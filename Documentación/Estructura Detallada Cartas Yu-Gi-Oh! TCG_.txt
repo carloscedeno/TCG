@@ -1,0 +1,650 @@
+﻿Estructura Detallada de Cartas de Yu-Gi-Oh! Trading Card Game para Contexto de Generación de Código por IA
+
+
+
+
+Introducción a la Estructura de Cartas de Yu-Gi-Oh! TCG
+
+
+Este documento tiene como objetivo proporcionar una descripción exhaustiva y estructurada de la anatomía de las cartas de Yu-Gi-Oh! Trading Card Game (TCG). Está diseñado específicamente para servir como contexto de alto nivel y fuente de datos para sistemas de Inteligencia Artificial (IA) encargados de generar o comprender código relacionado con el juego. Yu-Gi-Oh! TCG, con su vasta historia, miles de cartas y un sistema de reglas y rarezas único, requiere un modelado de datos preciso y granular que capture tanto los atributos físicos como los lógicos de cada carta, así como sus variaciones y su comportamiento en el juego.
+Una carta de Yu-Gi-Oh! es una entidad multifacética que combina elementos visuales, textuales y funcionales. Comprender su estructura es fundamental para cualquier sistema que intente interactuar con el juego a nivel programático. Los componentes se dividen en físicos, que corresponden a lo que se ve y se siente en la carta tangible, y lógicos, que abarcan los datos y las reglas que definen su comportamiento dentro del juego. Esta distinción es vital para una IA, ya que la representación visual es tan importante como la representación de las reglas para diversas aplicaciones, desde simuladores hasta herramientas de gestión de colecciones.
+
+
+Componentes Físicos de una Carta de Yu-Gi-Oh! TCG
+
+
+Las cartas de Yu-Gi-Oh! TCG son objetos tangibles con características físicas distintivas que influyen en su identificación y valor. A diferencia de otros TCGs, Yu-Gi-Oh! no utiliza un sistema de maná o tierras; en su lugar, el color del borde de la carta es un indicador clave del tipo de carta, lo que permite una identificación rápida a simple vista. 1
+
+
+Elementos Visuales Clave
+
+
+Los elementos visuales de una carta son fundamentales para su identificación y para la experiencia del jugador:
+* Nombre (Name): El nombre único de la carta, ubicado en la parte superior. Los nombres son muy importantes en Yu-Gi-Oh!, ya que muchas cartas utilizan palabras clave en su nombre para activar efectos (ej., "Eldlich" o "Golden Land" en el nombre de una carta). 1
+* Atributo (Attribute): Un símbolo en la esquina superior derecha que indica el atributo elemental del monstruo (ej., Oscuridad, Luz, Tierra, Agua, Fuego, Viento, Divino). 1
+* Nivel/Rango (Level/Rank): Indicado por el número de estrellas debajo del nombre de la carta para la mayoría de los monstruos. El nivel juega un papel en cómo se invocan los monstruos. 1
+* Ilustración (Artwork): La imagen central de la carta. Para los monstruos, suele ser el objeto principal, mientras que las cartas de Hechizo/Trampa pueden representar objetos o escenas de acción. El arte a menudo cuenta historias de arquetipos. 1
+* Tipo (Type): Ubicado entre corchetes justo encima del texto de la carta en los monstruos. Indica la especie del monstruo (ej., Dragón, Guerrero, Lanzador de Conjuros, Zombi). Cada monstruo tiene exactamente un tipo. 1
+* Texto de la Carta (Lore/Effect Text): El texto que describe lo que hace la carta. Desde 2011, Yu-Gi-Oh! utiliza el "Problem-Solving Card Text" (PSCT) para estandarizar el formato y facilitar la interpretación. En los monstruos normales, este espacio se usa para el texto de sabor (flavor text), que no tiene efecto en el juego. 1
+* ATK/DEF (Attack and Defense): Los valores de ataque y defensa de un monstruo, ubicados en la parte inferior de la carta. Se utilizan principalmente en batalla, pero también pueden ser mencionados en efectos de cartas. 1
+* Borde (Border): El área de color que rodea la carta. En Yu-Gi-Oh!, el color del borde identifica el tipo de carta (ej., Naranja para Monstruos de Efecto, Marrón para Monstruos de Fusión, Azul para Monstruos de Sincronía, Negro para Monstruos Xyz, Azul Oscuro para Monstruos de Enlace, Amarillo para Monstruos Normales, Verde para Monstruos Péndulo, Verde Claro para Hechizos, Morado para Trampas). 1
+* Número de Coleccionista (Number): Un identificador alfanumérico que indica la posición de la carta dentro de su set (ej., RA01-EN022). 4
+* Símbolo de Set (Set Identifier): Un código de letras y números en el lado derecho de la carta, debajo del número, que identifica el set al que pertenece la carta. 5
+* Símbolo de 1ª Edición (1st Edition Symbol): Un sello que indica que la carta pertenece a la primera tirada de impresión de un set. Las cartas de 1ª Edición, especialmente las de sets antiguos, pueden ser más valiosas. 4
+
+
+Implicaciones (Componentes Físicos)
+
+
+La IA debe ser capaz de procesar y distinguir estos elementos visuales para una identificación precisa y para la valoración. El color del borde es una característica visual fundamental para clasificar las cartas. La presencia de un símbolo de 1ª Edición o un patrón de holofoil específico puede alterar drásticamente el valor de una carta. Para la IA, esto significa que el modelo de datos debe incluir campos para el tipo de rareza, si es una 1ª Edición, y las URLs de las imágenes en diferentes resoluciones. Las imágenes de alta calidad son esenciales para el reconocimiento visual y la extracción de estos atributos.
+
+
+Componentes Lógicos y Campos de Datos de la Carta
+
+
+Los componentes lógicos de una carta de Yu-Gi-Oh! TCG definen su identidad, sus propiedades de juego y su interacción con las reglas del juego. Estos atributos son la base sobre la cual se construye cualquier sistema programático de Yu-Gi-Oh! TCG.
+
+
+Identificadores Únicos
+
+
+La identificación precisa de las cartas es fundamental en el vasto ecosistema de Yu-Gi-Oh! TCG. Las APIs proporcionan varios identificadores únicos:
+* ID de la Carta (id): Un identificador numérico único para la carta en la base de datos (ej., YGOPRODeck API).
+* Nombre (name): El nombre de la carta.
+* Passcode/Number (id o passcode): El código de 8 dígitos de la carta, que también sirve como identificador.
+* Konami ID (konami_id): Un identificador interno de Konami.
+* ID de TCGplayer (tcgplayer_id): Un identificador utilizado por TCGplayer para vincular a sus listados de productos y precios.
+* ID de Cardmarket (cardmarket_price): El precio de la carta en Cardmarket (en €), lo que implica un cardmarket_id subyacente para la identificación del producto.
+Estos identificadores son cruciales para la interoperabilidad de datos entre diferentes plataformas y APIs, permitiendo a la IA correlacionar información de reglas, imágenes y precios.
+
+
+Campos de Metadatos
+
+
+Las cartas poseen una serie de campos que describen sus propiedades y características:
+* Tipo (type): La categoría principal de la carta (ej., "Monster", "Spell", "Trap").
+* Frame Type (frameType): El tipo de marco de la carta, que corresponde al color del borde (ej., "xyz", "spell", "trap").
+* Descripción (desc): El texto de reglas o de sabor de la carta.
+* ATK (atk): Valor de ataque del monstruo.
+* DEF (def): Valor de defensa del monstruo.
+* Nivel (level): Nivel o Rango del monstruo.
+* Raza (race): El tipo de monstruo (ej., "Spellcaster", "Warrior", "Wyrm").
+* Atributo (attribute): Atributo elemental del monstruo (ej., "DARK", "LIGHT").
+* Link (link): Valor de Enlace para monstruos de Enlace.
+* Link Marker (linkmarker): Marcadores de Enlace para monstruos de Enlace (ej., "Top", "Bottom-Left").
+* Escala (scale): Valor de escala para monstruos Péndulo.
+* Set de Carta (cardset): El nombre del set al que pertenece la carta (ej., "Metal Raiders").
+* Arquetipo (archetype): El arquetipo al que pertenece la carta (ej., "Dark Magician", "Blue-Eyes").
+* Banlist (banlist): Indica la legalidad de la carta en diferentes banlists (TCG, OCG, Goat).
+* Fecha de Lanzamiento TCG/OCG (tcg_date, ocg_date): Fechas de lanzamiento originales en el TCG y OCG.
+* Imágenes (card_images): Un array que contiene URLs a imágenes de la carta en diferentes tamaños (image_url, image_url_small, image_url_cropped).
+* Precios (card_prices): Un array que contiene precios de la carta de múltiples vendedores (ej., cardmarket_price, coolstuffinc_price).
+* Rareza Master Duel (md_rarity): Rareza de la carta en Master Duel.
+* Tiene Efecto (has_effect): Booleano que indica si la carta tiene un efecto real.
+* Es Ilegal (is_illegal): Indica si la carta no puede ser usada en un duelo (ej., cartas de premio). 7
+* Tiene Condición de Nombre (has_name_condition): Indica si la carta es tratada como si tuviera otro nombre (ej., Cyber Harpie Lady). 7
+
+
+Implicaciones (Componentes Lógicos)
+
+
+La IA debe ser capaz de parsear y utilizar estos campos para construir una representación completa de la carta. La distinción entre type y frameType es crucial para la clasificación visual y la lógica del juego. Los atributos atk, def, level, link, linkmarker y scale son fundamentales para la simulación de combate y la resolución de habilidades específicas de monstruos. La información de banlist es vital para la construcción de mazos legales en diferentes formatos.
+
+
+Tabla: Campos de Datos Centrales de la Carta (Lógicos)
+
+
+Esta tabla detalla los campos de datos esenciales que definen la identidad lógica y las propiedades de juego de una carta de Yu-Gi-Oh! TCG, incluyendo sus identificadores clave y atributos comunes.
+Campo
+	Tipo de Dato
+	Descripción
+	Ejemplo
+	Fuente (Snippet ID)
+	id
+	Entero
+	Identificador único de la carta (YGOPRODeck).
+	6983839
+	
+
+	name
+	String
+	Nombre de la carta.
+	"Tornado Dragon"
+	
+
+	type
+	String
+	Tipo principal de la carta (Monster, Spell, Trap).
+	"XYZ Monster"
+	
+
+	frameType
+	String
+	Tipo de marco/borde de la carta.
+	"xyz"
+	
+
+	desc
+	String
+	Texto de reglas o sabor de la carta.
+	"2 Level 4 monsters\nOnce per turn (Quick Effect): You can detach 1 material from this card, then target 1 Spell/Trap on the field; destroy it."
+	
+
+	atk
+	Entero
+	Valor de ataque del monstruo.
+	2100
+	
+
+	def
+	Entero
+	Valor de defensa del monstruo.
+	2000
+	
+
+	level
+	Entero
+	Nivel o Rango del monstruo.
+	4
+	
+
+	race
+	String
+	Tipo de monstruo (ej., Wyrm, Spellcaster).
+	"Wyrm"
+	
+
+	attribute
+	String
+	Atributo elemental (ej., WIND, DARK).
+	"WIND"
+	
+
+	link
+	Entero
+	Valor de Enlace (para Link Monsters).
+	3
+	
+
+	linkmarker
+	Lista de Strings
+	Marcadores de Enlace (Top, Bottom-Left).
+	``
+	
+
+	scale
+	Entero
+	Valor de escala (para Pendulum Monsters).
+	5
+	
+
+	cardset
+	String
+	Nombre del set al que pertenece la carta.
+	"Metal Raiders"
+	
+
+	archetype
+	String
+	Arquetipo de la carta.
+	"Dark Magician"
+	
+
+	banlist
+	String
+	Legalidad en banlist (TCG, OCG, Goat).
+	"TCG"
+	
+
+	tcg_date
+	String
+	Fecha de lanzamiento en TCG (YYYY-MM-DD).
+	"2017-03-10"
+	
+
+	ocg_date
+	String
+	Fecha de lanzamiento en OCG (YYYY-MM-DD).
+	"2016-08-06"
+	
+
+	card_images
+	Lista de Hashes
+	URLs a imágenes de la carta.
+	[{"id": 6983839, "image_url": "...", "image_url_small": "..."}]
+	
+
+	card_prices
+	Lista de Hashes
+	Precios de la carta de varios vendedores.
+	[{"cardmarket_price": "0.50", "coolstuffinc_price": "0.75"}]
+	
+
+	md_rarity
+	String
+	Rareza en Master Duel.
+	"Ultra Rare"
+	
+
+	has_effect
+	Booleano
+	Indica si la carta tiene un efecto real.
+	true
+	
+
+	is_illegal
+	Booleano
+	Indica si la carta es ilegal para duelos.
+	false
+	7
+	has_name_condition
+	Booleano
+	Indica si la carta es tratada como otro nombre.
+	true
+	7
+	name_condition
+	String
+	Nombre alternativo si has_name_condition es true.
+	"Harpie Lady"
+	7
+	
+
+Tipos de Cartas de Yu-Gi-Oh! TCG y sus Atributos Específicos
+
+
+Yu-Gi-Oh! TCG clasifica sus cartas en tres tipos principales: Monstruos, Hechizos y Trampas, cada uno con un comportamiento distintivo y atributos específicos que rigen su interacción en el juego. 1
+
+
+Categorías Principales
+
+
+* Monstruos (Monster Cards): Son las criaturas que los jugadores invocan para atacar y defender. Se subdividen en varios tipos que se distinguen por el color de su borde y sus mecánicas de invocación:
+   * Monstruos Normales (Normal Monsters): Borde amarillo. Solo tienen texto de sabor (flavor text) y no efectos. 1
+   * Monstruos de Efecto (Effect Monsters): Borde naranja. Tienen habilidades que afectan el juego. 1
+   * Monstruos de Fusión (Fusion Monsters): Borde morado. Se invocan combinando monstruos específicos. 1
+   * Monstruos de Sincronía (Synchro Monsters): Borde blanco. Se invocan enviando monstruos al Cementerio. 1
+   * Monstruos Xyz (Xyz Monsters): Borde negro. Se invocan apilando monstruos con el mismo Nivel. 1
+   * Monstruos Péndulo (Pendulum Monsters): Borde verde (superior) y naranja/amarillo (inferior). Pueden ser jugados como monstruos o como hechizos en las Zonas de Péndulo. 1
+   * Monstruos de Enlace (Link Monsters): Borde azul oscuro. No tienen Nivel/Rango ni Defensa, sino un Valor de Enlace y Marcadores de Enlace. 1
+* Hechizos (Spell Cards): Borde verde claro. Proporcionan diversos efectos y se activan desde la mano o el campo. Se subdividen por iconos:
+   * Normal Spell: Sin icono. Efecto de un solo uso.
+   * Continuous Spell: Icono de infinito. Permanece en el campo con un efecto continuo.
+   * Equip Spell: Icono de cruz. Se equipa a un monstruo para darle un efecto.
+   * Quick-Play Spell: Icono de rayo. Puede activarse en el turno del oponente.
+   * Field Spell: Icono de brújula. Afecta a todo el campo de batalla.
+   * Ritual Spell: Icono de llama. Se usa para invocar Monstruos de Ritual.
+* Trampas (Trap Cards): Borde morado. Se activan en respuesta a ciertas acciones o en el turno del oponente. Se subdividen por iconos:
+   * Normal Trap: Sin icono. Efecto de un solo uso.
+   * Continuous Trap: Icono de infinito. Permanece en el campo con un efecto continuo.
+   * Counter Trap: Icono de flecha curva. Puede negar la activación de cartas o efectos.
+
+
+Atributos Específicos por Tipo de Carta
+
+
+* Monstruos:
+   * atk (Ataque) y def (Defensa): Valores numéricos que determinan el poder en combate. 1
+   * level (Nivel) o rank (Rango): Estrellas que indican el nivel o rango del monstruo. 1
+   * race (Raza): Tipo de criatura (ej., Dragón, Guerrero). 1
+   * attribute (Atributo): Elemento (ej., Oscuridad, Luz). 1
+   * link (Valor de Enlace) y linkmarker (Marcadores de Enlace): Para Monstruos de Enlace.
+   * scale (Escala): Para Monstruos Péndulo.
+* Hechizos y Trampas:
+   * Principalmente definidos por su desc (texto de efecto).
+
+
+Implicaciones (Tipos de Cartas)
+
+
+La IA debe modelar estos tipos de cartas y sus atributos condicionales. Por ejemplo, solo los monstruos tendrán atk, def, level/rank, race y attribute. El código generado por la IA debe incluir lógica para identificar el type y frameType de una carta antes de intentar acceder a atributos específicos, garantizando la coherencia y previniendo errores. La IA también debe comprender las mecánicas de invocación y activación asociadas a cada tipo de carta para simular el juego correctamente.
+
+
+Tabla: Tipos de Cartas de Yu-Gi-Oh! TCG y Atributos Clave
+
+
+Esta tabla resume los tipos de cartas principales de Yu-Gi-Oh! TCG y los atributos específicos que cada tipo posee, destacando su comportamiento fundamental en el juego.
+Tipo de Carta (type)
+	frameType (Color de Borde)
+	Atributos Específicos Clave
+	Comportamiento Clave
+	Fuente (Snippet ID)
+	Monster (Normal)
+	normal (Amarillo)
+	ATK, DEF, Level, Race, Attribute
+	Monstruo sin efectos, texto de sabor.
+	1
+	Monster (Effect)
+	effect (Naranja)
+	ATK, DEF, Level, Race, Attribute
+	Monstruo con efectos.
+	1
+	Monster (Fusion)
+	fusion (Morado)
+	ATK, DEF, Level, Race, Attribute
+	Monstruo invocado por Fusión.
+	1
+	Monster (Synchro)
+	synchro (Blanco)
+	ATK, DEF, Level, Race, Attribute
+	Monstruo invocado por Sincronía.
+	1
+	Monster (Xyz)
+	xyz (Negro)
+	ATK, DEF, Rank, Race, Attribute
+	Monstruo invocado por Xyz.
+	1
+	Monster (Pendulum)
+	pendulum (Verde/Amarillo)
+	ATK, DEF, Level, Race, Attribute, Scale
+	Puede ser Monstruo o Hechizo.
+	1
+	Monster (Link)
+	link (Azul Oscuro)
+	ATK, Link, Link Marker, Race, Attribute
+	Monstruo sin Nivel/Defensa, con marcadores de enlace.
+	1
+	Spell
+	spell (Verde Claro)
+	Ninguno (efecto en desc)
+	Efectos de un solo uso o continuos.
+	1
+	Trap
+	trap (Morado)
+	Ninguno (efecto en desc)
+	Efectos de un solo uso o continuos, a menudo en respuesta.
+	1
+	
+
+Interpretación del Texto de Reglas (Problem-Solving Card Text - PSCT)
+
+
+El "Problem-Solving Card Text" (PSCT) es el formato estandarizado para el texto de reglas de las cartas de Yu-Gi-Oh!, diseñado para hacer que los efectos sean consistentes y fáciles de interpretar. 1 Es crucial para que una IA genere o interprete reglas de manera efectiva, ya que define la sintaxis y la semántica de las habilidades.
+
+
+Estructura y Sintaxis del Texto de Efecto
+
+
+El PSCT utiliza puntuación específica para separar las diferentes partes de un efecto:
+* Dos Puntos ( : ) - Condición de Activación: Todo lo que precede a los dos puntos describe cuándo y bajo qué condiciones se puede activar un efecto. 2
+   * Ejemplo: When this card is Normal or Special Summoned: You can activate 1 of these effects. 3
+* Punto y Coma ( ; ) - Costo y Acciones de Activación: Todo lo que está entre los dos puntos y el punto y coma (o antes del punto y coma si no hay dos puntos) describe las acciones que se realizan al activar la carta, como pagar costos o seleccionar objetivos. Estas acciones se realizan inmediatamente al activar la carta, antes de que se añada a la cadena. 2
+   * Ejemplo: Discard 1 card; destroy all face-up monsters your opponent controls. (Descartar 1 carta es el costo/acción de activación). 3
+* Sin Puntuación (ni : ni ; ): Si un efecto no tiene dos puntos ni punto y coma, significa que el efecto no se activa ni inicia una cadena; simplemente se aplica siempre que se cumplan las condiciones. 3
+
+
+Palabras Clave y Frases Comunes
+
+
+El PSCT también estandarizó la terminología para mayor claridad:
+* [On Play] / [On K.O.] / [When Attacking]: Indican cuándo se activa un efecto.
+* [Counter]: Se refiere a los efectos de contador, que solo se pueden activar desde cartas en la mano durante el Counter Step de una batalla en el turno del oponente.
+* ``: Indica que un efecto solo puede activarse una vez por turno. Si hay varias cartas con el mismo nombre y este efecto, cada una puede activarlo una vez.
+* Banish: Reemplazó la frase "remove from play" para indicar que una carta es enviada a la Zona de Desterrados. 8
+* Leaves the field: Reemplazó "is removed from the field" para indicar que una carta se mueve del campo a cualquier otra zona (Cementerio, mano, desterrado, etc.). 8
+* then / also / and if you do / and: Palabras clave que aclaran la secuencia y dependencia de múltiples acciones dentro de un efecto. 3
+   * and if you do / then: Si la primera acción no se realiza, la segunda tampoco.
+   * and / also: Ambas acciones deben ocurrir, o ninguna.
+
+
+Implicaciones (Texto de Reglas)
+
+
+La IA debe ser capaz de analizar el texto de efecto de las cartas utilizando la sintaxis del PSCT para determinar las condiciones de activación, los costos y los efectos de resolución. Esto requiere capacidades avanzadas de Procesamiento del Lenguaje Natural (PLN) para la IA, que van más allá de la simple extracción de texto. La IA podría beneficiarse de un motor de reglas o una ontología de Yu-Gi-Oh! para interpretar y aplicar correctamente el texto de efecto. Para la generación de código, la IA podría generar plantillas de código para tipos de habilidades comunes (ej., if (condition) { cost(); effect(); }) y luego rellenar los detalles a partir del texto de efecto analizado.
+
+
+Variaciones y Ediciones de Cartas
+
+
+La estructura de las cartas de Yu-Gi-Oh! es intrínsecamente compleja debido a la multitud de variaciones y ediciones que existen para una misma carta lógica. Estas variaciones no son meramente estéticas, sino que tienen un impacto significativo en la identificación, la gestión y, crucialmente, el valor de mercado de las cartas.
+
+
+Tipos de Rarezas y Acabados (Foiling)
+
+
+Yu-Gi-Oh! tiene un sistema de rarezas muy diverso, a menudo con múltiples variantes de una misma carta dentro de un set. 5
+* Common: La rareza más básica, sin foil en el nombre ni en el arte. 5
+* Rare: Nombre de la carta en foil plateado, pero el arte no es holográfico. 6
+* Super Rare: Arte holográfico, pero el nombre de la carta no es foil. 5
+* Ultra Rare: Nombre de la carta en foil dorado y arte holográfico. 5
+* Secret Rare: Patrón de foil iridiscente/diagonal en el arte y nombre de la carta en foil de color arcoíris. 5
+* Ultimate Rare: Textura en relieve (embossed) en el nombre, arte y bordes. Muy táctiles y coleccionables. 6
+* Ghost Rare: Arte casi transparente y con efecto 3D al inclinar la carta. Extremadamente raras. 6
+* Starlight Rare: Foil de arcoíris de carta completa con líneas verticales que brillan. Entre las más raras. 5
+* Collector's Rare: Textura ligeramente elevada con apariencia grabada, similar a Ultimate Rare, con un patrón de foil único. 5
+* Gold Rare: Bordes dorados, nombre dorado, arte dorado y una imagen holográfica. Variantes incluyen Gold Secret Rare y Gold Ghost Rare. 5
+* Platinum Rare: Foil que cubre casi toda la carta excepto la caja de texto, con un nombre estilo Secret Rare. 5
+* Parallel Rares: Un patrón de puntos, "shatterfoil", "starfoil", "mosaic" u otro diseño único aplicado a toda la carta como una película no foil. 5
+* Prismatic Rare: Incluye Prismatic Collector's Rare y Prismatic Ultimate Rare, con patrones de foil específicos. 4
+
+
+Ediciones y Variantes de Impresión
+
+
+* 1st Edition: Las primeras tiradas de impresión de un set. Generalmente más valiosas que las "Unlimited". 4
+* Unlimited: Impresiones posteriores a la 1ª Edición.
+* OCG vs. TCG: Las cartas japonesas (OCG) tienen un reverso completamente diferente al de las cartas occidentales (TCG), y el reverso japonés solo se actualizó una vez en 2001. 9
+* Variaciones de Arte: Algunas cartas pueden tener arte alternativo o diferentes patrones de holofoil (ej., Cosmos Holo, Cracked Ice Holo, Sheen Holo, Starlight Holo). 9
+* Errores de Impresión: Pueden incluir errores tipográficos, fallos de tinta, foil faltante o incompleto, o errores de símbolos. Estos pueden afectar el valor de la carta.
+
+
+Condiciones de la Carta y su Impacto
+
+
+La condición física de una carta es uno de los factores más importantes que afectan su valor de mercado. Las plataformas de comercio de cartas y los servicios de tasación utilizan escalas estandarizadas para describir el estado de una carta:
+* Escala de Condiciones Estándar:
+   * Near Mint (NM): Desgaste mínimo, superficie casi sin marcas, esquinas nítidas. 10
+   * Lightly Played (LP): Desgaste menor en bordes, rasguños o arañazos, sin problemas estructurales. 10
+   * Moderately Played (MP): Desgaste en bordes/superficie, arañazos, dobleces con pliegues, imperfecciones moderadas. 10
+   * Heavily Played (HP): Gran cantidad de desgaste, imperfecciones moderadas a graves, pero aún auténticas y jugables con funda. 10
+   * Damaged (D) / Poor (PO): Defectos o imperfecciones graves, como desgarros, grandes dobleces o daños por agua, que pueden hacerlas ilegales para torneos o reducir drásticamente su valor. 11
+* Factores de Grado: La evaluación de la condición se basa en cuatro factores principales: las esquinas, los bordes, el centrado y la superficie. 13
+* Cartas Graduadas: Para las cartas de alto valor, los servicios de tasación de terceros (como PSA, BGS, CGC y SGC) evalúan y asignan una calificación numérica (ej., PSA 10, CGC 9.5) a la carta, que se sella en una funda protectora. Esta calificación certifica la condición y puede aumentar significativamente el valor de la carta. 14
+
+
+Implicaciones (Variaciones y Ediciones)
+
+
+La IA debe modelar la explosión combinatoria de variantes (set, número de coleccionista, rareza, tipo de foil, si es 1ª Edición, condición, grado). Esto requiere un modelo de datos jerárquico o relacional que vincule una "definición de carta" a múltiples "impresiones" y luego a "instancias físicas" con su condición y grado. La IA que trabaja con precios o recomendaciones de inversión debe ser capaz de consultar y predecir valores basados en la combinación precisa de estos atributos. 17
+
+
+Tabla: Variaciones de Cartas e Identificadores Asociados
+
+
+Esta tabla ilustra cómo las diferentes variaciones físicas y de impresión de una carta se identifican y cómo se relacionan con la identidad lógica de la carta.
+Tipo de Variación
+	Atributo Clave
+	Descripción
+	Impacto en Valor/Identificación
+	Fuente (Snippet ID)
+	Rareza
+	rarity (string), Símbolo físico
+	Nivel de escasez (Common, Ultra Rare, Secret Rare, etc.).
+	Indicador primario de valor; las rarezas especiales disparan el precio.
+	4
+	Acabado/Foil
+	frameType (implícito), card_images.image_url (implícito)
+	Tipo de superficie (Holo, Reverse Holo, Embossed, Rainbow, etc.).
+	Afecta directamente el precio de mercado, crucial para inventario.
+	5
+	Edición/Impresión
+	cardset, number, tcg_date, Símbolo 1st Edition
+	Colección a la que pertenece y su número; si es 1ª Edición.
+	Identifica la impresión específica, esencial para precios y coleccionismo.
+	
+
+	Condición
+	condition (string), grade (numérico)
+	Estado físico de la carta (Near Mint, Lightly Played, Damaged, etc.), calificado por servicios externos.
+	Multiplicador de valor crítico; una carta en mejor condición vale significativamente más.
+	10
+	Idioma
+	lang (string)
+	Idioma de la carta (ej., "en" para inglés).
+	Puede afectar la disponibilidad y el valor en mercados específicos.
+	9
+	
+
+Identificadores Clave y Fuentes de Datos Externas
+
+
+El ecosistema de datos de Yu-Gi-Oh! TCG está distribuido entre múltiples plataformas y APIs. Para una IA, la capacidad de acceder, consolidar y correlacionar datos de estas diversas fuentes es crucial para obtener una visión completa y precisa de una carta.
+
+
+APIs de Datos
+
+
+Las principales APIs y fuentes de datos para Yu-Gi-Oh! TCG incluyen:
+* YGOPRODeck API: Una API completa y actualizada que proporciona información detallada sobre cartas, sets, arquetipos, imágenes y precios. Permite búsquedas, filtros y actualizaciones en tiempo real de nuevas cartas y sets.
+   * Ofrece datos de precios de múltiples vendedores (ej., Cardmarket, CoolStuffInc).
+   * Permite la conversión de cartas OCG a TCG. 20
+* YGOHub API: Proporciona acceso a la base de datos de Yu-Gi-Oh!, incluyendo información de cartas, sets y banlists. Permite listar todas las cartas, sets y banlists, y verificar información de cartas por passcode. 7
+* JustTCG: Una API comercial multi-TCG que incluye Yu-Gi-Oh!. Ofrece acceso a datos de precios con granularidad por condición e impresión, y actualizaciones frecuentes (múltiples veces al día). 21
+* TCGplayer API: Históricamente una fuente clave de datos de catálogo y precios. Sin embargo, actualmente no concede nuevo acceso a su API para nuevos usuarios. A pesar de esto, sus datos siguen siendo accesibles a través de otros agregadores como JustTCG 21 o TCG-Home. 23
+* Cardmarket API (a través de Scrapers): Cardmarket, el mayor mercado europeo, no tiene una API pública directa mencionada en el material. No obstante, existen scrapers comerciales (como los de Apify) que permiten acceder a sus datos de precios y tendencias. 24
+* Kaggle Datasets: Existen datasets completos de cartas de Yu-Gi-Oh! en CSV, compilados de fuentes oficiales como Konami y TCGplayer, que incluyen datos de mercado y precios. 26
+
+
+Bases de Datos de Precios y su Relevancia para la Identificación
+
+
+Las plataformas de mercado y los agregadores de precios son fuentes vitales de información económica para las cartas:
+* Plataformas de Mercado: Sitios como TCGplayer, Cardmarket y Troll and Toad ofrecen listados de productos y precios, a menudo con filtros por condición y variantes. 27
+* Agregadores de Precios: Servicios como JustTCG 21, TCG-Home 23, Card Ladder 30, y PSA Price Guide 16 consolidan datos de precios de múltiples fuentes, incluyendo información sobre la condición y las variantes de las cartas.
+* Datos Históricos: La disponibilidad de datos históricos de precios es crucial para el análisis de tendencias. TCGplayer muestra gráficos de historial de precios 31, aunque su historial público se limita a un año. 32 Otros servicios como Card Ladder rastrean ventas públicas desde el año 2000. 30
+
+
+Implicaciones (Identificadores y Fuentes de Datos)
+
+
+La IA necesitará estrategias de consolidación y mapeo de IDs para obtener una visión completa de una carta (ej., reglas de YGOPRODeck, precios de JustTCG/TCGplayer/Cardmarket, imágenes de YGOPRODeck). El código generado por la IA debe incluir módulos para la integración de múltiples fuentes de datos, la resolución de IDs y la gestión de posibles inconsistencias o lagunas de datos. Los precios son altamente dinámicos y varían según la condición, la rareza y las tendencias del mercado, lo que requiere que el modelo de datos para la IA incluya tablas de precios con marcas de tiempo y atributos de condición/variante. 17
+
+
+Tabla: Identificadores Externos Clave
+
+
+Esta tabla lista los identificadores únicos utilizados por las principales plataformas y APIs de datos de Yu-Gi-Oh! TCG, explicando su propósito y dónde se encuentran en los objetos de datos.
+Identificador
+	Plataforma/API
+	Propósito
+	Campo en YGOPRODeck API (si aplica)
+	Fuente (Snippet ID)
+	id
+	YGOPRODeck
+	Identificador único de la carta.
+	id
+	
+
+	name
+	YGOPRODeck
+	Nombre de la carta.
+	name
+	
+
+	konami_id
+	Konami, YGOPRODeck
+	Identificador interno de Konami.
+	konami_id
+	
+
+	tcgplayer_id
+	TCGplayer, YGOPRODeck, JustTCG
+	Identificador de producto en TCGplayer para precios.
+	tcgplayer_id (en card_prices array)
+	
+
+	cardmarket_price
+	Cardmarket, YGOPRODeck
+	Precio de la carta en Cardmarket.
+	cardmarket_price (en card_prices array)
+	
+
+	number
+	Impresión física
+	Número de coleccionista de la carta.
+	number (en card_sets array)
+	4
+	set_code
+	Impresión física
+	Código corto de la colección.
+	set_code (en card_sets array)
+	5
+	
+
+Implicaciones para la Generación de Código por IA
+
+
+La información detallada sobre la estructura de las cartas de Yu-Gi-Oh! TCG tiene implicaciones directas y profundas para la generación de código por parte de una IA, abarcando desde el modelado de datos hasta la implementación de la lógica de juego y las interacciones con el mercado.
+
+
+Modelado de Datos para la IA
+
+
+La IA debe adoptar un modelo de datos jerárquico y relacional para representar las cartas de Yu-Gi-Oh! TCG de manera efectiva. Se sugiere una estructura que distinga entre:
+* Una entidad CardDefinition (basada en el name y oracle_id si existiera un concepto similar para la identidad lógica de la carta, o una combinación de name, type, race, attribute para la identidad de reglas).
+* Una entidad CardPrinting (basada en id de YGOPRODeck, cardset, number, rarity, y tipos de frameType/acabados) para representar una versión física específica de la carta.
+* Una entidad CardInstance (para colecciones de usuarios) que podría incluir atributos dinámicos como condition y purchase_price.
+Los atributos condicionales, como atk, def, level/rank, link, linkmarker y scale para Monstruos, deben modelarse como campos opcionales o a través de mecanismos de herencia de clases. La representación de type y race debe permitir su análisis para una aplicación granular de las reglas. Un modelo de datos bien diseñado es la base para cualquier código robusto, permitiendo a la IA generar clases, esquemas de bases de datos (SQL, NoSQL) y estructuras de datos en memoria de forma directa y eficiente. 34
+
+
+Consideraciones para la Lógica de Juego y Reglas
+
+
+Para generar código que simule o interactúe con el juego, la IA debe ser capaz de interpretar el texto de reglas (desc) utilizando el Problem-Solving Card Text (PSCT) y traducirlo a lógica programática. Esto podría implicar el uso de técnicas de Procesamiento del Lenguaje Natural (PLN) para extraer componentes de habilidades (condiciones, costos, efectos) y traducirlos a lógica condicional o a un motor de reglas. Las palabras clave del juego (ej., [On Play], [When Attacking], [Counter], ``, Banish) deben ser mapeadas a funciones o propiedades booleanas. La lógica de juego generada debe considerar la interacción de diferentes tipos de cartas y sus atributos específicos, como las mecánicas de invocación, los efectos de batalla y las interacciones de la cadena. 2
+
+
+Recomendaciones para la Estructura de la Base de Datos
+
+
+Para una IA que maneje grandes volúmenes de datos de cartas y transacciones, se recomienda un diseño de base de datos relacional con tablas separadas para CardDefinitions, CardPrintings, CardPrices (con campos para condition, rarity_type y timestamp), CardTypes, MonsterTypes, SpellTrapTypes, Attributes, Races, Abilities, Attacks, Sets, y Banlists. Es fundamental implementar un "versionado temporal" para los datos de precios 17 para permitir consultas históricas precisas y el análisis de tendencias. Una estructura de base de datos optimizada es crucial para la eficiencia y escalabilidad del código generado por la IA. 34
+
+
+Integración de APIs
+
+
+La IA debe ser capaz de integrar datos de múltiples APIs (YGOPRODeck, YGOHub, JustTCG, TCGplayer, Cardmarket a través de scrapers) para obtener una visión completa de la carta. Esto implica la necesidad de módulos de integración de datos que manejen la autenticación (si es necesaria), las tasas de límite, el mapeo de identificadores (tcgplayer_id, cardmarket_id) y la normalización de datos (ej., condiciones de cartas). La IA debe priorizar las APIs oficiales y comerciales para la fiabilidad y el cumplimiento legal.
+
+
+Conclusiones
+
+
+El análisis detallado de la estructura de las cartas de Yu-Gi-Oh! TCG revela que son entidades de una complejidad considerable, que requieren un modelo de datos multicapa para su representación programática. La distinción fundamental entre la identidad lógica de una carta y sus múltiples impresiones físicas, junto con sus diversas rarezas, acabados y condición, es un pilar para cualquier sistema de IA que pretenda interactuar con el juego. Esta granularidad es indispensable tanto para la aplicación precisa de las reglas del juego como para la gestión económica de colecciones en el mercado secundario.
+Las fuentes de datos externas, aunque fragmentadas y con variaciones en su accesibilidad y consistencia histórica, son críticas para construir una comprensión integral de las cartas, especialmente en lo que respecta a la información de precios y tendencias de mercado. La IA debe ser diseñada para integrar y consolidar datos de múltiples APIs, resolviendo los mapeos entre diferentes identificadores únicos.
+Para la generación de código, esto implica la necesidad de una arquitectura de datos robusta y modular. La IA no solo debe ser capaz de modelar los atributos estáticos de las cartas, sino también de interpretar el Problem-Solving Card Text (PSCT) mediante técnicas avanzadas de PLN para traducir las reglas del juego a lógica programática. En resumen, el desarrollo de una IA competente para Yu-Gi-Oh! TCG exige una comprensión profunda de su ontología, una estrategia de datos unificada y la capacidad de traducir conceptos complejos del juego en código funcional y escalable.
+Works cited
+1. Understanding How Yu-Gi-Oh Cards Are Laid Out - Card Anatomy 101, accessed June 29, 2025, https://outof.games/realms/yugioh/guides/146-understanding-how-yu-gi-oh-cards-are-laid-out-card-anatomy-101/
+2. Part 3: Conditions, Activations, and Effects – Yu-Gi-Oh!, accessed June 29, 2025, https://www.yugioh-card.com/eu/play/understanding-card-text/part-3-conditions-activations-and-effects/
+3. What Is PSCT? Problem-Solving Card Text In Yu-Gi-Oh - TCGplayer, accessed June 29, 2025, https://www.tcgplayer.com/content/article/What-Is-PSCT-Problem-Solving-Card-Text-In-Yu-Gi-Oh/97b96fce-2799-49fd-8227-00b155ba6433/
+4. YuGiOh 25th Anniversary Rarity Collection Price Guide - TCGplayer, accessed June 29, 2025, https://www.tcgplayer.com/categories/trading-and-collectible-card-games/yugioh/price-guides/25th-anniversary-rarity-collection
+5. Understanding Yu-Gi-Oh! Rarities - TCGplayer, accessed June 29, 2025, https://seller.tcgplayer.com/blog/articles/understanding-yu-gi-oh-rarities/
+6. What to Know: Yu-Gi-Oh! Card Rarity Explained - Beckett News, accessed June 29, 2025, https://www.beckett.com/news/what-to-know-yu-gi-oh-card-rarity-explained/
+7. YGOHub API · Apiary, accessed June 29, 2025, https://ygohub.docs.apiary.io/
+8. Part 2: New Words & Phrases – Yu-Gi-Oh!, accessed June 29, 2025, https://www.yugioh-card.com/eu/play/understanding-card-text/part-2-new-words-phrases/
+9. card-prints - CardTrader, accessed June 29, 2025, https://static.cardtrader.com/en/guides/card-prints
+10. Card Conditioning Overview - TCGplayer.com, accessed June 28, 2025, https://help.tcgplayer.com/hc/en-us/articles/221430307-Card-Conditioning-Overview
+11. Card Condition - Help - Cardmarket, accessed June 28, 2025, https://help.cardmarket.com/en/CardCondition
+12. Card Condition Guide - CardTrader, accessed June 28, 2025, https://static.cardtrader.com/en/guides/condition-guide
+13. Vintage Baseball Card Price Guide and Valuation - BBC Emporium, accessed June 28, 2025, https://bbcemporium.com/index.php?step=price_guide
+14. The Ultimate Guide to Trading Cards: History, Trends, and Future Insig, accessed June 28, 2025, https://www.cardchasersmtl.com/blogs/blog/the-ultimate-guide-to-trading-cards-history-trends-and-future-insights
+15. List of most expensive cards from collectible card games - Wikipedia, accessed June 28, 2025, https://en.wikipedia.org/wiki/List_of_most_expensive_cards_from_collectible_card_games
+16. PSA Price Guide - Trading Card Values, accessed June 28, 2025, https://www.psacard.com/priceguide
+17. DB Schema: Versioned price model vs invoice-related data - Stack Overflow, accessed June 28, 2025, https://stackoverflow.com/questions/44041554/db-schema-versioned-price-model-vs-invoice-related-data
+18. Solved: An Easy Way to get Card Database and Prices into Excel : r/magicTCG - Reddit, accessed June 28, 2025, https://www.reddit.com/r/magicTCG/comments/uu80zr/solved_an_easy_way_to_get_card_database_and/
+19. Card Conditioning Standards - TCGplayer, accessed June 28, 2025, https://mktg-assets.tcgplayer.com/web/seller/guides/Card-Conditioning-Standards.pdf
+20. isma91/yu-gi-oh-api: A complete solution backend to get all card from the popular TCG Yu-Gi-Oh. - GitHub, accessed June 28, 2025, https://github.com/isma91/yu-gi-oh-api
+21. JustTCG vs. The Alternatives: Choosing the Right TCG Pricing API, accessed June 29, 2025, https://justtcg.medium.com/justtcg-vs-the-alternatives-choosing-the-right-tcg-pricing-api-6d5d555ac7cd
+22. Why JustTCG? Unpacking the Features of Your New TCG Pricing Powerhouse - Medium, accessed June 29, 2025, https://medium.com/@justtcg/why-justtcg-unpacking-the-features-of-your-new-tcg-pricing-powerhouse-9d0d28b395ae
+23. Discover what your collection is wort with real-time card prices - TCG Home, accessed June 28, 2025, https://tcg-home.com/track-prices/
+24. Cardmarket.com Trend Scraper API - Apify, accessed June 28, 2025, https://apify.com/ecomscrape/cardmarket-trend-scraper/api
+25. Cardmarket.com Card Details Page Scraper API - Apify, accessed June 28, 2025, https://apify.com/ecomscrape/cardmarket-card-page-details-scraper/api
+26. Yu-Gi-Oh! TCG Complete Card Database - Kaggle, accessed June 29, 2025, https://www.kaggle.com/datasets/hammadus/yugioh-full-card-database-index-august-1st-2025
+27. New User Guide | Cardmarket - Help, accessed June 28, 2025, https://help.cardmarket.com/new-user-guide
+28. Troll and Toad - Magic the Gathering, Yugioh, Pokemon, Cards, Singles,, accessed June 28, 2025, https://www.trollandtoad.com/
+29. WIXOSS Price Guides - TCGplayer, accessed June 28, 2025, https://www.tcgplayer.com/categories/trading-and-collectible-card-games/wixoss/price-guides
+30. Sports Card Price Guide | Card Ladder, accessed June 28, 2025, https://www.cardladder.com/ladder
+31. The 10 Most Expensive Pokémon Cards of 2025 (So Far) - TCGplayer, accessed June 28, 2025, https://www.tcgplayer.com/content/article/The-10-Most-Expensive-Pok%C3%A9mon-Cards-of-2025-So-Far/7f39e243-6210-44e0-9fe2-0e62d6ca83fb/
+32. Understanding Historical Data in MTG Finance | TCGplayer, accessed June 28, 2025, https://www.tcgplayer.com/content/article/Understanding-Historical-Data-in-MTG-Finance/05fb040d-7bb3-45e2-bc52-b9fa8a49752e/
+33. The Finance Article Where I Use Secret Data to Make Cool Charts - TCGplayer, accessed June 28, 2025, https://www.tcgplayer.com/content/article/The-Finance-Article-Where-I-Use-Secret-Data-to-Make-Cool-Charts/3b637747-9a30-43dd-8db4-8ba8b4717455/
+34. Need advice on how to structure my database schema for online trading card game, accessed June 28, 2025, https://stackoverflow.com/questions/22257644/need-advice-on-how-to-structure-my-database-schema-for-online-trading-card-game
+35. SQL: good database design for cards? - Stack Overflow, accessed June 28, 2025, https://stackoverflow.com/questions/44286944/sql-good-database-design-for-cards
+36. Database design. Relationship : r/dataengineering - Reddit, accessed June 29, 2025, https://www.reddit.com/r/dataengineering/comments/1lkgmj3/database_design_relationship/
+37. 15 Essential Yugioh Terms You Won't Find in the Rulebook - YouTube, accessed June 29, 2025, https://www.youtube.com/watch?v=vR6Wn0DWDBo

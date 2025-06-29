@@ -1,0 +1,571 @@
+﻿Estructura Detallada de Cartas de Wixoss Trading Card Game para Contexto de Generación de Código por IA
+
+
+
+
+Introducción a la Estructura de Cartas de Wixoss TCG
+
+
+Este documento tiene como objetivo proporcionar una descripción exhaustiva y estructurada de la anatomía de las cartas de Wixoss Trading Card Game (TCG). Está diseñado específicamente para servir como contexto de alto nivel y fuente de datos para sistemas de Inteligencia Artificial (IA) encargados de generar o comprender código relacionado con el juego. Wixoss se distingue por su sistema de dos mazos (Main Deck y LRIG Deck), su mecánica de "Life Cloth" y "Ener Zone", y una variedad de tipos de cartas y rarezas únicas, lo que requiere un modelado de datos preciso y granular para cualquier aplicación programática.
+Una carta de Wixoss es una entidad multifacética que combina elementos visuales, textuales y funcionales. Comprender su estructura es fundamental para cualquier sistema que intente interactuar con el juego a nivel programático. Los componentes se dividen en físicos, que corresponden a lo que se ve y se siente en la carta tangible, y lógicos, que abarcan los datos y las reglas que definen su comportamiento dentro del juego. Esta distinción es vital para una IA, ya que la representación visual es tan importante como la representación de las reglas para diversas aplicaciones, desde simuladores hasta herramientas de gestión de colecciones.
+
+
+Componentes Físicos de una Carta de Wixoss TCG
+
+
+Las cartas de Wixoss TCG son objetos tangibles con características físicas distintivas que influyen en su identificación y valor. Su diseño incorpora elementos visuales que no solo son estéticos, sino que también transmiten información crucial para el juego y la colección.
+
+
+Elementos Visuales Clave
+
+
+Los elementos visuales de una carta de Wixoss TCG son esenciales para su identificación y para la experiencia del jugador:
+* Nombre de la Carta (Name): El nombre único de la carta. 1
+* Color (Color): El color de la carta (Blanco, Rojo, Azul, Verde, Negro, Incoloro), representado por el color del marco y un icono en la esquina superior derecha. El color afecta diversas mecánicas de juego. 2
+* Nivel (Level): Un número en la esquina superior izquierda de las cartas LRIG y SIGNI. Para LRIGs, indica su etapa de crecimiento; para SIGNIs, su fuerza relativa. 2
+* Límite (Limit): Un número en la esquina superior izquierda de las cartas LRIG que define el nivel combinado máximo de SIGNIs que un jugador puede tener en el campo. 2
+* Costo de Crecimiento (Grow Cost): Ubicado en la esquina inferior izquierda de las cartas LRIG, indica el costo de energía para hacer crecer al LRIG al siguiente nivel. 2
+* Costo (Cost): El costo de recurso para jugar una carta o activar una habilidad, expresado en el texto de la carta. 2
+* Poder (Power): El valor de poder de las cartas SIGNI, utilizado para determinar el ganador en combate entre SIGNIs. 2
+* Texto de Habilidades/Reglas (Text): La descripción de las habilidades o el texto de reglas de la carta. 2
+* Símbolo de Rareza (Rarity Symbol): Una letra o combinación de letras y símbolos que indica la rareza de la carta. Wixoss tiene una amplia variedad de rarezas, incluyendo:
+   * Común (C), Poco Común (UC), Rara (R), Súper Rara (SR), Legendaria (L) 4
+   * LRIG Rare (LR), Piece Rare (PI), Diva Rare (DiR), Secret Rare (SCR), Ultra Rare (UR) 4
+   * Starter Exclusive (ST), Promo (PR), Special Rare (SP) 4
+   * Variantes como LRIG Rare Parallel (LRP), Super Rare Parallel (SRP), Ultra Rare Debut (UR) 4
+   * Otros símbolos como TK (Token), 1st (First Edition), Re (Reprint), CO (Coin), GR (Graded) 4
+* Número de Coleccionista (Collector Number): Un identificador alfanumérico que indica la posición de la carta dentro de su set (ej., WXDi-D08-001[EN]). 1
+* Símbolo de Life Burst (Life Burst Symbol): Un icono que indica que la carta tiene la habilidad Life Burst. 2
+* Etiquetas de Formato: Etiquetas como (KS) para Key Selection y All Star formats, y (DS) para todos los formatos disponibles. 6
+* Etiquetas de Tipo: Etiquetas como |LB para Life Burst y LRIG|Assist para Assist LRIGs. 6
+
+
+Implicaciones (Componentes Físicos)
+
+
+La IA debe ser capaz de procesar y distinguir estos elementos visuales para una identificación precisa y para la valoración. El color del marco y el símbolo de tinta son cruciales para la construcción de mazos y la lógica de juego. La extensa lista de rarezas y sus símbolos asociados es vital para la coleccionabilidad y el valor de mercado. Para la IA, esto significa que el modelo de datos debe incluir campos para el color, el nivel, el límite, el costo de crecimiento, el poder, el tipo de rareza, si tiene Life Burst, y las URLs de las imágenes en diferentes resoluciones. Las imágenes de alta calidad son esenciales para el reconocimiento visual y la extracción de estos atributos.
+
+
+Componentes Lógicos y Campos de Datos de la Carta
+
+
+Los componentes lógicos de una carta de Wixoss TCG definen su identidad, sus propiedades de juego y su interacción con las reglas del juego. Estos atributos son la base sobre la cual se construye cualquier sistema programático de Wixoss TCG.
+
+
+Identificadores Únicos
+
+
+La identificación precisa de las cartas es fundamental en el ecosistema de Wixoss TCG. Las APIs y bases de datos comunitarias proporcionan varios identificadores únicos:
+* ID de la Carta (id): Un identificador único para la carta dentro de la base de datos (ej., el número de coleccionista como WXDi-D08-001). 1
+* Nombre (name): El nombre de la carta. 1
+* Código de Set (set_code): Un código abreviado que identifica la colección a la que pertenece la carta (ej., WXDi-D08). 1
+* Número de Coleccionista (collector_number): El número de la carta dentro de su set. 1
+* ID de TCGplayer (tcgplayer_id): Un identificador utilizado por TCGplayer para vincular a sus listados de productos y precios (implícito por la presencia de Wixoss en TCGplayer). 7
+* ID de Cardmarket (cardmarket_id): Un identificador utilizado por Cardmarket para sus productos (no directamente en las APIs de Wixoss, pero relevante para precios). 8
+Estos identificadores son cruciales para la interoperabilidad de datos entre diferentes plataformas y APIs, permitiendo a la IA correlacionar información de reglas, imágenes y precios.
+
+
+Campos de Metadatos
+
+
+Las cartas poseen una serie de campos que describen sus propiedades y características:
+* Tipo de Carta (card_type): La categoría principal de la carta (ej., "LRIG", "SIGNI", "Arts", "Spell", "PIECE", "RESONA", "TOKEN", "ASSIST LRIG", "CRAFT SIGNI", "RESONA SIGNI", "RELAY PIECE", "PIECE CRAFT", "SIGNI CRAFT", "SPELL CRAFT"). 4
+* Color (color): El color de la tinta de la carta (White, Red, Blue, Green, Black, Colorless). 2
+* Nivel (level): El nivel de la carta (para LRIGs y SIGNIs). 2
+* Límite (limit): El límite de nivel de SIGNIs para LRIGs. 2
+* Costo de Crecimiento (grow_cost): El costo para hacer crecer al LRIG. 2
+* Costo (cost): El costo general para jugar o activar habilidades. 2
+* Poder (power): El poder de ataque de los SIGNIs. 2
+* Texto de Reglas (text): La descripción de las habilidades o efectos de la carta. 2
+* Clase (class): Una clasificación adicional para SIGNIs (ej., "Idol Tone: Angel", "War Tone: Armed"). 4
+* Rareza (rarity): El nivel de rareza de la carta. 4
+* Set (set): El nombre o código del set al que pertenece la carta. 4
+* Legalidades (legalities): Información sobre la legalidad de la carta en diferentes formatos (ej., Key Selection, All Star). 6
+* Imágenes (image_uris): URLs a imágenes de la carta (implícito por la presencia de imágenes en bases de datos). 7
+* Precios (prices): Precios de mercado de diferentes fuentes (TCGplayer, Cardmarket). 7
+
+
+Implicaciones (Componentes Lógicos)
+
+
+La IA debe ser capaz de parsear y utilizar estos campos para construir una representación completa de la carta. La distinción entre card_type y los atributos específicos es crucial. Por ejemplo, solo los LRIGs tendrán level, limit y grow_cost. El código generado por la IA debe incluir lógica para identificar el card_type y class de una carta antes de intentar acceder a atributos específicos, garantizando la coherencia y previniendo errores. La información de cost, power y text es fundamental para la simulación de combate y la resolución de habilidades.
+
+
+Tabla: Campos de Datos Centrales de la Carta (Lógicos)
+
+
+Esta tabla detalla los campos de datos esenciales que definen la identidad lógica y las propiedades de juego de una carta de Wixoss TCG, incluyendo sus identificadores clave y atributos comunes.
+Campo
+	Tipo de Dato
+	Descripción
+	Ejemplo
+	Fuente (Snippet ID)
+	id
+	String
+	Identificador único de la carta (ej. número de coleccionista).
+	"WXDi-D08-001"
+	1
+	name
+	String
+	Nombre de la carta.
+	"Tamayorihime, New Moon Miko"
+	1
+	card_type
+	String
+	Tipo principal de la carta (LRIG, SIGNI, Arts, Spell, PIECE, etc.).
+	"LRIG"
+	2
+	color
+	String
+	Color de la tinta de la carta (White, Red, Blue, Green, Black, Colorless).
+	"White"
+	2
+	level
+	Entero
+	Nivel de la carta (para LRIGs y SIGNIs).
+	0
+	2
+	limit
+	Entero
+	Límite de nivel de SIGNIs (solo para LRIGs).
+	0
+	2
+	grow_cost
+	Entero
+	Costo de crecimiento (solo para LRIGs).
+	0
+	2
+	cost
+	Entero
+	Costo de juego o activación.
+	1
+	2
+	power
+	Entero
+	Poder de ataque (solo para SIGNIs).
+	5000
+	2
+	text
+	String
+	Texto de reglas o habilidades.
+	"Auto: When this SIGNI enters your field..."
+	2
+	class
+	String
+	Clasificación adicional para SIGNIs.
+	"Idol Tone: Angel"
+	4
+	rarity
+	String
+	Nivel de rareza.
+	"ST"
+	5
+	set_code
+	String
+	Código del set.
+	"WXDi-D08"
+	1
+	collector_number
+	String
+	Número de coleccionista.
+	"001"
+	1
+	has_life_burst
+	Booleano
+	Indica si la carta tiene la habilidad Life Burst.
+	true
+	2
+	is_assist_lrig
+	Booleano
+	Indica si es un Assist LRIG.
+	false
+	6
+	legalities
+	Objeto
+	Legalidad en formatos (ej., key_selection: "legal").
+	{"key_selection": "legal"}
+	6
+	image_url
+	String
+	URL de la imagen de la carta.
+	(URL a imagen)
+	7
+	tcgplayer_market_price
+	Decimal
+	Precio de mercado en TCGplayer.
+	0.25
+	7
+	
+
+Tipos de Cartas de Wixoss TCG y sus Atributos Específicos
+
+
+Wixoss TCG clasifica sus cartas en varias categorías principales, cada una con un comportamiento distintivo y atributos específicos que rigen su interacción en el juego. 4
+
+
+Categorías Principales
+
+
+Wixoss TCG tiene los siguientes tipos de cartas principales:
+* LRIG (Lrig Cards): Representan el avatar del jugador y son el objetivo principal del oponente. Los LRIGs suben de nivel durante el juego. Tienen Level, Limit y Grow Cost. 2
+   * Assist LRIGs: Un subtipo de LRIGs que se utilizan para apoyar al LRIG principal. 6
+* SIGNI (Signi Cards): Son espíritus invocados para luchar en apoyo del LRIG. Tienen Level y Power. 2
+   * Craft SIGNI / Resona SIGNI: Subtipos de SIGNI. 4
+* Arts (Arts Cards): Son habilidades del LRIG que se pueden jugar desde el LRIG Deck una vez por batalla. Tienen un Cost y reglas de Timing específicas. 2
+* Hechizos (Spell Cards): Son efectos mágicos de un solo uso que se juegan desde la mano durante la Main Phase. Tienen un Cost. 2
+   * Craft Spell: Un subtipo de Spell. 5
+* PIECE (Piece Cards): Cartas con efectos poderosos que se juegan desde el LRIG Deck. 4
+   * Piece Craft: Un subtipo de Piece. 5
+* RESONA (Resona Cards): Un tipo de carta que puede tener efectos especiales. 4
+* TOKEN (Token Cards): Representan efectos o marcadores en el juego. 4
+* RELAY PIECE (Relay Piece Cards): Un tipo de carta que puede tener efectos especiales. 4
+
+
+Atributos Específicos por Tipo de Carta
+
+
+* LRIG:
+   * Level: Nivel actual del LRIG. 2
+   * Limit: Límite de nivel combinado de SIGNIs. 2
+   * Grow Cost: Costo para subir de nivel. 2
+* SIGNI:
+   * Level: Nivel del SIGNI. 2
+   * Power: Poder de ataque del SIGNI. 2
+   * Class: Clasificación del SIGNI. 3
+* Arts / Spell / PIECE / RESONA / TOKEN / RELAY PIECE:
+   * Cost: Costo de juego o activación. 2
+   * Text: Descripción del efecto. 2
+
+
+Implicaciones (Tipos de Cartas)
+
+
+La IA debe modelar estos tipos de cartas y sus atributos condicionales. Por ejemplo, solo los LRIGs tendrán level, limit y grow_cost. El código generado por la IA debe incluir lógica para identificar el card_type de una carta antes de intentar acceder a atributos específicos, garantizando la coherencia y previniendo errores. La IA también debe comprender la interacción entre LRIGs y SIGNIs, y la mecánica de los dos mazos para simular el juego correctamente.
+
+
+Tabla: Tipos de Cartas de Wixoss TCG y Atributos Clave
+
+
+Esta tabla resume los tipos de cartas principales de Wixoss TCG y los atributos específicos que cada tipo posee, destacando su comportamiento fundamental en el juego.
+Tipo de Carta (card_type)
+	Subtipos/Clasificaciones Comunes (class)
+	Atributos Específicos Clave
+	Comportamiento Clave
+	Fuente (Snippet ID)
+	LRIG
+	Assist LRIG
+	Level, Limit, Grow Cost
+	Avatar del jugador, sube de nivel, determina el límite de SIGNIs.
+	6
+	SIGNI
+	Craft SIGNI, Resona SIGNI, Idol Tone, War Tone, Nature Tone, Mech Tone, Living Tone
+	Level, Power, Class
+	Criaturas de combate, su nivel no puede exceder el del LRIG.
+	4
+	Arts
+	
+
+	Cost, Text, Timing
+	Habilidades del LRIG, de un solo uso por batalla, con timing específico.
+	2
+	Spell
+	Craft Spell
+	Cost, Text
+	Efectos mágicos de un solo uso, jugados en Main Phase.
+	2
+	PIECE
+	Piece Craft
+	Cost, Text
+	Cartas poderosas del LRIG Deck.
+	4
+	RESONA
+	
+
+	Cost, Text
+	Cartas con efectos especiales.
+	4
+	TOKEN
+	
+
+	Ninguno (marcador)
+	Representa efectos o marcadores.
+	4
+	RELAY PIECE
+	
+
+	Cost, Text
+	Cartas con efectos especiales.
+	4
+	
+
+Interpretación del Texto de Reglas
+
+
+El texto de reglas en Wixoss TCG define las habilidades y efectos de las cartas. Para que una IA genere o interprete reglas de manera efectiva, necesita un análisis semántico del texto, comprendiendo la sintaxis, las palabras clave y las interacciones de las habilidades.
+
+
+Estructura y Sintaxis del Texto de Efecto
+
+
+El texto de reglas de Wixoss utiliza palabras clave y estructuras para definir los efectos:
+* Habilidades de Acción ([Action]): Se pueden usar pagando un costo durante la Main Phase del jugador activo. Pueden usarse múltiples veces si se paga el costo. Si tienen un Timing específico, solo se pueden usar en ese momento. 3
+* Habilidades Automáticas ([Auto]): Se activan automáticamente cuando se cumplen una condición o un momento específico (ej., "cuando~", "al comienzo de ~"). 3
+* Habilidades Constantes ([Constant]): Son válidas mientras la carta está en el campo, a menos que se indique lo contrario. No son válidas si la carta está fuera del campo (ej., en el mazo o la mano). 3
+* Habilidades de Entrada ([Enter]): Habilidades que tienen SIGNIs y LRIGs, y se activan solo cuando la carta aparece en el campo. Las habilidades sin costo se activan forzosamente; las que tienen costo pueden activarse pagándolo o no. 3
+* Timing de Arts: Las cartas Arts tienen reglas de Timing específicas:
+   * ``: Solo se pueden jugar durante la Main Phase del jugador activo. 2
+   * ``: Se pueden jugar durante la Attack Phase de cualquier jugador, antes de que se realicen los ataques. 2
+   * ``: Solo se pueden jugar cuando el oponente juega una carta de Hechizo. 2
+
+
+Palabras Clave y Mecánicas Comunes
+
+
+Wixoss utiliza varias palabras clave y mecánicas únicas:
+* Life Burst: Si una carta con el icono de Life Burst es "aplastada" (crushed) del Life Cloth, su habilidad Life Burst se puede activar. 2
+* Exceed: Un costo adicional donde se remueven cartas debajo del LRIG del juego. Se pueden usar las versiones de nivel anterior del LRIG que están debajo de la pila. 9
+* Double Crush: Una habilidad que significa que cuando se "aplasta" una carta del Life Cloth, se "aplastan" dos en su lugar. 9
+* Soul (【Soul】): LRIGs pueden ser adjuntados a SIGNIs como Soul por efecto. Si un SIGNI con Soul deja el campo, el Soul va al LRIG Trash. 10
+* Guard: Una habilidad que permite al oponente descartar una carta con Guard de su mano para prevenir el daño de un ataque de LRIG. No se puede usar contra ataques de SIGNI. 3
+* Ener Zone: Zona donde se descartan cartas para pagar costos. 6
+* LRIG Deck: Mazo separado del Main Deck. 6
+
+
+Implicaciones (Texto de Reglas)
+
+
+La IA debe ser capaz de analizar el texto de efecto de las cartas para determinar las condiciones de activación, los costos y los efectos de resolución. Esto requiere capacidades avanzadas de Procesamiento del Lenguaje Natural (PLN) para la IA, que van más allá de la simple extracción de texto. La IA podría beneficiarse de un motor de reglas o una ontología de Wixoss para interpretar y aplicar correctamente el texto de efecto. Para la generación de código, la IA podría generar plantillas de código para tipos de habilidades comunes (ej., if (condition) { cost(); effect(); }) y luego rellenar los detalles a partir del texto de efecto analizado.
+
+
+Variaciones y Ediciones de Cartas
+
+
+La estructura de las cartas de Wixoss TCG es compleja debido a la multitud de variaciones y ediciones que existen para una misma carta lógica. Estas variaciones no son meramente estéticas, sino que tienen un impacto significativo en la identificación, la gestión y, crucialmente, el valor de mercado de las cartas.
+
+
+Rareza y Símbolos
+
+
+La rareza de una carta de Wixoss se indica mediante un símbolo o texto y es un factor clave en su valor. 4
+* Común (C), Poco Común (UC), Rara (R), Súper Rara (SR), Legendaria (L): Rarezas estándar. 4
+* LRIG Rare (LR), Piece Rare (PI), Diva Rare (DiR), Secret Rare (SCR), Ultra Rare (UR): Rarezas más altas y exclusivas. 4
+* Starter Exclusive (ST), Promo (PR), Special Rare (SP): Rarezas asociadas a productos o eventos específicos. 4
+* Variantes: LRIG Rare Parallel (LRP), Super Rare Parallel (SRP), Ultra Rare Debut (UR). 4
+* Otros: TK (Token), 1st (First Edition), Re (Reprint), CO (Coin), GR (Graded). 4
+
+
+Acabados (Foiling) y Arte
+
+
+* Foil: Aunque no se detallan tipos específicos de foil en los snippets de Wixoss, las listas de productos en TCGplayer y eBay muestran cartas "Foil", lo que implica la existencia de versiones holográficas. 7
+
+
+Ediciones y Variantes de Impresión
+
+
+* Sets: Las cartas pertenecen a sets específicos, identificados por códigos y nombres (ej., CP01 Nijisanji Diva, D01 Ancient Surprise). 4
+* 1st Edition: Mencionada como una rareza (1st) en las listas, lo que sugiere la existencia de primeras ediciones. 5
+* Idiomas: Las cartas están disponibles en diferentes idiomas (ej., inglés, japonés). 1
+
+
+Condiciones de la Carta y su Impacto
+
+
+La condición física de una carta es uno de los factores más importantes que afectan su valor de mercado. Las plataformas de comercio de cartas y los servicios de tasación utilizan escalas estandarizadas:
+* Escala de Condiciones Estándar (aplicable a TCGs en general):
+   * Near Mint (NM): Desgaste mínimo, superficie casi sin marcas, esquinas nítidas. 13
+   * Lightly Played (LP): Desgaste menor en bordes, rasguños o arañazos, sin problemas estructurales. 13
+   * Moderately Played (MP): Desgaste en bordes/superficie, arañazos, dobleces con pliegues, imperfecciones moderadas. 13
+   * Heavily Played (HP): Gran cantidad de desgaste, imperfecciones moderadas a graves, pero aún auténticas y jugables con funda. 13
+   * Damaged (D) / Poor (PO): Defectos o imperfecciones graves, como desgarros, grandes dobleces o daños por agua, que pueden hacerlas ilegales para torneos o reducir drásticamente su valor. 14
+* Factores de Grado: La evaluación se basa en esquinas, bordes, centrado y superficie. 15
+* Cartas Graduadas: Servicios de terceros (PSA, BGS, CGC, SGC) asignan una calificación numérica que certifica la condición y puede aumentar significativamente el valor. 16
+
+
+Implicaciones (Variaciones y Ediciones)
+
+
+La IA debe modelar la explosión combinatoria de variantes (set, número de coleccionista, rareza, si es foil, condición, grado). Esto requiere un modelo de datos jerárquico o relacional que vincule una "definición de carta" a múltiples "impresiones" y luego a "instancias físicas" con su condición y grado. La IA que trabaja con precios o recomendaciones de inversión debe ser capaz de consultar y predecir valores basados en la combinación precisa de estos atributos.
+
+
+Tabla: Variaciones de Cartas e Identificadores Asociados
+
+
+Esta tabla ilustra cómo las diferentes variaciones físicas y de impresión de una carta se identifican y cómo se relacionan con la identidad lógica de la carta.
+Tipo de Variación
+	Atributo Clave
+	Descripción
+	Impacto en Valor/Identificación
+	Fuente (Snippet ID)
+	Rareza
+	rarity (string), Símbolo físico
+	Nivel de escasez (C, R, SR, L, PI, DiR, SEC, UR, etc.).
+	Indicador primario de valor; las rarezas especiales disparan el precio.
+	4
+	Acabado/Foil
+	Implícito en prices
+	Si la carta tiene un tratamiento holográfico.
+	Afecta directamente el precio de mercado.
+	7
+	Edición/Set
+	set_code, collector_number
+	Colección a la que pertenece y su número.
+	Identifica la impresión específica, esencial para precios.
+	1
+	Condición
+	condition (string), grade (numérico)
+	Estado físico de la carta (Near Mint, Lightly Played, Damaged, etc.), calificado por servicios externos.
+	Multiplicador de valor crítico; una carta en mejor condición vale significativamente más.
+	13
+	Idioma
+	lang (string)
+	Idioma de la carta.
+	Puede afectar la disponibilidad y el valor en mercados específicos.
+	1
+	Edición (1st)
+	rarity: "1st"
+	Indica si es una primera tirada de impresión.
+	Puede aumentar el valor coleccionable.
+	5
+	
+
+Identificadores Clave y Fuentes de Datos Externas
+
+
+El ecosistema de datos de Wixoss TCG está distribuido entre múltiples plataformas y APIs. Para una IA, la capacidad de acceder, consolidar y correlacionar datos de estas diversas fuentes es crucial para obtener una visión completa y precisa de una carta.
+
+
+APIs de Datos
+
+
+Las principales APIs y fuentes de datos para Wixoss TCG incluyen:
+* Wixoss TCG EU Card Database (wixosstcg.eu/Carddb): La base de datos oficial de cartas de Wixoss. Permite buscar por producto, color, tipo de carta, tipo de LRIG/clase y nivel. 18
+* TCGplayer: TCGplayer lista productos y precios de Wixoss. 4
+* JustTCG: Una API comercial multi-TCG que incluye Wixoss (implícito por su cobertura general de TCGs). Ofrece acceso a datos de precios con granularidad por condición e impresión, y actualizaciones frecuentes. 20
+* Cardmarket (a través de Scrapers): Cardmarket, el mayor mercado europeo, no tiene una API pública directa mencionada en el material. No obstante, existen scrapers comerciales (como los de Apify) que permiten acceder a sus datos de precios y tendencias. 8
+* GitHub Repositorios Comunitarios: Proyectos como TetrusAO/Wixoss-TCG-Cockatrice-Plugin ofrecen archivos XML con datos de cartas para uso en simuladores como Cockatrice. 6
+* CGC Cards Population Report: Proporciona datos sobre la cantidad de cartas Wixoss que han sido gradadas. 17
+
+
+Bases de Datos de Precios y su Relevancia para la Identificación
+
+
+Las plataformas de mercado y los agregadores de precios son fuentes vitales de información económica para las cartas:
+* Plataformas de Mercado: Sitios como TCGplayer y Cardmarket ofrecen listados de productos y precios, a menudo con filtros por condición y variantes. 7
+* Agregadores de Precios: Servicios como JustTCG 21, TCG-Home 24, Card Ladder 25, y PSA Price Guide 16 consolidan datos de precios de múltiples fuentes, incluyendo información sobre la condición y las variantes de las cartas.
+* Datos Históricos: La disponibilidad de datos históricos de precios es crucial para el análisis de tendencias. TCGplayer muestra gráficos de historial de precios 26, aunque su historial público se limita a un año. 26 Otros servicios como Card Ladder rastrean ventas públicas desde el año 2000. 25
+
+
+Implicaciones (Identificadores y Fuentes de Datos)
+
+
+La IA necesitará estrategias de consolidación y mapeo de IDs para obtener una visión completa de una carta (ej., reglas de la base de datos oficial de Wixoss, precios de JustTCG/TCGplayer/Cardmarket). El código generado por la IA debe incluir módulos para la integración de múltiples fuentes de datos, la resolución de IDs y la normalización de datos (ej., condiciones de cartas). Los precios son altamente dinámicos y varían según la condición, la rareza y las tendencias del mercado, lo que requiere que el modelo de datos para la IA incluya tablas de precios con marcas de tiempo y atributos de condición/variante. 27
+
+
+Tabla: Identificadores Externos Clave
+
+
+Esta tabla lista los identificadores únicos utilizados por las principales plataformas y APIs de datos de Wixoss TCG, explicando su propósito y dónde se encuentran en los objetos de datos.
+Identificador
+	Plataforma/API
+	Propósito
+	Campo en API (si aplica)
+	Fuente (Snippet ID)
+	id / collector_number
+	Wixoss TCG EU, TCGplayer
+	Identificador único de la carta.
+	number (TCGplayer)
+	7
+	name
+	Wixoss TCG EU, TCGplayer
+	Nombre de la carta.
+	name (TCGplayer)
+	7
+	set_code
+	Wixoss TCG EU, TCGplayer
+	Código corto de la colección.
+	Implícito en set (TCGplayer)
+	7
+	tcgplayer_id
+	TCGplayer, JustTCG
+	Identificador de producto en TCGplayer para precios.
+	N/A (enlace URL o campo en JustTCG)
+	7
+	cardmarket_id
+	Cardmarket
+	Identificador de producto en Cardmarket.
+	N/A (a través de scrapers)
+	8
+	
+
+Implicaciones para la Generación de Código por IA
+
+
+La información detallada sobre la estructura de las cartas de Wixoss TCG tiene implicaciones directas y profundas para la generación de código por parte de una IA, abarcando desde el modelado de datos hasta la implementación de la lógica de juego y las interacciones con el mercado.
+
+
+Modelado de Datos para la IA
+
+
+La IA debe adoptar un modelo de datos jerárquico y relacional para representar las cartas de Wixoss TCG de manera efectiva. Se sugiere una estructura que distinga entre:
+* Una entidad CardDefinition (basada en el name y set_code) para la identidad lógica de la carta.
+* Una entidad CardPrinting (basada en id / collector_number, rarity, y si es foil) para representar una versión física específica de la carta.
+* Una entidad CardInstance (para colecciones de usuarios) que podría incluir atributos dinámicos como condition y purchase_price.
+Los atributos condicionales, como level, limit, grow_cost para LRIGs, y power para SIGNIs, deben modelarse como campos opcionales o a través de mecanismos de herencia de clases. La representación de card_type y class debe permitir su análisis para una aplicación granular de las reglas. Un modelo de datos bien diseñado es la base para cualquier código robusto, permitiendo a la IA generar clases, esquemas de bases de datos (SQL, NoSQL) y estructuras de datos en memoria de forma directa y eficiente. 28
+
+
+Consideraciones para la Lógica de Juego y Reglas
+
+
+Para generar código que simule o interactúe con el juego, la IA debe ser capaz de interpretar el texto de reglas (text) y traducirlo a lógica programática. Esto podría implicar el uso de técnicas de Procesamiento del Lenguaje Natural (PLN) para extraer componentes de habilidades (costos, efectos, disparadores, timings) y traducirlos a lógica condicional o a un motor de reglas. Las palabras clave del juego (ej., [Action], [Auto], [Constant], [Enter], Life Burst, Exceed, Double Crush, Soul, Guard) deben ser mapeadas a funciones o propiedades booleanas. La lógica de juego generada debe considerar la interacción de diferentes tipos de cartas y sus atributos específicos, como el uso de la Ener Zone, el crecimiento de LRIGs, los desafíos de SIGNIs y la resolución de habilidades con timings específicos. 2
+
+
+Recomendaciones para la Estructura de la Base de Datos
+
+
+Para una IA que maneje grandes volúmenes de datos de cartas y transacciones, se recomienda un diseño de base de datos relacional con tablas separadas para CardDefinitions, CardPrintings, CardPrices (con campos para condition, foil y timestamp), CardTypes, LRIGClasses, SIGNIClasses, Abilities, Sets, y Legalidades. Es fundamental implementar un "versionado temporal" para los datos de precios 27 para permitir consultas históricas precisas y el análisis de tendencias. Una estructura de base de datos optimizada es crucial para la eficiencia y escalabilidad del código generado por la IA. 28
+
+
+Integración de APIs
+
+
+La IA debe ser capaz de integrar datos de múltiples APIs (Wixoss TCG EU Card Database, TCGplayer, JustTCG, Cardmarket a través de scrapers, repositorios comunitarios) para obtener una visión completa de la carta. Esto implica la necesidad de módulos de integración de datos que manejen la autenticación (si es necesaria), las tasas de límite, el mapeo de identificadores y la normalización de datos (ej., condiciones de cartas). La IA debe priorizar las APIs oficiales y comerciales para la fiabilidad y el cumplimiento legal. 20
+
+
+Conclusiones
+
+
+El análisis detallado de la estructura de las cartas de Wixoss TCG revela que son entidades de una complejidad considerable, que requieren un modelo de datos multicapa para su representación programática. La distinción fundamental entre la identidad lógica de una carta y sus múltiples impresiones físicas, junto con sus diversas rarezas, acabados y condición, es un pilar para cualquier sistema de IA que pretenda interactuar con el juego. Esta granularidad es indispensable tanto para la aplicación precisa de las reglas del juego como para la gestión económica de colecciones en el mercado secundario.
+Las fuentes de datos externas, aunque fragmentadas y con variaciones en su accesibilidad y consistencia histórica, son críticas para construir una comprensión integral de las cartas, especialmente en lo que respecta a la información de precios y tendencias de mercado. La IA debe ser diseñada para integrar y consolidar datos de múltiples APIs, resolviendo los mapeos entre diferentes identificadores únicos.
+Para la generación de código, esto implica la necesidad de una arquitectura de datos robusta y modular. La IA no solo debe ser capaz de modelar los atributos estáticos de las cartas, sino también de interpretar el texto de reglas y las mecánicas de juego para traducir las reglas del juego a lógica programática. En resumen, el desarrollo de una IA competente para Wixoss TCG exige una comprensión profunda de su ontología, una estrategia de datos unificada y la capacidad de traducir conceptos complejos del juego en código funcional y escalable.
+Works cited
+1. CardList｜WIXOSS-ウィクロス- | TOMY Company, Ltd., accessed June 29, 2025, https://www.takaratomy.co.jp/products/en.wixoss/card/?product_type=D08
+2. r/wixoss Wiki: WIXOSS Card Game Rules - Reddit, accessed June 29, 2025, https://www.reddit.com/r/wixoss/wiki/rules/
+3. Quick Start Guide - wixosstore, accessed June 29, 2025, https://www.wixosstore.com/quick-start-guide
+4. Shop WIXOSS Cards, Packs, Booster Boxes - TCGplayer, accessed June 29, 2025, https://shop.tcgplayer.com/wixoss
+5. CardList｜WIXOSS-ウィクロス- | TOMY Company, Ltd. - タカラトミー, accessed June 29, 2025, https://www.takaratomy.co.jp/products/en.wixoss/card/
+6. TetrusAO/Wixoss-TCG-Cockatrice-Plugin - GitHub, accessed June 29, 2025, https://github.com/TetrusAO/Wixoss-TCG-Cockatrice-Plugin
+7. WIXOSS Price Guides - TCGplayer, accessed June 29, 2025, https://www.tcgplayer.com/categories/trading-and-collectible-card-games/wixoss/price-guides
+8. Cardmarket.com Trend Scraper API - Apify, accessed June 28, 2025, https://apify.com/ecomscrape/cardmarket-trend-scraper/api
+9. How to Play Wixoss! #wixoss #tcg #anime - YouTube, accessed June 29, 2025, https://www.youtube.com/watch?v=HWrkTTfqDCA
+10. Card FAQ｜Rules｜WIXOSS-ウィクロス- | TOMY Company, Ltd. - タカラトミー, accessed June 29, 2025, https://www.takaratomy.co.jp/products/en.wixoss/rules/qa.html?pt=P04
+11. Wixoss Blue Archive - eBay, accessed June 28, 2025, https://www.ebay.com/shop/wixoss-blue-archive?_nkw=wixoss+blue+archive
+12. Database - wixosstcg.eu, accessed June 29, 2025, https://www.wixosstcg.eu/Carddb
+13. Card Conditioning Standards - TCGplayer, accessed June 28, 2025, https://mktg-assets.tcgplayer.com/web/seller/guides/Card-Conditioning-Standards.pdf
+14. Card Condition Guide - CardTrader, accessed June 28, 2025, https://static.cardtrader.com/en/guides/condition-guide
+15. Vintage Baseball Card Price Guide and Valuation - BBC Emporium, accessed June 28, 2025, https://bbcemporium.com/index.php?step=price_guide
+16. PSA Price Guide - Trading Card Values, accessed June 28, 2025, https://www.psacard.com/priceguide
+17. All WiXoss Card Population Report by CGC Cards, accessed June 29, 2025, https://www.cgccards.com/population-report/tcg/wixoss/123/all/990/
+18. Wixoss TCG, accessed June 29, 2025, https://www.wixosstcg.eu/
+19. Shop WIXOSS Cards, Packs, Booster Boxes - TCGplayer, accessed June 29, 2025, https://www.tcgplayer.com/search/wixoss/product?productLineName=wixoss
+20. JustTCG vs. The Alternatives: Choosing the Right TCG Pricing API, accessed June 28, 2025, https://justtcg.medium.com/justtcg-vs-the-alternatives-choosing-the-right-tcg-pricing-api-6d5d555ac7cd
+21. Why JustTCG? Unpacking the Features of Your New TCG Pricing Powerhouse - Medium, accessed June 28, 2025, https://medium.com/@justtcg/why-justtcg-unpacking-the-features-of-your-new-tcg-pricing-powerhouse-9d0d28b395ae
+22. Cardmarket.com Card Details Page Scraper API - Apify, accessed June 28, 2025, https://apify.com/ecomscrape/cardmarket-card-page-details-scraper/api
+23. Cockatrice - PonyMTG, accessed June 29, 2025, https://ponymtg.github.io/cockatrice3.html
+24. Discover what your collection is wort with real-time card prices - TCG Home, accessed June 28, 2025, https://tcg-home.com/track-prices/
+25. Sports Card Price Guide | Card Ladder, accessed June 28, 2025, https://www.cardladder.com/ladder
+26. Understanding Historical Data in MTG Finance | TCGplayer, accessed June 28, 2025, https://www.tcgplayer.com/content/article/Understanding-Historical-Data-in-MTG-Finance/05fb040d-7bb3-45e2-bc52-b9fa8a49752e/
+27. DB Schema: Versioned price model vs invoice-related data - Stack Overflow, accessed June 28, 2025, https://stackoverflow.com/questions/44041554/db-schema-versioned-price-model-vs-invoice-related-data
+28. Need advice on how to structure my database schema for online trading card game, accessed June 28, 2025, https://stackoverflow.com/questions/22257644/need-advice-on-how-to-structure-my-database-schema-for-online-trading-card-game
+29. SQL: good database design for cards? - Stack Overflow, accessed June 28, 2025, https://stackoverflow.com/questions/44286944/sql-good-database-design-for-cards
+30. Database design. Relationship : r/dataengineering - Reddit, accessed June 29, 2025, https://www.reddit.com/r/dataengineering/comments/1lkgmj3/database_design_relationship/

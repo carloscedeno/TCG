@@ -1,0 +1,556 @@
+﻿Estructura Detallada de Cartas de Flesh and Blood Trading Card Game para Contexto de Generación de Código por IA
+
+
+
+
+Introducción a la Estructura de Cartas de Flesh and Blood TCG
+
+
+Este documento tiene como objetivo proporcionar una descripción exhaustiva y estructurada de la anatomía de las cartas de Flesh and Blood (FaB) Trading Card Game. Está diseñado específicamente para servir como contexto de alto nivel y fuente de datos para sistemas de Inteligencia Artificial (IA) encargados de generar o comprender código relacionado con el juego. Flesh and Blood se distingue por su sistema de recursos basado en "pitching" cartas, su "cadena de combate" interactiva y una granularidad única en las versiones de cartas, lo que requiere un modelado de datos preciso y granular para cualquier aplicación programática.
+Una carta de Flesh and Blood es una entidad multifacética que combina elementos visuales, textuales y funcionales. Comprender su estructura es fundamental para cualquier sistema que intente interactuar con el juego a nivel programático. Los componentes se dividen en físicos, que corresponden a lo que se ve y se siente en la carta tangible, y lógicos, que abarcan los datos y las reglas que definen su comportamiento dentro del juego. Esta distinción es vital para una IA, ya que la representación visual es tan importante como la representación de las reglas para diversas aplicaciones, desde simuladores hasta herramientas de gestión de colecciones.
+
+
+Componentes Físicos de una Carta de Flesh and Blood TCG
+
+
+Las cartas de Flesh and Blood TCG son objetos tangibles con características físicas distintivas que influyen en su identificación y valor. Su diseño incorpora elementos visuales que no solo son estéticos, sino que también transmiten información crucial para el juego y la colección.
+
+
+Elementos Visuales Clave
+
+
+Los elementos visuales de una carta de Flesh and Blood TCG son esenciales para su identificación y para la experiencia del jugador:
+* Nombre de la Carta (Card Name): El nombre del héroe, arma, equipo, acción, reacción o instantáneo. 1
+* Valor de Pitch (Pitch Value): Un número de 1 a 3, representado por símbolos de recursos rojos en la esquina superior izquierda de la carta. Este valor indica cuántos puntos de recurso produce la carta cuando se "pitchea" (descarta de la mano para pagar costos). El color de la franja superior de la carta (azul, amarillo, rojo) también indica su valor de pitch. 1
+   * Azul: Valor de pitch 3, estadísticas más bajas. 1
+   * Amarillo: Valor de pitch 2, estadísticas intermedias. 1
+   * Rojo: Valor de pitch 1, estadísticas más altas. 1
+* Costo de Recurso (Resource Cost): Un número dentro de un círculo rojo en la esquina superior derecha de las cartas de Acción. Indica cuántos puntos de recurso deben pagarse para jugar la carta. 2
+* Valor de Ataque (Attack Value): Un número junto a un símbolo de lanza amarilla en la esquina inferior izquierda de las cartas de ataque. Representa el poder de ataque de la carta. 2
+* Valor de Defensa (Defense Value): Un número junto a un símbolo de escudo gris en la esquina inferior derecha de las cartas que pueden defender. 2
+* Símbolo de Rareza (Rarity Symbol): Una letra en la parte inferior central de cada carta que indica su rareza. 3
+   * C: Común 3
+   * T: Token 3
+   * R: Rara 3
+   * S: Súper Rara (descontinuada en sets más nuevos) 3
+   * M: Majestic 3
+   * L: Legendaria 3
+   * F: Fabled 4
+   * F/MV o marcador único: Marvel (arte alternativo, bordes extendidos, tratamientos especiales) 3
+* Código de Set y Número de Coleccionista (Set Code & Collector Number): Una línea de texto en la parte inferior izquierda de la carta que indica el set al que pertenece y su número de coleccionista. 4
+* Símbolo de 1ª Edición/Unlimited: Las cartas de 1ª Edición de Welcome to Rathe y Arcane Rising no tenían un punto de color. A partir de Crucible of War, las cartas de 1ª Edición tienen un punto de color con la letra de rareza dentro, mientras que las impresiones Unlimited tienen el contorno de un círculo de color. Desde el set Uprising en adelante, solo hay un tipo de caja de refuerzo con puntos sólidos de color. 4
+* Bordes de la Carta (Borders): Antes de History Pack 1, todas las cartas de Flesh and Blood tenían bordes negros. History Pack 1 introdujo reimpresiones con bordes blancos. 4
+* Acabados Foil (Foiling):
+   * Rainbow Foil: El tipo de foil tradicional que brilla como un arcoíris. Se encuentra una Rainbow Foil en cada paquete de refuerzo y puede ser de cualquier rareza. 4
+   * Cold Foil: Un acabado metálico plateado, extremadamente raro y más difícil de encontrar que las Rainbow Foils. 4
+
+
+Implicaciones (Componentes Físicos)
+
+
+La IA debe ser capaz de procesar y distinguir estos elementos visuales para una identificación precisa y para la valoración. El valor de pitch (y su color de franja) es un atributo clave que define la "unicidad" de una carta en FaB, incluso si el nombre es el mismo. 1 La presencia de un símbolo de rareza específico, un acabado foil (Rainbow vs. Cold Foil), o si es una 1ª Edición, puede alterar drásticamente el valor de una carta. 3 Para la IA, esto significa que el modelo de datos debe incluir campos para el valor de pitch, el tipo de foil, si es 1ª Edición/Unlimited, y las URLs de las imágenes en diferentes resoluciones. Las imágenes de alta calidad son esenciales para el reconocimiento visual y la extracción de estos atributos.
+
+
+Componentes Lógicos y Campos de Datos de la Carta
+
+
+Los componentes lógicos de una carta de Flesh and Blood TCG definen su identidad, sus propiedades de juego y su interacción con las reglas del juego. Estos atributos son la base sobre la cual se construye cualquier sistema programático de Flesh and Blood TCG.
+
+
+Identificadores Únicos
+
+
+La identificación precisa de las cartas es fundamental en el ecosistema de Flesh and Blood TCG. Las APIs y bases de datos comunitarias proporcionan varios identificadores únicos:
+* ID Único (unique_id): Un identificador único generado para cada carta (nombre + valor de pitch) que se mantiene consistente en todo el conjunto de datos. Este ID no cambia una vez añadido. 8
+* Nombre (name): El nombre de la carta. 1
+* Código de Set (set_code): Un código abreviado que identifica la colección a la que pertenece la carta. 4
+* Número de Coleccionista (collector_number): El número de la carta dentro de su set. 4
+* ID de TCGplayer (tcgplayer_id): Un identificador utilizado por TCGplayer para vincular a sus listados de productos y precios. 9
+* ID de Cardmarket (cardmarket_id): Un identificador utilizado por Cardmarket para sus productos (no directamente en las APIs de FaB, pero relevante para precios).
+Estos identificadores son cruciales para la interoperabilidad de datos entre diferentes plataformas y APIs, permitiendo a la IA correlacionar información de reglas, imágenes y precios.
+
+
+Campos de Metadatos
+
+
+Las cartas poseen una serie de campos que describen sus propiedades y características:
+* Tipo de Carta (card_type): La categoría principal de la carta (ej., "Hero", "Weapon", "Equipment", "Action", "Reaction", "Instant", "Token"). 1
+* Clase/Talentos (class, talents): Atributos que restringen qué cartas pueden incluirse en el mazo de un héroe. Las cartas genéricas pueden incluirse en cualquier mazo. 6
+* Texto de Habilidades/Reglas (text): La descripción de las habilidades o el texto de reglas de la carta. 8
+* Rareza (rarity): El nivel de rareza de la carta (C, T, R, S, M, L, F, Marvel). 3
+* Artista (artist): El nombre del ilustrador. 8
+* Imágenes (image_uris): URLs a imágenes de la carta en diferentes tamaños (si están disponibles). 5
+* Legalidades (legalities): Información sobre la legalidad de la carta en diferentes formatos de juego (ej., Classic Constructed, Blitz). 6
+* Fecha de Lanzamiento (release_date): Fecha de lanzamiento de la carta.
+* Acabados (finishes): Indica los tipos de acabados disponibles (ej., "Rainbow Foil", "Cold Foil", "Regular"). 4
+* Notas (notes): Información adicional sobre la carta, como si es de doble cara. 5
+
+
+Atributos Numéricos (Gameplay)
+
+
+Ciertos tipos de cartas poseen atributos numéricos específicos que definen su interacción en el juego:
+* Vida (life): El total de vida inicial de un héroe. 1
+* Intelecto (intellect): El tamaño de la mano de un héroe al final del turno. 1
+* Poder (power): El valor de ataque de un ataque. 1
+* Defensa (defense): El valor de defensa de una carta. 1
+* Puntos de Acción (action_points): El costo para jugar cartas de Acción o usar habilidades con la palabra "Action". 2
+
+
+Implicaciones (Componentes Lógicos)
+
+
+La IA debe ser capaz de parsear y utilizar estos campos para construir una representación completa de la carta. La distinción entre card_type y los atributos específicos es crucial. Por ejemplo, solo los héroes tendrán life e intellect. El código generado por la IA debe incluir lógica para identificar el card_type y class/talents de una carta antes de intentar acceder a atributos específicos, garantizando la coherencia y previniendo errores. La información de pitch_value, resource_cost, power, defense y text es fundamental para la simulación de combate y la resolución de habilidades.
+
+
+Tabla: Campos de Datos Centrales de la Carta (Lógicos)
+
+
+Esta tabla detalla los campos de datos esenciales que definen la identidad lógica y las propiedades de juego de una carta de Flesh and Blood TCG, incluyendo sus identificadores clave y atributos comunes.
+Campo
+	Tipo de Dato
+	Descripción
+	Ejemplo
+	Fuente (Snippet ID)
+	unique_id
+	String
+	Identificador único de la carta (nombre + pitch value).
+	"adaptive_plating_blue"
+	8
+	name
+	String
+	Nombre de la carta.
+	"Adaptive Plating"
+	11
+	card_type
+	String
+	Tipo principal de la carta (Hero, Action, Reaction, etc.).
+	"Equipment"
+	1
+	pitch_value
+	Entero
+	Valor de pitch (1, 2, o 3).
+	3
+	1
+	resource_cost
+	Entero
+	Costo de recurso para jugar la carta.
+	2
+	2
+	power
+	Entero
+	Valor de ataque (para ataques).
+	6
+	2
+	defense
+	Entero
+	Valor de defensa.
+	2
+	2
+	life
+	Entero
+	Vida inicial del héroe (solo para Héroes).
+	20
+	2
+	intellect
+	Entero
+	Intelecto del héroe (solo para Héroes).
+	4
+	2
+	text
+	String
+	Texto de reglas de la carta.
+	"Once per turn (Instant): You may pay 1 resource..."
+	2
+	rarity
+	String
+	Rareza de la carta (C, R, M, L, F, Marvel).
+	"Legendary"
+	11
+	set_code
+	String
+	Código del set (ej., EVO).
+	"EVO"
+	11
+	collector_number
+	String
+	Número de coleccionista.
+	"013"
+	11
+	finishes
+	Lista de Strings
+	Tipos de acabados disponibles (Regular, Rainbow Foil, Cold Foil).
+	``
+	5
+	class
+	String
+	Clase del héroe (ej., "Mechanologist").
+	"Mechanologist"
+	6
+	talents
+	Lista de Strings
+	Talentos del héroe (ej., "Light", "Shadow").
+	["Light"]
+	6
+	legalities
+	Objeto
+	Legalidad en formatos de juego (ej., classic_constructed: "legal").
+	{"classic_constructed": "legal"}
+	6
+	artist
+	String
+	Nombre del artista.
+	"Sam Yang"
+	8
+	image_url
+	String
+	URL de la imagen de la carta.
+	(URL a imagen)
+	5
+	notes
+	String
+	Notas adicionales (ej., "Double-sided card").
+	"Double-sided card"
+	5
+	
+
+Tipos de Cartas de Flesh and Blood TCG y sus Atributos Específicos
+
+
+Flesh and Blood TCG clasifica sus cartas en varias categorías principales, cada una con un comportamiento distintivo y atributos específicos que rigen su interacción en el juego. 1
+
+
+Categorías Principales
+
+
+FaB tiene siete tipos de cartas principales 1:
+* Héroes (Hero Cards): Representan al personaje del jugador y nunca abandonan el juego. Tienen Life (vida) e Intellect (tamaño de mano). 1
+   * Héroes Jóvenes (Young Heroes): Utilizados en el formato Blitz, tienen un pool de cartas más pequeño y un límite de vida diferente. 6
+* Armas (Weapon Cards): Equipo que el héroe puede usar para atacar. No van en el mazo principal. 1
+* Equipo (Equipment Cards): Armadura y otros objetos que el héroe puede usar para defender o proporcionar efectos. No van en el mazo principal. 1
+* Acciones (Action Cards): Ataques y tácticas que se usan para golpear al oponente. Jugar una Acción cuesta 1 Punto de Acción. Si una Acción tiene "Go Again", el jugador puede realizar otra acción. 1
+* Reacciones (Reaction Cards): Trucos que se usan durante el combate. Las Reacciones de Ataque se juegan en el turno propio para potenciar un ataque, y las Reacciones de Defensa se juegan en el turno del oponente para protegerse. 1
+* Instantáneos (Instant Cards): Movimientos que se pueden jugar en cualquier momento, en el turno de cualquier jugador. 1
+* Tokens (Token Cards): Representan efectos creados por otras cartas o sirven como héroes y sus armas básicas. Son de doble cara y no cuentan para el límite de cartas del mazo. 3
+
+
+Atributos Específicos por Tipo de Carta
+
+
+* Héroes: Life, Intellect. 1
+* Armas: Power (para ataques), Defense (si pueden defender). 2
+* Equipo: Defense (si pueden defender), Effects. 2
+* Acciones: Resource Cost, Power (si son ataques), Defense (si pueden defender), Go Again (habilidad). 1
+* Reacciones: Resource Cost, Defense (para Reacciones de Defensa), Effects. 1
+* Instantáneos: Resource Cost, Effects. 1
+* Tokens: No tienen costo de recurso ni valor de pitch, su función es ser un marcador o una representación. 3
+
+
+Implicaciones (Tipos de Cartas)
+
+
+La IA debe modelar estos tipos de cartas y sus atributos condicionales. Por ejemplo, solo los héroes tendrán life e intellect. El código generado por la IA debe incluir lógica para identificar el card_type de una carta antes de intentar acceder a atributos específicos, garantizando la coherencia y previniendo errores. La IA también debe comprender las mecánicas de los Puntos de Acción y la Cadena de Combate para simular el juego correctamente. 1
+
+
+Tabla: Tipos de Cartas de Flesh and Blood TCG y Atributos Clave
+
+
+Esta tabla resume los tipos de cartas principales de Flesh and Blood TCG y los atributos específicos que cada tipo posee, destacando su comportamiento fundamental en el juego.
+Tipo de Carta
+	Atributos Específicos Clave
+	Comportamiento Clave
+	Fuente (Snippet ID)
+	Hero
+	Life, Intellect
+	Representa al jugador, determina el tamaño de la mano y la vida inicial.
+	1
+	Weapon
+	Power, Defense (opcional)
+	Usado para atacar, no en el mazo principal.
+	1
+	Equipment
+	Defense (opcional), Effects
+	Proporciona beneficios o defensa, no en el mazo principal.
+	1
+	Action
+	Resource Cost, Power (si es ataque), Defense (si defiende), Go Again (habilidad)
+	Ataques y tácticas, consume Puntos de Acción.
+	1
+	Reaction
+	Resource Cost, Defense (si defiende), Effects
+	Trucos durante el combate (ataque o defensa).
+	1
+	Instant
+	Resource Cost, Effects
+	Se puede jugar en cualquier momento.
+	1
+	Token
+	Ninguno (marcador)
+	Representa efectos o héroes/armas básicas, no cuenta para el mazo.
+	3
+	
+
+Variaciones y Ediciones de Cartas
+
+
+La estructura de las cartas de Flesh and Blood TCG es compleja debido a la multitud de variaciones y ediciones que existen para una misma carta lógica. Estas variaciones no son meramente estéticas, sino que tienen un impacto significativo en la identificación, la gestión y, crucialmente, el valor de mercado de las cartas.
+
+
+Rareza y Símbolos
+
+
+La rareza de una carta de Flesh and Blood se indica mediante una letra en la parte inferior central y es un factor clave en su valor. 3
+* Común (C): La base de cada mazo, la mayoría de las cartas en los paquetes de refuerzo. 3
+* Token (T): Representan efectos o héroes/armas básicas. Son de doble cara. 3
+* Rara (R): Habilidades más especializadas, un paso adelante en diseño y poder. 3
+* Súper Rara (S): Aparecieron en sets anteriores (Welcome to Rathe, Arcane Rising), pero fueron descontinuadas en sets más nuevos. 3
+* Majestic (M): Cartas que cambian el juego, con arte impresionante y alta coleccionabilidad. 3
+* Legendaria (L): Cartas icónicas, muy raras, que pueden cambiar drásticamente el rumbo de la batalla. 3
+* Fabled (F): La rareza más alta, extremadamente difícil de encontrar. 4
+* Marvel (F/MV o símbolo único): El pináculo de la coleccionabilidad, con arte alternativo, bordes extendidos y tratamientos especiales. No necesariamente más poderosas, pero visualmente atractivas. 3
+
+
+Acabados (Foiling) y Arte
+
+
+* Rainbow Foil: El tipo de foil tradicional que brilla como un arcoíris. Se encuentra una Rainbow Foil en cada paquete de refuerzo y puede ser de cualquier rareza. 4
+* Cold Foil: Un acabado metálico plateado, extremadamente raro y más difícil de encontrar que las Rainbow Foils. Son una parte especial de Flesh and Blood para mostrar la coleccionabilidad del juego. 4
+* Arte Extendido (Extended Art): La ilustración se extiende más allá de los bordes normales. 5
+* Arte Alternativo (Alternate Art): Las cartas Marvel son ejemplos de arte alternativo. 3
+
+
+Ediciones y Variantes de Impresión
+
+
+* 1ª Edición vs. Unlimited: Las cartas de 1ª Edición de Welcome to Rathe y Arcane Rising no tenían un punto de color. A partir de Crucible of War, las cartas de 1ª Edición tienen un punto de color con la letra de rareza dentro, mientras que las impresiones Unlimited tienen el contorno de un círculo de color. Desde el set Uprising en adelante, solo hay un tipo de caja de refuerzo con puntos sólidos de color. 4
+* Bordes Blancos vs. Negros: Antes de History Pack 1, todas las cartas de Flesh and Blood tenían bordes negros. History Pack 1 introdujo reimpresiones con bordes blancos. 4
+* Diferencias por Pitch Value: Una carta se considera "única" si tiene un nombre y un valor de pitch diferentes. Esto significa que "Sink Below (red)" es única en comparación con "Sink Below (blue)" porque tienen valores de pitch diferentes, y se pueden tener 3 copias de cada una en un mazo. 1
+
+
+Condiciones de la Carta y su Impacto
+
+
+La condición física de una carta es uno de los factores más importantes que afectan su valor de mercado. Las plataformas de comercio de cartas y los servicios de tasación utilizan escalas estandarizadas:
+* Escala de Condiciones Estándar (aplicable a TCGs en general):
+   * Near Mint (NM): Desgaste mínimo, superficie casi sin marcas, esquinas nítidas. 12
+   * Lightly Played (LP): Desgaste menor en bordes, rasguños o arañazos, sin problemas estructurales. 12
+   * Moderately Played (MP): Imperfecciones más notables, como desgaste de bordes, arañazos o ligeros dobleces. 12
+   * Heavily Played (HP): Desgaste considerable, con múltiples imperfecciones moderadas o severas. 12
+   * Damaged (D) / Poor (PO): Daños significativos, como dobleces grandes, desgarros, manchas de agua o alteraciones. 13
+* Factores de Grado: La evaluación de la condición se basa en cuatro factores principales: las esquinas, los bordes, el centrado y la superficie. 14
+* Cartas Graduadas: Para las cartas de alto valor, los servicios de tasación de terceros (como PSA, BGS, CGC y SGC) evalúan y asignan una calificación numérica (ej., PSA 10, CGC 9.5) a la carta, que se sella en una funda protectora. Esta calificación certifica la condición y puede aumentar significativamente el valor de la carta. 15
+
+
+Implicaciones (Variaciones y Ediciones)
+
+
+La IA debe modelar la explosión combinatoria de variantes (set, número de coleccionista, rareza, tipo de foil, si es 1ª Edición, condición, grado). Esto requiere un modelo de datos jerárquico o relacional que vincule una "definición de carta" (identificada por nombre + pitch value) a múltiples "impresiones" (por set, número, rareza, acabados) y luego a "instancias físicas" con su condición y grado. La IA que trabaja con precios o recomendaciones de inversión debe ser capaz de consultar y predecir valores basados en la combinación precisa de estos atributos. 16
+
+
+Tabla: Variaciones de Cartas e Identificadores Asociados
+
+
+Esta tabla ilustra cómo las diferentes variaciones físicas y de impresión de una carta se identifican y cómo se relacionan con la identidad lógica de la carta.
+Tipo de Variación
+	Atributo Clave
+	Descripción
+	Impacto en Valor/Identificación
+	Fuente (Snippet ID)
+	Pitch Value
+	pitch_value (entero), Color de franja
+	Determina la "unicidad" de la carta; afecta la construcción del mazo.
+	Crucial para la identidad de la carta y la lógica de juego.
+	1
+	Rareza
+	rarity (string), Símbolo físico
+	Nivel de escasez (C, R, M, L, F, Marvel).
+	Indicador primario de valor; las rarezas especiales (ej. Marvel) disparan el precio.
+	3
+	Acabado/Foil
+	finishes (lista de strings)
+	Tipo de superficie (Regular, Rainbow Foil, Cold Foil).
+	Afecta directamente el precio de mercado; Cold Foils son muy valiosas.
+	4
+	Edición/Impresión
+	set_code, collector_number, 1st Edition/Unlimited
+	Colección a la que pertenece y su número; si es 1ª Edición.
+	Identifica la impresión específica, esencial para precios y coleccionismo.
+	4
+	Condición
+	condition (string), grade (numérico)
+	Estado físico de la carta (Near Mint, Lightly Played, Damaged, etc.), calificado por servicios externos.
+	Multiplicador de valor crítico; una carta en mejor condición vale significativamente más.
+	12
+	Bordes
+	Color del borde (negro, blanco)
+	Indica la era de impresión o si es una reimpresión.
+	Puede afectar la coleccionabilidad y el valor.
+	4
+	
+
+Identificadores Clave y Fuentes de Datos Externas
+
+
+El ecosistema de datos de Flesh and Blood TCG está distribuido entre múltiples plataformas y APIs. Para una IA, la capacidad de acceder, consolidar y correlacionar datos de estas diversas fuentes es crucial para obtener una visión completa y precisa de una carta.
+
+
+APIs de Datos
+
+
+Las principales APIs y fuentes de datos para Flesh and Blood TCG incluyen:
+* Flesh and Blood Card Database (cards.fabtcg.com): La base de datos oficial de cartas de Flesh and Blood. Aunque no se menciona una API pública directa para datos de precios, es una fuente autorizada para metadatos de cartas. 18
+* Fablib (Python Module): Una librería de Python para el análisis de Flesh and Blood TCG. Permite importar datos de cartas y sets desde archivos JSON/CSV. 19 Los datos JSON/CSV de la comunidad (
+the-fab-cube/flesh-and-blood-cards) son una fuente abierta y completa. 19
+* JustTCG: Una API comercial multi-TCG que incluye Flesh and Blood. Ofrece acceso a datos de precios con granularidad por condición e impresión, y actualizaciones frecuentes (múltiples veces al día). Está diseñada para una integración sencilla con endpoints REST y respuestas JSON consistentes. 23
+* TCGplayer: TCGplayer lista productos y precios de Flesh and Blood. 25 Sin embargo, actualmente no concede nuevo acceso a su API para nuevos usuarios. Sus datos son accesibles a través de su sitio web y otros agregadores.
+* Cardmarket (a través de Scrapers): Cardmarket, el mayor mercado europeo, no tiene una API pública directa mencionada en el material. No obstante, existen scrapers comerciales (como los de Apify) que permiten acceder a sus datos de precios y tendencias. 27
+
+
+Bases de Datos de Precios y su Relevancia para la Identificación
+
+
+Las plataformas de mercado y los agregadores de precios son fuentes vitales de información económica para las cartas:
+   * Plataformas de Mercado: Sitios como TCGplayer, Cardmarket, Card Kingdom y Troll and Toad ofrecen listados de productos y precios, a menudo con filtros por condición y variantes. 25
+   * Agregadores de Precios: Servicios como JustTCG 23, TCG-Home 35, Card Ladder 36, y PSA Price Guide 38 consolidan datos de precios de múltiples fuentes, incluyendo información sobre la condición y las variantes de las cartas.
+   * Datos Históricos: La disponibilidad de datos históricos de precios es crucial para el análisis de tendencias. TCGplayer muestra gráficos de historial de precios 39, aunque su historial público se limita a un año. 17 Otros servicios como Card Ladder rastrean ventas públicas desde el año 2000. 37
+
+
+Implicaciones (Identificadores y Fuentes de Datos)
+
+
+La IA necesitará estrategias de consolidación y mapeo de IDs para obtener una visión completa de una carta (ej., metadatos de fablib o fabtcg.com, precios de JustTCG/TCGplayer/Cardmarket). El código generado por la IA debe incluir módulos para la integración de múltiples fuentes de datos, la resolución de IDs y la normalización de datos (ej., condiciones de cartas). Los precios son altamente dinámicos y varían según la condición, la rareza y las tendencias del mercado, lo que requiere que el modelo de datos para la IA incluya tablas de precios con marcas de tiempo y atributos de condición/variante. 41
+
+
+Tabla: Identificadores Externos Clave
+
+
+Esta tabla lista los identificadores únicos utilizados por las principales plataformas y APIs de datos de Flesh and Blood TCG, explicando su propósito y dónde se encuentran en los objetos de datos.
+Identificador
+	Plataforma/API
+	Propósito
+	Campo en the-fab-cube/flesh-and-blood-cards (si aplica)
+	Fuente (Snippet ID)
+	unique_id
+	the-fab-cube/flesh-and-blood-cards
+	Identificador único de la carta (nombre + pitch value).
+	unique_id
+	8
+	name
+	fabtcg.com, fablib, the-fab-cube
+	Nombre de la carta.
+	name
+	1
+	pitch_value
+	fabtcg.com, fablib, the-fab-cube
+	Valor de pitch de la carta.
+	pitch_value
+	1
+	set_code
+	fabtcg.com, fablib, the-fab-cube
+	Código corto de la colección.
+	set_code
+	4
+	collector_number
+	fabtcg.com, fablib, the-fab-cube
+	Número de coleccionista de la carta.
+	collector_number
+	4
+	tcgplayer_id
+	TCGplayer, JustTCG
+	Identificador de producto en TCGplayer para precios.
+	N/A (enlace URL o campo en JustTCG)
+	9
+	cardmarket_id
+	Cardmarket
+	Identificador de producto en Cardmarket.
+	N/A (a través de scrapers)
+	28
+	
+
+Implicaciones para la Generación de Código por IA
+
+
+La información detallada sobre la estructura de las cartas de Flesh and Blood TCG tiene implicaciones directas y profundas para la generación de código por parte de una IA, abarcando desde el modelado de datos hasta la implementación de la lógica de juego y las interacciones con el mercado.
+
+
+Modelado de Datos para la IA
+
+
+La IA debe adoptar un modelo de datos jerárquico y relacional para representar las cartas de Flesh and Blood TCG de manera efectiva. Se sugiere una estructura que distinga entre:
+   * Una entidad CardDefinition (basada en el name y pitch_value) para la identidad lógica de la carta, ya que la combinación de estos dos atributos define la unicidad de una carta en FaB. 8
+   * Una entidad CardPrinting (basada en unique_id de the-fab-cube, set_code, collector_number, rarity, y finishes) para representar una versión física específica de la carta.
+   * Una entidad CardInstance (para colecciones de usuarios) que podría incluir atributos dinámicos como condition y purchase_price.
+Los atributos condicionales, como life e intellect para Héroes, o power y defense para ataques y defensas, deben modelarse como campos opcionales o a través de mecanismos de herencia de clases. La representación de class y talents debe permitir su análisis para una aplicación granular de las reglas. Un modelo de datos bien diseñado es la base para cualquier código robusto, permitiendo a la IA generar clases, esquemas de bases de datos (SQL, NoSQL) y estructuras de datos en memoria de forma directa y eficiente. 42
+
+
+Consideraciones para la Lógica de Juego y Reglas
+
+
+Para generar código que simule o interactúe con el juego, la IA debe ser capaz de interpretar el texto de reglas (text) y traducirlo a lógica programática. Esto podría implicar el uso de técnicas de Procesamiento del Lenguaje Natural (PLN) para extraer componentes de habilidades (costos, efectos, disparadores) y traducirlos a lógica condicional o a un motor de reglas. Las palabras clave del juego (ej., "Go Again", "Intimidate", "Opt X") deben ser mapeadas a funciones o propiedades booleanas. 1 La lógica de juego generada debe considerar la interacción de diferentes tipos de cartas y sus atributos específicos, como el uso de Puntos de Acción, la mecánica de "pitching" cartas para recursos, y la resolución de la Cadena de Combate. 1
+
+
+Recomendaciones para la Estructura de la Base de Datos
+
+
+Para una IA que maneje grandes volúmenes de datos de cartas y transacciones, se recomienda un diseño de base de datos relacional con tablas separadas para CardDefinitions (con name y pitch_value como clave compuesta o unique_id), CardPrintings (con set_code, collector_number, rarity, finishes), CardPrices (con campos para condition, finish y timestamp), CardTypes, Classes, Talents, Abilities, Sets, y Legalidades. Es fundamental implementar un "versionado temporal" para los datos de precios 41 para permitir consultas históricas precisas y el análisis de tendencias. Una estructura de base de datos optimizada es crucial para la eficiencia y escalabilidad del código generado por la IA. 42
+
+
+Integración de APIs
+
+
+La IA debe ser capaz de integrar datos de múltiples APIs (fablib / the-fab-cube, JustTCG, TCGplayer, Cardmarket a través de scrapers) para obtener una visión completa de la carta. Esto implica la necesidad de módulos de integración de datos que manejen la autenticación (si es necesaria), las tasas de límite, el mapeo de identificadores (tcgplayer_id, cardmarket_id) y la normalización de datos (ej., condiciones de cartas). La IA debe priorizar las APIs oficiales y comerciales para la fiabilidad y el cumplimiento legal. 23
+
+
+Conclusiones
+
+
+El análisis detallado de la estructura de las cartas de Flesh and Blood TCG revela que son entidades de una complejidad considerable, que requieren un modelo de datos multicapa para su representación programática. La distinción fundamental entre la identidad lógica de una carta (definida por su nombre y valor de pitch) y sus múltiples impresiones físicas, junto con sus diversas rarezas, acabados y condición, es un pilar para cualquier sistema de IA que pretenda interactuar con el juego. Esta granularidad es indispensable tanto para la aplicación precisa de las reglas del juego como para la gestión económica de colecciones en el mercado secundario.
+Las fuentes de datos externas, aunque fragmentadas y con variaciones en su accesibilidad y consistencia histórica, son críticas para construir una comprensión integral de las cartas, especialmente en lo que respecta a la información de precios y tendencias de mercado. La IA debe ser diseñada para integrar y consolidar datos de múltiples APIs, resolviendo los mapeos entre diferentes identificadores únicos.
+Para la generación de código, esto implica la necesidad de una arquitectura de datos robusta y modular. La IA no solo debe ser capaz de modelar los atributos estáticos de las cartas, sino también de interpretar el texto de reglas y las mecánicas de juego para traducir las reglas del juego a lógica programática. En resumen, el desarrollo de una IA competente para Flesh and Blood TCG exige una comprensión profunda de su ontología, una estrategia de datos unificada y la capacidad de traducir conceptos complejos del juego en código funcional y escalable.
+Works cited
+   1. How to Play Flesh and Blood | TCGplayer, accessed June 29, 2025, https://www.tcgplayer.com/content/article/How-to-Play-Flesh-and-Blood/69617ffc-44a9-4647-9e05-9d581fca3ed0/
+   2. Quickstart Rules - Flesh and Blood TCG, accessed June 29, 2025, https://fabtcg.com/en/resources/learn-to-play/quickstart-rules/
+   3. Guide to Flesh and Blood Card Rarity - Gaming Library, accessed June 29, 2025, https://www.gaminglib.com/blogs/news/guide-to-flesh-and-blood-card-rarity
+   4. A Simple Guide To Flesh And Blood's Card Rarities And Editions - Mana Grading, accessed June 29, 2025, https://managrading.com/a-simple-guide-to-flesh-and-bloods-card-rarities-and-editions/
+   5. Bright Lights - Flesh and Blood TCG, accessed June 29, 2025, https://fabtcg.com/en/collectors-centre/bright-lights/
+   6. Classic Constructed - Flesh and Blood TCG, accessed June 29, 2025, https://fabtcg.com/en/resources/gameplay-formats/classic-constructed/
+   7. Blitz - Flesh and Blood TCG, accessed June 29, 2025, https://fabtcg.com/en/resources/gameplay-formats/blitz/
+   8. the-fab-cube/flesh-and-blood-cards - GitHub, accessed June 29, 2025, https://github.com/the-fab-cube/flesh-and-blood-cards
+   9. Why is Flesh and Blood Becoming So Expensive? - TCGplayer, accessed June 28, 2025, https://www.tcgplayer.com/content/article/Why-is-Flesh-and-Blood-Becoming-So-Expensive/ef2a8168-b301-46b2-8b1d-5af460bbe380/
+   10. Living Legend - Flesh and Blood TCG, accessed June 29, 2025, https://fabtcg.com/en/resources/rules-and-policy-center/living-legend/
+   11. Flesh and Blood TCG Bright Lights Price Guide - TCGplayer, accessed June 29, 2025, https://www.tcgplayer.com/categories/trading-and-collectible-card-games/flesh-and-blood-tcg/price-guides/bright-lights
+   12. My Collection // Moxfield — MTG Deck Builder, accessed June 28, 2025, https://moxfield.com/decks/5yoiyxiy_kCHAp1VmWOdHA
+   13. Card Condition - Help - Cardmarket, accessed June 28, 2025, https://help.cardmarket.com/en/CardCondition
+   14. Vintage Baseball Card Price Guide and Valuation - BBC Emporium, accessed June 28, 2025, https://bbcemporium.com/index.php?step=price_guide
+   15. The Ultimate Guide to Trading Cards: History, Trends, and Future Insig, accessed June 28, 2025, https://www.cardchasersmtl.com/blogs/blog/the-ultimate-guide-to-trading-cards-history-trends-and-future-insights
+   16. Tools for trading cards sellers: CSV Upload and Price Guide - Ebay Export, accessed June 28, 2025, https://export.ebay.com/en/marketing/ebay-services-and-tools-help-seller/csv-upload-and-price-guide/
+   17. Understanding Historical Data in MTG Finance | TCGplayer, accessed June 28, 2025, https://www.tcgplayer.com/content/article/Understanding-Historical-Data-in-MTG-Finance/05fb040d-7bb3-45e2-bc52-b9fa8a49752e/
+   18. Flesh & Blood Card Database, accessed June 29, 2025, https://cards.fabtcg.com/
+   19. Flesh and Blood TCG Analysis Library, accessed June 29, 2025, https://fablib.readthedocs.io/
+   20. fh-fablib - PyPI, accessed June 29, 2025, https://pypi.org/project/fh-fablib/1.0.20250610/
+   21. Week 4 - Embedded Programming - Super Fablab Kochi - fab Academy 2025, accessed June 29, 2025, https://fabacademy.org/2025/labs/kochi/group_assignments/Week_4_Group_Assignment/
+   22. JSON Schemas - the-fab-cube/flesh-and-blood-cards - GitHub, accessed June 29, 2025, https://github.com/the-fab-cube/flesh-and-blood-cards/blob/develop/documentation/json-schemas.md
+   23. JustTCG vs. The Alternatives: Choosing the Right TCG Pricing API, accessed June 28, 2025, https://justtcg.medium.com/justtcg-vs-the-alternatives-choosing-the-right-tcg-pricing-api-6d5d555ac7cd
+   24. Why JustTCG? Unpacking the Features of Your New TCG Pricing Powerhouse - Medium, accessed June 28, 2025, https://medium.com/@justtcg/why-justtcg-unpacking-the-features-of-your-new-tcg-pricing-powerhouse-9d0d28b395ae
+   25. Apis - Kingdoms of Intrigue - One Piece Card Game - TCGplayer.com, accessed June 28, 2025, https://www.tcgplayer.com/product/516759/one-piece-card-game-kingdoms-of-intrigue-apis
+   26. WIXOSS Price Guides - TCGplayer, accessed June 28, 2025, https://www.tcgplayer.com/categories/trading-and-collectible-card-games/wixoss/price-guides
+   27. Cardmarket.com Trend Scraper API - Apify, accessed June 28, 2025, https://apify.com/ecomscrape/cardmarket-trend-scraper/api
+   28. Cardmarket.com Card Details Page Scraper API - Apify, accessed June 28, 2025, https://apify.com/ecomscrape/cardmarket-card-page-details-scraper/api
+   29. New User Guide | Cardmarket - Help, accessed June 28, 2025, https://help.cardmarket.com/new-user-guide
+   30. How to Sell Guide - Troll and Toad, accessed June 28, 2025, https://www.trollandtoad.com/howToSellGuide
+   31. Card Kingdom | Buy MTG Cards | MTG Sealed | MTG Accessories, accessed June 28, 2025, https://www.cardkingdom.com/
+   32. MTG / Card Prices - Card Kingdom, accessed June 28, 2025, https://www.cardkingdom.com/mtg/card-prices
+   33. Troll and Toad - Magic the Gathering, Yugioh, Pokemon, Cards, Singles,, accessed June 28, 2025, https://www.trollandtoad.com/
+   34. Login - Troll And Toad, accessed June 28, 2025, https://www.trollandtoad.com/login
+   35. Discover what your collection is wort with real-time card prices - TCG Home, accessed June 28, 2025, https://tcg-home.com/track-prices/
+   36. Top Trading Card Platforms - ConsignR, accessed June 28, 2025, https://consignr.app/blog/top-trading-card-platforms
+   37. Sports Card Price Guide | Card Ladder, accessed June 28, 2025, https://www.cardladder.com/ladder
+   38. PSA Price Guide - Trading Card Values, accessed June 28, 2025, https://www.psacard.com/priceguide
+   39. The 10 Most Expensive Pokémon Cards of 2025 (So Far) - TCGplayer, accessed June 28, 2025, https://www.tcgplayer.com/content/article/The-10-Most-Expensive-Pok%C3%A9mon-Cards-of-2025-So-Far/7f39e243-6210-44e0-9fe2-0e62d6ca83fb/
+   40. The Finance Article Where I Use Secret Data to Make Cool Charts - TCGplayer, accessed June 28, 2025, https://www.tcgplayer.com/content/article/The-Finance-Article-Where-I-Use-Secret-Data-to-Make-Cool-Charts/3b637747-9a30-43dd-8db4-8ba8b4717455/
+   41. DB Schema: Versioned price model vs invoice-related data - Stack Overflow, accessed June 28, 2025, https://stackoverflow.com/questions/44041554/db-schema-versioned-price-model-vs-invoice-related-data
+   42. Need advice on how to structure my database schema for online trading card game, accessed June 28, 2025, https://stackoverflow.com/questions/22257644/need-advice-on-how-to-structure-my-database-schema-for-online-trading-card-game
+   43. SQL: good database design for cards? - Stack Overflow, accessed June 28, 2025, https://stackoverflow.com/questions/44286944/sql-good-database-design-for-cards
+   44. Database design. Relationship : r/dataengineering - Reddit, accessed June 29, 2025, https://www.reddit.com/r/dataengineering/comments/1lkgmj3/database_design_relationship/
+   45. Crucible of War - Flesh and Blood TCG, accessed June 29, 2025, https://fabtcg.com/en/resources/rules-and-policy-center/release-notes/crucible-war/
+   46. Trading Card Game example | Download Scientific Diagram - ResearchGate, accessed June 28, 2025, https://www.researchgate.net/figure/Trading-Card-Game-example_fig1_224172433
