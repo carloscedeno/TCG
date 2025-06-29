@@ -1,0 +1,732 @@
+﻿Estructura Detallada de Cartas de Magic: The Gathering para Contexto de Generación de Código por IA
+
+
+
+
+Introducción a la Estructura de Cartas de Magic: The Gathering
+
+
+Este documento tiene como objetivo proporcionar una descripción exhaustiva y estructurada de la anatomía de las cartas de Magic: The Gathering (MTG), diseñada específicamente para servir como contexto de alto nivel y fuente de datos para sistemas de Inteligencia Artificial (IA) encargados de generar o comprender código relacionado con el juego. La precisión y la granularidad de la información son cruciales para que la IA pueda modelar correctamente las cartas, sus interacciones y las reglas del juego. Dada la complejidad de MTG, con más de 30 años de historia y miles de cartas con reglas únicas, se requiere un modelado de datos robusto que capture tanto los atributos físicos como los lógicos de cada carta, así como sus variaciones y su comportamiento en el juego.
+Una carta de MTG es una entidad multifacética que combina elementos visuales, textuales y funcionales. Comprender su estructura es fundamental para cualquier sistema que intente interactuar con el juego a nivel programático. Los componentes se dividen en físicos, que corresponden a lo que se ve y se siente en la carta tangible, y lógicos, que abarcan los datos y las reglas que definen su comportamiento dentro del juego. Esta distinción es vital para una IA, ya que la representación visual es tan importante como la representación de las reglas para diversas aplicaciones, desde simuladores hasta herramientas de gestión de colecciones.
+
+
+Componentes Físicos de una Carta de MTG
+
+
+Las cartas de Magic: The Gathering son objetos tangibles con características físicas distintivas que influyen en su identificación y valor. Aunque las dimensiones exactas no se especifican en el material de referencia, las cartas físicas poseen un tamaño estándar que facilita su manejo y permite el uso de accesorios como protectores. Su producción implica el uso de laminados holográficos y papel cartón, lo que les confiere durabilidad y una estética particular.1 Para una IA, si bien las dimensiones físicas no son directamente programáticas para la lógica del juego, resultan cruciales para aplicaciones de visión por computadora, como el reconocimiento de cartas o la simulación visual, donde la representación precisa del objeto físico es indispensable.
+
+
+Elementos Visuales Clave
+
+
+Los elementos visuales de una carta son fundamentales para su identificación y para la experiencia del jugador:
+* Marco de la Carta (Frame): El diseño del marco ha evolucionado significativamente a lo largo de las ediciones, con estilos distintivos de años como 1993, 1997, 2003 y 2015. Existen numerosas variantes, incluyendo marcos extendidos, cartas sin borde (borderless), arte completo (full art) que abarca toda la carta, o diseños "showcase" temáticos.2 El tipo de marco es un atributo esencial para identificar versiones específicas de una carta. La API de Scryfall, por ejemplo, maneja estas variaciones mediante términos de búsqueda como
+is:default para marcos tradicionales o is:nondefault para variantes, y ofrece la opción prefer:default o prefer:nondefault para priorizar versiones.2 Además, las técnicas de producción como "uncommon bleed" (diseños que se extienden al borde) y "common bleed" (bordes negros tradicionales) implican diferentes configuraciones de fabricación y herramientas de corte.1
+* Ilustración: La imagen principal de la carta es un componente central. Cada ilustración posee un illustration_id único que se mantiene consistente a través de las reimpresiones, lo que permite identificar el arte independientemente de la edición a la que pertenezca la carta.2 Las imágenes están disponibles en varios tamaños (por ejemplo, PNG de 745x1040 píxeles, JPG de 672x936, 488x680 y 146x204) y pueden tener diferentes estados de calidad:
+missing (no disponible), placeholder (temporal), lowres (baja resolución) o highres_scan (escaneo de alta resolución).4 Estos
+image_uris son vitales para las aplicaciones de IA que requieren representación visual precisa.
+* Símbolo de Expansión: Un pequeño icono que indica la colección o set al que pertenece la carta.5 Este símbolo es crucial para distinguir entre diferentes ediciones de una misma carta, especialmente porque muchas cartas son reimpresas a lo largo del tiempo.
+* Sello Holográfico: Presente en la parte inferior de las cartas raras y míticas, este sello puede variar en forma.1 Sirve como un elemento de seguridad y autenticación, ayudando a verificar la legitimidad de la carta.
+* Marca de Agua (Watermark): Algunas cartas pueden presentar una marca de agua translúcida en el fondo de la caja de texto, a menudo representando un símbolo de facción o un elemento temático del set.6
+* Número de Coleccionista (Collector Number): Un identificador alfanumérico que indica la posición de la carta dentro de una colección específica. Este número puede incluir caracteres no numéricos.2
+
+
+Implicaciones (Componentes Físicos)
+
+
+La interacción entre los atributos físicos y lógicos de una carta revela complejidades importantes para la IA:
+La combinación del set_code (derivado del símbolo de expansión), el collector_number y los finishes (como foil, etched o glossy) es fundamental para identificar una instancia física única de una carta, más allá de su identidad lógica abstracta. Por ejemplo, una carta como "Lightning Bolt" puede existir en múltiples ediciones, cada una con un set_code y collector_number distinto. Dentro de una misma edición, puede haber versiones nonfoil y foil.2 Para una identificación inequívoca de una
+instancia física específica, lo cual es crucial para la gestión de colecciones y el comercio en el mercado secundario, la IA necesita combinar el oracle_id (que representa la identidad lógica de la carta) con el set_code, el collector_number y los finishes.5 Esto implica que el modelo de datos para la IA debe soportar esta granularidad, quizás mediante la distinción entre una
+CardDefinition (para la identidad lógica y las reglas) y una CardInstance (para la impresión física específica).
+La disponibilidad de imágenes de alta resolución y diferentes recortes (image_uris) es crítica para diversas tareas de IA. Herramientas como TinEye MobileEngine 7 y TCGSnap 8 utilizan el reconocimiento de imagen para identificar cartas y extraer datos, mientras que conjuntos de datos como el de Sports Cards 9 emplean OCR y análisis de IA de atributos visuales. Las APIs como Scryfall proporcionan múltiples formatos de imagen (PNG, JPG en tamaños
+small, normal, large, border_crop, art_crop) y estados de imagen (missing, placeholder, lowres, highres_scan).4 Una imagen de baja resolución o un recorte inadecuado podría reducir significativamente la precisión del OCR y el reconocimiento visual. Por lo tanto, la IA debe ser consciente de la calidad y el tipo de imagen disponible para cada carta, priorizando las imágenes de alta resolución (
+highres_scan) y los recortes adecuados (art_crop para análisis de arte, border_crop para visualización en aplicaciones) para maximizar la precisión de sus tareas de procesamiento de imágenes.
+La existencia de múltiples "versiones" de una misma carta, como arte alternativo, diferentes marcos o impresiones promocionales, dentro de la misma colección o a través de reimpresiones, presenta un desafío en el modelado de datos.2 Por ejemplo, el material de referencia menciona "siete impresiones diferentes para cada lanzamiento de set Estándar" 3, y en el juego One Piece TCG, las Secret Rares tienen variantes V1, V2 y V3 con arte alternativo y "Manga Rare".10 Esto significa que un único
+oracle_id (la identidad lógica de la carta) puede mapearse a múltiples ids de Scryfall (identidades de impresión). La IA que genera código debe ser capaz de distinguir entre estas variantes para tareas como la generación de listados de productos, la valoración de colecciones (ya que el valor puede variar drásticamente entre variantes 10) o la simulación de colecciones. El modelo de datos debe incluir campos como
+finishes, promo_types, frame_effects, full_art, border_color y variation_of 2 para capturar la especificidad de cada impresión. El
+illustration_id es clave para agrupar impresiones que comparten el mismo arte.
+
+
+Componentes Lógicos y Campos de Datos de la Carta
+
+
+Los componentes lógicos de una carta de MTG definen su identidad, sus propiedades de juego y su interacción con las reglas del juego. Estos atributos son la base sobre la cual se construye cualquier sistema programático de MTG.
+
+
+Identificadores Únicos
+
+
+La identificación precisa de las cartas es fundamental en un ecosistema tan vasto como el de MTG. Para ello, se utilizan varios identificadores únicos:
+   * Scryfall ID (id): Un UUID (Universally Unique Identifier) que identifica de manera única cada impresión específica de una carta en la base de datos de Scryfall. Este es el identificador primario para una instancia física o digital concreta de una carta.6
+   * Oracle ID (oracle_id): Un UUID único que representa la identidad de las reglas de una carta. Este identificador es consistente a través de todas las reimpresiones de una misma carta, permitiendo agrupar todas las versiones de una carta lógica (por ejemplo, todas las impresiones de "Lightning Bolt" comparten el mismo oracle_id). Es un campo crucial para la lógica del juego.6
+   * MTGO ID (mtgo_id, mtgo_foil_id): Identificadores numéricos específicos para las cartas en Magic Online, la plataforma digital del juego.6
+   * Multiverse IDs (multiverse_ids): Identificadores utilizados en Gatherer, la base de datos oficial de Wizards of the Coast. Una carta puede tener múltiples Multiverse IDs si ha sido reimpresa.6
+   * TCGplayer ID (tcgplayer_id, tcgplayer_etched_id): Identificadores utilizados por la API de TCGplayer para precios y listados de productos. tcgplayer_etched_id es específico para versiones con acabado "etched".6
+   * Cardmarket ID (cardmarket_id): Identificador utilizado por la API de Cardmarket para sus productos.6
+Estos identificadores son fundamentales para la interoperabilidad de datos entre diferentes plataformas y APIs. Una IA necesitará un mapeo robusto entre estos identificadores para acceder a información cruzada, por ejemplo, para obtener las reglas de una carta de Scryfall y sus precios de TCGplayer.
+
+
+Campos de Metadatos
+
+
+Además de los identificadores, las cartas poseen una serie de campos que describen sus propiedades y características:
+   * Nombre (name): El nombre de la carta. En el caso de cartas multifacéticas (split, flip, transform), el campo name puede contener ambos nombres (ej., "Wear // Tear"), mientras que los nombres individuales de cada cara se encuentran en los objetos card_faces.2
+   * Costo de Maná (mana_cost, cmc): Un conjunto de símbolos y números que representan el costo necesario para lanzar la carta. El cmc (Converted Mana Cost, ahora conocido como Mana Value) es un valor decimal que representa el total de maná requerido.5 Los símbolos de maná tienen representaciones estandarizadas (ej.,
+{W/U} para maná blanco o azul).12
+   * Línea de Tipo (type_line): Una cadena de texto que describe los tipos, supertipos y subtipos de la carta (ej., "Criatura Legendaria — Dragón Anciano").6
+   * Rareza (rarity): Indica la rareza de la carta dentro de su colección (valores comunes incluyen common, uncommon, rare, special, mythic, bonus).6 Otros TCGs, como Pokémon, tienen sistemas de rareza más granulares con símbolos específicos y variantes como "Manga Rare".10
+   * Colección (set, set_name, set_type, set_id): El código corto y el nombre completo de la colección a la que pertenece la carta. El set_type indica el tipo de colección (ej., core set, expansion, promo).6
+   * Artista (artist, artist_ids): El nombre del ilustrador de la carta y su identificador único.6
+   * Texto de Sabor (flavor_text): Un texto narrativo que proporciona contexto temático o lore sobre la carta, pero que no afecta las reglas del juego.6
+   * Legalidades (legalities): Un objeto que describe la legalidad de la carta en diferentes formatos de juego (ej., legal, not_legal, restricted, banned).6
+
+
+Atributos Numéricos (Gameplay)
+
+
+Ciertos tipos de cartas poseen atributos numéricos específicos que definen su interacción en el juego:
+      * Fuerza (power) y Resistencia (toughness): Exclusivos de las criaturas, la fuerza indica el daño que infligen en combate, y la resistencia, el daño que pueden recibir antes de ser destruidas. Estos valores pueden ser no numéricos (ej., "*").5
+      * Lealtad (loyalty): Atributo de los Planeswalkers, representa sus "puntos de vida" y se utiliza para activar sus habilidades. También puede ser no numérico (ej., "X").6
+      * Defensa (defense): Introducido con el tipo de carta "Batalla", funciona de manera similar a la lealtad de los Planeswalkers.6
+
+
+Implicaciones (Componentes Lógicos)
+
+
+La forma en que se estructuran y relacionan estos componentes lógicos tiene profundas implicaciones para una IA:
+La distinción entre oracle_id y id de Scryfall es fundamental para la IA. El oracle_id define la identidad de reglas de una carta, su esencia jugable, y es consistente a través de todas sus reimpresiones. Esto significa que las reglas de una carta como "Lightning Bolt" son las mismas sin importar la edición en la que fue impresa.6 Por otro lado, el
+id de Scryfall define una impresión específica, lo que es indispensable para una IA que gestiona colecciones, precios o variantes visuales, ya que el valor y la apariencia de un "Lightning Bolt" de Alpha son muy diferentes a los de un "Lightning Bolt" de Double Masters. La IA debe ser capaz de navegar entre estas dos identidades, posiblemente manteniendo un índice que mapee un oracle_id a un conjunto de ids de impresión, y viceversa, para soportar tanto la lógica de juego como las funcionalidades de mercado y colección.
+La representación estructurada del mana_cost y la type_line es vital para que la IA realice cálculos de costo, filtrado y aplicación de reglas basadas en los tipos de carta. El mana_cost puede ser complejo, incluyendo maná genérico, de color, híbrido o Phyrexian.12 La IA necesita una forma normalizada de interpretar esto para calcular el
+cmc (mana value) y determinar si un jugador puede lanzar un hechizo. De manera similar, la type_line contiene tipos y subtipos (ej., "Criatura — Goblin Guerrero").6 Para aplicar reglas que afecten a "Criaturas" o "Goblins", la IA necesita parsear esta cadena de forma consistente. Scryfall ya proporciona
+cmc como un valor decimal y type_line como una cadena, así como colors y color_identity como arrays de colores.6 Esto sugiere que la IA puede consumir estos campos directamente, pero debe tener la lógica para interpretar su significado subyacente (por ejemplo, cómo
+{W/U} en el mana_cost contribuye a la color_identity). La IA podría beneficiarse de un diccionario de símbolos de maná y sus valores numéricos o de color, y una estructura de datos para analizar la línea de tipo en un array de sus componentes.
+La rareza (rarity) y las variaciones de impresión (finishes, promo_types, frame_effects, full_art, border_color) tienen un impacto directo y significativo en el valor de mercado de una carta. Por ejemplo, el material de referencia muestra que cartas únicas o muy raras como "Pikachu Illustrator" o "The One Ring" pueden alcanzar valores millonarios.11 De igual manera, las variantes de arte alternativo y las "Manga Rares" en el juego One Piece TCG son "mucho más valiosas y buscadas" que sus contrapartes estándar.10 Esto establece una clara relación causal: la escasez y la deseabilidad de una variante específica (debido a su arte, acabado o rareza de impresión) influyen directamente en su precio. Para una IA que trabaja con precios o recomendaciones de inversión, no basta con conocer el
+oracle_id de la carta; necesita la granularidad de la rarity y los finishes y frame_effects de la impresión específica para proporcionar estimaciones de valor precisas. El modelo de datos debe vincular los datos de impresión (como finishes, promo_types, frame_effects) directamente a los datos de precios, y considerar cómo las rarezas específicas de otros TCGs (como las de Pokémon o One Piece) podrían traducirse o modelarse para MTG si se busca una abstracción general de TCG.
+
+
+Tabla: Campos de Datos Centrales de la Carta (Lógicos)
+
+
+Esta tabla detalla los campos de datos esenciales que definen la identidad lógica y las propiedades de juego de una carta de MTG, incluyendo sus identificadores clave y atributos comunes. Su valor para una IA es múltiple: proporciona una referencia centralizada y estandarizada de los atributos de la carta, lo cual es crucial para que la IA tenga un vocabulario común y una estructura de datos predecible al procesar información de cartas de MTG. Sirve como un esquema directo para el modelado de bases de datos o la definición de clases/objetos en el código de la IA, facilitando la generación de código para la manipulación de cartas. Al asociar los campos con su relevancia en las reglas (ej., mana_cost para el lanzamiento de hechizos, power/toughness para combate), la IA puede construir una comprensión más profunda de la mecánica del juego y cómo los atributos de la carta influyen en ella.
+Campo
+	Tipo de Dato
+	Descripción
+	Ejemplo
+	Fuente (Snippet ID)
+	id
+	UUID
+	Identificador único de la impresión de la carta en Scryfall.
+	d169a3b2-f282-4462-8353-85b591b22e03
+	6
+	oracle_id
+	UUID
+	Identificador único de la identidad de reglas de la carta, consistente entre reimpresiones.
+	b2c6aa39-2d2a-459c-a555-fb48ba993373 (para Lightning Bolt)
+	6
+	name
+	String
+	Nombre de la carta. Para multifacéticas, incluye ambos nombres.
+	"Lightning Bolt", "Wear // Tear"
+	2
+	mana_cost
+	String
+	Costo de maná de la carta en formato de símbolos.
+	"{1}{R}", "{W/U}"
+	12
+	cmc
+	Decimal
+	Valor de maná convertido (Mana Value).
+	1.0, 3.0
+	6
+	type_line
+	String
+	Tipos, supertipos y subtipos de la carta.
+	"Instant", "Legendary Creature — Dragon"
+	6
+	rarity
+	String
+	Rareza de la carta (common, uncommon, rare, mythic, etc.).
+	"rare", "mythic"
+	6
+	set
+	String
+	Código de la colección a la que pertenece la carta.
+	"jmp", "ltr"
+	6
+	set_name
+	String
+	Nombre completo de la colección.
+	"Jumpstart", "The Lord of the Rings: Tales of Middle-earth"
+	6
+	collector_number
+	String
+	Número de la carta dentro de su colección.
+	"325", "207"
+	2
+	artist
+	String
+	Nombre del ilustrador.
+	"Magali Villeneuve"
+	6
+	oracle_text
+	String
+	Texto de reglas canónico de la carta.
+	"Lightning Bolt deals 3 damage to any target."
+	6
+	power
+	String
+	Fuerza de la criatura (si aplica).
+	"3", "*"
+	5
+	toughness
+	String
+	Resistencia de la criatura (si aplica).
+	"3", "*"
+	5
+	loyalty
+	String
+	Lealtad del Planeswalker (si aplica).
+	"4", "X"
+	6
+	defense
+	String
+	Defensa de la Batalla (si aplica).
+	"5"
+	6
+	finishes
+	Array de Strings
+	Tipos de acabados disponibles (nonfoil, foil, etched, glossy).
+	["nonfoil", "foil"]
+	2
+	legalities
+	Objeto
+	Legalidad de la carta en diferentes formatos de juego.
+	{"standard": "legal", "commander": "legal"}
+	6
+	illustration_id
+	UUID
+	Identificador único de la obra de arte de la carta.
+	a1b2c3d4-e5f6-7890-1234-567890abcdef
+	2
+	
+
+Tipos de Cartas de MTG y sus Atributos Específicos
+
+
+Magic: The Gathering clasifica sus cartas en varias categorías, cada una con un comportamiento distintivo y atributos específicos que rigen su interacción en el juego. Comprender estos tipos es fundamental para la IA al modelar la lógica del juego.
+
+
+Categorías Principales
+
+
+MTG cuenta con ocho tipos de cartas principales, que pueden ser permanentes (permanecen en el campo de batalla una vez jugadas) o no permanentes (se resuelven y van al cementerio) 14:
+      * Criaturas: Son los principales combatientes del juego, utilizados para atacar a los oponentes y bloquear sus ataques. Poseen dos atributos numéricos clave: power (fuerza), que indica el daño que infligen en combate, y toughness (resistencia), que determina cuánto daño pueden recibir antes de ser destruidas.5
+      * Conjuros (Sorceries): Representan efectos mágicos de un solo uso. Una vez que su efecto se resuelve, van al cementerio. Se lanzan a "velocidad de conjuro", lo que significa que solo pueden ser jugados durante una de las fases principales del jugador activo y cuando la pila de hechizos está vacía.16
+      * Instantáneos (Instants): Similares a los conjuros en que son hechizos de un solo uso que van al cementerio tras resolverse. Sin embargo, a diferencia de los conjuros, los instantáneos pueden ser lanzados en cualquier momento en que el jugador tenga prioridad, incluso durante el turno del oponente, permitiendo jugadas sorpresa o respuestas rápidas.16
+      * Tierras (Lands): Son la fuente principal de maná, la energía mágica necesaria para lanzar la mayoría de los hechizos. Las tierras se "juegan" (no se "lanzan"), son permanentes en el campo de batalla y no se consideran hechizos. Normalmente, un jugador puede jugar una tierra por turno de forma gratuita.16
+      * Artefactos (Artifacts): Representan objetos, construcciones o dispositivos. La mayoría son incoloros. Pueden ser de varios subtipos, como "Equipo" (que se adjunta a criaturas para mejorarlas) o "Vehículo" (que puede convertirse en criatura al ser "tripulado"). Muchos artefactos también son criaturas. Aunque no tienen reglas principales únicas, muchas cartas interactúan específicamente con artefactos.16
+      * Encantamientos (Enchantments): Representan efectos mágicos continuos que permanecen en el campo de batalla una vez lanzados. Suelen tener efectos pasivos o habilidades activadas. Algunos son "Auras", que deben ser lanzadas sobre otro permanente para alterarlo de alguna manera.16
+      * Planeswalkers: Son poderosos seres que pueden viajar entre diferentes planos de existencia. Cada Planeswalker tiene un contador de loyalty (lealtad) que se utiliza para activar sus habilidades. Pueden ser atacados por criaturas, y el daño recibido reduce su lealtad; si esta llega a cero, el Planeswalker es enviado al cementerio.16
+      * Batallas (Battles): El tipo de carta más reciente. Representan conflictos importantes y son cartas de doble cara que pueden transformarse. Actualmente, solo existe el subtipo "Asedio". Las batallas tienen contadores de defense (defensa) y pueden ser atacadas. Al ser derrotadas, se exilian y su propietario puede jugar el reverso (que puede ser una criatura, artefacto u otro tipo de carta) de forma gratuita.16
+
+
+Tipos de Cartas Adicionales/Variantes
+
+
+Además de las categorías principales, existen otros tipos de cartas que son específicos de variantes de juego o sets particulares:
+      * Conspiracy, Dungeon, Phenomenon, Plane, Scheme y Vanguard: Estos tipos de cartas no son "jugables" en todos los formatos o no se encuentran en los mazos principales, sino que forman parte de mecánicas de juego específicas (por ejemplo, los Dungeon son un tipo de carta que representa un lugar que se "explora" en el juego).14
+      * Kindred (anteriormente Tribal): Un supertipo que puede combinarse con otros tipos de carta (ej., "Kindred Sorcery"). Aunque su nombre ha cambiado, sigue siendo relevante para las interacciones de tipo de carta.14
+
+
+Implicaciones (Tipos de Cartas)
+
+
+La categorización de cartas y sus atributos tienen implicaciones directas para la IA:
+La type_line de una carta (ej., "Legendary Creature — Dinosaur") implica una jerarquía y un sistema de clasificación que la IA debe comprender para aplicar reglas específicas. El material de referencia indica que "Legendary es un supertipo, esencialmente una categoría adicional además del tipo" y que "después del guion suele ir un subtipo".14 Esto significa que la
+type_line no es simplemente una cadena de texto, sino una composición de supertypes (como Legendary, Basic, Snow), types (como Creature, Artifact, Enchantment) y subtypes (como Goblin, Warrior, Aura). Para la IA, esto implica que el campo type_line debe ser analizado en un array de sus componentes (ej., ["Legendary", "Creature"] y ``) para permitir consultas y lógica de juego precisas (ej., "buscar todas las criaturas con el subtipo 'Dinosaurio'"). El modelo de datos debería reflejar esta estructura para permitir consultas eficientes y la aplicación correcta de reglas que afectan a categorías amplias o muy específicas de cartas.
+Los atributos numéricos como power, toughness, loyalty y defense son condicionales al tipo de carta. Por ejemplo, solo las criaturas tienen fuerza y resistencia, los planeswalkers tienen lealtad y las batallas tienen defensa.5 Si una IA intenta acceder a la
+power de una carta de tipo "Instantáneo", debería esperar un valor nulo o una excepción. Esto sugiere un diseño de base de datos donde estos atributos sean opcionales o se almacenen en tablas relacionadas específicas para cada tipo de carta, o un modelo de objeto con herencia donde los subtipos de carta hereden los atributos relevantes. Para la generación de código, esto significa que la IA debe incorporar lógica condicional basada en la type_line antes de intentar acceder a estos atributos, garantizando la coherencia y previniendo errores.
+
+
+Tabla: Tipos de Cartas de MTG y Atributos Clave
+
+
+Esta tabla resume los tipos de cartas principales de MTG y los atributos específicos que cada tipo posee, destacando su comportamiento fundamental en el juego. Su valor para una IA es múltiple: permite a la IA clasificar las cartas por su tipo principal y comprender inmediatamente qué atributos esperar y cómo interactuar con ellas en el juego. Es esencial para la implementación de la lógica del juego, ya que la IA puede usar esta tabla para determinar si una carta puede atacar, bloquear, generar maná o si tiene habilidades de lealtad, lo cual es crítico para la simulación de partidas y la toma de decisiones. Finalmente, ayuda a la IA a validar la consistencia de los datos de las cartas, asegurando, por ejemplo, que solo las criaturas tengan un valor de fuerza.
+Tipo de Carta
+	Descripción
+	Atributos Específicos
+	Comportamiento Clave
+	Fuente (Snippet ID)
+	Criatura
+	Combatientes que atacan y bloquean.
+	Fuerza (power), Resistencia (toughness)
+	Permanente, Ataca/Bloquea
+	5
+	Conjuro
+	Hechizo de un solo uso.
+	Ninguno
+	No Permanente, Velocidad de Conjuro
+	16
+	Instantáneo
+	Hechizo de un solo uso.
+	Ninguno
+	No Permanente, Velocidad de Instantáneo
+	16
+	Tierra
+	Genera maná.
+	Ninguno
+	Permanente, Se "juega" (no se "lanza"), No es hechizo
+	16
+	Artefacto
+	Representa objetos o construcciones.
+	Ninguno (a menos que sea también Criatura)
+	Permanente, Mayormente incoloro
+	16
+	Encantamiento
+	Efecto mágico continuo.
+	Ninguno
+	Permanente, Algunos son Auras
+	16
+	Planeswalker
+	Ser poderoso con habilidades activadas.
+	Lealtad (loyalty)
+	Permanente, Puede ser atacado
+	16
+	Batalla
+	Representa un conflicto, se puede transformar.
+	Defensa (defense)
+	Permanente, Puede ser atacado, Doble cara
+	16
+	
+
+Interpretación del Texto de Reglas (Texto Oracle)
+
+
+El "Oracle text" es la versión oficial y canónica del texto de reglas de una carta, mantenida por Wizards of the Coast. Es la fuente fundamental para la aplicación precisa de las reglas, ya que anula cualquier texto impreso en cartas antiguas que pueda estar desactualizado o ser incorrecto.17 Este texto es complejo y puede contener palabras clave (ej., "Volar", "Prisa"), así como diferentes tipos de habilidades: activadas, disparadas y estáticas.17 Para que una IA genere o interprete reglas de manera efectiva, necesita un análisis semántico profundo del texto Oracle, lo cual va más allá de la simple extracción de texto y requiere comprender la sintaxis, las palabras clave y las interacciones de las habilidades.
+
+
+Estructura y Sintaxis del Texto Oracle
+
+
+El texto Oracle sigue una sintaxis estandarizada para definir las habilidades de una carta:
+      * Habilidades Activadas: Se caracterizan por tener un costo y un efecto, separados por dos puntos (ej., {1}{R}: [Efecto]). Se pueden activar en cualquier momento en que el jugador tenga prioridad y pueda pagar el costo.18
+      * Habilidades Disparadas: Comienzan con palabras clave como "cuando", "siempre que" o "al". Se activan automáticamente cuando ocurre un evento específico en el juego y se colocan en la pila para su resolución.17
+      * Habilidades Estáticas: Son declaraciones que modifican las reglas del juego de forma continua mientras la carta está en el campo de batalla o en la zona relevante. No utilizan la pila y están siempre activas.18
+
+
+Palabras Clave y su Significado
+
+
+Magic: The Gathering utiliza un extenso conjunto de palabras clave (ej., "Vigilancia", "Dañar primero", "Vínculo vital") que poseen significados específicos definidos en las reglas del juego.18 Algunas son "Evergreen", lo que significa que pueden aparecer en cualquier set, mientras que otras son "Mechanics" que rotan dentro y fuera de los sets con las expansiones.18 El texto Oracle a menudo incluye un texto recordatorio entre paréntesis para estas palabras clave, especialmente cuando se introducen en un set, para ayudar a los jugadores a comprender su función.
+
+
+Símbolos en el Texto de Reglas
+
+
+Los símbolos de maná y otros símbolos de reglas (ej., {T} para "tapar" un permanente, {Q} para "enderezar" un permanente) aparecen frecuentemente en el texto de reglas y tienen un significado programático específico.12 Estos símbolos son cruciales para el cálculo de costos y la interpretación de las acciones que una carta puede realizar o requerir.
+
+
+Implicaciones (Texto de Reglas)
+
+
+La interpretación del texto de reglas presenta desafíos y oportunidades para la IA:
+La IA debe priorizar el "Oracle text" sobre el texto impreso en la carta para una interpretación precisa de las reglas, especialmente para cartas antiguas que han recibido erratas. El material de referencia establece que "la referencia de cartas Oracle debe usarse para determinar la redacción de una carta" y que "muchas cartas antiguas han recibido errata en la referencia de cartas Oracle".18 Esto significa que el texto físico en una carta antigua podría ser incorrecto o desactualizado según las reglas actuales del juego. Para una IA que simula el juego o aplica reglas, el uso del texto impreso podría llevar a errores críticos. La IA debe ser instruida para siempre consultar el
+oracle_text (disponible en APIs como Scryfall 6) como la fuente autorizada. Esto implica que el flujo de datos para la IA debe asegurar que el
+oracle_text sea el campo principal para la lógica de reglas, y que cualquier texto de carta escaneado o reconocido por OCR sea validado o reemplazado por la versión Oracle.
+La complejidad del texto Oracle, con sus habilidades activadas, disparadas y estáticas, palabras clave y referencias a sí mismo, exige capacidades avanzadas de Procesamiento del Lenguaje Natural (PLN) para la IA. El material de referencia describe la estructura de las habilidades (costo:efecto para activadas, "cuando/siempre que/al" para disparadas, declaraciones para estáticas) y menciona el "texto autorreferencial" y las "versiones abreviadas del nombre de una carta".18 Para que una IA "entienda" una carta, no basta con leer el texto; necesita analizar su estructura, identificar los componentes de las habilidades, resolver referencias (ej., "esta criatura", "su controlador") y comprender el significado de las palabras clave. Esto va más allá de la generación de código simple y se adentra en el ámbito de la comprensión semántica y la representación del conocimiento. La IA podría beneficiarse de un motor de reglas o una ontología de MTG para interpretar y aplicar correctamente el texto Oracle. Para la generación de código, la IA podría generar plantillas de código para tipos de habilidades comunes (ej.,
+if (evento_disparador) { activar_habilidad() }) y luego rellenar los detalles a partir del texto Oracle analizado.
+
+
+Tabla: Símbolos de Maná y su Representación
+
+
+Esta tabla detalla los diversos símbolos de maná y otros símbolos de reglas que aparecen en las cartas de MTG, junto con su representación textual estandarizada y su valor lógico. Su valor para una IA es múltiple: proporciona una referencia para analizar y generar costos de maná y texto de habilidades de manera consistente, ya que los símbolos son una parte crucial del "lenguaje" de MTG. Es esencial para que la IA calcule correctamente el cmc de una carta y determine si se pueden pagar los costos de lanzamiento o activación. Finalmente, permite a la IA reconocer y actuar sobre habilidades que requieren "tapar" o "enderezar" permanentes, o que involucran contadores específicos.
+Símbolo Gráfico
+	Representación Textual (Scryfall/Oracle)
+	Valor de Maná (CMC)
+	Descripción
+	Fuente (Snippet ID)
+	{W}
+	{W}
+	1.0
+	Un maná blanco.
+	12
+	{U}
+	{U}
+	1.0
+	Un maná azul.
+	12
+	{B}
+	{B}
+	1.0
+	Un maná negro.
+	12
+	{R}
+	{R}
+	1.0
+	Un maná rojo.
+	12
+	{G}
+	{G}
+	1.0
+	Un maná verde.
+	12
+	{C}
+	{C}
+	1.0
+	Un maná incoloro (específico).
+	12
+	{X}
+	{X}
+	0.0
+	Maná genérico variable.
+	12
+	{0}
+	{0}
+	0.0
+	Cero maná genérico.
+	12
+	{1}
+	{1}
+	1.0
+	Un maná genérico.
+	12
+	{2}
+	{2}
+	2.0
+	Dos maná genérico.
+	12
+	{100}
+	{100}
+	100.0
+	Cien maná genérico.
+	12
+	{∞}
+	{∞}
+	Infinito
+	Maná genérico infinito.
+	12
+	{W/U}
+	{W/U}
+	1.0
+	Un maná blanco o azul (híbrido).
+	12
+	{2/W}
+	{2/W}
+	2.0
+	Dos maná genérico o un maná blanco (híbrido).
+	12
+	{W/P}
+	{W/P}
+	1.0
+	Un maná blanco o dos vidas (Phyrexian).
+	12
+	{T}
+	{T}
+	N/A
+	Símbolo de "Tapar" (girar un permanente).
+	12
+	{Q}
+	{Q}
+	N/A
+	Símbolo de "Enderezar" (enderezar un permanente).
+	12
+	{E}
+	{E}
+	N/A
+	Un contador de energía.
+	12
+	
+
+Variaciones y Ediciones de Cartas
+
+
+La estructura de las cartas de Magic: The Gathering es intrínsecamente compleja debido a la multitud de variaciones y ediciones que existen para una misma carta lógica. Estas variaciones no son meramente estéticas, sino que tienen un impacto significativo en la identificación, la gestión y, crucialmente, el valor de mercado de las cartas.
+
+
+Tipos de Acabados (Finishes)
+
+
+Las cartas pueden presentar diferentes acabados físicos que alteran su apariencia y, consecuentemente, su valor. La API de Scryfall, por ejemplo, utiliza el atributo finishes para identificar los tipos de acabados disponibles: nonfoil (no foil), foil (foil tradicional), etched (foil grabado) y glossy (brillante).2 Estos acabados son críticos para la valoración de cartas, ya que los precios pueden variar drásticamente entre ellos (por ejemplo,
+usd_foil y usd_etched en los datos de precios de Scryfall) 2, y son esenciales para una gestión precisa del inventario.
+
+
+Variantes de Arte y Marco
+
+
+Más allá de los acabados, las cartas se imprimen con diversas variantes de arte y diseño de marco:
+      * Marcos "Default": Se refieren a los marcos tradicionales que han caracterizado la mayoría de las cartas a lo largo de la historia de MTG (por ejemplo, los marcos de 1993, 1997, 2003 o 2015).2
+      * Variantes Modernas: Incluyen cartas full_art (donde la ilustración ocupa la mayor parte de la carta), borderless (sin borde, con la ilustración extendiéndose hasta el borde de la carta), showcase (con un diseño de marco especial y temático para un set en particular) y promo (impresiones promocionales con arte o marcos únicos).2
+      * Arte Alternativo (alt art): Algunas cartas tienen ilustraciones completamente diferentes a su versión estándar, que pueden ser significativamente más valiosas debido a su atractivo estético y su rareza.10
+Estas variantes son atributos clave para la identificación de productos específicos en el mercado secundario y para la personalización de colecciones. La IA debe ser capaz de distinguirlas para tareas de búsqueda, filtrado y valoración, ya que cada variante puede tener un precio de mercado único.
+
+
+Condiciones de la Carta y su Impacto
+
+
+La condición física de una carta es uno de los factores más importantes que afectan su valor de mercado. Las plataformas de comercio de cartas y los servicios de tasación utilizan escalas estandarizadas para describir el estado de una carta:
+      * Escala de Condiciones Estándar:
+      * Mint (M) / Gem Mint (GEM-MT 10): Cartas prácticamente perfectas, sin defectos visibles.19
+      * Near Mint (NM): Presentan un desgaste mínimo por manipulación o juego, con una superficie casi impecable y esquinas nítidas.20
+      * Lightly Played (LP) / Slightly Played (SP): Muestran pequeñas imperfecciones, como un ligero desgaste en los bordes o rasguños menores, pero sin daños estructurales significativos.20
+      * Moderately Played (MP): Presentan imperfecciones más notables, como desgaste de bordes, arañazos o ligeros dobleces, pero sin comprometer la integridad estructural de la carta.20
+      * Heavily Played (HP): Muestran un desgaste considerable, con múltiples imperfecciones moderadas o severas, pero aún son auténticas y generalmente jugables en una funda.20
+      * Damaged (D) / Poor (PO): Presentan daños significativos, como dobleces grandes, desgarros, manchas de agua o alteraciones, que pueden hacerlas ilegales para torneos o reducir drásticamente su valor.21
+      * Factores de Grado: La evaluación de la condición se basa en cuatro factores principales: las esquinas (su nitidez), los bordes (el desgaste en los lados), el centrado (la alineación de la imagen en la carta) y la superficie (la presencia de arañazos, suciedad o defectos de impresión).19
+      * Imperfecciones Específicas: Se han definido tipos específicos de imperfecciones, como Edgewear (desgaste de bordes), Scuffing (rozaduras), Grime (suciedad), Bend (doblez), Damage (daño), Scratch (arañazo), Ink Errors (errores de tinta), Miscuts (cortes incorrectos) y Crimping (daño por la maquinaria de empaquetado).24 Estas imperfecciones se clasifican por severidad:
+Slight, Minor, Moderate y Major.24
+      * Cartas Graduadas: Para las cartas de alto valor, los servicios de tasación de terceros (como PSA, BGS, CGC y SGC) evalúan y asignan una calificación numérica (ej., PSA 10, CGC 9.5) a la carta, que se sella en una funda protectora. Esta calificación certifica la condición y puede aumentar significativamente el valor de la carta.25
+La condición es un atributo crítico para el comercio de cartas y la valoración de colecciones. Una IA que interactúa con mercados secundarios o gestiona inventarios debe poder modelar y comparar cartas por su condición para proporcionar estimaciones de valor precisas.
+
+
+Implicaciones (Variaciones y Ediciones)
+
+
+La gestión de variaciones y ediciones es un desafío central en el modelado de datos de TCGs:
+Una única "carta lógica" (definida por su oracle_id) puede tener una vasta cantidad de "instancias físicas" únicas, cada una con su propio id de Scryfall, set_code, collector_number, finishes y condition. Este fenómeno representa una explosión combinatoria de variantes, lo que constituye un desafío clave para el modelado de datos. El material de referencia menciona "siete impresiones diferentes para cada lanzamiento de set Estándar" 3, y describe cómo las Secret Rares en One Piece TCG tienen múltiples versiones de rareza y arte (V1, V2, V3, Manga Rare).10 Además, Scryfall y otras fuentes listan diversos
+finishes (nonfoil, foil, etched, glossy) y tipos de marcos.2 Sumado a esto, las cartas pueden existir en múltiples
+conditions (NM, LP, MP, HP, D) y grados (PSA 10, CGC 9, etc.).20 Para la IA, esto implica que su modelo de datos no puede ser plano. Necesitará una estructura jerárquica o relacional que vincule una "definición de carta" (por
+oracle_id) a múltiples "impresiones" (por id de Scryfall, set_code, collector_number, finishes), y luego a "instancias físicas" (que incluirían la condition y el grade). La generación de código para gestionar colecciones o mercados debe reflejar esta complejidad, permitiendo búsquedas y filtrados muy específicos (ej., "todas las 'Lightning Bolt' foil de Modern Horizons 3 en Near Mint").
+Las variaciones no son solo estéticas; son determinantes directos del valor de mercado. Una IA que opera en un contexto económico debe comprender que la misma carta lógica puede tener precios radicalmente diferentes según su impresión, acabado y condición. El material de referencia documenta que una "Black Lotus" de Alpha firmada por el artista puede valer millones, y una "The One Ring" única también alcanza cifras millonarias.11 De manera similar, una "Nami OP01-016 alternate art Rare" puede valer "mucho más que la estándar".10 Las preguntas explícitas en el material de referencia, como "¿Cómo se compara el valor entre condiciones (ej., mint vs. near mint)?" y "¿Qué variaciones (ej., holofoil vs. reverse holofoil) están aumentando más de valor?" 27, refuerzan esta causalidad. Esto establece una clara relación: la escasez y la deseabilidad de una variante específica (debido a su arte, acabado o rareza de impresión) influyen directamente en su precio, y la condición física actúa como un multiplicador de valor. Para una IA que genera código para plataformas de comercio o herramientas de inversión, es insuficiente solo el precio base de una carta. Debe ser capaz de consultar y predecir precios basados en la combinación precisa de
+set, finishes, promo_types, frame_effects y condition/grade. Esto requiere que el modelo de datos de precios sea tan granular como el modelo de datos de las cartas, posiblemente con tablas de precios que incluyan condition y finish como claves.28
+
+
+Tabla: Variaciones de Cartas e Identificadores Asociados
+
+
+Esta tabla ilustra cómo las diferentes variaciones físicas y de impresión de una carta se identifican y cómo se relacionan con la identidad lógica de la carta. Su valor para una IA es múltiple: permite a la IA gestionar inventarios de cartas con la granularidad necesaria para el comercio y la colección. Es crítica para la IA al calcular el valor de una colección o al determinar precios de mercado, ya que el valor de una carta varía enormemente según su variación y condición. Finalmente, facilita la generación de interfaces de usuario que permitan a los usuarios buscar, filtrar y visualizar cartas según sus preferencias de variantes.
+Tipo de Variación
+	Atributo Clave
+	Descripción
+	Impacto en Valor/Identificación
+	Fuente (Snippet ID)
+	Acabado
+	finishes
+	Tipo de superficie de la carta: no-foil, foil, grabado, brillante.
+	Afecta directamente el precio de mercado (usd_foil, usd_etched), crucial para inventario.
+	2
+	Marco/Arte
+	frame_effects, full_art, border_color, promo_types
+	Diseño visual del marco, arte extendido, sin bordes, promociones.
+	Crea variantes de alto valor coleccionable, distingue impresiones únicas.
+	2
+	Rareza
+	rarity
+	Nivel de escasez de la carta en su colección (común, rara, mítica, etc.).
+	Indicador primario de valor base; las rarezas especiales (ej. Manga Rare) disparan el precio.
+	10
+	Condición
+	condition, grade
+	Estado físico de la carta (Near Mint, Lightly Played, Damaged, etc.), calificado por servicios externos.
+	Multiplicador de valor crítico; una carta en mejor condición vale significativamente más.
+	20
+	Edición/Set
+	set, set_name, collector_number
+	Colección a la que pertenece la carta y su número dentro de ella.
+	Identifica la impresión específica, esencial para precios y legalidades de formato.
+	2
+	
+
+Identificadores Clave y Fuentes de Datos Externas
+
+
+El ecosistema de datos de Magic: The Gathering, y de los juegos de cartas coleccionables en general, es vasto y está distribuido entre múltiples plataformas y APIs. Para una IA, la capacidad de acceder, consolidar y correlacionar datos de estas diversas fuentes es crucial para obtener una visión completa y precisa de una carta.
+
+
+APIs de Datos
+
+
+Las principales APIs y fuentes de datos para MTG y otros TCGs incluyen:
+         * Scryfall API: Considerada la fuente más completa y recomendada para datos de cartas de MTG. Ofrece un id único para cada impresión y un oracle_id para la identidad de reglas, junto con imágenes (image_uris), precios (prices) y legalidades en formatos de juego.29 Es gratuita para uso no comercial y de fan.29
+         * MTGJSON: Proporciona volcados de datos estáticos en formatos portables (JSON) para todas las cartas de MTG. Es una alternativa a las APIs en tiempo real para aplicaciones que pueden gestionar grandes conjuntos de datos localmente, permitiendo una mayor independencia de la red.30
+         * JustTCG: Una API comercial enfocada en precios multi-TCG, incluyendo MTG, Pokémon, Yu-Gi-Oh!, Lorcana, One Piece y Union Arena. Se destaca por sus actualizaciones frecuentes y la granularidad de precios por condición e impresión, posicionándose como una alternativa a TCGplayer.30
+         * TCGplayer API: Históricamente, una fuente clave de datos de catálogo y precios. Sin embargo, actualmente no concede nuevo acceso a su API.34 A pesar de esto, sus datos siguen siendo accesibles a través de otros agregadores como JustTCG 30 o TCG-Home.35
+         * Cardmarket API (a través de Scrapers): Cardmarket, el mayor mercado europeo, no tiene una API pública directa mencionada en el material. No obstante, existen scrapers comerciales (como los de Apify) que permiten acceder a sus datos de precios y tendencias.36 Cardmarket también publica "tablas de datos" descargables.38
+         * Otras APIs de TCG: El ecosistema de TCGs cuenta con APIs para otros juegos populares, como Pokémon TCG (TCGdex 40, pokemontcg.io 42), Yu-Gi-Oh! (Yu-Gi-Oh! API 43), Lorcana (Lorcast.com 45), Flesh and Blood (Fablib 47, cards.fabtcg.com 48), Star Wars Unlimited, Digimon y One Piece.49 Estas APIs demuestran modelos de datos y funcionalidades comunes que pueden servir de inspiración para un sistema agnóstico de TCG.
+
+
+Bases de Datos de Precios y su Relevancia para la Identificación
+
+
+Las plataformas de mercado y los agregadores de precios son fuentes vitales de información económica para las cartas:
+         * Plataformas de Mercado: Sitios como TCGplayer, Cardmarket, Card Kingdom y Troll and Toad ofrecen listados de productos y precios, a menudo con filtros por condición y variantes.51
+         * Agregadores de Precios: Servicios como JustTCG, TCG-Home, Card Ladder y PSA Price Guide consolidan datos de precios de múltiples fuentes, incluyendo información sobre la condición y las variantes de las cartas.54
+         * Datos Históricos: La disponibilidad de datos históricos de precios es crucial para el análisis de tendencias. Card Ladder, por ejemplo, rastrea ventas públicas desde el año 2000.60 Otros sitios como QuietSpeculation.com y MTGStocks.com ofrecen datos desde 2012/2013, mientras que la historia de precios pública de TCGplayer se limita a un año.61 La consistencia y disponibilidad de estos datos varían, lo que representa un desafío para el análisis a largo plazo.
+
+
+Implicaciones (Identificadores y Fuentes de Datos)
+
+
+La naturaleza distribuida de los datos de TCGs tiene implicaciones significativas para la IA:
+El ecosistema de datos de TCGs está fragmentado entre múltiples APIs, bases de datos y plataformas de mercado. Para obtener una visión completa de una carta (reglas de Scryfall, precios de JustTCG/Cardmarket, imágenes de Scryfall), la IA necesitará estrategias de consolidación y mapeo de IDs. Existen una multitud de APIs y plataformas, cada una con sus propios identificadores (por ejemplo, id y oracle_id de Scryfall, productId de TCGplayer, idProduct de Cardmarket).6 Para construir una comprensión integral de una carta, la IA no puede depender de una única fuente. Necesitará un mecanismo para mapear y fusionar datos de diferentes APIs utilizando los identificadores cruzados (ej.,
+tcgplayer_id, cardmarket_id en Scryfall).6 Esto implica que el código generado por la IA debe incluir módulos para la integración de múltiples fuentes de datos, la resolución de IDs y la gestión de posibles inconsistencias o lagunas de datos (por ejemplo, TCGplayer no concede nuevas APIs 34).
+Los precios de las cartas son altamente dinámicos y varían según la condición, la rareza y las tendencias del mercado. El material de referencia muestra que el historial de precios de TCGplayer es limitado a un año, pero otras fuentes como QuietSpeculation y MTGStocks tienen datos más antiguos.61 Cardhedger ofrece "5 años de historial de precios para cada grado" y una "API de webhook en tiempo real".57 Además, la discusión sobre el "versionado temporal" para precios en una base de datos 28 subraya que los precios no son un atributo estático de la carta, sino un conjunto de datos que cambia con el tiempo y varía por condiciones y variantes. Para una IA que realiza análisis financieros, optimización de precios 62 o seguimiento de inversiones 59, es crucial tener acceso a datos históricos y un modelo que pueda consultar precios para una fecha y condición específicas. El modelo de datos para la IA debe incluir tablas de precios con marcas de tiempo y atributos de condición/variante, y la lógica de código debe ser capaz de realizar consultas temporales y agregaciones de precios.
+
+
+Tabla: Identificadores Externos Clave
+
+
+Esta tabla lista los identificadores únicos utilizados por las principales plataformas y APIs de datos de MTG, explicando su propósito y dónde se encuentran en los objetos de datos. Su valor para una IA es múltiple: sirve como un mapa de referencia para que la IA navegue entre diferentes fuentes de datos, permitiendo la integración de información diversa sobre una misma carta. Ayuda a la IA a mantener la consistencia de los datos al cruzar referencias entre plataformas, asegurando que se hable de la misma carta o impresión. Finalmente, permite a la IA construir consultas eficientes a través de múltiples APIs, utilizando el ID más apropiado para cada tipo de información (ej., oracle_id para reglas, tcgplayer_id para precios).
+Identificador
+	Plataforma/API
+	Propósito
+	Campo en Scryfall API (si aplica)
+	Fuente (Snippet ID)
+	id
+	Scryfall
+	Identificador único de cada impresión de carta.
+	id
+	6
+	oracle_id
+	Scryfall
+	Identificador único de la identidad de reglas de la carta.
+	oracle_id
+	6
+	mtgo_id
+	Magic Online
+	Identificador de la carta en Magic Online.
+	mtgo_id
+	6
+	mtgo_foil_id
+	Magic Online
+	Identificador de la versión foil de la carta en Magic Online.
+	mtgo_foil_id
+	6
+	multiverse_ids
+	Gatherer (Wizards)
+	Identificadores de la base de datos oficial de Wizards.
+	multiverse_ids
+	6
+	tcgplayer_id
+	TCGplayer
+	Identificador de producto en TCGplayer para precios.
+	tcgplayer_id
+	6
+	tcgplayer_etched_id
+	TCGplayer
+	Identificador de producto en TCGplayer para versiones etched.
+	tcgplayer_etched_id
+	6
+	cardmarket_id
+	Cardmarket
+	Identificador de producto en Cardmarket.
+	cardmarket_id
+	6
+	collector_number
+	Impresión física
+	Número de la carta dentro de su colección.
+	collector_number
+	6
+	set
+	Impresión física
+	Código corto de la colección.
+	set
+	6
+	
+
+Implicaciones para la Generación de Código por IA
+
+
+La información detallada sobre la estructura de las cartas de Magic: The Gathering tiene implicaciones directas y profundas para la generación de código por parte de una IA, abarcando desde el modelado de datos hasta la implementación de la lógica de juego y las interacciones con el mercado.
+
+
+Modelado de Datos para la IA
+
+
+La IA debe adoptar un modelo de datos jerárquico y relacional para representar las cartas de MTG de manera efectiva. Se sugiere una estructura que distinga entre:
+         * Una entidad CardDefinition (basada en el oracle_id) para representar la identidad lógica de la carta y sus reglas fundamentales.
+         * Una entidad CardPrinting (basada en el id de Scryfall, set, collector_number y finishes) para representar una versión física específica de la carta.
+         * Una entidad CardInstance (para colecciones de usuarios) que podría incluir atributos dinámicos como condition, grade y purchase_price.
+Los atributos condicionales, como power/toughness para criaturas, loyalty para planeswalkers y defense para batallas, deben modelarse como campos opcionales o a través de mecanismos de herencia de clases para evitar la dispersión de datos nulos y mantener la coherencia del modelo. La representación de la type_line debe permitir su análisis en supertipos, tipos y subtipos para una aplicación granular de las reglas. Un modelo de datos bien diseñado es la base para cualquier código robusto, permitiendo a la IA generar clases, esquemas de bases de datos (SQL, NoSQL) y estructuras de datos en memoria de forma directa y eficiente.
+
+
+Consideraciones para la Lógica de Juego y Reglas
+
+
+Para generar código que simule o interactúe con el juego, la IA debe ser capaz de interpretar y aplicar el "Oracle text" de forma programática. Esto podría implicar el uso de técnicas de Procesamiento del Lenguaje Natural (PLN) para extraer componentes de habilidades (costos, efectos, disparadores) y traducirlos a lógica condicional o a un motor de reglas. Las palabras clave del juego deben ser mapeadas a funciones o propiedades booleanas (ej., has_flying: true). La lógica de juego generada debe considerar la interacción de diferentes tipos de cartas y sus atributos específicos, como la forma en que el daño afecta a las criaturas frente a los planeswalkers. La generación de código para un simulador de juego o un bot de juego requiere una comprensión profunda de las reglas y cómo se aplican a los atributos de la carta.
+
+
+Recomendaciones para la Estructura de la Base de Datos
+
+
+Para una IA que maneje grandes volúmenes de datos de cartas y transacciones, se recomienda un diseño de base de datos relacional con tablas separadas para CardDefinitions, CardPrintings, CardPrices (con campos para condition, finish y timestamp), CardTypes, ManaSymbols y Keywords. Es fundamental implementar un "versionado temporal" para los datos de precios 28 para permitir consultas históricas precisas y el análisis de tendencias. Además, se podría considerar el uso de bases de datos de grafos para modelar relaciones complejas entre cartas (ej., combos, sinergias) o para representar el "Stack" o el "Battlefield" de manera dinámica durante una partida. Una estructura de base de datos optimizada es crucial para la eficiencia y escalabilidad del código generado por la IA.
+
+
+Implicaciones (Implicaciones para la Generación de Código)
+
+
+La generación de código para MTG presenta desafíos que van más allá de la simple representación de datos:
+La IA no solo necesita los datos de las cartas, sino también un "metamodelo" de las reglas de MTG que le permita interpretar el oracle_text y generar lógica de juego. Aunque el oracle_text es texto libre, está estructurado por las reglas de MTG. Para que la IA genere código de juego (ej., "si una criatura con volar ataca, no puede ser bloqueada por criaturas sin volar"), necesita comprender la semántica de "Volar" y "bloquear". Esto no es solo un mapeo de datos, sino una interpretación de conceptos y relaciones. La IA podría beneficiarse de un sistema de ontología o un motor de reglas que defina las interacciones de las palabras clave y los tipos de habilidades. Para la generación de código, esto significa que la IA no solo generaría estructuras de datos, sino también funciones y clases que encapsulen la lógica de las reglas, posiblemente utilizando un lenguaje de dominio específico (DSL) o un marco de reglas. Una recomendación clave es que la IA aprenda a analizar el texto Oracle en una representación estructurada (ej., un árbol sintáctico abstracto o un grafo de conocimiento) que luego pueda ser traducido a código.
+La IA que genera código para simular partidas o interactuar con el juego en tiempo real debe considerar las "zonas" de juego (Library, Hand, Battlefield, Graveyard, Stack, Exile, Command) y la mutabilidad de los estados de la carta (ej., contadores, daño, control). El material de referencia detalla las zonas del juego y cómo las cartas se mueven entre ellas, y menciona que las criaturas reciben daño y mueren, y los planeswalkers pierden lealtad.18 Esto implica que el estado de una carta no es estático una vez que está en juego. Los contadores, el daño, el control y la ubicación de la carta son atributos dinámicos que cambian durante el juego. Para la IA, esto significa que el modelo de datos debe ser mutable y capaz de representar el "estado del juego" en un momento dado. Las entidades de carta en el campo de batalla no son solo copias de la
+CardPrinting, sino instancias con su propio estado (ej., current_toughness, damage_marked, loyalty_counters). La generación de código para un motor de juego requerirá clases y funciones que gestionen el movimiento de cartas entre zonas, la aplicación de efectos temporales y la actualización de los atributos de estado de las cartas en tiempo real.
+
+
+Conclusiones
+
+
+El análisis detallado de la estructura de las cartas de Magic: The Gathering revela que son entidades de una complejidad considerable, que requieren un modelo de datos multicapa para su representación programática. La distinción fundamental entre la identidad lógica de una carta (representada por el oracle_id) y sus múltiples impresiones físicas (identificadas por el id de Scryfall, set, finishes y condition) es un pilar para cualquier sistema de IA que pretenda interactuar con el juego. Esta granularidad es indispensable tanto para la aplicación precisa de las reglas del juego como para la gestión económica de colecciones en el mercado secundario.
+Las fuentes de datos externas, aunque fragmentadas y con variaciones en su accesibilidad y consistencia histórica, son críticas para construir una comprensión integral de las cartas, especialmente en lo que respecta a la información de precios y tendencias de mercado. La IA debe ser diseñada para integrar y consolidar datos de múltiples APIs, resolviendo los mapeos entre diferentes identificadores únicos.
+Para la generación de código, esto implica la necesidad de una arquitectura de datos robusta y modular. La IA no solo debe ser capaz de modelar los atributos estáticos de las cartas, sino también de interpretar el "Oracle text" mediante técnicas avanzadas de PLN para traducir las reglas del juego a lógica programática. Además, la capacidad de gestionar la dinámica del juego en tiempo real, incluyendo el movimiento de cartas entre zonas y la mutabilidad de sus estados, es un desafío clave que requiere un diseño de software que refleje la naturaleza efímera y cambiante de una partida de MTG. En resumen, el desarrollo de una IA competente para MTG exige una comprensión profunda de su ontología, una estrategia de datos unificada y la capacidad de traducir conceptos complejos del juego en código funcional y escalable.
+Works cited
+         1. Building a Card | Magic: The Gathering - Wizards of the Coast, accessed June 29, 2025, https://magic.wizards.com/en/news/feature/building-card-2018-06-29
+         2. API & Data · Scryfall Blog · Scryfall Magic The Gathering Search, accessed June 29, 2025, https://scryfall.com/blog/category/api
+         3. Printing variations - MTGNexus, accessed June 29, 2025, https://www.mtgnexus.com/viewtopic.php?t=13620
+         4. Card Imagery · API Documentation - Scryfall, accessed June 28, 2025, https://scryfall.com/docs/api/images
+         5. Anatomy of a Magic Card | MAGIC: THE GATHERING, accessed June 29, 2025, https://magic.wizards.com/en/news/feature/anatomy-magic-card-2006-10-21
+         6. Card Objects · API Documentation · Scryfall Magic The Gathering ..., accessed June 29, 2025, https://scryfall.com/docs/api/cards
+         7. MobileEngine: TCG Recognition, accessed June 28, 2025, https://services.tineye.com/MobileEngine/TCG
+         8. TCGSnap - Card Price Checker on the App Store - Apple, accessed June 28, 2025, https://apps.apple.com/us/app/tcgsnap-card-price-checker/id6738723607
+         9. GotThatData/sports-cards · Datasets at Hugging Face, accessed June 28, 2025, https://huggingface.co/datasets/GotThatData/sports-cards
+         10. Understanding One Piece TCG Rarity System - Beginner guide! : r/OnePieceTCG - Reddit, accessed June 28, 2025, https://www.reddit.com/r/OnePieceTCG/comments/1fp5bq5/understanding_one_piece_tcg_rarity_system/
+         11. List of most expensive cards from collectible card games - Wikipedia, accessed June 28, 2025, https://en.wikipedia.org/wiki/List_of_most_expensive_cards_from_collectible_card_games
+         12. Colors and Costs · API Documentation - Scryfall, accessed June 28, 2025, https://scryfall.com/docs/api/colors
+         13. MTG Advanced Search - Card Kingdom, accessed June 29, 2025, https://www.cardkingdom.com/catalog/magic_the_gathering/search
+         14. Card types? : r/mtg - Reddit, accessed June 29, 2025, https://www.reddit.com/r/mtg/comments/1fmf7bx/card_types/
+         15. Understanding Pokémon Rarity Symbols and Card Features | CGC, accessed June 28, 2025, https://www.cgccards.com/news/article/12438/pokemon-rarity-symbols/
+         16. MTG card types explained - Wargamer, accessed June 29, 2025, https://www.wargamer.com/magic-the-gathering/mtg-card-types
+         17. Newbie question: rules/guidelines for interpreting oracle text : r/magicTCG - Reddit, accessed June 29, 2025, https://www.reddit.com/r/magicTCG/comments/1ifjpgk/newbie_question_rulesguidelines_for_interpreting/
+         18. Magic: The Gathering rules - Wikipedia, accessed June 29, 2025, https://en.wikipedia.org/wiki/Magic:_The_Gathering_rules
+         19. Vintage Baseball Card Price Guide and Valuation - BBC Emporium, accessed June 28, 2025, https://bbcemporium.com/index.php?step=price_guide
+         20. Card Conditioning Overview - TCGplayer.com, accessed June 28, 2025, https://help.tcgplayer.com/hc/en-us/articles/221430307-Card-Conditioning-Overview
+         21. Card Condition - Help - Cardmarket, accessed June 28, 2025, https://help.cardmarket.com/en/CardCondition
+         22. Card Condition Guide - CardTrader, accessed June 28, 2025, https://static.cardtrader.com/en/guides/condition-guide
+         23. Importing a Collection - Help // Moxfield — MTG Deck Builder, accessed June 28, 2025, https://moxfield.com/help/importing-collection
+         24. Card Conditioning Standards - TCGplayer, accessed June 28, 2025, https://mktg-assets.tcgplayer.com/web/seller/guides/Card-Conditioning-Standards.pdf
+         25. The Ultimate Guide to Trading Cards: History, Trends, and Future Insig, accessed June 28, 2025, https://www.cardchasersmtl.com/blogs/blog/the-ultimate-guide-to-trading-cards-history-trends-and-future-insights
+         26. PSA Price Guide - Trading Card Values, accessed June 28, 2025, https://www.psacard.com/priceguide
+         27. Tools for trading cards sellers: CSV Upload and Price Guide - Ebay Export, accessed June 28, 2025, https://export.ebay.com/en/marketing/ebay-services-and-tools-help-seller/csv-upload-and-price-guide/
+         28. DB Schema: Versioned price model vs invoice-related data - Stack Overflow, accessed June 28, 2025, https://stackoverflow.com/questions/44041554/db-schema-versioned-price-model-vs-invoice-related-data
+         29. REST API Documentation · Scryfall Magic The Gathering Search, accessed June 28, 2025, https://scryfall.com/docs/api
+         30. JustTCG vs. The Alternatives: Choosing the Right TCG Pricing API, accessed June 28, 2025, https://justtcg.medium.com/justtcg-vs-the-alternatives-choosing-the-right-tcg-pricing-api-6d5d555ac7cd
+         31. Card · MTGJSON.com · Portable formats for all Magic: The Gathering ..., accessed June 29, 2025, https://mtgjson.com/data-models/card/
+         32. TCGPlayer Automated Price Movement Tracker Data Source : r/mtgfinance - Reddit, accessed June 28, 2025, https://www.reddit.com/r/mtgfinance/comments/1lik21c/tcgplayer_automated_price_movement_tracker_data/
+         33. Why JustTCG? Unpacking the Features of Your New TCG Pricing Powerhouse - Medium, accessed June 28, 2025, https://medium.com/@justtcg/why-justtcg-unpacking-the-features-of-your-new-tcg-pricing-powerhouse-9d0d28b395ae
+         34. Getting Started with TCGplayer API, accessed June 28, 2025, https://docs.tcgplayer.com/docs/getting-started
+         35. Discover what your collection is wort with real-time card prices - TCG Home, accessed June 28, 2025, https://tcg-home.com/track-prices/
+         36. Cardmarket.com Trend Scraper API - Apify, accessed June 28, 2025, https://apify.com/ecomscrape/cardmarket-trend-scraper/api
+         37. Cardmarket.com Card Details Page Scraper API - Apify, accessed June 28, 2025, https://apify.com/ecomscrape/cardmarket-card-page-details-scraper/api
+         38. Data Tables | Cardmarket, accessed June 28, 2025, https://www.cardmarket.com/en/Magic/Data
+         39. Data Tables from Cardmarket - Reddit, accessed June 28, 2025, https://www.reddit.com/r/CardMarket/comments/1k4icc6/data_tables_from_cardmarket/
+         40. TCGdex - Public APIs, accessed June 28, 2025, https://publicapis.io/tcgdex-api
+         41. TCGdex API: The Multilingual Pokemon TCG API, accessed June 28, 2025, https://tcgdex.dev/
+         42. Pokémon TCG API, accessed June 28, 2025, https://pokemontcg.io/
+         43. isma91/yu-gi-oh-api: A complete solution backend to get all card from the popular TCG Yu-Gi-Oh. - GitHub, accessed June 28, 2025, https://github.com/isma91/yu-gi-oh-api
+         44. Yu-Gi-Oh! - Public APIs, accessed June 28, 2025, https://publicapis.io/yu-gi-oh%21-api
+         45. Lorcana-api.com | Lorcana-api.com, accessed June 28, 2025, https://lorcana-api.com/
+         46. Card API - Lorcast - Lorcana Card Search, accessed June 28, 2025, https://lorcast.com/docs/api/cards
+         47. Flesh and Blood TCG Analysis Library, accessed June 28, 2025, https://fablib.readthedocs.io/
+         48. Flesh & Blood Card Database, accessed June 28, 2025, https://cards.fabtcg.com/
+         49. Apis - Kingdoms of Intrigue - One Piece Card Game - TCGplayer.com, accessed June 28, 2025, https://www.tcgplayer.com/product/516759/one-piece-card-game-kingdoms-of-intrigue-apis
+         50. ApiTCG - GitHub, accessed June 28, 2025, https://github.com/apitcg
+         51. MTG Deckbuilder | Find Your Cards - Card Kingdom, accessed June 28, 2025, https://www.cardkingdom.com/builder
+         52. Card Kingdom | Buy MTG Cards | MTG Sealed | MTG Accessories, accessed June 28, 2025, https://www.cardkingdom.com/
+         53. Troll and Toad - Magic the Gathering, Yugioh, Pokemon, Cards, Singles,, accessed June 28, 2025, https://www.trollandtoad.com/
+         54. price check // Moxfield — MTG Deck Builder, accessed June 28, 2025, https://moxfield.com/decks/sT7yUIV6ukyZL17zIQz05Q
+         55. My Collection // Moxfield — MTG Deck Builder, accessed June 28, 2025, https://moxfield.com/decks/5yoiyxiy_kCHAp1VmWOdHA
+         56. Pricing options : r/Moxfield - Reddit, accessed June 28, 2025, https://www.reddit.com/r/Moxfield/comments/1kxed0x/pricing_options/
+         57. Sports Card and Trading Card API and Data Service - Card Hedge, accessed June 28, 2025, https://www.cardhedger.com/land-services
+         58. The Finance Article Where I Use Secret Data to Make Cool Charts - TCGplayer, accessed June 28, 2025, https://www.tcgplayer.com/content/article/The-Finance-Article-Where-I-Use-Secret-Data-to-Make-Cool-Charts/3b637747-9a30-43dd-8db4-8ba8b4717455/
+         59. Top Trading Card Platforms - ConsignR, accessed June 28, 2025, https://consignr.app/blog/top-trading-card-platforms
+         60. Sports Card Price Guide | Card Ladder, accessed June 28, 2025, https://www.cardladder.com/ladder
+         61. Understanding Historical Data in MTG Finance | TCGplayer, accessed June 28, 2025, https://www.tcgplayer.com/content/article/Understanding-Historical-Data-in-MTG-Finance/05fb040d-7bb3-45e2-bc52-b9fa8a49752e/
+         62. TCG Card Shop Simulator: Tips For Setting The Best Prices - Game Rant, accessed June 28, 2025, https://gamerant.com/tcg-card-shop-simulator-best-prices-tips/

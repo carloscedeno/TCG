@@ -1,6 +1,6 @@
 requests
 beautifulsoup4
 pandas
-supabase-py
+supabase
 python-dotenv
 lxml 
