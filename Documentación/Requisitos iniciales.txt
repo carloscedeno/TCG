@@ -1,0 +1,292 @@
+﻿Documento de Requisitos Técnicos y Funcionales: Plataforma Agregadora de Precios de TCG
+Versión: 1.1
+Fecha: 28 de junio de 2025
+1. Introducción y Visión del Producto
+Este documento define los requisitos funcionales, no funcionales y técnicos para el desarrollo de una aplicación web avanzada para la agregación y análisis de precios de cartas coleccionables (TCG). El objetivo es crear una herramienta centralizada, precisa y fácil de usar para coleccionistas, jugadores y vendedores de los siguientes TCGs: Magic: The Gathering, Pokémon, Lorcana, Flesh and Blood, Yu-Gi-Oh!, Wixoss y One Piece.
+La plataforma consolidará datos de precios de mercados clave como Card Kingdom, TCGplayer, Cardmarket y Troll and Toad, presentando la información de manera clara, incluyendo un precio de mercado promedio calculado y un precio de compra sugerido. Este documento servirá como la única fuente de verdad para el equipo de desarrollo.
+2. Requisitos Funcionales (RF) - Detallado
+RF-01: Sistema de Búsqueda Avanzada de Cartas
+El sistema debe proporcionar una funcionalidad de búsqueda robusta y multifacética, diseñada para ser intuitiva y potente.
+* RF-01.1: Componente de Búsqueda Principal:
+   * Comportamiento: La barra de búsqueda principal estará siempre visible en la cabecera de la página. A medida que el usuario escribe, un menú desplegable mostrará sugerencias de autocompletado en tiempo real con el nombre de la carta y el juego al que pertenece (ej. "Sol Ring - Magic: The Gathering"). Al seleccionar una sugerencia o presionar Enter, se ejecutará la búsqueda.
+   * Lógica Booleana:
+      * elfo AND guerrero (o elfo guerrero): Devuelve cartas que contienen ambos términos en su tipo o texto.
+      * destruir OR exiliar: Devuelve cartas que contienen al menos uno de los dos términos.
+      * artefacto -criatura: Devuelve cartas que son artefactos pero no del subtipo criatura.
+      * "volar, vigilancia": Devuelve cartas que contienen la frase exacta en su texto.
+* RF-01.2: Panel de Filtros Detallados:
+   * Interacción: Un panel de filtros lateral (o un modal en vista móvil) permitirá al usuario refinar la búsqueda actual. Aplicar un filtro debe actualizar los resultados de la búsqueda dinámicamente sin recargar la página.
+   * Gestión de Estado: Los filtros seleccionados deben ser visibles como "etiquetas" en la parte superior de los resultados de búsqueda. El usuario puede eliminar un filtro haciendo clic en la 'x' de su etiqueta. Los filtros deben persistir en la URL como parámetros de consulta (query params) para que las búsquedas puedan ser compartidas.
+   * Componentes de Filtro:
+      * Juego: Checkboxes para seleccionar múltiples juegos.
+      * Set/Edición: Un menú desplegable con buscador interno. Las ediciones se agruparán por año o ciclo.
+      * Rareza, Color, etc.: Grupos de checkboxes visualmente claros.
+* RF-01.3: Visualización de Resultados:
+   * Los resultados se mostrarán en una cuadrícula (grid) de imágenes de cartas por defecto, con opción a cambiar a una vista de lista/tabla.
+   * La paginación será mediante "scroll infinito" para una experiencia de navegación fluida.
+   * Cada carta en los resultados mostrará su imagen, nombre, set y el "Precio Promedio de Mercado" para la versión más común (ej. Non-Foil, NM).
+RF-02: Visualización de Precios y Datos de Mercado
+La página de detalle de una carta debe ser un centro de información completo y accionable.
+* RF-02.1: Desglose de Precios por Fuente:
+   * Se mostrará una tabla o lista clara con el logo de cada fuente (TCGplayer, Card Kingdom, etc.).
+   * Cada fila mostrará el nombre de la fuente, el precio de la carta en esa tienda para la versión seleccionada (ej. NM Foil), y un botón de "Comprar" que redirigirá al usuario a la página del producto correspondiente en una nueva pestaña.
+* RF-02.2: Precio Promedio de Mercado (Calculado):
+   * Este valor se mostrará en un lugar destacado de la página (ej. en una tipografía grande debajo del nombre de la carta).
+   * Un pequeño ícono de información ((i)) al lado del precio, al pasar el cursor sobre él, mostrará un tooltip explicando: "Este es un promedio calculado de los precios disponibles en TCGplayer, Card Kingdom y Cardmarket para la versión seleccionada."
+* RF-02.3: Precio de Compra Sugerido (Calculado):
+   * Este precio se mostrará en una sección separada llamada "Valor de Venta" o "Buylist".
+   * Se mostrará el valor (60% del promedio) y una nota explicativa: "Este es un valor estimado para vender tus cartas a tiendas. Los precios reales de compra pueden variar."
+* RF-02.4: Gráficos de Historial de Precios Interactivo:
+   * El gráfico de líneas debe permitir al usuario hacer zoom en rangos de fechas específicos.
+   * Un conjunto de botones (1M, 3M, 1A, Todo) permitirá cambiar rápidamente el rango de tiempo.
+   * Funcionalidad de Comparación: El usuario podrá seleccionar checkboxes (ej. "NM", "LP", "Foil NM") para trazar múltiples líneas de tendencia en el mismo gráfico, permitiendo una comparación visual directa de cómo la condición o el acabado afectan el valor a lo largo del tiempo. Cada línea tendrá un color distinto y una leyenda clara.
+RF-03: Visualización de Cartas, Versiones e Imágenes
+La navegación entre las diferentes impresiones de una carta debe ser visual e intuitiva.
+* RF-03.1: Navegador de Versiones:
+   * Debajo de la imagen principal de la carta, se implementará un carrusel o una cuadrícula de miniaturas (thumbnails) que muestre todas las demás impresiones disponibles de esa carta.
+   * Cada miniatura mostrará la imagen de la versión, su código de set y su rareza.
+   * Interacción: Al hacer clic en una miniatura, la vista principal de la página (imagen grande, detalles del set, precios y gráfico) se actualizará instantáneamente para reflejar la versión seleccionada. La URL de la página también se actualizará para apuntar a esa impresión específica.
+* RF-03.2: Controles de Acabado y Condición:
+   * Directamente sobre la sección de precios, habrá botones o un menú desplegable para seleccionar la Condición (NM, LP, etc.) y el Acabado (Foil/Non-Foil).
+   * La selección de estas opciones actualizará dinámicamente todos los módulos de precios en la página (precios por fuente, precio promedio y gráfico histórico).
+RF-04: Carga Masiva de Colecciones
+El proceso de importación debe guiar al usuario y proporcionar retroalimentación clara.
+* Flujo de Usuario Detallado:
+   1. Paso 1: Carga de Archivo: El usuario accede a "Mi Colección > Importar" y se encuentra con un área para arrastrar y soltar (drag-and-drop) su archivo .CSV o .TXT, o seleccionarlo manualmente.
+   2. Paso 2: Parseo y Mapeo: El sistema parsea el archivo en segundo plano. La interfaz muestra una vista previa de las columnas detectadas y pide al usuario que confirme si el mapeo automático a los campos (Nombre, Edición, Cantidad, Condición, etc.) es correcto, permitiendo ajustes si es necesario.
+   3. Paso 3: Pantalla de Revisión: El sistema procesa las filas y presenta un resumen:
+      * Cartas Reconocidas: Una lista de las cartas que se importarán con éxito, mostrando nombre, set e imagen.
+      * Posibles Conflictos: Cartas que fueron encontradas pero con ambigüedades (ej. "Sol Ring" sin un set especificado). El sistema ofrecerá opciones para que el usuario seleccione la versión correcta.
+      * Errores/No Encontradas: Una lista de las filas que no pudieron ser procesadas (ej. nombre de carta mal escrito, código de set incorrecto), con un mensaje claro del error.
+   4. Paso 4: Confirmación Final: El usuario revisa el resumen y hace clic en "Confirmar Importación" para añadir las cartas reconocidas a su colección. Las cartas con errores pueden ser descargadas en un nuevo CSV para su corrección y re-importación.
+RF-05: Gestión de Colección de Usuario
+El panel de colección debe funcionar como un portafolio de inversión.
+* RF-05.1: Panel Principal de "Mi Colección":
+   * La vista principal será una tabla potente y personalizable.
+   * Columnas: El usuario podrá elegir qué columnas mostrar: Imagen, Nombre, Set, Cantidad, Condición, Idioma, Acabado, Precio de Compra Registrado (si el usuario lo introduce), Valor de Mercado Actual (Precio Promedio), Ganancia/Pérdida (diferencia entre valor actual y precio de compra), y un mini-gráfico de tendencia de 7 días.
+   * Funcionalidad de Tabla: La tabla debe permitir ordenar por cualquier columna y tener un campo de búsqueda para filtrar la colección actual.
+* RF-05.2: Panel de Resumen (Dashboard):
+   * En la parte superior de la página "Mi Colección", se mostrarán widgets clave:
+      * Valor Total de la Colección: Un número grande y claro.
+      * Ganancia/Pérdida Total: Calculado sobre todas las cartas con precio de compra.
+      * Gráfico Histórico del Valor de la Colección: Un gráfico de área que muestre cómo ha fluctuado el valor total de la colección del usuario a lo largo del tiempo.
+      * Top Ganadores/Perdedores: Listas de las 5 cartas que más han aumentado y disminuido de valor en la última semana/mes.
+* RF-05.3: Edición en Línea (Inline Editing):
+   * El usuario podrá hacer clic directamente en los campos de Cantidad o Condición dentro de la tabla para editarlos sin tener que navegar a una página separada, haciendo la gestión más rápida y eficiente.
+3. Requisitos No Funcionales (RNF)
+* RNF-01: Rendimiento:
+   * Tiempo de Respuesta: Las búsquedas de cartas y la carga de páginas de precios deben completarse en menos de 2 segundos.
+   * Carga Concurrente: La plataforma debe soportar al menos 100 usuarios concurrentes sin degradación del rendimiento en su fase inicial.
+* RNF-02: Escalabilidad:
+   * La arquitectura debe estar basada en la nube (ej. AWS, GCP, Azure) para permitir el escalado horizontal de servidores y bases de datos según la demanda.
+   * La ingesta de datos de precios desde las APIs debe realizarse mediante procesos asíncronos (colas de mensajes como RabbitMQ o SQS) para no afectar el rendimiento de la interfaz de usuario.
+* RNF-03: Disponibilidad: El sistema debe tener un uptime del 99.5%.
+* RNF-04: Precisión y Frescura de los Datos:
+   * Actualizaciones: Los precios deben actualizarse al menos una vez cada 24 horas. Para fuentes que lo permitan, la actualización será más frecuente (cada 4-6 horas).
+   * Estandarización: Se debe implementar la tabla de mapeo de condiciones (ver sección 5) para normalizar los datos de todas las fuentes y garantizar la precisión de los cálculos de promedios.
+* RNF-05: Usabilidad y Experiencia de Usuario (UX):
+   * La interfaz debe ser limpia, intuitiva y totalmente responsiva (mobile-first).
+   * La navegación debe ser clara y consistente en toda la aplicación.
+* RNF-06: Seguridad:
+   * Las contraseñas de los usuarios deben ser hasheadas y salteadas.
+   * Toda la comunicación debe ser a través de HTTPS.
+   * Las claves de API deben almacenarse de forma segura (ej. AWS Secrets Manager, HashiCorp Vault) y nunca exponerse en el lado del cliente.
+* RNF-07: Cumplimiento Legal:
+   * La plataforma debe cumplir estrictamente con los Términos de Servicio de todas las APIs utilizadas.
+   * Se debe proporcionar atribución clara a las fuentes de datos según lo requieran.
+   * Si se utiliza web scraping, debe ser ético: respetar robots.txt, limitar las tasas de petición y operar en horas de bajo tráfico.
+4. Arquitectura del Sistema y Base de Datos
+Se utilizará una base de datos relacional (como PostgreSQL) con un esquema normalizado para garantizar la integridad y flexibilidad de los datos.
+Esquema de la Base de Datos
+Tabla: Games
+* game_id (PK, INT)
+* game_name (VARCHAR)
+Tabla: Sets
+* set_id (PK, INT)
+* game_id (FK -> Games)
+* set_name (VARCHAR)
+* set_code (VARCHAR, e.g., 'MKM')
+* release_date (DATE)
+Tabla: Cards (Datos lógicos)
+* card_id (PK, UUID)
+* game_id (FK -> Games)
+* card_name (VARCHAR)
+* type_line (VARCHAR)
+* oracle_text (TEXT)
+* mana_cost (VARCHAR, nullable)
+* power (VARCHAR, nullable)
+* toughness (VARCHAR, nullable)
+* base_rarity (VARCHAR)
+Tabla: CardPrintings (Versiones físicas)
+* printing_id (PK, UUID)
+* card_id (FK -> Cards)
+* set_id (FK -> Sets)
+* collector_number (VARCHAR)
+* rarity (VARCHAR)
+* is_foil (BOOLEAN)
+* is_non_foil (BOOLEAN)
+* is_etched (BOOLEAN)
+* is_alt_art (BOOLEAN)
+* artist (VARCHAR)
+* image_url_small (VARCHAR)
+* image_url_normal (VARCHAR)
+* image_url_large (VARCHAR)
+* api_source_id (VARCHAR, e.g., Scryfall ID)
+Tabla: Conditions
+* condition_id (PK, INT)
+* condition_name (VARCHAR, 'Near Mint', 'Lightly Played', etc.)
+Tabla: Sources (Fuentes de precios)
+* source_id (PK, INT)
+* source_name (VARCHAR, 'TCGplayer', 'Card Kingdom', etc.)
+Tabla: PriceHistory (Almacén de datos históricos)
+* price_entry_id (PK, BIGSERIAL)
+* printing_id (FK -> CardPrintings)
+* source_id (FK -> Sources)
+* condition_id (FK -> Conditions)
+* price_usd (DECIMAL(10, 2))
+* timestamp (TIMESTAMPTZ, default: NOW())
+Tabla: AggregatedPrices (Caché de precios calculados para rendimiento)
+* printing_id (PK, FK -> CardPrintings)
+* condition_id (PK, FK -> Conditions)
+* avg_market_price_usd (DECIMAL(10, 2))
+* buy_price_usd (DECIMAL(10, 2))
+* last_updated (TIMESTAMPTZ)
+Mapeo Estandarizado de Condiciones
+Condición Estándar (Nuestra Plataforma)
+	TCGplayer
+	Cardmarket
+	Card Kingdom
+	Near Mint (NM)
+	Near Mint
+	Mint, Near Mint
+	NM/Mint (NM/M)
+	Lightly Played (LP)
+	Lightly Played
+	Slightly Played (SP)
+	Excellent (EX)
+	Moderately Played (MP)
+	Moderately Played
+	Played (PL)
+	Very Good (VG)
+	Heavily Played (HP)
+	Heavily Played
+	Heavily Played (HP)
+	Good (G)
+	Damaged
+	Damaged
+	Poor (PO)
+	Damaged (D/DM)
+	5. Documentación de APIs y Estrategia de Integración
+La estrategia se basa en un enfoque híbrido:
+1. APIs específicas del juego: Para datos canónicos de cartas e imágenes (Scryfall, pokemontcg.io). Son la fuente de verdad para la información de la carta.
+2. APIs de Agregadores Comerciales: Para datos de precios de múltiples TCGs. Son la fuente primaria y más fiable para los precios. Recomendación: JustTCG o Cardhedger.
+3. Web Scraping (Como último recurso): Para mercados sin API pública (ej. Cardmarket), utilizando servicios como Apify para minimizar riesgos.
+Anexo: Documentación Detallada de APIs
+API 1: Scryfall (Para Magic: The Gathering)
+* Propósito: Fuente principal para todos los datos de cartas de MTG, sets, reglas e imágenes.
+* Documentación Oficial: https://scryfall.com/docs/api
+* Autenticación: No requerida para la mayoría de los endpoints. Es una API gratuita orientada a la comunidad.
+* Límites de Tasa: 10 peticiones por segundo.
+* Endpoints Clave:
+   * GET https://api.scryfall.com/cards/search?q=[query]: Para realizar búsquedas de cartas.
+   * GET https://api.scryfall.com/cards/[id]: Para obtener datos de una carta por su ID de Scryfall.
+* Ejemplo de Petición (Buscar "Sol Ring"):
+curl "https://api.scryfall.com/cards/search?q=sol+ring"
+
+* Ejemplo de Respuesta (JSON Parcial):
+{
+ "object": "list",
+ "total_cards": 1,
+ "data": [
+   {
+     "object": "card",
+     "id": "b30d345c-dc99-42be-98fb-42045c9b74e8",
+     "name": "Sol Ring",
+     "image_uris": {
+       "small": "https://cards.scryfall.io/small/front/b/3/b30d345c-dc99-42be-98fb-42045c9b74e8.jpg",
+       "normal": "https://cards.scryfall.io/normal/front/b/3/b30d345c-dc99-42be-98fb-42045c9b74e8.jpg",
+       "large": "https://cards.scryfall.io/large/front/b/3/b30d345c-dc99-42be-98fb-42045c9b74e8.jpg"
+     },
+     "prices": {
+       "usd": "1.23",
+       "usd_foil": "2.54",
+       "eur": "1.50",
+       "eur_foil": "3.00"
+     }
+   }
+ ]
+}
+
+API 2: Pokémon TCG API (pokemontcg.io)
+   * Propósito: Fuente de datos para cartas, sets e imágenes de Pokémon TCG.
+   * Documentación Oficial: https://pokemontcg.io/
+   * Autenticación: Opcional (clave API para límites de tasa más altos).
+   * Endpoints Clave:
+   * GET https://api.pokemontcg.io/v2/cards?q=name:charizard
+   * Ejemplo de Petición (Buscar "Charizard"):
+curl "https://api.pokemontcg.io/v2/cards?q=name:charizard"
+
+   * Ejemplo de Respuesta (JSON Parcial):
+{
+   "data": [
+       {
+           "id": "base1-4",
+           "name": "Charizard",
+           "images": {
+               "small": "https://images.pokemontcg.io/base1/4.png",
+               "large": "https://images.pokemontcg.io/base1/4_hires.png"
+           },
+           "tcgplayer": {
+               "url": "https://prices.pokemontcg.io/tcgplayer/base1-4",
+               "updatedAt": "2025/06/28",
+               "prices": {
+                   "holofoil": {
+                       "low": 200.0,
+                       "mid": 350.0,
+                       "high": 999.99,
+                       "market": 320.55
+                   }
+               }
+           }
+       }
+   ]
+}
+
+API 3: JustTCG (Agregador Comercial Recomendado)
+      * Propósito: Fuente principal para precios de múltiples TCGs (Magic, Pokémon, Lorcana, etc.), con alta frecuencia de actualización y granularidad.
+      * Sitio Web: https://justtcg.com/ (el enlace directo a la API se obtiene al contratar)
+      * Autenticación: Requerida (Clave de API de pago).
+      * Ventajas:
+      * Reduce drásticamente la complejidad de integrar múltiples APIs.
+      * Proporciona datos de precios que no están disponibles públicamente.
+      * Ofrece datos históricos y por condición.
+      * Soporte comercial y mayor fiabilidad.
+      * Endpoint Típico (Conceptual):
+      * GET https://api.justtcg.com/v1/prices?game=lorcana&name=Elsa&set=TheFirstChapter&condition=NM&foil=true
+      * Ejemplo de Respuesta (Conceptual):
+{
+ "card_name": "Elsa - Spirit of Winter",
+ "game": "Lorcana",
+ "set": "The First Chapter",
+ "condition": "Near Mint",
+ "is_foil": true,
+ "prices": {
+   "tcgplayer": { "market": 45.50 },
+   "cardkingdom": { "retail": 52.99 },
+   "cardmarket": { "trend": 42.00 }
+ },
+ "last_updated": "2025-06-28T14:30:00Z"
+}
+
+API 4: Apify (Para Web Scraping de Cardmarket)
+         * Propósito: Extraer datos de precios de Cardmarket, que no tiene una API pública oficial.
+         * Documentación del Scraper: https://apify.com/ecomscrape/cardmarket-trend-scraper
+         * Autenticación: Requerida (Token de API de Apify).
+         * Funcionamiento: Se configura un "Actor" en Apify para que visite las páginas de Cardmarket y extraiga los datos de precios según las reglas definidas. Apify gestiona los proxies y la infraestructura del scraping.
+         * Datos a Extraer: Precio mínimo, precio de tendencia, precios por condición y cantidad de ofertas.
+         * Ejemplo de Petición (Conceptual, usando la librería de Apify):
+const { ApifyClient } = require('apify-client');
+const client = new ApifyClient({ token: 'TU_API_TOKEN' });
+const run = await client.actor('ecomscrape/cardmarket-trend-scraper').call({
+   "cardUrl": "https://www.cardmarket.com/en/Magic/Products/Singles/Commander-Masters/Sol-Ring"
+});
