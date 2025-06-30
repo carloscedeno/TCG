@@ -14,9 +14,11 @@ serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+    
     if (!supabaseUrl || !supabaseServiceKey) {
       throw new Error('Missing environment variables')
     }
+
     const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
     const url = new URL(req.url)
@@ -28,41 +30,95 @@ serve(async (req) => {
       path = path.replace('/tcg-api', '')
     }
 
-    // Only handle /api/games GET for now
-    if (path === '/api/games' && method === 'GET') {
-      const { data, error } = await supabase
-        .from('games')
-        .select('*')
-        .eq('is_active', true)
-      if (error) {
-        return new Response(
-          JSON.stringify({ error: error.message }),
-          { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
-        )
+    // Parse parameters based on method
+    let params = {}
+    if (method === 'GET') {
+      // For GET requests, get parameters from query string
+      params = Object.fromEntries(url.searchParams.entries())
+    } else if (method === 'POST' || method === 'PUT' || method === 'PATCH') {
+      // For other methods, get parameters from request body
+      try {
+        params = await req.json()
+      } catch {
+        params = {}
       }
-      return new Response(
-        JSON.stringify({ games: data }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
-      )
     }
 
-    // Fallback for other endpoints
-    return new Response(
-      JSON.stringify({
-        message: 'Hello from TCG API',
-        path: path,
-        method: req.method,
+    let response
+
+    if (path === '/' || path === '/tcg-api' || path === '/tcg-api/') {
+      response = {
+        message: 'TCG API - Trading Card Game Price Aggregation System',
+        version: '1.0.0',
         timestamp: new Date().toISOString(),
         available_endpoints: [
-          '/api/games'
+          '/api/games',
+          '/api/sets',
+          '/api/cards',
+          '/api/prices',
+          '/api/search',
+          '/api/collections',
+          '/api/watchlists',
+          '/api/stats'
+        ],
+        documentation: 'Use the endpoints above to access TCG data and functionality'
+      }
+    }
+    else if (path.startsWith('/api/games')) {
+      response = await handleGamesEndpoint(supabase, path, method, params)
+    }
+    else if (path.startsWith('/api/sets')) {
+      response = await handleSetsEndpoint(supabase, path, method, params)
+    }
+    else if (path.startsWith('/api/cards')) {
+      response = await handleCardsEndpoint(supabase, path, method, params)
+    }
+    else if (path.startsWith('/api/prices')) {
+      response = await handlePricesEndpoint(supabase, path, method, params)
+    }
+    else if (path.startsWith('/api/search')) {
+      response = await handleSearchEndpoint(supabase, path, method, params)
+    }
+    else if (path.startsWith('/api/collections')) {
+      response = await handleCollectionsEndpoint(supabase, path, method, params)
+    }
+    else if (path.startsWith('/api/watchlists')) {
+      response = await handleWatchlistsEndpoint(supabase, path, method, params)
+    }
+    else if (path.startsWith('/api/stats')) {
+      response = await handleStatsEndpoint(supabase, path, method, params)
+    }
+    else {
+      response = {
+        error: 'Endpoint not found',
+        available_endpoints: [
+          '/api/games',
+          '/api/sets',
+          '/api/cards',
+          '/api/prices',
+          '/api/search',
+          '/api/collections',
+          '/api/watchlists',
+          '/api/stats'
         ]
-      }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+      }
+    }
+
+    return new Response(
+      JSON.stringify(response),
+      {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: response.error ? 400 : 200,
+      },
     )
+
   } catch (error) {
     return new Response(
       JSON.stringify({ error: error.message }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+      {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 500,
+      },
     )
   }
 })
