@@ -4,7 +4,7 @@ Script de prueba para verificar el mapeo de TCG por marketplace
 """
 
 import sys
-from data.scrapers.shared.data.models import TCGMarketplaceMapper
+from scraper.data.models import TCGMarketplaceMapper
 
 def test_tcg_detection():
     """Probar la detección de TCG desde URLs"""

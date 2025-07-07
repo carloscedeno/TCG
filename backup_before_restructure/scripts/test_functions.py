@@ -108,8 +108,8 @@ def main():
     
     # Ejecutar pruebas
     try:
-    test_sql_functions(supabase_url, supabase_key)
-    test_edge_functions(project_ref)
+        test_sql_functions(supabase_url, supabase_key)
+        test_edge_functions(project_ref)
         test_environment_variables()
         print("✅ Todas las pruebas pasaron")
     except Exception as e:

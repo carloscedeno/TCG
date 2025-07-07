@@ -1,198 +1,151 @@
-# Estructura del Proyecto TCG Web App
+# Project Structure
 
-## 🏗️ Nueva Arquitectura de Carpetas
+This document describes the new project structure following industry best practices.
+
+## Directory Structure
 
 ```
-TCG Web App/
-├── .env                          # Variables de entorno (raíz del proyecto)
-├── .gitignore                    # Archivos ignorados por Git
-├── README.md                     # Documentación principal del proyecto
-├── requirements.txt              # Dependencias de Python
-├── pyproject.toml               # Configuración del proyecto Python
-│
-├── backend/                      # Backend y APIs
-│   ├── __init__.py
-│   ├── config/                   # Configuración del backend
-│   │   ├── __init__.py
-│   │   ├── settings.py           # Configuración general
-│   │   ├── database.py           # Configuración de base de datos
-│   │   └── environment.py        # Variables de entorno
-│   │
-│   ├── database/                 # Base de datos y modelos
-│   │   ├── __init__.py
-│   │   ├── models/               # Modelos de datos
-│   │   │   ├── __init__.py
-│   │   │   ├── games.py          # Modelo de juegos
-│   │   │   ├── cards.py          # Modelo de cartas
-│   │   │   ├── prices.py         # Modelo de precios
-│   │   │   └── users.py          # Modelo de usuarios
-│   │   ├── migrations/           # Migraciones de base de datos
-│   │   │   ├── 001_initial_schema.sql
-│   │   │   ├── 002_add_indexes.sql
-│   │   │   └── 003_add_triggers.sql
-│   │   ├── seeds/                # Datos iniciales
-│   │   │   ├── 001_games.sql
-│   │   │   ├── 002_conditions.sql
-│   │   │   └── 003_sources.sql
-│   │   └── setup.py              # Configuración de BD
-│   │
-│   ├── api/                      # APIs y endpoints
-│   │   ├── __init__.py
-│   │   ├── routes/               # Rutas de la API
-│   │   │   ├── __init__.py
-│   │   │   ├── games.py          # Endpoints de juegos
-│   │   │   ├── cards.py          # Endpoints de cartas
-│   │   │   ├── prices.py         # Endpoints de precios
-│   │   │   ├── collections.py    # Endpoints de colecciones
-│   │   │   └── search.py         # Endpoints de búsqueda
-│   │   ├── middleware/           # Middleware
-│   │   │   ├── __init__.py
-│   │   │   ├── auth.py           # Autenticación
-│   │   │   ├── cors.py           # CORS
-│   │   │   └── rate_limit.py     # Rate limiting
-│   │   └── utils/                # Utilidades de API
-│   │       ├── __init__.py
-│   │       ├── responses.py      # Respuestas estandarizadas
-│   │       └── validators.py     # Validación de datos
-│   │
-│   ├── services/                 # Lógica de negocio
-│   │   ├── __init__.py
-│   │   ├── tcg_service.py        # Servicio principal TCG
-│   │   ├── price_service.py      # Servicio de precios
-│   │   ├── collection_service.py # Servicio de colecciones
-│   │   └── search_service.py     # Servicio de búsqueda
-│   │
-│   └── supabase/                 # Integración con Supabase
-│       ├── __init__.py
-│       ├── client.py             # Cliente de Supabase
-│       ├── functions/            # Edge Functions
-│       │   ├── tcg-api/
-│       │   │   ├── index.ts
-│       │   │   └── supabase/
-│       │   │       └── config.toml
-│       │   └── import_map.json
-│       └── setup.py              # Configuración de Supabase
-│
-├── scraper/                      # Sistema de scraping
-│   ├── __init__.py
-│   ├── config/                   # Configuración del scraper
-│   │   ├── __init__.py
-│   │   ├── settings.py           # Configuración general
-│   │   └── marketplaces.py       # Configuración de marketplaces
-│   │
-│   ├── scrapers/                 # Scrapers específicos
-│   │   ├── __init__.py
-│   │   ├── base.py               # Clase base para scrapers
-│   │   ├── cardmarket.py         # Scraper de Cardmarket
-│   │   ├── tcgplayer.py          # Scraper de TCGplayer
-│   │   ├── cardkingdom.py        # Scraper de Card Kingdom
-│   │   └── trollandtoad.py       # Scraper de Troll and Toad
-│   │
-│   ├── data/                     # Gestión de datos
-│   │   ├── __init__.py
-│   │   ├── manager.py            # Gestor de datos
-│   │   ├── normalizer.py         # Normalización de datos
-│   │   └── validator.py          # Validación de datos
-│   │
-│   ├── utils/                    # Utilidades del scraper
-│   │   ├── __init__.py
-│   │   ├── anti_bot.py           # Gestión anti-bot
-│   │   ├── rate_limiter.py       # Rate limiting
-│   │   └── logger.py             # Logging
-│   │
-│   ├── tests/                    # Pruebas del scraper
-│   │   ├── __init__.py
-│   │   ├── test_scrapers.py
-│   │   ├── test_data_manager.py
-│   │   └── test_utils.py
-│   │
-│   └── main.py                   # Script principal del scraper
-│
-├── data_loader/                  # Cargador de datos externos
-│   ├── __init__.py
-│   ├── config/                   # Configuración
-│   │   ├── __init__.py
-│   │   └── apis.py               # Configuración de APIs externas
-│   │
-│   ├── loaders/                  # Cargadores específicos
-│   │   ├── __init__.py
-│   │   ├── scryfall.py           # Cargador de Scryfall (MTG)
-│   │   ├── pokemon.py            # Cargador de Pokémon API
-│   │   └── sample_data.py        # Generador de datos de muestra
-│   │
-│   └── main.py                   # Script principal del cargador
-│
-├── frontend/                     # Frontend (futuro)
-│   ├── public/
-│   ├── src/
-│   ├── package.json
-│   └── README.md
-│
-├── docs/                         # Documentación
-│   ├── api/                      # Documentación de APIs
-│   │   ├── README.md
-│   │   ├── endpoints.md
-│   │   └── examples.md
-│   ├── database/                 # Documentación de BD
-│   │   ├── schema.md
-│   │   ├── migrations.md
-│   │   └── seeds.md
-│   ├── deployment/               # Documentación de despliegue
-│   │   ├── setup.md
-│   │   ├── environment.md
-│   │   └── troubleshooting.md
-│   └── architecture/             # Documentación de arquitectura
-│       ├── overview.md
-│       ├── database_design.md
-│       └── api_design.md
-│
-├── scripts/                      # Scripts de utilidad
-│   ├── setup.py                  # Configuración inicial
-│   ├── deploy.py                 # Despliegue
-│   ├── backup.py                 # Backup de datos
-│   └── test.py                   # Ejecución de pruebas
-│
-├── tests/                        # Pruebas generales
-│   ├── __init__.py
-│   ├── unit/                     # Pruebas unitarias
-│   ├── integration/              # Pruebas de integración
-│   └── e2e/                      # Pruebas end-to-end
-│
-└── logs/                         # Logs del sistema
-    ├── scraper/
-    ├── api/
-    └── database/
+mtg-tcg-web-app/
+├── src/                    # Main application source code
+│   ├── api/               # FastAPI application
+│   │   ├── routes/        # API route definitions
+│   │   ├── middleware/    # Custom middleware
+│   │   ├── controllers/   # Request/response handlers
+│   │   ├── services/      # Business logic services
+│   │   ├── models/        # Data models
+│   │   ├── schemas/       # Pydantic schemas
+│   │   └── utils/         # API utilities
+│   ├── core/              # Core application logic
+│   │   ├── config/        # Configuration management
+│   │   ├── database/      # Database related code
+│   │   │   ├── migrations/ # Database migrations
+│   │   │   ├── seeds/     # Database seed data
+│   │   │   ├── models/    # SQLAlchemy models
+│   │   │   └── repositories/ # Data access layer
+│   │   ├── services/      # Core business services
+│   │   └── utils/         # Core utilities
+│   ├── features/          # Feature modules
+│   │   ├── auth/          # Authentication
+│   │   ├── cards/         # Card management
+│   │   ├── prices/        # Price tracking
+│   │   ├── collections/   # Collection management
+│   │   ├── users/         # User management
+│   │   └── analytics/     # Analytics and reporting
+│   └── shared/            # Shared components
+│       ├── constants/     # Application constants
+│       ├── types/         # Type definitions
+│       ├── exceptions/    # Custom exceptions
+│       └── decorators/    # Custom decorators
+├── frontend/              # React frontend application
+│   ├── src/               # Frontend source code
+│   │   ├── components/    # React components
+│   │   │   ├── ui/        # Reusable UI components
+│   │   │   ├── cards/     # Card-related components
+│   │   │   ├── prices/    # Price-related components
+│   │   │   ├── collections/ # Collection components
+│   │   │   └── layout/    # Layout components
+│   │   ├── pages/         # Page components
+│   │   ├── hooks/         # Custom React hooks
+│   │   ├── services/      # API services
+│   │   ├── utils/         # Frontend utilities
+│   │   ├── types/         # TypeScript types
+│   │   ├── styles/        # CSS/styling
+│   │   └── assets/        # Static assets
+│   ├── public/            # Public assets
+│   └── tests/             # Frontend tests
+├── infrastructure/         # Infrastructure and deployment
+│   ├── supabase/          # Supabase configuration
+│   │   ├── functions/     # Edge functions
+│   │   ├── policies/      # Row Level Security
+│   │   ├── triggers/      # Database triggers
+│   │   └── config/        # Supabase config
+│   ├── deployment/        # Deployment configuration
+│   │   ├── docker/        # Docker configuration
+│   │   ├── kubernetes/    # Kubernetes manifests
+│   │   ├── terraform/     # Infrastructure as Code
+│   │   └── scripts/       # Deployment scripts
+│   └── monitoring/        # Monitoring and observability
+│       ├── logs/          # Log configuration
+│       ├── metrics/       # Metrics collection
+│       └── alerts/        # Alerting rules
+├── data/                  # Data processing
+│   ├── scrapers/          # Web scraping modules
+│   │   ├── cardmarket/    # Cardmarket scraper
+│   │   ├── tcgplayer/     # TCGPlayer scraper
+│   │   ├── cardkingdom/   # Card Kingdom scraper
+│   │   ├── trollandtoad/  # Troll and Toad scraper
+│   │   └── shared/        # Shared scraping utilities
+│   ├── loaders/           # Data loading utilities
+│   ├── processors/        # Data processing pipelines
+│   ├── validators/        # Data validation
+│   └── exports/           # Data export utilities
+├── docs/                  # Documentation
+│   ├── api/               # API documentation
+│   ├── architecture/      # Architecture documentation
+│   ├── deployment/        # Deployment guides
+│   ├── development/       # Development guides
+│   ├── user-guides/       # User documentation
+│   └── tcg-structures/    # TCG structure documentation
+├── tests/                 # Test suite
+│   ├── unit/              # Unit tests
+│   ├── integration/       # Integration tests
+│   ├── e2e/               # End-to-end tests
+│   ├── fixtures/          # Test fixtures
+│   └── mocks/             # Test mocks
+├── tools/                 # Development tools
+│   ├── scripts/           # Utility scripts
+│   ├── mcp/               # MCP server files
+│   ├── migrations/        # Migration utilities
+│   └── utilities/         # Development utilities
+├── config/                # Configuration files
+│   ├── environments/      # Environment-specific configs
+│   ├── templates/         # Configuration templates
+│   └── secrets/           # Secret management
+├── logs/                  # Application logs
+├── .github/               # GitHub configuration
+│   └── workflows/         # CI/CD workflows
+├── .venv/                 # Python virtual environment
+├── .git/                  # Git repository
+├── .gitignore            # Git ignore rules
+├── .env.example          # Environment variables template
+├── docker-compose.yml     # Docker Compose configuration
+├── pyproject.toml        # Python project configuration
+├── requirements.txt       # Python dependencies
+└── README.md             # Project documentation
 ```
 
-## 🎯 Beneficios de esta Estructura
+### Benefits of This Structure
 
-### 1. **Separación de Responsabilidades**
-- **Backend**: APIs, servicios y lógica de negocio
-- **Scraper**: Sistema independiente de scraping
-- **Data Loader**: Carga de datos externos
-- **Frontend**: Interfaz de usuario (futuro)
+1. Separation of Concerns: Clear separation between API, core logic, and features. Each module has a specific responsibility. Easy to locate and modify specific functionality.
+2. Scalability: Modular design allows easy addition of new features. Infrastructure is separate from application code. Database migrations and seeds are organized.
+3. Maintainability: Consistent naming conventions. Clear file organization. Easy to understand project structure.
+4. Testing: Dedicated test directory with different test types. Fixtures and mocks are organized. Easy to run specific test suites.
+5. Development Experience: Tools directory for development utilities. Pre-commit hooks for code quality. Comprehensive documentation structure.
+6. Deployment: Infrastructure as Code with Terraform. Docker and Kubernetes configurations. Monitoring and observability setup.
 
-### 2. **Configuración Centralizada**
-- **Variables de entorno** en la raíz del proyecto
-- **Configuración modular** por componente
-- **Fácil mantenimiento** y escalabilidad
+### Migration Guide
 
-### 3. **Organización Profesional**
-- **Estructura estándar** de proyectos Python
-- **Separación clara** entre diferentes capas
-- **Fácil navegación** y comprensión
+From Old Structure:
+1. Backend files → src/api/
+2. Scraper files → data/scrapers/
+3. Documentation → docs/
+4. MCP files → tools/mcp/
+5. Tests → tests/
 
-### 4. **Escalabilidad**
-- **Módulos independientes** que pueden crecer
-- **Fácil agregar** nuevos componentes
-- **Testing organizado** por capas
+New Files Created:
+1. Configuration: Modern Python project configuration
+2. Docker: Containerization setup
+3. CI/CD: GitHub Actions workflows
+4. Development: Pre-commit hooks and linting
+5. Documentation: Comprehensive documentation structure
 
-## 🚀 Próximos Pasos
+Next Steps:
+1. Update imports in existing files to match new structure
+2. Configure environment variables
+3. Set up database with new migrations
+4. Test the application with new structure
+5. Deploy using new infrastructure setup
 
-1. **Crear la nueva estructura** de carpetas
-2. **Mover archivos existentes** a sus ubicaciones correctas
-3. **Actualizar imports** y referencias
-4. **Configurar el archivo .env** en la raíz
-5. **Actualizar documentación** y scripts
+---
 
-¿Te parece bien esta estructura? ¿Quieres que proceda a reorganizar todo el proyecto? 
+This structure follows industry best practices and provides a solid foundation for a scalable, maintainable application.

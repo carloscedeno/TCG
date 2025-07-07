@@ -6,7 +6,7 @@ Script para probar todas las APIs de Supabase y verificar su funcionamiento
 import asyncio
 import json
 from datetime import datetime
-from src.api.supabase.client import TCGDatabaseAPI
+from backend.supabase.client import TCGDatabaseAPI
 
 class SupabaseAPITester:
     def __init__(self):

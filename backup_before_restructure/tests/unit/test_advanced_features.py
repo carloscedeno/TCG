@@ -7,12 +7,12 @@ import unittest
 from datetime import datetime
 from typing import Dict, Any
 
-from data.scrapers.shared.data.models import (
+from scraper.data.models import (
     CardData, CardPrice, CardVariant, ScrapingResult, ScrapingBatch,
     VariantDetector, CardIdentifier, TCGMarketplaceMapper, PriceNormalizer, ConditionMapper
 )
-from data.scrapers.shared.utils.anti_bot import AntiBotManager, ProxyConfig, UserAgentRotator
-from data.scrapers.shared.data.manager import IncrementalUpdateManager, DataRetentionManager, DataQualityManager
+from scraper.utils.anti_bot import AntiBotManager, ProxyConfig, UserAgentRotator
+from scraper.data.manager import IncrementalUpdateManager, DataRetentionManager, DataQualityManager
 
 class TestVariantDetection(unittest.TestCase):
     """Pruebas para el sistema de detección de variantes"""

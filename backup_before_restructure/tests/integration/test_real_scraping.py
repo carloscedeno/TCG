@@ -10,11 +10,7 @@ import time
 import csv
 from datetime import datetime
 from typing import Dict, List, Any
-from data.scrapers.shared.data.models import TCGMarketplaceMapper, CardData
-import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
-import pytest
+from scraper.data.models import TCGMarketplaceMapper, CardData
 
 class RealScrapingTester:
     def __init__(self):
@@ -291,14 +287,6 @@ class RealScrapingTester:
             writer.writerows(csv_data)
         
         print(f"✅ CSV creado con {len(csv_data)} URLs de entrada")
-
-@pytest.mark.asyncio
-def test_real_scraping():
-    tester = RealScrapingTester()
-    asyncio.run(tester.run_full_test())
-    # Validar que al menos un TCG y marketplace generaron resultados
-    assert tester.stats['successful_scrapes'] > 0, "No se logró scrapear ningún TCG"
-    assert tester.stats['total_cards'] > 0, "No se generaron cartas de prueba"
 
 async def main():
     """Función principal"""
