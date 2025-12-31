@@ -58,3 +58,8 @@ frontend/node_modules/
 frontend/.next/
 frontend/.nuxt/
 frontend/dist/
+
+# Large backup files
+*.backup
+*.backup.gz
+*.sql
