@@ -32,21 +32,18 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     setLoading(true);
-    const params = new URLSearchParams();
-    if (query) params.append('q', query);
-
     // Use activeRarity tab if not 'All'
     const rarityToFilter = activeRarity !== 'All' ? activeRarity : (filters.rarities && filters.rarities.length > 0 ? filters.rarities.join(',') : null);
-    if (rarityToFilter) params.append('rarity', rarityToFilter);
 
-    if (filters.games && filters.games.length > 0) params.append('game', filters.games.join(','));
-    if (filters.sets && filters.sets.length > 0) params.append('set', filters.sets.join(','));
-    if (filters.colors && filters.colors.length > 0) params.append('color', filters.colors.join(','));
-
-    params.append('limit', LIMIT.toString());
-    params.append('offset', (page * LIMIT).toString());
-
-    fetchCards(params.toString())
+    fetchCards({
+      q: query || undefined,
+      rarity: rarityToFilter || undefined,
+      game: filters.games && filters.games.length > 0 ? filters.games.join(',') : undefined,
+      set: filters.sets && filters.sets.length > 0 ? filters.sets.join(',') : undefined,
+      color: filters.colors && filters.colors.length > 0 ? filters.colors.join(',') : undefined,
+      limit: LIMIT,
+      offset: page * LIMIT
+    })
       .then(({ cards: fetchedCards, total_count }) => {
         setTotalCount(total_count);
         // Sort cards in frontend for now
