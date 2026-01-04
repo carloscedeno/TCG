@@ -12,14 +12,25 @@ from typing import List, Dict, Any, Optional
 import argparse
 from pathlib import Path
 
-# Importar módulos locales
-from scraper.data.models import (
-    CardData, CardPrice, CardVariant, ScrapingResult, ScrapingBatch,
-    PriceNormalizer, ConditionMapper, TCGAttributeMapper, TCGMarketplaceMapper,
-    VariantDetector, CardIdentifier
-)
-from scraper.utils.anti_bot import AntiBotManager, ProxyConfig
-from scraper.data.manager import IncrementalUpdateManager, DataRetentionManager, DataQualityManager
+# Importar módulos locales con rutas relativas correctas
+try:
+    from .data.models import (
+        CardData, CardPrice, CardVariant, ScrapingResult, ScrapingBatch,
+        PriceNormalizer, ConditionMapper, TCGAttributeMapper, TCGMarketplaceMapper,
+        VariantDetector, CardIdentifier
+    )
+    from .utils.anti_bot import AntiBotManager, ProxyConfig
+    from .data.manager import IncrementalUpdateManager, DataRetentionManager, DataQualityManager
+except (ImportError, ValueError):
+    # Fallback for direct execution or when not imported as a package
+    sys.path.append(str(Path(__file__).parent))
+    from data.models import (
+        CardData, CardPrice, CardVariant, ScrapingResult, ScrapingBatch,
+        PriceNormalizer, ConditionMapper, TCGAttributeMapper, TCGMarketplaceMapper,
+        VariantDetector, CardIdentifier
+    )
+    from utils.anti_bot import AntiBotManager, ProxyConfig
+    from data.manager import IncrementalUpdateManager, DataRetentionManager, DataQualityManager
 
 # Importaciones opcionales para evitar errores si no existen
 try:
@@ -28,15 +39,16 @@ except ImportError:
     SupabaseClient = None
 
 try:
-    from scraper.scrapers.cardmarket import CardmarketScraper
-    from scraper.scrapers.cardkingdom import CardKingdomScraper
-    from scraper.scrapers.tcgplayer import TCGPlayerScraper
-    from scraper.scrapers.trollandtoad import TrollAndToadScraper
-except ImportError:
-    CardmarketScraper = None
-    CardKingdomScraper = None
-    TCGPlayerScraper = None
-    TrollAndToadScraper = None
+    from .scrapers.cardmarket import CardmarketScraper
+    from .scrapers.cardkingdom import CardKingdomScraper
+    from .scrapers.tcgplayer import TCGPlayerScraper
+    from .scrapers.trollandtoad import TrollAndToadScraper
+except (ImportError, ValueError):
+    # Fallback for direct execution
+    from scrapers.cardmarket import CardmarketScraper
+    from scrapers.cardkingdom import CardKingdomScraper
+    from scrapers.tcgplayer import TCGPlayerScraper
+    from scrapers.trollandtoad import TrollAndToadScraper
 
 # Configurar logging
 logging.basicConfig(
@@ -62,30 +74,6 @@ class TCGScraperManager:
             self.supabase = None
             logger.warning("SupabaseClient no disponible - funcionalidad de base de datos deshabilitada")
         
-        # Inicializar scrapers solo si están disponibles
-        self.scrapers = {}
-        if CardmarketScraper:
-            self.scrapers['cardmarket'] = CardmarketScraper()
-        if CardKingdomScraper:
-            self.scrapers['cardkingdom'] = CardKingdomScraper()
-        if TCGPlayerScraper:
-            self.scrapers['tcgplayer'] = TCGPlayerScraper()
-        if TrollAndToadScraper:
-            self.scrapers['trollandtoad'] = TrollAndToadScraper()
-        
-        if not self.scrapers:
-            logger.warning("No hay scrapers disponibles")
-        
-        # Componentes de normalización y mapeo
-        self.price_normalizer = PriceNormalizer()
-        self.condition_mapper = ConditionMapper()
-        self.attribute_mapper = TCGAttributeMapper()
-        self.marketplace_mapper = TCGMarketplaceMapper()
-        
-        # Nuevos componentes avanzados
-        self.variant_detector = VariantDetector()
-        self.card_identifier = CardIdentifier()
-        
         # Sistema anti-bot
         self.anti_bot_manager = None
         if use_anti_bot:
@@ -96,10 +84,34 @@ class TCGScraperManager:
                 requests_per_hour=1000
             )
         
+        # Inicializar scrapers solo si están disponibles
+        self.scrapers = {}
+        if CardmarketScraper:
+            self.scrapers['cardmarket'] = CardmarketScraper(self.anti_bot_manager)
+        if CardKingdomScraper:
+            self.scrapers['cardkingdom'] = CardKingdomScraper(self.anti_bot_manager)
+        if TCGPlayerScraper:
+            self.scrapers['tcgplayer'] = TCGPlayerScraper(self.anti_bot_manager)
+        if TrollAndToadScraper:
+            self.scrapers['trollandtoad'] = TrollAndToadScraper(self.anti_bot_manager)
+        
+        if not self.scrapers:
+            logger.warning("No hay scrapers disponibles")
+        
         # Gestión de datos
         self.incremental_manager = IncrementalUpdateManager(data_dir)
         self.retention_manager = DataRetentionManager(data_dir)
         self.quality_manager = DataQualityManager()
+
+        # Componentes de normalización y mapeo
+        self.price_normalizer = PriceNormalizer()
+        self.condition_mapper = ConditionMapper()
+        self.attribute_mapper = TCGAttributeMapper()
+        self.marketplace_mapper = TCGMarketplaceMapper()
+        
+        # Nuevos componentes avanzados
+        self.variant_detector = VariantDetector()
+        self.card_identifier = CardIdentifier()
         
         # Estadísticas
         self.stats = {
@@ -112,8 +124,16 @@ class TCGScraperManager:
             'anomalies_found': 0
         }
     
-    def load_input_data(self, csv_file: str) -> List[Dict[str, Any]]:
-        """Cargar datos de entrada desde CSV"""
+    def load_input_data(self, csv_file: Optional[str] = None, from_supabase: bool = False) -> List[Dict[str, Any]]:
+        """Cargar datos de entrada desde CSV o Supabase"""
+        if from_supabase and self.supabase:
+            logger.info("Cargando cartas desde Supabase...")
+            return self.load_cards_from_supabase()
+        
+        if not csv_file:
+            logger.error("Se requiere un archivo CSV si no se carga desde Supabase")
+            return []
+            
         try:
             with open(csv_file, 'r', encoding='utf-8') as file:
                 reader = csv.DictReader(file)
@@ -123,6 +143,31 @@ class TCGScraperManager:
             return []
         except Exception as e:
             logger.error(f"Error al leer CSV: {e}")
+            return []
+
+    def load_cards_from_supabase(self, limit: int = 100) -> List[Dict[str, Any]]:
+        """Cargar cartas de la base de datos que necesitan actualización"""
+        try:
+            # Esta es una implementación simplificada. 
+            # En un sistema real, buscaríamos cartas cuya última actualización sea antigua.
+            # O cartas marcadas como 'priority' para trackeo.
+            query = self.supabase.supabase.table('card_printings').select(
+                'printing_id, image_url, cards(card_name, game_id, games(game_code)), sets(set_name)'
+            ).limit(limit).execute()
+            
+            cards_from_db = []
+            for item in query.data:
+                cards_from_db.append({
+                    'card_name': item['cards']['card_name'],
+                    'set_name': item['sets']['set_name'],
+                    'game_code': item['cards']['games']['game_code'],
+                    'source': 'cardmarket' if 'cardmarket' in (item.get('image_url') or '') else 'tcgplayer',
+                    'url': item.get('image_url') or '' # Esto es un placeholder, idealmente tendríamos la URL del marketplace
+                })
+            
+            return cards_from_db
+        except Exception as e:
+            logger.error(f"Error cargando cartas de Supabase: {e}")
             return []
     
     def detect_game_from_url(self, url: str, source: str) -> str:

@@ -1,53 +1,81 @@
-import csv
+import logging
 from datetime import datetime
 from bs4 import BeautifulSoup
-from ..models import CardPrice
-from ..utils import fetch_url, clean_text
-from ..supabase_client import insert_card_price
-import logging
+try:
+    from ..data.models import ScrapingResult
+    from ..utils.anti_bot import AntiBotManager
+except ImportError:
+    from data.models import ScrapingResult
+    from utils.anti_bot import AntiBotManager
+import requests
 
-INPUT_CSV = "input_urls.csv"
-
-
-def scrape_cardmarket():
-    """
-    Lee un archivo CSV con URLs de cartas, scrapea el precio de tendencia de cada una,
-    guarda el resultado en Supabase y loggea el proceso.
-    """
-    logging.info(f"Leyendo URLs desde {INPUT_CSV}")
-    with open(INPUT_CSV, newline='', encoding='utf-8') as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            url = row['url']
-            card_name = row['card_name']
-            set_name = row['set_name']
-            condition = row.get('condition', 'Near Mint')
-            logging.info(f"Scrapeando: {card_name} ({set_name}) -> {url}")
-            html = fetch_url(url)
-            if not html:
-                logging.error(f"No se pudo obtener la página para {card_name}")
-                continue
-            soup = BeautifulSoup(html, "lxml")
-            price_elem = soup.find("span", class_="price-container")
+class CardmarketScraper:
+    def __init__(self, anti_bot_manager: AntiBotManager = None):
+        self.name = "cardmarket"
+        self.anti_bot_manager = anti_bot_manager
+        self.base_url = "https://www.cardmarket.com"
+        
+    def scrape_card(self, url: str) -> dict:
+        """
+        Scrapea el precio de tendencia de una carta de Cardmarket.
+        """
+        logging.info(f"[Cardmarket] Scrapeando URL: {url}")
+        
+        try:
+            default_headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                "Accept-Language": "en-US,en;q=0.9",
+            }
+            
+            # Si tenemos anti_bot_manager, usamos su configuración
+            config = {'headers': default_headers, 'timeout': 15}
+            if self.anti_bot_manager:
+                anti_bot_config = self.anti_bot_manager.get_request_config()
+                # Merge headers, anti_bot_config headers take precedence
+                config['headers'].update(anti_bot_config.get('headers', {}))
+                # Update other config parameters, but ensure timeout is 15
+                config.update({k: v for k, v in anti_bot_config.items() if k != 'headers'})
+                config['timeout'] = 15 # Explicitly set timeout to 15
+            
+            resp = requests.get(url, **config)
+            
+            if resp.status_code != 200:
+                return {"success": False, "error": f"Status code {resp.status_code}"}
+            
+            soup = BeautifulSoup(resp.text, "lxml")
+            
+            # Buscamos el precio de tendencia (Price Trend)
+            # En Cardmarket suele estar en una tabla de estadísticas
+            stats_container = soup.find("div", class_="info-list-container")
             price = None
-            if price_elem:
-                price_text = clean_text(price_elem.text)
-                try:
-                    price = float(price_text.replace('€', '').replace(',', '.'))
-                except Exception:
-                    price = None
-            if price:
-                card_price = CardPrice(
-                    card_name=card_name,
-                    set_name=set_name,
-                    condition=condition,
-                    price=price,
-                    currency="EUR",
-                    source="Cardmarket",
-                    url=url,
-                    scraped_at=datetime.utcnow().isoformat()
-                )
-                logging.info(f"Precio encontrado: {card_price.price} EUR")
-                insert_card_price(card_price.__dict__)
+            
+            if stats_container:
+                # Buscamos el label "Price Trend" o "Tendencia de precios"
+                labels = stats_container.find_all("dt")
+                values = stats_container.find_all("dd")
+                
+                for label, value in zip(labels, values):
+                    if "Price Trend" in label.text or "Tendencia de precios" in label.text:
+                        price_text = value.text.strip()
+                        # Formato: "1,50 €"
+                        try:
+                            # Limpiamos el texto del precio
+                            clean_price = price_text.replace('€', '').replace('\xa0', '').replace(' ', '').replace('.', '').replace(',', '.').strip()
+                            price = float(clean_price)
+                            break
+                        except Exception as e:
+                            logging.error(f"Error parseando precio: {price_text} -> {e}")
+            
+            if price is not None:
+                return {
+                    "success": True,
+                    "price": price,
+                    "currency": "EUR",
+                    "scraped_at": datetime.utcnow().isoformat()
+                }
             else:
-                logging.warning(f"No se encontró el precio de tendencia para {card_name}") 
+                return {"success": False, "error": "No se encontró el precio de tendencia"}
+                
+        except Exception as e:
+            logging.error(f"Error en CardmarketScraper: {e}")
+            return {"success": False, "error": str(e)}

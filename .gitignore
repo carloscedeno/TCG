@@ -42,7 +42,7 @@ logs/
 
 # Data files
 *.csv
-*.json
+# *.json  <-- Removed this to allow package.json
 *.db
 *.sqlite
 
@@ -63,3 +63,14 @@ frontend/dist/
 *.backup
 *.backup.gz
 *.sql
+
+# Temp/Debug scripts
+test_*.py
+verify_test.py
+debug_scraper.py
+check_*.py
+test_results_*.json
+
+# Vite/Node
+node_modules/
+.vite/

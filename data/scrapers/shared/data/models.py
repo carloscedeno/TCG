@@ -106,9 +106,9 @@ class ScrapingResult:
 @dataclass
 class ScrapingBatch:
     """Resultado de un lote de scraping"""
-    total_cards: int
-    successful_scrapes: int
-    failed_scrapes: int
+    total_cards: int = 0
+    successful_scrapes: int = 0
+    failed_scrapes: int = 0
     results: List[ScrapingResult] = field(default_factory=list)
     start_time: datetime = field(default_factory=datetime.utcnow)
     end_time: Optional[datetime] = None

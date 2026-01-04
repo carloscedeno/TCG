@@ -47,6 +47,26 @@ def fix_relationships():
         else:
             conn.commit()
 
+        # Add FK from sets to games
+        try:
+            cur.execute("ALTER TABLE sets ADD CONSTRAINT fk_sets_games FOREIGN KEY (game_id) REFERENCES games(game_id);")
+            print("Added FK: sets -> games")
+        except Exception as e:
+            print(f"Could not add FK sets -> games: {e}")
+            conn.rollback()
+        else:
+            conn.commit()
+
+        # Add FK from cards to games
+        try:
+            cur.execute("ALTER TABLE cards ADD CONSTRAINT fk_cards_games FOREIGN KEY (game_id) REFERENCES games(game_id);")
+            print("Added FK: cards -> games")
+        except Exception as e:
+            print(f"Could not add FK cards -> games: {e}")
+            conn.rollback()
+        else:
+            conn.commit()
+
         cur.close()
         conn.close()
         print("Finished fixing relationships.")

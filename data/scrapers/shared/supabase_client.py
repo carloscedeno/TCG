@@ -1,17 +1,41 @@
 import os
+# from azure.identity import DefaultAzureCredential # Removed unused import
 from supabase import create_client, Client
 from dotenv import load_dotenv
+import logging
 
 load_dotenv()
 
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
+class SupabaseClient:
+    def __init__(self, url: str = None, key: str = None):
+        self.url = url or os.getenv("SUPABASE_URL")
+        self.key = key or os.getenv("SUPABASE_SERVICE_ROLE_KEY") or os.getenv("SUPABASE_ANON_KEY")
+        
+        if not self.url or not self.key:
+            logging.error("Supabase URL or Key missing")
+            self.supabase = None
+        else:
+            self.supabase: Client = create_client(self.url, self.key)
 
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+    def insert_price_history(self, price_data: list):
+        if not self.supabase:
+            return False
+        try:
+            resp = self.supabase.table("price_history").insert(price_data).execute()
+            return True
+        except Exception as e:
+            logging.error(f"Error inserting price history: {e}")
+            return False
 
-def insert_card_price(card_price: dict, table: str = "price_history"):
-    resp = supabase.table(table).insert(card_price).execute()
-    if resp.status_code == 201:
-        print(f"[Supabase] Precio insertado correctamente en {table}.")
-    else:
-        print(f"[Supabase] Error al insertar: {resp.data}") 
+    def get_cards_needing_update(self, limit: int = 100):
+        if not self.supabase:
+            return []
+        try:
+            # Query cards from card_printings
+            resp = self.supabase.table("card_printings").select(
+                "printing_id, card_id, cards(card_name, game_id, games(game_code)), sets(set_name), image_url"
+            ).limit(limit).execute()
+            return resp.data
+        except Exception as e:
+            logging.error(f"Error fetching cards: {e}")
+            return []

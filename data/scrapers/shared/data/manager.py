@@ -11,7 +11,10 @@ from dataclasses import dataclass, asdict
 import logging
 from pathlib import Path
 
-from data.scrapers.shared.data.models import CardPrice, CardData, CardVariant
+try:
+    from .models import CardPrice, CardData, CardVariant
+except ImportError:
+    from models import CardPrice, CardData, CardVariant
 
 logger = logging.getLogger(__name__)
 

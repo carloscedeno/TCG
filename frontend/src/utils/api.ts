@@ -8,8 +8,8 @@ export interface CardApi {
   rarity: string;
 }
 
-const API_BASE = 'https://sxuotvogwvmxuvwbsscv.supabase.co/functions/v1/tcg-api';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN4dW90dm9nb3d2bXh1dndiYnNzY3YiLCJyb2xlIjoiYW5vbiIsImiaWF0IjoxNzY3MTI1Mjc1LCJleHAiOjIwODI3MDEyNzV9.0qL7dIEnwg22RyORGX06G97VjdH4C8_l4Qgm2oPEYTY';
+const API_BASE = import.meta.env.VITE_API_BASE || 'https://sxuotvogwvmxuvwbsscv.supabase.co/functions/v1/tcg-api';
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN4dW90dm9nd3ZteHV2d2Jzc2N2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcxMjUyNzUsImV4cCI6MjA4MjcwMTI3NX0.0qL7dIEnwg22RyORGX06G97VjdH4C8_l4Qgm2oPEYTY';
 
 export const fetchCards = async (params: {
   q?: string,
