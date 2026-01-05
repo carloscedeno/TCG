@@ -148,27 +148,50 @@ def retry_supabase_operation(operation_func, *args, **kwargs):
 
 # Mapeo de campos Scryfall -> DB para 'cards'
 def map_scryfall_card(card):
+    # Para cartas de doble cara, el oracle_text y type_line pueden estar en las caras
+    oracle_text = card.get('oracle_text')
+    type_line = card.get('type_line')
+    mana_cost = card.get('mana_cost')
+    
+    if 'card_faces' in card and not oracle_text:
+        oracle_text = " // ".join([f.get('oracle_text', '') for f in card['card_faces']])
+    if 'card_faces' in card and not type_line:
+        type_line = " // ".join([f.get('type_line', '') for f in card['card_faces']])
+    if 'card_faces' in card and not mana_cost:
+        mana_cost = " // ".join([f.get('mana_cost', '') for f in card['card_faces']])
+
     return {
         'card_id': card['oracle_id'],
         'game_id': GAME_ID,
         'card_name': card['name'],
-        'type_line': card.get('type_line'),
-        'oracle_text': card.get('oracle_text'),
-        'mana_cost': card.get('mana_cost'),
+        'type_line': type_line,
+        'oracle_text': oracle_text,
+        'mana_cost': mana_cost,
         'rarity': card.get('rarity'),
         'updated_at': datetime.now(timezone.utc).isoformat(),
+        'colors': card.get('colors', []),
+        'legalities': card.get('legalities', {}),
     }
 
 # Mapeo de campos Scryfall -> DB para 'card_printings'
 def map_scryfall_printing(card, set_id):
+    # Imagen: si no está en el nivel superior, está en la primera cara
+    image_url = card.get('image_uris', {}).get('normal')
+    if not image_url and 'card_faces' in card:
+        image_url = card['card_faces'][0].get('image_uris', {}).get('normal')
+
     return {
         'printing_id': card['id'],
         'card_id': card['oracle_id'],
         'set_id': set_id,
         'set_code': card.get('set'),
         'collector_number': card.get('collector_number'),
-        'image_url': card.get('image_uris', {}).get('normal') if card.get('image_uris') else None,
+        'image_url': image_url,
         'prices': card.get('prices'),
+        'card_faces': card.get('card_faces'),
+        'rarity': card.get('rarity'),
+        'artist': card.get('artist'),
+        'flavor_text': card.get('flavor_text'),
         'updated_at': datetime.now(timezone.utc).isoformat(),
     }
 
