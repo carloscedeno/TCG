@@ -222,19 +222,19 @@ def main():
     
     print("Obteniendo sets de MTG desde la base de datos...")
     
-    query = supabase.table('sets').select('set_id,set_code,released_at').eq('game_id', GAME_ID)
+    query = supabase.table('sets').select('set_id,set_code,release_date').eq('game_id', GAME_ID)
     
     if not is_full_sync:
         # Solo sets lanzados en los últimos 90 días (captura nuevos lanzamientos y spoilers)
         from datetime import timedelta
         threshold_date = (datetime.now() - timedelta(days=90)).strftime('%Y-%m-%d')
-        query = query.gte('released_at', threshold_date)
+        query = query.gte('release_date', threshold_date)
     
     sets_resp = retry_supabase_operation(query.execute)
     sets = sets_resp.data
     
     # Ordenar por fecha de lanzamiento desc (lo más nuevo primero)
-    sets.sort(key=lambda x: x.get('released_at' or ''), reverse=True)
+    sets.sort(key=lambda x: x.get('release_date' or ''), reverse=True)
     
     if limit:
         print(f"🧪 Aplicando límite de test: {limit} sets")
@@ -247,7 +247,7 @@ def main():
     for i, s in enumerate(sets, 1):
         set_id = s['set_id']
         set_code = s['set_code']
-        rel_date = s.get('released_at', 'unknown')
+        rel_date = s.get('release_date', 'unknown')
         print(f"\n📦 [{i}/{len(sets)}] Procesando set {set_code} (Lanzado: {rel_date})...")
         
         try:
