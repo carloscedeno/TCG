@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { X, CheckCircle, XCircle, ShoppingCart, ExternalLink, Shield, RotateCw } from 'lucide-react';
+import { supabase } from '../../context/AuthContext';
 
 interface CardModalProps {
     isOpen: boolean;
@@ -48,17 +49,82 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
 
     useEffect(() => {
         if (isOpen && cardId) {
-            setLoading(true);
-            setCurrentFaceIndex(0);
-            fetch(`${import.meta.env.VITE_API_BASE || 'http://localhost:8000'}/api/cards/${cardId}`)
-                .then(res => res.json())
-                .then(data => setDetails(data))
-                .catch(err => console.error("Failed to load details", err))
-                .finally(() => setLoading(false));
+            loadCardDetails(cardId);
         } else {
             setDetails(null);
         }
     }, [isOpen, cardId]);
+
+    const loadCardDetails = async (id: string) => {
+        setLoading(true);
+        setCurrentFaceIndex(0);
+
+        try {
+            const { data, error } = await supabase
+                .from('card_printings')
+                .select(`
+                printing_id,
+                image_url,
+                artist,
+                flavor_text,
+                collector_number,
+                rarity,
+                card_faces,
+                cards (
+                    card_name,
+                    type_line,
+                    oracle_text,
+                    mana_cost,
+                    power,
+                    toughness,
+                    legalities,
+                    colors
+                ),
+                sets (
+                    set_name,
+                    set_code
+                ),
+                aggregated_prices (
+                    avg_market_price_usd
+                )
+            `)
+                .eq('printing_id', id)
+                .single();
+
+            if (error) throw error;
+            if (!data) throw new Error("No data found");
+
+            const cardData = (data.cards as any) || {};
+            const setData = (data.sets as any) || {};
+            const priceData = (data.aggregated_prices as any);
+            const price = Array.isArray(priceData) && priceData.length > 0
+                ? priceData[0].avg_market_price_usd
+                : priceData?.avg_market_price_usd || 0;
+
+            setDetails({
+                card_id: data.printing_id,
+                name: cardData.card_name,
+                mana_cost: cardData.mana_cost,
+                type: cardData.type_line,
+                oracle_text: cardData.oracle_text,
+                flavor_text: data.flavor_text,
+                artist: data.artist,
+                rarity: data.rarity,
+                set: setData.set_name,
+                set_code: setData.set_code,
+                collector_number: data.collector_number,
+                legalities: cardData.legalities,
+                image_url: data.image_url,
+                price: price,
+                colors: cardData.colors,
+                card_faces: data.card_faces as any
+            });
+        } catch (err) {
+            console.error("Failed to load details from Supabase", err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     if (!isOpen) return null;
 

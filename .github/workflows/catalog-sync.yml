@@ -3,7 +3,9 @@ name: Catalog Synchronization
 on:
   schedule:
     - cron: '0 0 * * *' # Every day at midnight
-  workflow_dispatch: # Allows manual trigger from GitHub UI or API
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+  repository_dispatch: # Allows trigger from the web app via API
+    types: [manual_sync_trigger]
 
 jobs:
   sync:

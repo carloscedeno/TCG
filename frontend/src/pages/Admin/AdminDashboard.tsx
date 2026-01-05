@@ -18,6 +18,10 @@ export const AdminDashboard = () => {
     const [showLogModal, setShowLogModal] = useState(false);
     const [isRefreshingLogs, setIsRefreshingLogs] = useState(false);
 
+    // GitHub Automation State
+    const [githubToken, setGithubToken] = useState(localStorage.getItem('geeko_gh_token') || '');
+    const [isTriggeringGit, setIsTriggeringGit] = useState(false);
+
     useEffect(() => {
         if (user && isAdmin) {
             fetchStats();
@@ -29,6 +33,44 @@ export const AdminDashboard = () => {
             return () => clearInterval(interval);
         }
     }, [user, isAdmin]);
+
+    const saveGithubToken = (token: string) => {
+        setGithubToken(token);
+        localStorage.setItem('geeko_gh_token', token);
+    };
+
+    const triggerGithubSync = async () => {
+        if (!githubToken) {
+            alert("Por favor, introduce un Personal Access Token de GitHub.");
+            return;
+        }
+
+        setIsTriggeringGit(true);
+        try {
+            const response = await fetch('https://api.github.com/repos/carloscedeno/TCG/dispatches', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Authorization': `token ${githubToken}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    event_type: 'manual_sync_trigger'
+                })
+            });
+
+            if (response.ok || response.status === 204) {
+                setResults(prev => ({ ...prev, 'github-sync': { message: 'Workflow de GitHub disparado exitosamente!' } }));
+            } else {
+                const err = await response.json();
+                setResults(prev => ({ ...prev, 'github-sync': { error: `GitHub error: ${err.message || response.statusText}` } }));
+            }
+        } catch (err: any) {
+            setResults(prev => ({ ...prev, 'github-sync': { error: `Connection error: ${err.message}` } }));
+        } finally {
+            setIsTriggeringGit(false);
+        }
+    };
 
     const fetchTasks = async () => {
         try {
@@ -283,29 +325,48 @@ export const AdminDashboard = () => {
                             </div>
                         </div>
 
+                        {/* Section: Webhooks & Automation */}
                         <div className="glass-card rounded-3xl p-8 border border-white/10 bg-black/40 border-dashed">
                             <h2 className="text-2xl font-black mb-4 flex items-center gap-3 italic">
                                 <Settings className="text-geeko-cyan" />
-                                AUTOMATION
+                                GITHUB AUTOMATION
                             </h2>
                             <p className="text-slate-500 text-xs font-bold mb-6 italic">
-                                Deploy external synchronization via GitHub Actions or Cron hooks.
+                                Dispara la sincronización directamente en GitHub Actions.
                             </p>
-                            <div className="p-4 bg-black/40 rounded-2xl border border-white/5">
-                                <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">Sync Endpoint (POST)</div>
-                                <div className="flex gap-2 mb-2">
-                                    <code className="bg-black/60 p-3 rounded-xl text-geeko-cyan text-[10px] flex-grow break-all overflow-hidden border border-white/5">
-                                        {`${API_BASE}/api/webhook/sync?token=YOUR_TOKEN`}
-                                    </code>
+
+                            <div className="space-y-4">
+                                <div className="p-4 bg-black/40 rounded-2xl border border-white/5">
+                                    <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">GitHub Personal Access Token</div>
+                                    <div className="flex gap-2 mb-2">
+                                        <input
+                                            type="password"
+                                            value={githubToken}
+                                            onChange={(e) => saveGithubToken(e.target.value)}
+                                            placeholder="ghp_xxxxxxxxxxxx"
+                                            className="bg-black/60 p-3 rounded-xl text-geeko-cyan text-[10px] flex-grow border border-white/5 focus:outline-none focus:border-geeko-cyan/50"
+                                        />
+                                    </div>
                                     <button
-                                        onClick={() => navigator.clipboard.writeText(`${API_BASE}/api/webhook/sync?token=YOUR_TOKEN`)}
-                                        className="p-3 bg-white/5 hover:bg-white/10 rounded-xl text-white transition-colors border border-white/10"
+                                        onClick={triggerGithubSync}
+                                        disabled={isTriggeringGit}
+                                        className="w-full mt-2 bg-white/5 hover:bg-white/10 disabled:opacity-50 text-white p-3 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all border border-white/10 flex items-center justify-center gap-2"
                                     >
-                                        <Shield size={16} />
+                                        {isTriggeringGit ? (
+                                            <>
+                                                <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                                Disparando...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Shield size={14} className="text-geeko-cyan" />
+                                                Trigger Manual Sync (Actions)
+                                            </>
+                                        )}
                                     </button>
                                 </div>
-                                <div className="text-[9px] text-slate-600 font-bold uppercase tracking-tighter">
-                                    * Use SYNC_WEBHOOK_TOKEN env variable as token.
+                                <div className="p-4 bg-slate-900/30 rounded-2xl border border-white/5 text-[9px] text-slate-500 leading-relaxed font-bold">
+                                    Pega tu PAT de GitHub arriba para habilitar el botón. El token se guarda localmente en tu navegador.
                                 </div>
                             </div>
                         </div>
