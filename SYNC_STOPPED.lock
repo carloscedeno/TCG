@@ -1,0 +1,17 @@
+
+# 🚦 SEMÁFORO DE SINCRONIZACIÓN
+# ESTADO: DETENIDO MANUALMENTE
+# ÚLTIMO CHECK: 2026-01-04
+# RAZÓN: Proceso completado/estancado en sets finales.
+
+"""
+RESUMEN FINAL:
+- Sets procesados: ~459/485
+- Cartas totales: >31,000
+- Impresiones: >86,000
+- Sets especiales (Marvel, Avatar, FF): IDENTIFICADOS Y CARGADOS
+
+PRÓXIMOS PASOS:
+1. Activar sistema de precios.
+2. Iniciar torneos.
+"""

@@ -1,5 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
+import Profile from './pages/Profile';
+import TournamentHub from './pages/TournamentHub';
 import { AdminDashboard } from './pages/Admin/AdminDashboard';
 import { AuthProvider } from './context/AuthContext';
 
@@ -9,6 +11,8 @@ function App() {
             <Router basename="/TCG">
                 <Routes>
                     <Route path="/" element={<Home />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/tournaments" element={<TournamentHub />} />
                     <Route path="/admin" element={<AdminDashboard />} />
                 </Routes>
             </Router>

@@ -183,6 +183,61 @@ async def get_sets(
     except Exception as e:
         return {"sets": [], "error": str(e)}
 
+@app.get("/api/cards/{printing_id}")
+async def get_card_details(printing_id: str):
+    """Get full details for a specific card printing."""
+    if not supabase:
+        return {"error": "Database not configured"}
+    
+    try:
+        # Join card_printings with cards (for oracle text, stats) and sets (for set info)
+        # Also need prices and card_faces for double-faced cards
+        query = supabase.table('card_printings').select(
+            'printing_id, image_url, artist, flavor_text, collector_number, rarity, card_faces, '
+            'cards(card_name, type_line, oracle_text, mana_cost, power, toughness, legalities, colors), '
+            'sets(set_name, set_code), '
+            'aggregated_prices(avg_market_price_usd)'
+        ).eq('printing_id', printing_id).single()
+        
+        response = query.execute()
+        item = response.data
+        
+        if not item:
+            raise HTTPException(status_code=404, detail="Card not found")
+            
+        card_data = item.get('cards') or {}
+        set_data = item.get('sets') or {}
+        price_data = item.get('aggregated_prices') or []
+        price = 0
+        if price_data and len(price_data) > 0:
+            price = price_data[0].get('avg_market_price_usd', 0)
+        
+        # Get card_faces from the printing (not from card_data)
+        card_faces = item.get('card_faces')
+            
+        return {
+            "card_id": item.get('printing_id'),
+            "name": card_data.get('card_name'),
+            "mana_cost": card_data.get('mana_cost'),
+            "type": card_data.get('type_line'),
+            "oracle_text": card_data.get('oracle_text'),
+            "flavor_text": item.get('flavor_text'),
+            "artist": item.get('artist'),
+            "rarity": item.get('rarity'),
+            "set": set_data.get('set_name'),
+            "set_code": set_data.get('set_code'),
+            "collector_number": item.get('collector_number'),
+            "legalities": card_data.get('legalities'),
+            "image_url": item.get('image_url'),
+            "price": price,
+            "colors": card_data.get('colors'),
+            "card_faces": card_faces  # Include card faces if they exist
+        }
+    except Exception as e:
+        print(f"Detail Query failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 # --- Admin & Scraper Endpoints ---
 
 async def verify_admin(authorization: str = Header(None)):
