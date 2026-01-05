@@ -203,21 +203,42 @@ def get_all_cards_for_set(set_code):
     return cards
 
 def main():
-    # Soporte para límite opcional (test)
-    limit = int(sys.argv[1]) if len(sys.argv) > 1 else None
+    # Soporte para argumentos: --full para todo, o un número para límite de test
+    args = sys.argv[1:]
+    is_full_sync = '--full' in args
+    limit = None
+    for arg in args:
+        if arg.isdigit():
+            limit = int(arg)
+            break
     
-    print(f"🚀 Iniciando carga de cartas de MTG desde Scryfall... {'(Límite: ' + str(limit) + ')' if limit else ''}")
+    print(f"🚀 Iniciando carga de cartas de MTG desde Scryfall...")
+    if is_full_sync:
+        print("📁 Modo: FULL SYNC (Procesando todos los sets)")
+    else:
+        print("⏱️ Modo: RECENT ONLY (Sets de los últimos 90 días)")
+        
     print(f"📋 Configuración de reintentos: máximo {MAX_RETRIES} intentos, delay base {BASE_DELAY}s")
     
     print("Obteniendo sets de MTG desde la base de datos...")
-    sets_resp = retry_supabase_operation(
-        supabase.table('sets').select('set_id,set_code').eq('game_id', GAME_ID).execute
-    )
+    
+    query = supabase.table('sets').select('set_id,set_code,released_at').eq('game_id', GAME_ID)
+    
+    if not is_full_sync:
+        # Solo sets lanzados en los últimos 90 días (captura nuevos lanzamientos y spoilers)
+        from datetime import timedelta
+        threshold_date = (datetime.now() - timedelta(days=90)).strftime('%Y-%m-%d')
+        query = query.gte('released_at', threshold_date)
+    
+    sets_resp = retry_supabase_operation(query.execute)
     sets = sets_resp.data
     
-    # Si hay límite, solo procesamos un par de sets
+    # Ordenar por fecha de lanzamiento desc (lo más nuevo primero)
+    sets.sort(key=lambda x: x.get('released_at' or ''), reverse=True)
+    
     if limit:
-        sets = sets[:2]
+        print(f"🧪 Aplicando límite de test: {limit} sets")
+        sets = sets[:limit]
         
     print(f"Sets de MTG a procesar: {len(sets)}")
 
@@ -226,7 +247,8 @@ def main():
     for i, s in enumerate(sets, 1):
         set_id = s['set_id']
         set_code = s['set_code']
-        print(f"\n📦 [{i}/{len(sets)}] Procesando set {set_code} (ID {set_id})...")
+        rel_date = s.get('released_at', 'unknown')
+        print(f"\n📦 [{i}/{len(sets)}] Procesando set {set_code} (Lanzado: {rel_date})...")
         
         try:
             cards = get_all_cards_for_set(set_code)
