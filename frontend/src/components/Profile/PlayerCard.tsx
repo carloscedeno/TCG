@@ -3,7 +3,6 @@ import {
     Trophy,
     Sword,
     BookOpen,
-    Zap,
     Shield,
     Star,
     User,
