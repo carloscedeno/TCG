@@ -42,7 +42,7 @@ export const AdminDashboard = () => {
                 setActiveTasks(data);
             }
         } catch (err) {
-            // Silencioso durante polling para evitar spam en consola cuando el servidor se reinicia por hot-reload
+            // Silencioso
         }
     };
 
@@ -62,23 +62,9 @@ export const AdminDashboard = () => {
                 });
             }
         } catch (err) {
-            // Silencioso durante polling
+            // Silencioso
         }
     };
-
-    if (loading) return <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white">Cargando...</div>;
-
-    if (!user || !isAdmin) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-slate-950 p-4">
-                <div className="bg-slate-900 border border-red-500/20 p-8 rounded-2xl max-w-md w-full text-center">
-                    <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-                    <h2 className="text-2xl font-bold text-white mb-2">Acceso Denegado</h2>
-                    <p className="text-slate-400">No tienes permisos para acceder a esta área. Esta sección es exclusiva para administradores.</p>
-                </div>
-            </div>
-        );
-    }
 
     const runScraper = async (source: string) => {
         setRunning(prev => ({ ...prev, [source]: true }));
@@ -91,11 +77,10 @@ export const AdminDashboard = () => {
             });
             const data = await response.json();
             setResults(prev => ({ ...prev, [source]: data }));
-            // Refresh stats after run
             fetchStats();
         } catch (err) {
             console.error(err);
-            setResults(prev => ({ ...prev, [source]: { error: 'Error de conexión con el backend' } }));
+            setResults(prev => ({ ...prev, [source]: { error: 'Error de conexión' } }));
         } finally {
             setRunning(prev => ({ ...prev, [source]: false }));
         }
@@ -114,13 +99,12 @@ export const AdminDashboard = () => {
             const data = await response.json();
             setResults(prev => ({ ...prev, [id]: data }));
             if (data.task_id) {
-                // Si arranca, abrimos los logs automáticamente para ver qué pasa
                 fetchTaskLogs(data.task_id);
             }
             fetchStats();
         } catch (err) {
             console.error(err);
-            setResults(prev => ({ ...prev, [id]: { error: 'Error de conexión con el backend' } }));
+            setResults(prev => ({ ...prev, [id]: { error: 'Error de conexión' } }));
         } finally {
             setRunning(prev => ({ ...prev, [id]: false }));
         }
@@ -135,126 +119,117 @@ export const AdminDashboard = () => {
                 }
             });
             const data = await response.json();
-            setSelectedTaskLog({ id: taskId, logs: data.logs || '--- Esperando salida del proceso... ---' });
+            setSelectedTaskLog({ id: taskId, logs: data.logs || 'Esperando output...' });
             setShowLogModal(true);
         } catch (err) {
-            console.error('Error fetching logs:', err);
+            console.error(err);
         } finally {
             setIsRefreshingLogs(false);
         }
     };
 
+    if (loading) return <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white font-black italic">GEEKORIUM LOADING...</div>;
+
+    if (!user || !isAdmin) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-slate-950 p-4">
+                <div className="bg-slate-900 border border-red-500/20 p-8 rounded-2xl max-w-md w-full text-center shadow-2xl">
+                    <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+                    <h2 className="text-2xl font-bold text-white mb-2 uppercase tracking-tighter">Acceso Denegado</h2>
+                    <p className="text-slate-400 text-sm">Esta zona es exclusiva para administradores de Geekorium.</p>
+                </div>
+            </div>
+        );
+    }
+
     const scrapers = [
-        { id: 'cardmarket', name: 'Cardmarket', description: 'Scraper de precios para el mercado europeo (EUR)', icon: <Database className="text-orange-400" /> },
-        { id: 'tcgplayer', name: 'TCGPlayer', description: 'Scraper de precios para el mercado americano (USD)', icon: <Database className="text-blue-400" /> },
+        { id: 'cardmarket', name: 'Cardmarket', description: 'Precios EU (EUR)', icon: <Database className="text-orange-400" /> },
+        { id: 'tcgplayer', name: 'TCGPlayer', description: 'Precios US (USD)', icon: <Database className="text-blue-400" /> },
     ];
 
     const syncServices = [
-        { id: 'MTG', name: 'Scryfall (MTG)', description: 'Sincroniza catálogo completo de Magic', icon: <Database className="text-red-400" /> },
-        { id: 'POKEMON', name: 'Pokemon API', description: 'Sincroniza cartas de Pokémon TCG', icon: <Database className="text-yellow-400" /> },
+        { id: 'MTG', name: 'Scryfall (MTG)', description: 'Catálogo Magic: The Gathering', icon: <Database className="text-red-400" /> },
     ];
 
     return (
-        <div className="min-h-screen bg-slate-950 text-white p-8">
+        <div className="min-h-screen bg-slate-950 text-white p-8 font-sans">
             <div className="max-w-6xl mx-auto">
                 <div className="flex items-center justify-between mb-12">
                     <div>
                         <div className="flex items-center gap-2 mb-2">
-                            <Shield className="text-blue-500 w-5 h-5" />
-                            <span className="text-blue-500 font-bold text-sm tracking-widest uppercase">Panel de Administración</span>
+                            <Shield className="text-geeko-cyan w-5 h-5" />
+                            <span className="text-geeko-cyan font-black text-xs tracking-widest uppercase">Admin Terminal v1.0</span>
                         </div>
-                        <h1 className="text-4xl font-black text-white">Gestión del Sistema</h1>
+                        <h1 className="text-5xl font-black text-white tracking-tighter italic">GEEKO<span className="text-geeko-cyan">SYSTEM</span></h1>
                     </div>
                     <div className="flex items-center gap-4">
-                        <div className="bg-slate-900 border border-slate-800 px-4 py-2 rounded-xl flex items-center gap-3">
-                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                            <span className="text-sm font-medium text-slate-300">Sistema Conectado</span>
+                        <div className="bg-slate-900 border border-slate-800 px-4 py-2 rounded-xl flex items-center gap-3 shadow-lg">
+                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_#22c55e]"></div>
+                            <span className="text-xs font-bold text-slate-300 uppercase tracking-widest">Live Connection</span>
                         </div>
                     </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                    <StatCard title="Total Usuarios" value={stats.total_users} change="Activos" icon={<Users className="text-blue-400" />} />
-                    <StatCard title="Cartas Indexadas" value={stats.total_cards} change="En DB" icon={<Database className="text-purple-400" />} />
-                    <StatCard title="Actualizaciones de Precios" value={stats.total_updates} change="Historial" icon={<Settings className="text-emerald-400" />} />
+                    <StatCard title="Usuarios Fleet" value={stats.total_users} change="Online" icon={<Users className="text-blue-400" />} />
+                    <StatCard title="Deep Index" value={stats.total_cards} change="Nodes" icon={<Database className="text-purple-400" />} />
+                    <StatCard title="Price Flux" value={stats.total_updates} change="Ops" icon={<Settings className="text-emerald-400" />} />
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <div className="space-y-8">
-                        {/* Section: Controls Scrapers */}
-                        <div className="bg-slate-900/50 border border-slate-800 rounded-3xl p-8 backdrop-blur-xl">
-                            <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
-                                <Play className="text-blue-500 fill-blue-500" />
-                                Ejecutar Scrapers de Precios
+                        <div className="glass-card rounded-3xl p-8 border border-white/5 bg-slate-900/50">
+                            <h2 className="text-2xl font-black mb-6 flex items-center gap-3 italic">
+                                <Play className="text-geeko-cyan fill-geeko-cyan" />
+                                EXECUTE SCRAPERS
                             </h2>
                             <div className="space-y-4">
                                 {scrapers.map((scraper) => (
-                                    <div key={scraper.id} className="bg-slate-800/40 border border-slate-700/50 rounded-2xl p-6 flex items-center justify-between hover:border-slate-600 transition-all">
+                                    <div key={scraper.id} className="bg-slate-800/20 border border-white/5 rounded-2xl p-6 flex items-center justify-between hover:bg-white/5 transition-all group">
                                         <div className="flex items-center gap-4">
-                                            <div className="w-12 h-12 bg-slate-900 rounded-xl flex items-center justify-center">
+                                            <div className="w-12 h-12 bg-black/40 rounded-xl flex items-center justify-center border border-white/5 group-hover:border-geeko-cyan/30">
                                                 {scraper.icon}
                                             </div>
                                             <div>
-                                                <h3 className="font-bold text-lg">{scraper.name}</h3>
-                                                <p className="text-slate-500 text-sm">{scraper.description}</p>
+                                                <h3 className="font-black text-lg italic uppercase">{scraper.name}</h3>
+                                                <p className="text-slate-500 text-xs font-bold">{scraper.description}</p>
                                             </div>
                                         </div>
                                         <button
                                             onClick={() => runScraper(scraper.id)}
                                             disabled={running[scraper.id]}
-                                            className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-2 rounded-xl font-bold transition-all flex items-center gap-2"
+                                            className="bg-geeko-cyan/20 border border-geeko-cyan/50 hover:bg-geeko-cyan/40 text-geeko-cyan px-6 py-2 rounded-xl font-black text-xs uppercase tracking-widest transition-all"
                                         >
-                                            {running[scraper.id] ? (
-                                                <>
-                                                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                                    Corriendo...
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <Play className="w-4 h-4 fill-white" />
-                                                    Ejecutar
-                                                </>
-                                            )}
+                                            {running[scraper.id] ? 'Running...' : 'Deploy'}
                                         </button>
                                     </div>
                                 ))}
                             </div>
                         </div>
 
-                        {/* Section: Catalog Sync */}
-                        <div className="bg-slate-900/50 border border-slate-800 rounded-3xl p-8 backdrop-blur-xl">
-                            <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
-                                <Database className="text-purple-500" />
-                                Sincronización de Catálogo
+                        <div className="glass-card rounded-3xl p-8 border border-white/5 bg-slate-900/50">
+                            <h2 className="text-2xl font-black mb-6 flex items-center gap-3 italic text-purple-400">
+                                <Database className="text-purple-400" />
+                                CATALOG SYNC
                             </h2>
                             <div className="space-y-4">
                                 {syncServices.map((service) => (
-                                    <div key={service.id} className="bg-slate-800/40 border border-slate-700/50 rounded-2xl p-6 flex items-center justify-between hover:border-slate-600 transition-all">
+                                    <div key={service.id} className="bg-slate-800/20 border border-white/5 rounded-2xl p-6 flex items-center justify-between hover:bg-white/5 transition-all group">
                                         <div className="flex items-center gap-4">
-                                            <div className="w-12 h-12 bg-slate-900 rounded-xl flex items-center justify-center">
+                                            <div className="w-12 h-12 bg-black/40 rounded-xl flex items-center justify-center border border-white/5 group-hover:border-purple-400/30">
                                                 {service.icon}
                                             </div>
                                             <div>
-                                                <h3 className="font-bold text-lg">{service.name}</h3>
-                                                <p className="text-slate-500 text-sm">{service.description}</p>
+                                                <h3 className="font-black text-lg italic uppercase">{service.name}</h3>
+                                                <p className="text-slate-500 text-xs font-bold">{service.description}</p>
                                             </div>
                                         </div>
                                         <button
                                             onClick={() => runSync(service.id)}
                                             disabled={running[`sync-${service.id}`]}
-                                            className="bg-purple-600 hover:bg-purple-500 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-2 rounded-xl font-bold transition-all flex items-center gap-2"
+                                            className="bg-purple-600/20 border border-purple-500/50 hover:bg-purple-600/40 text-purple-400 px-6 py-2 rounded-xl font-black text-xs uppercase tracking-widest transition-all"
                                         >
-                                            {running[`sync-${service.id}`] ? (
-                                                <>
-                                                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                                    Sincronizando...
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <Settings className="w-4 h-4" />
-                                                    Sincronizar
-                                                </>
-                                            )}
+                                            {running[`sync-${service.id}`] ? 'Syncing...' : 'Start'}
                                         </button>
                                     </div>
                                 ))}
@@ -262,112 +237,114 @@ export const AdminDashboard = () => {
                         </div>
                     </div>
 
-                    {/* Section: Status & Logs */}
-                    <div className="bg-slate-900/50 border border-slate-800 rounded-3xl p-8 backdrop-blur-xl">
-                        <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
-                            <Database className="text-purple-500" />
-                            Estado de Procesos
-                        </h2>
-
-                        <div className="space-y-4 mb-6">
-                            {activeTasks.length > 0 ? (
-                                activeTasks.map(task => (
-                                    <div key={task.id} className="bg-slate-800/40 border border-slate-700 rounded-xl p-4">
-                                        <div className="flex items-center justify-between mb-2">
-                                            <span className="font-bold text-sm text-slate-300 uppercase tracking-wider">{task.game_code} Sync</span>
-                                            <div className="flex items-center gap-2">
-                                                <button
-                                                    onClick={() => fetchTaskLogs(task.id)}
-                                                    className="text-[10px] bg-slate-700 hover:bg-slate-600 px-2 py-0.5 rounded text-slate-300 transition-colors"
-                                                >
-                                                    Ver Logs
-                                                </button>
-                                                <span className={`text-xs px-2 py-1 rounded-full font-bold uppercase ${task.status === 'running' ? 'bg-blue-500/20 text-blue-400 animate-pulse' :
-                                                    task.status === 'completed' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'
-                                                    }`}>
-                                                    {task.status}
-                                                </span>
+                    <div className="space-y-8">
+                        <div className="glass-card rounded-3xl p-8 border border-white/5 bg-slate-900/50">
+                            <h2 className="text-2xl font-black mb-6 flex items-center gap-3 italic">
+                                <Shield className="text-emerald-400" />
+                                MISSION CONTROL
+                            </h2>
+                            <div className="space-y-4 mb-6">
+                                {activeTasks.length > 0 ? (
+                                    activeTasks.map(task => (
+                                        <div key={task.id} className="bg-slate-800/20 border border-white/5 rounded-2xl p-4">
+                                            <div className="flex items-center justify-between mb-2">
+                                                <span className="font-black text-xs text-slate-300 uppercase tracking-widest">{task.game_code} Task Runner</span>
+                                                <div className="flex items-center gap-2">
+                                                    <button onClick={() => fetchTaskLogs(task.id)} className="text-[10px] font-black uppercase text-blue-400 hover:underline">View Logs</button>
+                                                    <span className={`text-[10px] px-2 py-0.5 rounded font-black uppercase ${task.status === 'running' ? 'bg-blue-500/20 text-blue-400' : 'bg-emerald-500/20 text-emerald-400'}`}>
+                                                        {task.status}
+                                                    </span>
+                                                </div>
                                             </div>
+                                            {task.status === 'running' && (
+                                                <div className="w-full bg-black h-1 mt-2 rounded-full overflow-hidden">
+                                                    <div className="bg-geeko-cyan h-full animate-pulse" style={{ width: '100%' }}></div>
+                                                </div>
+                                            )}
                                         </div>
-                                        <div className="text-[10px] text-slate-500">ID: {task.id}</div>
-                                        {task.status === 'running' && (
-                                            <div className="w-full bg-slate-700 h-1 mt-3 rounded-full overflow-hidden">
-                                                <div className="bg-blue-500 h-full animate-progress" style={{ width: '100%' }}></div>
-                                            </div>
-                                        )}
+                                    ))
+                                ) : (
+                                    <div className="text-slate-600 font-bold text-center py-6 bg-black/20 rounded-2xl border border-dashed border-white/5">
+                                        NO ACTIVE RUNNERS
                                     </div>
-                                ))
-                            ) : (
-                                <div className="text-slate-600 italic text-sm text-center py-4 bg-slate-800/20 rounded-xl border border-dashed border-slate-800">
-                                    No hay procesos activos
-                                </div>
-                            )}
+                                )}
+                            </div>
+                            <div className="bg-black/60 rounded-2xl p-4 font-mono text-[10px] h-32 overflow-y-auto space-y-1 border border-white/5">
+                                {Object.entries(results).map(([source, result], idx) => (
+                                    <div key={idx} className="flex gap-2">
+                                        <span className="text-slate-600">[{new Date().toLocaleTimeString()}]</span>
+                                        <span className="text-geeko-cyan">{source.toUpperCase()}:</span>
+                                        <span className={result.error ? 'text-red-400' : 'text-emerald-400'}>
+                                            {result.error || result.message || 'OK'}
+                                        </span>
+                                    </div>
+                                ))}
+                                {Object.keys(results).length === 0 && <div className="text-slate-700 italic">Console output initialized...</div>}
+                            </div>
                         </div>
 
-                        <div className="bg-black/40 rounded-2xl p-4 font-mono text-[11px] h-[250px] overflow-y-auto space-y-2 border border-slate-800">
-                            <div className="text-slate-500 mb-2 border-b border-slate-800 pb-1">Historial de Comandos</div>
-                            {Object.entries(results).map(([source, result], idx) => (
-                                <div key={idx} className="pb-2 last:border-0">
-                                    <span className="text-emerald-500">[{new Date().toLocaleTimeString()}]</span>
-                                    <span className="text-blue-400 ml-2 uppercase font-bold text-[9px]">{source}:</span>
-                                    <span className="text-slate-300 ml-2">
-                                        {result.error ? (
-                                            <span className="text-red-400">Error: {result.error}</span>
-                                        ) : (
-                                            <span className="text-emerald-400">{result.message || 'Ok'}</span>
-                                        )}
-                                    </span>
+                        <div className="glass-card rounded-3xl p-8 border border-white/10 bg-black/40 border-dashed">
+                            <h2 className="text-2xl font-black mb-4 flex items-center gap-3 italic">
+                                <Settings className="text-geeko-cyan" />
+                                AUTOMATION
+                            </h2>
+                            <p className="text-slate-500 text-xs font-bold mb-6 italic">
+                                Deploy external synchronization via GitHub Actions or Cron hooks.
+                            </p>
+                            <div className="p-4 bg-black/40 rounded-2xl border border-white/5">
+                                <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">Sync Endpoint (POST)</div>
+                                <div className="flex gap-2 mb-2">
+                                    <code className="bg-black/60 p-3 rounded-xl text-geeko-cyan text-[10px] flex-grow break-all overflow-hidden border border-white/5">
+                                        {`${API_BASE}/api/webhook/sync?token=YOUR_TOKEN`}
+                                    </code>
+                                    <button
+                                        onClick={() => navigator.clipboard.writeText(`${API_BASE}/api/webhook/sync?token=YOUR_TOKEN`)}
+                                        className="p-3 bg-white/5 hover:bg-white/10 rounded-xl text-white transition-colors border border-white/10"
+                                    >
+                                        <Shield size={16} />
+                                    </button>
                                 </div>
-                            ))}
-                            {Object.keys(results).length === 0 && (
-                                <div className="text-slate-700 italic">Consola de administración lista...</div>
-                            )}
+                                <div className="text-[9px] text-slate-600 font-bold uppercase tracking-tighter">
+                                    * Use SYNC_WEBHOOK_TOKEN env variable as token.
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            {/* Added a back button to exit admin */}
-            <div className="max-w-6xl mx-auto mt-8 flex justify-center">
-                <button
-                    onClick={() => window.location.href = '/TCG/'}
-                    className="text-slate-500 hover:text-white transition-colors text-sm font-bold flex items-center gap-2"
-                >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" /></svg>
-                    Volver a la Tienda
-                </button>
+
+                <div className="mt-12 flex justify-center">
+                    <button
+                        onClick={() => window.location.href = '/'}
+                        className="text-slate-500 hover:text-geeko-cyan transition-all text-xs font-black uppercase tracking-[0.3em] flex items-center gap-3 group"
+                    >
+                        <span className="group-hover:-translate-x-1 transition-transform">←</span> Return to Deck
+                    </button>
+                </div>
             </div>
 
-            {/* Log Modal */}
             {showLogModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-                    <div className="bg-slate-900 border border-slate-800 w-full max-w-4xl max-h-[80vh] rounded-3xl overflow-hidden flex flex-col shadow-2xl">
-                        <div className="p-6 border-b border-slate-800 flex items-center justify-between bg-slate-900/50">
-                            <h3 className="text-xl font-bold flex items-center gap-2">
-                                <Shield className="text-blue-500 w-5 h-5" />
-                                Salida del Proceso: {selectedTaskLog?.id}
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+                    <div className="glass-card border border-white/10 w-full max-w-4xl max-h-[85vh] rounded-[2rem] overflow-hidden flex flex-col shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+                        <div className="p-6 border-b border-white/5 flex items-center justify-between bg-white/5">
+                            <h3 className="text-xl font-black italic tracking-tighter flex items-center gap-3 uppercase">
+                                <Shield className="text-geeko-cyan w-6 h-6" />
+                                Logs // {selectedTaskLog?.id}
                             </h3>
-                            <button
-                                onClick={() => setShowLogModal(false)}
-                                className="text-slate-500 hover:text-white transition-colors"
-                            >
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" /></svg>
+                            <button onClick={() => setShowLogModal(false)} className="text-slate-500 hover:text-white transition-colors bg-white/5 p-2 rounded-full">
+                                <X size={20} />
                             </button>
                         </div>
-                        <div className="p-6 bg-black/40 overflow-y-auto font-mono text-sm text-slate-300 whitespace-pre-wrap flex-grow">
-                            {selectedTaskLog?.logs || 'No hay logs aún...'}
+                        <div className="p-8 bg-black/60 overflow-y-auto font-mono text-[11px] text-slate-300 whitespace-pre-wrap flex-grow custom-scrollbar">
+                            {selectedTaskLog?.logs || 'Scanning for data...'}
                         </div>
-                        <div className="p-4 border-t border-slate-800 flex justify-end">
+                        <div className="p-6 border-t border-white/5 flex justify-between items-center bg-white/5">
+                            <span className="text-[10px] text-slate-600 font-black uppercase tracking-widest">System Status: Active</span>
                             <button
                                 onClick={() => selectedTaskLog && fetchTaskLogs(selectedTaskLog.id)}
                                 disabled={isRefreshingLogs}
-                                className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white px-6 py-2 rounded-xl font-bold transition-all text-sm flex items-center gap-2"
+                                className="bg-geeko-cyan text-black px-8 py-3 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_20px_rgba(34,211,238,0.3)]"
                             >
-                                {isRefreshingLogs ? (
-                                    <>
-                                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                        Actualizando...
-                                    </>
-                                ) : 'Actualizar Logs'}
+                                {isRefreshingLogs ? 'Updating...' : 'Refresh Logs'}
                             </button>
                         </div>
                     </div>
@@ -378,14 +355,18 @@ export const AdminDashboard = () => {
 };
 
 const StatCard = ({ title, value, change, icon }: { title: string, value: string, change: string, icon: React.ReactNode }) => (
-    <div className="bg-slate-900/50 border border-slate-800 p-6 rounded-3xl backdrop-blur-xl hover:border-slate-700 transition-all">
+    <div className="glass-card p-6 rounded-[2rem] border border-white/5 bg-slate-900/50 hover:border-geeko-cyan/30 transition-all group">
         <div className="flex items-center justify-between mb-4">
-            <div className="w-10 h-10 bg-slate-800 rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-black/40 rounded-2xl flex items-center justify-center border border-white/5 group-hover:bg-geeko-cyan/10 transition-colors">
                 {icon}
             </div>
-            <span className="text-emerald-500 text-xs font-bold leading-none">{change}</span>
+            <span className="text-emerald-500 text-[10px] font-black uppercase tracking-[0.2em] bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">{change}</span>
         </div>
-        <h3 className="text-slate-500 text-sm font-medium mb-1">{title}</h3>
-        <p className="text-3xl font-black text-white">{value}</p>
+        <h3 className="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">{title}</h3>
+        <p className="text-4xl font-black text-white italic tracking-tighter">{value}</p>
     </div>
+);
+
+const X = ({ size, className }: { size: number, className?: string }) => (
+    <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
 );

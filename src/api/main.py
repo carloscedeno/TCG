@@ -419,3 +419,47 @@ async def get_admin_stats(user_id: str = Depends(verify_admin)):
             "total_users": 0,
             "total_updates": 0
         }
+
+@app.post("/api/webhook/sync")
+async def public_sync_webhook(token: str = Query(...), game_code: str = "MTG"):
+    """
+    Webhook público (protegido por token) para disparar sincronizaciones.
+    Útil para GitHub Actions o servicios de cron externos.
+    """
+    expected_token = os.getenv("SYNC_WEBHOOK_TOKEN")
+    if not expected_token or token != expected_token:
+        raise HTTPException(status_code=401, detail="Invalid sync token")
+    
+    # Reutilizamos la lógica de sincronización (sin requerir admin auth aquí)
+    # pero llamamos internamente a una función compartida o simplemente iniciamos el proceso
+    try:
+        task_id = f"webhook_sync_{game_code.lower()}_{int(time.time())}"
+        script_path = os.path.join(os.getcwd(), 'data_loader', 'load_mtgs_cards_from_scryfall.py')
+        
+        env = os.environ.copy()
+        env["PYTHONIOENCODING"] = "utf-8"
+        
+        process = subprocess.Popen(
+            [sys.executable, script_path],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            encoding='utf-8',
+            bufsize=1,
+            cwd=os.getcwd(),
+            env=env
+        )
+        
+        export_tasks[task_id] = {
+            "id": task_id,
+            "game_code": game_code.upper(),
+            "status": "running",
+            "start_time": datetime.now().isoformat(),
+            "process": process,
+            "logs": f"--- Webhook Sync Triggered for {game_code.upper()} ---\n"
+        }
+        
+        return {"success": True, "message": "Sync triggered via webhook", "task_id": task_id}
+    except Exception as e:
+        return {"error": str(e)}
+
