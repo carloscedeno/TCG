@@ -1,3 +1,5 @@
+import { supabase } from '../context/AuthContext';
+
 export interface CardApi {
   card_id: string;
   name: string;
@@ -6,10 +8,8 @@ export interface CardApi {
   price: number;
   image_url: string;
   rarity: string;
+  card_faces?: any[];
 }
-
-const API_BASE = import.meta.env.VITE_API_BASE || 'https://sxuotvogwvmxuvwbsscv.supabase.co/functions/v1/tcg-api';
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN4dW90dm9nd3ZteHV2d2Jzc2N2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcxMjUyNzUsImV4cCI6MjA4MjcwMTI3NX0.0qL7dIEnwg22RyORGX06G97VjdH4C8_l4Qgm2oPEYTY';
 
 export const fetchCards = async (params: {
   q?: string,
@@ -20,32 +20,65 @@ export const fetchCards = async (params: {
   limit?: number,
   offset?: number
 }): Promise<{ cards: CardApi[], total_count: number }> => {
-  const queryParams = new URLSearchParams();
-  if (params.q) queryParams.append('q', params.q);
-  if (params.game) queryParams.append('game', params.game);
-  if (params.set) queryParams.append('set', params.set);
-  if (params.rarity) queryParams.append('rarity', params.rarity);
-  if (params.color) queryParams.append('color', params.color);
-  if (params.limit) queryParams.append('limit', params.limit.toString());
-  if (params.offset) queryParams.append('offset', params.offset.toString());
+  const { q, game, set, rarity, color, limit = 50, offset = 0 } = params;
 
   try {
-    const response = await fetch(`${API_BASE}/api/cards?${queryParams.toString()}`, {
-      headers: {
-        'apikey': SUPABASE_ANON_KEY,
-        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-      }
-    });
+    let query = supabase.from('card_printings').select(`
+      printing_id, 
+      image_url,
+      card_faces,
+      cards!inner(card_id, card_name, type_line, rarity, game_id, colors),
+      sets!inner(set_name),
+      aggregated_prices(avg_market_price_usd)
+    `, { count: 'exact' });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    // Apply filters
+    if (q) query = query.ilike('cards.card_name', `%${q}%`);
+    if (rarity) query = query.in('cards.rarity', rarity.split(',').map(r => r.trim().toLowerCase()));
+
+    if (game) {
+      const gameMap: Record<string, number> = { 'Magic: The Gathering': 22, 'Pokémon': 23, 'Lorcana': 24, 'Yu-Gi-Oh!': 26 };
+      const gameIds = game.split(',').map(g => gameMap[g.trim()]).filter(id => id !== undefined);
+      if (gameIds.length > 0) query = query.in('cards.game_id', gameIds);
     }
 
-    const data = await response.json();
-    return {
-      cards: data.cards || [],
-      total_count: data.total_count || 0
-    };
+    if (set) query = query.in('sets.set_name', set.split(',').map(s => s.trim()));
+
+    if (color) {
+      const colorMap: Record<string, string> = { 'White': 'W', 'Blue': 'U', 'Black': 'B', 'Red': 'R', 'Green': 'G', 'Colorless': 'C' };
+      const colorCodes = color.split(',').map(c => colorMap[c.trim()]).filter(code => code !== undefined);
+      if (colorCodes.length > 0) query = query.overlaps('cards.colors', colorCodes);
+    }
+
+    // Limit and Offset
+    query = query.range(offset, offset + limit - 1);
+    // Default sort by name for consistent paging
+    query = query.order('card_name', { foreignTable: 'cards', ascending: true });
+
+    const { data, error, count } = await query;
+    if (error) throw error;
+
+    const cards = (data || []).map(item => {
+      const cardData = (item.cards as any) || {};
+      const setData = (item.sets as any) || {};
+      const priceData = item.aggregated_prices as any;
+      const price = Array.isArray(priceData) && priceData.length > 0
+        ? priceData[0].avg_market_price_usd
+        : (priceData?.avg_market_price_usd || 0);
+
+      return {
+        card_id: item.printing_id,
+        name: cardData.card_name,
+        type: cardData.type_line,
+        set: setData.set_name || '',
+        price: price,
+        image_url: item.image_url,
+        rarity: cardData.rarity,
+        card_faces: item.card_faces as any[]
+      };
+    });
+
+    return { cards, total_count: count || 0 };
   } catch (error) {
     console.error('Error fetching cards:', error);
     return { cards: [], total_count: 0 };
@@ -53,16 +86,19 @@ export const fetchCards = async (params: {
 };
 
 export const fetchSets = async (game_code?: string): Promise<any[]> => {
-  const url = `${API_BASE}/api/sets${game_code ? `?game_code=${game_code}` : ''}`;
   try {
-    const response = await fetch(url, {
-      headers: {
-        'apikey': SUPABASE_ANON_KEY,
-        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-      }
-    });
-    const data = await response.json();
-    return data.sets || [];
+    let query = supabase
+      .from('sets')
+      .select('*, games!inner(game_name, game_code)')
+      .eq('is_digital', false);
+
+    if (game_code) {
+      query = query.eq('games.game_code', game_code);
+    }
+
+    const { data, error } = await query;
+    if (error) throw error;
+    return data || [];
   } catch (error) {
     console.error('Error fetching sets:', error);
     return [];
