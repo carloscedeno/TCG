@@ -45,6 +45,33 @@ class ValuationService:
                     geek_price = geek_price or fallback
                     ck_price = ck_price or fallback
 
+            # Fallback for URL generation if missing (and if we have a price or as a general service)
+            if not ck_url:
+                try:
+                    # Fetch card and set info for URL construction
+                    # We need set name and card name. 
+                    # Note: This is an approximation. CardKingdom set names might differ from Scryfall/DB.
+                    info = supabase.table('card_printings').select('card:cards(card_name), set:sets(set_name)')\
+                        .eq('printing_id', printing_id).single().execute()
+                    
+                    if info.data:
+                        card_name = info.data.get('card', {}).get('card_name', '')
+                        set_name = info.data.get('set', {}).get('set_name', '')
+                        
+                        if card_name and set_name:
+                            # Simple Slugify: lowercase, replace spaces with hyphens, remove chars
+                            def slugify(text):
+                                import re
+                                text = text.lower()
+                                text = re.sub(r'[^a-z0-9\s-]', '', text)
+                                return re.sub(r'\s+', '-', text)
+
+                            ck_slug_set = slugify(set_name)
+                            ck_slug_card = slugify(card_name)
+                            ck_url = f"https://www.cardkingdom.com/mtg/{ck_slug_set}/{ck_slug_card}"
+                except Exception as e:
+                    print(f"Error generating fallback URL: {e}")
+
             return {
                 "store_price": geek_price,
                 "market_price": ck_price,
