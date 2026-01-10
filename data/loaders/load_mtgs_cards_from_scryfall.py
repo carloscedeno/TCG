@@ -182,6 +182,7 @@ def map_scryfall_printing(card, set_id):
 
     return {
         'printing_id': card['id'],
+        'scryfall_id': card['id'],
         'card_id': card['oracle_id'],
         'set_id': set_id,
         'set_code': card.get('set'),

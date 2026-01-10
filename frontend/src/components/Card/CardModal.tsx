@@ -40,6 +40,7 @@ interface CardDetails {
     valuation?: {
         store_price: number;
         market_price: number;
+        market_url?: string;
         valuation_avg: number;
     };
     legalities: Record<string, string>;
@@ -288,7 +289,12 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
                                     {/* Marketplace Links */}
                                     <div className="space-y-4">
                                         <div className="space-y-3">
-                                            <button className="w-full flex items-center justify-between p-4 rounded-xl bg-neutral-900 hover:bg-neutral-800 transition-all border border-white/5 group">
+                                            <a
+                                                href={details.valuation?.market_url || '#'}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="w-full flex items-center justify-between p-4 rounded-xl bg-neutral-900 hover:bg-neutral-800 transition-all border border-white/5 group"
+                                            >
                                                 <div className="text-left">
                                                     <div className="text-[10px] font-black uppercase text-neutral-500 tracking-widest mb-1">External Market</div>
                                                     <span className="flex items-center gap-2 text-sm font-bold text-neutral-200">
@@ -301,7 +307,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
                                                     </span>
                                                     <ExternalLink size={14} className="text-neutral-500 group-hover:text-white transition-colors" />
                                                 </div>
-                                            </button>
+                                            </a>
 
                                             {/* Valuation Average Display */}
                                             <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-geeko-cyan/5 border border-geeko-cyan/20">
