@@ -6,6 +6,12 @@ This document describes the new project structure following industry best practi
 
 ```
 mtg-tcg-web-app/
+├── .agent/                 # Agentic Engineering Rules & Workflows
+│   ├── AGENTS.md          # Entry point for modular rules
+│   ├── reference/         # Specialized rule files (frontend, api, etc.)
+│   └── workflows/         # Automated command-based workflows
+├── PRD.md                 # Product Requirements Document (Source of Truth)
+├── PLAN.md                # Project Roadmap & Step-by-step Planning
 ├── src/                    # Main application source code
 │   ├── api/               # FastAPI application
 │   │   ├── routes/        # API route definitions

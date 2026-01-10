@@ -64,8 +64,8 @@ frontend/dist/
 *.backup.gz
 *.sql
 
-# Temp/Debug scripts
-test_*.py
+# Temp/Debug scripts (only in root)
+/test_*.py
 verify_test.py
 debug_scraper.py
 check_*.py

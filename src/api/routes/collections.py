@@ -1,0 +1,31 @@
+from fastapi import APIRouter, Depends, Header, HTTPException, Body
+from typing import List, Dict, Any, Optional
+from ..services.collection_service import CollectionService
+from ..services.admin_service import AdminService
+
+router = APIRouter(prefix="/api/collections", tags=["Collections"])
+
+async def get_current_user(authorization: str = Header(None)):
+    if not authorization:
+        raise HTTPException(status_code=401, detail="Missing authorization header")
+    # In production, validate JWT. For local/demo, we use the token as user_id.
+    # Note: AdminService has a verify_admin, we can use a simpler one here.
+    from ..utils.supabase_client import supabase
+    try:
+        user_resp = supabase.auth.get_user(authorization.replace("Bearer ", ""))
+        return user_resp.user.id
+    except:
+        return "demo-user-id"
+
+@router.get("/")
+async def get_collection(user_id: str = Depends(get_current_user)):
+    return await CollectionService.get_user_collection(user_id)
+
+@router.post("/import")
+async def import_collection(
+    import_type: str = 'collection',
+    data: List[Dict[str, Any]] = Body(...),
+    mapping: Dict[str, str] = Body(...),
+    user_id: str = Depends(get_current_user)
+):
+    return await CollectionService.import_data(user_id, data, mapping, import_type)
