@@ -27,12 +27,10 @@ This platform is an advanced web application for aggregating and analyzing Tradi
 - **Dynamic Filters:** Game, Set/Edition, Rarity, Color, etc., with URL persistence.
 
 ### 2.2. Price Tracking & Analysis (✅ Core Implemented)
-- **Marketplace Comparison:** Side-by-side pricing from multiple sources (Scrapers built for Cardmarket, TCGPlayer).
-- **Calculated Metrics:** Average Market Price and Suggested Buy Price.
-- **Historical Charts:** Interactive charts (1M, 3M, 1Y, All) with zoom and multi-line comparison (NM vs MP, Foil vs Non-Foil).
-
-### 2.3. User Collection Management (🏗️ In Progress)
-- **Bulk Upload**: CSV/TXT import with mapping verification and conflict resolution (Identifies TCG and Store Prices).
+- **Card Detail View**: Premium modal featuring:
+    - **Geekorium Price**: Primary highlighted price for direct purchasing.
+    - **CardKingdom Reference**: Secondary market price for comparison.
+    - **Valuation Average**: Real-time average calculation between store and market.
 - **Portfolio Dashboard**: 
     - **Two-Factor Valuation**: Collection value is calculated using both **Geekorium Store Prices** (internal benchmark) and **CardKingdom Market Prices** (external reference).
     - **Profit/Loss Tracking**: Real-time gainers and losers based on the variance between purchase price, store price, and market price.
@@ -41,8 +39,10 @@ This platform is an advanced web application for aggregating and analyzing Tradi
 
 ### 2.4. Admin & Automation (✅ Implemented)
 - **GeekoSystem Terminal:** Real-time monitoring of scrapers and sync tasks.
-- **Catalog Sync:** Automated ingestion from Scryfall (MTG) and Pokemon TCG API.
-- **GitHub Automation:** Manual trigger of GitHub Actions workflows directly from the dashboard.
+- **Catalog & Price Sync**: 
+    - **Daily Automation**: Automatic price updates scheduled for **12:30 AM Pacific Time** daily.
+    - **Multi-Source**: Ingestion from Scryfall (MTG) and direct market scraping from CardKingdom.
+- **GitHub Automation**: Manual trigger of GitHub Actions workflows directly from the dashboard.
 
 ---
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { X, CheckCircle, XCircle, ShoppingCart, ExternalLink, Shield, RotateCw } from 'lucide-react';
-import { supabase } from '../../context/AuthContext';
+import { X, CheckCircle, XCircle, ShoppingCart, ExternalLink, Shield, RotateCw, Info } from 'lucide-react';
+import { fetchCardDetails } from '../../utils/api';
 
 interface CardModalProps {
     isOpen: boolean;
@@ -37,6 +37,11 @@ interface CardDetails {
     collector_number: string;
     image_url: string;
     price: number;
+    valuation?: {
+        store_price: number;
+        market_price: number;
+        valuation_avg: number;
+    };
     legalities: Record<string, string>;
     colors: string[];
     card_faces?: CardFace[];
@@ -60,67 +65,12 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
         setCurrentFaceIndex(0);
 
         try {
-            const { data, error } = await supabase
-                .from('card_printings')
-                .select(`
-                printing_id,
-                image_url,
-                artist,
-                flavor_text,
-                collector_number,
-                rarity,
-                card_faces,
-                cards (
-                    card_name,
-                    type_line,
-                    oracle_text,
-                    mana_cost,
-                    power,
-                    toughness,
-                    legalities,
-                    colors
-                ),
-                sets (
-                    set_name,
-                    set_code
-                ),
-                aggregated_prices (
-                    avg_market_price_usd
-                )
-            `)
-                .eq('printing_id', id)
-                .single();
-
-            if (error) throw error;
+            const data = await fetchCardDetails(id);
             if (!data) throw new Error("No data found");
 
-            const cardData = (data.cards as any) || {};
-            const setData = (data.sets as any) || {};
-            const priceData = (data.aggregated_prices as any);
-            const price = Array.isArray(priceData) && priceData.length > 0
-                ? priceData[0].avg_market_price_usd
-                : priceData?.avg_market_price_usd || 0;
-
-            setDetails({
-                card_id: data.printing_id,
-                name: cardData.card_name,
-                mana_cost: cardData.mana_cost,
-                type: cardData.type_line,
-                oracle_text: cardData.oracle_text,
-                flavor_text: data.flavor_text,
-                artist: data.artist,
-                rarity: data.rarity,
-                set: setData.set_name,
-                set_code: setData.set_code,
-                collector_number: data.collector_number,
-                legalities: cardData.legalities,
-                image_url: data.image_url,
-                price: price,
-                colors: cardData.colors,
-                card_faces: data.card_faces as any
-            });
+            setDetails(data);
         } catch (err) {
-            console.error("Failed to load details from Supabase", err);
+            console.error("Failed to load details from Local API", err);
         } finally {
             setLoading(false);
         }
@@ -335,20 +285,37 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
                                         </div>
                                     </div>
 
-                                    {/* Competitor Links */}
-                                    <div className="space-y-2">
-                                        <button className="w-full flex items-center justify-between p-3 rounded-lg bg-neutral-800 hover:bg-neutral-700 transition-colors border border-white/5 text-xs font-bold text-neutral-300">
-                                            <span className="flex items-center gap-2">Buy @ CardKingdom</span>
-                                            <ExternalLink size={12} />
-                                        </button>
-                                        <button className="w-full flex items-center justify-between p-3 rounded-lg bg-neutral-800 hover:bg-neutral-700 transition-colors border border-white/5 text-xs font-bold text-neutral-300">
-                                            <span className="flex items-center gap-2">Buy @ TCGPlayer</span>
-                                            <ExternalLink size={12} />
-                                        </button>
-                                        <button className="w-full flex items-center justify-between p-3 rounded-lg bg-neutral-800 hover:bg-neutral-700 transition-colors border border-white/5 text-xs font-bold text-neutral-300">
-                                            <span className="flex items-center gap-2">Buy @ StarCityGames</span>
-                                            <ExternalLink size={12} />
-                                        </button>
+                                    {/* Marketplace Links */}
+                                    <div className="space-y-4">
+                                        <div className="space-y-3">
+                                            <button className="w-full flex items-center justify-between p-4 rounded-xl bg-neutral-900 hover:bg-neutral-800 transition-all border border-white/5 group">
+                                                <div className="text-left">
+                                                    <div className="text-[10px] font-black uppercase text-neutral-500 tracking-widest mb-1">External Market</div>
+                                                    <span className="flex items-center gap-2 text-sm font-bold text-neutral-200">
+                                                        Buy @ CardKingdom
+                                                    </span>
+                                                </div>
+                                                <div className="flex items-center gap-3">
+                                                    <span className="text-geeko-cyan font-mono font-bold">
+                                                        ${details.valuation?.market_price ? details.valuation.market_price.toFixed(2) : '---'}
+                                                    </span>
+                                                    <ExternalLink size={14} className="text-neutral-500 group-hover:text-white transition-colors" />
+                                                </div>
+                                            </button>
+
+                                            {/* Valuation Average Display */}
+                                            <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-geeko-cyan/5 border border-geeko-cyan/20">
+                                                <div className="flex items-center gap-2">
+                                                    <Info size={14} className="text-geeko-cyan" />
+                                                    <span className="text-[10px] font-black text-geeko-cyan/80 uppercase tracking-widest">
+                                                        Valuation Average
+                                                    </span>
+                                                </div>
+                                                <span className="text-sm font-black text-geeko-cyan font-mono">
+                                                    ${details.valuation?.valuation_avg ? details.valuation.valuation_avg.toFixed(2) : '---'}
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

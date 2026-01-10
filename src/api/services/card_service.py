@@ -72,6 +72,8 @@ class CardService:
     @staticmethod
     async def get_card_details(printing_id: str) -> Dict[str, Any]:
         try:
+            from .valuation_service import ValuationService
+            
             query = supabase.table('card_printings').select(
                 'printing_id, image_url, artist, flavor_text, collector_number, rarity, card_faces, '
                 'cards(card_name, type_line, oracle_text, mana_cost, power, toughness, legalities, colors), '
@@ -86,8 +88,9 @@ class CardService:
                 
             card_data = item.get('cards') or {}
             set_data = item.get('sets') or {}
-            price_data = item.get('aggregated_prices') or []
-            price = price_data[0].get('avg_market_price_usd', 0) if price_data else 0
+            
+            # Fetch valuation
+            valuation = await ValuationService.get_two_factor_valuation(printing_id)
                 
             return {
                 "card_id": item.get('printing_id'),
@@ -103,7 +106,8 @@ class CardService:
                 "collector_number": item.get('collector_number'),
                 "legalities": card_data.get('legalities'),
                 "image_url": item.get('image_url'),
-                "price": price,
+                "price": valuation.get('store_price', 0),
+                "valuation": valuation,
                 "colors": card_data.get('colors'),
                 "card_faces": item.get('card_faces')
             }
