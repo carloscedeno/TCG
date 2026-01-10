@@ -27,3 +27,8 @@ Follow these rules for every interaction:
 - Every completed task, feature, or phase must be committed to Git.
 - **Verification**: Changes must be verified in both Local and Production environments before moving to the next task/phase.
 - PRD and PLAN must be updated to ensure consistency.
+
+## 7. Hybrid Cloud Architecture
+- **Supabase is the Backend**: The database and core services live in Supabase.
+- **Local-to-Cloud Connection**: Local development (FastAPI/Frontend) must connect to the PRODUCTION/STAGING Supabase instance to avoid local divergence.
+- **Git is for Front & Logic**: Frontend code and scraper logic live in Git; persistent data lives in Supabase.

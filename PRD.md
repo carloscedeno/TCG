@@ -32,9 +32,12 @@ This platform is an advanced web application for aggregating and analyzing Tradi
 - **Historical Charts:** Interactive charts (1M, 3M, 1Y, All) with zoom and multi-line comparison (NM vs MP, Foil vs Non-Foil).
 
 ### 2.3. User Collection Management (🏗️ In Progress)
-- **Bulk Upload:** CSV/TXT import with mapping verification and conflict resolution.
-- **Portfolio Dashboard:** Total collection value, Profit/Loss tracking, and Ganadores/Perdedores widgets.
-- **Inline Editing:** Quick updates for card quantity and condition.
+- **Bulk Upload**: CSV/TXT import with mapping verification and conflict resolution (Identifies TCG and Store Prices).
+- **Portfolio Dashboard**: 
+    - **Two-Factor Valuation**: Collection value is calculated using both **Geekorium Store Prices** (internal benchmark) and **CardKingdom Market Prices** (external reference).
+    - **Profit/Loss Tracking**: Real-time gainers and losers based on the variance between purchase price, store price, and market price.
+    - **Ganadores/Perdedores Widgets**: Highlighting cards with the highest market shifts.
+- **Inline Editing**: Quick updates for card quantity and condition.
 
 ### 2.4. Admin & Automation (✅ Implemented)
 - **GeekoSystem Terminal:** Real-time monitoring of scrapers and sync tasks.
@@ -52,10 +55,14 @@ This platform is an advanced web application for aggregating and analyzing Tradi
 - **Marketplace Mapping:** Standardized condition mapping across TCGPlayer, Cardmarket, etc.
 
 ### 3.2. Architecture
-- **Backend:** FastAPI (Python) for processing and API.
-- **Frontend:** React (TypeScript) for the user interface.
-- **Database:** PostgreSQL (Supabase) for data storage.
-- **Deployment:** GitHub Pages / Supabase Edge Functions.
+- **Supabase (Core Backend)**: Our primary source of truth. All persistent data (Authentication, DB, Storage) and core business logic (Edge Functions) reside here.
+- **Git (Frontend & Automation)**: Stores the React frontend code (deployed to GitHub Pages) and the automation ecosystem (FastAPI / Scrapers).
+- **Hybrid Hub Model**: Local development (FastAPI/React) targets the production/staging Supabase Cloud instance directly to guarantee environment parity.
+
+### 3.3. Deployment & Lifecycle
+- **GitHub Sync**: Frontend and automation scripts are managed via Git and auto-deployed as required.
+- **Persistence**: Scrapers and sync tasks update the global Supabase state.
+- **Workflow**: Implement -> Commit -> Hybrid Local Verification -> Production Audit.
 
 ---
 

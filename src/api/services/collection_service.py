@@ -111,13 +111,23 @@ class CollectionService:
 
     @staticmethod
     async def get_user_collection(user_id: str) -> List[Dict[str, Any]]:
-        """Retrieves the full collection for a user with market prices."""
+        """Retrieves the full collection for a user with two-factor valuation."""
+        from .valuation_service import ValuationService
+        
         response = supabase.table('user_collections').select(
-            'id, quantity, condition, purchase_price, '
+            'id, printing_id, quantity, condition, purchase_price, '
             'card_printings(printing_id, image_url, '
             'cards(card_name, rarity, game_id), '
-            'sets(set_name, set_code), '
-            'aggregated_prices(avg_market_price_usd))'
+            'sets(set_name, set_code))'
         ).eq('user_id', user_id).execute()
         
-        return response.data
+        collection = []
+        for item in response.data:
+            printing_id = item['printing_id']
+            valuation = await ValuationService.get_two_factor_valuation(printing_id)
+            
+            # Enrich item with valuation
+            item['valuation'] = valuation
+            collection.append(item)
+            
+        return collection

@@ -93,6 +93,17 @@ export const fetchCards = async (params: {
   }
 };
 
+export const fetchUserCollection = async (): Promise<any[]> => {
+  try {
+    const response = await fetch(`${API_BASE}/api/collections`);
+    if (!response.ok) throw new Error('Failed to fetch collection');
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching user collection:', error);
+    return [];
+  }
+};
+
 export const fetchSets = async (game_code?: string): Promise<any[]> => {
   try {
     let query = supabase

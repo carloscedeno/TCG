@@ -24,13 +24,17 @@
 *Current Objective: Transform the imported data into visual intelligence for the user.*
 
 ### Task 2.1: Portfolio Dashboard
-- [ ] **Value Widgets**: Implementation of "Total Portfolio Value" and "24h Change" cards.
+- [ ] **Dual-Valuation Engine**: Logic to calculate value based on Geekorium Price + CardKingdom Market Price.
+- [ ] **Value Widgets**: Implementation of "Store Value", "Market Value", and "Global Total" cards.
 - [ ] **Top Performers**: Display cards in collection with most significant price jumps (Gainers vs Losers).
-- [ ] **TCG Distribution**: Pie chart showing collection balance between MTG, Pokémon, One Piece, etc.
 
 ### Task 2.2: Backend Processor Hardening
 - [ ] **Batch Database Upsert**: Optimize the `CollectionService` to handle 1000+ rows efficiently.
 - [ ] **Printing Matcher AI**: Improve the search logic to match card names/sets even with slight typos.
+
+### Task 2.3: Market Data Integration (CardKingdom)
+- [ ] **Scraper Refinement**: Integrate the existing `cardkingdom.py` into the `AdminService` workflow.
+- [ ] **Price Aggregation**: Ensure CardKingdom prices are stored as a distinct marketplace source for comparison.
 
 ---
 

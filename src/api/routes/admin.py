@@ -27,4 +27,4 @@ async def get_task_logs(task_id: str, admin_id: str = Depends(get_current_admin)
 
 @router.post("/scraper/run/{source}")
 async def run_scraper(source: str, admin_id: str = Depends(get_current_admin)):
-    return await AdminService.run_scraper(source, admin_id)
+    return await AdminService.run_scraper(source)

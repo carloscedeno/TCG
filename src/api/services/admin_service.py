@@ -117,31 +117,58 @@ class AdminService:
         return results
 
     @staticmethod
-    async def run_scraper(source: str, user_id: str):
-        # We need the scraper manager here. 
-        # Since the path logic is tricky, we'll try to import it or use a fallback
+    async def run_scraper(source: str):
+        """Asynchronously runs a scraper for a specific source and tracks progress."""
         SCRAPER_PATH = Path(os.getcwd()) / "data" / "scrapers" / "shared"
         sys.path.append(str(SCRAPER_PATH))
         
-        try:
-            from scraper_manager import TCGScraperManager
-            manager = TCGScraperManager(
-                supabase_url=os.getenv('SUPABASE_URL'),
-                supabase_key=os.getenv('SUPABASE_SERVICE_ROLE_KEY') or os.getenv('SUPABASE_ANON_KEY')
-            )
-            
-            data = manager.load_input_data(from_supabase=True)
-            if not data:
-                data = [{"card_name": "Black Lotus", "url": "https://www.cardmarket.com/en/Magic/Products/Singles/Commander-Masters/Black-Lotus", "source": "cardmarket"}]
-            
-            # Simple batch execution (first 5 for verification as per previous logic)
-            batch = manager.scrape_batch(data[:5], sources_filter=[source])
-            
-            return {
-                "success": True, 
-                "source": source, 
-                "count": len(batch.results),
-                "message": f"Scraping for {source} completed successfully"
-            }
-        except Exception as e:
-            return {"error": f"Failed to run scraper: {str(e)}"}
+        task_id = f"scraper_{source}_{int(time.time())}"
+        export_tasks[task_id] = {
+            "id": task_id,
+            "source": source,
+            "status": "running",
+            "start_time": datetime.now().isoformat(),
+            "logs": f"--- Iniciando Scraper {source.upper()} [{task_id}] ---\n"
+        }
+
+        def background_scrape():
+            try:
+                from scraper_manager import TCGScraperManager
+                manager = TCGScraperManager(
+                    supabase_url=os.getenv('SUPABASE_URL'),
+                    supabase_key=os.getenv('SUPABASE_SERVICE_ROLE_KEY') or os.getenv('SUPABASE_ANON_KEY')
+                )
+                
+                export_tasks[task_id]["logs"] += "--- Cargando URLs de entrada... ---\n"
+                # For now, use the load_input_data which might use CSV or Supabase
+                data = manager.load_input_data(from_supabase=True)
+                
+                if not data:
+                    export_tasks[task_id]["logs"] += "--- AVISO: No se encontraron URLs en Supabase. Usando semillas... ---\n"
+                    data = [{"card_name": "Sol Ring", "url": "https://www.cardkingdom.com/mtg/commander-masters/sol-ring", "source": "cardkingdom"}]
+                
+                export_tasks[task_id]["logs"] += f"--- Iniciando Lote ({len(data[:10])} items) para {source}... ---\n"
+                
+                # Execute batch (limited to 10 for safety/speed in this context)
+                batch = manager.scrape_batch(data[:10], sources_filter=[source])
+                
+                if batch.successful_scrapes > 0:
+                    export_tasks[task_id]["logs"] += f"--- Éxito: {batch.successful_scrapes} precios obtenidos. ---\n"
+                    manager.save_to_supabase(batch)
+                    export_tasks[task_id]["logs"] += "--- Datos sincronizados con Supabase. ---\n"
+                    export_tasks[task_id]["status"] = "completed"
+                else:
+                    export_tasks[task_id]["logs"] += "--- Error: No se pudo obtener ningún precio. ---\n"
+                    export_tasks[task_id]["status"] = "failed"
+                    
+            except Exception as e:
+                export_tasks[task_id]["status"] = "failed"
+                export_tasks[task_id]["logs"] += f"\n[ERROR CRÍTICO] {str(e)}\n"
+
+        threading.Thread(target=background_scrape, daemon=True).start()
+        
+        return {
+            "success": True, 
+            "task_id": task_id,
+            "message": f"Scraper for {source} started in background"
+        }
