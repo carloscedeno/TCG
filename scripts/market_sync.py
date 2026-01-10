@@ -18,7 +18,7 @@ def run_market_sync():
     load_dotenv()
     
     supabase_url = os.getenv('SUPABASE_URL')
-    supabase_key = os.getenv('SUPABASE_SERVICE_ROLE_KEY')
+    supabase_key = os.getenv('SUPABASE_SERVICE_ROLE_KEY') or os.getenv('SUPABASE_ANON_KEY')
     
     if not supabase_url or not supabase_key:
         logger.error("Missing Supabase credentials in environment")
