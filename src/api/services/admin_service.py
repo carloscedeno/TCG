@@ -139,6 +139,47 @@ class AdminService:
                     supabase_key=os.getenv('SUPABASE_SERVICE_ROLE_KEY') or os.getenv('SUPABASE_ANON_KEY')
                 )
                 
+                if source == 'cardkingdom':
+                     # Use API client for CardKingdom sync
+                    export_tasks[task_id]["logs"] += "--- Usando CardKingdom API v2 Client... ---\n"
+                    from scrapers.cardkingdom_api import CardKingdomAPI
+                    
+                    ck_client = CardKingdomAPI()
+                    pricelist = ck_client.fetch_full_pricelist()
+                    
+                    if not pricelist:
+                        raise Exception("Failed to download pricelist from CardKingdom API")
+                    
+                    export_tasks[task_id]["logs"] += f"--- Pricelist descargada: {len(pricelist)} items. ---\n"
+                    export_tasks[task_id]["logs"] += "--- Buscando cartas en base de datos local para actualizar... ---\n"
+                    
+                    # For a test run, we might want to target specific cards, but here we process what's in DB
+                    # Or better, update cards that have scryfall_ids
+                    # Since this is "run_scraper", let's update a small batches or the specific pending ones
+                    
+                    # Fetch cards from DB that have scryfall_id
+                    db_cards = supabase.table('card_printings').select('printing_id, scryfall_id').not_.is_('scryfall_id', 'null').limit(50).execute().data
+                    
+                    updates_count = 0
+                    for db_card in db_cards:
+                        match = ck_client.get_price_by_scryfall_id(pricelist, db_card['scryfall_id'])
+                        if match:
+                            # Insert into price history
+                            price_entry = {
+                                "printing_id": db_card['printing_id'],
+                                "source_id": 21, # CardKingdom
+                                "price_usd": match['price_retail'],
+                                "url": match['url'],
+                                "is_foil": match['is_foil']
+                            }
+                            supabase.table('price_history').insert(price_entry).execute()
+                            updates_count += 1
+                    
+                    export_tasks[task_id]["logs"] += f"--- Sincronización API completada: {updates_count} precios actualizados. ---\n"
+                    export_tasks[task_id]["status"] = "completed"
+                    return
+
+                # Default fallback to legacy scraper manager
                 export_tasks[task_id]["logs"] += "--- Cargando URLs de entrada... ---\n"
                 # For now, use the load_input_data which might use CSV or Supabase
                 data = manager.load_input_data(from_supabase=True)
