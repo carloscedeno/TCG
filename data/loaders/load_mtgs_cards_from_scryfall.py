@@ -297,6 +297,10 @@ def main():
                     if 'oracle_id' not in card:
                         continue
                     
+                    # Filtro obligatorio: Solo inglés por ahora
+                    if card.get('lang') != 'en':
+                        continue
+                        
                     # Preparar card (deduplicar por card_id)
                     c_data = map_scryfall_card(card)
                     cards_dict[c_data['card_id']] = c_data

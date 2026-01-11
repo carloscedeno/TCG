@@ -12,10 +12,11 @@ async def get_cards(
     set: Optional[str] = Query(None, description="Set name filter"),
     rarity: Optional[str] = Query(None, description="Rarity filter"),
     color: Optional[str] = Query(None, description="Color filter"),
+    type: Optional[str] = Query(None, description="Card type filter"),
     limit: int = Query(50, description="Limit results"),
     offset: int = Query(0, description="Offset results")
 ):
-    return await CardService.get_cards(q, game, set, rarity, color, limit, offset)
+    return await CardService.get_cards(q, game, set, rarity, color, type, limit, offset)
 
 @router.get("/cards/{printing_id}")
 async def get_card_details(printing_id: str):

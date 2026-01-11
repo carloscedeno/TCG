@@ -6,6 +6,7 @@ export interface Filters {
   sets: string[];
   rarities: string[];
   colors: string[];
+  types: string[];
 }
 
 export interface FiltersPanelProps {
@@ -180,6 +181,31 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
                     <Check size={8} className="text-cyan-400" />
                   </div>
                 )}
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Tipo de Carta */}
+      <section>
+        <h3 className="text-[11px] font-black uppercase tracking-widest text-neutral-600 mb-4 flex items-center gap-2">
+          <div className="w-1 h-3 bg-red-600 rounded-full"></div>
+          Card Essence (Type)
+        </h3>
+        <div className="flex flex-wrap gap-2">
+          {['Creature', 'Instant', 'Sorcery', 'Enchantment', 'Artifact', 'Planeswalker', 'Land'].map(type => {
+            const isSelected = selected.types?.includes(type);
+            return (
+              <button
+                key={type}
+                onClick={() => handleCheckbox('types', type)}
+                className={`px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all border ${isSelected
+                    ? 'bg-red-600/10 border-red-500/50 text-red-400'
+                    : 'bg-neutral-900/50 border-neutral-800 text-neutral-500 hover:text-neutral-300'
+                  }`}
+              >
+                {type}
               </button>
             );
           })}

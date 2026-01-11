@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { X, CheckCircle, XCircle, ShoppingCart, ExternalLink, Shield, RotateCw, Info } from 'lucide-react';
+import { X, CheckCircle, XCircle, ShoppingCart, ExternalLink, RotateCw } from 'lucide-react';
 import { fetchCardDetails } from '../../utils/api';
 
 interface CardModalProps {
@@ -21,6 +21,16 @@ interface CardFace {
     mana_cost?: string;
     type_line?: string;
     oracle_text?: string;
+}
+
+interface Version {
+    printing_id: string;
+    set_name: string;
+    set_code: string;
+    collector_number: string;
+    rarity: string;
+    price: number;
+    image_url: string;
 }
 
 interface CardDetails {
@@ -46,18 +56,22 @@ interface CardDetails {
     legalities: Record<string, string>;
     colors: string[];
     card_faces?: CardFace[];
+    all_versions?: Version[];
 }
 
 export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId }) => {
     const [details, setDetails] = useState<CardDetails | null>(null);
     const [loading, setLoading] = useState(false);
     const [currentFaceIndex, setCurrentFaceIndex] = useState(0);
+    const [activePrintingId, setActivePrintingId] = useState<string | null>(null);
 
     useEffect(() => {
         if (isOpen && cardId) {
+            setActivePrintingId(cardId);
             loadCardDetails(cardId);
         } else {
             setDetails(null);
+            setActivePrintingId(null);
         }
     }, [isOpen, cardId]);
 
@@ -69,11 +83,31 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
             const data = await fetchCardDetails(id);
             if (!data) throw new Error("No data found");
 
+            // Mandatory: Always show the latest version (first in the list)
+            if (data.all_versions && data.all_versions.length > 0) {
+                const latestId = data.all_versions[0].printing_id;
+                if (latestId !== id && !activePrintingId) {
+                    // Stop current loading and fetch the latest instead
+                    setActivePrintingId(latestId);
+                    const latestData = await fetchCardDetails(latestId);
+                    setDetails(latestData);
+                    setLoading(false);
+                    return;
+                }
+            }
+
             setDetails(data);
         } catch (err) {
-            console.error("Failed to load details from Local API", err);
+            console.error("Failed to load details", err);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleVersionClick = (id: string) => {
+        if (id !== activePrintingId) {
+            setActivePrintingId(id);
+            loadCardDetails(id);
         }
     };
 
@@ -90,248 +124,165 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
         return <XCircle size={14} className="text-neutral-600" />;
     };
 
-    const formatLegalityLabel = (key: string) => {
-        return key.charAt(0).toUpperCase() + key.slice(1);
-    };
-
     const relevantFormats = ['standard', 'pioneer', 'modern', 'legacy', 'commander', 'pauper'];
 
-    // Determine which image to show
     const currentImage = (() => {
         if (details?.card_faces && details.card_faces.length > 0) {
             const face = details.card_faces[currentFaceIndex];
-            // Try to get image from face's image_uris object
             if (face?.image_uris) {
-                return face.image_uris.normal || face.image_uris.large || face.image_uris.png || face.image_uris.border_crop;
+                return face.image_uris.normal || face.image_uris.large || face.image_uris.png;
             }
         }
-        // Fallback to main image_url
         return details?.image_url;
     })();
 
     const hasMultipleFaces = details?.card_faces && details.card_faces.length > 1;
-
-    const toggleFace = () => {
-        if (hasMultipleFaces) {
-            setCurrentFaceIndex((prev) => (prev + 1) % (details?.card_faces?.length || 1));
-        }
-    };
 
     return (
         <div
             className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200"
             onClick={handleBackdropClick}
         >
-            <div className="relative w-full max-w-5xl h-[90vh] md:h-auto md:max-h-[90vh] glass-card rounded-3xl border border-white/10 shadow-2xl flex flex-col md:flex-row overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="relative w-full max-w-6xl h-[90vh] glass-card rounded-3xl border border-white/10 shadow-2xl flex flex-col md:flex-row overflow-hidden">
 
-                <button
-                    onClick={onClose}
-                    className="absolute top-4 right-4 z-50 p-2 bg-black/50 rounded-full text-white md:hidden"
-                >
+                {/* Close Button */}
+                <button onClick={onClose} className="absolute top-6 right-6 z-50 p-2 hover:bg-white/10 rounded-full transition-colors text-neutral-400">
                     <X size={24} />
                 </button>
 
-                {/* LEFT COLUMN: IMAGE */}
-                <div className="w-full md:w-[400px] bg-[#121212] flex items-center justify-center p-8 border-r border-white/5 relative">
-                    <div className="absolute inset-0 bg-gradient-to-b from-geeko-red/5 to-geeko-blue/5 opacity-50" />
+                {/* LEFT: IMAGE & VERSIONS LIST */}
+                <div className="w-full md:w-[450px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden">
+                    <div className="flex-1 flex items-center justify-center p-8 relative">
+                        {loading ? (
+                            <div className="w-64 h-90 rounded-xl bg-white/5 animate-pulse flex items-center justify-center">
+                                <div className="w-10 h-10 border-4 border-t-geeko-cyan border-white/10 rounded-full animate-spin" />
+                            </div>
+                        ) : (
+                            <img
+                                src={currentImage}
+                                alt={details?.name}
+                                className="w-full max-w-sm rounded-[24px] shadow-2xl z-10 hover:scale-[1.02] transition-transform duration-500"
+                            />
+                        )}
+                        {hasMultipleFaces && !loading && (
+                            <button
+                                onClick={(e) => { e.stopPropagation(); setCurrentFaceIndex(prev => (prev + 1) % 2); }}
+                                className="absolute top-10 left-10 p-3 bg-white/10 hover:bg-white/20 rounded-full border border-white/20 transition-all z-20 group"
+                            >
+                                <RotateCw size={20} className="text-geeko-cyan group-hover:rotate-180 transition-transform duration-500" />
+                            </button>
+                        )}
+                    </div>
 
-                    {/* Flip Button for Double-Faced Cards */}
-                    {hasMultipleFaces && !loading && (
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                toggleFace();
-                            }}
-                            className="absolute top-4 left-4 z-20 p-3 bg-geeko-cyan/20 hover:bg-geeko-cyan/30 rounded-full border border-geeko-cyan/50 transition-all group"
-                            title="Flip card"
-                        >
-                            <RotateCw size={20} className="text-geeko-cyan group-hover:rotate-180 transition-transform duration-500" />
-                        </button>
-                    )}
-
-                    {loading ? (
-                        <div className="w-64 h-96 rounded-xl bg-white/5 animate-pulse flex items-center justify-center">
-                            <div className="w-12 h-12 border-4 border-t-geeko-cyan border-white/10 rounded-full animate-spin" />
+                    {/* MOXFIELD-STYLE VERSIONS LIST */}
+                    <div className="h-[300px] border-t border-white/5 bg-[#080808] flex flex-col">
+                        <div className="px-6 py-4 flex items-center justify-between border-b border-white/5">
+                            <h3 className="text-xs font-black uppercase tracking-widest text-neutral-500">Edition / Printings</h3>
+                            <span className="text-[10px] text-neutral-600 font-bold">{details?.all_versions?.length || 0} Versions</span>
                         </div>
-                    ) : currentImage ? (
-                        <img
-                            src={currentImage}
-                            alt={details?.name || 'Card'}
-                            className="w-full max-w-sm rounded-[18px] shadow-[0_0_30px_rgba(0,0,0,0.5)] z-10 hover:scale-105 transition-transform duration-500"
-                        />
-                    ) : (
-                        <div className="w-64 h-96 rounded-xl bg-white/5 flex flex-col items-center justify-center text-neutral-500 gap-4">
-                            <Shield size={48} className="opacity-20" />
-                            <span>No Image Available</span>
+                        <div className="flex-1 overflow-y-auto custom-scrollbar">
+                            {details?.all_versions?.map((v) => (
+                                <button
+                                    key={v.printing_id}
+                                    onClick={() => handleVersionClick(v.printing_id)}
+                                    className={`w-full flex items-center gap-4 px-6 py-3 hover:bg-white/5 transition-colors border-b border-white/5 group ${activePrintingId === v.printing_id ? 'bg-geeko-cyan/10' : ''}`}
+                                >
+                                    <div className="w-8 h-8 rounded bg-neutral-900 flex items-center justify-center text-[10px] font-black group-hover:text-geeko-cyan transition-colors">
+                                        {v.set_code.toUpperCase()}
+                                    </div>
+                                    <div className="flex-1 text-left">
+                                        <div className={`text-xs font-bold leading-tight ${activePrintingId === v.printing_id ? 'text-geeko-cyan' : 'text-neutral-300'}`}>
+                                            {v.set_name}
+                                        </div>
+                                        <div className="text-[10px] text-neutral-600 font-bold">#{v.collector_number} • {v.rarity}</div>
+                                    </div>
+                                    <div className="text-xs font-mono font-bold text-neutral-400 group-hover:text-white">
+                                        ${v.price > 0 ? v.price.toFixed(2) : '---'}
+                                    </div>
+                                </button>
+                            ))}
                         </div>
-                    )}
+                    </div>
                 </div>
 
-                {/* RIGHT COLUMN: DETAILS */}
-                <div className="flex-1 overflow-y-auto custom-scrollbar bg-[#0a0a0a]/95 text-white">
+                {/* RIGHT: CARD TEXT & ACTIONS */}
+                <div className="flex-1 overflow-y-auto custom-scrollbar bg-[#050505] p-10 space-y-8">
                     {loading ? (
-                        <div className="p-10 space-y-6">
+                        <div className="space-y-6">
                             <div className="h-10 w-3/4 bg-white/5 rounded-lg animate-pulse" />
-                            <div className="h-6 w-1/2 bg-white/5 rounded-lg animate-pulse" />
                             <div className="h-32 w-full bg-white/5 rounded-lg animate-pulse" />
                         </div>
                     ) : details ? (
-                        <div className="p-8 md:p-10 space-y-8">
-
-                            {/* Header */}
-                            <div className="space-y-2">
-                                <div className="flex items-start justify-between">
-                                    <h2 className="text-4xl font-black tracking-tight text-white leading-none">
-                                        {hasMultipleFaces && details.card_faces?.[currentFaceIndex]?.name
-                                            ? details.card_faces[currentFaceIndex].name
-                                            : details.name}
-                                    </h2>
-                                    <button onClick={onClose} className="hidden md:block p-2 hover:bg-white/10 rounded-full transition-colors">
-                                        <X size={24} className="text-neutral-400" />
-                                    </button>
-                                </div>
-                                <div className="flex items-center gap-3 text-lg font-medium text-neutral-400">
-                                    {(() => {
-                                        const currentFace = hasMultipleFaces ? details.card_faces?.[currentFaceIndex] : null;
-                                        const mana = currentFace?.mana_cost || details.mana_cost;
-                                        const type = currentFace?.type_line || details.type;
-
-                                        return (
-                                            <>
-                                                {mana && <span>{mana}</span>}
-                                                {mana && type && <span>•</span>}
-                                                {type && <span>{type}</span>}
-                                            </>
-                                        );
-                                    })()}
+                        <>
+                            <div className="space-y-4">
+                                <h2 className="text-5xl font-black tracking-tighter text-white">
+                                    {details.name}
+                                </h2>
+                                <div className="flex items-center gap-3 text-xl font-medium text-neutral-400">
+                                    <span>{details.mana_cost || ''}</span>
+                                    {details.mana_cost && <span>•</span>}
+                                    <span>{details.type}</span>
                                 </div>
                             </div>
 
-                            {/* Oracle Text */}
-                            {(() => {
-                                const currentFace = hasMultipleFaces ? details.card_faces?.[currentFaceIndex] : null;
-                                const oracleText = currentFace?.oracle_text || details.oracle_text;
-
-                                if (!oracleText) return null;
-
-                                return (
-                                    <div className="space-y-4 p-6 rounded-2xl bg-white/5 border border-white/5">
-                                        {oracleText.split('\n').map((line, i) => (
-                                            <p key={i} className="text-sm leading-relaxed text-neutral-200">
-                                                {line}
-                                            </p>
-                                        ))}
-                                        {details.flavor_text && (
-                                            <p className="text-xs italic text-neutral-500 pt-4 border-t border-white/5 font-serif">
-                                                "{details.flavor_text}"
-                                            </p>
-                                        )}
-                                    </div>
-                                );
-                            })()}
-
-                            {/* Meta Info */}
-                            <div className="flex flex-wrap gap-x-8 gap-y-2 text-xs font-bold uppercase tracking-widest text-neutral-500">
-                                {details.set && (
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-geeko-cyan">Set:</span> {details.set} {details.set_code && `(${details.set_code.toUpperCase()})`}
-                                    </div>
-                                )}
-                                {details.collector_number && (
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-geeko-cyan">Collector:</span> #{details.collector_number}
-                                    </div>
-                                )}
-                                {details.rarity && (
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-geeko-cyan">Rarity:</span> {details.rarity}
-                                    </div>
+                            <div className="p-8 rounded-3xl bg-white/5 border border-white/10 space-y-6">
+                                <div className="text-lg leading-relaxed text-neutral-200 font-medium">
+                                    {details.oracle_text?.split('\n').map((line, i) => <p key={i} className="mb-4">{line}</p>)}
+                                </div>
+                                {details.flavor_text && (
+                                    <p className="text-sm italic text-neutral-500 font-serif border-t border-white/10 pt-6">
+                                        "{details.flavor_text}"
+                                    </p>
                                 )}
                             </div>
 
-                            <div className="h-px w-full bg-white/10" />
-
-                            {/* MARKETPLACE SECTION */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-
-                                {/* Legalities */}
-                                {details.legalities && (
-                                    <div className="space-y-4">
-                                        <h3 className="text-xs font-black uppercase tracking-widest text-neutral-400 mb-2">Format Legality</h3>
-                                        <div className="grid grid-cols-2 gap-2">
-                                            {relevantFormats.map(fmt => (
-                                                <div key={fmt} className="flex items-center justify-between p-2 rounded-lg bg-neutral-900 border border-white/5">
-                                                    <span className="text-xs font-bold text-neutral-400">{formatLegalityLabel(fmt)}</span>
-                                                    {getLegalityIcon(details.legalities[fmt] || 'not_legal')}
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Prices & Actions */}
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 pt-4">
+                                {/* Marketplace */}
                                 <div className="space-y-4">
-                                    <h3 className="text-xs font-black uppercase tracking-widest text-neutral-400 mb-2">Marketplace Options</h3>
+                                    <h3 className="text-xs font-black uppercase tracking-widest text-neutral-500">Marketplace</h3>
 
-                                    {/* Geekorium Price */}
-                                    <div className="p-4 rounded-xl bg-gradient-to-r from-geeko-gold/10 to-transparent border border-geeko-gold/30 flex items-center justify-between group cursor-pointer hover:bg-geeko-gold/20 transition-all">
-                                        <div>
-                                            <div className="text-[10px] font-black uppercase text-geeko-gold tracking-widest mb-1">Geekorium Price</div>
-                                            <div className="text-3xl font-black text-white font-mono group-hover:scale-105 transition-transform">
-                                                ${details.price ? details.price.toFixed(2) : '---'}
+                                    <div className="p-6 rounded-2xl bg-gradient-to-br from-geeko-gold/20 to-transparent border border-geeko-gold/30 group">
+                                        <div className="text-[10px] font-black uppercase text-geeko-gold tracking-widest mb-1">Geekorium Price</div>
+                                        <div className="flex items-center justify-between">
+                                            <div className="text-4xl font-black text-white font-mono">${details.price ? details.price.toFixed(2) : '---'}</div>
+                                            <div className="h-12 w-12 rounded-full bg-geeko-gold text-black flex items-center justify-center shadow-lg shadow-geeko-gold/20">
+                                                <ShoppingCart size={24} />
                                             </div>
-                                        </div>
-                                        <div className="h-10 w-10 rounded-full bg-geeko-gold text-black flex items-center justify-center shadow-[0_0_15px_rgba(255,193,7,0.4)]">
-                                            <ShoppingCart size={20} />
                                         </div>
                                     </div>
 
-                                    {/* Marketplace Links */}
-                                    <div className="space-y-4">
-                                        <div className="space-y-3">
-                                            <a
-                                                href={details.valuation?.market_url || '#'}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="w-full flex items-center justify-between p-4 rounded-xl bg-neutral-900 hover:bg-neutral-800 transition-all border border-white/5 group"
-                                            >
-                                                <div className="text-left">
-                                                    <div className="text-[10px] font-black uppercase text-neutral-500 tracking-widest mb-1">External Market</div>
-                                                    <span className="flex items-center gap-2 text-sm font-bold text-neutral-200">
-                                                        Buy @ CardKingdom
-                                                    </span>
-                                                </div>
-                                                <div className="flex items-center gap-3">
-                                                    <span className="text-geeko-cyan font-mono font-bold">
-                                                        ${details.valuation?.market_price ? details.valuation.market_price.toFixed(2) : '---'}
-                                                    </span>
-                                                    <ExternalLink size={14} className="text-neutral-500 group-hover:text-white transition-colors" />
-                                                </div>
-                                            </a>
-
-                                            {/* Valuation Average Display */}
-                                            <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-geeko-cyan/5 border border-geeko-cyan/20">
-                                                <div className="flex items-center gap-2">
-                                                    <Info size={14} className="text-geeko-cyan" />
-                                                    <span className="text-[10px] font-black text-geeko-cyan/80 uppercase tracking-widest">
-                                                        Valuation Average
-                                                    </span>
-                                                </div>
-                                                <span className="text-sm font-black text-geeko-cyan font-mono">
-                                                    ${details.valuation?.valuation_avg ? details.valuation.valuation_avg.toFixed(2) : '---'}
-                                                </span>
-                                            </div>
+                                    <a
+                                        href={details.valuation?.market_url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="w-full flex items-center justify-between p-5 rounded-2xl bg-neutral-900 hover:bg-geeko-cyan/10 border border-white/5 hover:border-geeko-cyan transition-all group"
+                                    >
+                                        <div className="flex flex-col">
+                                            <span className="text-[10px] font-black uppercase text-neutral-500 tracking-widest group-hover:text-geeko-cyan transition-colors">Buy @ CardKingdom</span>
+                                            <span className="text-lg font-bold">Standard Market</span>
                                         </div>
+                                        <div className="flex items-center gap-4">
+                                            <span className="text-xl font-mono font-black text-white">$ {details.valuation?.market_price ? details.valuation.market_price.toFixed(2) : '---'}</span>
+                                            <ExternalLink size={18} className="text-neutral-500 group-hover:text-geeko-cyan" />
+                                        </div>
+                                    </a>
+                                </div>
+
+                                {/* Legality */}
+                                <div className="space-y-4">
+                                    <h3 className="text-xs font-black uppercase tracking-widest text-neutral-500">Format Legality</h3>
+                                    <div className="grid grid-cols-2 gap-3">
+                                        {relevantFormats.map(fmt => (
+                                            <div key={fmt} className="flex items-center justify-between p-3 rounded-xl bg-neutral-900/50 border border-white/5">
+                                                <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">{fmt}</span>
+                                                {getLegalityIcon(details.legalities?.[fmt] || 'not_legal')}
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                             </div>
-
-                        </div>
-                    ) : (
-                        <div className="h-full flex items-center justify-center text-neutral-500">
-                            Failed to load card data.
-                        </div>
-                    )}
+                        </>
+                    ) : null}
                 </div>
             </div>
         </div>

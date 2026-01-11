@@ -13,6 +13,7 @@ Load these rules as needed for specific tasks:
 3. **[Backend & API](reference/api.md)**: FastAPI, Pydantic models, and business logic.
 4. **[Scraper & Data](reference/scrapers.md)**: Anti-bot, data quality, and variant detection.
 5. **[Documentation](reference/documentation.md)**: Managing the PRD, PLAN, and docs folders.
+6. **[Lessons Learned](lessons_learned.md)**: Technical debt, bug fixes, and optimization history.
 
 ## 🛠️ Workflows
 Use the following commands to automate tasks:

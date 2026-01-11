@@ -125,8 +125,9 @@ class CardService:
         try:
             from .valuation_service import ValuationService
             
+            # 1. Fetch the requested printing details
             query = supabase.table('card_printings').select(
-                'printing_id, image_url, artist, flavor_text, collector_number, rarity, card_faces, '
+                'printing_id, card_id, image_url, artist, flavor_text, collector_number, rarity, card_faces, '
                 'cards(card_name, type_line, oracle_text, mana_cost, power, toughness, legalities, colors), '
                 'sets(set_name, set_code), '
                 'aggregated_prices(avg_market_price_usd)'
@@ -139,8 +140,43 @@ class CardService:
                 
             card_data = item.get('cards') or {}
             set_data = item.get('sets') or {}
+            oracle_id = item.get('card_id')
             
-            # Fetch valuation
+            # 2. Fetch ALL printings for this card (oracle_id)
+            # We want set info and prices for each
+            all_printings_query = supabase.table('card_printings').select(
+                'printing_id, rarity, collector_number, image_url, '
+                'sets!inner(set_name, set_code, release_date), '
+                'aggregated_prices(avg_market_price_usd)'
+            ).eq('card_id', oracle_id).execute()
+            
+            all_printings_data = all_printings_query.data or []
+            
+            # Sort printings by release date (latest first)
+            # Note: We need to handle potential null release dates
+            all_printings_data.sort(
+                key=lambda x: (x.get('sets', {}).get('release_date') or '0000-00-00'), 
+                reverse=True
+            )
+            
+            # Map printings for the frontend
+            all_versions = []
+            for p in all_printings_data:
+                ps = p.get('sets') or {}
+                price_data = p.get('aggregated_prices') or []
+                price = price_data[0].get('avg_market_price_usd', 0) if price_data else 0
+                
+                all_versions.append({
+                    "printing_id": p['printing_id'],
+                    "set_name": ps.get('set_name'),
+                    "set_code": ps.get('set_code'),
+                    "collector_number": p.get('collector_number'),
+                    "rarity": p.get('rarity'),
+                    "price": price,
+                    "image_url": p.get('image_url')
+                })
+
+            # Fetch valuation for the main printing
             valuation = await ValuationService.get_two_factor_valuation(printing_id)
                 
             return {
@@ -160,7 +196,8 @@ class CardService:
                 "price": valuation.get('store_price', 0),
                 "valuation": valuation,
                 "colors": card_data.get('colors'),
-                "card_faces": item.get('card_faces')
+                "card_faces": item.get('card_faces'),
+                "all_versions": all_versions
             }
         except Exception as e:
             if isinstance(e, HTTPException): raise e

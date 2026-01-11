@@ -1,7 +1,7 @@
 import os
 import sys
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -77,10 +77,12 @@ def run_ck_sync():
                         price_entries.append({
                             "printing_id": db_card['printing_id'],
                             "source_id": ck_source_id,
+                            "condition_id": 16, # Near Mint
                             "price_usd": match['price_retail'],
                             "url": match.get('url'),
                             "is_foil": match.get('is_foil', False),
-                            "stock_quantity": match.get('qty_retail', 0)
+                            "stock_quantity": match.get('qty_retail', 0),
+                            "timestamp": datetime.now(timezone.utc).isoformat()
                         })
                 except Exception as e:
                     total_errors += 1
@@ -96,10 +98,13 @@ def run_ck_sync():
                 except Exception as e:
                     logger.error(f"Failed to insert batch: {e}")
             
-            if len(db_cards) < batch_size:
-                break
-            
+            # Simple offset increment
             offset += batch_size
+            
+            # If we got fewer results than requested, we've reached the end
+            if len(db_cards) < batch_size:
+                logger.info("Reached end of database cards.")
+                break
         
         logger.info("=== SYNC SUMMARY ===")
         logger.info(f"Total prices updated: {total_updated}")

@@ -12,10 +12,12 @@ import { UserMenu } from '../components/Navigation/UserMenu';
 import { LogIn, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const mockFilters: Omit<Filters, 'sets'> = {
+const mockFilters: Filters = {
   games: ['Magic: The Gathering', 'Pokémon', 'Yu-Gi-Oh!', 'Lorcana'],
   rarities: ['Common', 'Uncommon', 'Rare', 'Mythic'],
   colors: ['White', 'Blue', 'Black', 'Red', 'Green', 'Colorless', 'Multicolor'],
+  types: ['Creature', 'Instant', 'Sorcery', 'Enchantment', 'Artifact', 'Planeswalker', 'Land'],
+  sets: []
 };
 
 const Home: React.FC = () => {
@@ -58,6 +60,7 @@ const Home: React.FC = () => {
       game: filters.games && filters.games.length > 0 ? filters.games.join(',') : undefined,
       set: filters.sets && filters.sets.length > 0 ? filters.sets.join(',') : undefined,
       color: filters.colors && filters.colors.length > 0 ? filters.colors.join(',') : undefined,
+      type: filters.types && filters.types.length > 0 ? filters.types.join(',') : undefined,
       limit: LIMIT,
       offset: page * LIMIT
     })
@@ -310,6 +313,13 @@ const Home: React.FC = () => {
                       {filters.colors?.map(c => (
                         <button key={c} onClick={() => setFilters({ ...filters, colors: filters.colors?.filter(x => x !== c) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-cyan-600/10 border border-cyan-500/30 rounded-full text-[10px] font-bold text-cyan-400 hover:bg-cyan-600/20 transition-all group">
                           {c}
+                          <X size={10} className="group-hover:rotate-90 transition-transform" />
+                        </button>
+                      ))}
+
+                      {filters.types?.map(t => (
+                        <button key={t} onClick={() => setFilters({ ...filters, types: filters.types?.filter(x => x !== t) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600/10 border border-red-500/30 rounded-full text-[10px] font-bold text-red-400 hover:bg-red-600/20 transition-all group">
+                          {t}
                           <X size={10} className="group-hover:rotate-90 transition-transform" />
                         </button>
                       ))}
