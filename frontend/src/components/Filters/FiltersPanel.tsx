@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
+import { Search, X, Sliders, Filter, Check } from 'lucide-react';
 
 export interface Filters {
   games: string[];
@@ -15,6 +16,13 @@ export interface FiltersPanelProps {
 }
 
 export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, onChange, setsOptions }) => {
+  const [setSearch, setSetSearch] = useState('');
+
+  const filteredSets = useMemo(() => {
+    if (!setSearch) return setsOptions.slice(0, 50); // Muestra solo los primeros 50 por defecto
+    return setsOptions.filter(s => s.toLowerCase().includes(setSearch.toLowerCase())).slice(0, 50);
+  }, [setsOptions, setSearch]);
+
   const handleCheckbox = (key: keyof Filters, value: string) => {
     const prev = selected[key] || [];
     if (prev.includes(value)) {
@@ -24,88 +32,169 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
     }
   };
 
+  const clearFilters = () => {
+    onChange({});
+    setSetSearch('');
+  };
+
+  const hasActiveFilters = Object.values(selected).some(v => v && v.length > 0);
+
   return (
-    <aside className="w-full bg-neutral-900/50 border border-neutral-800 p-5 rounded-xl backdrop-blur-sm">
-      <h2 className="text-xl font-bold mb-6 text-white flex items-center gap-2">
-        <span>🔍</span> Filters
-      </h2>
+    <aside className="w-full bg-[#0d0d0d] border border-white/5 p-6 rounded-3xl shadow-2xl space-y-8">
+      <div className="flex items-center justify-between mb-2">
+        <h2 className="text-lg font-black italic tracking-tighter text-white flex items-center gap-2">
+          <Sliders size={18} className="text-blue-500" />
+          FILTERS
+        </h2>
+        {hasActiveFilters && (
+          <button
+            onClick={clearFilters}
+            className="text-[10px] font-bold uppercase tracking-widest text-neutral-500 hover:text-red-400 transition-colors flex items-center gap-1 group"
+          >
+            <X size={10} className="group-hover:rotate-90 transition-transform" />
+            Reset
+          </button>
+        )}
+      </div>
 
       {/* Juegos */}
-      <div className="mb-6">
-        <h3 className="text-sm font-bold uppercase tracking-wider text-neutral-500 mb-3">Game</h3>
-        <div className="flex flex-col gap-2">
-          {filters.games.map(game => (
-            <label key={game} className="flex items-center gap-3 text-sm cursor-pointer group">
-              <div className="relative flex items-center">
-                <input
-                  type="checkbox"
-                  checked={selected.games?.includes(game) || false}
-                  onChange={() => handleCheckbox('games', game)}
-                  className="peer h-5 w-5 appearance-none rounded border border-neutral-700 bg-neutral-800 checked:bg-purple-600 checked:border-purple-600 transition-all cursor-pointer"
-                />
-                <svg className="absolute h-3.5 w-3.5 text-white opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none left-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={4}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <span className="text-neutral-300 group-hover:text-white transition-colors">{game}</span>
-            </label>
-          ))}
+      <section>
+        <h3 className="text-[11px] font-black uppercase tracking-widest text-neutral-600 mb-4 flex items-center gap-2">
+          <div className="w-1 h-3 bg-blue-600 rounded-full"></div>
+          Game Universe
+        </h3>
+        <div className="flex flex-wrap gap-2">
+          {filters.games.map(game => {
+            const isSelected = selected.games?.includes(game);
+            return (
+              <button
+                key={game}
+                onClick={() => handleCheckbox('games', game)}
+                className={`px-4 py-2 rounded-xl text-[11px] font-bold transition-all border ${isSelected
+                  ? 'bg-blue-600/10 border-blue-500/50 text-blue-400 shadow-lg shadow-blue-500/10'
+                  : 'bg-neutral-900/50 border-neutral-800 text-neutral-500 hover:border-neutral-700 hover:text-neutral-300'
+                  }`}
+              >
+                {game}
+              </button>
+            );
+          })}
         </div>
-      </div>
+      </section>
 
-      {/* Sets */}
-      <div className="mb-6">
-        <h3 className="text-sm font-bold uppercase tracking-wider text-neutral-500 mb-3">Set / Edition</h3>
-        <select
-          className="w-full px-3 py-2.5 rounded-lg border border-neutral-700 bg-neutral-800 text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all"
-          value={selected.sets?.[0] || ''}
-          onChange={e => onChange({ ...selected, sets: e.target.value ? [e.target.value] : [] })}
-        >
-          <option value="">All Sets</option>
-          {setsOptions.map(set => (
-            <option key={set} value={set}>{set}</option>
-          ))}
-        </select>
-      </div>
+      {/* Sets / Ediciones Dinámicas */}
+      <section>
+        <h3 className="text-[11px] font-black uppercase tracking-widest text-neutral-600 mb-4 flex items-center gap-2">
+          <div className="w-1 h-3 bg-purple-600 rounded-full"></div>
+          Expansion / Set
+        </h3>
+        <div className="relative mb-3">
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-600" />
+          <input
+            type="text"
+            placeholder="Search sets..."
+            value={setSearch}
+            onChange={(e) => setSetSearch(e.target.value)}
+            className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2.5 pl-9 pr-4 text-xs text-white placeholder:text-neutral-600 focus:outline-none focus:border-purple-500/50 transition-all font-medium"
+          />
+        </div>
+        <div className="max-h-52 overflow-y-auto pr-2 custom-scrollbar space-y-1">
+          {filteredSets.length > 0 ? (
+            filteredSets.map(setName => (
+              <button
+                key={setName}
+                onClick={() => handleCheckbox('sets', setName)}
+                className={`flex items-center justify-between w-full px-3 py-2 rounded-lg text-left text-[11px] font-medium transition-all ${selected.sets?.includes(setName)
+                  ? 'bg-purple-600/10 text-purple-400'
+                  : 'text-neutral-500 hover:bg-white/5 hover:text-neutral-300'
+                  }`}
+              >
+                <span className="truncate pr-4">{setName}</span>
+                {selected.sets?.includes(setName) && <Check size={12} />}
+              </button>
+            ))
+          ) : (
+            <p className="text-[10px] text-neutral-600 italic py-4 text-center">No sets found matching "{setSearch}"</p>
+          )}
+        </div>
+      </section>
 
       {/* Rareza */}
-      <div className="mb-6">
-        <h3 className="text-sm font-bold uppercase tracking-wider text-neutral-500 mb-3">Rarity</h3>
-        <div className="flex flex-col gap-2">
-          {filters.rarities.map(rarity => (
-            <label key={rarity} className="flex items-center gap-3 text-sm cursor-pointer group">
-              <div className="relative flex items-center">
-                <input
-                  type="checkbox"
-                  checked={selected.rarities?.includes(rarity) || false}
-                  onChange={() => handleCheckbox('rarities', rarity)}
-                  className="peer h-5 w-5 appearance-none rounded border border-neutral-700 bg-neutral-800 checked:bg-purple-600 checked:border-purple-600 transition-all cursor-pointer"
-                />
-                <svg className="absolute h-3.5 w-3.5 text-white opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none left-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={4}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <span className="text-neutral-300 group-hover:text-white transition-colors">{rarity}</span>
-            </label>
-          ))}
+      <section>
+        <h3 className="text-[11px] font-black uppercase tracking-widest text-neutral-600 mb-4 flex items-center gap-2">
+          <div className="w-1 h-3 bg-geeko-gold rounded-full"></div>
+          Power Rarity
+        </h3>
+        <div className="grid grid-cols-2 gap-2">
+          {filters.rarities.map(rarity => {
+            const isSelected = selected.rarities?.includes(rarity);
+            return (
+              <button
+                key={rarity}
+                onClick={() => handleCheckbox('rarities', rarity)}
+                className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border transition-all ${isSelected
+                  ? 'bg-geeko-gold/10 border-geeko-gold/40 text-geeko-gold shadow-lg shadow-geeko-gold/5'
+                  : 'bg-neutral-900/50 border-neutral-800 text-neutral-500 hover:border-neutral-700'
+                  }`}
+              >
+                <div className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-geeko-gold animate-pulse' : 'bg-neutral-700'}`} />
+                <span className="text-[10px] font-black uppercase tracking-tight">{rarity}</span>
+              </button>
+            );
+          })}
         </div>
-      </div>
+      </section>
 
       {/* Colores */}
-      <div className="mb-2">
-        <h3 className="text-sm font-bold uppercase tracking-wider text-neutral-500 mb-3">Color</h3>
-        <div className="grid grid-cols-2 gap-2">
-          {filters.colors.map(color => (
-            <label key={color} className="flex items-center gap-2 text-xs cursor-pointer group">
-              <input
-                type="checkbox"
-                checked={selected.colors?.includes(color) || false}
-                onChange={() => handleCheckbox('colors', color)}
-                className="peer h-4 w-4 appearance-none rounded border border-neutral-700 bg-neutral-800 checked:bg-purple-600 checked:border-purple-600 transition-all cursor-pointer"
-              />
-              <span className="text-neutral-400 group-hover:text-white transition-colors">{color}</span>
-            </label>
-          ))}
+      <section>
+        <h3 className="text-[11px] font-black uppercase tracking-widest text-neutral-600 mb-4 flex items-center gap-2">
+          <div className="w-1 h-3 bg-cyan-500 rounded-full"></div>
+          Mana Essence
+        </h3>
+        <div className="grid grid-cols-4 gap-2">
+          {filters.colors.map(color => {
+            const isSelected = selected.colors?.includes(color);
+            const colorMap: Record<string, string> = {
+              'White': 'bg-white',
+              'Blue': 'bg-blue-500',
+              'Black': 'bg-neutral-400',
+              'Red': 'bg-red-500',
+              'Green': 'bg-green-500',
+              'Colorless': 'bg-neutral-600',
+              'Multicolor': 'bg-gradient-to-br from-yellow-400 via-red-500 to-blue-500'
+            };
+
+            return (
+              <button
+                key={color}
+                onClick={() => handleCheckbox('colors', color)}
+                title={color}
+                className={`relative group w-full aspect-square rounded-xl border flex items-center justify-center transition-all ${isSelected
+                  ? 'border-cyan-500/50 bg-cyan-500/5'
+                  : 'border-neutral-800 bg-neutral-900/50 hover:border-neutral-600'
+                  }`}
+              >
+                <div className={`w-3 h-3 rounded-full ${colorMap[color] || 'bg-neutral-500'} ${isSelected ? 'ring-2 ring-white/50 scale-110 shadow-lg' : 'opacity-60 group-hover:opacity-100'} transition-all`} />
+                {isSelected && (
+                  <div className="absolute top-1 right-1">
+                    <Check size={8} className="text-cyan-400" />
+                  </div>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      <div className="pt-4 mt-8 border-t border-white/5">
+        <div className="bg-blue-600/5 rounded-2xl p-4 border border-blue-600/10">
+          <p className="text-[10px] font-medium text-neutral-500 mb-2 leading-tight">
+            Filters are applied dynamically based on CardKingdom market availability.
+          </p>
+          <div className="flex items-center gap-2 text-[10px] font-bold text-blue-400 lowercase italic">
+            <Filter size={10} />
+            Auto-Sync Active
+          </div>
         </div>
       </div>
     </aside>

@@ -9,7 +9,7 @@ import type { Filters } from '../components/Filters/FiltersPanel';
 import { useAuth } from '../context/AuthContext';
 import { AuthModal } from '../components/Auth/AuthModal';
 import { UserMenu } from '../components/Navigation/UserMenu';
-import { LogIn } from 'lucide-react';
+import { LogIn, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const mockFilters: Omit<Filters, 'sets'> = {
@@ -32,12 +32,20 @@ const Home: React.FC = () => {
   const { user } = useAuth();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
+  const [debouncedQuery, setDebouncedQuery] = useState('');
   const LIMIT = 50;
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(query);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [query]);
 
   useEffect(() => {
     // Reset page when filters change
     setPage(0);
-  }, [query, filters, activeRarity]);
+  }, [debouncedQuery, filters, activeRarity]);
 
   useEffect(() => {
     setLoading(true);
@@ -45,7 +53,7 @@ const Home: React.FC = () => {
     const rarityToFilter = activeRarity !== 'All' ? activeRarity : (filters.rarities && filters.rarities.length > 0 ? filters.rarities.join(',') : null);
 
     fetchCards({
-      q: query || undefined,
+      q: debouncedQuery || undefined,
       rarity: rarityToFilter || undefined,
       game: filters.games && filters.games.length > 0 ? filters.games.join(',') : undefined,
       set: filters.sets && filters.sets.length > 0 ? filters.sets.join(',') : undefined,
@@ -69,13 +77,21 @@ const Home: React.FC = () => {
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
-  }, [query, filters, activeRarity, sortBy, page]);
+  }, [debouncedQuery, filters, activeRarity, sortBy, page]);
 
   useEffect(() => {
-    fetchSets('MTG')
+    const gameToFetch = filters.games && filters.games.length === 1 ? filters.games[0] : 'MTG';
+    const gameCodeMap: Record<string, string> = {
+      'Magic: The Gathering': 'MTG',
+      'Pokémon': 'PKM',
+      'Yu-Gi-Oh!': 'YGO',
+      'Lorcana': 'LOR'
+    };
+
+    fetchSets(gameCodeMap[gameToFetch] || 'MTG')
       .then(realSets => setSets(realSets.map((s: any) => s.set_name)))
       .catch(() => setSets([]));
-  }, []);
+  }, [filters.games]);
 
   const rarities = ['All', 'Mythic', 'Rare', 'Uncommon', 'Common'];
 
@@ -136,28 +152,30 @@ const Home: React.FC = () => {
               <span className="text-blue-500">Universes Beyond</span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-              <div className="relative group rounded-3xl overflow-hidden cursor-pointer border border-white/10" onClick={() => {
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+              <div className="relative group rounded-[2.5rem] overflow-hidden cursor-pointer border border-white/5 shadow-2xl transition-all duration-500 hover:shadow-red-600/10 hover:border-red-500/20 active:scale-[0.98]" onClick={() => {
                 setFilters({ ...filters, sets: ["Marvel's Spider-Man"] });
                 setQuery('');
               }}>
-                <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-blue-700 opacity-80 group-hover:scale-105 transition-transform duration-700"></div>
-                <div className="absolute inset-0 bg-black/30"></div>
-                <div className="relative p-8 flex flex-col justify-end h-48">
-                  <h3 className="text-3xl font-black italic uppercase text-white mb-2">Marvel x Magic</h3>
-                  <p className="text-sm font-medium text-white/80">Spiderman, Captain America & more available now.</p>
+                <div className="absolute inset-0 bg-gradient-to-br from-red-600 via-red-900 to-black opacity-90 group-hover:scale-110 transition-transform duration-1000"></div>
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.1),transparent)] group-hover:opacity-100 opacity-50 transition-opacity"></div>
+                <div className="relative p-10 flex flex-col justify-end h-64">
+                  <div className="inline-block px-3 py-1 bg-red-500/20 border border-red-500/30 rounded-full text-[9px] font-black tracking-[0.2em] text-red-400 uppercase mb-4 w-fit">Featured Drop</div>
+                  <h3 className="text-4xl font-black italic uppercase text-white mb-2 tracking-tighter leading-none">Marvel x Magic</h3>
+                  <p className="text-sm font-medium text-white/60 max-w-xs">Assemble your heroes with the limited edition Spiderman collection.</p>
                 </div>
               </div>
 
-              <div className="relative group rounded-3xl overflow-hidden cursor-pointer border border-white/10" onClick={() => {
+              <div className="relative group rounded-[2.5rem] overflow-hidden cursor-pointer border border-white/5 shadow-2xl transition-all duration-500 hover:shadow-cyan-600/10 hover:border-cyan-500/20 active:scale-[0.98]" onClick={() => {
                 setFilters({ ...filters, sets: ['Avatar: The Last Airbender'] });
                 setQuery('');
               }}>
-                <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-orange-400 opacity-80 group-hover:scale-105 transition-transform duration-700"></div>
-                <div className="absolute inset-0 bg-black/30"></div>
-                <div className="relative p-8 flex flex-col justify-end h-48">
-                  <h3 className="text-3xl font-black italic uppercase text-white mb-2">Avatar: The Last Airbender</h3>
-                  <p className="text-sm font-medium text-white/80">Master the four elements with Aang and friends.</p>
+                <div className="absolute inset-0 bg-gradient-to-br from-cyan-600 via-blue-900 to-black opacity-90 group-hover:scale-110 transition-transform duration-1000"></div>
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.1),transparent)] group-hover:opacity-100 opacity-50 transition-opacity"></div>
+                <div className="relative p-10 flex flex-col justify-end h-64">
+                  <div className="inline-block px-3 py-1 bg-cyan-500/20 border border-cyan-500/30 rounded-full text-[9px] font-black tracking-[0.2em] text-cyan-400 uppercase mb-4 w-fit">Collector Choice</div>
+                  <h3 className="text-4xl font-black italic uppercase text-white mb-2 tracking-tighter leading-none">Avatar: Eclipsed</h3>
+                  <p className="text-sm font-medium text-white/60 max-w-xs">Return to Lorwyn with a touch of elemental airbending power.</p>
                 </div>
               </div>
             </div>
@@ -167,9 +185,26 @@ const Home: React.FC = () => {
                 <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter leading-none mb-4">
                   TCG <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Price Tracker</span>
                 </h1>
-                <p className="text-neutral-500 text-lg max-w-2xl font-medium">
+                <p className="text-neutral-500 text-lg max-w-2xl font-medium mb-10">
                   Showing <span className="text-neutral-300">{cards.length}</span> of <span className="text-neutral-300">{totalCount.toLocaleString()}</span> cards found in the database.
                 </p>
+
+                <div className="flex flex-wrap gap-8 py-8 border-t border-white/5">
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-600 mb-1">Vault Scale</span>
+                    <span className="text-2xl font-black text-white italic tracking-tighter">{(totalCount / 1000).toFixed(1)}K <span className="text-xs text-neutral-500 not-italic font-medium">Assets</span></span>
+                  </div>
+                  <div className="w-px h-10 bg-white/5 self-center"></div>
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-600 mb-1">Market Reach</span>
+                    <span className="text-2xl font-black text-blue-500 italic tracking-tighter">04 <span className="text-xs text-neutral-500 not-italic font-medium">Nodes</span></span>
+                  </div>
+                  <div className="w-px h-10 bg-white/5 self-center"></div>
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-600 mb-1">Sync Latency</span>
+                    <span className="text-2xl font-black text-emerald-500 italic tracking-tighter">99.9% <span className="text-xs text-neutral-500 not-italic font-medium">Uptime</span></span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -245,21 +280,61 @@ const Home: React.FC = () => {
                   </button>
                 </div>
               ) : (
-                <div className="flex flex-col gap-12">
+                <div className="flex flex-col gap-6">
+                  {/* Active Filters Tokens */}
+                  {(Object.values(filters).some(v => v && v.length > 0) || activeRarity !== 'All' || debouncedQuery) && (
+                    <div className="flex flex-wrap items-center gap-2 mb-2 animate-in fade-in slide-in-from-left-2 duration-300">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-neutral-600 mr-2">Active:</span>
+
+                      {debouncedQuery && (
+                        <button onClick={() => setQuery('')} className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600/10 border border-blue-500/30 rounded-full text-[10px] font-bold text-blue-400 hover:bg-blue-600/20 transition-all group">
+                          Search: {debouncedQuery}
+                          <X size={10} className="group-hover:rotate-90 transition-transform" />
+                        </button>
+                      )}
+
+                      {filters.games?.map(g => (
+                        <button key={g} onClick={() => setFilters({ ...filters, games: filters.games?.filter(x => x !== g) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-600/10 border border-purple-500/30 rounded-full text-[10px] font-bold text-purple-400 hover:bg-purple-600/20 transition-all group">
+                          {g}
+                          <X size={10} className="group-hover:rotate-90 transition-transform" />
+                        </button>
+                      ))}
+
+                      {filters.sets?.map(s => (
+                        <button key={s} onClick={() => setFilters({ ...filters, sets: filters.sets?.filter(x => x !== s) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600/10 border border-emerald-500/30 rounded-full text-[10px] font-bold text-emerald-400 hover:bg-emerald-600/20 transition-all group">
+                          Set: {s}
+                          <X size={10} className="group-hover:rotate-90 transition-transform" />
+                        </button>
+                      ))}
+
+                      {filters.colors?.map(c => (
+                        <button key={c} onClick={() => setFilters({ ...filters, colors: filters.colors?.filter(x => x !== c) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-cyan-600/10 border border-cyan-500/30 rounded-full text-[10px] font-bold text-cyan-400 hover:bg-cyan-600/20 transition-all group">
+                          {c}
+                          <X size={10} className="group-hover:rotate-90 transition-transform" />
+                        </button>
+                      ))}
+
+                      <button onClick={() => { setFilters({}); setQuery(''); setActiveRarity('All'); }} className="text-[10px] font-black uppercase tracking-widest text-neutral-500 hover:text-white transition-colors ml-2 underline underline-offset-4 decoration-neutral-800">
+                        Clear All
+                      </button>
+                    </div>
+                  )}
+
                   <CardGrid cards={cards} onCardClick={setSelectedCardId} />
                   {cards.length < totalCount && (
                     <div className="flex justify-center pb-20">
                       <button
                         onClick={() => setPage((p: number) => p + 1)}
                         disabled={loading}
-                        className="px-10 py-4 bg-neutral-900 border border-neutral-800 rounded-full font-black text-[11px] tracking-widest uppercase hover:bg-neutral-800 hover:border-neutral-700 transition-all flex items-center gap-3 disabled:opacity-50 shadow-xl"
+                        className="group relative overflow-hidden px-12 py-5 bg-neutral-900 border border-neutral-800 rounded-full font-black text-[11px] tracking-[0.2em] uppercase hover:border-blue-500/50 transition-all flex items-center gap-4 disabled:opacity-50 shadow-2xl"
                       >
+                        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/0 via-blue-600/10 to-blue-600/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
                         {loading ? (
                           <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
                         ) : (
-                          'More Results'
+                          'Load More Archives'
                         )}
-                        {!loading && <span className="text-neutral-500">[{totalCount - cards.length}]</span>}
+                        {!loading && <span className="text-neutral-600 bg-neutral-800 px-2 py-0.5 rounded-md">[{totalCount - cards.length}]</span>}
                       </button>
                     </div>
                   )}
