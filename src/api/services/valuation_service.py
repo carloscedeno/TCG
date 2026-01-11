@@ -103,12 +103,17 @@ class ValuationService:
                 if not geek_price and source_code == 'geekorium':
                     geek_price = float(p['price_usd'] or 0)
                 
-                # Market Value (CardKingdom)
                 if not ck_price and source_code == 'cardkingdom':
-                    ck_price = float(p['price_usd'] or 0)
-                    ck_url = p.get('url')
+                    ck_price = float(p.get('price_usd') or 0)
+                    # Check if URL looks like CardKingdom
+                    url = p.get('url')
+                    if url and 'cardkingdom.com' in url:
+                        ck_url = url
+                    else:
+                        # If URL is missing or wrong, we will generate it later
+                        pass
                 
-                if geek_price and ck_price:
+                if geek_price and ck_price and ck_url:
                     break
             
             # Fallback to aggregated_prices if specific sources not found
