@@ -13,6 +13,9 @@ sys.path.append(str(PROJECT_ROOT / "data" / "scrapers" / "shared"))
 from src.api.utils.supabase_client import get_supabase_admin
 supabase = get_supabase_admin()
 
+# Ensure logs directory exists before configuring logging
+os.makedirs(PROJECT_ROOT / 'logs', exist_ok=True)
+
 # Setup logging
 logging.basicConfig(
     level=logging.INFO,
@@ -23,9 +26,6 @@ logging.basicConfig(
     ]
 )
 logger = logging.getLogger(__name__)
-
-# Ensure logs directory exists
-os.makedirs(PROJECT_ROOT / 'logs', exist_ok=True)
 
 def run_ck_sync():
     load_dotenv()
