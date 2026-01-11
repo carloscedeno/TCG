@@ -15,99 +15,94 @@ class CardService:
         offset: int = 0
     ) -> Dict[str, Any]:
         try:
-            # Base selection
+            # Base selection: We query CARDS (Unique Oracles)
+            # and join with printings to get an image and price.
+            # We filter for 'en' printings by default to keep it clean.
             select_parts = [
-                'printing_id',
-                'image_url',
-                'cards!inner(card_id, card_name, type_line, rarity, game_id, colors)' if (q or rarity or game or color or card_type) else 'cards(card_id, card_name, type_line, rarity, game_id, colors)',
-                'sets!inner(set_name)' if set_name else 'sets(set_name)',
-                'aggregated_prices(avg_market_price_usd)'
+                'card_id, card_name, type_line, rarity, game_id, colors',
+                'card_printings(printing_id, image_url, sets(set_name, set_code, release_date), aggregated_prices(avg_market_price_usd))'
             ]
             
-            query = supabase.table('card_printings').select(
+            # If set_name is filtered, we need to ensure the card has a printing in that set
+            if set_name:
+                select_parts[1] = 'card_printings!inner(printing_id, image_url, sets!inner(set_name, set_code, release_date), aggregated_prices(avg_market_price_usd))'
+
+            query = supabase.table('cards').select(
                 ', '.join(select_parts),
                 count='planned'
             )
             
-            # Apply filters
+            # Apply filters (directly on 'cards' table)
             if q:
-                query = query.ilike('cards.card_name', f'%{q}%')
+                query = query.ilike('card_name', f'%{q}%')
             
             if rarity:
                 rarities = [r.strip().lower() for r in rarity.split(',')]
-                query = query.in_('cards.rarity', rarities)
+                query = query.in_('rarity', rarities)
                 
             if game:
                 game_names = [g.strip() for g in game.split(',')]
                 game_map = {'Magic: The Gathering': 22, 'Pokémon': 23, 'Lorcana': 24, 'Yu-Gi-Oh!': 26}
                 game_ids = [game_map[gn] for gn in game_names if gn in game_map]
                 if game_ids:
-                    query = query.in_('cards.game_id', game_ids)
+                    query = query.in_('game_id', game_ids)
             
             if set_name:
                 set_list = [s.strip() for s in set_name.split(',')]
-                query = query.in_('sets.set_name', set_list)
+                query = query.in_('card_printings.sets.set_name', set_list)
             
             if color:
                 color_names = [c.strip() for c in color.split(',')]
-                color_map = {
-                    'White': 'W', 'Blue': 'U', 'Black': 'B', 'Red': 'R', 'Green': 'G', 
-                    'Colorless': 'C', 'Multicolor': 'M'
-                }
+                color_map = {'White': 'W', 'Blue': 'U', 'Black': 'B', 'Red': 'R', 'Green': 'G', 'Colorless': 'C'}
                 color_codes = [color_map[cn] for cn in color_names if cn in color_map]
-                
                 if color_codes:
                     if 'C' in color_codes:
-                        query = query.is_('cards.colors', 'null')
-                    elif 'M' in color_codes:
-                        # Multicolor: colors array length > 1 (hard to do in raw PostgREST without RPC, 
-                        # so we'll just allow multiple colors if selected together)
-                        pass
+                        query = query.is_('colors', 'null')
                     else:
-                        # Use overlap operator for array colors
-                        # Format for PostgREST overlap: {W,U}
                         codes_str = '{' + ','.join(color_codes) + '}'
-                        query = query.filter('cards.colors', 'ov', codes_str)
+                        query = query.filter('colors', 'ov', codes_str)
 
             if card_type:
                 types = [t.strip() for t in card_type.split(',')]
                 for t in types:
-                    query = query.ilike('cards.type_line', f'%{t}%')
+                    query = query.ilike('type_line', f'%{t}%')
 
-            # Order and Pagination
-            query = query.order('printing_id', desc=True).range(offset, offset + limit - 1)
-            
+            # Pagination and Execution
+            query = query.order('card_name', ascending=True).range(offset, offset + limit - 1)
             response = query.execute()
             
             cards = []
             for item in response.data:
-                card_data = item.get('cards')
-                if not card_data: continue
+                printings = item.get('card_printings') or []
+                if not printings:
+                    continue
                 
-                set_data = item.get('sets') or {}
-                if isinstance(set_data, list): set_data = set_data[0] if set_data else {}
+                # Sort printings by release date and pick latest
+                printings.sort(
+                    key=lambda x: (x.get('sets', {}).get('release_date') or '0000-00-00'), 
+                    reverse=True
+                )
                 
-                price_data = item.get('aggregated_prices') or []
+                latest = printings[0]
+                price_data = latest.get('aggregated_prices') or []
                 price = price_data[0].get('avg_market_price_usd', 0) if price_data else 0
                 
                 cards.append({
-                    "card_id": item.get('printing_id'),
-                    "name": card_data.get('card_name'),
-                    "type": card_data.get('type_line'),
-                    "set": set_data.get('set_name', ''),
+                    "card_id": latest.get('printing_id'), # We still pass printing_id for the modal
+                    "oracle_id": item.get('card_id'),
+                    "name": item.get('card_name'),
+                    "type": item.get('type_line'),
+                    "set": latest.get('sets', {}).get('set_name', ''),
                     "price": price,
-                    "image_url": item.get('image_url'),
-                    "rarity": card_data.get('rarity')
+                    "image_url": latest.get('image_url'),
+                    "rarity": item.get('rarity')
                 })
             
             return {"cards": cards, "total_count": response.count or 0}
             
         except Exception as e:
-            import traceback
-            error_msg = str(e)
-            print(f"❌ [CardService Error]: {error_msg}")
-            traceback.print_exc()
-            raise HTTPException(status_code=500, detail=f"Search service error: {error_msg}")
+            print(f"❌ [CardService Error]: {e}")
+            raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
     async def get_card_details(printing_id: str) -> Dict[str, Any]:
@@ -129,49 +124,44 @@ class CardService:
                 
             card_data = item.get('cards') or {}
             set_data = item.get('sets') or {}
+            oracle_id = item.get('card_id') # FIX: Define oracle_id
+            
             # 2. Fetch ALL printings for this card (oracle_id)
-            # We want set info and prices for each. Added limit of 100 to prevent timeouts.
             all_versions = []
-            try:
-                all_printings_query = supabase.table('card_printings').select(
-                    'printing_id, rarity, collector_number, image_url, '
-                    'sets!inner(set_name, set_code, release_date), '
-                    'aggregated_prices(avg_market_price_usd)'
-                ).eq('card_id', oracle_id).limit(100).execute()
-                
-                all_printings_data = all_printings_query.data or []
-                
-                # Sort printings by release date (latest first)
-                all_printings_data.sort(
-                    key=lambda x: (x.get('sets', {}).get('release_date') or '0000-00-00'), 
-                    reverse=True
-                )
-                
-                # Map printings for the frontend
-                for p in all_printings_data:
-                    ps = p.get('sets') or {}
-                    price_data = p.get('aggregated_prices') or []
-                    price = price_data[0].get('avg_market_price_usd', 0) if price_data else 0
+            if oracle_id:
+                try:
+                    p_query = supabase.table('card_printings').select(
+                        'printing_id, rarity, collector_number, image_url, '
+                        'sets!inner(set_name, set_code, release_date), '
+                        'aggregated_prices(avg_market_price_usd)'
+                    ).eq('card_id', oracle_id).limit(50).execute()
                     
-                    all_versions.append({
-                        "printing_id": p['printing_id'],
-                        "set_name": ps.get('set_name'),
-                        "set_code": ps.get('set_code'),
-                        "collector_number": p.get('collector_number'),
-                        "rarity": p.get('rarity'),
-                        "price": price,
-                        "image_url": p.get('image_url')
-                    })
-            except Exception as inner_e:
-                print(f"⚠️ [CardService] Warning fetching versions: {inner_e}")
-                # We still return the card details even if versions fail
-                all_versions = []
+                    p_data = p_query.data or []
+                    p_data.sort(key=lambda x: (x.get('sets', {}).get('release_date') or '0000-00-00'), reverse=True)
+                    
+                    for p in p_data:
+                        ps = p.get('sets') or {}
+                        pd = p.get('aggregated_prices') or []
+                        price = pd[0].get('avg_market_price_usd', 0) if pd else 0
+                        
+                        all_versions.append({
+                            "printing_id": p['printing_id'],
+                            "set_name": ps.get('set_name'),
+                            "set_code": ps.get('set_code'),
+                            "collector_number": p.get('collector_number'),
+                            "rarity": p.get('rarity'),
+                            "price": price,
+                            "image_url": p.get('image_url')
+                        })
+                except Exception as inner_e:
+                    print(f"⚠️ Versions fetch error: {inner_e}")
 
             # Fetch valuation for the main printing
             valuation = await ValuationService.get_two_factor_valuation(printing_id)
                 
             return {
                 "card_id": item.get('printing_id'),
+                "oracle_id": oracle_id,
                 "name": card_data.get('card_name'),
                 "mana_cost": card_data.get('mana_cost'),
                 "type": card_data.get('type_line'),
@@ -184,7 +174,7 @@ class CardService:
                 "collector_number": item.get('collector_number'),
                 "legalities": card_data.get('legalities'),
                 "image_url": item.get('image_url'),
-                "price": valuation.get('store_price', 0),
+                "price": valuation.get('valuation_avg', 0), # Show average valuation as primary
                 "valuation": valuation,
                 "colors": card_data.get('colors'),
                 "card_faces": item.get('card_faces'),
