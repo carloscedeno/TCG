@@ -1,8 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PlayerCard from '../components/Profile/PlayerCard';
+import { PortfolioStats } from '../components/Profile/PortfolioStats';
+import { useAuth } from '../context/AuthContext';
+import { CollectionService } from '../services/CollectionService';
+import type { CollectionItem } from '../services/CollectionService';
+import { Loader2 } from 'lucide-react';
 
 const ProfilePage: React.FC = () => {
-    // Datos de prueba basados en el manual de Geekorium
+    const { session } = useAuth();
+    const [collection, setCollection] = useState<CollectionItem[]>([]);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        const fetchCollection = async () => {
+            if (session?.access_token) {
+                setLoading(true);
+                try {
+                    const data = await CollectionService.getUserCollection(session.access_token);
+                    setCollection(data);
+                } catch (error) {
+                    console.error("Error fetching collection:", error);
+                } finally {
+                    setLoading(false);
+                }
+            }
+        };
+
+        fetchCollection();
+    }, [session]);
+
+    // Datos de prueba basados en el manual de Geekorium (Static Context)
     const mockStats = [
         {
             name: "Magic: The Gathering",
@@ -62,11 +89,29 @@ const ProfilePage: React.FC = () => {
 
                     <section>
                         <PlayerCard
-                            username="CYBER_WIZARD"
+                            username={session?.user?.email?.split('@')[0] || "CYBER_WIZARD"}
                             title="Elite Member • Geekorium Vanguard"
                             stats={mockStats}
                             dndStats={mockDndStats}
                         />
+                    </section>
+
+                    {/* Portfolio Section */}
+                    <section className="animate-in slide-in-from-bottom-8 duration-700">
+                        <div className="flex items-center gap-4 mb-8">
+                            <h2 className="text-3xl font-black italic uppercase tracking-tighter">
+                                Financial <span className="text-geeko-cyan">Intelligence</span>
+                            </h2>
+                            <div className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent"></div>
+                        </div>
+
+                        {loading ? (
+                            <div className="h-64 flex items-center justify-center">
+                                <Loader2 className="w-12 h-12 text-geeko-cyan animate-spin" />
+                            </div>
+                        ) : (
+                            <PortfolioStats collection={collection} />
+                        )}
                     </section>
 
                     <footer className="pt-12 text-center text-slate-600 text-[10px] uppercase font-bold tracking-widest">

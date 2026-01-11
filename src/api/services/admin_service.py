@@ -140,11 +140,12 @@ class AdminService:
                 )
                 
                 if source == 'cardkingdom':
-                     # Use API client for CardKingdom sync
+                    # Use API client for CardKingdom sync
                     export_tasks[task_id]["logs"] += "--- Usando CardKingdom API v2 Client... ---\n"
                     from scrapers.cardkingdom_api import CardKingdomAPI
                     
                     ck_client = CardKingdomAPI()
+                    export_tasks[task_id]["logs"] += "--- Descargando pricelist completo de CardKingdom... ---\n"
                     pricelist = ck_client.fetch_full_pricelist()
                     
                     if not pricelist:
@@ -153,29 +154,58 @@ class AdminService:
                     export_tasks[task_id]["logs"] += f"--- Pricelist descargada: {len(pricelist)} items. ---\n"
                     export_tasks[task_id]["logs"] += "--- Buscando cartas en base de datos local para actualizar... ---\n"
                     
-                    # For a test run, we might want to target specific cards, but here we process what's in DB
-                    # Or better, update cards that have scryfall_ids
-                    # Since this is "run_scraper", let's update a small batches or the specific pending ones
+                    # Fetch cards from DB that have scryfall_id (limit to 100 for performance)
+                    db_cards = supabase.table('card_printings').select(
+                        'printing_id, scryfall_id'
+                    ).not_.is_('scryfall_id', 'null').limit(100).execute().data
                     
-                    # Fetch cards from DB that have scryfall_id
-                    db_cards = supabase.table('card_printings').select('printing_id, scryfall_id').not_.is_('scryfall_id', 'null').limit(50).execute().data
+                    if not db_cards:
+                        export_tasks[task_id]["logs"] += "--- AVISO: No se encontraron cartas con scryfall_id en la base de datos. ---\n"
+                        export_tasks[task_id]["status"] = "completed"
+                        return
+                    
+                    export_tasks[task_id]["logs"] += f"--- Procesando {len(db_cards)} cartas... ---\n"
                     
                     updates_count = 0
-                    for db_card in db_cards:
-                        match = ck_client.get_price_by_scryfall_id(pricelist, db_card['scryfall_id'])
-                        if match:
-                            # Insert into price history
-                            price_entry = {
-                                "printing_id": db_card['printing_id'],
-                                "source_id": 21, # CardKingdom
-                                "price_usd": match['price_retail'],
-                                "url": match['url'],
-                                "is_foil": match['is_foil']
-                            }
-                            supabase.table('price_history').insert(price_entry).execute()
-                            updates_count += 1
+                    errors_count = 0
                     
-                    export_tasks[task_id]["logs"] += f"--- Sincronización API completada: {updates_count} precios actualizados. ---\n"
+                    # Get CardKingdom source_id from database
+                    source_query = supabase.table('price_sources').select('source_id').eq('source_code', 'cardkingdom').single().execute()
+                    ck_source_id = source_query.data['source_id'] if source_query.data else 21
+                    
+                    for idx, db_card in enumerate(db_cards, 1):
+                        try:
+                            match = ck_client.get_price_by_scryfall_id(pricelist, db_card['scryfall_id'])
+                            if match and match.get('price_retail', 0) > 0:
+                                # Insert into price history with URL
+                                price_entry = {
+                                    "printing_id": db_card['printing_id'],
+                                    "source_id": ck_source_id,
+                                    "price_usd": match['price_retail'],
+                                    "url": match.get('url'),  # Now properly saved
+                                    "is_foil": match.get('is_foil', False),
+                                    "stock_quantity": match.get('qty_retail', 0)
+                                }
+                                supabase.table('price_history').insert(price_entry).execute()
+                                updates_count += 1
+                                
+                                if idx % 10 == 0:
+                                    export_tasks[task_id]["logs"] += f"--- Progreso: {idx}/{len(db_cards)} procesadas, {updates_count} actualizadas. ---\n"
+                            else:
+                                # Card not found in CardKingdom or price is 0
+                                pass
+                        except Exception as e:
+                            errors_count += 1
+                            if errors_count <= 5:  # Log only first 5 errors to avoid spam
+                                export_tasks[task_id]["logs"] += f"--- Error procesando carta {db_card.get('printing_id')}: {str(e)} ---\n"
+                    
+                    export_tasks[task_id]["logs"] += f"\n=== RESUMEN DE SINCRONIZACIÓN ===\n"
+                    export_tasks[task_id]["logs"] += f"Total procesadas: {len(db_cards)}\n"
+                    export_tasks[task_id]["logs"] += f"Precios actualizados: {updates_count}\n"
+                    export_tasks[task_id]["logs"] += f"Errores: {errors_count}\n"
+                    export_tasks[task_id]["logs"] += f"Tasa de éxito: {(updates_count/len(db_cards)*100):.1f}%\n"
+                    export_tasks[task_id]["logs"] += "=================================\n"
+                    
                     export_tasks[task_id]["status"] = "completed"
                     return
 

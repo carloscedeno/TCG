@@ -24,17 +24,18 @@
 *Current Objective: Transform the imported data into visual intelligence for the user.*
 
 ### Task 2.1: Portfolio Dashboard
-- [ ] **Dual-Valuation Engine**: Logic to calculate value based on Geekorium Price + CardKingdom Market Price.
-- [ ] **Value Widgets**: Implementation of "Store Value", "Market Value", and "Global Total" cards.
-- [ ] **Top Performers**: Display cards in collection with most significant price jumps (Gainers vs Losers).
+- [x] **Dual-Valuation Engine**: Logic to calculate value based on Geekorium Price + CardKingdom Market Price.
+- [x] **Value Widgets**: Implementation of "Store Value", "Market Value", and "Global Total" cards.
+- [x] **Top Performers**: Display cards in collection with most significant price jumps (Gainers vs Losers).
 
 ### Task 2.2: Backend Processor Hardening
-- [ ] **Batch Database Upsert**: Optimize the `CollectionService` to handle 1000+ rows efficiently.
+- [x] **Batch Collection Fetch**: Optimized `CollectionService` to eliminate N+1 queries when loading user portfolios.
+- [ ] **Batch Database Upsert**: Optimize the `import_data` logic to handle 1000+ rows efficiently.
 - [ ] **Printing Matcher AI**: Improve the search logic to match card names/sets even with slight typos.
 
 ### Task 2.3: Market Data Integration (CardKingdom)
-- [ ] **Scraper Refinement**: Integrate the existing `cardkingdom.py` into the `AdminService` workflow.
-- [ ] **Price Aggregation**: Ensure CardKingdom prices are stored as a distinct marketplace source for comparison.
+- [x] **Scraper Refinement**: Integrated CardKingdom API v2 into the `AdminService` workflow with batch processing and error handling.
+- [x] **Price Aggregation**: CardKingdom prices are stored as a distinct marketplace source with URLs for direct product links.
 
 ---
 
@@ -46,5 +47,5 @@
 ---
 
 ## 🕒 Current Verification State
-- [x] **Local**: Import UI, API Routes, Mapping Logic.
-- [ ] **Production**: Deployment to GH Pages / Production Backend. (Need to verify after next commit).
+- [x] **Local**: Portfolio Dashboard UI, Dual-Valuation Logic, CardKingdom API Integration.
+- [ ] **Production**: Deployment to GH Pages / Production Backend. (Pending next commit and verification).

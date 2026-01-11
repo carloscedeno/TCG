@@ -121,13 +121,25 @@ class CollectionService:
             'sets(set_name, set_code))'
         ).eq('user_id', user_id).execute()
         
+        collection_data = response.data
+        if not collection_data:
+            return []
+
+        # Extract all printing ids to minimize calls
+        printing_ids = list(set([item['printing_id'] for item in collection_data]))
+        
+        # Batch fetch valuations
+        valuations_map = await ValuationService.get_batch_valuations(printing_ids)
+
         collection = []
-        for item in response.data:
-            printing_id = item['printing_id']
-            valuation = await ValuationService.get_two_factor_valuation(printing_id)
-            
-            # Enrich item with valuation
-            item['valuation'] = valuation
+        for item in collection_data:
+            pid = item['printing_id']
+            # Enrich item with valuation from batch map
+            item['valuation'] = valuations_map.get(pid, {
+                "store_price": 0.0,
+                "market_price": 0.0,
+                "valuation_avg": 0.0
+            })
             collection.append(item)
             
         return collection
