@@ -185,6 +185,7 @@ export const AdminDashboard = () => {
     }
 
     const scrapers = [
+        { id: 'cardkingdom', name: 'CardKingdom', description: 'Market Reference (USD)', icon: <Database className="text-emerald-400" /> },
         { id: 'cardmarket', name: 'Cardmarket', description: 'Precios EU (EUR)', icon: <Database className="text-orange-400" /> },
         { id: 'tcgplayer', name: 'TCGPlayer', description: 'Precios US (USD)', icon: <Database className="text-blue-400" /> },
     ];

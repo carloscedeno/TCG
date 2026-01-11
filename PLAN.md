@@ -30,19 +30,19 @@
 
 ### Task 2.2: Backend Processor Hardening
 - [x] **Batch Collection Fetch**: Optimized `CollectionService` to eliminate N+1 queries when loading user portfolios.
-- [ ] **Batch Database Upsert**: Optimize the `import_data` logic to handle 1000+ rows efficiently.
+- [x] **Batch Database Upsert**: Optimized the `import_data` logic to handle 1000+ rows efficiently with batch queries.
 - [ ] **Printing Matcher AI**: Improve the search logic to match card names/sets even with slight typos.
 
 ### Task 2.3: Market Data Integration (CardKingdom)
 - [x] **Scraper Refinement**: Integrated CardKingdom API v2 into the `AdminService` workflow with batch processing and error handling.
 - [x] **Price Aggregation**: CardKingdom prices are stored as a distinct marketplace source with URLs for direct product links.
+- [x] **GitHub Sync Integration**: Connected the app triggers with daily automated sync via GitHub Actions.
 
 ---
 
 ## 📅 Roadmap for Next Sessions
-1. **GitHub Sync Integration**: Connect the app triggers with the daily automated sync.
-2. **Price Alerts**: Real-time notifications for market shifts.
-3. **Advanced Analytics**: Compare collection value against market indexes.
+1. **Price Alerts**: Real-time notifications for market shifts.
+2. **Advanced Analytics**: Compare collection value against market indexes.
 
 ---
 

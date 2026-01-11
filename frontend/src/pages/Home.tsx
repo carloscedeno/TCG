@@ -8,7 +8,8 @@ import { FiltersPanel } from '../components/Filters/FiltersPanel';
 import type { Filters } from '../components/Filters/FiltersPanel';
 import { useAuth } from '../context/AuthContext';
 import { AuthModal } from '../components/Auth/AuthModal';
-import { LogIn, LayoutDashboard, LogOut } from 'lucide-react';
+import { UserMenu } from '../components/Navigation/UserMenu';
+import { LogIn } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const mockFilters: Omit<Filters, 'sets'> = {
@@ -28,7 +29,7 @@ const Home: React.FC = () => {
   const [activeRarity, setActiveRarity] = useState('All');
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(0);
-  const { user, isAdmin, signOut } = useAuth();
+  const { user } = useAuth();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
   const LIMIT = 50;
@@ -103,11 +104,6 @@ const Home: React.FC = () => {
                 <a href="#" className="hover:text-white transition-colors">Home</a>
                 <Link to="/tournaments" className="hover:text-white transition-colors">Tournaments</Link>
                 <Link to="/profile" className="hover:text-white transition-colors">My Profile</Link>
-                {isAdmin && (
-                  <Link to="/admin" className="text-blue-400 font-bold hover:text-blue-300 transition-colors flex items-center gap-1">
-                    <LayoutDashboard size={14} /> Admin
-                  </Link>
-                )}
               </div>
             </div>
             <div className="flex-1 max-w-xl mx-8 hidden md:block">
@@ -115,24 +111,7 @@ const Home: React.FC = () => {
             </div>
             <div className="flex items-center gap-4">
               {user ? (
-                <div className="group relative">
-                  <button className="flex items-center gap-2 bg-neutral-900 border border-neutral-800 px-3 py-1.5 rounded-full hover:border-neutral-700 transition-all">
-                    <div className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-[10px] font-bold">
-                      {user.email?.[0].toUpperCase()}
-                    </div>
-                    <span className="text-xs font-bold text-neutral-300 hidden sm:block">{user.email?.split('@')[0]}</span>
-                  </button>
-                  <div className="absolute right-0 top-full pt-2 hidden group-hover:block w-48 animate-in fade-in slide-in-from-top-1">
-                    <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-1 shadow-2xl">
-                      <button
-                        onClick={signOut}
-                        className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
-                      >
-                        <LogOut size={14} /> Cerrar Sesión
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                <UserMenu />
               ) : (
                 <button
                   onClick={() => setIsAuthModalOpen(true)}

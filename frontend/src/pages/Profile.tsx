@@ -4,10 +4,12 @@ import { PortfolioStats } from '../components/Profile/PortfolioStats';
 import { useAuth } from '../context/AuthContext';
 import { CollectionService } from '../services/CollectionService';
 import type { CollectionItem } from '../services/CollectionService';
+import { UserMenu } from '../components/Navigation/UserMenu';
+import { Link } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 
 const ProfilePage: React.FC = () => {
-    const { session } = useAuth();
+    const { session, user } = useAuth();
     const [collection, setCollection] = useState<CollectionItem[]>([]);
     const [loading, setLoading] = useState(false);
 
@@ -70,12 +72,31 @@ const ProfilePage: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-[#050505] text-white font-sans relative selection:bg-purple-500/30 overflow-hidden">
-
             {/* Ambient Background Mesh */}
             <div className="fixed inset-0 z-0 pointer-events-none">
                 <div className="absolute top-[10%] left-[20%] w-[60%] h-[60%] bg-purple-900/10 rounded-full blur-[180px] animate-pulse" style={{ animationDuration: '15s' }} />
                 <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-cyan-900/10 rounded-full blur-[150px] animate-pulse" style={{ animationDuration: '10s' }} />
             </div>
+
+            {/* Header */}
+            <header className="bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-white/5 sticky top-0 z-50 shadow-2xl shadow-black/50 relative">
+                <nav className="max-w-[1600px] mx-auto px-6 py-3 flex items-center justify-between">
+                    <div className="flex items-center gap-8">
+                        <Link to="/" className="flex items-center gap-4 hover:opacity-80 transition-opacity">
+                            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center font-black text-xl italic shadow-lg shadow-blue-600/20">T</div>
+                            <h1 className="text-xl font-black tracking-tighter text-white">TCG HUB</h1>
+                        </Link>
+                        <div className="hidden lg:flex items-center gap-6 text-[13px] font-medium text-neutral-400">
+                            <Link to="/" className="hover:text-white transition-colors">Home</Link>
+                            <Link to="/tournaments" className="hover:text-white transition-colors">Tournaments</Link>
+                            <Link to="/profile" className="text-white transition-colors">My Profile</Link>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        {user && <UserMenu />}
+                    </div>
+                </nav>
+            </header>
 
             <div className="relative z-10 py-12 px-4">
                 <div className="max-w-6xl mx-auto space-y-12">

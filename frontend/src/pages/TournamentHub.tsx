@@ -1,6 +1,8 @@
 import React from 'react';
 import { Calendar, Trophy, Users, Swords, MapPin } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { UserMenu } from '../components/Navigation/UserMenu';
+import { useAuth } from '../context/AuthContext';
 
 // Mock data for initial display (until we connect to Supabase real data)
 const UPCOMING_TOURNAMENTS = [
@@ -44,6 +46,7 @@ const UPCOMING_TOURNAMENTS = [
 
 const TournamentHub: React.FC = () => {
     const navigate = useNavigate();
+    const { user } = useAuth();
 
     return (
         <div className="min-h-screen bg-[#050505] text-white font-sans relative selection:bg-geeko-gold/30 overflow-hidden">
@@ -53,6 +56,26 @@ const TournamentHub: React.FC = () => {
                 <div className="absolute top-[-20%] right-[-10%] w-[50%] h-[50%] bg-geeko-orange/10 rounded-full blur-[150px] animate-pulse" style={{ animationDuration: '8s' }} />
                 <div className="absolute bottom-[-20%] left-[-10%] w-[50%] h-[50%] bg-geeko-blue/10 rounded-full blur-[150px] animate-pulse" style={{ animationDuration: '10s' }} />
             </div>
+
+            {/* Header */}
+            <header className="bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-white/5 sticky top-0 z-50 shadow-2xl shadow-black/50 relative">
+                <nav className="max-w-[1600px] mx-auto px-6 py-3 flex items-center justify-between">
+                    <div className="flex items-center gap-8">
+                        <Link to="/" className="flex items-center gap-4 hover:opacity-80 transition-opacity">
+                            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center font-black text-xl italic shadow-lg shadow-blue-600/20">T</div>
+                            <h1 className="text-xl font-black tracking-tighter text-white">TCG HUB</h1>
+                        </Link>
+                        <div className="hidden lg:flex items-center gap-6 text-[13px] font-medium text-neutral-400">
+                            <Link to="/" className="hover:text-white transition-colors">Home</Link>
+                            <Link to="/tournaments" className="text-white transition-colors">Tournaments</Link>
+                            <Link to="/profile" className="hover:text-white transition-colors">My Profile</Link>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        {user && <UserMenu />}
+                    </div>
+                </nav>
+            </header>
 
             <div className="relative z-10 py-8 px-4">
                 <div className="max-w-7xl mx-auto space-y-12">

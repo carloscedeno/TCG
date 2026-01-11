@@ -3,7 +3,11 @@ import { BulkImport } from '../components/collections/BulkImport';
 import { Shield, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+import { UserMenu } from '../components/Navigation/UserMenu';
+import { useAuth } from '../context/AuthContext';
+
 const ImportCollection: React.FC = () => {
+    const { user } = useAuth();
     const handleImportComplete = (data: any) => {
         console.log('Import data:', data);
         // Here we would call the backend service
@@ -16,6 +20,26 @@ const ImportCollection: React.FC = () => {
                 <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-geeko-cyan/5 rounded-full blur-[150px] animate-pulse" />
                 <div className="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-purple-900/10 rounded-full blur-[150px]" />
             </div>
+
+            {/* Header */}
+            <header className="bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-white/5 sticky top-0 z-50 shadow-2xl shadow-black/50 relative">
+                <nav className="max-w-[1600px] mx-auto px-6 py-3 flex items-center justify-between">
+                    <div className="flex items-center gap-8">
+                        <Link to="/" className="flex items-center gap-4 hover:opacity-80 transition-opacity">
+                            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center font-black text-xl italic shadow-lg shadow-blue-600/20">T</div>
+                            <h1 className="text-xl font-black tracking-tighter text-white">TCG HUB</h1>
+                        </Link>
+                        <div className="hidden lg:flex items-center gap-6 text-[13px] font-medium text-neutral-400">
+                            <Link to="/" className="hover:text-white transition-colors">Home</Link>
+                            <Link to="/tournaments" className="hover:text-white transition-colors">Tournaments</Link>
+                            <Link to="/profile" className="hover:text-white transition-colors">My Profile</Link>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        {user && <UserMenu />}
+                    </div>
+                </nav>
+            </header>
 
             <div className="relative z-10 max-w-[1600px] mx-auto px-6 py-12">
                 <div className="flex items-center justify-between mb-16">
