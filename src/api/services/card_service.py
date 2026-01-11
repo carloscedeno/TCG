@@ -15,30 +15,34 @@ class CardService:
         offset: int = 0
     ) -> Dict[str, Any]:
         try:
-            # Determine if we need to filter by card attributes
-            needs_card_filter = q or rarity or game or color or card_type
+            # Base selection
+            select_parts = [
+                'printing_id',
+                'image_url',
+                'cards!inner(card_id, card_name, type_line, rarity, game_id, colors)' if (q or rarity or game or color or card_type) else 'cards(card_id, card_name, type_line, rarity, game_id, colors)',
+                'sets!inner(set_name)' if set_name else 'sets(set_name)',
+                'aggregated_prices(avg_market_price_usd)'
+            ]
             
-            # Start query
             query = supabase.table('card_printings').select(
-                'printing_id, image_url, '
-                'cards!inner(card_id, card_name, type_line, rarity, game_id, colors), '
-                'sets!inner(set_name) if set_name else sets(set_name), '
-                'aggregated_prices(avg_market_price_usd)',
+                ', '.join(select_parts),
                 count='planned'
             )
             
-            if q: query = query.ilike('cards.card_name', f'%{q}%')
+            # Apply filters
+            if q:
+                query = query.ilike('cards.card_name', f'%{q}%')
             
             if rarity:
                 rarities = [r.strip().lower() for r in rarity.split(',')]
-                # Normalizar: Common -> common, etc.
                 query = query.in_('cards.rarity', rarities)
                 
             if game:
                 game_names = [g.strip() for g in game.split(',')]
                 game_map = {'Magic: The Gathering': 22, 'Pokémon': 23, 'Lorcana': 24, 'Yu-Gi-Oh!': 26}
                 game_ids = [game_map[gn] for gn in game_names if gn in game_map]
-                if game_ids: query = query.in_('cards.game_id', game_ids)
+                if game_ids:
+                    query = query.in_('cards.game_id', game_ids)
             
             if set_name:
                 set_list = [s.strip() for s in set_name.split(',')]
@@ -53,49 +57,34 @@ class CardService:
                 color_codes = [color_map[cn] for cn in color_names if cn in color_map]
                 
                 if color_codes:
-                    # Stage 1: Get card_ids from 'cards' table (faster than joining 236k records)
-                    card_subquery = supabase.table('cards').select('card_id')
-                    
-                    if 'C' in color_codes: # Colorless
-                        card_subquery = card_subquery.is_('colors', 'null')
-                    elif 'M' in color_codes: # Multicolor (simplification: >1 color)
-                        # We'll just filter for anything with multiple characters if it were text, 
-                        # but for arrays we use a trick or just allow it 
+                    if 'C' in color_codes:
+                        query = query.is_('cards.colors', 'null')
+                    elif 'M' in color_codes:
+                        # Multicolor: colors array length > 1 (hard to do in raw PostgREST without RPC, 
+                        # so we'll just allow multiple colors if selected together)
                         pass
                     else:
-                        # Filter by colors OR color_identity to satisfy card identity requirement
-                        card_subquery = card_subquery.overlap('colors', color_codes)
-                    
-                    card_ids_res = card_subquery.limit(2000).execute()
-                    matched_ids = [c['card_id'] for c in card_ids_res.data]
-                    
-                    if matched_ids:
-                        query = query.in_('cards.card_id', matched_ids)
-                    else:
-                        return {"cards": [], "total_count": 0}
+                        # Use overlap operator for array colors
+                        # Format for PostgREST overlap: {W,U}
+                        codes_str = '{' + ','.join(color_codes) + '}'
+                        query = query.filter('cards.colors', 'ov', codes_str)
 
             if card_type:
                 types = [t.strip() for t in card_type.split(',')]
                 for t in types:
                     query = query.ilike('cards.type_line', f'%{t}%')
 
-            # Order by printing_id to ensure consistency and avoid "id" column error
-            # We use desc=True for newer cards first
-            query = query.order('printing_id', desc=True)
-            
-            # Limit and Offset
-            query = query.range(offset, offset + limit - 1)
+            # Order and Pagination
+            query = query.order('printing_id', desc=True).range(offset, offset + limit - 1)
             
             response = query.execute()
             
             cards = []
             for item in response.data:
-                # Robust attribute access
                 card_data = item.get('cards')
                 if not card_data: continue
                 
                 set_data = item.get('sets') or {}
-                # Sometimes sets is a list if not correctly mapped in join
                 if isinstance(set_data, list): set_data = set_data[0] if set_data else {}
                 
                 price_data = item.get('aggregated_prices') or []
