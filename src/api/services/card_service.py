@@ -140,41 +140,43 @@ class CardService:
                 
             card_data = item.get('cards') or {}
             set_data = item.get('sets') or {}
-            oracle_id = item.get('card_id')
-            
             # 2. Fetch ALL printings for this card (oracle_id)
-            # We want set info and prices for each
-            all_printings_query = supabase.table('card_printings').select(
-                'printing_id, rarity, collector_number, image_url, '
-                'sets!inner(set_name, set_code, release_date), '
-                'aggregated_prices(avg_market_price_usd)'
-            ).eq('card_id', oracle_id).execute()
-            
-            all_printings_data = all_printings_query.data or []
-            
-            # Sort printings by release date (latest first)
-            # Note: We need to handle potential null release dates
-            all_printings_data.sort(
-                key=lambda x: (x.get('sets', {}).get('release_date') or '0000-00-00'), 
-                reverse=True
-            )
-            
-            # Map printings for the frontend
+            # We want set info and prices for each. Added limit of 100 to prevent timeouts.
             all_versions = []
-            for p in all_printings_data:
-                ps = p.get('sets') or {}
-                price_data = p.get('aggregated_prices') or []
-                price = price_data[0].get('avg_market_price_usd', 0) if price_data else 0
+            try:
+                all_printings_query = supabase.table('card_printings').select(
+                    'printing_id, rarity, collector_number, image_url, '
+                    'sets!inner(set_name, set_code, release_date), '
+                    'aggregated_prices(avg_market_price_usd)'
+                ).eq('card_id', oracle_id).limit(100).execute()
                 
-                all_versions.append({
-                    "printing_id": p['printing_id'],
-                    "set_name": ps.get('set_name'),
-                    "set_code": ps.get('set_code'),
-                    "collector_number": p.get('collector_number'),
-                    "rarity": p.get('rarity'),
-                    "price": price,
-                    "image_url": p.get('image_url')
-                })
+                all_printings_data = all_printings_query.data or []
+                
+                # Sort printings by release date (latest first)
+                all_printings_data.sort(
+                    key=lambda x: (x.get('sets', {}).get('release_date') or '0000-00-00'), 
+                    reverse=True
+                )
+                
+                # Map printings for the frontend
+                for p in all_printings_data:
+                    ps = p.get('sets') or {}
+                    price_data = p.get('aggregated_prices') or []
+                    price = price_data[0].get('avg_market_price_usd', 0) if price_data else 0
+                    
+                    all_versions.append({
+                        "printing_id": p['printing_id'],
+                        "set_name": ps.get('set_name'),
+                        "set_code": ps.get('set_code'),
+                        "collector_number": p.get('collector_number'),
+                        "rarity": p.get('rarity'),
+                        "price": price,
+                        "image_url": p.get('image_url')
+                    })
+            except Exception as inner_e:
+                print(f"⚠️ [CardService] Warning fetching versions: {inner_e}")
+                # We still return the card details even if versions fail
+                all_versions = []
 
             # Fetch valuation for the main printing
             valuation = await ValuationService.get_two_factor_valuation(printing_id)
