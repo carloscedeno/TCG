@@ -68,7 +68,7 @@ class CardService:
                     query = query.ilike('type_line', f'%{t}%')
 
             # Pagination and Execution
-            query = query.order('card_name', ascending=True).range(offset, offset + limit - 1)
+            query = query.order('card_name', desc=False).range(offset, offset + limit - 1)
             response = query.execute()
             
             cards = []

@@ -42,13 +42,13 @@ def heavy_repair():
     batch_size = 1000
     
     while True:
-        resp = supabase.table('price_history').select('printing_id, price_usd, created_at')\
-            .order('created_at', desc=True).range(offset, offset + batch_size - 1).execute()
+        resp = supabase.table('price_history').select('printing_id, price_usd')\
+            .range(offset, offset + batch_size - 1).execute()
         if not resp.data: break
         all_prices.extend(resp.data)
         if len(resp.data) < batch_size: break
         offset += batch_size
-        if offset > 10000: break # Limitemos para no morir en el intento, los más recientes primero
+        if offset > 80000: break # Process all 75k records
 
     # Deduplicar por printing_id (quedarse con el más reciente)
     latest_prices = {}

@@ -21,7 +21,7 @@ class ValuationService:
             response = supabase.table('price_history').select(
                 'printing_id, price_usd, url, source:source_id(source_code)'
             ).in_('printing_id', printing_ids)\
-             .order('price_entry_id', ascending=False)\
+             .order('price_entry_id', desc=True)\
              .limit(len(printing_ids) * 10)\
              .execute()
             
@@ -86,7 +86,7 @@ class ValuationService:
             # Fetch latest prices including source metadata
             response = supabase.table('price_history').select('price_usd, url, source:source_id(source_code)')\
                 .eq('printing_id', printing_id)\
-                .order('price_entry_id', ascending=False)\
+                .order('price_entry_id', desc=True)\
                 .limit(20)\
                 .execute()
             

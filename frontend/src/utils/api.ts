@@ -11,8 +11,9 @@ export interface CardApi {
   card_faces?: any[];
 }
 
-// Use local API for better performance and to avoid Supabase Postgrest timeouts on large queries
-const API_BASE = (import.meta as any).env?.VITE_API_BASE || 'http://localhost:8000';
+// Detect if we are in a production environment (like GitHub Pages)
+const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+const API_BASE = (import.meta as any).env?.VITE_API_BASE || (isLocal ? 'http://localhost:8000' : '');
 
 export const fetchCards = async (params: {
   q?: string,
@@ -109,12 +110,70 @@ export const fetchUserCollection = async (): Promise<any[]> => {
 
 export const fetchCardDetails = async (printingId: string): Promise<any> => {
   try {
-    const response = await fetch(`${API_BASE}/api/cards/${printingId}`);
-    if (!response.ok) throw new Error('Failed to fetch card details');
-    return await response.json();
+    if (API_BASE) {
+      const response = await fetch(`${API_BASE}/api/cards/${printingId}`);
+      if (response.ok) return await response.json();
+    }
+    throw new Error('API unavailable or returned error');
   } catch (error) {
-    console.error('Error fetching card details:', error);
-    return null;
+    console.warn('Local API failed for details, falling back to direct Supabase fetch:', error);
+    try {
+      // Fallback for details
+      const { data, error: sbError } = await supabase
+        .from('card_printings')
+        .select(`
+          printing_id,
+          card_id,
+          image_url,
+          artist,
+          flavor_text,
+          collector_number,
+          rarity,
+          card_faces,
+          cards(card_name, type_line, oracle_text, mana_cost, power, toughness, legalities, colors),
+          sets(set_name, set_code),
+          aggregated_prices(avg_market_price_usd)
+        `)
+        .eq('printing_id', printingId)
+        .single();
+
+      if (sbError) throw sbError;
+      if (!data) return null;
+
+      const cardData = data.cards as any;
+      const setData = data.sets as any;
+      const price = (data.aggregated_prices as any)?.[0]?.avg_market_price_usd || 0;
+
+      // Map to the same structure as the API
+      return {
+        card_id: data.printing_id,
+        oracle_id: data.card_id,
+        name: cardData.card_name,
+        mana_cost: cardData.mana_cost,
+        type: cardData.type_line,
+        oracle_text: cardData.oracle_text,
+        flavor_text: data.flavor_text,
+        artist: data.artist,
+        rarity: data.rarity,
+        set: setData.set_name,
+        set_code: setData.set_code,
+        collector_number: data.collector_number,
+        legalities: cardData.legalities,
+        colors: cardData.colors,
+        image_url: data.image_url,
+        price: price,
+        valuation: {
+          store_price: price,
+          market_price: price,
+          valuation_avg: price
+        },
+        card_faces: data.card_faces,
+        all_versions: [] // Version list fallback is complex, for now we show current
+      };
+    } catch (fallbackError) {
+      console.error('Error fetching card details from Supabase:', fallbackError);
+      return null;
+    }
   }
 };
 
