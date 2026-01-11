@@ -288,8 +288,8 @@ def main():
             print(f"  📄 Cartas encontradas: {len(cards)}")
             set_cards, set_printings = 0, 0
             
-            cards_batch = []
-            printings_batch = []
+            cards_dict = {}
+            printings_dict = {}
             BATCH_SIZE = 500
             
             for j, card in enumerate(cards, 1):
@@ -297,20 +297,23 @@ def main():
                     if 'oracle_id' not in card:
                         continue
                     
-                    # Preparar card
-                    cards_batch.append(map_scryfall_card(card))
-                    # Preparar printing
-                    printings_batch.append(map_scryfall_printing(card, set_id))
+                    # Preparar card (deduplicar por card_id)
+                    c_data = map_scryfall_card(card)
+                    cards_dict[c_data['card_id']] = c_data
+                    
+                    # Preparar printing (deduplicar por printing_id)
+                    p_data = map_scryfall_printing(card, set_id)
+                    printings_dict[p_data['printing_id']] = p_data
                     
                     # Si el lote está lleno, procesar
-                    if len(cards_batch) >= BATCH_SIZE:
-                        retry_supabase_operation(supabase.table('cards').upsert(cards_batch, on_conflict='card_id').execute)
-                        retry_supabase_operation(supabase.table('card_printings').upsert(printings_batch, on_conflict='printing_id').execute)
-                        set_cards += len(cards_batch)
-                        set_printings += len(printings_batch)
+                    if len(cards_dict) >= BATCH_SIZE:
+                        retry_supabase_operation(supabase.table('cards').upsert(list(cards_dict.values()), on_conflict='card_id').execute)
+                        retry_supabase_operation(supabase.table('card_printings').upsert(list(printings_dict.values()), on_conflict='printing_id').execute)
+                        set_cards += len(cards_dict)
+                        set_printings += len(printings_dict)
                         print(f"  ✨ [{j}/{len(cards)}] Lote procesado.")
-                        cards_batch = []
-                        printings_batch = []
+                        cards_dict = {}
+                        printings_dict = {}
                         sys.stdout.flush()
                 
                 except Exception as e:
@@ -318,12 +321,12 @@ def main():
                     continue
             
             # Procesar el resto del lote si queda algo
-            if cards_batch:
-                retry_supabase_operation(supabase.table('cards').upsert(cards_batch, on_conflict='card_id').execute)
-                retry_supabase_operation(supabase.table('card_printings').upsert(printings_batch, on_conflict='printing_id').execute)
-                set_cards += len(cards_batch)
-                set_printings += len(printings_batch)
-                print(f"  ✨ Final del lote procesado ({len(cards_batch)} ítems).")
+            if cards_dict:
+                retry_supabase_operation(supabase.table('cards').upsert(list(cards_dict.values()), on_conflict='card_id').execute)
+                retry_supabase_operation(supabase.table('card_printings').upsert(list(printings_dict.values()), on_conflict='printing_id').execute)
+                set_cards += len(cards_dict)
+                set_printings += len(printings_dict)
+                print(f"  ✨ Final del lote procesado ({len(cards_dict)} ítems).")
             
             total_cards += set_cards
             total_printings += set_printings
