@@ -19,4 +19,11 @@ def get_supabase_admin() -> Client:
         raise ValueError("Supabase environment variables not set")
     return create_client(SUPABASE_URL, key)
 
-supabase = get_supabase_client()
+def _get_default_client():
+    try:
+        return get_supabase_client()
+    except ValueError:
+        return None
+
+# Global client for general use
+supabase = _get_default_client()
