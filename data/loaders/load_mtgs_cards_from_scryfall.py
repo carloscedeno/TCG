@@ -258,7 +258,7 @@ def main():
     sets = sets_resp.data
     
     # Ordenar por fecha de lanzamiento desc (lo más nuevo primero)
-    sets.sort(key=lambda x: x.get('release_date' or ''), reverse=True)
+    sets.sort(key=lambda x: x.get('release_date') or '', reverse=True)
     
     if limit:
         print(f"🧪 Aplicando límite de test: {limit} sets")
