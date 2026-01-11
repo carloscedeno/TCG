@@ -4,8 +4,14 @@ on:
   schedule:
     - cron: '0 0 * * *' # Every day at midnight
   workflow_dispatch: # Allows manual trigger from GitHub UI
+    inputs:
+      full_sync:
+        description: 'Run a full sync instead of recent only'
+        required: false
+        type: boolean
+        default: false
   repository_dispatch: # Allows trigger from the web app via API
-    types: [manual_sync_trigger]
+    types: [manual_sync_trigger, full_sync_trigger]
 
 jobs:
   sync:
@@ -36,4 +42,10 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-        run: python data/loaders/load_mtgs_cards_from_scryfall.py
+          FULL_SYNC: ${{ github.event.inputs.full_sync == 'true' || github.event.action == 'full_sync_trigger' }}
+        run: |
+          if [ "$FULL_SYNC" = "true" ]; then
+            python data/loaders/load_mtgs_cards_from_scryfall.py --full
+          else
+            python data/loaders/load_mtgs_cards_from_scryfall.py
+          fi
