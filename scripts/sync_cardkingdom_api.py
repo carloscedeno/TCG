@@ -10,7 +10,7 @@ PROJECT_ROOT = Path(__file__).parent.parent
 sys.path.append(str(PROJECT_ROOT))
 sys.path.append(str(PROJECT_ROOT / "data" / "scrapers" / "shared"))
 
-from utils.supabase_client import supabase
+from src.api.utils.supabase_client import supabase
 
 # Setup logging
 logging.basicConfig(
