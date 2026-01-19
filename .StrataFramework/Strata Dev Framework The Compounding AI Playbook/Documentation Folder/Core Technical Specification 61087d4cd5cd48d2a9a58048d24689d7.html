@@ -1,0 +1,759 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Core Technical Specification</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="61087d4c-d5cd-48d2-a9a5-8048d24689d7" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">⚙️</span></div><h1 class="page-title" dir="auto">Core Technical Specification</h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="auto"><p id="e0a31269-71a9-4955-ade2-2e4b0775edbd" class=""><strong>Version:</strong> 1.0 | <strong>Type:</strong> System Architecture &amp; Workflow Protocol</p></div><div style="display:contents" dir="ltr"><figure class="block-color-blue callout" style="white-space:pre-wrap;display:flex" id="7dae7a2a-c284-4238-8ca0-8e9239b174fc"><div style="font-size:1.5em"><span class="icon">📋</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="f68d2b91-4415-4a44-ba4c-593b6bf9421e" class="">This document serves as the <strong>technical reference manual</strong> for implementing the Strata Dev Framework in your codebase. It consolidates all architectural decisions, directory structures, and workflow protocols into a single source of truth.</p></div></div></figure></div><div style="display:contents" dir="auto"><p id="b541d480-bbc2-4982-abc4-f97b7eb5bb5f" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="3d70e658-dc81-45a5-9ef2-8a48bc78f873"/></div><div style="display:contents" dir="auto"><p id="d2f304e3-02e3-4114-a5e9-8acc744e25b3" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="feadb992-d1ee-4914-b9e9-99ae8b8a9cbd" class="">1. Philosophy: Compounding Agentic Engineering</h1></div><div style="display:contents" dir="auto"><p id="8a56f865-e66e-4aaf-ad4d-7472364f0051" class="">The Strata Framework shifts development from a linear <strong>&quot;Feature Factory&quot;</strong> model to an <strong>Exponential System Evolution</strong> model.</p></div><div style="display:contents" dir="auto"><h3 id="bcd3ba77-df37-4f42-b158-2c04370970ae" class="">Core Principles</h3></div><div style="display:contents" dir="auto"><p id="43fadfbd-c689-442d-ae35-372fb90b3fac" class=""><strong>Spec-Driven Development</strong></p></div><div style="display:contents" dir="auto"><ul id="44558e9b-04cb-429b-ace3-b2c52e5dbe11" class="bulleted-list"><li style="list-style-type:disc">No code is written without a rigorous, approved specification (PRD)</li></ul></div><div style="display:contents" dir="auto"><ul id="4994070c-f553-4a9d-b1f9-aba37dcf6f9a" class="bulleted-list"><li style="list-style-type:disc">The Chat History is ephemeral; the PRD is the absolute truth</li></ul></div><div style="display:contents" dir="auto"><ul id="dbf2a5d3-33ce-4e7f-baec-97d8c72091d4" class="bulleted-list"><li style="list-style-type:disc">Location: <code>docs/specs/</code><code><a href="http://prd.md">prd.md</a></code></li></ul></div><div style="display:contents" dir="auto"><p id="32d3995a-8e46-45e6-b0f5-35cea631d46f" class=""><strong>Atomic Execution</strong></p></div><div style="display:contents" dir="auto"><ul id="66a6c0a4-9f97-4fd9-acd3-de9fc65f27d6" class="bulleted-list"><li style="list-style-type:disc">Work is broken down into binary units (Atoms) verifiable by scripts</li></ul></div><div style="display:contents" dir="auto"><ul id="072c3bca-ff9d-4ff5-85eb-d0ea9b33349a" class="bulleted-list"><li style="list-style-type:disc">Each atom must be completable in ONE agent context window</li></ul></div><div style="display:contents" dir="auto"><ul id="56f77861-96f5-4e6b-848b-e742e8b0722b" class="bulleted-list"><li style="list-style-type:disc">Binary acceptance criteria only (Pass/Fail)</li></ul></div><div style="display:contents" dir="auto"><p id="7150b643-047d-4a37-8c0c-8bb5d83c4de5" class=""><strong>Compounding Context</strong></p></div><div style="display:contents" dir="auto"><ul id="ae7d5b25-4f8d-48cb-bc38-95a660561704" class="bulleted-list"><li style="list-style-type:disc">Every bug fixed or lesson learned must be &quot;codified&quot; into the system&#x27;s memory</li></ul></div><div style="display:contents" dir="auto"><ul id="a6ad683a-b0d3-4ae6-943f-590c6c3faf31" class="bulleted-list"><li style="list-style-type:disc"><code>.mdc</code> rules for style/architecture decisions</li></ul></div><div style="display:contents" dir="auto"><ul id="6b78eb64-f1ab-4b5e-81eb-ac02ee659329" class="bulleted-list"><li style="list-style-type:disc"><code><a href="http://agents.md">agents.md</a></code> for tactical knowledge and gotchas</li></ul></div><div style="display:contents" dir="auto"><ul id="121aaed7-b84f-405b-a64f-d27cfb7f2024" class="bulleted-list"><li style="list-style-type:disc">Ensures the same error never occurs twice</li></ul></div><div style="display:contents" dir="auto"><p id="5a2ab54f-cd4e-455d-9a2a-3300aee8bf1f" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="66961597-2976-4a35-8bf4-1adb079db5d1"/></div><div style="display:contents" dir="auto"><p id="3441999b-222b-4566-9fdf-6289c67bf60c" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="3598e328-ffab-488d-8d04-92ae468f5388" class="">2. The Strata Directory Structure</h1></div><div style="display:contents" dir="auto"><p id="b7326a2e-c353-4bb8-b32c-3aaa2c8083c2" class="">All projects <strong>MUST</strong> strictly adhere to this standardized topology to ensure agent autonomy.</p></div><div style="display:contents" dir="auto"><h3 id="c1fd2556-bc29-4d9e-9dd8-518050bd46e7" class="">Complete Directory Tree</h3></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="b65a8204-965a-4889-8363-881a5fbfe311" class="code code-wrap"><code class="language-undefined" style="white-space:pre-wrap;word-break:break-all">project-root/
+├── .cursor/
+│   └── rules/
+│       └── global.mdc       # The &quot;Constitution&quot;: Tech stack, critical constraints
+├── logs/
+│   └── progress.txt         # Short-Term Memory: Active PPRE cycle logs
+├── scripts/
+│   └── sdd/
+│       └── autopilot.sh     # The Engine: Automates Plan → Reset → Execute loop
+├── docs/
+│   ├── specs/               # INPUT LAYER
+│   │   ├── prd.md           # Source of Truth (Business Logic)
+│   │   └── stories.json     # Executable Atoms with Binary Acceptance Criteria
+│   ├── reference/           # CONTEXT SHARDING (Loaded on-demand only)
+│   │   ├── api_guidelines.md
+│   │   ├── db_schema.md
+│   │   └── ui_patterns.md
+│   └── done_specs/          # ARCHIVE: Completed stories.json files
+└── src/
+    └── components/
+        └── agents.md        # Long-Term Memory: Tacit knowledge &amp; bug prevention</code></pre></div><div style="display:contents" dir="auto"><h3 id="db3a112a-e949-4447-b408-8f6bad6447f1" class="">Component Roles</h3></div><div style="display:contents" dir="auto"><p id="4de97007-ae13-4615-b326-cf9d5ceea5f5" class=""><code><strong>.cursor/rules/global.mdc</strong></code> - The Constitution</p></div><div style="display:contents" dir="auto"><ul id="5970ed5b-6f23-4fd3-a796-3dc6245115f6" class="bulleted-list"><li style="list-style-type:disc">Always loaded by the AI</li></ul></div><div style="display:contents" dir="auto"><ul id="d66eb998-edf6-489b-b181-30a5b90ec30a" class="bulleted-list"><li style="list-style-type:disc">Contains universal, high-level rules</li></ul></div><div style="display:contents" dir="auto"><ul id="af5dd6d0-d656-4e50-a351-e7ef025b9a9b" class="bulleted-list"><li style="list-style-type:disc">Must be &lt; 200 lines to prevent context overload</li></ul></div><div style="display:contents" dir="auto"><ul id="071c105c-b5c9-48f1-be59-b22a7cf23ed1" class="bulleted-list"><li style="list-style-type:disc">Examples: &quot;Use TypeScript&quot;, &quot;No console.logs in production&quot;</li></ul></div><div style="display:contents" dir="auto"><p id="9cf74961-ee72-48bb-b312-8170a0b12409" class=""><code><strong>logs/progress.txt</strong></code> - Short-Term Memory</p></div><div style="display:contents" dir="auto"><ul id="c9996398-a731-4627-b171-61a61c4d0309" class="bulleted-list"><li style="list-style-type:disc">Session-level continuity between PPRE cycles</li></ul></div><div style="display:contents" dir="auto"><ul id="29a07286-7fd6-4149-89ff-63815370f1f1" class="bulleted-list"><li style="list-style-type:disc">Format: <code>[YYYY-MM-DD HH:MM] ✅/❌ STORY-ID: Description</code></li></ul></div><div style="display:contents" dir="auto"><ul id="9962c42b-5486-4385-8ad2-c39f4c58b568" class="bulleted-list"><li style="list-style-type:disc">Cleared or archived after epic completion</li></ul></div><div style="display:contents" dir="auto"><p id="b45cae99-4fd2-46d0-ac76-449e1591c76d" class=""><code><strong>scripts/sdd/</strong></code><code><strong><a href="http://autopilot.sh">autopilot.sh</a></strong></code> - The Execution Engine</p></div><div style="display:contents" dir="auto"><ul id="7224a9db-b65b-4bc6-a5f7-00f329f5aba1" class="bulleted-list"><li style="list-style-type:disc">Automates the PPRE cycle</li></ul></div><div style="display:contents" dir="auto"><ul id="7908fc2f-5a84-4cd2-869e-dd587bd0868f" class="bulleted-list"><li style="list-style-type:disc">Enforces the Kill Switch (context reset)</li></ul></div><div style="display:contents" dir="auto"><ul id="be62a73f-9cd8-46ba-97f4-811c97c90f10" class="bulleted-list"><li style="list-style-type:disc">Handles git commits and story verification</li></ul></div><div style="display:contents" dir="auto"><p id="646ee4bc-15e7-4243-b8bf-10c0ebe50837" class=""><code><strong>docs/specs/</strong></code><code><strong><a href="http://prd.md">prd.md</a></strong></code> - The Blueprint</p></div><div style="display:contents" dir="auto"><ul id="81073fbd-f9b6-4b98-af89-786bec92a1ff" class="bulleted-list"><li style="list-style-type:disc">Single source of truth for business logic</li></ul></div><div style="display:contents" dir="auto"><ul id="e2ce46a3-c55f-4b53-9a02-f8acc022bf93" class="bulleted-list"><li style="list-style-type:disc">Must include: Mission, Technical Architecture, Data Dictionary, Implementation Plan</li></ul></div><div style="display:contents" dir="auto"><ul id="ab8bf651-caa5-4158-9cec-15a2d3337cd9" class="bulleted-list"><li style="list-style-type:disc">Overrides chat history in all conflicts</li></ul></div><div style="display:contents" dir="auto"><p id="8a9ff7e2-b24d-4463-8e63-e7cfb2cc15aa" class=""><code><strong>docs/specs/stories.json</strong></code> - The Execution Contract</p></div><div style="display:contents" dir="auto"><ul id="e7662a83-4e31-45b4-a809-d73aaf5b0970" class="bulleted-list"><li style="list-style-type:disc">Array of atomic tasks</li></ul></div><div style="display:contents" dir="auto"><ul id="69e1e30d-f674-4305-b3a8-eefe3066dff4" class="bulleted-list"><li style="list-style-type:disc">Each story has binary <code>acceptance_criteria</code></li></ul></div><div style="display:contents" dir="auto"><ul id="5e6f906e-b428-4086-94ed-f23b1fc4eca4" class="bulleted-list"><li style="list-style-type:disc">Agent self-verifies and marks <code>passes: true/false</code></li></ul></div><div style="display:contents" dir="auto"><p id="919d1c48-0138-418f-8fc6-a8a300a5d7ae" class=""><code><strong>docs/reference/*.md</strong></code> - Context Sharding Layer</p></div><div style="display:contents" dir="auto"><ul id="80a6e0c3-d444-4a9b-a20f-abc3c60e7842" class="bulleted-list"><li style="list-style-type:disc">Loaded <strong>on-demand only</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="766840aa-fc1d-45b3-8179-d500027cb76f" class="bulleted-list"><li style="list-style-type:disc">Prevents &quot;Context Poisoning&quot;</li></ul></div><div style="display:contents" dir="auto"><ul id="4089b7f6-e3b5-4ef5-a9f1-4404fa2add64" class="bulleted-list"><li style="list-style-type:disc">Example: Load <code>auth_</code><code><a href="http://flow.md">flow.md</a></code> only when working on auth</li></ul></div><div style="display:contents" dir="auto"><p id="6b67e2e5-fdd2-423e-b599-2cdd452f685a" class=""><strong>`src/</strong>/<a href="http://agents.md">agents.md</a>` - Long-Term Memory</p></div><div style="display:contents" dir="auto"><ul id="af3c5a78-1294-4e15-8955-15b1f618a1fa" class="bulleted-list"><li style="list-style-type:disc">Fractal: Lives in every relevant directory</li></ul></div><div style="display:contents" dir="auto"><ul id="981ae43f-3a2c-4ea1-bc89-95bd7cac6aa7" class="bulleted-list"><li style="list-style-type:disc">Contains: Critical Lessons, Known Issues, Local Conventions, Dependencies</li></ul></div><div style="display:contents" dir="auto"><ul id="be4f593b-39ce-4df5-9ddd-6f5e294b2308" class="bulleted-list"><li style="list-style-type:disc">Date-stamped entries for timeline tracking</li></ul></div><div style="display:contents" dir="auto"><p id="df79f59d-6543-4b49-9110-6a37b2a9feb7" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="a3a343b7-c495-4309-adf3-0879e6cfcd7f"/></div><div style="display:contents" dir="auto"><p id="7f6cf341-2c49-4e4d-8ce1-627723abb611" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="6b421182-8499-4af0-a922-6f37f0ed713e" class="">3. The Workflows</h1></div><div style="display:contents" dir="auto"><h2 id="bd328c90-239c-4ec5-b53f-69ffa90a8439" class="">Phase 1: The Blueprint (PRD)</h2></div><div style="display:contents" dir="auto"><p id="11e93fbb-f61c-4b02-9c11-169d0c640dcd" class=""><strong>Rule:</strong> The Chat History is ephemeral; the PRD is the absolute truth.</p></div><div style="display:contents" dir="auto"><p id="5b084ddf-4329-4c4d-8c90-48a9f4f66151" class=""><strong>Location:</strong> <code>docs/specs/</code><code><a href="http://prd.md">prd.md</a></code></p></div><div style="display:contents" dir="auto"><p id="5fe2cfa7-49ff-4aff-86e8-c6064885ee1f" class=""><strong>Required Sections:</strong></p></div><div style="display:contents" dir="auto"><ol type="1" id="9fd94429-42f4-44d0-b402-5784aeaf429d" class="numbered-list" start="1"><li><strong>Mission:</strong> What problem are we solving?</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="a606eabf-9ee9-4ab5-ab29-ce146d6ec21c" class="numbered-list" start="2"><li><strong>Technical Architecture:</strong> High-level system design</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="178afa5a-ce0b-4ca8-9491-44db4a883085" class="numbered-list" start="3"><li><strong>Data Dictionary:</strong> All entities, fields, relationships</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="147e7baa-1348-4d8a-9b4c-b9df3cc11c0b" class="numbered-list" start="4"><li><strong>Implementation Plan:</strong> Step-by-step breakdown</li></ol></div><div style="display:contents" dir="auto"><p id="f27d7caa-10f9-483f-aa62-a261b7b15609" class=""><strong>Validation:</strong> PRD must be approved by stakeholders before any coding begins.</p></div><div style="display:contents" dir="auto"><p id="60f05e04-de85-48d3-9335-772df6765e46" class="">
+</p></div><div style="display:contents" dir="auto"><h2 id="36a78812-242e-452f-99b3-c75b82c2b41a" class="">Phase 2: Atomic Decomposition</h2></div><div style="display:contents" dir="auto"><p id="f5ec4cdd-5191-43be-bd2b-a967b100a46c" class=""><strong>Action:</strong> Convert <code><a href="http://prd.md">prd.md</a></code> into <code>docs/specs/stories.json</code></p></div><div style="display:contents" dir="auto"><p id="50c5444b-88a5-4abb-b034-831411302c03" class=""><strong>The Atomicity Rule:</strong></p></div><div style="display:contents" dir="auto"><ul id="73bb97e2-a5a2-42f5-a59c-923f357cfb42" class="bulleted-list"><li style="list-style-type:disc">A &quot;Story&quot; must be small enough to be completed in <strong>one single agent context window</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="d28a3495-65c3-449f-9ce5-41bb7786ed2f" class="bulleted-list"><li style="list-style-type:disc">Approximately 1 file or 1 function</li></ul></div><div style="display:contents" dir="auto"><ul id="c454cd83-7a19-4aa9-975d-6ceb1cb45b7d" class="bulleted-list"><li style="list-style-type:disc">If it requires &quot;figuring things out&quot;, it&#x27;s research, not a story</li></ul></div><div style="display:contents" dir="auto"><p id="9107d30e-850e-4c7b-8380-42a5d0f2caba" class=""><strong>Validation:</strong></p></div><div style="display:contents" dir="auto"><ul id="7678e64a-7df2-4197-9192-68e3e46d74c0" class="bulleted-list"><li style="list-style-type:disc">Every story MUST have an <code>acceptance_criteria</code> array</li></ul></div><div style="display:contents" dir="auto"><ul id="9cb4c86d-90ff-4224-8d01-90b09ff5e3f1" class="bulleted-list"><li style="list-style-type:disc">Criteria must be <strong>Binary (Pass/Fail)</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="3803329a-1345-4efa-982b-774a7a1cca24" class="bulleted-list"><li style="list-style-type:disc">Vague criteria (e.g., &quot;Make it look good&quot;) are <strong>prohibited</strong></li></ul></div><div style="display:contents" dir="auto"><p id="f9e4b6dc-c54c-40f7-b7fb-739e7452e868" class=""><strong>Example Story:</strong></p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="70e15785-494e-4d6e-acc5-5d2718ed7d2f" class="code code-wrap"><code class="language-JSON" style="white-space:pre-wrap;word-break:break-all">{
+  &quot;id&quot;: &quot;AUTH-03&quot;,
+  &quot;description&quot;: &quot;Add JWT token validation middleware&quot;,
+  &quot;files_to_touch&quot;: [&quot;src/middleware/auth.ts&quot;],
+  &quot;acceptance_criteria&quot;: [
+    &quot;Middleware function named &#x27;validateJWT&#x27; exists&quot;,
+    &quot;Returns 401 status code for invalid tokens&quot;,
+    &quot;Attaches decoded user object to req.user on success&quot;
+  ],
+  &quot;passes&quot;: false
+}</code></pre></div><div style="display:contents" dir="auto"><p id="9a89f533-76f4-40d8-b1de-4fe014ba2971" class="">
+</p></div><div style="display:contents" dir="auto"><h2 id="ab48a29a-7cc2-4a5d-bd81-ebfdbb6d265f" class="">Phase 3: The PPRE Execution Loop</h2></div><div style="display:contents" dir="auto"><p id="d23777e8-d504-44a9-9d26-6dd0bf80ae3f" class="">Agents must not &quot;vibe code.&quot; They must follow the <strong>PPRE Cycle</strong> enforced by <code>scripts/sdd/</code><code><a href="http://autopilot.sh">autopilot.sh</a></code>:</p></div><div style="display:contents" dir="auto"><h3 id="c4f1d139-89c9-4403-94a9-f2b5a7de954e" class="">1. PRIME</h3></div><div style="display:contents" dir="auto"><ul id="35da5f78-79ad-4411-baac-229fb560a040" class="bulleted-list"><li style="list-style-type:disc">Load <strong>only</strong> the current story from <code>stories.json</code></li></ul></div><div style="display:contents" dir="auto"><ul id="466cfa53-c800-471c-b6d6-563eda625366" class="bulleted-list"><li style="list-style-type:disc">Load relevant <code>docs/reference/</code> files</li></ul></div><div style="display:contents" dir="auto"><ul id="73bccfd7-9172-46f8-9e3a-f614b156f434" class="bulleted-list"><li style="list-style-type:disc">Do NOT load the entire chat history</li></ul></div><div style="display:contents" dir="auto"><h3 id="5eac5e35-4811-4f15-b24d-ab1e5a8be228" class="">2. PLAN</h3></div><div style="display:contents" dir="auto"><ul id="6eea7c13-7e85-4af4-9913-e58d29ef2c16" class="bulleted-list"><li style="list-style-type:disc">Generate a specific implementation plan in the chat</li></ul></div><div style="display:contents" dir="auto"><ul id="b12ad338-fcde-47c0-b0bb-a9d184d7de8d" class="bulleted-list"><li style="list-style-type:disc">Human reviews and approves the plan</li></ul></div><div style="display:contents" dir="auto"><ul id="b169873b-4f05-479c-94e2-ec0cac1ebc31" class="bulleted-list"><li style="list-style-type:disc">Plan is saved to context</li></ul></div><div style="display:contents" dir="auto"><h3 id="fff87123-efc7-4554-8dbf-fcab4def21e9" class="">3. RESET (The Kill Switch) ⚠️</h3></div><div style="display:contents" dir="auto"><ul id="761aa174-9c0e-4c3d-9b06-c83ff0d719b0" class="bulleted-list"><li style="list-style-type:disc"><strong>Critical:</strong> Clear the context window/chat history</li></ul></div><div style="display:contents" dir="auto"><ul id="d3322f5b-ca28-4973-a62d-bb5fd794e3ee" class="bulleted-list"><li style="list-style-type:disc">This prevents &quot;Context Rot&quot;</li></ul></div><div style="display:contents" dir="auto"><ul id="a900c5d0-00c2-4217-bff2-d948911a0583" class="bulleted-list"><li style="list-style-type:disc">Only the approved Plan and relevant files remain in context</li></ul></div><div style="display:contents" dir="auto"><h3 id="6de75f25-0af0-4989-9bbb-00e3c20f6ae2" class="">4. EXECUTE</h3></div><div style="display:contents" dir="auto"><ul id="ccade3b1-ffb1-4fac-bcae-a10387f63e70" class="bulleted-list"><li style="list-style-type:disc">Write code based strictly on the Plan and Story constraints</li></ul></div><div style="display:contents" dir="auto"><ul id="383f931e-cb43-4ab4-8fe0-6c9673679c3c" class="bulleted-list"><li style="list-style-type:disc">No improvisation or &quot;creative interpretation&quot;</li></ul></div><div style="display:contents" dir="auto"><ul id="c8e6f39a-3900-4a02-aef8-974e5550bbd4" class="bulleted-list"><li style="list-style-type:disc">Follow binary acceptance criteria exactly</li></ul></div><div style="display:contents" dir="auto"><h3 id="2aa97c43-6096-431c-be04-8c24568d971f" class="">5. VERIFY</h3></div><div style="display:contents" dir="auto"><ul id="afcb3fb7-50d2-4338-ad36-cf5ee7663f19" class="bulleted-list"><li style="list-style-type:disc">Agent checks its own code against <code>acceptance_criteria</code></li></ul></div><div style="display:contents" dir="auto"><ul id="6aaaedc8-83fd-4d18-95be-7dd3e814ed5a" class="bulleted-list"><li style="list-style-type:disc">Each criterion must evaluate to Pass or Fail</li></ul></div><div style="display:contents" dir="auto"><ul id="02a6437a-204d-49cb-b464-66fb46f64f8e" class="bulleted-list"><li style="list-style-type:disc">No partial passes allowed</li></ul></div><div style="display:contents" dir="auto"><h3 id="7604afe7-6f8f-47d3-957c-35e83e980359" class="">6. COMMIT</h3></div><div style="display:contents" dir="auto"><ul id="fde785bd-5f4b-4395-8d3e-cb31d61d23ec" class="bulleted-list"><li style="list-style-type:disc">If all criteria pass: Set <code>&quot;passes&quot;: true</code> in JSON</li></ul></div><div style="display:contents" dir="auto"><ul id="1d4766ed-0af8-4c01-8759-49d3aae3921e" class="bulleted-list"><li style="list-style-type:disc">Log to <code>logs/progress.txt</code> with timestamp</li></ul></div><div style="display:contents" dir="auto"><ul id="c49b3a79-1bf2-402a-ac0e-736b4ed94708" class="bulleted-list"><li style="list-style-type:disc">Git commit with story ID in message</li></ul></div><div style="display:contents" dir="auto"><ul id="69d3bcf6-8e87-40e2-a5eb-411d62ef47f4" class="bulleted-list"><li style="list-style-type:disc">If any criterion fails: Update <code><a href="http://agents.md">agents.md</a></code> with lesson learned</li></ul></div><div style="display:contents" dir="auto"><p id="3ccf6d49-b1b3-4805-aed0-283eb300c88a" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="c3c28dea-7032-4fe6-9b25-a564f3307a2c"/></div><div style="display:contents" dir="auto"><p id="34dff1a0-f335-4223-a160-d8f09d41106a" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="3c88e3cc-3b4c-4eb3-81c3-9af196cd27b6" class="">4. Context Management Strategy</h1></div><div style="display:contents" dir="auto"><h2 id="693d46db-a6d4-4f31-baa8-18a7f0eeae81" class="">Context Sharding</h2></div><div style="display:contents" dir="auto"><p id="2ce8d21a-dfeb-4275-b475-223330522c66" class="">To prevent &quot;Context Poisoning&quot; (confusing the AI with too much info), we strictly separate context:</p></div><div style="display:contents" dir="auto"><p id="88216586-6818-4cd5-8fc4-9989d87bf65f" class=""><strong>Global Context</strong> (<code>.cursor/rules/global.mdc</code>)</p></div><div style="display:contents" dir="auto"><ul id="489d6d13-4d6e-4835-91f4-40affa6d6d05" class="bulleted-list"><li style="list-style-type:disc">Always loaded</li></ul></div><div style="display:contents" dir="auto"><ul id="f01c27c3-204b-4188-84db-05803972a41b" class="bulleted-list"><li style="list-style-type:disc">Contains strictly high-level rules</li></ul></div><div style="display:contents" dir="auto"><ul id="f382735c-e510-40af-bfda-29049eaa5b39" class="bulleted-list"><li style="list-style-type:disc">Examples: &quot;Use TypeScript&quot;, &quot;No console.logs in production&quot;, &quot;Follow PPRE cycle&quot;</li></ul></div><div style="display:contents" dir="auto"><ul id="d291274c-2040-404e-b43c-869d55d235dc" class="bulleted-list"><li style="list-style-type:disc">Constraint: &lt; 200 lines</li></ul></div><div style="display:contents" dir="auto"><p id="6fded71b-f2b0-4291-8941-c75fb09d4416" class=""><strong>On-Demand Context</strong> (<code>docs/reference/</code>)</p></div><div style="display:contents" dir="auto"><ul id="6b9ebdfd-1ceb-4056-98e6-aaf13cc3982f" class="bulleted-list"><li style="list-style-type:disc">Loaded <strong>only</strong> when requested</li></ul></div><div style="display:contents" dir="auto"><ul id="17e20d3c-e33c-4ab4-89d5-9980c1c243ae" class="bulleted-list"><li style="list-style-type:disc">Mechanism: If working on Auth, load <code>docs/reference/auth_</code><code><a href="http://flow.md">flow.md</a></code></li></ul></div><div style="display:contents" dir="auto"><ul id="b6f09c72-8989-46dc-b109-e88a71202dc7" class="bulleted-list"><li style="list-style-type:disc">Do NOT load <code>ui_</code><code><a href="http://components.md">components.md</a></code> when working on Auth</li></ul></div><div style="display:contents" dir="auto"><ul id="bb5568c4-5361-4794-96dc-2ca10b6c9834" class="bulleted-list"><li style="list-style-type:disc">Prevents information overload</li></ul></div><div style="display:contents" dir="auto"><h2 id="1d0d09f8-6857-4826-a719-761fcbeb85fc" class="">Memory Systems</h2></div><div style="display:contents" dir="auto"><p id="fdb04a9f-6197-4d72-9c50-c1eba66f5c3c" class=""><strong>Short-Term Memory</strong> (<code>logs/progress.txt</code>)</p></div><div style="display:contents" dir="auto"><ul id="acfd7a03-6e54-4af2-b734-babc24ce40fc" class="bulleted-list"><li style="list-style-type:disc"><strong>Question it answers:</strong> &quot;What did I just do?&quot;</li></ul></div><div style="display:contents" dir="auto"><ul id="ba352209-f1a9-4498-8072-494cac3343c2" class="bulleted-list"><li style="list-style-type:disc"><strong>Purpose:</strong> Maintain continuity between PPRE cycles without bloating context</li></ul></div><div style="display:contents" dir="auto"><ul id="cf503c3f-3b24-4bbc-b847-1493ffb3af00" class="bulleted-list"><li style="list-style-type:disc"><strong>Lifespan:</strong> Current epic or sprint</li></ul></div><div style="display:contents" dir="auto"><ul id="0ee3e886-92f2-4e72-b3b1-45c9d917a324" class="bulleted-list"><li style="list-style-type:disc"><strong>Format:</strong> Timestamped log entries</li></ul></div><div style="display:contents" dir="auto"><p id="2e670e0e-1e8e-4dbc-af8e-7b1640709228" class=""><strong>Long-Term Memory</strong> (<code>src/**/</code><code><a href="http://agents.md">agents.md</a></code>)</p></div><div style="display:contents" dir="auto"><ul id="b8a2744c-aaed-463c-813a-cfaf8ce1f3df" class="bulleted-list"><li style="list-style-type:disc"><strong>Question it answers:</strong> &quot;What have I learned?&quot;</li></ul></div><div style="display:contents" dir="auto"><ul id="68852287-aa10-4d18-a958-7b8b5e55ed49" class="bulleted-list"><li style="list-style-type:disc"><strong>Purpose:</strong> Store project-specific nuances and prevent repeated errors</li></ul></div><div style="display:contents" dir="auto"><ul id="9c7d78ea-3fa4-44f7-9ada-6041dbe15b66" class="bulleted-list"><li style="list-style-type:disc"><strong>Lifespan:</strong> Permanent (until architecture change)</li></ul></div><div style="display:contents" dir="auto"><ul id="bddd20d5-2a99-497f-b88d-970daa825c0d" class="bulleted-list"><li style="list-style-type:disc"><strong>Examples:</strong><div style="display:contents" dir="auto"><ul id="560bda54-6d99-4a68-9afa-ef760b207869" class="bulleted-list"><li style="list-style-type:circle">&quot;This API endpoint requires a specific header format&quot;</li></ul></div><div style="display:contents" dir="auto"><ul id="dfdfed14-2d82-4555-a706-dcf2b7784c26" class="bulleted-list"><li style="list-style-type:circle">&quot;Button.tsx has a known z-index issue with Modal.tsx&quot;</li></ul></div><div style="display:contents" dir="auto"><ul id="1c80bf52-72df-4f98-a64b-230ec9499548" class="bulleted-list"><li style="list-style-type:circle">&quot;Use react-hook-form with zod validation for all forms&quot;</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><p id="444f9782-eab8-497b-9f8e-811949568fa5" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="f59b9842-2ce1-4154-8243-0853dfbde6bd"/></div><div style="display:contents" dir="auto"><p id="c47baa3d-681b-4bf4-bb3e-3afc17f65dc9" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="0e21994e-10d6-4771-99b8-5cddcbc962dd" class="">5. System Evolution (The &quot;Compounding&quot; Effect)</h1></div><div style="display:contents" dir="auto"><p id="24fe1506-da74-4095-be91-85e0cd6ef7ff" class="">When a bug or failure occurs during the PPRE Loop:</p></div><div style="display:contents" dir="auto"><h3 id="2fc68358-fa47-4bf6-a74c-7ed69b26d7b0" class="">Step 1: Fix the Code</h3></div><div style="display:contents" dir="auto"><ul id="7fd19b0e-03a4-4d10-bc90-aaf5182b7485" class="bulleted-list"><li style="list-style-type:disc">This is <strong>Linear work</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="a9d3512f-e574-4585-b8fc-86c5a32f2698" class="bulleted-list"><li style="list-style-type:disc">Solves the immediate problem</li></ul></div><div style="display:contents" dir="auto"><ul id="536d427b-acf2-44ea-ae53-798969f18c58" class="bulleted-list"><li style="list-style-type:disc">Does NOT prevent future occurrences</li></ul></div><div style="display:contents" dir="auto"><h3 id="fc218828-869c-4abb-88f0-0df16efee170" class="">Step 2: MANDATORY - Update the System</h3></div><div style="display:contents" dir="auto"><ul id="bfacb5d7-8cfb-4b06-b1eb-5769e01cf1b3" class="bulleted-list"><li style="list-style-type:disc">This is <strong>Exponential work</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="6bfcfbe1-008c-4935-898e-452484e19ca6" class="bulleted-list"><li style="list-style-type:disc">Ensures the system learns</li></ul></div><div style="display:contents" dir="auto"><p id="142e04b4-5341-4e7e-a78d-2db82f0cdb52" class=""><strong>Decision Tree:</strong></p></div><div style="display:contents" dir="auto"><p id="3b301881-b6c9-426c-96d5-89ce5cf610d6" class=""><strong>If it was a logic error:</strong></p></div><div style="display:contents" dir="auto"><ul id="655b8bf6-4e5d-49df-9276-3cdf0441c36d" class="bulleted-list"><li style="list-style-type:disc">→ Update <code>src/**/</code><code><a href="http://agents.md">agents.md</a></code> with a warning</li></ul></div><div style="display:contents" dir="auto"><ul id="d3dcb52d-8420-458b-ad4a-5242c701c47d" class="bulleted-list"><li style="list-style-type:disc">Example: &quot;Warning: The <code>/users</code> API returns strings for IDs, not numbers&quot;</li></ul></div><div style="display:contents" dir="auto"><p id="010e7912-f24c-41a3-baa4-caa97cfc494b" class=""><strong>If it was a style error:</strong></p></div><div style="display:contents" dir="auto"><ul id="93d8b163-3ee7-4cae-b579-f6e4d57f8bba" class="bulleted-list"><li style="list-style-type:disc">→ Update <code>.cursor/rules/global.mdc</code></li></ul></div><div style="display:contents" dir="auto"><ul id="abc41d2d-970f-46ea-a272-789c4be72927" class="bulleted-list"><li style="list-style-type:disc">Example: &quot;All API calls must use the centralized <code>apiClient</code> wrapper&quot;</li></ul></div><div style="display:contents" dir="auto"><p id="e0a1fc51-ddbe-4ab5-bd5c-51701a72fcdb" class=""><strong>If it was a process error:</strong></p></div><div style="display:contents" dir="auto"><ul id="a4252cb4-0d5a-4e70-bf43-f7934cd819f3" class="bulleted-list"><li style="list-style-type:disc">→ Update <code>docs/reference/</code><code><a href="http://workflow.md">workflow.md</a></code></li></ul></div><div style="display:contents" dir="auto"><ul id="d7cf5f5f-3131-42b9-8d7d-ab27d1506d42" class="bulleted-list"><li style="list-style-type:disc">Example: &quot;Always run type-check before committing&quot;</li></ul></div><div style="display:contents" dir="ltr"><figure class="block-color-red callout" style="white-space:pre-wrap;display:flex" id="1d2d5024-d4ef-44d5-8400-370bdeaf3701"><div style="font-size:1.5em"><span class="icon">⚠️</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="5599eea1-a86f-4ed3-b261-ffbf83b6b482" class=""><strong>Mandate:</strong> If you fix a bug manually and do not update a <code>.md</code> file, you have <strong>failed the protocol</strong>. The system has not learned.</p></div></div></figure></div><div style="display:contents" dir="auto"><h3 id="f387fe50-c582-4b4e-9c15-bac84a72e2e0" class="">Objective</h3></div><div style="display:contents" dir="auto"><p id="c7d56058-a882-44e6-95e9-a6ab0155043d" class="">The system must be <strong>smarter at the end of the day</strong> than it was at the start.</p></div><div style="display:contents" dir="auto"><p id="73d6c2c5-c314-4af8-88be-cf9a3f54889f" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="20ea7c29-02ad-4103-9e7c-7970b818e216"/></div><div style="display:contents" dir="auto"><p id="aa5c0f3f-ac5d-4c4b-8db9-2319d09bc426" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="8edb60d2-563c-4d2a-a2c7-b78a96666617" class="">6. Implementation Instructions</h1></div><div style="display:contents" dir="auto"><h3 id="fcd400f4-c507-4e9b-a1e4-22fabbdeb984" class="">For Your Repository</h3></div><div style="display:contents" dir="auto"><p id="ceb01d7a-4298-47f3-8e66-6227dc590b07" class=""><strong>1. Save this specification:</strong></p></div><div style="display:contents" dir="auto"><ul id="ca623bce-ad2e-471d-b026-0570708b80b1" class="bulleted-list"><li style="list-style-type:disc">Create a file: <code>docs/strata_</code><code><a href="http://framework.md">framework.md</a></code></li></ul></div><div style="display:contents" dir="auto"><ul id="3658cc9e-b1b1-46c0-80d4-c5048fb8ecc9" class="bulleted-list"><li style="list-style-type:disc">Copy the directory structure and workflow protocols</li></ul></div><div style="display:contents" dir="auto"><ul id="6c85006b-640c-45e3-8c24-fb18281fdac8" class="bulleted-list"><li style="list-style-type:disc">Customize for your tech stack</li></ul></div><div style="display:contents" dir="auto"><p id="9589f09a-ac98-4e73-8abd-a15bbe9aaa5f" class=""><strong>2. Reference in your Constitution:</strong></p></div><div style="display:contents" dir="auto"><ul id="c1f4d73b-259f-4af9-8546-2d37fef3aacf" class="bulleted-list"><li style="list-style-type:disc">In <code>.cursor/rules/global.mdc</code>, add at the top:<div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="72507a81-1d93-4d62-bf3d-1ea502729aeb" class="code code-wrap"><code class="language-undefined" style="white-space:pre-wrap;word-break:break-all">YOU MUST FOLLOW THE ARCHITECTURE AND WORKFLOWS DEFINED IN `docs/strata_framework.md`.</code></pre></div></li></ul></div><div style="display:contents" dir="auto"><p id="0356f9bd-d2a1-45d4-a94d-bc35c2bc5ca1" class=""><strong>3. Use as Context:</strong></p></div><div style="display:contents" dir="auto"><ul id="ee66c1d3-3967-47c7-99a6-cce7306c2ba1" class="bulleted-list"><li style="list-style-type:disc">When starting a new feature or PRD:<div style="display:contents" dir="auto"><ul id="45a882ee-980a-479e-94eb-1571af051644" class="bulleted-list"><li style="list-style-type:circle">Drag <code>docs/strata_</code><code><a href="http://framework.md">framework.md</a></code> into the chat</li></ul></div><div style="display:contents" dir="auto"><ul id="6d4dae49-3224-48de-a55f-70e76da14195" class="bulleted-list"><li style="list-style-type:circle">This tells the Agent &quot;who it is&quot; and how to work</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><p id="048f3401-baf2-41fd-b5fc-bc074ac6034d" class=""><strong>4. Automate with </strong><strong><a href="http://autopilot.sh">autopilot.sh</a></strong><strong>:</strong></p></div><div style="display:contents" dir="auto"><ul id="a4c36786-684a-4fe3-8ddb-00b2130169d6" class="bulleted-list"><li style="list-style-type:disc">Create <code>scripts/sdd/</code><code><a href="http://autopilot.sh">autopilot.sh</a></code> to enforce PPRE cycle</li></ul></div><div style="display:contents" dir="auto"><ul id="a9dbd006-68df-4e7b-8679-ca7c9bce87ea" class="bulleted-list"><li style="list-style-type:disc">Script should:<div style="display:contents" dir="auto"><ul id="4f17a9fd-71a3-40cb-bb59-941230a9da10" class="bulleted-list"><li style="list-style-type:circle">Read <code>stories.json</code></li></ul></div><div style="display:contents" dir="auto"><ul id="fd2efd2c-e72d-410d-b426-75de7112ea5f" class="bulleted-list"><li style="list-style-type:circle">Loop through stories with <code>passes: false</code></li></ul></div><div style="display:contents" dir="auto"><ul id="ffcbfe87-1db4-4a5c-aef4-7b7c978b3c3c" class="bulleted-list"><li style="list-style-type:circle">Invoke AI with PRIME → PLAN → RESET → EXECUTE</li></ul></div><div style="display:contents" dir="auto"><ul id="031a9ffa-fd45-476e-85de-9071706c731f" class="bulleted-list"><li style="list-style-type:circle">Verify and commit</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><p id="425dfd41-1326-4042-9020-5ce1480fc561" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="8679f118-a706-4d44-b9ec-ea192468e809"/></div><div style="display:contents" dir="auto"><p id="d5dc7905-1887-4a5a-9e7e-f7e6b76892bc" class="">
+</p></div><div style="display:contents" dir="ltr"><figure class="callout" style="white-space:pre-wrap;display:flex" id="5c35ed2e-a13e-4788-849c-87269328ecc0"><div style="font-size:1.5em"><span class="icon">🔗</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="c225d10f-62c4-4389-bba1-e448357119fd" class=""><strong>Related Resources:</strong></p></div><div style="display:contents" dir="auto"><ul id="ffdc6572-3f55-4026-9e17-5843b9c973e6" class="bulleted-list"><li style="list-style-type:disc"><a href="../../Strata%20Dev%20Framework%20The%20Compounding%20AI%20Playbook%202eaacc211ff180fa90d5d8d118437f9f.html"><img class="icon notion-static-icon" src="https://www.notion.so/icons/code_blue.svg"/>Strata Dev Framework: The Compounding AI Playbook</a> - Implementation guide</li></ul></div><div style="display:contents" dir="auto"><ul id="3c80a3c7-82a1-4784-b940-a1448e6ebd51" class="bulleted-list"><li style="list-style-type:disc">Framework Overview PDF - Philosophy deep dive</li></ul></div><div style="display:contents" dir="auto"><ul id="6d019400-2fc1-4df4-8727-a8397aaa0f77" class="bulleted-list"><li style="list-style-type:disc">The Complete Developer Handbook - Advanced patterns</li></ul></div><div style="display:contents" dir="auto"><ul id="58ec16a2-a5f9-45f7-a22e-3cb85cb757ba" class="bulleted-list"><li style="list-style-type:disc">PPRE Cycle PDF - Detailed workflow breakdown</li></ul></div></div></figure></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

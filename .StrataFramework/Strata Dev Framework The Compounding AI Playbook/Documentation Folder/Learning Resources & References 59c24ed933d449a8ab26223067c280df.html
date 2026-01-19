@@ -1,0 +1,730 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Learning Resources &amp; References</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="59c24ed9-33d4-49a8-ab26-223067c280df" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🔗</span></div><h1 class="page-title" dir="auto">Learning Resources &amp; References</h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="ltr"><figure class="block-color-blue callout" style="white-space:pre-wrap;display:flex" id="b17132f5-ac54-4505-80dc-10c38f7f7576"><div style="font-size:1.5em"><span class="icon">🎓</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="d8b2e6cc-3e9b-44a9-80ad-99ceb9ffea17" class="">This page contains <strong>external resources, tools, and references</strong> that inspired and support the Strata Dev Framework. These are curated links to repositories, video tutorials, documentation, and tools that will deepen your understanding of spec-driven development and agentic engineering.</p></div></div></figure></div><div style="display:contents" dir="auto"><p id="8775b540-8892-4484-93d7-4b8cf4787f32" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="a7ef3ed2-49cd-4956-9dd7-72aac43645cd"/></div><div style="display:contents" dir="auto"><p id="f7fad43f-3be0-4213-940d-aaba3970fd0f" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="fa9ea9ac-3d7d-45fb-99cd-776ed463edf9" class="">💻 Repositories &amp; Tools (Code &amp; Rules)</h1></div><div style="display:contents" dir="auto"><p id="d3cc6a0c-b9ed-497a-bd28-a12937631ae6" class="">These open-source repositories provide practical implementations, best practices, and reusable components for the framework.</p></div><div style="display:contents" dir="auto"><h3 id="eb86c953-1066-483a-9a2c-fd806902d7ad" class="">Core Tooling</h3></div><div style="display:contents" dir="auto"><p id="79b29be9-2801-4fb8-9825-c5d2de6766e7" class=""><strong>Ralph Asset Management</strong> (Official Repository)</p></div><div style="display:contents" dir="auto"><ul id="7b7c0d64-c6d1-4e8f-af82-f87f4b2187e7" class="bulleted-list"><li style="list-style-type:disc">URL: <a href="https://github.com/allegro/ralph">https://github.com/allegro/ralph</a></li></ul></div><div style="display:contents" dir="auto"><ul id="590fa570-37cc-469f-ab6f-11014e07a90d" class="bulleted-list"><li style="list-style-type:disc">Description: Asset management system that inspired the &quot;Ralph Protocol&quot; for atomic execution</li></ul></div><div style="display:contents" dir="auto"><ul id="9c64432e-4b5f-4a9d-8531-cadf9019e206" class="bulleted-list"><li style="list-style-type:disc">Use for: Understanding task decomposition and asset tracking patterns</li></ul></div><div style="display:contents" dir="auto"><p id="b94f3d53-5a0d-4676-b8f5-1256dd6412e9" class=""><strong>Cursor Best Practices</strong> (Rules &amp; Guidelines)</p></div><div style="display:contents" dir="auto"><ul id="4756a7d1-9290-4935-a40c-5de4b7738909" class="bulleted-list"><li style="list-style-type:disc">URL: <a href="https://github.com/madvaultllc/cursor-best-practices">https://github.com/madvaultllc/cursor-best-practices</a></li></ul></div><div style="display:contents" dir="auto"><ul id="0d06a2c5-eb72-48b2-9c47-cc3c620b3f6d" class="bulleted-list"><li style="list-style-type:disc">Description: Community best practices for using Cursor AI editor</li></ul></div><div style="display:contents" dir="auto"><ul id="0cd07567-ccae-4086-99ee-438d147c87c2" class="bulleted-list"><li style="list-style-type:disc">Use for: Learning effective prompting and context management strategies</li></ul></div><div style="display:contents" dir="auto"><p id="c24b3700-e399-4154-822b-abd2b6fa8b34" class=""><strong>OpenSpec</strong> (Spec-Driven Development)</p></div><div style="display:contents" dir="auto"><ul id="795d79c1-54c8-4497-800a-c30fe0c39612" class="bulleted-list"><li style="list-style-type:disc">URL: <a href="https://github.com/Fission-AI/OpenSpec">https://github.com/Fission-AI/OpenSpec</a></li></ul></div><div style="display:contents" dir="auto"><ul id="ecc9ba2f-c381-477d-8adf-3ccb1ab1ecda" class="bulleted-list"><li style="list-style-type:disc">Description: Toolkit for structured, spec-driven AI coding projects</li></ul></div><div style="display:contents" dir="auto"><ul id="51cdac8d-a5d3-49f0-aaa1-1f85861df5e2" class="bulleted-list"><li style="list-style-type:disc">Use for: Creating change proposals and living specifications</li></ul></div><div style="display:contents" dir="auto"><ul id="3041c689-1e4a-4106-bcbf-87f4cca15d5e" class="bulleted-list"><li style="list-style-type:disc"><strong>🌟 Must-watch tutorial:</strong> <a href="https://www.youtube.com/watch?v=gHkdrO6IExM">OpenSpec Full Tutorial</a></li></ul></div><div style="display:contents" dir="auto"><p id="1cadc478-765a-41d5-be50-4a31a36f9947" class=""><strong>Awesome Cursor Rules</strong> (Directory of Rules)</p></div><div style="display:contents" dir="auto"><ul id="2d1ae113-4e6d-4d73-ad23-e580e3207712" class="bulleted-list"><li style="list-style-type:disc">URL: <a href="https://github.com/PatrickJS/awesome-cursorrules">https://github.com/PatrickJS/awesome-cursorrules</a></li></ul></div><div style="display:contents" dir="auto"><ul id="aed20742-04f7-4507-af01-5799a66ac64e" class="bulleted-list"><li style="list-style-type:disc">Description: Curated collection of Cursor rules for different use cases</li></ul></div><div style="display:contents" dir="auto"><ul id="fd0e451f-ec36-44ae-a20b-6026486def86" class="bulleted-list"><li style="list-style-type:disc">Use for: Finding pre-built <code>.mdc</code> rules for your tech stack</li></ul></div><div style="display:contents" dir="auto"><p id="df45eb09-26d5-40f2-9b7f-d76b4842644e" class=""><strong>Cursor Directory</strong> (Community Rules)</p></div><div style="display:contents" dir="auto"><ul id="f820f55a-0562-4be7-934d-d8bc8d130dc7" class="bulleted-list"><li style="list-style-type:disc">URL: <a href="https://cursor.directory/">https://cursor.directory/</a></li></ul></div><div style="display:contents" dir="auto"><ul id="9bbb641a-814a-4625-86fc-21fb706472c6" class="bulleted-list"><li style="list-style-type:disc">Description: Community-contributed Cursor rules and configurations</li></ul></div><div style="display:contents" dir="auto"><ul id="5bed2e97-c734-47fc-86c7-0a5bb462db05" class="bulleted-list"><li style="list-style-type:disc">Use for: Browsing and sharing Cursor AI configurations</li></ul></div><div style="display:contents" dir="auto"><p id="d19bbd09-2d5f-47a8-8c6e-50f15b32a48b" class=""><strong>Spec-Kit</strong> (Toolkit for Spec-Driven Development)</p></div><div style="display:contents" dir="auto"><ul id="8c248502-f107-4a13-92fd-563f25c12749" class="bulleted-list"><li style="list-style-type:disc">URL: <a href="https://github.com/github/spec-kit">https://github.com/github/spec-kit</a></li></ul></div><div style="display:contents" dir="auto"><ul id="9bc06c2a-5db1-4a2f-9c0a-ecac297155fc" class="bulleted-list"><li style="list-style-type:disc">Description: GitHub&#x27;s toolkit for specification-driven development</li></ul></div><div style="display:contents" dir="auto"><ul id="dbb19cf1-62ca-4b73-aa64-128278715114" class="bulleted-list"><li style="list-style-type:disc">Use for: Understanding spec authoring and validation patterns</li></ul></div><div style="display:contents" dir="auto"><p id="74fa3c03-6755-48be-b453-4b3ca1aeeaca" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="cf7ec0e1-d477-4362-94ff-5abffe87f3a4"/></div><div style="display:contents" dir="auto"><p id="e8dcb5a2-5681-4074-813d-f1b7d10f1e6f" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="177e563e-dd64-43ce-8aea-abadb16ce67b" class="">🎬 Videos &amp; Educational Channels</h1></div><div style="display:contents" dir="auto"><p id="e97cf712-99e3-4056-9229-7a6949f50e50" class="">Video tutorials and channels that demonstrate the principles and practices of the framework.</p></div><div style="display:contents" dir="auto"><h3 id="504dadfc-ae0c-4383-bc3d-66e4844ded48" class="">Ralph Wiggum Agent (Workflow)</h3></div><div style="display:contents" dir="auto"><p id="9af9031f-8014-4643-b0c5-ad3e01887c1d" class=""><strong>Created by:</strong> Greg Isenberg &amp; Ryan Carson</p></div><div style="display:contents" dir="auto"><p id="699b513d-a3e7-4a7d-9d9f-9d41337f3ad7" class=""><strong>Resources:</strong></p></div><div style="display:contents" dir="auto"><ul id="51efc17f-b7d3-46b6-87a5-d4895687f5f4" class="bulleted-list"><li style="list-style-type:disc">Workflow Overview: <a href="https://startup-ideas-pod.link/Ralph">https://startup-ideas-pod.link/Ralph</a></li></ul></div><div style="display:contents" dir="auto"><ul id="4b780d75-a928-4363-8edf-6f2ff469eeb8" class="bulleted-list"><li style="list-style-type:disc">AMP Code Example: <a href="https://startup-ideas-pod.link/amp-code">https://startup-ideas-pod.link/amp-code</a></li></ul></div><div style="display:contents" dir="auto"><p id="b9b7c966-3068-4d3f-86ef-73a32f05f655" class=""><strong>Description:</strong> Demonstrates the &quot;Ralph Protocol&quot; for breaking down complex tasks into atomic, verifiable units</p></div><div style="display:contents" dir="auto"><p id="bb8b5d91-7185-4fe2-8597-af3c920e7a94" class=""><strong>Key Concepts:</strong> Atomic execution, binary acceptance criteria, agent self-verification</p></div><div style="display:contents" dir="auto"><p id="07cb8fee-020d-470c-924c-2cebe0b84177" class="">
+</p></div><div style="display:contents" dir="auto"><h3 id="51bb865c-9370-4eb8-aa6c-a6c53bae9990" class="">SnapperAI (PRD Templates)</h3></div><div style="display:contents" dir="auto"><p id="7286c82d-bc1b-4726-b2c1-987aaaa6bf5b" class=""><strong>Channel:</strong> <a href="https://youtube.com/@snapperAI">https://youtube.com/@snapperAI</a></p></div><div style="display:contents" dir="auto"><p id="ee4c21ea-4f78-4415-bf7e-ca5de8f0902a" class=""><strong>Templates:</strong> <a href="https://snapperai.io/templates">https://snapperai.io/templates</a></p></div><div style="display:contents" dir="auto"><p id="04c17f36-5319-4438-828e-8b3ce5927f76" class=""><strong>Description:</strong> Practical templates and examples for creating production-ready PRDs</p></div><div style="display:contents" dir="auto"><p id="24aadc3b-704e-4598-acb4-d7713961dd7a" class=""><strong>Best for:</strong> Learning how to write effective Product Requirements Documents</p></div><div style="display:contents" dir="auto"><p id="0ec4c2a9-95ee-442d-aec5-043ef8cb059f" class="">
+</p></div><div style="display:contents" dir="auto"><h3 id="0cba418a-c918-42a1-924b-10826f74c2fb" class="">JeredBlu (MCP &amp; PRD Creator)</h3></div><div style="display:contents" dir="auto"><p id="2ad6e9ae-dfb2-4b3c-96b7-df70ee096b15" class=""><strong>Channel:</strong> <a href="https://youtube.com/@JeredBlu">https://youtube.com/@JeredBlu</a></p></div><div style="display:contents" dir="auto"><p id="957f3582-25b1-4aec-8398-5e9fb1ebc37a" class=""><strong>Description:</strong> Tutorials on Model Context Protocol (MCP) and PRD creation workflows</p></div><div style="display:contents" dir="auto"><p id="cdfa196f-4486-4a3b-b2a6-dfb2f9dacc98" class=""><strong>Best for:</strong> Understanding context management and specification authoring</p></div><div style="display:contents" dir="auto"><p id="922830f2-1ef2-422c-a955-b5da0d1a23a1" class="">
+</p></div><div style="display:contents" dir="auto"><h3 id="2ee42347-41be-45b4-912c-e94d51b9d340" class="">OpenSpec Tutorial (Must Watch)</h3></div><div style="display:contents" dir="auto"><p id="84f49e11-96db-44b6-9698-4bf071696004" class=""><strong>Video:</strong> <a href="https://www.youtube.com/watch?v=gHkdrO6IExM">Full OpenSpec Tutorial</a></p></div><div style="display:contents" dir="auto"><p id="ff644bd5-3a3e-4d43-8021-00ebdedddf34" class=""><strong>Duration:</strong> ~12 minutes</p></div><div style="display:contents" dir="auto"><p id="cf88c656-3319-4215-8471-3a5c29d1f758" class=""><strong>Topics Covered:</strong></p></div><div style="display:contents" dir="auto"><ul id="3daf12f7-35d9-4420-be54-d92e1fa5cfa3" class="bulleted-list"><li style="list-style-type:disc">Initializing OpenSpec in your project</li></ul></div><div style="display:contents" dir="auto"><ul id="48359067-6e40-4131-bf6f-7430f2a09c82" class="bulleted-list"><li style="list-style-type:disc">Creating change proposals and living specs</li></ul></div><div style="display:contents" dir="auto"><ul id="3fa3310b-bbee-4ecf-993d-5dda49735cb6" class="bulleted-list"><li style="list-style-type:disc">Integrating AI coding assistants (KiloCode, Claude Code, Cursor)</li></ul></div><div style="display:contents" dir="auto"><ul id="890a5254-f582-48c9-bae4-bf341224b4f2" class="bulleted-list"><li style="list-style-type:disc">Moving from proposal to implementation</li></ul></div><div style="display:contents" dir="auto"><ul id="18f2fd3b-1c0f-4350-a67a-0c27dec6b91f" class="bulleted-list"><li style="list-style-type:disc">Keeping workflows clean, auditable, and scalable</li></ul></div><div style="display:contents" dir="auto"><p id="9272eec4-ac32-4a80-9f54-8ccc637635e7" class=""><strong>👉 Highly recommended:</strong> Watch this before implementing the framework in your repository</p></div><div style="display:contents" dir="auto"><p id="d3d0d448-da10-4285-904d-7310cc2ccb62" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="140ccf41-05d0-4751-b591-06dbbe6e5c02"/></div><div style="display:contents" dir="auto"><p id="9652a393-bc8d-4700-95a0-1b4a8127f7b0" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="0e523243-e018-4e98-a7bd-1ef1bcb82062" class="">📚 Documentation &amp; Additional Resources</h1></div><div style="display:contents" dir="auto"><p id="54816ee0-cd85-42d1-b0c0-e60fc331de27" class="">Official documentation and thought leadership on compounding AI and agentic development.</p></div><div style="display:contents" dir="auto"><h3 id="d67b5f88-ecd6-4bf3-8942-12a7919512ff" class="">Official Documentation</h3></div><div style="display:contents" dir="auto"><p id="47756224-8a44-4811-8307-09a9f3d6297e" class=""><strong>Ralph Documentation</strong> (Quickstart Guide)</p></div><div style="display:contents" dir="auto"><ul id="7e5db3e7-a2be-4035-aa5f-e78610c04c44" class="bulleted-list"><li style="list-style-type:disc">URL: <a href="https://ralph-ng.readthedocs.io/en/latest/user/quickstart/">https://ralph-ng.readthedocs.io/en/latest/user/quickstart/</a></li></ul></div><div style="display:contents" dir="auto"><ul id="fbeeeb2c-51f8-47cc-93fa-2d3ef9db39b4" class="bulleted-list"><li style="list-style-type:disc">Description: Official Ralph asset management quickstart</li></ul></div><div style="display:contents" dir="auto"><ul id="0867aa1e-dfb0-43f1-b491-d82cc0547fc2" class="bulleted-list"><li style="list-style-type:disc">Use for: Understanding the origin concepts behind atomic task execution</li></ul></div><div style="display:contents" dir="auto"><p id="15b60815-79bd-4bbe-b59f-83df3a6d3efa" class="">
+</p></div><div style="display:contents" dir="auto"><h3 id="539e9d14-2086-40aa-8448-aed2a8a23797" class="">Thought Leadership</h3></div><div style="display:contents" dir="auto"><p id="7cc3712b-5d37-4cd8-a560-07b9682f6ee1" class=""><strong>Every</strong> (Dan Shipper - Compounding AI)</p></div><div style="display:contents" dir="auto"><ul id="2839c3a0-6975-4376-b96b-23f760731de7" class="bulleted-list"><li style="list-style-type:disc">URL: <a href="https://every.to">https://every.to</a></li></ul></div><div style="display:contents" dir="auto"><ul id="4e8aa167-c1d1-4b76-b5ae-2ee9ac99d994" class="bulleted-list"><li style="list-style-type:disc">Description: Articles on AI-assisted productivity and compounding engineering</li></ul></div><div style="display:contents" dir="auto"><ul id="2029e5c6-a641-4147-8a5c-ad29bde3c15d" class="bulleted-list"><li style="list-style-type:disc"><strong>Key insight:</strong> How to build systems that get smarter over time</li></ul></div><div style="display:contents" dir="auto"><ul id="a684d3de-e32a-4424-8dd5-808c884a359b" class="bulleted-list"><li style="list-style-type:disc"><strong>Recommended reading:</strong> Search for &quot;Compounding AI&quot; and &quot;AI Memory Systems&quot;</li></ul></div><div style="display:contents" dir="auto"><p id="53dcddcb-8bef-441a-ac72-5fe43def3c4c" class="">
+</p></div><div style="display:contents" dir="auto"><h3 id="91884b62-8544-4a64-989b-d449e68f29ef" class="">AI Development Tools</h3></div><div style="display:contents" dir="auto"><p id="c3c9a5f9-8a63-4417-be0f-f700fb924127" class=""><strong>Amazon Q Developer</strong></p></div><div style="display:contents" dir="auto"><ul id="4d279099-d2c2-4d88-827e-a5c6905336da" class="bulleted-list"><li style="list-style-type:disc">URL: <a href="https://aws.amazon.com/q/developer">https://aws.amazon.com/q/developer</a></li></ul></div><div style="display:contents" dir="auto"><ul id="80335f2d-7b37-416f-9fd0-5aab1b07d9e3" class="bulleted-list"><li style="list-style-type:disc">Description: AWS&#x27;s AI-powered development assistant</li></ul></div><div style="display:contents" dir="auto"><ul id="e0e7170e-0dee-4082-83cb-1533e4a481e6" class="bulleted-list"><li style="list-style-type:disc">Use for: Enterprise-scale code generation and review</li></ul></div><div style="display:contents" dir="auto"><p id="e54c2435-b628-43ba-b4fa-b27af91506b2" class=""><strong>Qodo Merge</strong></p></div><div style="display:contents" dir="auto"><ul id="ee4d67d7-1d97-4f41-a4a5-50c702ae8216" class="bulleted-list"><li style="list-style-type:disc">URL: <a href="https://qodo.ai/merge">https://qodo.ai/merge</a></li></ul></div><div style="display:contents" dir="auto"><ul id="934c4abe-1fab-47ea-ab26-3d86e959424e" class="bulleted-list"><li style="list-style-type:disc">Description: AI-powered code review and merge assistance</li></ul></div><div style="display:contents" dir="auto"><ul id="82b096a6-a965-4905-b980-38d1a2fd210d" class="bulleted-list"><li style="list-style-type:disc">Use for: Automated PR reviews aligned with your framework rules</li></ul></div><div style="display:contents" dir="auto"><p id="65186307-4384-4757-9dbe-539b6b7f1adf" class=""><strong>Maximus Labs</strong> (GEO/AI SEO)</p></div><div style="display:contents" dir="auto"><ul id="bd44d926-8c2d-4716-bdcd-8f3fdd5115dd" class="bulleted-list"><li style="list-style-type:disc">URL: <a href="https://maximuslabs.ai">https://maximuslabs.ai</a></li></ul></div><div style="display:contents" dir="auto"><ul id="4038da03-a0f2-4cae-a58c-c018454abd9e" class="bulleted-list"><li style="list-style-type:disc">Description: AI-powered SEO and content optimization</li></ul></div><div style="display:contents" dir="auto"><ul id="cc9461a9-3634-4f8d-bfbe-95ad3616757c" class="bulleted-list"><li style="list-style-type:disc">Use for: Documentation optimization and discoverability</li></ul></div><div style="display:contents" dir="auto"><p id="79566c8d-d188-497c-8cc1-4dfd27dec37e" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="a4d8db5d-3817-4151-90d4-804341f7585c"/></div><div style="display:contents" dir="auto"><p id="56ddaa4f-20cb-4ef0-b4b5-63627ca60ad5" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="ddbe6f07-9ebe-4595-b377-f32276393376" class="">📌 How to Use These Resources</h1></div><div style="display:contents" dir="auto"><h3 id="e73162ae-54be-40d5-9a5b-970573990456" class="">👶 For Beginners</h3></div><div style="display:contents" dir="auto"><p id="16ebebef-e575-46cb-912d-0efbaace4fc8" class=""><strong>Recommended Learning Path:</strong></p></div><div style="display:contents" dir="auto"><ol type="1" id="fd4ff86f-3b52-4391-9d1c-d4129edc6d32" class="numbered-list" start="1"><li>🎬 <strong>Watch:</strong> <a href="https://www.youtube.com/watch?v=gHkdrO6IExM">OpenSpec Tutorial</a> (12 min)</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="4a6490e0-3176-43b0-a0f4-fefa8d24f934" class="numbered-list" start="2"><li>💻 <strong>Explore:</strong> <a href="https://github.com/madvaultllc/cursor-best-practices">Cursor Best Practices</a> repo</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="13c931bc-de8a-450d-8d47-00d837af4f6b" class="numbered-list" start="3"><li>📖 <strong>Read:</strong> Articles on <a href="http://Every.to">Every.to</a> about Compounding AI</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="14c56272-df0a-4c66-995d-c174c709b4f2" class="numbered-list" start="4"><li>🛠️ <strong>Implement:</strong> Clone <a href="https://github.com/Fission-AI/OpenSpec">OpenSpec</a> and try it in a test project</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="d6906eb6-9e0c-4c3d-b685-579ad2e1656d" class="numbered-list" start="5"><li>📄 <strong>Reference:</strong> Use <a href="https://snapperai.io/templates">SnapperAI templates</a> for your first PRD</li></ol></div><div style="display:contents" dir="auto"><h3 id="dc58446f-18b4-43f0-b681-8b6b073947d9" class="">🚀 For Practitioners</h3></div><div style="display:contents" dir="auto"><p id="8d7d9105-0ba8-4cb8-a6c1-ffa1d15f7b0f" class=""><strong>Deep Dives:</strong></p></div><div style="display:contents" dir="auto"><ul id="074320a8-f4f8-4a9b-b038-a55f8ca85aaa" class="bulleted-list"><li style="list-style-type:disc">🧑‍💻 <strong>Study the code:</strong> Fork <a href="https://github.com/allegro/ralph">Ralph</a> and analyze its task decomposition patterns</li></ul></div><div style="display:contents" dir="auto"><ul id="09daaa3b-b824-4b43-92d4-52c017fbfe7b" class="bulleted-list"><li style="list-style-type:disc">🔧 <strong>Build tooling:</strong> Use <a href="https://github.com/github/spec-kit">Spec-Kit</a> to create custom spec validators</li></ul></div><div style="display:contents" dir="auto"><ul id="4977158d-7a4d-470f-a6e5-8fed446f12e3" class="bulleted-list"><li style="list-style-type:disc">🤝 <strong>Collaborate:</strong> Share your <code>.mdc</code> rules on <a href="https://cursor.directory/">Cursor Directory</a></li></ul></div><div style="display:contents" dir="auto"><ul id="c8c1ad3f-ace4-4abe-a1ec-274558e5a483" class="bulleted-list"><li style="list-style-type:disc">📊 <strong>Optimize:</strong> Integrate <a href="https://qodo.ai/merge">Qodo Merge</a> into your CI/CD for automated reviews</li></ul></div><div style="display:contents" dir="auto"><h3 id="fa76cbe3-07f8-45f6-adfc-9d84bc8dc579" class="">🏛️ For Enterprise Teams</h3></div><div style="display:contents" dir="auto"><p id="0091ef4a-3788-49f9-94c4-7b78cb9fad2d" class=""><strong>Integration Resources:</strong></p></div><div style="display:contents" dir="auto"><ul id="5e2d72b2-8956-4cb5-8ac5-f1602bca1605" class="bulleted-list"><li style="list-style-type:disc">🔐 <strong>Security:</strong> Evaluate <a href="https://aws.amazon.com/q/developer">Amazon Q Developer</a> for enterprise compliance</li></ul></div><div style="display:contents" dir="auto"><ul id="93cdcbfb-c1a0-4884-aa69-e826cfb91ff1" class="bulleted-list"><li style="list-style-type:disc">📈 <strong>Analytics:</strong> Use <a href="https://maximuslabs.ai">Maximus Labs</a> for documentation discoverability</li></ul></div><div style="display:contents" dir="auto"><ul id="de0d8c8b-ea9a-4e39-a7d5-837819095480" class="bulleted-list"><li style="list-style-type:disc">📚 <strong>Training:</strong> Distribute <a href="https://github.com/PatrickJS/awesome-cursorrules">Awesome Cursor Rules</a> to your team</li></ul></div><div style="display:contents" dir="auto"><ul id="5ed7a43b-8862-4198-bcac-f556db4711a1" class="bulleted-list"><li style="list-style-type:disc">🛡️ <strong>Guardrails:</strong> Implement rules from <a href="https://github.com/madvaultllc/cursor-best-practices">Cursor Best Practices</a></li></ul></div><div style="display:contents" dir="auto"><p id="b5cd5940-5515-48fb-8820-279746211d55" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="17d280f1-ffbd-4dab-9bb8-304d72687d3f"/></div><div style="display:contents" dir="auto"><p id="23dadeac-3eec-46e6-be00-246e0c90bc27" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="7706fb13-cc7c-4eea-b13e-5acea202c89c" class="">🔄 Keeping Up-to-Date</h1></div><div style="display:contents" dir="ltr"><figure class="block-color-yellow callout" style="white-space:pre-wrap;display:flex" id="8247f621-f880-43f3-b7f9-9c352f377c5d"><div style="font-size:1.5em"><span class="icon">⭐</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="25ce2ea8-97a1-4be1-92de-b0c7d2df8daa" class=""><strong>Pro Tip:</strong> Star these repositories on GitHub to receive updates and new releases. The ecosystem is evolving rapidly.</p></div></div></figure></div><div style="display:contents" dir="auto"><h3 id="25e8db07-b99a-4aec-bf47-9303098f7090" class="">Recommended GitHub Stars</h3></div><div style="display:contents" dir="auto"><ul id="8ac17b5a-6c51-42df-b4b6-fe7e614dc47e" class="bulleted-list"><li style="list-style-type:disc"><a href="https://github.com/Fission-AI/OpenSpec">OpenSpec</a> - Active development</li></ul></div><div style="display:contents" dir="auto"><ul id="f4a1fdb6-1b2f-4900-8523-db63dadf0944" class="bulleted-list"><li style="list-style-type:disc"><a href="https://github.com/PatrickJS/awesome-cursorrules">Awesome Cursor Rules</a> - Regular community contributions</li></ul></div><div style="display:contents" dir="auto"><ul id="259941e9-5058-43da-af51-f1372dd56ee1" class="bulleted-list"><li style="list-style-type:disc"><a href="https://github.com/madvaultllc/cursor-best-practices">Cursor Best Practices</a> - Continuously updated</li></ul></div><div style="display:contents" dir="auto"><h3 id="1b644d40-493d-49f5-93f7-b26ff3b9ed8e" class="">Recommended YouTube Subscriptions</h3></div><div style="display:contents" dir="auto"><ul id="d4d1a98b-e31e-45bb-8a50-89034f6d3018" class="bulleted-list"><li style="list-style-type:disc"><a href="https://youtube.com/@snapperAI">@snapperAI</a> - PRD templates and workflows</li></ul></div><div style="display:contents" dir="auto"><ul id="b05981d9-08cb-4b44-bf39-6125b6252097" class="bulleted-list"><li style="list-style-type:disc"><a href="https://youtube.com/@JeredBlu">@JeredBlu</a> - MCP and context management</li></ul></div><div style="display:contents" dir="auto"><p id="05dd111e-1006-46c4-a33e-e6f273b6d907" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="5d368d42-1fde-4bae-bcd2-7133c6be0dc2"/></div><div style="display:contents" dir="auto"><p id="cdf9bd90-337d-4a9f-9b01-e8133a943b68" class="">
+</p></div><div style="display:contents" dir="ltr"><figure class="callout" style="white-space:pre-wrap;display:flex" id="1bca26b4-b63f-42bc-b775-b53f457e1094"><div style="font-size:1.5em"><span class="icon">🔗</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="dac7be1a-4978-4f2b-bd45-b2d9352c0c60" class=""><strong>Related Framework Resources:</strong></p></div><div style="display:contents" dir="auto"><ul id="7d61915c-8d9e-479b-b06a-e1c2d892a9fd" class="bulleted-list"><li style="list-style-type:disc"><a href="../../Strata%20Dev%20Framework%20The%20Compounding%20AI%20Playbook%202eaacc211ff180fa90d5d8d118437f9f.html"><img class="icon notion-static-icon" src="https://www.notion.so/icons/code_blue.svg"/>Strata Dev Framework: The Compounding AI Playbook</a> - Implementation guide</li></ul></div><div style="display:contents" dir="auto"><ul id="b20bdc86-7dc8-4beb-ac47-2ead65b3a531" class="bulleted-list"><li style="list-style-type:disc"><a href="Core%20Technical%20Specification%2061087d4cd5cd48d2a9a58048d24689d7.html"><span class="icon">⚙️</span>Core Technical Specification</a> - Directory structure and workflows</li></ul></div><div style="display:contents" dir="auto"><ul id="e66ae273-f825-40d0-957c-53ecd2ecc9cd" class="bulleted-list"><li style="list-style-type:disc">Framework Overview PDF - Philosophy deep dive</li></ul></div><div style="display:contents" dir="auto"><ul id="545c20f7-f92e-495b-9544-0d297531f72d" class="bulleted-list"><li style="list-style-type:disc">The Complete Developer Handbook - Advanced patterns</li></ul></div></div></figure></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

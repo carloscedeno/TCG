@@ -1,0 +1,810 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Strata Dev Framework: The Compounding AI Playbook</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="2eaacc21-1ff1-80fa-90d5-d8d118437f9f" class="page sans"><header><div class="page-header-icon undefined"><img class="icon notion-static-icon" src="https://www.notion.so/icons/code_blue.svg"/></div><h1 class="page-title" dir="auto">Strata Dev Framework: The Compounding AI Playbook</h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="auto"><p id="c669679b-f298-4ca8-8d9a-4b15cd811b99" class=""><strong>Status:</strong> 🟢 Active | <strong>Version:</strong> 2.0 | <strong>Guardian:</strong> Engineering Lead</p></div><div style="display:contents" dir="ltr"><figure class="callout" style="white-space:pre-wrap;display:flex" id="fca6a16e-e4c2-43d4-9598-28403bbec036"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="566f826b-5cea-4b14-9409-65a9dff5ee39" class=""><strong>Mission:</strong> <em>We do not just ship code; we architect the system that ships the code.</em></p></div></div></figure></div><div style="display:contents" dir="auto"><p id="0c4b8174-3a80-4d66-a123-f694bba37dd2" class="">
+</p></div><div style="display:contents" dir="auto"><h2 id="603b8724-9670-44b3-a98c-00296b81a48a" class="">👋 Introduction</h2></div><div style="display:contents" dir="auto"><p id="a820cf7f-2575-44a9-9b36-4b00b197c7f2" class="">Welcome to the <strong>Strata Dev Framework</strong>, a revolutionary approach to AI-assisted software development that transforms linear &quot;vibe coding&quot; into a <strong>compounding engineering system</strong>.</p></div><div style="display:contents" dir="auto"><p id="42ef0d08-5152-43c5-ab88-0824ff7538e5" class="">This framework is built on a simple but powerful insight: <em>traditional AI coding relies on chat history (RAM), which decays over time. Instead, we move intelligence to the file system (Disk), creating a system that gets smarter with every bug fixed.</em></p></div><div style="display:contents" dir="auto"><h3 id="2395bb6a-c353-46d0-ad5e-690518481bab" class="">🎯 What You&#x27;ll Find Here</h3></div><div style="display:contents" dir="auto"><p id="e4c13cfe-2eae-482f-90a8-ce2742049f93" class="">This page is your <strong>implementation guide</strong> for applying the Strata Dev Framework to your daily development workflow. It covers:</p></div><div style="display:contents" dir="auto"><ul id="ee0d347f-511c-4e6f-9942-f35392866dbd" class="bulleted-list"><li style="list-style-type:disc"><strong>The Philosophy:</strong> Why traditional AI coding fails and how Strata fixes it</li></ul></div><div style="display:contents" dir="auto"><ul id="3bf275d1-31a5-4458-9115-abf4c1d10693" class="bulleted-list"><li style="list-style-type:disc"><strong>The Architecture:</strong> How to structure your codebase as a &quot;Disk-Based Brain&quot;</li></ul></div><div style="display:contents" dir="auto"><ul id="57dd5680-f85b-4b24-b7ed-072ee26e6e45" class="bulleted-list"><li style="list-style-type:disc"><strong>The Process:</strong> The PPRE Cycle for deterministic, autonomous execution</li></ul></div><div style="display:contents" dir="auto"><ul id="3dacf9be-63a0-4b7f-8bd1-ec0de6dcf132" class="bulleted-list"><li style="list-style-type:disc"><strong>The Standards:</strong> Documentation rules that create compound learning</li></ul></div><div style="display:contents" dir="auto"><ul id="6906a797-2596-47ee-a8a6-3dd32b48430a" class="bulleted-list"><li style="list-style-type:disc"><strong>The Templates:</strong> Ready-to-use artifacts to get started immediately</li></ul></div><div style="display:contents" dir="auto"><h3 id="582730f8-504b-4417-bb91-ff5be0dd07b3" class="">📚 Companion Resources</h3></div><div style="display:contents" dir="auto"><p id="5b96819d-cc53-4b3d-933e-1172fca55047" class="">For deep dives into the theory, architecture, and philosophy behind this framework, visit the <a href="Strata%20Dev%20Framework%20The%20Compounding%20AI%20Playbook/Documentation%20Folder%202eaacc211ff1801b82b1f4c2f2d9b8ff.html"><span class="icon">📁</span>Documentation Folder</a>, which contains:</p></div><div style="display:contents" dir="auto"><ul id="de3306cd-2194-4990-b9ff-8124c1d27fdd" class="bulleted-list"><li style="list-style-type:disc"><strong>Framework Overview</strong> (start here for first-time readers)</li></ul></div><div style="display:contents" dir="auto"><ul id="b0004af8-6b4a-4def-9288-ad6a2a8233ac" class="bulleted-list"><li style="list-style-type:disc"><strong>The Complete Developer Handbook</strong> (comprehensive technical reference)</li></ul></div><div style="display:contents" dir="auto"><ul id="fe6e23e5-685e-45cb-9b66-c4da95d8fec1" class="bulleted-list"><li style="list-style-type:disc"><strong><a href="Strata%20Dev%20Framework%20The%20Compounding%20AI%20Playbook/Documentation%20Folder/Core%20Technical%20Specification%2061087d4cd5cd48d2a9a58048d24689d7.html"><span class="icon">⚙️</span>Core Technical Specification</a></strong> (directory structure, workflows, implementation guide)</li></ul></div><div style="display:contents" dir="auto"><ul id="ce8781d8-78f7-4282-ac5d-1d888266766c" class="bulleted-list"><li style="list-style-type:disc"><strong>PPRE Cycle Guide</strong> (detailed process documentation)</li></ul></div><div style="display:contents" dir="auto"><ul id="f31936d1-f6e0-45cb-8bb6-f778a8942b2a" class="bulleted-list"><li style="list-style-type:disc"><strong>Architecture Videos</strong> (visual explanations)</li></ul></div><div style="display:contents" dir="auto"><ul id="ff2c564b-d60c-48e8-8497-22a7b4743a86" class="bulleted-list"><li style="list-style-type:disc"><strong>Podcasts</strong> (context on &quot;The Hidden Cost of Human Middleware&quot;)</li></ul></div><div style="display:contents" dir="auto"><ul id="2a9b109d-db42-4679-8a3b-d239cafdf136" class="bulleted-list"><li style="list-style-type:disc"><strong><a href="Strata%20Dev%20Framework%20The%20Compounding%20AI%20Playbook/Documentation%20Folder/Learning%20Resources%20&amp;%20References%2059c24ed933d449a8ab26223067c280df.html"><span class="icon">🔗</span>Learning Resources &amp; References</a></strong> (external tools, GitHub repos, video tutorials)</li></ul></div><div style="display:contents" dir="ltr"><figure class="block-color-gray callout" style="white-space:pre-wrap;display:flex" id="82518fdd-ea1c-4c06-80d8-60fff483d774"><div style="font-size:1.5em"><span class="icon">📖</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="97e9f901-dcd6-4df8-b0f6-8c01dce834d3" class=""><strong>New to the framework?</strong> Start with the <a href="Strata%20Dev%20Framework%20The%20Compounding%20AI%20Playbook/Documentation%20Folder%202eaacc211ff1801b82b1f4c2f2d9b8ff.html"><span class="icon">📁</span>Documentation Folder</a>, read the Framework Overview PDF, then return here for implementation guidance.</p></div></div></figure></div><div style="display:contents" dir="auto"><p id="9838eab2-7cb6-4fda-96a9-60b8018b9acd" class="">
+</p></div><div style="display:contents" dir="auto"><h3 id="6b868b81-e4a9-42c0-b783-d3a618b364d8" class="">📑 Table of Contents</h3></div><div style="display:contents" dir="auto"><ol type="1" id="c071b2b1-50af-44e5-b79e-2e9f7f64f1bb" class="numbered-list" start="1"><li>The Manifesto: From Linear to Exponential</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="3bb7eff3-00da-44cd-874c-e10a10785082" class="numbered-list" start="2"><li>System Architecture: The Disk-Based Brain</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="c7f8eb83-58f3-40b4-ae73-da7bf580fe8a" class="numbered-list" start="3"><li>The Engine: PPRE &amp; The Kill Switch</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="137276a0-99d2-4c88-a4d6-dfee7b39a5e8" class="numbered-list" start="4"><li>The Ralph Protocol: Atomic Execution</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="3d2c9060-5265-4cd8-9aea-2526e9de29aa" class="numbered-list" start="5"><li>System Evolution: The Golden Rule</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="1891e22b-fc1f-4ab3-8a25-d4308bb03c2f" class="numbered-list" start="6"><li>Templates &amp; Artifacts</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="4c13c42c-40c6-4186-8ef5-077dc7b5b4de" class="numbered-list" start="7"><li>Documentation Standards</li></ol></div><div style="display:contents" dir="auto"><p id="844a9acb-7194-48ef-89b1-2fff14e2d074" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="4c9100ec-7018-42fe-93b9-d8ad41677b8c"/></div><div style="display:contents" dir="auto"><p id="9d009182-0e6d-4cfd-8934-7d352b7f52f1" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="cd3ac24a-d5af-480f-bad8-5ca582d61b56" class="">🧬 The Manifesto: From Linear to Exponential</h1></div><div style="display:contents" dir="ltr"><figure class="block-color-gray callout" style="white-space:pre-wrap;display:flex" id="f3e7c104-2081-4e86-bb8d-e6d587fe342c"><div style="font-size:1.5em"><span class="icon">📄</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="007de449-473c-4d8f-bba0-cd208edf8d86" class=""><strong>Deep dive:</strong> For a comprehensive exploration of this philosophy, see the Framework Overview in <a href="Strata%20Dev%20Framework%20The%20Compounding%20AI%20Playbook/Documentation%20Folder%202eaacc211ff1801b82b1f4c2f2d9b8ff.html"><span class="icon">📁</span>Documentation Folder</a>.</p></div></div></figure></div><div style="display:contents" dir="auto"><h3 id="9104e362-76db-4f1a-ac7d-601a2ad3c2e8" class="">The Problem: &quot;Vibe Coding&quot;</h3></div><div style="display:contents" dir="auto"><p id="10b8a2ed-6a32-4ab7-beea-6dee6e690dff" class="">Traditional AI coding is <strong>Linear</strong>. You chat, you get code, you paste it.</p></div><div style="display:contents" dir="auto"><ul id="2708435b-1039-4d7e-ab7d-1192d34e37c7" class="bulleted-list"><li style="list-style-type:disc">❌ <strong>Context Decay:</strong> As the chat gets longer, the AI&#x27;s IQ drops.</li></ul></div><div style="display:contents" dir="auto"><ul id="97451492-b60f-4c99-a71e-464279d6a67b" class="bulleted-list"><li style="list-style-type:disc">❌ <strong>Zero Memory:</strong> Fixing a bug in the chat fixes it <em>once</em>. It does not teach the system for the next time.</li></ul></div><div style="display:contents" dir="auto"><ul id="adb24c0c-76f0-4e6b-b43e-e42ffa859295" class="bulleted-list"><li style="list-style-type:disc">❌ <strong>Fragility:</strong> Without specs, the code drifts from the requirements instantly.</li></ul></div><div style="display:contents" dir="auto"><h3 id="ed468fdd-3f59-47ca-96c7-74c9bc7949ad" class="">The Solution: Compounding Engineering</h3></div><div style="display:contents" dir="auto"><p id="7dd4a899-a469-4683-9312-39d5c9f82f3a" class="">Under <strong>Strata Dev Framework The Compounding AI Playbook</strong>, every bug fixed must leave the system smarter than it was yesterday. We achieve this by moving intelligence from <strong>RAM (Chat)</strong> to <strong>Disk (Files)</strong>.</p></div><div style="display:contents" dir="ltr"><figure class="callout" style="white-space:pre-wrap;display:flex" id="c1cb446e-a845-44f2-a550-fce59187c04f"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="735d7373-b09f-476e-9b05-aa77de0242b3" class=""><strong>The Core Equation:</strong></p></div><div style="display:contents" dir="auto"><p id="02e19d99-669d-4e10-9cb8-3ef73d213698" class=""><code>Bug Found</code> + <code>Update </code><a href="http://agents.md">`agents.md`</a> = <code>Asset Appreciation</code></p></div></div></figure></div><div style="display:contents" dir="auto"><p id="e1921a98-7209-444c-af45-c02ad16d9ff5" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="495f1703-445b-4f8f-8d35-859985708c31"/></div><div style="display:contents" dir="auto"><p id="edc5f551-5fa9-4dab-9848-ae85e4d90426" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="f2de7bbd-983c-4028-8994-3cdbea8d1c89" class="">🧠 System Architecture: The Disk-Based Brain</h1></div><div style="display:contents" dir="ltr"><figure class="block-color-gray callout" style="white-space:pre-wrap;display:flex" id="473d773c-6bb0-44fd-9683-41cd73c01900"><div style="font-size:1.5em"><span class="icon">🎬</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="e26725a0-41da-4dfc-9564-c58b62f2ead6" class=""><strong>Visual learners:</strong> Watch the Architecture Videos in <a href="Strata%20Dev%20Framework%20The%20Compounding%20AI%20Playbook/Documentation%20Folder%202eaacc211ff1801b82b1f4c2f2d9b8ff.html"><span class="icon">📁</span>Documentation Folder</a> for detailed walkthroughs of this system.</p></div></div></figure></div><div style="display:contents" dir="ltr"><figure class="block-color-gray callout" style="white-space:pre-wrap;display:flex" id="147f1be8-a387-4110-adac-89d6cbfd6b0d"><div style="font-size:1.5em"><span class="icon">⚙️</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="ed59c4c7-8a16-47cc-9aaf-ae266846bd4f" class=""><strong>Implementation reference:</strong> See <a href="Strata%20Dev%20Framework%20The%20Compounding%20AI%20Playbook/Documentation%20Folder/Core%20Technical%20Specification%2061087d4cd5cd48d2a9a58048d24689d7.html"><span class="icon">⚙️</span>Core Technical Specification</a> for the complete directory structure and component roles.</p></div></div></figure></div><div style="display:contents" dir="auto"><p id="8a8f8f03-860e-4126-87f3-fd2c85a52f35" class="">We treat the file system as the brain of the AI. Do not rely on the chat history.</p></div><div style="display:contents" dir="auto"><h3 id="348148cd-dbb6-43ff-b865-e4fe47e534cd" class="">📂 Directory Topology</h3></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="d611362a-525c-46e2-b4d9-5d31e91d3504" class="code code-wrap"><code class="language-Mermaid" style="white-space:pre-wrap;word-break:break-all">graph TD
+    Root[root/] --&gt; Cursor[.cursor/rules/]
+    Root --&gt; Docs[docs/]
+    Root --&gt; Logs[logs/]
+    Root --&gt; Src[src/]
+
+    Cursor --&gt; Global[global.mdc]
+
+    Docs --&gt; Specs[specs/]
+    Docs --&gt; Archive[done_specs/]
+    Docs --&gt; Ref[reference/]
+
+    Specs --&gt; PRD[</code></pre></div><div style="display:contents" dir="auto"><h3 id="3c8b4d64-17d7-4989-8590-1669169c0f60" class="">🧩 Component Breakdown</h3></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.125em;line-height:1.3;margin:0">🏛️ 1. The Constitution (<code>.cursor/rules/global.mdc</code>)</summary></details></div><div style="display:contents" dir="auto"><ul id="f87dc368-f585-4323-9891-bf3b70c317d0" class="bulleted-list"><li style="list-style-type:disc"><strong>Purpose:</strong> The immutable laws. Tech stack, forbidden patterns, and safety rails.</li></ul></div><div style="display:contents" dir="auto"><ul id="09ff9a7e-da9e-40fe-aaca-5da76a5e106e" class="bulleted-list"><li style="list-style-type:disc"><strong>Constraint:</strong> Must be <strong>&lt; 200 lines</strong>. If it&#x27;s too long, the AI ignores it.</li></ul></div><div style="display:contents" dir="auto"><ul id="addf902b-8aa6-422e-8d99-63d4dc635e7b" class="bulleted-list"><li style="list-style-type:disc"><strong>Content:</strong> &quot;Always use TypeScript&quot;, &quot;No console.logs&quot;, &quot;Follow PPRE cycle&quot;.</li></ul></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.125em;line-height:1.3;margin:0">📚 2. Modular Context (<code>docs/reference/*.md</code>)</summary></details></div><div style="display:contents" dir="auto"><ul id="c58cd6ec-ef7b-419c-bbfd-c1a047fd9a0d" class="bulleted-list"><li style="list-style-type:disc"><strong>Purpose:</strong> <strong>Context Sharding</strong>. We do not load all documentation at once.</li></ul></div><div style="display:contents" dir="auto"><ul id="8310355b-de61-4b91-a012-ace369c32579" class="bulleted-list"><li style="list-style-type:disc"><strong>Mechanism:</strong> If the agent is working on Auth, it loads <a href="http://auth.md">`auth.md`</a>. It does <em>not</em> load <a href="http://billing.md">`billing.md`</a>. This prevents <strong>Context Poisoning</strong>.</li></ul></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.125em;line-height:1.3;margin:0">🦠 3. Fractal Memory (<code>src/**/</code><code><a href="http://agents.md">agents.md</a></code>)</summary></details></div><div style="display:contents" dir="auto"><ul id="5f143080-d4ce-4671-9891-de46f0577a38" class="bulleted-list"><li style="list-style-type:disc"><strong>Purpose:</strong> <strong>Tacit Knowledge</strong>. This is where the system &quot;learns&quot;.</li></ul></div><div style="display:contents" dir="auto"><ul id="81e28538-ad58-44fc-9699-c56a9306b590" class="bulleted-list"><li style="list-style-type:disc"><strong>Location:</strong> Lives inside every folder (e.g., <code>src/components/</code><a href="http://agents.md">`agents.md`</a>).</li></ul></div><div style="display:contents" dir="auto"><ul id="3a3473ce-6987-447b-9cc0-85c8d9b6c25a" class="bulleted-list"><li style="list-style-type:disc"><strong>Content:</strong> &quot;In this folder, we use named exports only.&quot; &quot;Button.tsx has a known issue with z-index.&quot;</li></ul></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.125em;line-height:1.3;margin:0">📜 4. The Input Contract (<code>docs/specs/stories.json</code>)</summary></details></div><div style="display:contents" dir="auto"><ul id="83fadf16-3653-4ffa-a1e4-fca086ba9237" class="bulleted-list"><li style="list-style-type:disc"><strong>Purpose:</strong> The executable instruction.</li></ul></div><div style="display:contents" dir="auto"><ul id="c5220f75-ca64-4363-9c42-039235144a51" class="bulleted-list"><li style="list-style-type:disc"><strong>Format:</strong> JSON array of atomic tasks with <strong>Binary Acceptance Criteria</strong> (Pass/Fail).</li></ul></div><div style="display:contents" dir="auto"><p id="e7f0abfb-eecf-4c0d-95fb-2734e97be783" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="8a533c07-f224-4a57-b9fc-a1ec30ce940d"/></div><div style="display:contents" dir="auto"><p id="5bd0d48b-f4a7-4746-a2f5-d0f5f5bba726" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="382376a4-9803-4b79-bc4b-629f1cbe3cfd" class="">⚙️ The Engine: PPRE &amp; The Kill Switch</h1></div><div style="display:contents" dir="ltr"><figure class="block-color-gray callout" style="white-space:pre-wrap;display:flex" id="d4d1497c-7ecc-4eb8-a3f6-df38b3a46f22"><div style="font-size:1.5em"><span class="icon">📄</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="6c85db9c-bc62-48ca-8b48-9da54aea2efc" class=""><strong>Process details:</strong> For a complete breakdown of each phase, see The_PPRE_Cycle.pdf in <a href="Strata%20Dev%20Framework%20The%20Compounding%20AI%20Playbook/Documentation%20Folder%202eaacc211ff1801b82b1f4c2f2d9b8ff.html"><span class="icon">📁</span>Documentation Folder</a>.</p></div></div></figure></div><div style="display:contents" dir="auto"><p id="61f77f18-d1d7-48d2-aca4-d0a4955e80b6" class="">We do not &quot;chat&quot; with code. We execute the <strong>PPRE Cycle</strong>.</p></div><div style="display:contents" dir="auto"><h3 id="5747378c-8ef6-4689-80ca-4ad1a9b65e43" class="">🔄 The Cycle Visualization</h3></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="0b0fdb78-1d9e-4891-acea-1735839662f4" class="code code-wrap"><code class="language-Mermaid" style="white-space:pre-wrap;word-break:break-all">sequenceDiagram
+    participant H as Human (Architect)
+    participant A as Agent (Worker)
+    participant S as System (Files)
+
+    Note over H, A: Phase 1: PRIME
+    H-&gt;&gt;A: Load Context (Story + Reference Docs)
+
+    Note over H, A: Phase 2: PLAN
+    A-&gt;&gt;H: Propose Implementation </code></pre></div><div style="display:contents" dir="auto"><h3 id="40007e0b-1f5f-4fb9-ae45-3fad99757289" class="">🛑 The Kill Switch (Context Reset)</h3></div><div style="display:contents" dir="ltr"><figure class="callout" style="white-space:pre-wrap;display:flex" id="8e267e83-916f-4eff-96ee-8f23a0dc6190"><div style="font-size:1.5em"><span class="icon">⚠️</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="95a87d97-a0ed-4997-a9f1-17dafd853c21" class=""><em>&quot;Context Rot is the enemy of intelligence.&quot;</em></p></div></div></figure></div><div style="display:contents" dir="auto"><p id="86702aec-8539-4f20-9cad-f7125740ccbc" class="">You must <strong>wipe the chat history</strong> (reset) between the Plan and Execute phases.</p></div><div style="display:contents" dir="auto"><ol type="1" id="51e79fff-2993-49d9-b94d-c8def7da5ea5" class="numbered-list" start="1"><li><strong>Plan Phase:</strong> High creativity, lots of tokens.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="e159ed8b-c7e7-466d-b56d-2808a553f3e2" class="numbered-list" start="2"><li><strong>Reset:</strong> Restore IQ to 100%.</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="32e95b01-b31b-4e73-ae60-27f2eaeb81ba" class="numbered-list" start="3"><li><strong>Execute Phase:</strong> High precision, zero noise. Feed <em>only</em> the Plan and the active file.</li></ol></div><div style="display:contents" dir="auto"><p id="e6d61909-e887-48b4-9ec2-3be761819212" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="f954e7d0-0b13-467f-ab1a-3f127230adf4"/></div><div style="display:contents" dir="auto"><p id="80f3d044-cba7-4c28-9924-6960f5361869" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="002796b4-8546-4594-9fbc-7b1b3d98517f" class="">🤖 The Ralph Protocol: Atomic Execution</h1></div><div style="display:contents" dir="ltr"><figure class="block-color-gray callout" style="white-space:pre-wrap;display:flex" id="c94dc3cd-9b96-42cd-9eea-0e41b5b6ca8b"><div style="font-size:1.5em"><span class="icon">📖</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="90cd722a-c23a-448d-ba2a-52b7f2c48066" class=""><strong>Implementation guide:</strong> See the Developer Handbook in <a href="Strata%20Dev%20Framework%20The%20Compounding%20AI%20Playbook/Documentation%20Folder%202eaacc211ff1801b82b1f4c2f2d9b8ff.html"><span class="icon">📁</span>Documentation Folder</a> for advanced examples and edge cases.</p></div></div></figure></div><div style="display:contents" dir="auto"><p id="af2c00c1-1aaa-4221-b4d1-56b27779a79c" class="">How to write <code>stories.json</code> so the agent cannot fail.</p></div><div style="display:contents" dir="auto"><h3 id="3c86890e-1459-4fa0-8682-c070dd251a4f" class="">📏 Rule of Atomicity</h3></div><div style="display:contents" dir="auto"><p id="6c806d45-ccee-475f-989f-c8e6e26a06b8" class="">A story is <strong>Atomic</strong> if it can be completed in <strong>ONE</strong> context window (approx. 1 file or 1 function). If it requires &quot;figuring things out&quot;, it is not a story; it is research.</p></div><div style="display:contents" dir="auto"><h3 id="eca13e7e-2b0d-42c3-aebf-587c0548ad3c" class="">✅ Binary Acceptance Criteria</h3></div><div style="display:contents" dir="auto"><p id="8b980d53-03cd-4203-af2a-0d2f59efebc7" class="">Criteria must be objectively <strong>True</strong> or <strong>False</strong>. No subjectivity allowed.</p></div><div style="display:contents" dir="ltr"><table id="6a9855a6-c9f7-4462-b50c-85468b27fd49" class="simple-table"><tbody><div style="display:contents" dir="ltr"><tr id="51cbecd8-ff16-45af-99e6-ccbd0928d240"><td id="Tt[I" class="">❌ <strong>Bad Criteria (Vague)</strong></td><td id="tyPI" class="">✅ <strong>Good Criteria (Binary)</strong></td></tr></div><div style="display:contents" dir="ltr"><tr id="b8e84651-f17a-4b18-8eef-d9045301a256"><td id="Tt[I" class="">&quot;Make the UI look modern&quot;</td><td id="tyPI" class="">&quot;Button uses Tailwind class <code>rounded-lg</code>&quot;</td></tr></div><div style="display:contents" dir="ltr"><tr id="53067b14-65ab-4c3b-8ae4-2131d9f889fa"><td id="Tt[I" class="">&quot;Fix the bug&quot;</td><td id="tyPI" class="">&quot;Function <code>calculateTotal</code> returns 100 for input&quot;</td></tr></div><div style="display:contents" dir="ltr"><tr id="88a326b5-b608-4016-828c-1f0161653901"><td id="Tt[I" class="">&quot;Add error handling&quot;</td><td id="tyPI" class="">&quot;API returns 400 status on invalid JSON&quot;</td></tr></div></tbody></table></div><div style="display:contents" dir="auto"><h3 id="5430aa3b-5eba-4105-8518-f7b2d2cc441a" class="">🛡️ Self-Verification</h3></div><div style="display:contents" dir="auto"><p id="a35cfbd8-1cc6-4380-b116-fc598fde1f66" class="">The Agent must read <code>stories.json</code>, check its own code against the <code>acceptance_criteria</code>, and <em>only then</em> mark <code>passes: true</code>. Humans verify <em>after</em> the agent claims success.</p></div><div style="display:contents" dir="auto"><p id="49fb0661-ad96-475d-a7cc-721687410a9a" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="d0378724-e47c-4952-9d8b-079e6d26f795"/></div><div style="display:contents" dir="auto"><p id="cf79294e-7fc0-4164-a686-0e7256f240d6" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="af224713-aa61-4c5b-8972-8fae1bb076a9" class="">📈 System Evolution: The Golden Rule</h1></div><div style="display:contents" dir="auto"><p id="bedfd8b6-f381-46d6-8ce8-45a523ff1a88" class="">This is the most important section for the &quot;Guardian&quot; role.</p></div><div style="display:contents" dir="auto"><h3 id="b08b7b17-2061-405d-9802-4c657b958447" class="">🧬 The Evolution Loop</h3></div><div style="display:contents" dir="auto"><p id="17decade-d294-4ba4-8f34-347e75a95b2f" class="">When a bug occurs or the Agent gets stuck:</p></div><div style="display:contents" dir="auto"><ol type="1" id="29854a25-9d64-438e-b33c-eb2057cc912a" class="numbered-list" start="1"><li><strong>Fix the Code:</strong> (Linear work).</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="365a1e6c-af06-4692-b0a1-b6e63b63f603" class="numbered-list" start="2"><li><strong>Codify the Lesson:</strong> (Exponential work). You <strong>MUST</strong> update a Markdown file.</li></ol></div><div style="display:contents" dir="auto"><ul id="dc605041-a9e4-4a9b-b659-86eb646ae565" class="bulleted-list"><li style="list-style-type:disc"><strong>Logic Error?</strong> → Update <code>src/\*/</code><a href="http://agents.md">`agents.md`</a> (&quot;Warning: This API returns strings, not numbers&quot;).</li></ul></div><div style="display:contents" dir="auto"><ul id="7d2ee1a0-2a8b-4080-9fd2-8e2ef53222f9" class="bulleted-list"><li style="list-style-type:disc"><strong>Style Error?</strong> → Update <code>.cursor/rules/global.mdc</code>.</li></ul></div><div style="display:contents" dir="auto"><ul id="a684b425-10b6-4c01-a30f-d1c817dbca83" class="bulleted-list"><li style="list-style-type:disc"><strong>Process Error?</strong> → Update <code>docs/reference/</code><a href="http://workflow.md">`workflow.md`</a>.</li></ul></div><div style="display:contents" dir="ltr"><figure class="block-color-red callout" style="white-space:pre-wrap;display:flex" id="26addd54-5187-4aa2-a434-23f46534c699"><div style="font-size:1.5em"><span class="icon">⚠️</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="013d3ebc-4ead-42be-b97a-b35380d736a2" class=""><strong>Mandate:</strong> If you fix a bug manually and do not update a <code>.md</code> file, you have failed the protocol. The system has not learned.</p></div></div></figure></div><div style="display:contents" dir="auto"><p id="002251ca-2c07-46bd-a1dd-b73347c422d2" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="b24d4c14-65fd-45a2-baee-eb48d0714a7c"/></div><div style="display:contents" dir="auto"><p id="ea84eef2-c91c-4d05-840e-092e7348b080" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="499f822d-c7f0-4643-8f52-126103217bf8" class="">📝 Templates &amp; Artifacts</h1></div><div style="display:contents" dir="auto"><h3 id="4abf6345-7e61-4be6-a16a-8f76016529a9" class="">📄 <code>docs/specs/stories.json</code> Template</h3></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="de052937-f9b2-4dbf-b4e4-9bdfeb85e0cd" class="code code-wrap"><code class="language-JSON" style="white-space:pre-wrap;word-break:break-all">{
+  &quot;epic&quot;: &quot;User Authentication&quot;,
+  &quot;stories&quot;: [
+    {
+      &quot;id&quot;: &quot;AUTH-01&quot;,
+      &quot;description&quot;: &quot;Create Login Form Component&quot;,
+      &quot;files_to_touch&quot;: [&quot;src/components/LoginForm.tsx&quot;],
+      &quot;acceptance_criteria&quot;: [
+        &quot;Component exports &#x27;LoginForm&#x27;&quot;,
+        &quot;Contains email and password input fields&quot;,
+        &quot;Submit button is disabled when fields are empty&quot;
+      ],
+      &quot;passes&quot;: false
+    }
+  ]
+}</code></pre></div><div style="display:contents" dir="auto"><h3 id="d762bac1-dffd-49ae-9db3-a99a3306d3e7" class="">📄 <code>src/components/</code><a href="http://agents.md">`agents.md`</a> Template (Memory)</h3></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2a5123a3-405c-4396-bd43-38aa82371be2" class="code code-wrap"><code class="language-Markdown" style="white-space:pre-wrap;word-break:break-all"># 🧠 Agent Memory: Components Folder
+
+## 📌 Critical Lessons
+- **2023-10-25:** We use `shadcn/ui` for all buttons. Do not import raw HTML buttons.
+- **2023-11-02:** All forms must use `react-hook-form` with `zod` validation.
+
+## 🛑 Known Issues
+- The `DatePicker` component crashes if passed a null date. Always wrap in a conditional check.</code></pre></div><div style="display:contents" dir="auto"><h3 id="496ad2f9-2f41-41a2-8c38-a1e4c07bbd18" class="">📄 <code>.cursor/rules/global.mdc</code> Header</h3></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2019fddd-8d22-4c10-8d55-e8e71a2f98a8" class="code code-wrap"><code class="language-Markdown" style="white-space:pre-wrap;word-break:break-all">---
+description: GLOBAL CONSTITUTION - ALWAYS ACTIVE
+globs: *
+---
+# 🏗️ Strata Dev Framework Constitution
+
+YOU MUST FOLLOW THE ARCHITECTURE AND WORKFLOWS DEFINED IN `docs/strata_</code></pre></div><div style="display:contents" dir="ltr"><figure class="block-color-gray callout" style="white-space:pre-wrap;display:flex" id="765fc2e8-fcaa-4d07-a7d8-c07ad37a599a"><div style="font-size:1.5em"><span class="icon">📄</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="addd3fa7-9277-4960-ac7e-0c1cf2c27760" class=""><strong>Full specification:</strong> For the complete directory structure and workflow details, see <a href="Strata%20Dev%20Framework%20The%20Compounding%20AI%20Playbook/Documentation%20Folder/Core%20Technical%20Specification%2061087d4cd5cd48d2a9a58048d24689d7.html"><span class="icon">⚙️</span>Core Technical Specification</a>.</p></div></div></figure></div><div style="display:contents" dir="auto"><p id="37db8bb8-85f5-475d-9f33-f8a0f83c765d" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="242980e1-69b2-41f1-9cd8-192721ec187a"/></div><div style="display:contents" dir="auto"><p id="2eaacc21-1ff1-8001-8e35-e7a21da796d0" class="">
+</p></div><div style="display:contents" dir="ltr"><figure class="block-color-blue callout" style="white-space:pre-wrap;display:flex" id="86681ce4-a91b-4778-b200-f98c2e61816e"><div style="font-size:1.5em"><span class="icon">🚀</span></div><div style="width:100%"><div style="display:contents" dir="auto"><h3 id="35b84a38-affb-4b72-878e-026bdbe91244" class="">How to Launch This Framework</h3></div><div style="display:contents" dir="auto"><ol type="1" id="3ee281da-e165-4673-9156-e883c3397af6" class="numbered-list" start="1"><li>Share this page with your engineering team</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="fd0c0874-b41b-479d-86e3-55e9ea4cfb36" class="numbered-list" start="2"><li>Establish the rule: <strong>nobody writes code until they have read this</strong></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="bd8162f6-99ff-4baa-a7a0-e7da6b78e60a" class="numbered-list" start="3"><li>Create the directory structure in your repository</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="91a7b662-2745-4b40-bfb3-8929991b38de" class="numbered-list" start="4"><li>Begin with a small pilot project to validate the workflow</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="56cecf74-3479-4e79-b972-c2402195158f" class="numbered-list" start="5"><li>Update <a href="http://agents.md">`agents.md`</a> files as you learn</li></ol></div></div></figure></div><div style="display:contents" dir="auto"><p id="4237ef68-9869-45d4-ac48-8ddbfae64255" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="55904112-976f-49a6-93b8-ca1772c968db"/></div><div style="display:contents" dir="auto"><p id="2eaacc21-1ff1-8072-9a98-cbe926ba0232" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="fa7a560e-2d78-42ec-9bf0-eae86cdd32a6" class="">📚 Documentation Standards</h1></div><div style="display:contents" dir="ltr"><figure class="block-color-gray callout" style="white-space:pre-wrap;display:flex" id="7303cf6b-89c2-4eda-b560-0cd8b2ece676"><div style="font-size:1.5em"><span class="icon">📚</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="2138ff36-0bc8-48ad-9742-eccc8cf3e521" class=""><strong>Reference materials:</strong> All constitutional documents and templates are available in <a href="Strata%20Dev%20Framework%20The%20Compounding%20AI%20Playbook/Documentation%20Folder%202eaacc211ff1801b82b1f4c2f2d9b8ff.html"><span class="icon">📁</span>Documentation Folder</a>.</p></div></div></figure></div><div style="display:contents" dir="auto"><p id="f4fc4c49-7d01-4eb4-ab6f-ddef643ec440" class="">Documentation is not an afterthought. It is the <strong>permanent memory</strong> of the system.</p></div><div style="display:contents" dir="auto"><h3 id="3effbaca-aaed-4895-8006-aab3c6a9628d" class="">🎯 The Documentation Hierarchy</h3></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.125em;line-height:1.3;margin:0">Level 1: Constitutional (<code>.cursor/rules/global.mdc</code>)</summary></details></div><div style="display:contents" dir="auto"><p id="cd506516-d1e9-40cb-a4ac-800c8714844b" class=""><strong>When to update:</strong> When you establish a new universal rule or architectural constraint.</p></div><div style="display:contents" dir="auto"><p id="9cd0dde5-f408-42e7-8255-e72886b2679c" class=""><strong>Examples:</strong></p></div><div style="display:contents" dir="auto"><ul id="7e98bf9f-573a-470b-a4cb-170017f243c2" class="bulleted-list"><li style="list-style-type:disc">&quot;All API calls must use the centralized <code>apiClient</code> wrapper&quot;</li></ul></div><div style="display:contents" dir="auto"><ul id="8c0ad4f7-6cb0-430f-8c1e-a68c0dcab519" class="bulleted-list"><li style="list-style-type:disc">&quot;Database migrations must be reversible&quot;</li></ul></div><div style="display:contents" dir="auto"><ul id="dcee2849-b2df-4882-bdce-2973018f3f95" class="bulleted-list"><li style="list-style-type:disc">&quot;All components must be tested with React Testing Library&quot;</li></ul></div><div style="display:contents" dir="auto"><p id="cdb94059-3eb3-4641-b027-0e687fcf75d2" class=""><strong>Lifespan:</strong> Permanent until a major architecture change.</p></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.125em;line-height:1.3;margin:0">Level 2: Reference (<code>docs/reference/*.md</code>)</summary></details></div><div style="display:contents" dir="auto"><p id="accb61f3-2ae0-4ac7-9260-9c0a80c71fa3" class=""><strong>When to update:</strong> When you add new features, APIs, or integration patterns.</p></div><div style="display:contents" dir="auto"><p id="91a9d469-3590-43b0-b4f1-e1effb74d44d" class=""><strong>Required files:</strong></p></div><div style="display:contents" dir="auto"><ul id="8f1f0d86-a92a-449f-93d1-a487dedfc260" class="bulleted-list"><li style="list-style-type:disc"><code>api_</code><a href="http://endpoints.md">`endpoints.md`</a> - All backend endpoints with request/response examples</li></ul></div><div style="display:contents" dir="auto"><ul id="392dd68f-0d3c-41a7-91f2-de4dec37e97c" class="bulleted-list"><li style="list-style-type:disc"><a href="http://auth.md">`auth.md`</a> - Authentication flow, token management, permissions</li></ul></div><div style="display:contents" dir="auto"><ul id="ac86cc1b-6177-4cfd-8c01-5b323e3bbece" class="bulleted-list"><li style="list-style-type:disc"><code>db_</code><a href="http://schema.md">`schema.md`</a> - Database tables, relationships, indexes</li></ul></div><div style="display:contents" dir="auto"><ul id="f89b3e0e-7c87-461c-968a-3585c33dd179" class="bulleted-list"><li style="list-style-type:disc"><a href="http://deployment.md">`deployment.md`</a> - Build, test, and deployment procedures</li></ul></div><div style="display:contents" dir="auto"><ul id="af29ba01-3d39-42f9-8ead-31ec5b56679a" class="bulleted-list"><li style="list-style-type:disc"><code>env_</code><a href="http://variables.md">`variables.md`</a> - All environment variables and their purpose</li></ul></div><div style="display:contents" dir="auto"><p id="2a336890-b022-4b82-8505-2ffd30c2192c" class=""><strong>Format:</strong></p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="45fce69e-8395-45c6-ae91-0eb7f13d5779" class="code code-wrap"><code class="language-Markdown" style="white-space:pre-wrap;word-break:break-all"># API Endpoints
+
+## POST /api/users/login
+
+**Purpose:** Authenticate user and return JWT token
+
+**Request:**</code></pre></div><div style="display:contents" dir="auto"><p id="071b2fe6-528e-47de-86b8-9fd7b75137b4" class="">{<div class="indented"><div style="display:contents" dir="auto"><p id="0128870f-00df-401a-917f-f11c59f88b2a" class="">&quot;email&quot;: &quot;<a href="mailto:user@example.com">user@example.com</a>&quot;,</p></div><div style="display:contents" dir="auto"><p id="6a560bbb-53dd-4239-9420-ca815b796231" class="">&quot;password&quot;: &quot;hashed_password&quot;</p></div></div></p></div><div style="display:contents" dir="auto"><p id="567cd92e-e132-48ad-b418-94750394975b" class="">}</p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="d741bf1b-acb2-4c33-9b07-986cc439d1d0" class="code code-wrap"><code class="language-undefined" style="white-space:pre-wrap;word-break:break-all">
+**Response (200):**</code></pre></div><div style="display:contents" dir="auto"><p id="58a6ecda-05e0-4fa1-80c2-923b8e6ff36f" class="">{<div class="indented"><div style="display:contents" dir="auto"><p id="7c31568b-9dc5-4e31-988e-11f155652ae8" class="">&quot;token&quot;: &quot;eyJhbGc...&quot;,</p></div><div style="display:contents" dir="auto"><p id="b07074ef-3966-4c0c-9c5a-cd1394a5cd0b" class="">&quot;user&quot;: { &quot;id&quot;: 123, &quot;name&quot;: &quot;John&quot; }</p></div></div></p></div><div style="display:contents" dir="auto"><p id="7784cbe3-3b03-4aae-b3af-8002ab102aa6" class="">}</p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="ebfaf280-efed-4b2f-ac75-e28230e64ba6" class="code code-wrap"><code class="language-undefined" style="white-space:pre-wrap;word-break:break-all">
+**Error Cases:**
+- 401: Invalid credentials
+- 429: Rate limit exceeded</code></pre></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.125em;line-height:1.3;margin:0">Level 3: Tactical (<code>src/*/</code><a href="http://agents.md">`agents.md`</a>)</summary></details></div><div style="display:contents" dir="auto"><p id="b97ebeaa-1f69-4d92-9abe-85b04022d230" class=""><strong>When to update:</strong> Every time you fix a bug, discover a gotcha, or establish a local convention.</p></div><div style="display:contents" dir="auto"><p id="339cb8bb-46a0-45e0-a3c3-86f469f13af8" class=""><strong>Structure:</strong></p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="f7fd4d01-94d9-45f4-902d-448809dc0713" class="code code-wrap"><code class="language-Markdown" style="white-space:pre-wrap;word-break:break-all"># 🧠 Agent Memory: [Folder Name]
+
+## 📌 Critical Lessons
+- **YYYY-MM-DD:** Lesson learned with context
+
+## 🛑 Known Issues
+- Issue description and workaround
+
+## 🏗️ Local Conventions
+- &quot;This folder uses X pattern because Y&quot;
+
+## 🔗 Dependencies
+- &quot;Module A depends on Module B for Z functionality&quot;</code></pre></div><div style="display:contents" dir="auto"><details open=""><summary style="font-weight:600;font-size:1.125em;line-height:1.3;margin:0">Level 4: Execution (<code>logs/progress.txt</code>)</summary></details></div><div style="display:contents" dir="auto"><p id="cfb2406b-a361-4e14-9e39-ee27de20a0dc" class=""><strong>When to update:</strong> After completing each story in <code>stories.json</code>.</p></div><div style="display:contents" dir="auto"><p id="11bd7719-a515-4b35-b733-8d3d08ad7e52" class=""><strong>Format:</strong></p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="c2e3f507-8981-4a21-9894-c82252c4368a" class="code code-wrap"><code class="language-JavaScript" style="white-space:pre-wrap;word-break:break-all">[2026-01-16 15:30] ✅ AUTH-01: Login Form Component
+- Created LoginForm.tsx with email/password fields
+- Added form validation with react-hook-form
+- All acceptance criteria passed
+- Updated src/components/</code></pre></div><div style="display:contents" dir="auto"><h3 id="f0cfc708-5dae-4be2-a38d-efeb8ac2d1f9" class="">📐 Documentation Rules</h3></div><div style="display:contents" dir="ltr"><figure class="block-color-yellow callout" style="white-space:pre-wrap;display:flex" id="dfb7395d-4887-4d1e-8b60-972de29cf457"><div style="font-size:1.5em"><span class="icon">⚡</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="95f14245-5aa0-406c-b389-44faf852a9b3" class=""><strong>Rule 1: No Orphan Fixes</strong><br/>Every bug fix MUST update at least one <code>.md</code> file. If you fix it in code but not in docs, you will hit the same bug again.</p></div></div></figure></div><div style="display:contents" dir="ltr"><figure class="block-color-yellow callout" style="white-space:pre-wrap;display:flex" id="660802a5-d496-40ed-8a41-b15f8f76c746"><div style="font-size:1.5em"><span class="icon">⚡</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="83ac3acf-5273-43f7-a187-fbf6a649e992" class=""><strong>Rule 2: Date Every Entry</strong><br/>Always prefix lessons with <code>YYYY-MM-DD</code>. This creates a timeline of system evolution.</p></div></div></figure></div><div style="display:contents" dir="ltr"><figure class="block-color-yellow callout" style="white-space:pre-wrap;display:flex" id="5ab1b97f-a36c-4d17-9860-32a86819fbab"><div style="font-size:1.5em"><span class="icon">⚡</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="4f346b57-8b22-4cde-8062-f4d37e45fdae" class=""><strong>Rule 3: Be Specific</strong><br/>&quot;The API is weird&quot; ❌<br/>&quot;The <code>/users</code> endpoint returns strings for IDs, not numbers&quot; ✅</p></div></div></figure></div><div style="display:contents" dir="ltr"><figure class="block-color-yellow callout" style="white-space:pre-wrap;display:flex" id="6198ce40-0944-4205-970b-7a91c1ff27bf"><div style="font-size:1.5em"><span class="icon">⚡</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="baafdf3f-8e30-4a3a-a3f3-7b1f51358c08" class=""><strong>Rule 4: One Source of Truth</strong><br/>Do not duplicate information. Use references:<br/>&quot;For authentication, see <code>docs/reference/</code><a href="http://auth.md">`auth.md`</a>&quot;</p></div></div></figure></div><div style="display:contents" dir="ltr"><figure class="block-color-yellow callout" style="white-space:pre-wrap;display:flex" id="c75143df-33e6-4a00-88be-071629647975"><div style="font-size:1.5em"><span class="icon">⚡</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="c4358947-64c7-4d26-8c0c-b929ff280c70" class=""><strong>Rule 5: Archive Completed Specs</strong><br/>When a feature is complete, move <code>docs/specs/feature.json</code> to <code>docs/done_specs/feature.json</code>. Keep the active folder clean.</p></div></div></figure></div><div style="display:contents" dir="auto"><h3 id="b50dbb68-87dc-4f0b-bc38-da53ea3a4185" class="">🔍 Documentation Checklist</h3></div><div style="display:contents" dir="auto"><p id="70fa3daf-0397-45a0-9c34-f82f2850d768" class="">Before marking any story as complete, verify:</p></div><div style="display:contents" dir="auto"><ul id="f8a42f6f-7c57-442b-a7f6-77c0fdfd1017" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">Code is written and passes acceptance criteria</span><div class="indented"></div></li></ul></div><div style="display:contents" dir="auto"><ul id="4e344d4d-848d-4de7-8fa0-1dfe8799a1ab" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">Relevant <a href="http://agents.md">`agents.md`</a> file updated with lessons learned</span><div class="indented"></div></li></ul></div><div style="display:contents" dir="auto"><ul id="3a4650ab-c4ed-4619-a2f0-6df2e31817b7" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">Reference docs updated if new APIs/patterns were introduced (see <a href="Strata%20Dev%20Framework%20The%20Compounding%20AI%20Playbook/Documentation%20Folder%202eaacc211ff1801b82b1f4c2f2d9b8ff.html"><span class="icon">📁</span>Documentation Folder</a> for constitutional and reference templates)</span><div class="indented"></div></li></ul></div><div style="display:contents" dir="auto"><ul id="283284cd-acdc-45cc-a855-5cacd34401ab" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked"><code>logs/progress.txt</code> entry created with timestamp</span><div class="indented"></div></li></ul></div><div style="display:contents" dir="auto"><ul id="b986f362-4bcf-4102-9cfe-9aed68274145" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">Story in <code>stories.json</code> marked as <code>&quot;passes&quot;: true</code></span><div class="indented"></div></li></ul></div><div style="display:contents" dir="auto"><ul id="bed269b6-54de-4ebc-aef5-905710d5058e" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">Spec moved to <code>done_specs/</code> if entire epic is complete</span><div class="indented"></div></li></ul></div><div style="display:contents" dir="auto"><ul id="6343dd68-49a1-44e8-8822-4ab2b08a79fa" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">Framework documentation in <a href="Strata%20Dev%20Framework%20The%20Compounding%20AI%20Playbook/Documentation%20Folder%202eaacc211ff1801b82b1f4c2f2d9b8ff.html"><span class="icon">📁</span>Documentation Folder</a> consulted if architectural decisions were made</span><div class="indented"></div></li></ul></div><div style="display:contents" dir="auto"><h3 id="71e624ab-7f5e-4177-afeb-610dd0a3aed6" class="">💡 Pro Tips</h3></div><div style="display:contents" dir="auto"><p id="c3f41f1a-e81e-40e8-92de-2a4a177e8d1a" class=""><strong>For Code Reviews:</strong></p></div><div style="display:contents" dir="auto"><ul id="419d9ed7-3e3d-4d33-bd11-a127aa169bf5" class="bulleted-list"><li style="list-style-type:disc">Before approving a PR, check if documentation was updated</li></ul></div><div style="display:contents" dir="auto"><ul id="2ac64a3f-df51-4aad-b5a0-81b6f2a99695" class="bulleted-list"><li style="list-style-type:disc">Ask: &quot;What would the next developer need to know?&quot;</li></ul></div><div style="display:contents" dir="auto"><p id="b1cf02f0-60a4-419a-8b66-37226b1b53cd" class=""><strong>For Onboarding:</strong></p></div><div style="display:contents" dir="auto"><ul id="74aec306-1bc1-479c-87d9-d8c0c0282db1" class="bulleted-list"><li style="list-style-type:disc">New team members should read in this order:<div style="display:contents" dir="auto"><ol type="1" id="8b1b7974-0aba-45f0-afe0-30621f311002" class="numbered-list" start="1"><li><a href="Strata%20Dev%20Framework%20The%20Compounding%20AI%20Playbook/Documentation%20Folder%202eaacc211ff1801b82b1f4c2f2d9b8ff.html"><span class="icon">📁</span>Documentation Folder</a> (Start with Framework Overview and Developer Handbook)</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="95e03904-54fd-427e-89d7-1ddad711dd9f" class="numbered-list" start="2"><li><code>global.mdc</code> (The laws)</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="81b5e891-7b19-4ef6-9712-f6106a838bef" class="numbered-list" start="3"><li>This page (The framework implementation guide)</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="e8f26609-8a2c-4fe0-938c-fcdf38fd7b0b" class="numbered-list" start="4"><li><code>docs/reference/</code> (The current system)</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="4e6d4894-5329-4a3d-88bc-b3fe47ba0564" class="numbered-list" start="5"><li><code>src/\*/</code><a href="http://agents.md">`agents.md`</a> (The gotchas)</li></ol></div></li></ul></div><div style="display:contents" dir="auto"><p id="2bba8483-1bed-4d18-96ab-7f04f63b873c" class=""><strong>For Debugging:</strong></p></div><div style="display:contents" dir="auto"><ul id="729e7f85-d747-4560-9c51-ed89a2c34abb" class="bulleted-list"><li style="list-style-type:disc">Search <a href="http://agents.md">`agents.md`</a> files first before Googling</li></ul></div><div style="display:contents" dir="auto"><ul id="fbd00f94-c5a8-4092-82fe-a25771d4b0de" class="bulleted-list"><li style="list-style-type:disc">The solution might already be documented from last time</li></ul></div><div style="display:contents" dir="ltr"><figure class="callout" style="white-space:pre-wrap;display:flex" id="b6c8af9b-d968-44eb-a3d9-dd3fa7584c85"><div style="font-size:1.5em"><span class="icon">🎓</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="4934bae2-c3fd-4d5f-b2a6-7c08822e91c5" class=""><strong>Remember:</strong> Documentation is not overhead. It is <strong>compound interest</strong> on your engineering investment. Every minute spent documenting saves hours in the future.</p></div></div></figure></div><div style="display:contents" dir="auto"><p id="9d06e702-857b-48e6-ae73-dfa19da9d691" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="32b7f5b3-ecb2-4e3b-b1f0-bcd84bedbf11"/></div><div style="display:contents" dir="auto"><p id="f9818161-cc14-47ae-a91b-8d4d03c562a8" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="85387f27-41fb-4056-b082-044cc6d9e0c6" class="">🎓 Certification: Prove Your Mastery</h1></div><div style="display:contents" dir="ltr"><figure class="block-color-red callout" style="white-space:pre-wrap;display:flex" id="35813666-e9b8-4006-a1d4-a575f697430d"><div style="font-size:1.5em"><span class="icon">⚠️</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="fc4d4919-5610-451c-ab38-17210c775cf3" class=""><strong>🚨 MANDATORY REQUIREMENT 🚨</strong></p></div><div style="display:contents" dir="auto"><p id="107ab0c2-b094-494e-afe1-4d25d54755dc" class="">Before you are authorized to write code using this framework, you <strong>MUST</strong> complete and pass the official certification quiz.</p></div><div style="display:contents" dir="auto"><p id="ace0ef36-891e-4d3e-b73c-b2a8f0bb9f73" class=""><strong>Passing Score:</strong> 90% (Maximum 1 error allowed)</p></div><div style="display:contents" dir="auto"><p id="84c98d93-c0c2-40d4-b143-13a847433e46" class=""><strong>What it covers:</strong></p></div><div style="display:contents" dir="auto"><ul id="b0340129-5a03-4a47-ba1b-72900dfd84ba" class="bulleted-list"><li style="list-style-type:disc">The Mindset Protocols (understanding &quot;Vibe Coding&quot; vs. Compounding Engineering)</li></ul></div><div style="display:contents" dir="auto"><ul id="b123844b-dec2-4af7-b099-96fafeae8d40" class="bulleted-list"><li style="list-style-type:disc">System Architecture (Memory Architecture, Context Sharding)</li></ul></div><div style="display:contents" dir="auto"><ul id="d8c07d97-f6a7-49dc-9aeb-1223cd0e73ef" class="bulleted-list"><li style="list-style-type:disc">The PPRE Execution Loop (Prime → Plan → Reset → Execute)</li></ul></div><div style="display:contents" dir="auto"><ul id="88b7cca3-52f2-4e1d-9dbe-8b086dffae30" class="bulleted-list"><li style="list-style-type:disc">Guardian Scenarios (real-world decision-making)</li></ul></div><div style="display:contents" dir="auto"><ul id="d7104305-3244-493b-88a0-0d6bf1f3c317" class="bulleted-list"><li style="list-style-type:disc">Protocol Compliance (Acceptance Criteria, Evolution Loop)</li></ul></div></div></figure></div><div style="display:contents" dir="auto"><h3 id="05eff00e-bb9b-4f7e-b398-68ee6a7b6932" class="">📋 Assessment Details</h3></div><div style="display:contents" dir="auto"><p id="19995010-25a7-4103-8c1c-93cebbea31e8" class="">This is the <strong>Official Competency Assessment</strong> for the Strata Dev Framework. It consists of 15 questions covering:</p></div><div style="display:contents" dir="auto"><ul id="a6bdd595-1536-4fcb-9e48-22e465d34f92" class="bulleted-list"><li style="list-style-type:disc"><strong>Section 1:</strong> The Mindset Protocols (True/False)</li></ul></div><div style="display:contents" dir="auto"><ul id="d2222de1-0806-40e0-9aac-f2e42585c5ef" class="bulleted-list"><li style="list-style-type:disc"><strong>Section 2:</strong> System Architecture (Select All That Apply)</li></ul></div><div style="display:contents" dir="auto"><ul id="55d60b03-5249-4c82-b961-02726afadd76" class="bulleted-list"><li style="list-style-type:disc"><strong>Section 3:</strong> The PPRE Execution Loop</li></ul></div><div style="display:contents" dir="auto"><ul id="0dc91c5e-b943-477f-b702-2003cdc94ddc" class="bulleted-list"><li style="list-style-type:disc"><strong>Section 4:</strong> The Guardian Scenarios</li></ul></div><div style="display:contents" dir="auto"><ul id="1e2452d7-0e03-4117-ac37-64977d5bf194" class="bulleted-list"><li style="list-style-type:disc"><strong>Section 5:</strong> Final Protocol Check</li></ul></div><div style="display:contents" dir="auto"><h3 id="82a64b9b-d86d-474e-91b9-a502480e6c66" class="">✅ Certification Requirements</h3></div><div style="display:contents" dir="auto"><ol type="1" id="bf471f90-8d65-4d31-ad4c-7fbdef8eb99d" class="numbered-list" start="1"><li><strong>Complete the reading journey:</strong><div style="display:contents" dir="auto"><ul id="ebf3e985-769a-44a5-8aab-ef0eae7273e2" class="bulleted-list"><li style="list-style-type:disc">Review all materials in <a href="Strata%20Dev%20Framework%20The%20Compounding%20AI%20Playbook/Documentation%20Folder%202eaacc211ff1801b82b1f4c2f2d9b8ff.html"><span class="icon">📁</span>Documentation Folder</a></li></ul></div><div style="display:contents" dir="auto"><ul id="1b4050a2-90c3-456a-a93b-b794ce00222c" class="bulleted-list"><li style="list-style-type:disc">Read this implementation guide completely</li></ul></div><div style="display:contents" dir="auto"><ul id="587a7828-cd96-4309-a9db-ca6653207fb9" class="bulleted-list"><li style="list-style-type:disc">Watch all architecture videos</li></ul></div><div style="display:contents" dir="auto"><ul id="e4d4b819-966d-401b-97a0-fc3ea9b0d787" class="bulleted-list"><li style="list-style-type:disc">Listen to the framework podcasts</li></ul></div><div style="display:contents" dir="auto"><ul id="570b425b-ea05-4cf6-9abf-75ef498695d8" class="bulleted-list"><li style="list-style-type:disc">Review <a href="Strata%20Dev%20Framework%20The%20Compounding%20AI%20Playbook/Documentation%20Folder/Learning%20Resources%20&amp;%20References%2059c24ed933d449a8ab26223067c280df.html"><span class="icon">🔗</span>Learning Resources &amp; References</a> for external tools and tutorials</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="382779cd-3937-46b2-bec6-a31f097f1dd5" class="numbered-list" start="2"><li><strong>Take the certification quiz:</strong><div style="display:contents" dir="auto"><ul id="145cd54f-56e1-4114-bac9-0ee6de24ccba" class="bulleted-list"><li style="list-style-type:disc"><a href="https://forms.gle/ABvRg4qtwXCZZdqB7">**📝 Access the Official Certification Quiz**</a></li></ul></div><div style="display:contents" dir="auto"><ul id="94c0c4fe-b537-4c0a-a2fe-116459fcf5f5" class="bulleted-list"><li style="list-style-type:disc">You must score at least 90% (14/15 correct)</li></ul></div><div style="display:contents" dir="auto"><ul id="57d14a7b-e0b9-4b19-9354-41e9b1d3348d" class="bulleted-list"><li style="list-style-type:disc">Maximum 1 error allowed</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="040d2891-4495-49c4-a1f9-ce2663e4a6d0" class="numbered-list" start="3"><li><strong>Apply the framework:</strong><div style="display:contents" dir="auto"><ul id="08fbae71-de4a-40d5-bef1-13b029a516a8" class="bulleted-list"><li style="list-style-type:disc">Only after passing can you begin coding with this framework</li></ul></div><div style="display:contents" dir="auto"><ul id="61bffb3c-29d6-4989-bfb5-ce36cf961bda" class="bulleted-list"><li style="list-style-type:disc">Your certification demonstrates you understand the Guardian role</li></ul></div><div style="display:contents" dir="auto"><ul id="877ec8e9-5f01-4296-884c-54af16a04491" class="bulleted-list"><li style="list-style-type:disc">You are now responsible for maintaining System Evolution</li></ul></div></li></ol></div><div style="display:contents" dir="ltr"><figure class="block-color-blue callout" style="white-space:pre-wrap;display:flex" id="201e183f-9c45-419d-b5be-73b03f37600b"><div style="font-size:1.5em"><span class="icon">🏆</span></div><div style="width:100%"><div style="display:contents" dir="auto"><h3 id="f44ad629-ab8c-4c00-9b03-c8a3f2b04978" class="">Ready to Certify?</h3></div><div style="display:contents" dir="auto"><p id="4e1a3b72-eba0-4d26-b6ae-9582b66d4a3a" class="">Once you&#x27;ve completed your study of all framework materials, take the quiz:</p></div><div style="display:contents" dir="auto"><p id="89f8e998-f362-4ee6-aebd-d6060df6f4a7" class=""><mark class="highlight-red"><strong>👉 </strong></mark><mark class="highlight-red"><a href="https://forms.gle/ABvRg4qtwXCZZdqB7">****START CERTIFICATION QUIZ****</a></mark></p></div><div style="display:contents" dir="auto"><p id="5c226148-5476-4b35-b9cc-5614dacf5b53" class="">Remember: This is not a test of memorization, but of understanding. The framework depends on Guardians who truly grasp the philosophy of compounding engineering.</p></div></div></figure></div><div style="display:contents" dir="auto"><p id="98da99ab-8d2b-448c-b27a-c86c35f67591" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="343cab73-e824-4305-8f69-0be8a9c1bcd8"/></div><div style="display:contents" dir="auto"><p id="a4bc7f69-f454-4872-9cd1-02d6687d0257" class="">
+</p></div><div style="display:contents" dir="ltr"><figure id="2eaacc21-1ff1-801b-82b1-f4c2f2d9b8ff" class="link-to-page"><a href="Strata%20Dev%20Framework%20The%20Compounding%20AI%20Playbook/Documentation%20Folder%202eaacc211ff1801b82b1f4c2f2d9b8ff.html"><span class="icon">📁</span>Documentation Folder</a></figure></div><div style="display:contents" dir="ltr"><figure id="0674e9fa-2439-44d4-bb4c-75f8a8807a6f" class="link-to-page"><a href="Strata%20Dev%20Framework%20The%20Compounding%20AI%20Playbook/%E2%9C%85%20Framework%20Quality%20-%20Final%20Report%200674e9fa243944d4bb4c75f8a8807a6f.html"><span class="icon">🚧</span>✅ Framework Quality - Final Report</a></figure></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

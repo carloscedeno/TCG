@@ -1,0 +1,788 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>🤖 Autopilot Script Example</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="c3938a9f-e27d-4a0f-a6ff-a5689cd654b2" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🤖</span></div><h1 class="page-title" dir="auto">🤖 Autopilot Script Example</h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="auto"><p id="8a299606-e6da-40d1-a188-f5ee5fb27df4" class=""><strong>Status:</strong> 🟢 Production Ready | <strong>Dependency:</strong> <code>jq</code> (JSON Processor)<br/><strong>Mission:</strong> Enforce the PPRE Cycle and automate the administrative overhead of the Ralph Protocol.</p></div><div style="display:contents" dir="ltr"><figure class="block-color-blue callout" style="white-space:pre-wrap;display:flex" id="6e487ada-9df9-42dd-88ce-5c82c73b9083"><div style="font-size:1.5em"><span class="icon">⚙️</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="9b7c2bcc-2e79-4de1-8fc0-7d72ae9203e1" class=""><strong>What is this?</strong> This script is the practical implementation of the &quot;Ralph Loop&quot; mentioned in the documentation. It automates state management (<code>stories.json</code>), logging (<code>progress.txt</code>), and version control, leaving humans only the task of operating the Agent.</p></div></div></figure></div><div style="display:contents" dir="auto"><p id="6e9aa900-07ea-4878-b666-bd0a40063f55" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="a7148d45-be8a-40c0-8fd0-aa3403a837c2"/></div><div style="display:contents" dir="auto"><p id="1ca9343e-9af0-4fb8-9f2e-877223c82312" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="16617820-f12f-4512-997c-8cee7f558e74" class="">1. 📜 The Complete Script</h1></div><div style="display:contents" dir="auto"><p id="67b4dbba-72a5-41a7-bfd9-033b82bf88b1" class=""><strong>File location:</strong> <code>scripts/</code><code><a href="http://autopilot.sh">autopilot.sh</a></code></p></div><div style="display:contents" dir="auto"><p id="d3a9dc46-90cd-427b-9e32-8abdd6781c2c" class=""><strong>Part 1 - Configuration &amp; Setup:</strong></p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1a9f8bfc-78a6-468d-885f-d65f471801e1" class="code code-wrap"><code class="language-Bash" style="white-space:pre-wrap;word-break:break-all">#!/bin/bash
+
+# --- CONFIGURATION ---
+SPECS_FILE=&quot;docs/specs/stories.json&quot;
+PROGRESS_FILE=&quot;logs/progress.txt&quot;
+MEMORY_FILE=&quot;src/scripts/agents.md&quot;
+
+# --- CHECK DEPENDENCIES ---
+if ! command -v jq &amp;&gt; /dev/null; then
+    echo &quot;❌ Error: &#x27;jq&#x27; is not installed.&quot;
+    echo &quot;Run &#x27;brew install jq&#x27; or &#x27;sudo apt install jq&#x27;.&quot;
+    exit 1
+fi
+
+echo &quot;🚀 Strata Autopilot Engine: ONLINE&quot;
+echo &quot;-----------------------------------&quot;</code></pre></div><div style="display:contents" dir="auto"><p id="755b1bf5-1ed7-4cda-a508-3def008f0dbf" class=""><strong>Part 2 - The Ralph Loop:</strong></p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="b81e02d8-7fa4-4916-a88c-eb2654336e84" class="code code-wrap"><code class="language-Bash" style="white-space:pre-wrap;word-break:break-all"># --- THE RALPH LOOP ---
+while true; do
+    # 1. READ: Find first story where passes == false
+    CURRENT_STORY=$(jq -r &#x27;.stories[] | select(.passes==false) | .id + &quot;: &quot; + .description&#x27; $SPECS_FILE | head -n 1)
+    STORY_ID=$(echo &quot;$CURRENT_STORY&quot; | cut -d&#x27;:&#x27; -f1)
+
+    # 2. CHECK: If no stories left, exit
+    if [ -z &quot;$STORY_ID&quot; ]; then
+        echo &quot;🎉 All stories completed!&quot;
+        exit 0
+    fi
+
+    echo &quot;🤖 CURRENT TARGET: $CURRENT_STORY&quot;
+    echo &quot;📋 INSTRUCTIONS FOR AGENT:&quot;
+    echo &quot;   1. Prime: Read story $STORY_ID&quot;
+    echo &quot;   2. Plan: Generate implementation plan&quot;
+    echo &quot;   3. RESET CONTEXT (Ctrl+K)&quot;
+    echo &quot;   4. Execute&quot;</code></pre></div><div style="display:contents" dir="auto"><p id="8b32262e-cd2d-49c0-b6e7-969aa1b258ce" class=""><strong>Part 3 - Human Verification &amp; Success:</strong></p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1b56111a-9c45-498e-aea9-259d34480b06" class="code code-wrap"><code class="language-Bash" style="white-space:pre-wrap;word-break:break-all"># 3. INTERVENTION: Wait for human/agent
+read -p &quot;&gt;&gt; Did agent verify acceptance criteria? (y/n): &quot; RESULT
+
+if [ &quot;$RESULT&quot; == &quot;y&quot; ]; then
+    # 4. SUCCESS PROTOCOL
+    echo &quot;✅ Marking $STORY_ID as DONE...&quot;
+
+    # Update JSON (atomic write)
+    tmp=$(mktemp)
+    jq --arg id &quot;$STORY_ID&quot; &#x27;(.stories[] | select(.id == $id)).passes = true&#x27; $SPECS_FILE &gt; &quot;$tmp&quot; &amp;&amp; mv &quot;$tmp&quot; $SPECS_FILE
+
+    # Log to Short-Term Memory
+    echo &quot;[$(date)] COMPLETED $STORY_ID&quot; &gt;&gt; $PROGRESS_FILE
+
+    # Git Checkpoint
+    git add .
+    git commit -m &quot;feat($STORY_ID): completed via Strata Autopilot&quot;
+
+    echo &quot;💾 Progress Saved. Loading next atom...&quot;
+    echo &quot;-----------------------------------&quot;</code></pre></div><div style="display:contents" dir="auto"><p id="363c2e4e-21e1-4423-a965-82bde05ac981" class=""><strong>Part 4 - Failure Protocol:</strong></p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="7783d8f4-0f2b-47ef-bae7-4142586697df" class="code code-wrap"><code class="language-Bash" style="white-space:pre-wrap;word-break:break-all">    else
+        # 5. FAILURE PROTOCOL
+        echo &quot;🛑 STOP.&quot;
+        echo &quot;⚠️  Update &#x27;agents.md&#x27; with failure reason.&quot;
+        read -p &quot;&gt;&gt; Codified the lesson? (Press Enter)&quot;
+        echo &quot;🔄 Restarting cycle for $STORY_ID...&quot;
+        echo &quot;-----------------------------------&quot;
+    fi
+done</code></pre></div><div style="display:contents" dir="auto"><p id="92672119-a628-40b4-bdb1-04b7590b6c31" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="dc88e3d8-0ee9-4059-ae1e-7c0f04d94061"/></div><div style="display:contents" dir="auto"><p id="da2e57fa-fcf2-422c-b0a7-e2370098c6e4" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="3e8e99d1-6004-4f27-8d0a-ea7f75a85ea5" class="">2. 🔍 Line-by-Line Explanation</h1></div><div style="display:contents" dir="ltr"><table id="98a8e8ea-db64-4300-b897-9735a586a488" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="791e7b58-643c-4680-9700-5f7691262a9a"><th id="Mt@C" class="simple-table-header-color simple-table-header">Line</th><th id="VwCc" class="simple-table-header-color simple-table-header">Concept</th><th id="p]&lt;a" class="simple-table-header-color simple-table-header">Technical Explanation</th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="b6754e93-12a0-4291-8753-394a7d2f22e5"><td id="Mt@C" class=""><code>18</code></td><td id="VwCc" class=""><strong>The Infinite Loop</strong></td><td id="p]&lt;a" class="">Script runs until no tasks remain. Simulates &quot;Autonomous Agent&quot; behavior.</td></tr></div><div style="display:contents" dir="ltr"><tr id="6293f8b7-6120-4e63-b31c-7094c0ff511b"><td id="Mt@C" class=""><code>20</code></td><td id="VwCc" class=""><strong>Atomic Selection</strong></td><td id="p]&lt;a" class="">Uses <code>jq</code> to find first <code>false</code> item. Forces <strong>Sequential Execution</strong>.</td></tr></div><div style="display:contents" dir="ltr"><tr id="82e17e2e-3b23-4e22-ac81-23fef5aa3d3b"><td id="Mt@C" class=""><code>24</code></td><td id="VwCc" class=""><strong>Exit Condition</strong></td><td id="p]&lt;a" class="">Empty <code>STORY_ID</code> means <code>stories.json</code> is 100% complete.</td></tr></div><div style="display:contents" dir="ltr"><tr id="6c1188e7-aed2-4b62-a60b-8120f80cba24"><td id="Mt@C" class=""><code>37</code></td><td id="VwCc" class=""><strong>Human-in-the-Loop</strong></td><td id="p]&lt;a" class="">Acts as &quot;Gatekeeper&quot;. Waits for human validation before proceeding.</td></tr></div><div style="display:contents" dir="ltr"><tr id="fb5acd6c-2fec-4c3e-8429-80c7bce66a17"><td id="Mt@C" class=""><code>43</code></td><td id="VwCc" class=""><strong>State Mutation</strong></td><td id="p]&lt;a" class="">Rewrites JSON &quot;in-place&quot;, changing <code>false</code> to <code>true</code>. Updates the Contract.</td></tr></div><div style="display:contents" dir="ltr"><tr id="036a27da-e9ae-4a41-979a-f1bd25ee13c7"><td id="Mt@C" class=""><code>51</code></td><td id="VwCc" class=""><strong>Auto-Commit</strong></td><td id="p]&lt;a" class="">Automatic commit per story. Ensures granular, clean Git history.</td></tr></div><div style="display:contents" dir="ltr"><tr id="802506d5-970c-480e-907d-08ca4f089764"><td id="Mt@C" class=""><code>58</code></td><td id="VwCc" class=""><strong>Forced Evolution</strong></td><td id="p]&lt;a" class="">Blocks progress until human confirms <code><a href="http://agents.md">agents.md</a></code> update. Prevents &quot;brute forcing&quot;.</td></tr></div></tbody></table></div><div style="display:contents" dir="auto"><p id="fe2c791d-6478-4ae8-8a53-63bc6aaaf19c" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="253bfdf7-4109-4773-89dc-14596b3ca5d1"/></div><div style="display:contents" dir="auto"><p id="c0c90922-f387-4b43-8bf7-8eab2dfca467" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="9c6fcb8c-d901-4a7b-bccf-ebb7d0aca4cd" class="">3. ⚙️ Customization Examples</h1></div><div style="display:contents" dir="auto"><h3 id="473d5d0b-1df4-4b4a-b48d-be1f4053601a" class="">For Automated Tests (CI/CD)</h3></div><div style="display:contents" dir="auto"><p id="add93a0d-3dcf-4c61-a811-e1b03fbe3b5b" class="">Replace line 37 with:</p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="784f403a-f123-4603-a023-8ff9418298c1" class="code code-wrap"><code class="language-Bash" style="white-space:pre-wrap;word-break:break-all">echo &quot;🧪 Running Tests...&quot;
+if npm test; then
+    RESULT=&quot;y&quot;
+else
+    RESULT=&quot;n&quot;
+fi</code></pre></div><div style="display:contents" dir="auto"><h3 id="4878103b-4dbd-4b70-b2c0-e6a40163c6c8" class="">For Python Projects</h3></div><div style="display:contents" dir="auto"><p id="c91f5c9f-b1c3-4122-81ad-6391c790ecbb" class="">Change configuration:</p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="83497119-1b4f-4a5f-8579-c89ce0fa9850" class="code code-wrap"><code class="language-Bash" style="white-space:pre-wrap;word-break:break-all">SPECS_FILE=&quot;requirements/stories.json&quot;
+MEMORY_FILE=&quot;app/api/agents.md&quot;</code></pre></div><div style="display:contents" dir="auto"><h3 id="6d063ff3-e526-45eb-92d6-4b87f26ea079" class="">For Silent Mode (Advanced)</h3></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="36f4b9bb-da5e-441c-bfbb-8bdc9e7c3718" class="code code-wrap"><code class="language-Bash" style="white-space:pre-wrap;word-break:break-all">claude --prompt &quot;Execute story $STORY_ID from $SPECS_FILE. Output only code.&quot;</code></pre></div><div style="display:contents" dir="auto"><p id="d519a388-756d-4230-afcb-5a0a6f2792a7" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="306c0703-f53e-40d1-9246-8eec334fdede"/></div><div style="display:contents" dir="auto"><p id="dc61dce0-3da1-4e96-9117-700fc0a3d90a" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="ceeb755e-ca39-4407-bd8d-fcb35719063b" class="">4. 🚑 Common Problems</h1></div><div style="display:contents" dir="auto"><h3 id="d94060a8-533f-4250-9e23-b767b21c36da" class="">Problem: <code>command not found: jq</code></h3></div><div style="display:contents" dir="auto"><ul id="93cc66c8-2c3c-4a06-91f7-16fd76d8d92e" class="bulleted-list"><li style="list-style-type:disc"><strong>Cause:</strong> JSON processor not installed</li></ul></div><div style="display:contents" dir="auto"><ul id="fcf89725-c24a-4a67-87c4-af3dca4b45bb" class="bulleted-list"><li style="list-style-type:disc"><strong>Solution:</strong> Run <code>brew install jq</code> (Mac) or <code>sudo apt-get install jq</code> (Linux/WSL)</li></ul></div><div style="display:contents" dir="auto"><h3 id="e99c53d1-77c4-4731-a79f-a23d9ae09027" class="">Problem: <code>Permission denied</code></h3></div><div style="display:contents" dir="auto"><ul id="685c3ff4-c5ac-4687-aa66-e0313dda1660" class="bulleted-list"><li style="list-style-type:disc"><strong>Cause:</strong> Script not executable</li></ul></div><div style="display:contents" dir="auto"><ul id="60ce4554-9c38-43fd-91af-ed88bab90443" class="bulleted-list"><li style="list-style-type:disc"><strong>Solution:</strong> Run <code>chmod +x scripts/</code><code><a href="http://autopilot.sh">autopilot.sh</a></code></li></ul></div><div style="display:contents" dir="auto"><h3 id="ce068f3a-66ff-4b1e-be43-167b6191ee12" class="">Problem: Script deletes JSON</h3></div><div style="display:contents" dir="auto"><ul id="e64640e7-c59d-446a-97f0-db59dbe04856" class="bulleted-list"><li style="list-style-type:disc"><strong>Cause:</strong> Syntax error in <code>stories.json</code></li></ul></div><div style="display:contents" dir="auto"><ul id="07bba699-4bf9-4402-a799-7aaf126d30af" class="bulleted-list"><li style="list-style-type:disc"><strong>Solution:</strong> Validate JSON with <code>jq . docs/specs/stories.json</code> before running</li></ul></div><div style="display:contents" dir="auto"><p id="6eb575f6-d6a0-4ab6-88c8-ea3fa0779c12" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="525157ae-e48e-4fd3-b1e1-2caa1624d155"/></div><div style="display:contents" dir="auto"><p id="df9cd3c7-b411-4b8b-94b6-fb15c79cbc3c" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="a5570dab-7019-48ff-bbe0-ac00f9ba451e" class="">🔗 Related Resources</h1></div><div style="display:contents" dir="auto"><ul id="a77b5167-4751-4d99-a936-72a10e581dda" class="bulleted-list"><li style="list-style-type:disc"><a href="Core%20Technical%20Specification%2061087d4cd5cd48d2a9a58048d24689d7.html"><span class="icon">⚙️</span>Core Technical Specification</a> - Understand the Ralph Loop conceptually</li></ul></div><div style="display:contents" dir="auto"><ul id="f8c9689e-c631-40fe-94af-089153686f0d" class="bulleted-list"><li style="list-style-type:disc"><a href="PRD%20Template%20&amp;%20Creation%20Guide%202c60d2a752124229a1230002eadbafba.html"><span class="icon">📋</span>PRD Template &amp; Creation Guide</a> - Create valid stories.json</li></ul></div><div style="display:contents" dir="auto"><ul id="33febabe-e896-475d-9263-e401239d690f" class="bulleted-list"><li style="list-style-type:disc"><a href="Learning%20Resources%20&amp;%20References%2059c24ed933d449a8ab26223067c280df.html"><span class="icon">🔗</span>Learning Resources &amp; References</a> - External tools</li></ul></div><div style="display:contents" dir="auto"><ul id="42efe65b-920d-4145-9534-093dc037c2e9" class="bulleted-list"><li style="list-style-type:disc"><a href="https://forms.gle/ABvRg4qtwXCZZdqB7">Certification Quiz</a> - Validate PPRE cycle understanding</li></ul></div><div style="display:contents" dir="ltr"><figure class="block-color-purple callout" style="white-space:pre-wrap;display:flex" id="7e4f0d2a-0705-4517-aada-aa246f2ab914"><div style="font-size:1.5em"><span class="icon">🎓</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="892adb56-a518-46ba-a512-d7eaa14c1f6d" class=""><strong>Before using in production</strong>, ensure your team has completed the certification quiz.</p></div></div></figure></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

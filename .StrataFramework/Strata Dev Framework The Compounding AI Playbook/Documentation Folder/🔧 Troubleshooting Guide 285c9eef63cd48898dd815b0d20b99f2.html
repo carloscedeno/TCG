@@ -1,0 +1,811 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>🔧 Troubleshooting Guide</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="285c9eef-63cd-4889-8dd8-15b0d20b99f2" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🔧</span></div><h1 class="page-title" dir="auto">🔧 Troubleshooting Guide</h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="auto"><p id="b8999dbc-73ef-4367-b20b-8a9e9ae610dc" class=""><strong>Purpose:</strong> Common debugging scenarios for the Strata Dev Framework<br/><strong>Audience:</strong> Developers experiencing issues with the PPRE cycle, context management, or framework implementation</p></div><div style="display:contents" dir="ltr"><figure class="block-color-red callout" style="white-space:pre-wrap;display:flex" id="0e9e36d8-3a4b-4481-838c-09e61ef60df6"><div style="font-size:1.5em"><span class="icon">🚨</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="91776e7c-0b33-46b7-9b4b-2c9f5ec24678" class=""><strong>Before reporting a bug:</strong> 90% of framework problems are due to not strictly following the process. Review this guide first.</p></div></div></figure></div><div style="display:contents" dir="auto"><p id="8aae836d-3d08-4c1c-9de9-894763c7fa75" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="4ca8d614-94f8-4630-913a-6f8e058691e4"/></div><div style="display:contents" dir="auto"><p id="5a56353e-25fe-4659-83ec-1237ade513d1" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="e8b8ed78-8d95-4b2c-af06-4fea37194c50" class="">🤖 Problem 1: &quot;Agent doesn&#x27;t follow PPRE cycle&quot;</h1></div><div style="display:contents" dir="auto"><h3 id="ad4e3fbe-4455-41cf-a608-ce46221b695e" class="">Symptoms</h3></div><div style="display:contents" dir="auto"><ul id="8ffabbeb-b319-4221-85ec-cd5cc61c2d1f" class="bulleted-list"><li style="list-style-type:disc">Agent starts coding without making a plan</li></ul></div><div style="display:contents" dir="auto"><ul id="98954323-f1e0-46c2-add0-92d8815a363a" class="bulleted-list"><li style="list-style-type:disc">Agent &quot;guesses&quot; requirements not in <code>stories.json</code></li></ul></div><div style="display:contents" dir="auto"><ul id="13cdedfb-2ee3-43ce-98db-d2dad2ba7198" class="bulleted-list"><li style="list-style-type:disc">Generated code doesn&#x27;t meet acceptance criteria</li></ul></div><div style="display:contents" dir="auto"><ul id="bbeb75c7-be25-4304-bfab-af3d07e2d8e5" class="bulleted-list"><li style="list-style-type:disc">Agent refactors unrelated code</li></ul></div><div style="display:contents" dir="auto"><h3 id="340347e7-bc27-41f4-85c8-4042b595d8c3" class="">Diagnosis</h3></div><div style="display:contents" dir="auto"><p id="acd98816-d52f-490c-ba5b-3180fdb94bce" class="">The agent is in <strong>&quot;Vibe Coding Mode&quot;</strong> because it didn&#x27;t receive explicit PPRE cycle instructions. Without structured context, the LLM falls back to default behavior: write code immediately.</p></div><div style="display:contents" dir="auto"><h3 id="be229e4f-2069-4bcd-bddf-14906652f341" class="">Solution</h3></div><div style="display:contents" dir="auto"><p id="f27ebcce-0118-4e6b-b2e8-07d2008d683c" class=""><strong>Step 1: Verify </strong><code><strong>global.mdc</strong></code><strong> exists</strong></p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="087c712c-2463-4c10-a04a-1c28f748c152" class="code code-wrap"><code class="language-Bash" style="white-space:pre-wrap;word-break:break-all">ls -la .cursor/rules/global.mdc</code></pre></div><div style="display:contents" dir="auto"><p id="c9a8c6fd-5a00-410f-a468-3a8ad4cf6bec" class="">If it doesn&#x27;t exist, create it with the template from the Quick Start Guide.</p></div><div style="display:contents" dir="auto"><p id="09ac1445-ddc0-4f43-9e79-3d9f57823edf" class=""><strong>Step 2: Force PPRE cycle explicitly</strong></p></div><div style="display:contents" dir="auto"><p id="4acea997-e797-46c7-bbb5-76053f5bbe7a" class="">Use these <strong>exact</strong> prompts in each chat:</p></div><div style="display:contents" dir="auto"><p id="d54400b1-115c-44ae-8595-9740cffebe4c" class=""><strong>PRIME:</strong></p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="d13ee560-9ffb-4662-a2b6-341c4bcd12b6" class="code code-wrap"><code class="language-undefined" style="white-space:pre-wrap;word-break:break-all">Read the active story in docs/specs/stories.json. 
+Also read .cursor/rules/global.mdc.
+Do NOT code yet. Just confirm you understand.</code></pre></div><div style="display:contents" dir="auto"><p id="b6c7c670-0fc4-4ffb-9d0e-af25657b7753" class=""><strong>PLAN:</strong></p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="11f3a170-a2c4-48fd-b9a2-8a3b5b51ebbd" class="code code-wrap"><code class="language-undefined" style="white-space:pre-wrap;word-break:break-all">Create a step-by-step implementation plan.
+Output as Markdown. Include:
+1. Files to create/modify
+2. Dependencies to check
+3. Acceptance criteria to verify</code></pre></div><div style="display:contents" dir="auto"><p id="4a8e9c99-224f-4cda-b78e-037466957cf1" class=""><strong>RESET:</strong> Press <code>Cmd+K</code> (Mac) or <code>Ctrl+K</code> (Windows). <strong>Mandatory.</strong></p></div><div style="display:contents" dir="auto"><p id="2cdcb90b-0ae1-4dc0-91d5-9fe04d958e46" class=""><strong>EXECUTE:</strong></p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="37869edf-a402-497d-b3fc-651d10220fbe" class="code code-wrap"><code class="language-undefined" style="white-space:pre-wrap;word-break:break-all">[Paste plan here]
+
+Execute this plan. After completion, verify against 
+acceptance criteria and update stories.json.</code></pre></div><div style="display:contents" dir="auto"><p id="a0dd5ea8-8f52-4100-bbec-050fb1d746ef" class=""><strong>Step 3: If problem persists</strong></p></div><div style="display:contents" dir="auto"><ul id="feea23e0-ad5d-4e90-83dd-08ab4f8b8d71" class="bulleted-list"><li style="list-style-type:disc">Close and reopen Cursor completely</li></ul></div><div style="display:contents" dir="auto"><ul id="66c5e2fa-40dd-4f44-81a5-85ecb474f928" class="bulleted-list"><li style="list-style-type:disc">Verify no multiple chat tabs open</li></ul></div><div style="display:contents" dir="auto"><ul id="399608ac-7ec2-4cf4-9161-add7f69dd07d" class="bulleted-list"><li style="list-style-type:disc">Check for old <code>.cursorrules</code> in project root</li></ul></div><div style="display:contents" dir="auto"><p id="67bbc07d-b34b-4122-a874-5b1c6ce3444a" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="a5d3b0de-8db7-491b-86e5-91229871ffa2"/></div><div style="display:contents" dir="auto"><p id="76f07dd2-7040-43fe-9f31-74d2c440544f" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="e6ea36e8-6e09-4648-a964-33e3a1952616" class="">🧠 Problem 2: &quot;Context Decay still happening&quot;</h1></div><div style="display:contents" dir="auto"><h3 id="5b003946-9b35-402e-b9de-81ac9ccba7d7" class="">Symptoms</h3></div><div style="display:contents" dir="auto"><ul id="9dbd90da-892a-4153-9bc6-57fe21e69d4f" class="bulleted-list"><li style="list-style-type:disc">Agent &quot;forgets&quot; decisions made 5 minutes ago</li></ul></div><div style="display:contents" dir="auto"><ul id="fbdfba21-4103-4544-9cb7-18ac891d812d" class="bulleted-list"><li style="list-style-type:disc">Agent asks same question multiple times</li></ul></div><div style="display:contents" dir="auto"><ul id="87cef44c-d31e-4560-b0a6-5148f7eeb831" class="bulleted-list"><li style="list-style-type:disc">Agent introduces bugs already fixed</li></ul></div><div style="display:contents" dir="auto"><ul id="3733752d-dc7c-48b5-9463-d721d1c4ded3" class="bulleted-list"><li style="list-style-type:disc">Code quality degrades in long chats</li></ul></div><div style="display:contents" dir="auto"><h3 id="88f68e0b-c170-488f-b1f0-acfda8ea20b6" class="">Diagnosis</h3></div><div style="display:contents" dir="auto"><p id="aa6a4c29-f968-4ca9-a59e-001b3e086fa6" class="">You&#x27;re experiencing <strong>Context Window Pollution</strong>. Each message consumes tokens. At context limit (100k-200k tokens), the model starts &quot;forgetting&quot; information at the beginning.</p></div><div style="display:contents" dir="auto"><h3 id="ed2276a6-3200-4bfd-b654-47d609db4205" class="">Solution</h3></div><div style="display:contents" dir="auto"><p id="791ee01b-43f0-484e-a123-91a4c80a3cae" class=""><strong>Cause #1: Not doing RESET</strong></p></div><div style="display:contents" dir="auto"><ul id="bf54bf8b-e0d7-45ca-9c50-c21b33f728bb" class="bulleted-list"><li style="list-style-type:disc"><strong>Golden rule:</strong> ALWAYS RESET between PLAN and EXECUTE</li></ul></div><div style="display:contents" dir="auto"><ul id="971b230b-9282-4e73-865c-c78ce4a77de4" class="bulleted-list"><li style="list-style-type:disc">If chat has 20+ messages, you&#x27;re doing something wrong</li></ul></div><div style="display:contents" dir="auto"><p id="81cbfddc-c5b9-433e-9a73-109880bbe443" class=""><strong>Cause #2: Not using </strong><code><strong><a href="http://agents.md">agents.md</a></strong></code></p></div><div style="display:contents" dir="auto"><p id="a2163618-5a2c-46a8-879b-a6c753f0b2b6" class="">The file system is &quot;permanent brain&quot;. Chat is &quot;volatile RAM&quot;.</p></div><div style="display:contents" dir="auto"><p id="8a7f2936-c9e5-4380-bdc4-b8e23dca15ff" class="">✅ <strong>Correct:</strong></p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="d48c8328-3570-4154-b26d-46b6555a0e9a" class="code code-wrap"><code class="language-Markdown" style="white-space:pre-wrap;word-break:break-all"># src/components/agents.md
+
+## ⚠️ Critical Lessons Learned
+- **2026-01-16:** API returns user IDs as strings, 
+  not numbers. Always cast to Number().</code></pre></div><div style="display:contents" dir="auto"><p id="1134b553-4a1c-4530-b286-ec03f82237cc" class="">❌ <strong>Incorrect:</strong> Letting agent fix same bug 3 times without documenting.</p></div><div style="display:contents" dir="auto"><p id="a85342b1-b3d3-4546-9518-3954a909e95f" class=""><strong>Cause #3: Stories too large</strong></p></div><div style="display:contents" dir="auto"><p id="8cd498c1-071b-42a3-b52f-0b12ed488f50" class="">If story touches 10+ files, it&#x27;s not atomic. Split it:</p></div><div style="display:contents" dir="auto"><p id="dae293ad-3e7b-4e21-a980-b4e0ea4c010e" class="">❌ <strong>Bad:</strong></p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2e8167fb-b2be-4734-b207-186e33752593" class="code code-wrap"><code class="language-JSON" style="white-space:pre-wrap;word-break:break-all">{&quot;id&quot;: &quot;AUTH-01&quot;, 
+ &quot;description&quot;: &quot;Implement complete auth system&quot;}</code></pre></div><div style="display:contents" dir="auto"><p id="4a9a5220-b2b0-452c-8614-399ca80497c8" class="">✅ <strong>Good:</strong></p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="b3ccbdf8-0971-405c-b76f-d43b486bb087" class="code code-wrap"><code class="language-JSON" style="white-space:pre-wrap;word-break:break-all">[
+  {&quot;id&quot;: &quot;AUTH-01a&quot;, &quot;description&quot;: &quot;Create login UI&quot;},
+  {&quot;id&quot;: &quot;AUTH-01b&quot;, &quot;description&quot;: &quot;Add validation&quot;},
+  {&quot;id&quot;: &quot;AUTH-01c&quot;, &quot;description&quot;: &quot;Connect to API&quot;}
+]</code></pre></div><div style="display:contents" dir="auto"><p id="598b819a-bae5-46f0-8cc1-58db068193ad" class=""><strong>Cause #4: Dragging large PDFs into chat</strong></p></div><div style="display:contents" dir="auto"><ul id="09b80fe2-eb72-43b4-96b6-9980c6da75c2" class="bulleted-list"><li style="list-style-type:disc">Extract relevant text to <code>.md</code> in <code>docs/reference/</code></li></ul></div><div style="display:contents" dir="auto"><ul id="85efc85b-b687-46dd-969b-ec4aa64fd680" class="bulleted-list"><li style="list-style-type:disc">Drag small <code>.md</code> instead of full PDF</li></ul></div><div style="display:contents" dir="auto"><p id="9f46ba40-f527-47d6-b07b-ef4518f7891a" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="4f4a15ae-3e3c-456a-9970-37e4f980d828"/></div><div style="display:contents" dir="auto"><p id="d2e9b31f-ff18-4ca1-887a-ae3124b27bb9" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="c6974528-a4a9-4a64-8c5b-8c947eb300cd" class="">📋 Problem 3: &quot;Stories.json not validating&quot;</h1></div><div style="display:contents" dir="auto"><h3 id="fed2d22c-85c2-4f4a-9de5-a88ffac25d92" class="">Symptoms</h3></div><div style="display:contents" dir="auto"><ul id="9b245c5a-da16-40ec-a1b6-7a8f597f1127" class="bulleted-list"><li style="list-style-type:disc">Error: <code>Unexpected token</code> when running autopilot</li></ul></div><div style="display:contents" dir="auto"><ul id="cf33a89a-e797-4638-a577-d283ab29aa31" class="bulleted-list"><li style="list-style-type:disc">Agent doesn&#x27;t find stories marked <code>false</code></li></ul></div><div style="display:contents" dir="auto"><ul id="fcd76d9c-4562-46e1-b574-ac685841c5a1" class="bulleted-list"><li style="list-style-type:disc">Script says &quot;All complete&quot; but tasks remain</li></ul></div><div style="display:contents" dir="auto"><ul id="da9e9e32-b2ae-4dbb-a2eb-c6070a0224ef" class="bulleted-list"><li style="list-style-type:disc">Acceptance criteria not being evaluated</li></ul></div><div style="display:contents" dir="auto"><h3 id="420c79c3-ea54-4725-9de6-7faf4e442f9c" class="">Diagnosis</h3></div><div style="display:contents" dir="auto"><p id="cf10498a-44a0-465d-b6e3-73a4dc5c8395" class="">JSON is strict. A syntax error breaks the entire file.</p></div><div style="display:contents" dir="auto"><h3 id="47cea499-f9a2-41a4-9f95-7544fde27bb3" class="">Solution</h3></div><div style="display:contents" dir="auto"><p id="82caa801-bb94-4d65-bf0c-827a846f672a" class=""><strong>Step 1: Validate syntax</strong></p></div><div style="display:contents" dir="auto"><p id="8333d5d5-cdd8-43c1-83f5-da16129246fb" class="">Online: <a href="http://jsonlint.com">jsonlint.com</a></p></div><div style="display:contents" dir="auto"><p id="c98dd96f-f0fb-49a3-83f9-f2cfffe47ddd" class="">Terminal:</p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="8c32aacf-a4a5-4281-85cd-8424eb597a0c" class="code code-wrap"><code class="language-Bash" style="white-space:pre-wrap;word-break:break-all">jq . docs/specs/stories.json</code></pre></div><div style="display:contents" dir="auto"><p id="72f4bf1d-253b-43a3-b84e-415950317ea7" class=""><strong>Step 2: Common errors</strong></p></div><div style="display:contents" dir="auto"><p id="c75fadde-3f4a-4771-b8dc-f2a0212cc257" class="">❌ <strong>Extra comma:</strong></p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="049df7e1-a810-4acf-8ee5-800bdb8cfa25" class="code code-wrap"><code class="language-JSON" style="white-space:pre-wrap;word-break:break-all">{&quot;stories&quot;: [
+  {&quot;id&quot;: &quot;TASK-01&quot;, &quot;passes&quot;: false},
+]}</code></pre></div><div style="display:contents" dir="auto"><p id="2e1886ca-3220-46a6-92f7-87070ff7e1b0" class="">❌ <strong>Wrong quotes on booleans:</strong></p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="414acee8-a41a-4a37-ac4e-73a978c994cc" class="code code-wrap"><code class="language-JSON" style="white-space:pre-wrap;word-break:break-all">{&quot;passes&quot;: &quot;false&quot;}  // Wrong (string)
+{&quot;passes&quot;: false}    // Correct (boolean)</code></pre></div><div style="display:contents" dir="auto"><p id="ce4e5114-3e0f-42b5-9f29-0db7eb94752e" class=""><strong>Step 3: Valid template</strong></p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="c025b6c7-54b8-469a-87e4-d7a949f14c8f" class="code code-wrap"><code class="language-JSON" style="white-space:pre-wrap;word-break:break-all">{
+  &quot;epic&quot;: &quot;Feature Name&quot;,
+  &quot;status&quot;: &quot;active&quot;,
+  &quot;stories&quot;: [
+    {
+      &quot;id&quot;: &quot;FEAT-001&quot;,
+      &quot;description&quot;: &quot;Short description&quot;,
+      &quot;files_to_touch&quot;: [&quot;src/file.ts&quot;],
+      &quot;acceptance_criteria&quot;: [
+        &quot;Criterion 1&quot;,
+        &quot;Criterion 2&quot;
+      ],
+      &quot;passes&quot;: false
+    }
+  ]
+}</code></pre></div><div style="display:contents" dir="auto"><p id="03655c0b-4c1f-4ae8-b6ae-02755fde92cd" class=""><strong>Step 4: Automate validation</strong></p></div><div style="display:contents" dir="auto"><p id="9b058526-482c-49be-b12c-ed63433150e6" class="">Add pre-commit hook:</p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="26a741c4-751e-4c72-b01c-f4ccae711ee1" class="code code-wrap"><code class="language-Bash" style="white-space:pre-wrap;word-break:break-all"># .git/hooks/pre-commit
+#!/bin/bash
+jq . docs/specs/stories.json &gt; /dev/null
+if [ $? -ne 0 ]; then
+    echo &quot;❌ stories.json is invalid JSON!&quot;
+    exit 1
+fi</code></pre></div><div style="display:contents" dir="auto"><p id="aef2a178-5265-4df9-bbea-f41a31d23c11" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="99d96331-f210-464c-87fb-e269c603211c"/></div><div style="display:contents" dir="auto"><p id="9c61720c-516e-4c7a-8702-04b9da1b72cd" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="a2862057-6d5f-4f8f-ae29-50a3aa0231a3" class="">📝 Problem 4: &quot;<a href="http://Agents.md">Agents.md</a> not being updated&quot;</h1></div><div style="display:contents" dir="auto"><h3 id="e8eaed67-0174-4733-85ce-950145d727d0" class="">Symptoms</h3></div><div style="display:contents" dir="auto"><ul id="15fbfbb4-a1b8-43df-b4a3-d2fc194c1d2d" class="bulleted-list"><li style="list-style-type:disc">Agent makes same mistake multiple times</li></ul></div><div style="display:contents" dir="auto"><ul id="76029694-324e-4acd-a171-2d545f313fd0" class="bulleted-list"><li style="list-style-type:disc"><code><a href="http://agents.md">agents.md</a></code> files empty or outdated</li></ul></div><div style="display:contents" dir="auto"><ul id="e9dacfdd-73b8-4241-ab0e-c584c261b70c" class="bulleted-list"><li style="list-style-type:disc">Team doesn&#x27;t know what lessons learned</li></ul></div><div style="display:contents" dir="auto"><ul id="7e84f154-b621-4f2a-9c70-1dfce5edd6e9" class="bulleted-list"><li style="list-style-type:disc">No &quot;compounding&quot; (system doesn&#x27;t get smarter)</li></ul></div><div style="display:contents" dir="auto"><h3 id="7411d90e-c41c-49fa-9c10-72a38e3106fc" class="">Diagnosis</h3></div><div style="display:contents" dir="auto"><p id="0b7e6c4c-b4c5-4fd3-96f4-b07825b5a8d8" class="">&quot;System Evolution&quot; protocol not being followed. Developers fix bugs without codifying learning.</p></div><div style="display:contents" dir="auto"><h3 id="1d7be101-7e32-406a-90eb-6e33b864319f" class="">Solution</h3></div><div style="display:contents" dir="auto"><p id="e57c9dc9-e268-4fee-b787-d33eb7fabd69" class=""><strong>Step 1: Understand evolution protocol</strong></p></div><div style="display:contents" dir="auto"><p id="796aa1a1-6e5b-47c5-8268-95c23b100b93" class="">When you find a bug:</p></div><div style="display:contents" dir="auto"><ol type="1" id="b16d1e84-de74-4cd3-906a-894713cac16e" class="numbered-list" start="1"><li><strong>DO NOT fix it silently</strong></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="79b0bc0a-dabc-4c8e-97bf-c66ad7d8c1b6" class="numbered-list" start="2"><li>Open <code><a href="http://agents.md">agents.md</a></code> in relevant folder</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="9f4d71fb-cd1f-498f-a119-81cde9cd2e69" class="numbered-list" start="3"><li>Add entry with date + lesson</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="e0600f5c-fb57-44c2-9bb3-08ab53503693" class="numbered-list" start="4"><li><strong>Then</strong> fix the bug</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="7b911a61-ebff-4f49-84f3-e166213ecaea" class="numbered-list" start="5"><li>Commit both changes together</li></ol></div><div style="display:contents" dir="auto"><p id="e6762663-a3a4-465a-a14d-efecc333b09c" class=""><strong>Step 2: Correct structure</strong></p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="340d685a-d09c-457d-993f-77ed8893b6a8" class="code code-wrap"><code class="language-Markdown" style="white-space:pre-wrap;word-break:break-all"># 🧠 Agent Memory: [Module Name]
+
+## ⚠️ Critical Lessons Learned
+
+- **2026-01-16:** The `formatDate()` utility expects 
+  ISO strings, not Date objects. Always convert first.
+- **2026-01-14:** Never mutate props directly. 
+  Clone first with `structuredClone()`.
+
+## 🚫 Forbidden Patterns
+
+- Do NOT use `any` type in this module.
+- Do NOT import from `@/utils/deprecated`.
+
+## 📚 Context
+
+- This module interfaces with legacy Python API
+- Date formats must match backend: YYYY-MM-DD
+- All IDs are UUIDs (strings), never integers</code></pre></div><div style="display:contents" dir="auto"><p id="22ebbe68-1005-4923-b7f7-454f32c2c0ba" class=""><strong>Step 3: Template for new modules</strong></p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="47ea86f2-2807-42e1-b6f8-f5b2d5525ca5" class="code code-wrap"><code class="language-Bash" style="white-space:pre-wrap;word-break:break-all">mkdir src/new-module
+cat &gt; src/new-module/agents.md &lt;&lt; &#x27;EOF&#x27;
+# 🧠 Agent Memory: New Module
+
+## ⚠️ Critical Lessons Learned
+
+(None yet - new module)
+
+## 🚫 Forbidden Patterns
+
+(To be defined)
+EOF</code></pre></div><div style="display:contents" dir="auto"><p id="5183fe32-3de8-4483-87af-36f45f05ba06" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="1b318eca-3a2f-446b-9794-741352b7f8b1"/></div><div style="display:contents" dir="auto"><p id="58f5b059-88e3-40cd-9f5b-a4e3cc74987f" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="51822641-4fc6-4738-a5ba-05e00b6dd725" class="">❓ FAQ: Common Errors</h1></div><div style="display:contents" dir="auto"><h3 id="0f0fb957-23c3-46ac-96a8-a807e463aab0" class="">Q1: &quot;Agent changed my tech stack&quot;</h3></div><div style="display:contents" dir="auto"><p id="60e61209-1aa1-41b9-af56-0893bf42ac99" class=""><strong>Cause:</strong> <code>global.mdc</code> doesn&#x27;t define tech stack</p></div><div style="display:contents" dir="auto"><p id="a00b28b0-263b-443c-9b5f-420e184bc198" class=""><strong>Solution:</strong> Add &quot;Tech Stack Standards&quot; section:</p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="f8a587be-80c6-4b82-87d6-b7ce3973005d" class="code code-wrap"><code class="language-Markdown" style="white-space:pre-wrap;word-break:break-all">## 4. Tech Stack Standards (IMMUTABLE)
+- Language: TypeScript 5.0+
+- Framework: Next.js 14 (App Router)
+- Styling: TailwindCSS (NO CSS-in-JS)
+- State: Zustand (NO Redux)
+- Testing: Vitest (NO Jest)</code></pre></div><div style="display:contents" dir="auto"><hr id="13157b82-bcc4-4b3e-934c-fac8807f9075"/></div><div style="display:contents" dir="auto"><h3 id="337e9345-9511-4265-8828-f9a70614cac1" class="">Q2: &quot;Autopilot stuck in loop&quot;</h3></div><div style="display:contents" dir="auto"><p id="628b3c81-702a-43df-9137-abb51cbaf95a" class=""><strong>Cause:</strong> Story has <code>passes: true</code> but script detects <code>false</code></p></div><div style="display:contents" dir="auto"><p id="389969dc-5f65-403e-99b7-1054efbdbd52" class=""><strong>Solution:</strong> Look for invisible characters:</p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="98f6387b-cf9d-449e-8a3c-c2f553d780e0" class="code code-wrap"><code class="language-Bash" style="white-space:pre-wrap;word-break:break-all">cat -A docs/specs/stories.json | grep &quot;passes&quot;</code></pre></div><div style="display:contents" dir="auto"><hr id="ad243e4b-bfc9-401c-9c89-40c6aca87e49"/></div><div style="display:contents" dir="auto"><h3 id="564b2ce5-6316-4907-a575-7ce67b7747fd" class="">Q3: &quot;Agent hallucinates functions&quot;</h3></div><div style="display:contents" dir="auto"><p id="1edc662a-519b-4eac-9fe8-8c74116b4d37" class=""><strong>Cause:</strong> Agent assumes libraries not installed</p></div><div style="display:contents" dir="auto"><p id="43b396f6-91a1-4c7e-9424-16b02afadd7c" class=""><strong>Solution:</strong> Force verification in plan:</p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="8737b823-5bbb-4765-bad9-28dcecd75265" class="code code-wrap"><code class="language-undefined" style="white-space:pre-wrap;word-break:break-all">Before planning, check package.json for dependencies.
+Do NOT assume any library is installed.</code></pre></div><div style="display:contents" dir="auto"><hr id="785cb484-7c76-4105-8c82-4ff302b63d52"/></div><div style="display:contents" dir="auto"><h3 id="d373f4c2-209b-455e-9a1f-3674b1c50ea5" class="">Q4: &quot;Auto-commits breaking workflow&quot;</h3></div><div style="display:contents" dir="auto"><p id="23a0b200-86e9-4c69-9b00-a9c2cf2c4045" class=""><strong>Cause:</strong> Script commits without review</p></div><div style="display:contents" dir="auto"><p id="7098b241-a655-4972-84ee-56c3e420879a" class=""><strong>Solution:</strong> Modify script to stage instead:</p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="97076bdf-9ece-4089-bfaf-b4e8be633b10" class="code code-wrap"><code class="language-Bash" style="white-space:pre-wrap;word-break:break-all">git add .
+echo &quot;✅ Changes staged. Review manually.&quot;</code></pre></div><div style="display:contents" dir="auto"><hr id="19467769-c47d-42a7-aee4-e440b07ec4b6"/></div><div style="display:contents" dir="auto"><h3 id="8f325b4f-1b4a-4fea-aa17-f7e5817006a1" class="">Q5: &quot;Team not following framework&quot;</h3></div><div style="display:contents" dir="auto"><p id="2b6d2c1e-d515-4839-bb04-da2115d6d0fa" class=""><strong>Cause:</strong> Lack of accountability</p></div><div style="display:contents" dir="auto"><p id="c0f41b89-63d1-4612-9f41-98cd966c7fd4" class=""><strong>Solution:</strong> Implement gates:</p></div><div style="display:contents" dir="auto"><ol type="1" id="9bf69ffe-8d59-4119-bcba-02571c1042c7" class="numbered-list" start="1"><li>Pre-commit hook validating <code>stories.json</code> and <code><a href="http://agents.md">agents.md</a></code></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="05e25c57-ade3-47a1-8ddb-95a981a0d1df" class="numbered-list" start="2"><li>PR template requiring story link</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="85b2728a-27d8-44a2-9938-ca87643570b3" class="numbered-list" start="3"><li>Mandatory certification: <a href="https://forms.gle/ABvRg4qtwXCZZdqB7">Take Quiz</a></li></ol></div><div style="display:contents" dir="auto"><hr id="f3c1033c-7d38-4198-9870-44c0cd21105e"/></div><div style="display:contents" dir="auto"><h3 id="e57c1dc8-cc71-4c25-8611-cbc2f8905506" class="">Q6: &quot;Framework too slow for hotfixes&quot;</h3></div><div style="display:contents" dir="auto"><p id="962d18c8-c56d-4de8-908d-4feafcc694c5" class=""><strong>Cause:</strong> Scope misunderstanding. Framework is for features, not emergencies.</p></div><div style="display:contents" dir="auto"><p id="e654b4de-4ad4-466e-b8fe-939629e95a83" class=""><strong>Solution:</strong> Create bypass protocol:</p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="7c482891-99ab-413e-a26e-cf800b6d8db8" class="code code-wrap"><code class="language-Markdown" style="white-space:pre-wrap;word-break:break-all"># HOTFIX Exception Protocol
+
+For CRITICAL production bugs only:
+1. Fix immediately (skip PPRE)
+2. Within 24h: Create retro story in done_specs/
+3. Document in agents.md what caused bug
+4. Add preventive rule to global.mdc if applicable</code></pre></div><div style="display:contents" dir="auto"><p id="74bf7bc5-8daa-4847-b5d6-54fa90bfb8c7" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="ffa41bfe-d3a6-4350-b30a-007f38640375"/></div><div style="display:contents" dir="auto"><p id="322f280b-f66b-415a-882f-e4671e934df3" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="91dc50ba-fc2c-4f4f-8d38-e8f17366666c" class="">🆘 Still Stuck?</h1></div><div style="display:contents" dir="ltr"><figure class="block-color-blue callout" style="white-space:pre-wrap;display:flex" id="4b0ddeb0-49f7-450f-b7b0-2d44e93347a9"><div style="font-size:1.5em"><span class="icon">💬</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="2e56e4c3-22ae-461c-b630-e305176de4ff" class=""><strong>Escalation Path</strong></p></div><div style="display:contents" dir="auto"><ol type="1" id="d2b651c1-5564-4d19-a05f-c878ae8fc53e" class="numbered-list" start="1"><li><strong>First:</strong> Review Quick Start Guide for basic concepts</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="6e93ec32-a039-4380-87c6-e9928bd26333" class="numbered-list" start="2"><li><strong>Second:</strong> Consult <a href="Core%20Technical%20Specification%2061087d4cd5cd48d2a9a58048d24689d7.html"><span class="icon">⚙️</span>Core Technical Specification</a> for architecture</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="54df4592-cf29-4933-a112-81074901f5c6" class="numbered-list" start="3"><li><strong>Third:</strong> Check all documentation in <a href="../Documentation%20Folder%202eaacc211ff1801b82b1f4c2f2d9b8ff.html"><span class="icon">📁</span>Documentation Folder</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="eb47cca4-7c88-42b4-af50-0970952bb968" class="numbered-list" start="4"><li><strong>Last Resort:</strong> Contact Guardian Team with:<div style="display:contents" dir="auto"><ul id="d84d1a2b-d70b-4b31-bf14-c503f099c3bd" class="bulleted-list"><li style="list-style-type:disc">Current <code>stories.json</code></li></ul></div><div style="display:contents" dir="auto"><ul id="055c2bb2-2635-4885-98ba-ec620384a7f6" class="bulleted-list"><li style="list-style-type:disc">Last error logs</li></ul></div><div style="display:contents" dir="auto"><ul id="ced0fbbf-75ff-48b0-b4e8-0c286dfd30d8" class="bulleted-list"><li style="list-style-type:disc">Screenshot of chat when it failed</li></ul></div></li></ol></div></div></figure></div><div style="display:contents" dir="auto"><p id="268f1a5c-b4ee-4f0a-8621-0f705c9c5695" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="776b52d0-77ce-42ff-9b18-3b8c99d992dd"/></div><div style="display:contents" dir="auto"><p id="6d2ac41e-da83-4c23-b575-46640a0183f2" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="139ad815-1d41-49d3-a54f-1e48daef6290" class="">🔗 Related Resources</h1></div><div style="display:contents" dir="auto"><ul id="57c53452-9971-4e6d-b38d-16dfd679734c" class="bulleted-list"><li style="list-style-type:disc"><a href="Core%20Technical%20Specification%2061087d4cd5cd48d2a9a58048d24689d7.html"><span class="icon">⚙️</span>Core Technical Specification</a> - Framework architecture</li></ul></div><div style="display:contents" dir="auto"><ul id="769dae6b-9afa-43bf-a6d3-0f590645f8be" class="bulleted-list"><li style="list-style-type:disc"><a href="PRD%20Template%20&amp;%20Creation%20Guide%202c60d2a752124229a1230002eadbafba.html"><span class="icon">📋</span>PRD Template &amp; Creation Guide</a> - Write correct stories.json</li></ul></div><div style="display:contents" dir="auto"><ul id="3423d044-71c1-448e-a07e-23b6d7b89157" class="bulleted-list"><li style="list-style-type:disc"><a href="Learning%20Resources%20&amp;%20References%2059c24ed933d449a8ab26223067c280df.html"><span class="icon">🔗</span>Learning Resources &amp; References</a> - External tools</li></ul></div><div style="display:contents" dir="auto"><ul id="ebb5eadb-cff6-40b3-9d81-47f5c177550d" class="bulleted-list"><li style="list-style-type:disc"><a href="https://forms.gle/ABvRg4qtwXCZZdqB7">Certification Quiz</a> - Validate understanding</li></ul></div><div style="display:contents" dir="ltr"><figure class="block-color-teal callout" style="white-space:pre-wrap;display:flex" id="95c422fd-f5f6-4267-b31d-4cf1116cb4b2"><div style="font-size:1.5em"><span class="icon">✅</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="b785431e-a537-4d09-8a43-1b5acfcbbb16" class=""><strong>Pro Tip:</strong> 90% of problems solved by strictly following PPRE cycle. If in doubt, go back to basics: Prime → Plan → <strong>RESET</strong> → Execute.</p></div></div></figure></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

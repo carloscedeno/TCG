@@ -1,0 +1,729 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Documentation Folder</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="2eaacc21-1ff1-801b-82b1-f4c2f2d9b8ff" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">📁</span></div><h1 class="page-title" dir="auto">Documentation Folder</h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="ltr"><figure class="block-color-blue callout" style="white-space:pre-wrap;display:flex" id="2d7819e5-e559-4f90-a7f7-4419e2061cc8"><div style="font-size:1.5em"><img class="icon" src="https://www.notion.so\"/></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="f508c3d0-bc3e-4669-8f4c-8ca501f93728" class=""><strong>Welcome to the Strata Dev Framework Documentation</strong></p></div><div style="display:contents" dir="auto"><p id="0240add5-eff9-4d0c-bb1f-a9846881275c" class="">This folder contains all the comprehensive materials you need to master the framework. Start with the <strong>Quick Start Guide</strong> for immediate implementation, then explore the technical specifications for deeper understanding.</p></div></div></figure></div><div style="display:contents" dir="auto"><p id="161597a9-e575-4316-8ea9-3d2d6916ad3a" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="3802de11-4c7b-469c-a0f8-9090f4e77229"/></div><div style="display:contents" dir="auto"><p id="1adb5859-91bf-4185-9642-1a4d84b64799" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="e3630d02-a1ca-4824-a79f-8872d4cb09cb" class="">🚀 Getting Started</h1></div><div style="display:contents" dir="auto"><h2 id="15b4a10a-9bb5-45fe-b211-793eeb2cc843" class="">New to the Framework?</h2></div><div style="display:contents" dir="auto"><p id="50e5039d-a2ab-421a-9553-3710e603854d" class=""><strong>Recommended Path:</strong></p></div><div style="display:contents" dir="auto"><ol type="1" id="38fbaa4b-6584-46cf-ab9a-a673a7d6dab5" class="numbered-list" start="1"><li>⭐ Start here: <a href="Documentation%20Folder/%E2%9A%A1%20Quick%20Start%20Guide%20(5-Minute%20Guide)%20c2a8f3367ca1495f99da14cf3cfc9baf.html"><span class="icon">⚡</span>⚡ Quick Start Guide (5-Minute Guide)</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="5a6e53a2-3d66-4c53-b333-2c743cbb2078" class="numbered-list" start="2"><li>Read: <a href="Documentation%20Folder/Core%20Technical%20Specification%2061087d4cd5cd48d2a9a58048d24689d7.html"><span class="icon">⚙️</span>Core Technical Specification</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="749076ee-ce3f-4e61-9cfc-b11ef91250d3" class="numbered-list" start="3"><li>Browse: <a href="Documentation%20Folder/Learning%20Resources%20&amp;%20References%2059c24ed933d449a8ab26223067c280df.html"><span class="icon">🔗</span>Learning Resources &amp; References</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="23cac741-31f7-4e20-9119-6b4b951a1eb2" class="numbered-list" start="4"><li>Create PRDs: <a href="Documentation%20Folder/PRD%20Template%20&amp;%20Creation%20Guide%202c60d2a752124229a1230002eadbafba.html"><span class="icon">📋</span>PRD Template &amp; Creation Guide</a></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="a0b95c26-ea02-4e8b-b612-b34b6333bef2" class="numbered-list" start="5"><li>Certify: <a href="https://forms.gle/ABvRg4qtwXCZZdqB7">Take the Quiz</a></li></ol></div><div style="display:contents" dir="auto"><p id="388ef333-76b7-419b-9527-51a438419f02" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="89602ac8-00fb-47f3-8182-2a7fe6145c23"/></div><div style="display:contents" dir="auto"><p id="7e32afbc-387e-4015-a9ba-ecb4b820ddac" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="6610b9b8-61be-4949-8c7c-83e5bdf1493b" class="">📚 Core Documentation</h1></div><div style="display:contents" dir="auto"><h2 id="fa02f1af-f597-4f91-b851-61ede97e6883" class="">📝 Implementation Guides</h2></div><div style="display:contents" dir="auto"><p id="98c90ac0-940c-4f8a-ab4c-bc95e4ebc577" class=""><a href="Documentation%20Folder/%E2%9A%A1%20Quick%20Start%20Guide%20(5-Minute%20Guide)%20c2a8f3367ca1495f99da14cf3cfc9baf.html"><span class="icon">⚡</span>⚡ Quick Start Guide (5-Minute Guide)</a>  </p></div><div style="display:contents" dir="auto"><p id="c42c2a67-4c5d-4b2f-bcaa-90bdf0258ada" class=""><strong>Perfect for:</strong> First-time users  </p></div><div style="display:contents" dir="auto"><p id="70587e7e-08cf-4ecd-818a-b194d9f3f544" class=""><strong>Time:</strong> 5 minutes  </p></div><div style="display:contents" dir="auto"><p id="14c91dcd-575c-4f2a-b67f-27230aa2b06a" class=""><strong>What you&#x27;ll learn:</strong> Set up your first PPRE cycle, understand the basic workflow</p></div><div style="display:contents" dir="auto"><p id="2b1aa810-cad1-4b3e-9a03-2da49811c58c" class=""><a href="Documentation%20Folder/Core%20Technical%20Specification%2061087d4cd5cd48d2a9a58048d24689d7.html"><span class="icon">⚙️</span>Core Technical Specification</a>  </p></div><div style="display:contents" dir="auto"><p id="2dab4063-36f5-485a-a8c3-0b4d9c00ea18" class=""><strong>Perfect for:</strong> Technical leads and architects  </p></div><div style="display:contents" dir="auto"><p id="61174fce-344d-40cc-b37d-0f3ba9c11c80" class=""><strong>Content:</strong> Complete directory structure, component roles, workflows, system architecture  </p></div><div style="display:contents" dir="auto"><p id="dd39f777-e45c-4e12-9a44-b75de7335ab1" class=""><strong>Status:</strong> ⚠️ Currently under maintenance - content being updated</p></div><div style="display:contents" dir="auto"><p id="b10f239e-9a4d-43d0-81bb-316db80db980" class=""><a href="Documentation%20Folder/PRD%20Template%20&amp;%20Creation%20Guide%202c60d2a752124229a1230002eadbafba.html"><span class="icon">📋</span>PRD Template &amp; Creation Guide</a>  </p></div><div style="display:contents" dir="auto"><p id="c3555e1a-c30a-4c57-a62e-0eacdfed465f" class=""><strong>Perfect for:</strong> Product managers and project leads  </p></div><div style="display:contents" dir="auto"><p id="8052403e-6068-4234-8cb5-4ae030076903" class=""><strong>What you&#x27;ll learn:</strong> How to create stories.json from requirements in 30 minutes  </p></div><div style="display:contents" dir="auto"><p id="0cef6a07-4fff-4e64-9708-2224272c39d0" class=""><strong>Status:</strong> ⚠️ Currently under maintenance - content being updated</p></div><div style="display:contents" dir="auto"><p id="cf161ff7-70d9-4c74-8bb5-4ae6a025f5f8" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="6187ef93-0e12-4764-a819-a756ed06c250"/></div><div style="display:contents" dir="auto"><p id="2eaacc21-1ff1-8021-8442-e07d726a2a24" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="f1c9ad71-6896-4bb5-8f9f-04d05dfea491" class="">🔧 Operational Resources</h1></div><div style="display:contents" dir="auto"><h2 id="59966b47-3c3f-42a9-bb51-0b9f0553dc9f" class="">🤖 Automation &amp; Tools</h2></div><div style="display:contents" dir="auto"><p id="7ef24c35-52d2-447e-98f2-44fe8b91fa61" class=""><a href="Documentation%20Folder/%F0%9F%A4%96%20Autopilot%20Script%20Example%20c3938a9fe27d4a0fa6ffa5689cd654b2.html"><span class="icon">🤖</span>🤖 Autopilot Script Example</a>  </p></div><div style="display:contents" dir="auto"><p id="8ff1c509-3631-45db-b295-e72d2b6165a6" class=""><strong>Perfect for:</strong> DevOps and automation engineers  </p></div><div style="display:contents" dir="auto"><p id="db0ba1f5-5b6b-4459-a23d-a3c1e0919fec" class=""><strong>Content:</strong> Complete bash script for automating the Ralph Loop, dependency management  </p></div><div style="display:contents" dir="auto"><p id="2b3065c9-3554-4e30-9ddd-d3ea104afefb" class=""><strong>Status:</strong> ✅ Production ready</p></div><div style="display:contents" dir="auto"><p id="95191b65-fdb6-4b58-8edf-8ad95509b504" class=""><a href="Documentation%20Folder/%F0%9F%94%A7%20Troubleshooting%20Guide%20285c9eef63cd48898dd815b0d20b99f2.html"><span class="icon">🔧</span>🔧 Troubleshooting Guide</a>  </p></div><div style="display:contents" dir="auto"><p id="23d0e4ef-49f3-4fc7-9d4c-354ace7bb986" class=""><strong>Perfect for:</strong> Developers experiencing issues  </p></div><div style="display:contents" dir="auto"><p id="b2f1ca23-ba44-468b-85d9-b18c6c35e460" class=""><strong>Content:</strong> 4 major problems + 6 FAQs with solutions  </p></div><div style="display:contents" dir="auto"><p id="597bee82-ba99-43bd-a19e-18dea1266785" class=""><strong>Status:</strong> ✅ Complete</p></div><div style="display:contents" dir="auto"><p id="7c1eea71-29be-4af1-b0dd-337e055d2698" class=""><a href="Documentation%20Folder/%F0%9F%93%A6%20Example%20Repository%2099c1377933a84fbe95aea3cf4b727479.html"><span class="icon">📦</span>📦 Example Repository</a>  </p></div><div style="display:contents" dir="auto"><p id="f04889ac-b54d-4dee-8ef1-8e02ff132778" class=""><strong>Perfect for:</strong> Teams wanting a reference implementation  </p></div><div style="display:contents" dir="auto"><p id="34301b08-7fda-4aa3-8614-44be284fba81" class=""><strong>Content:</strong> Complete file structure, all artifacts, README with setup steps  </p></div><div style="display:contents" dir="auto"><p id="ab2aa809-fba5-4dc8-87e4-fcf8d7943f95" class=""><strong>Status:</strong> ✅ Ready to clone</p></div><div style="display:contents" dir="auto"><p id="bc9e8360-bf7d-42bc-bf96-76e4e6c87b55" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="b034531b-869a-4ed1-b756-69cc99cfaa8a"/></div><div style="display:contents" dir="auto"><p id="b979520e-01f8-4e4f-8041-d294e837ffe3" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="59d3d15d-a584-4443-8d55-26b8c6e10756" class="">🎓 Learning &amp; Resources</h1></div><div style="display:contents" dir="auto"><h2 id="52102ab2-2315-4c90-9cb1-3f301a01c2f3" class="">🔗 External Resources</h2></div><div style="display:contents" dir="auto"><p id="04af23b3-46be-47cc-a59c-5738fe9dd911" class=""><a href="Documentation%20Folder/Learning%20Resources%20&amp;%20References%2059c24ed933d449a8ab26223067c280df.html"><span class="icon">🔗</span>Learning Resources &amp; References</a>  </p></div><div style="display:contents" dir="auto"><p id="2eaacc21-1ff1-808a-adb2-c2b9aa5628ab" class=""><strong>Perfect for:</strong> Expanding your knowledge  </p></div><div style="display:contents" dir="auto"><p id="150d5b78-bc68-406a-afa2-d7ea4c70f990" class=""><strong>Content:</strong> GitHub repos, video tutorials, tools, frameworks  </p></div><div style="display:contents" dir="auto"><p id="d19687d9-4309-47ea-a0de-ca841cd516bb" class=""><strong>Status:</strong> ⚠️ Currently under maintenance - links being verified</p></div><div style="display:contents" dir="auto"><p id="d4e4008e-5b54-4329-9bf1-1ff3132b0742" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="2987f033-8b39-475f-a1e0-4275285f8d24"/></div><div style="display:contents" dir="auto"><p id="ae9ac73c-4a1c-4c4e-846f-6428ca9c8fcf" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="2c4abdf2-7857-4e7b-aa3a-f778c95982bf" class="">🎯 Certification</h1></div><div style="display:contents" dir="auto"><h2 id="563e600b-032b-432a-a8e1-11b652ac1c74" class="">🏆 Validate Your Mastery</h2></div><div style="display:contents" dir="auto"><p id="157668ae-6444-4cd2-bdd8-6cc655a8d810" class="">Before using this framework in production, you <strong>must</strong> pass the certification quiz.</p></div><div style="display:contents" dir="auto"><p id="bf308abb-4403-413f-84d6-6e5651e97835" class=""><strong>📘 Official Certification Quiz</strong>  </p></div><div style="display:contents" dir="auto"><p id="548ec63c-d5f4-477c-b6e0-2d1b416b88e2" class=""><a href="https://forms.gle/ABvRg4qtwXCZZdqB7">Take the Quiz</a></p></div><div style="display:contents" dir="auto"><p id="0dde82fd-95ab-48ad-9eb6-20051f8d4670" class=""><strong>Passing Score:</strong> 90% (14/15 correct)  </p></div><div style="display:contents" dir="auto"><p id="64ae947a-c50b-4402-adfd-bf0ec4ec8d90" class=""><strong>Topics Covered:</strong></p></div><div style="display:contents" dir="auto"><ul id="b049543a-f559-420f-b7e9-e4e3e1a80a47" class="bulleted-list"><li style="list-style-type:disc">Mindset Protocols (Vibe Coding vs Compounding Engineering)</li></ul></div><div style="display:contents" dir="auto"><ul id="a53ad5fa-ea44-4095-bf9b-73a8f0768f78" class="bulleted-list"><li style="list-style-type:disc">System Architecture (Memory, Context Sharding)</li></ul></div><div style="display:contents" dir="auto"><ul id="b6d1612b-3ed6-433a-a39d-01f0a78c3ff4" class="bulleted-list"><li style="list-style-type:disc">PPRE Execution Loop</li></ul></div><div style="display:contents" dir="auto"><ul id="c933a31f-502d-4df5-a8ce-68b77b1390e0" class="bulleted-list"><li style="list-style-type:disc">Guardian Scenarios</li></ul></div><div style="display:contents" dir="auto"><ul id="279ac1bd-04e3-4099-b52a-63d2199552e6" class="bulleted-list"><li style="list-style-type:disc">Protocol Compliance</li></ul></div><div style="display:contents" dir="auto"><p id="9cfe6004-fa3f-4971-a026-85f5caae3aee" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="e1f367c3-53cc-4b17-a550-39d95c81977a"/></div><div style="display:contents" dir="auto"><p id="e62f085f-a856-430d-95f6-e1dcda60eed3" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="1e4dd084-b0af-4e28-98bd-e98fc6c2570e" class="">⚙️ Status Legend</h1></div><div style="display:contents" dir="auto"><p id="1bd0d672-05b4-40dc-a2df-a6a655c64e26" class="">✅ <strong>Complete</strong> - Ready for production use  </p></div><div style="display:contents" dir="auto"><p id="3b1af707-bc81-4867-9b43-9269dcc01980" class="">⚠️ <strong>Under Maintenance</strong> - Content being updated, links may work  </p></div><div style="display:contents" dir="auto"><p id="7e9f29a0-6afb-46c0-b537-9ae0d38b712d" class="">🚧 <strong>In Progress</strong> - Actively being developed</p></div><div style="display:contents" dir="auto"><p id="269c56c6-aa4e-4eba-8ad2-4d32686dfcdc" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="cb722a3c-a0e4-4c5d-9ecb-b57c4e5513b4"/></div><div style="display:contents" dir="auto"><p id="ab1c7001-8e03-4920-9f72-844f5c4a04b5" class="">
+</p></div><div style="display:contents" dir="ltr"><figure class="block-color-gray callout" style="white-space:pre-wrap;display:flex" id="bbcd57fc-5e6b-4adc-8fec-1bab6d1389c8"><div style="font-size:1.5em"><img class="icon" src="https://www.notion.so\"/></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="96ecc26e-ba9a-4958-824a-7613a5a66116" class=""><strong>Have questions?</strong> Check the <a href="Documentation%20Folder/%F0%9F%94%A7%20Troubleshooting%20Guide%20285c9eef63cd48898dd815b0d20b99f2.html"><span class="icon">🔧</span>🔧 Troubleshooting Guide</a> or review the <a href="Documentation%20Folder/%E2%9A%A1%20Quick%20Start%20Guide%20(5-Minute%20Guide)%20c2a8f3367ca1495f99da14cf3cfc9baf.html"><span class="icon">⚡</span>⚡ Quick Start Guide (5-Minute Guide)</a>.</p></div></div></figure></div><div style="display:contents" dir="auto"><p id="8835e39b-caae-476b-8948-77bd0b100227" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="57fb612d-010c-446f-85da-e94fa761449d"/></div><div style="display:contents" dir="auto"><p id="2eaacc21-1ff1-80e3-8800-ef8246902866" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="817d67a2-f863-4ca4-a0d1-4d8ba4a9db5a" class="">🔍 Quick Navigation</h1></div><div style="display:contents" dir="auto"><p id="9d97629b-f14a-4fa3-9be6-69eeb80f44ef" class=""><strong>Start Coding:</strong></p></div><div style="display:contents" dir="auto"><ul id="1b0593eb-73e1-4297-9dfd-99f2f1b864fe" class="bulleted-list"><li style="list-style-type:disc"><a href="Documentation%20Folder/%E2%9A%A1%20Quick%20Start%20Guide%20(5-Minute%20Guide)%20c2a8f3367ca1495f99da14cf3cfc9baf.html"><span class="icon">⚡</span>⚡ Quick Start Guide (5-Minute Guide)</a></li></ul></div><div style="display:contents" dir="auto"><ul id="803c80e6-41fc-4e8f-991d-e70abaab77de" class="bulleted-list"><li style="list-style-type:disc"><a href="Documentation%20Folder/%F0%9F%A4%96%20Autopilot%20Script%20Example%20c3938a9fe27d4a0fa6ffa5689cd654b2.html"><span class="icon">🤖</span>🤖 Autopilot Script Example</a></li></ul></div><div style="display:contents" dir="auto"><p id="f4331853-d3d9-4cd0-9835-f99699392946" class=""><strong>Get Help:</strong></p></div><div style="display:contents" dir="auto"><ul id="c3ed73cf-745f-4d2b-99b7-f4951c0ec731" class="bulleted-list"><li style="list-style-type:disc"><a href="Documentation%20Folder/%F0%9F%94%A7%20Troubleshooting%20Guide%20285c9eef63cd48898dd815b0d20b99f2.html"><span class="icon">🔧</span>🔧 Troubleshooting Guide</a></li></ul></div><div style="display:contents" dir="auto"><ul id="dd88570b-ac1a-4b1c-8dfa-60a62f9b18a9" class="bulleted-list"><li style="list-style-type:disc"><a href="Documentation%20Folder/%F0%9F%93%A6%20Example%20Repository%2099c1377933a84fbe95aea3cf4b727479.html"><span class="icon">📦</span>📦 Example Repository</a></li></ul></div><div style="display:contents" dir="auto"><p id="3b947e3b-6a05-4607-a0a5-ddd3ea1d354f" class=""><strong>Deepen Understanding:</strong></p></div><div style="display:contents" dir="auto"><ul id="a38f3972-e5ab-499f-aa5f-dd8666103f73" class="bulleted-list"><li style="list-style-type:disc"><a href="Documentation%20Folder/Core%20Technical%20Specification%2061087d4cd5cd48d2a9a58048d24689d7.html"><span class="icon">⚙️</span>Core Technical Specification</a></li></ul></div><div style="display:contents" dir="auto"><ul id="ae760482-a8e7-46df-9bdc-6c7aff33c76e" class="bulleted-list"><li style="list-style-type:disc"><a href="Documentation%20Folder/PRD%20Template%20&amp;%20Creation%20Guide%202c60d2a752124229a1230002eadbafba.html"><span class="icon">📋</span>PRD Template &amp; Creation Guide</a></li></ul></div><div style="display:contents" dir="auto"><ul id="d7b61a29-3cdc-4c07-abac-a98e7d1362d4" class="bulleted-list"><li style="list-style-type:disc"><a href="Documentation%20Folder/Learning%20Resources%20&amp;%20References%2059c24ed933d449a8ab26223067c280df.html"><span class="icon">🔗</span>Learning Resources &amp; References</a></li></ul></div><div style="display:contents" dir="auto"><p id="46e1f136-082e-4eed-bb15-39dd4e1ce357" class=""><strong>Certify:</strong></p></div><div style="display:contents" dir="auto"><ul id="138ad73c-9bae-4ebc-981a-d8ab67321c2c" class="bulleted-list"><li style="list-style-type:disc"><a href="https://forms.gle/ABvRg4qtwXCZZdqB7">Official Certification Quiz</a></li></ul></div><div style="display:contents" dir="ltr"><figure id="c3938a9f-e27d-4a0f-a6ff-a5689cd654b2" class="link-to-page"><a href="Documentation%20Folder/%F0%9F%A4%96%20Autopilot%20Script%20Example%20c3938a9fe27d4a0fa6ffa5689cd654b2.html"><span class="icon">🤖</span>🤖 Autopilot Script Example</a></figure></div><div style="display:contents" dir="ltr"><figure id="c2a8f336-7ca1-495f-99da-14cf3cfc9baf" class="link-to-page"><a href="Documentation%20Folder/%E2%9A%A1%20Quick%20Start%20Guide%20(5-Minute%20Guide)%20c2a8f3367ca1495f99da14cf3cfc9baf.html"><span class="icon">⚡</span>⚡ Quick Start Guide (5-Minute Guide)</a></figure></div><div style="display:contents" dir="ltr"><figure id="61087d4c-d5cd-48d2-a9a5-8048d24689d7" class="link-to-page"><a href="Documentation%20Folder/Core%20Technical%20Specification%2061087d4cd5cd48d2a9a58048d24689d7.html"><span class="icon">⚙️</span>Core Technical Specification</a></figure></div><div style="display:contents" dir="ltr"><figure id="59c24ed9-33d4-49a8-ab26-223067c280df" class="link-to-page"><a href="Documentation%20Folder/Learning%20Resources%20&amp;%20References%2059c24ed933d449a8ab26223067c280df.html"><span class="icon">🔗</span>Learning Resources &amp; References</a></figure></div><div style="display:contents" dir="ltr"><figure id="2c60d2a7-5212-4229-a123-0002eadbafba" class="link-to-page"><a href="Documentation%20Folder/PRD%20Template%20&amp;%20Creation%20Guide%202c60d2a752124229a1230002eadbafba.html"><span class="icon">📋</span>PRD Template &amp; Creation Guide</a></figure></div><div style="display:contents" dir="ltr"><figure id="285c9eef-63cd-4889-8dd8-15b0d20b99f2" class="link-to-page"><a href="Documentation%20Folder/%F0%9F%94%A7%20Troubleshooting%20Guide%20285c9eef63cd48898dd815b0d20b99f2.html"><span class="icon">🔧</span>🔧 Troubleshooting Guide</a></figure></div><div style="display:contents" dir="ltr"><figure id="99c13779-33a8-4fbe-95ae-a3cf4b727479" class="link-to-page"><a href="Documentation%20Folder/%F0%9F%93%A6%20Example%20Repository%2099c1377933a84fbe95aea3cf4b727479.html"><span class="icon">📦</span>📦 Example Repository</a></figure></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

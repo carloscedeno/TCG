@@ -38,6 +38,8 @@ venv.bak/
 
 # Logs
 logs/
+!logs/.gitkeep
+!.StrataFramework/logs/.gitkeep
 *.log
 
 # Data files

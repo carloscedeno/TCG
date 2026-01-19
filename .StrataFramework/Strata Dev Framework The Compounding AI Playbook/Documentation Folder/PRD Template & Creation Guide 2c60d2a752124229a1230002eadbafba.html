@@ -1,0 +1,851 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>PRD Template &amp; Creation Guide</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="2c60d2a7-5212-4229-a123-0002eadbafba" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">📋</span></div><h1 class="page-title" dir="auto">PRD Template &amp; Creation Guide</h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="auto"><p id="7d749317-bff9-406b-adcb-349af0525e0b" class=""><strong>Version:</strong> 1.0 | <strong>Type:</strong> Spec-Driven Development Template</p></div><div style="display:contents" dir="ltr"><figure class="block-color-blue callout" style="white-space:pre-wrap;display:flex" id="5788b6ff-4980-4682-919a-def7731fe2f7"><div style="font-size:1.5em"><span class="icon">🎯</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="f926b40d-e966-4739-a42a-2971f6fcb1c3" class="">This guide shows you how to create <strong>professional Product Requirements Documents (PRDs)</strong> in 30 minutes using AI, aligned with the Strata Dev Framework&#x27;s spec-driven development philosophy.</p></div><div style="display:contents" dir="auto"><p id="5207c854-8027-432b-a0ff-71a949189d9a" class=""><strong>What you&#x27;ll get:</strong> A complete PRD ready to be converted into <code>stories.json</code> for atomic execution.</p></div></div></figure></div><div style="display:contents" dir="auto"><p id="b17a4f7f-bf8b-4e64-b3fe-c5ac33e12aa5" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="07cebdd5-ecc9-412f-9a3b-b75bd3b91d03"/></div><div style="display:contents" dir="auto"><p id="06255e3b-cfaa-4296-95a1-1f8591351862" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="a35bf566-62ee-4aa5-8ae7-b00774a5bc9e" class="">📦 What&#x27;s Inside</h1></div><div style="display:contents" dir="auto"><p id="11157f2d-84d1-459d-a7fc-ec89adbe11ae" class=""><strong>2 AI Prompts + This Guide = Complete PRD System</strong></p></div><div style="display:contents" dir="auto"><ol type="1" id="1b524751-735b-413b-ad09-67cbca63090c" class="numbered-list" start="1"><li><strong>ChatGPT Scaffold Prompt</strong> - Creates PRD structure + Claude prompt</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="e287b42c-856e-4be4-9ed8-99e5fd34c2f3" class="numbered-list" start="2"><li><strong>Claude Generation Prompt</strong> - Generates detailed 15-20 page PRD</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="3978826a-8aa7-4850-a558-06a685e5663a" class="numbered-list" start="3"><li><strong>Review &amp; Polish Prompt</strong> - Reviews and improves your PRD</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="2445ef43-544e-4599-97de-10fe41c5aad9" class="numbered-list" start="4"><li><strong>Strata Conversion Guide</strong> - How to convert PRD → <code>stories.json</code></li></ol></div><div style="display:contents" dir="auto"><p id="a1c8b46b-cbd9-4ced-a63a-7409f13fac2f" class="">That&#x27;s it! No complex setup, no multiple documents to manage.</p></div><div style="display:contents" dir="auto"><p id="57d44cb4-38f4-44dd-9952-6c30138e52cc" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="5122825d-949b-4321-862d-6340dec3a754"/></div><div style="display:contents" dir="auto"><p id="c7898846-b256-4f9f-a8fb-ae31ae75c230" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="0f29b3ce-2593-4c7e-9dfd-f3c03c778d0d" class="">🚀 How It Works (4 Simple Steps)</h1></div><div style="display:contents" dir="auto"><h2 id="b0acc7d6-d3a4-4bd2-81e1-f22a675c9e5d" class="">Step 1: Generate Your PRD Creation Prompt (5 minutes)</h2></div><div style="display:contents" dir="auto"><p id="a6b3df96-5541-4489-aaa2-6fa6e8e25e12" class=""><strong>Using ChatGPT (GPT-4 recommended):</strong></p></div><div style="display:contents" dir="auto"><h3 id="cef50477-ae25-4df1-83c0-94d6b7d12e08" class="">Scaffold Prompt Template</h3></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="8b702d9f-c97f-4529-8019-7b19a255240f" class="code code-wrap"><code class="language-Markdown" style="white-space:pre-wrap;word-break:break-all">You are a senior product manager creating a PRD for a new AI project.
+
+Project Description: [YOUR PROJECT DESCRIPTION HERE]
+
+Create a comprehensive prompt for Claude that will generate a complete PRD with these sections:
+
+1. Executive Summary
+2. Problem Statement
+3. Solution Overview
+4. User Personas
+5. Technical Architecture
+6. Functional Requirements (as user stories)
+7. API Specifications
+8. Implementation Plan
+9. Success Metrics
+10. Risk Assessment
+
+The PRD must follow the Strata Dev Framework principles:
+- Spec-driven (PRD is source of truth)
+- Atomic decomposition (requirements broken into verifiable units)
+- Binary acceptance criteria (Pass/Fail only)
+- Implementation-ready (developers can start immediately)
+
+Format the prompt so Claude will generate a 15-20 page professional document.</code></pre></div><div style="display:contents" dir="auto"><p id="8e762d5f-1359-46df-bdec-342de978cbc7" class=""><strong>Action:</strong></p></div><div style="display:contents" dir="auto"><ol type="1" id="d4179032-f371-4e4e-b88e-d3d5b9ec4630" class="numbered-list" start="1"><li>Replace <code>[YOUR PROJECT DESCRIPTION HERE]</code> with your project</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="0a7f1420-8cf1-476c-affe-b08dcf8cfe33" class="numbered-list" start="2"><li>Paste into ChatGPT</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="397635ce-dedb-488f-8500-0a9e66a5d51e" class="numbered-list" start="3"><li><strong>Result:</strong> Complete prompt ready for Claude</li></ol></div><div style="display:contents" dir="auto"><p id="fc29b176-583b-4dd9-a2c5-1d569a8cefac" class="">
+</p></div><div style="display:contents" dir="auto"><h2 id="8b7d41d3-6fa0-4f58-b814-0c4c5e18f6d7" class="">Step 2: Generate Your PRD (5 minutes)</h2></div><div style="display:contents" dir="auto"><p id="3b621a84-f942-4ba6-9d39-358f4c36cc25" class=""><strong>Using Claude:</strong></p></div><div style="display:contents" dir="auto"><ol type="1" id="4f871ede-e54e-44fa-ab55-0e34bda6b674" class="numbered-list" start="1"><li>Copy ChatGPT&#x27;s entire response</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="15b068d3-fe13-452c-af70-e00b07f1f304" class="numbered-list" start="2"><li>Paste directly into Claude chat</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="c9656fa1-2998-48d2-b2f4-1e8818272d8f" class="numbered-list" start="3"><li><strong>Result:</strong> 15-20 page professional PRD</li></ol></div><div style="display:contents" dir="ltr"><figure class="block-color-yellow callout" style="white-space:pre-wrap;display:flex" id="963b7b6b-d277-4784-aedc-e3d976231bd9"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="b1e16bcd-7011-406d-8314-442b4a0ecbdc" class=""><strong>Pro Tip:</strong> Claude Pro generates faster, but any tier works. If the response is cut off, simply type &quot;continue&quot; to get the rest.</p></div></div></figure></div><div style="display:contents" dir="auto"><p id="186921ea-3c99-4ee8-8eb3-59966a2f30c8" class="">
+</p></div><div style="display:contents" dir="auto"><h2 id="d949809b-0e2b-4588-bfd6-3249a780a10a" class="">Step 3: Review &amp; Polish (5 minutes)</h2></div><div style="display:contents" dir="auto"><p id="92133c9a-e26d-4716-8001-76df769d85c8" class=""><strong>Using ChatGPT again:</strong></p></div><div style="display:contents" dir="auto"><h3 id="06ded73d-351f-468b-bc4e-e00e6556738f" class="">Review Prompt Template</h3></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="62276cca-e36b-4a09-984e-dda8490f586a" class="code code-wrap"><code class="language-Markdown" style="white-space:pre-wrap;word-break:break-all">Review this PRD for completeness and quality. Check for:
+
+1. Vague requirements (flag anything that isn&#x27;t binary/verifiable)
+2. Missing technical details
+3. Unrealistic timelines
+4. Gaps in user stories or acceptance criteria
+5. Missing API specifications
+6. Unclear success metrics
+
+Provide specific suggestions for improvement.
+
+PRD:
+[PASTE YOUR PRD HERE]</code></pre></div><div style="display:contents" dir="auto"><p id="32309a48-ada4-4c2d-a0c6-0e2b03d05bf4" class=""><strong>Action:</strong></p></div><div style="display:contents" dir="auto"><ol type="1" id="00ff7f33-8023-4aaa-a213-28a07f34a7d9" class="numbered-list" start="1"><li>Paste your PRD from Claude</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="67feb0ab-859c-47cc-bed8-cd8da7dc7e2c" class="numbered-list" start="2"><li>Apply ChatGPT&#x27;s suggestions</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="9b3e6269-b287-4a96-8a49-6cad5bb8761e" class="numbered-list" start="3"><li><strong>Result:</strong> Production-ready PRD</li></ol></div><div style="display:contents" dir="auto"><p id="f9abb3f6-930f-4142-8d2c-56e4ab2879c2" class="">
+</p></div><div style="display:contents" dir="auto"><h2 id="8933bde2-0e7b-4ee3-95c6-4ed30933642f" class="">Step 4: Convert to Stories.json (15 minutes)</h2></div><div style="display:contents" dir="auto"><p id="12113000-db5e-4aed-8dfe-a42a6ca721bf" class="">Now convert your PRD into atomic, executable stories.</p></div><div style="display:contents" dir="auto"><h3 id="55d4f062-1d2d-4b42-90fe-040546942087" class="">Conversion Prompt for ChatGPT</h3></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="ac821bc5-565d-4c89-8e92-e10e23a228ff" class="code code-wrap"><code class="language-Markdown" style="white-space:pre-wrap;word-break:break-all">Convert this PRD into a stories.json file following the Strata Dev Framework format.
+
+For each functional requirement, create atomic stories that:
+- Are completable in ONE context window (1 file or 1 function)
+- Have binary acceptance criteria (Pass/Fail only)
+- Specify exact files to touch
+- Are ordered by dependency
+
+Format:
+{
+  &quot;epic&quot;: &quot;Epic Name&quot;,
+  &quot;stories&quot;: [
+    {
+      &quot;id&quot;: &quot;EPIC-01&quot;,
+      &quot;description&quot;: &quot;Atomic task description&quot;,
+      &quot;files_to_touch&quot;: [&quot;path/to/file.ts&quot;],
+      &quot;acceptance_criteria&quot;: [
+        &quot;Specific, binary criterion 1&quot;,
+        &quot;Specific, binary criterion 2&quot;
+      ],
+      &quot;passes&quot;: false
+    }
+  ]
+}
+
+PRD:
+[PASTE YOUR PRD HERE]</code></pre></div><div style="display:contents" dir="auto"><p id="ff907633-f69c-4038-91bd-377b059d3070" class=""><strong>Result:</strong> Ready-to-execute <code>stories.json</code> file</p></div><div style="display:contents" dir="auto"><p id="cc9051b0-5db2-4871-b469-1ad81146adfe" class=""><strong>Total Time: 30 minutes</strong></p></div><div style="display:contents" dir="auto"><p id="19ab01ef-370e-4bc6-952d-d4b0956b02f7" class=""><strong>Total Effort: 4 copy-paste operations</strong></p></div><div style="display:contents" dir="auto"><p id="1e509bb3-99b0-497a-9f62-fb39d68bc9fa" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="486ee38c-7158-4ef1-b31d-d0e7589631c1"/></div><div style="display:contents" dir="auto"><p id="97573ad8-0ab9-404c-8e95-dfd4ee08f9ba" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="dd22acde-6d61-49fd-bac4-076f0d86eb57" class="">✅ What You Get</h1></div><div style="display:contents" dir="auto"><p id="a9863f5c-4197-4d46-ae6d-bd97ebbff6af" class="">After 30 minutes, you&#x27;ll have a comprehensive PRD with:</p></div><div style="display:contents" dir="auto"><h3 id="3192c4c4-67f3-4376-af0f-1f4de952669c" class="">📄 Documentation</h3></div><div style="display:contents" dir="auto"><ul id="d0f71fe6-04a3-4ebb-adfe-330b3e4afb75" class="bulleted-list"><li style="list-style-type:disc"><strong>Executive Summary</strong> - Clear vision and objectives</li></ul></div><div style="display:contents" dir="auto"><ul id="cf09d5cb-16f1-45a8-be5e-90da0045d90a" class="bulleted-list"><li style="list-style-type:disc"><strong>Problem Statement</strong> - Market-backed pain points</li></ul></div><div style="display:contents" dir="auto"><ul id="1e753d71-cf7b-4b51-84cf-5696cd0ee0ee" class="bulleted-list"><li style="list-style-type:disc"><strong>Solution Overview</strong> - Technical approach and differentiators</li></ul></div><div style="display:contents" dir="auto"><ul id="58d15a1c-21ba-4c21-9fba-0ee1343f99cb" class="bulleted-list"><li style="list-style-type:disc"><strong>User Personas</strong> - Detailed target user profiles</li></ul></div><div style="display:contents" dir="auto"><ul id="63f3c8f8-2463-4a6b-98dd-0ac072e36e43" class="bulleted-list"><li style="list-style-type:disc"><strong>Technical Architecture</strong> - Complete system design</li></ul></div><div style="display:contents" dir="auto"><h3 id="3f7a354c-599b-4eb2-9e1e-dda2fcf12b6c" class="">🔧 Implementation Ready</h3></div><div style="display:contents" dir="auto"><ul id="58298f67-b6f0-444a-8a57-36c4496832eb" class="bulleted-list"><li style="list-style-type:disc"><strong>Functional Requirements</strong> - User stories with acceptance criteria</li></ul></div><div style="display:contents" dir="auto"><ul id="770bd86a-d300-4e56-84b0-ccd3bab3e7a3" class="bulleted-list"><li style="list-style-type:disc"><strong>API Specifications</strong> - Endpoints and data models</li></ul></div><div style="display:contents" dir="auto"><ul id="875c01dc-9373-4464-ac41-0250aa28c353" class="bulleted-list"><li style="list-style-type:disc"><strong>Implementation Plan</strong> - Sprint timeline and team needs</li></ul></div><div style="display:contents" dir="auto"><ul id="b50aa246-d3cc-46be-bb06-6f1c78b50f24" class="bulleted-list"><li style="list-style-type:disc"><strong>Success Metrics</strong> - Measurable KPIs and targets</li></ul></div><div style="display:contents" dir="auto"><ul id="355c6455-434a-4f36-a6af-9ad7a30e94c2" class="bulleted-list"><li style="list-style-type:disc"><strong>Risk Assessment</strong> - Identified risks with mitigation strategies</li></ul></div><div style="display:contents" dir="auto"><h3 id="06decd44-69b5-415a-afac-e1829f7a621a" class="">⚙️ Strata Framework Integration</h3></div><div style="display:contents" dir="auto"><ul id="41e2d8b9-d38b-4720-9af6-775cf0458792" class="bulleted-list"><li style="list-style-type:disc"><strong>stories.json</strong> - Atomic, executable tasks</li></ul></div><div style="display:contents" dir="auto"><ul id="e4ebd981-8d3f-47c7-9b35-a1d7aed60c8c" class="bulleted-list"><li style="list-style-type:disc"><strong>Binary Acceptance Criteria</strong> - No ambiguity</li></ul></div><div style="display:contents" dir="auto"><ul id="e757274e-8721-4e49-8675-26a8b48cd8f5" class="bulleted-list"><li style="list-style-type:disc"><strong>File-level Granularity</strong> - Agent knows exactly what to touch</li></ul></div><div style="display:contents" dir="auto"><ul id="a30ea82e-1af2-464f-9166-b70eda2d56d2" class="bulleted-list"><li style="list-style-type:disc"><strong>PPRE Cycle Ready</strong> - Can start Prime → Plan → Reset → Execute immediately</li></ul></div><div style="display:contents" dir="auto"><p id="cd5e73b1-07f0-46ac-be72-a91bb4af736b" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="f8276663-5cfb-48c7-8a80-51cf7e6e1fa8"/></div><div style="display:contents" dir="auto"><p id="e3aa0f3a-5d40-43a6-873e-e4cf5ec5bcb3" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="cb036b9d-7d9c-4d76-8508-7907896e16ac" class="">🛠️ What You Need</h1></div><div style="display:contents" dir="auto"><h2 id="427d2e29-d717-441d-9f5c-3c38a7759f7e" class="">Required Tools</h2></div><div style="display:contents" dir="auto"><ul id="647b6f2d-8c79-42f1-b2eb-9d2ba7e19cb2" class="bulleted-list"><li style="list-style-type:disc"><strong>ChatGPT</strong> (GPT-4 access recommended)</li></ul></div><div style="display:contents" dir="auto"><ul id="c15aca19-090f-4903-a3bc-dbaf969d37b6" class="bulleted-list"><li style="list-style-type:disc"><strong>Claude</strong> (any tier works, Pro is faster)</li></ul></div><div style="display:contents" dir="auto"><ul id="79ffede7-b061-4880-bb1f-4a48a7a0a4f7" class="bulleted-list"><li style="list-style-type:disc"><strong>Text Editor</strong> (for saving your PRD and stories.json)</li></ul></div><div style="display:contents" dir="auto"><h2 id="bfdafc49-87b1-4a87-84c7-81e2f0240b9e" class="">No Setup Required</h2></div><div style="display:contents" dir="auto"><ul id="ff287420-160e-4f50-b3a6-865f67c8bed4" class="bulleted-list"><li style="list-style-type:disc">❌ No Claude Projects to configure</li></ul></div><div style="display:contents" dir="auto"><ul id="14e41c83-32ad-4220-8fa9-ec4fd2ab1046" class="bulleted-list"><li style="list-style-type:disc">❌ No complex prompt engineering</li></ul></div><div style="display:contents" dir="auto"><ul id="03ea4afa-7e9b-4d45-851e-c7a8731ccd23" class="bulleted-list"><li style="list-style-type:disc">❌ No multiple documents to track</li></ul></div><div style="display:contents" dir="auto"><ul id="1acf38c4-ab9a-4706-ae4b-6b5bf4845f6c" class="bulleted-list"><li style="list-style-type:disc">❌ No technical knowledge needed</li></ul></div><div style="display:contents" dir="auto"><p id="ad509f10-1ef1-4b2a-a44b-4febf41adcf2" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="4b9ee210-074a-49f6-b95a-b433225d5c0e"/></div><div style="display:contents" dir="auto"><p id="a27fe8af-6183-493c-877c-9c26ee3f4521" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="7dd474a0-b564-4db8-a7ba-fd8ca6f13f52" class="">💡 Pro Tips for Better Results</h1></div><div style="display:contents" dir="auto"><h2 id="3555790b-f1bc-4a5c-8120-3239a7b6c6a7" class="">For Your Project Description</h2></div><div style="display:contents" dir="auto"><p id="554d6b21-1ebd-413a-94cd-556ca78ad503" class=""><strong>Be specific about:</strong></p></div><div style="display:contents" dir="auto"><ul id="82834129-3496-45f8-9ebf-e9e677eb67bc" class="bulleted-list"><li style="list-style-type:disc">✅ Target users and main goal</li></ul></div><div style="display:contents" dir="auto"><ul id="3955b1e2-8494-4be6-a17b-e5bc6c1f8b51" class="bulleted-list"><li style="list-style-type:disc">✅ Key integrations or platforms</li></ul></div><div style="display:contents" dir="auto"><ul id="e7228cce-8c00-46ea-b0f6-2a8132e63385" class="bulleted-list"><li style="list-style-type:disc">✅ Constraints (budget, timeline, team size)</li></ul></div><div style="display:contents" dir="auto"><ul id="128aa01d-a212-4d12-b2d7-476b1f9168be" class="bulleted-list"><li style="list-style-type:disc">✅ <strong>Focus on WHAT you&#x27;re building</strong>, not HOW</li></ul></div><div style="display:contents" dir="auto"><h3 id="97380e86-0271-4c8e-85a5-6544604ab5c0" class="">Example Descriptions</h3></div><div style="display:contents" dir="auto"><p id="f595a03e-3cb5-4c84-b121-4e468a590685" class=""><strong>Good Examples ✅</strong></p></div><div style="display:contents" dir="auto"><p id="469d8fd1-a0f4-4cfb-b7ba-50c13eb8976d" class=""><em>&quot;A commercial furniture design assistant that generates 3D renders using real, in-stock SKUs from our catalog. Target users are furniture dealers creating proposals for corporate clients. Must integrate with existing PIM system and validate pricing/availability in real-time.&quot;</em></p></div><div style="display:contents" dir="auto"><p id="cee967c8-cbd7-48fa-b70a-36b418e3320e" class=""><em>&quot;An AI-powered code review system that checks PRs against our .cursor/rules/global.mdc constitution and suggests updates to </em><em><a href="http://agents.md">agents.md</a></em><em> files when bugs are fixed. For engineering teams using the Strata Dev Framework.&quot;</em></p></div><div style="display:contents" dir="auto"><p id="95cd16df-3094-44ce-a2fe-113ed3ecd39f" class=""><strong>Bad Examples ❌</strong></p></div><div style="display:contents" dir="auto"><p id="052b8f73-dce2-4c28-8ada-20eb05a3b71a" class=""><em>&quot;An AI thing that helps people&quot;</em></p></div><div style="display:contents" dir="auto"><p id="282f90e3-74c9-4732-9c45-55928eee6469" class=""><em>&quot;A chatbot using machine learning&quot;</em></p></div><div style="display:contents" dir="auto"><p id="8d30ac38-5a0e-4c3d-a445-acc35f01ed06" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="de45dee4-28bf-4589-8f5e-8e4e0773a509"/></div><div style="display:contents" dir="auto"><p id="328ddd10-23a4-4f91-94a0-418c1f78b5e1" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="8ac5fe3f-7c1a-4bca-a363-78959485a7ee" class="">🎯 Success Indicators</h1></div><div style="display:contents" dir="auto"><h2 id="831511e7-9d78-4705-b64b-77f849808543" class="">Your PRD is ready when:</h2></div><div style="display:contents" dir="auto"><ul id="aa66869a-0542-47f3-830d-6697c92269f4" class="bulleted-list"><li style="list-style-type:disc">✅ <strong>15+ pages</strong> of detailed content</li></ul></div><div style="display:contents" dir="auto"><ul id="34e901fa-0abc-4065-afb0-61b4064066f3" class="bulleted-list"><li style="list-style-type:disc">✅ <strong>All 10 sections</strong> are comprehensive</li></ul></div><div style="display:contents" dir="auto"><ul id="a9106897-51c0-4614-9f21-c51df6486583" class="bulleted-list"><li style="list-style-type:disc">✅ <strong>Developers can start building</strong> from your specs</li></ul></div><div style="display:contents" dir="auto"><ul id="a8970a27-56b7-49bc-b315-0440ba4a130e" class="bulleted-list"><li style="list-style-type:disc">✅ <strong>ChatGPT review</strong> shows only minor improvements needed</li></ul></div><div style="display:contents" dir="auto"><ul id="effce087-e517-4ff9-96c8-279fad4ad493" class="bulleted-list"><li style="list-style-type:disc">✅ <strong>stories.json</strong> has 10-30 atomic stories</li></ul></div><div style="display:contents" dir="auto"><ul id="675512af-cea2-41ea-81a2-c85d38166972" class="bulleted-list"><li style="list-style-type:disc">✅ <strong>All acceptance criteria</strong> are binary (Pass/Fail)</li></ul></div><div style="display:contents" dir="auto"><h2 id="a208b15a-3b36-4f44-a3df-9948d9832702" class="">Red Flags 🚩</h2></div><div style="display:contents" dir="auto"><ul id="04759edb-5235-4b80-a9cc-ff2a22284d12" class="bulleted-list"><li style="list-style-type:disc">🚩 <strong>Under 10 pages</strong> - Too generic or missing details</li></ul></div><div style="display:contents" dir="auto"><ul id="f0fa9b4f-e842-494d-abd0-a4db041e38d7" class="bulleted-list"><li style="list-style-type:disc">🚩 <strong>Vague requirements</strong> - &quot;User-friendly interface&quot; instead of specific user stories</li></ul></div><div style="display:contents" dir="auto"><ul id="df974f82-9beb-4c5e-9a87-90479cd7381d" class="bulleted-list"><li style="list-style-type:disc">🚩 <strong>No technical specs</strong> - Developers can&#x27;t estimate effort</li></ul></div><div style="display:contents" dir="auto"><ul id="92d178dc-98eb-401a-8bcc-8f8281801afb" class="bulleted-list"><li style="list-style-type:disc">🚩 <strong>Impossible timeline</strong> - 6 months of work planned for 6 weeks</li></ul></div><div style="display:contents" dir="auto"><ul id="8c7803e1-67c3-4f02-b697-111cf26b0bb1" class="bulleted-list"><li style="list-style-type:disc">🚩 <strong>Subjective criteria</strong> - &quot;Should look modern&quot; instead of &quot;Uses Tailwind class rounded-lg&quot;</li></ul></div><div style="display:contents" dir="auto"><p id="35cb928d-1b75-47d0-8f7f-ac6f313627d2" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="1f8afa03-2f9e-4d99-9635-402f7131a4f3"/></div><div style="display:contents" dir="auto"><p id="6f6aa813-09d6-4ce3-b6ad-8c86d7183e10" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="80fc3ccc-074a-4d87-9516-e986dc45ac3d" class="">🔄 Common Customizations</h1></div><div style="display:contents" dir="auto"><p id="de1daab6-0359-4106-a2f8-1bdc6b86232d" class="">Add these to your ChatGPT Scaffold Prompt for specific needs:</p></div><div style="display:contents" dir="auto"><h3 id="f8fa422c-68d3-49e0-8f2f-bd7424c08698" class="">For MVPs</h3></div><div style="display:contents" dir="auto"><p id="08a9b711-7d99-473a-9ef0-81a1fb7deb53" class=""><em>&quot;Focus on MVP features only. Mark advanced features as &#x27;Phase 2&#x27;. Prioritize time-to-market over feature completeness.&quot;</em></p></div><div style="display:contents" dir="auto"><h3 id="b7aa8cfb-64d1-40f7-af3a-90ab599af6da" class="">For Startups</h3></div><div style="display:contents" dir="auto"><p id="5fcff857-18bf-4eb5-a584-a6a78fecb191" class=""><em>&quot;Include investor pitch elements and clear monetization strategy. Focus on market differentiation and competitive analysis.&quot;</em></p></div><div style="display:contents" dir="auto"><h3 id="9970695c-80d6-4a3d-94c7-ef50d76fd21e" class="">For Enterprise</h3></div><div style="display:contents" dir="auto"><p id="06fcb070-a69a-429e-a5bd-e6dabfd14d6f" class=""><em>&quot;Include compliance requirements (SOC2, GDPR, OWASP) and enterprise features like SSO, audit logs, and role-based access control.&quot;</em></p></div><div style="display:contents" dir="auto"><h3 id="5f265e77-f28d-4907-b135-dfcfef5fe7ed" class="">For Agentic Systems</h3></div><div style="display:contents" dir="auto"><p id="90678a2e-8cdb-4361-b97c-d94f05004107" class=""><em>&quot;Include guardrails, confidence gates, HITL/EITL decision points, and fallback strategies. Define MCP tools and context management approach.&quot;</em></p></div><div style="display:contents" dir="auto"><p id="9ac180d6-9788-4644-aecc-ae71db79b261" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="133565c6-74b2-41a5-8807-0ab1f707a005"/></div><div style="display:contents" dir="auto"><p id="92f76f7a-3d1c-4248-b671-26f564a8d71f" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="a72c3aa5-7fca-487e-b9ea-be6114a976e5" class="">🚨 Troubleshooting</h1></div><div style="display:contents" dir="auto"><h2 id="eba4b170-ec77-4d7e-ae73-40ffe6c449d6" class="">Problem: ChatGPT scaffold too generic</h2></div><div style="display:contents" dir="auto"><p id="f02c0a74-f94f-4ca2-be36-f48ff8630d8a" class=""><strong>Solution:</strong> Add more specific context about your industry, users, and main goal. Include technical constraints upfront.</p></div><div style="display:contents" dir="auto"><h2 id="960e739f-86d7-4f57-888d-824e802b717f" class="">Problem: Claude PRD missing technical details</h2></div><div style="display:contents" dir="auto"><p id="d5ac64f9-683a-4036-aa2b-52d44fc9bb88" class=""><strong>Solution:</strong> Ask Claude to &quot;expand the technical architecture section with more implementation details, including tech stack, data flow, and integration points.&quot;</p></div><div style="display:contents" dir="auto"><h2 id="39a335b3-d110-497e-a4ee-eeff13280008" class="">Problem: PRD doesn&#x27;t feel like your project</h2></div><div style="display:contents" dir="auto"><p id="8a28e323-695c-4a0a-a2a5-f777e7d4456f" class=""><strong>Solution:</strong> Include your specific use case, target market, and key differentiators in the initial description. Mention your company&#x27;s domain (e.g., &quot;commercial furniture&quot;, &quot;e-commerce&quot;).</p></div><div style="display:contents" dir="auto"><h2 id="0cb36681-2c7a-4d18-ad1d-75c9665672f4" class="">Problem: Timeline seems unrealistic</h2></div><div style="display:contents" dir="auto"><p id="1e5e7d8e-bd58-4453-8146-62cc826ea4a2" class=""><strong>Solution:</strong> Specify your team size and timeline constraints in the ChatGPT prompt. Example: &quot;We have 2 full-time engineers and need to launch MVP in 6 weeks.&quot;</p></div><div style="display:contents" dir="auto"><h2 id="8c941c4d-9694-496b-8a9b-d677a3e636d1" class="">Problem: stories.json has stories that are too big</h2></div><div style="display:contents" dir="auto"><p id="d46f24bd-158e-49aa-982b-b48c814c2c47" class=""><strong>Solution:</strong> Ask ChatGPT to &quot;break down any story that requires changes to more than 2 files into smaller atomic stories.&quot;</p></div><div style="display:contents" dir="auto"><p id="43c03550-8d43-4921-8fdd-b265fb04b496" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="9afe4293-5f58-4099-ba16-71bcc4e92a0f"/></div><div style="display:contents" dir="auto"><p id="8fd3fb15-909b-49e7-a383-fd4558950be2" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="9aa2d12d-a573-409a-87f4-098647e13b24" class="">🎯 After Your PRD is Complete</h1></div><div style="display:contents" dir="auto"><h2 id="13828911-ca95-46e4-a07f-cee59a78ed4c" class="">Immediate Next Steps (Week 1)</h2></div><div style="display:contents" dir="auto"><ol type="1" id="34a56fb2-ba0a-46fa-be96-44b26a35bd55" class="numbered-list" start="1"><li><strong>Share with stakeholders</strong> - Get feedback and approval</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="7a55f3d6-3466-4ea0-88c5-bbb0a8791c6e" class="numbered-list" start="2"><li><strong>Technical review</strong> - Have <span class="user">@Christian Mejia</span> or tech lead assess feasibility</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="b071d4cc-0ba7-487e-8ae0-81f364112484" class="numbered-list" start="3"><li><strong>User validation</strong> - Show to 5-10 potential customers</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="36420066-530d-4d06-b19a-a9d77eba3f38" class="numbered-list" start="4"><li><strong>MVP scoping</strong> - Identify minimum viable features</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="6c8e3e73-34a1-45b1-b573-edb8c4f472b0" class="numbered-list" start="5"><li><strong>Save to docs/specs/</strong> - Store <code><a href="http://prd.md">prd.md</a></code> and <code>stories.json</code> in your repo</li></ol></div><div style="display:contents" dir="auto"><h2 id="75a0286e-2d87-4171-acd9-a20da7fc79fd" class="">Development Ready (Month 1)</h2></div><div style="display:contents" dir="auto"><ul id="ee7e874c-694a-4fee-8358-c42111df0e91" class="bulleted-list"><li style="list-style-type:disc"><strong>Development team</strong> can start building using PPRE cycle</li></ul></div><div style="display:contents" dir="auto"><ul id="c82be7ce-055d-4a44-a17f-ca207764196f" class="bulleted-list"><li style="list-style-type:disc"><strong>User stories</strong> ready for sprint planning</li></ul></div><div style="display:contents" dir="auto"><ul id="eced4011-a19e-4a9a-9d9a-544916de2d7b" class="bulleted-list"><li style="list-style-type:disc"><strong>Success metrics</strong> defined for tracking progress</li></ul></div><div style="display:contents" dir="auto"><ul id="6c58df30-c367-4595-a230-f1fcf256b801" class="bulleted-list"><li style="list-style-type:disc"><strong>Risk mitigation</strong> plans in place</li></ul></div><div style="display:contents" dir="auto"><ul id="68784742-3d01-4c0b-904c-c1735f0268a5" class="bulleted-list"><li style="list-style-type:disc"><strong><a href="http://agents.md">agents.md</a></strong><strong> files</strong> can start accumulating lessons learned</li></ul></div><div style="display:contents" dir="auto"><p id="83cee3d2-b0f0-4d3d-82b3-045c6c93831f" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="c4cd9557-159e-4059-987e-ea4a093d01f8"/></div><div style="display:contents" dir="auto"><p id="1222a16d-1802-44fe-a2e9-e7b5b8018e7d" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="becc2aa9-ecd5-416e-83ab-5e9efbbebabc" class="">📖 Example: Login Feature PRD to Stories.json</h1></div><div style="display:contents" dir="auto"><h2 id="d4604008-1cd3-4914-93e5-fd85944aaf11" class="">PRD Excerpt</h2></div><div style="display:contents" dir="auto"><p id="814df84a-4cf0-4b22-845c-83c4d3d62e28" class=""><strong>Functional Requirement 3.1: User Authentication</strong></p></div><div style="display:contents" dir="auto"><p id="e4c83964-5618-4616-8cc3-a49f4e27defa" class="">Users must be able to log in using email and password. The system must validate credentials, generate JWT tokens, and handle failed login attempts.</p></div><div style="display:contents" dir="auto"><p id="dae28ae7-b318-48a7-be8b-04f4bee02eee" class=""><strong>Acceptance Criteria:</strong></p></div><div style="display:contents" dir="auto"><ul id="971e7cd8-110f-4817-b343-8ae7e7468ddb" class="bulleted-list"><li style="list-style-type:disc">User can submit email and password</li></ul></div><div style="display:contents" dir="auto"><ul id="9f6a66ae-01a7-4ce9-be9d-7569b13642eb" class="bulleted-list"><li style="list-style-type:disc">System validates credentials against database</li></ul></div><div style="display:contents" dir="auto"><ul id="107f110d-5b70-4c23-9685-d739553d9af1" class="bulleted-list"><li style="list-style-type:disc">On success: JWT token returned with 24hr expiration</li></ul></div><div style="display:contents" dir="auto"><ul id="809efdd1-d8f6-4c38-a7cd-85e1ff2ba2f3" class="bulleted-list"><li style="list-style-type:disc">On failure: Clear error message shown</li></ul></div><div style="display:contents" dir="auto"><ul id="852f04e5-f0f0-4141-8f61-d0f6da5e83f5" class="bulleted-list"><li style="list-style-type:disc">After 5 failed attempts: Account locked for 15 minutes</li></ul></div><div style="display:contents" dir="auto"><h2 id="9bc821bd-1a5f-4261-a660-1f18d02aa951" class="">Converted to stories.json</h2></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1ed4dd2b-fdec-4f31-b594-25bb87c347bb" class="code code-wrap"><code class="language-JSON" style="white-space:pre-wrap;word-break:break-all">{
+  &quot;epic&quot;: &quot;User Authentication&quot;,
+  &quot;stories&quot;: [
+    {
+      &quot;id&quot;: &quot;AUTH-01&quot;,
+      &quot;description&quot;: &quot;Create Login Form Component&quot;,
+      &quot;files_to_touch&quot;: [&quot;src/components/LoginForm.tsx&quot;],
+      &quot;acceptance_criteria&quot;: [
+        &quot;Component exports &#x27;LoginForm&#x27;&quot;,
+        &quot;Contains email input field with type=&#x27;email&#x27;&quot;,
+        &quot;Contains password input field with type=&#x27;password&#x27;&quot;,
+        &quot;Contains submit button&quot;,
+        &quot;Submit button is disabled when fields are empty&quot;
+      ],
+      &quot;passes&quot;: false
+    },
+    {
+      &quot;id&quot;: &quot;AUTH-02&quot;,
+      &quot;description&quot;: &quot;Create login API endpoint&quot;,
+      &quot;files_to_touch&quot;: [&quot;src/api/auth.ts&quot;],
+      &quot;acceptance_criteria&quot;: [
+        &quot;POST /api/auth/login endpoint exists&quot;,
+        &quot;Accepts JSON body with email and password&quot;,
+        &quot;Returns 200 + JWT token on valid credentials&quot;,
+        &quot;Returns 401 on invalid credentials&quot;,
+        &quot;JWT token has 24hr expiration&quot;
+      ],
+      &quot;passes&quot;: false
+    },
+    {
+      &quot;id&quot;: &quot;AUTH-03&quot;,
+      &quot;description&quot;: &quot;Add failed login attempt tracking&quot;,
+      &quot;files_to_touch&quot;: [&quot;src/api/auth.ts&quot;, &quot;src/models/user.ts&quot;],
+      &quot;acceptance_criteria&quot;: [
+        &quot;failed_attempts counter exists in User model&quot;,
+        &quot;Counter increments on failed login&quot;,
+        &quot;Counter resets to 0 on successful login&quot;,
+        &quot;Returns 429 (Too Many Requests) after 5 failures&quot;,
+        &quot;Lock expires after 15 minutes&quot;
+      ],
+      &quot;passes&quot;: false
+    }
+  ]
+}</code></pre></div><div style="display:contents" dir="auto"><p id="b3b68b0e-3b0e-45d2-ac52-5230a66116af" class=""><strong>Notice:</strong></p></div><div style="display:contents" dir="auto"><ul id="9be015a8-3372-4abf-844d-3030d98734e1" class="bulleted-list"><li style="list-style-type:disc">Each story touches 1-2 files maximum</li></ul></div><div style="display:contents" dir="auto"><ul id="71761453-550f-46fb-9827-6012a71a8003" class="bulleted-list"><li style="list-style-type:disc">All criteria are binary (you can verify Pass/Fail)</li></ul></div><div style="display:contents" dir="auto"><ul id="59947d73-de56-4278-85ff-0f2756c53960" class="bulleted-list"><li style="list-style-type:disc">Stories are ordered by dependency</li></ul></div><div style="display:contents" dir="auto"><ul id="47f049c2-77ca-4df3-8e68-74f4c6ff190f" class="bulleted-list"><li style="list-style-type:disc">Ready for PPRE cycle execution</li></ul></div><div style="display:contents" dir="auto"><p id="d3c6a18a-6b7f-49e8-a5ae-0b43e663bef8" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="1318bb85-6c24-45e5-a36d-f85165b4af70"/></div><div style="display:contents" dir="auto"><p id="eeb0ad3d-8cb9-4697-a4fd-e3af43b7e846" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="08996ede-bf9a-45c4-b39d-d6738755cc33" class="">📈 Expected ROI</h1></div><div style="display:contents" dir="auto"><h2 id="c22d2a75-2ec6-46cf-903f-a36b1a20dbe5" class="">Time Savings</h2></div><div style="display:contents" dir="auto"><ul id="cb8c9a26-6fea-48c8-9d8e-0f14a0ebf029" class="bulleted-list"><li style="list-style-type:disc"><strong>Traditional PRD creation:</strong> 2-3 weeks</li></ul></div><div style="display:contents" dir="auto"><ul id="4ed8b72b-c891-450e-91c9-08c35fb1ebc1" class="bulleted-list"><li style="list-style-type:disc"><strong>With this system:</strong> 30 minutes</li></ul></div><div style="display:contents" dir="auto"><ul id="136ee5ff-7cf6-448a-97f9-6653c16d24bb" class="bulleted-list"><li style="list-style-type:disc"><strong>Time saved:</strong> 95%+ reduction</li></ul></div><div style="display:contents" dir="auto"><h2 id="a6f7af20-a92a-480c-8b05-55a03b09c7bf" class="">Quality Improvements</h2></div><div style="display:contents" dir="auto"><ul id="f5264f43-59a6-4c3b-8160-56967cbeccb7" class="bulleted-list"><li style="list-style-type:disc"><strong>Professional formatting</strong> from day one</li></ul></div><div style="display:contents" dir="auto"><ul id="ee0ea762-4532-4995-9d89-b69f8a76c634" class="bulleted-list"><li style="list-style-type:disc"><strong>Comprehensive coverage</strong> of all critical sections</li></ul></div><div style="display:contents" dir="auto"><ul id="4860f28b-210d-4eb3-afa9-ac1b0922b1a1" class="bulleted-list"><li style="list-style-type:disc"><strong>Technical depth</strong> typically requiring senior PM experience</li></ul></div><div style="display:contents" dir="auto"><ul id="d39eabcc-35e6-46eb-9f7c-01ba04de220d" class="bulleted-list"><li style="list-style-type:disc"><strong>Consistent quality</strong> across all projects</li></ul></div><div style="display:contents" dir="auto"><ul id="cddb30d8-ffaa-4bce-85d1-1caf5e969c4c" class="bulleted-list"><li style="list-style-type:disc"><strong>Framework-aligned</strong> - Ready for Strata Dev workflow</li></ul></div><div style="display:contents" dir="auto"><h2 id="027ae689-0d2c-4798-ba75-b83f22d47ee8" class="">Risk Reduction</h2></div><div style="display:contents" dir="auto"><ul id="0c4e6815-ae6f-4fc2-85d7-c0108339a83e" class="bulleted-list"><li style="list-style-type:disc"><strong>Clear specifications</strong> reduce misunderstandings</li></ul></div><div style="display:contents" dir="auto"><ul id="5322c6a3-363a-40c7-9320-aaec459ad956" class="bulleted-list"><li style="list-style-type:disc"><strong>Binary criteria</strong> eliminate &quot;definition of done&quot; debates</li></ul></div><div style="display:contents" dir="auto"><ul id="a16e125f-f217-47da-9717-6cf0021980e4" class="bulleted-list"><li style="list-style-type:disc"><strong>Atomic stories</strong> prevent scope creep</li></ul></div><div style="display:contents" dir="auto"><ul id="c767ac4a-902c-4bc1-9e18-869a0327669b" class="bulleted-list"><li style="list-style-type:disc"><strong>Early validation</strong> catches issues before coding</li></ul></div><div style="display:contents" dir="auto"><p id="dfd19c5a-d249-4d5f-8856-1eacd3fef6aa" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="33ead5d7-bd41-4be0-9cbc-a9ba3f048b0e"/></div><div style="display:contents" dir="auto"><p id="0b0aa292-8ee5-4939-ba24-67b547fb1915" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="44bca1ff-cb48-4863-9146-a6c7c085e494" class="">🔗 Integration with Strata Dev Framework</h1></div><div style="display:contents" dir="auto"><h2 id="6ab1d6f5-8758-458b-8621-d42cf2868db8" class="">PRD as &quot;The Constitution&quot; for Your Feature</h2></div><div style="display:contents" dir="ltr"><figure class="block-color-gray callout" style="white-space:pre-wrap;display:flex" id="dcef5129-687d-4d35-80c3-82f2ecff25b2"><div style="font-size:1.5em"><span class="icon">⚙️</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="f87396d0-1209-4726-9a6a-e91b1f30cb9d" class="">Remember from <a href="Core%20Technical%20Specification%2061087d4cd5cd48d2a9a58048d24689d7.html"><span class="icon">⚙️</span>Core Technical Specification</a>: <strong>The Chat History is ephemeral; the PRD is the absolute truth.</strong></p></div></div></figure></div><div style="display:contents" dir="auto"><h3 id="20fb744d-7a56-44cf-8f55-4d6c75f7359b" class="">How PRD Fits in the Framework</h3></div><div style="display:contents" dir="auto"><ol type="1" id="03da6845-3cc1-43ae-a528-4eaec8d75541" class="numbered-list" start="1"><li><strong>Phase 1: The Blueprint (PRD)</strong> ← You are here<div style="display:contents" dir="auto"><ul id="4d6cacf6-0e73-4f5a-8812-1760a58c6350" class="bulleted-list"><li style="list-style-type:disc">Create PRD using this guide (30 min)</li></ul></div><div style="display:contents" dir="auto"><ul id="3a09137f-768f-42e3-b2b7-7e11f0269f54" class="bulleted-list"><li style="list-style-type:disc">Get stakeholder approval</li></ul></div><div style="display:contents" dir="auto"><ul id="243fd943-a065-450a-a566-6bcf946e7c92" class="bulleted-list"><li style="list-style-type:disc">Store in <code>docs/specs/</code><code><a href="http://prd.md">prd.md</a></code></li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="9b52d1ba-c7b3-4e6e-9ce9-56ee5d2306c2" class="numbered-list" start="2"><li><strong>Phase 2: Atomic Decomposition</strong><div style="display:contents" dir="auto"><ul id="6b3facc3-22b8-4a9e-99d7-e1b595bd57e9" class="bulleted-list"><li style="list-style-type:disc">Convert PRD → <code>stories.json</code> (15 min)</li></ul></div><div style="display:contents" dir="auto"><ul id="e596ef9d-916c-4d26-96c6-72eba78b4d51" class="bulleted-list"><li style="list-style-type:disc">Validate atomicity (each story = 1 context window)</li></ul></div><div style="display:contents" dir="auto"><ul id="46601ae5-85d6-4a00-ad35-8c96eabceaff" class="bulleted-list"><li style="list-style-type:disc">Ensure binary acceptance criteria</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="d07919c2-b7a6-4672-9775-059666269ea8" class="numbered-list" start="3"><li><strong>Phase 3: PPRE Execution</strong><div style="display:contents" dir="auto"><ul id="564ae80c-68d6-43a9-a144-9780a51cd0e7" class="bulleted-list"><li style="list-style-type:disc">Run <a href="http://autopilot.sh">autopilot.sh</a> or manual PPRE cycles</li></ul></div><div style="display:contents" dir="auto"><ul id="019d0f22-9eb0-4459-ab30-cb774f4b2530" class="bulleted-list"><li style="list-style-type:disc">Prime → Plan → Reset → Execute</li></ul></div><div style="display:contents" dir="auto"><ul id="21ea8171-4a1c-409b-865d-1a4445e78ef9" class="bulleted-list"><li style="list-style-type:disc">Update <code><a href="http://agents.md">agents.md</a></code> with lessons learned</li></ul></div></li></ol></div><div style="display:contents" dir="auto"><h3 id="76da9bd4-5a20-442e-929d-1cc99d1e6abc" class="">PRD Maintenance</h3></div><div style="display:contents" dir="auto"><p id="39a51eb4-b980-4320-9990-a73eab8e7410" class=""><strong>When to update your PRD:</strong></p></div><div style="display:contents" dir="auto"><ul id="48b0b454-43f8-4581-b6ef-d49e19b25827" class="bulleted-list"><li style="list-style-type:disc">❌ <strong>NOT</strong> every time you fix a bug (that goes in <code><a href="http://agents.md">agents.md</a></code>)</li></ul></div><div style="display:contents" dir="auto"><ul id="753dbe76-0b09-423f-9180-2c272aab7580" class="bulleted-list"><li style="list-style-type:disc">✅ <strong>YES</strong> when requirements change or scope shifts</li></ul></div><div style="display:contents" dir="auto"><ul id="b4e4fb0c-0ffa-4810-a5c9-dfa73a0c727a" class="bulleted-list"><li style="list-style-type:disc">✅ <strong>YES</strong> when stakeholders request new features</li></ul></div><div style="display:contents" dir="auto"><ul id="6b62a258-cc43-429c-a5cb-6461e7a9df5f" class="bulleted-list"><li style="list-style-type:disc">✅ <strong>YES</strong> when technical constraints force architecture changes</li></ul></div><div style="display:contents" dir="auto"><p id="4597e4fc-13c9-494d-b980-04939c1a0ab0" class=""><strong>Version control:</strong></p></div><div style="display:contents" dir="auto"><ul id="7c6937eb-1abb-4ac8-a1f3-8ca75e80d00a" class="bulleted-list"><li style="list-style-type:disc">Keep PRD in git alongside code</li></ul></div><div style="display:contents" dir="auto"><ul id="a6594818-c82d-468b-b58e-96954a117f54" class="bulleted-list"><li style="list-style-type:disc">Use semantic versioning (v1.0, v1.1, v2.0)</li></ul></div><div style="display:contents" dir="auto"><ul id="22032297-920d-4954-828a-076ec5a995b6" class="bulleted-list"><li style="list-style-type:disc">Archive old versions in <code>docs/done_specs/</code> when major version changes</li></ul></div><div style="display:contents" dir="auto"><p id="dc9af81a-d491-429e-92bb-61b8f29c0c69" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="59ce632c-ca16-4586-bff5-40a888403677"/></div><div style="display:contents" dir="auto"><p id="5be09235-e080-452f-87a2-de505e627e56" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="f473d5d1-286d-4dde-8e3e-e95cf210e0df" class="">💼 Use Cases</h1></div><div style="display:contents" dir="auto"><p id="603c2a14-9230-42b0-8b03-8c1e62b2de1e" class="">This system works for:</p></div><div style="display:contents" dir="auto"><ul id="2b8fc92d-bea2-42b0-838c-cc8f322c9e52" class="bulleted-list"><li style="list-style-type:disc">🏢 <strong>Enterprise Features</strong> - Planning major feature additions</li></ul></div><div style="display:contents" dir="auto"><ul id="c11d9acc-ab0a-411f-a65f-724f55832f2d" class="bulleted-list"><li style="list-style-type:disc">🚀 <strong>Startup MVPs</strong> - Rapid prototyping and validation</li></ul></div><div style="display:contents" dir="auto"><ul id="39d244a4-b8c1-4ddf-a826-1eb13260a98b" class="bulleted-list"><li style="list-style-type:disc">🤖 <strong>Agentic Systems</strong> - Designing AI agent workflows</li></ul></div><div style="display:contents" dir="auto"><ul id="c7358b79-bbf0-4ed3-a7f8-f8af8968392c" class="bulleted-list"><li style="list-style-type:disc">🔧 <strong>Platform Tools</strong> - Internal tooling and automation</li></ul></div><div style="display:contents" dir="auto"><ul id="dc40ff87-6b4f-4653-88bb-dae139dda57e" class="bulleted-list"><li style="list-style-type:disc">📊 <strong>Data Pipelines</strong> - ETL and data processing systems</li></ul></div><div style="display:contents" dir="auto"><ul id="80f7948f-a967-4614-bcbe-375b668a118b" class="bulleted-list"><li style="list-style-type:disc">🌐 <strong>API Services</strong> - Microservices and backend APIs</li></ul></div><div style="display:contents" dir="auto"><p id="c52d1537-988e-4790-8e2a-04f40cb3ab59" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="9264f5a5-a026-436a-b936-9601b1a559bf"/></div><div style="display:contents" dir="auto"><p id="13501266-8d4a-4a8f-b3bd-55035dfaed52" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="41c236a0-40a7-42dd-8413-39942eae6d7a" class="">🎯 Remember</h1></div><div style="display:contents" dir="auto"><p id="ec43af6e-b362-4709-a05d-81722fc39c7f" class=""><strong>The key to success:</strong> Be specific in your project description. The more context you provide about your users, goals, and constraints, the better your PRD will be.</p></div><div style="display:contents" dir="auto"><p id="e86c988b-67c9-42be-83c7-d75b8871bb0f" class=""><strong>This isn&#x27;t magic:</strong> It&#x27;s a systematic process that combines the strengths of ChatGPT (structure) and Claude (depth) to create professional documentation in minutes instead of weeks.</p></div><div style="display:contents" dir="auto"><p id="a4635613-e66f-4471-a50f-439051fbdb1f" class=""><strong>Start now:</strong> Pick your next feature or project and run through the process. Your first PRD will be ready in 30 minutes.</p></div><div style="display:contents" dir="auto"><p id="6219bf87-4336-4897-85a0-0d1cba7866da" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="e9f9f1a5-7006-4315-886c-aa64c22bc52c"/></div><div style="display:contents" dir="auto"><p id="10483a5e-f124-43cb-bb19-d25ccb26b6cc" class="">
+</p></div><div style="display:contents" dir="ltr"><figure class="callout" style="white-space:pre-wrap;display:flex" id="76c3a14a-a8ac-4f66-bb9a-736075e95ca5"><div style="font-size:1.5em"><span class="icon">🔗</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="81805e61-6804-4b32-933c-e85d10aab1ae" class=""><strong>Related Framework Resources:</strong></p></div><div style="display:contents" dir="auto"><ul id="85bf0fd3-96eb-4eab-baeb-797186252162" class="bulleted-list"><li style="list-style-type:disc"><a href="../../Strata%20Dev%20Framework%20The%20Compounding%20AI%20Playbook%202eaacc211ff180fa90d5d8d118437f9f.html"><img class="icon notion-static-icon" src="https://www.notion.so/icons/code_blue.svg"/>Strata Dev Framework: The Compounding AI Playbook</a> - Implementation guide</li></ul></div><div style="display:contents" dir="auto"><ul id="a67460cc-3dd7-45e4-a659-a466f6d99bec" class="bulleted-list"><li style="list-style-type:disc"><a href="Core%20Technical%20Specification%2061087d4cd5cd48d2a9a58048d24689d7.html"><span class="icon">⚙️</span>Core Technical Specification</a> - PRD → stories.json workflow</li></ul></div><div style="display:contents" dir="auto"><ul id="bfaebc24-8d1e-41e4-9f34-2231f66137b5" class="bulleted-list"><li style="list-style-type:disc">Framework Overview PDF - Philosophy of spec-driven development</li></ul></div><div style="display:contents" dir="auto"><ul id="b609c581-2cf4-4954-a849-cf3049dfe951" class="bulleted-list"><li style="list-style-type:disc">The Complete Developer Handbook - Advanced PRD patterns</li></ul></div></div></figure></div><div style="display:contents" dir="auto"><p id="c477218d-3c9d-4fae-98a5-39052dd53af0" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="e781330e-7ef9-49d6-9b4c-a2a7d3104846"/></div><div style="display:contents" dir="auto"><p id="2b020866-89b4-4688-892e-f8ec94743f6f" class=""><em>Happy building! 🚀</em></p></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

@@ -1,0 +1,874 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>📦 Example Repository</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="99c13779-33a8-4fbe-95ae-a3cf4b727479" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">📦</span></div><h1 class="page-title" dir="auto">📦 Example Repository</h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="auto"><p id="ac5021ed-8c3f-49ed-bec4-857a5d61dc65" class=""><strong>Status:</strong> 🟢 Live Sample | <strong>Stack:</strong> React + TypeScript + Node<br/><strong>Objective:</strong> A &quot;clean slate&quot; repository demonstrating the Strata file topology.</p></div><div style="display:contents" dir="ltr"><figure class="block-color-blue callout" style="white-space:pre-wrap;display:flex" id="6ac97574-d82d-4a27-b37c-6cb58660193c"><div style="font-size:1.5em"><span class="icon">👨‍💻</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="78b16f67-9e12-4a16-816d-7880566b031c" class=""><strong>For Developers:</strong> This page contains the exact files you need to upload to a repo called <code>strata-reference-impl</code> to have your &quot;Golden Sample&quot;. Copy and paste each file as-is.</p></div></div></figure></div><div style="display:contents" dir="auto"><p id="d2c5ce34-3f95-446c-a07e-e253e9cda38f" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="a4967338-94da-4b77-9c6c-1237dadd851c"/></div><div style="display:contents" dir="auto"><p id="74a6c39f-23ee-43e8-b082-07a6c34066c8" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="931c8cbe-abcf-4501-9fe4-7eb7651238a2" class="">1. 📂 Directory Structure</h1></div><div style="display:contents" dir="auto"><p id="dcfd13f1-ad3a-48da-b862-c63cb676acf2" class=""><strong>Create this exact structure in your repository:</strong></p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="fe1ba1a7-dd14-48ad-bcd7-7343d6a4f280" class="code code-wrap"><code class="language-undefined" style="white-space:pre-wrap;word-break:break-all">.
+├── .cursor/
+│   └── rules/
+│       └── global.mdc       # The Constitution
+├── docs/
+│   ├── specs/
+│   │   └── stories.json     # Input Contract
+│   └── reference/
+│       ├── auth_flow.md
+│       └── ui_standards.md
+├── logs/
+│   └── progress.txt         # Short-Term Memory
+├── scripts/
+│   └── autopilot.sh         # The Engine
+└── src/
+    ├── components/
+    │   └── agents.md        # Long-Term Memory (UI)
+    └── api/
+        └── agents.md        # Long-Term Memory (Backend)</code></pre></div><div style="display:contents" dir="auto"><p id="2564a7cd-6cb8-49b0-8d73-0bc36c0db334" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="429c619a-99be-430a-bbc7-b00e0eca0fdb"/></div><div style="display:contents" dir="auto"><p id="5f5488aa-4497-4332-bf12-dd7774a78528" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="c0838ee6-8cd9-4443-8174-82926ac73763" class="">2. 📄 Critical Artifacts</h1></div><div style="display:contents" dir="auto"><h2 id="41c74cff-047f-48a5-841f-1c8a9eb3fc55" class="">🏛️ <code>.cursor/rules/global.mdc</code> (The Constitution)</h2></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="0ff7ffe7-aecb-48ea-adc9-0bf97d2b25b3" class="code code-wrap"><code class="language-Markdown" style="white-space:pre-wrap;word-break:break-all">---
+description: GLOBAL STRATA LAWS - ALWAYS ACTIVE
+globs: *
+---
+# 🏗️ Strata Constitution
+
+1. **Zero Hallucination:** You DO NOT write code 
+   without a Plan.
+2. **The Memory Rule:** Before editing ANY folder, 
+   you MUST read the `agents.md` file inside it.
+3. **Atomic Execution:** Execute strictly one story 
+   from `stories.json` at a time.
+4. **Binary Verification:** You are done ONLY when 
+   the `acceptance_criteria` in `stories.json` are met.
+5. **Context Hygiene:** Do not load documentation 
+   files unless specifically required by the Plan.
+
+## 🛑 Forbidden Patterns
+- No `console.log` in production.
+- No class components (Function components only).
+- No direct CSS files (Tailwind only).</code></pre></div><div style="display:contents" dir="auto"><p id="68dc9bd4-07f3-466d-b7fd-335e3b15f0cc" class="">
+</p></div><div style="display:contents" dir="auto"><h2 id="949a186c-eb78-4542-9f8f-70cdaf365f55" class="">🧠 <code>src/components/</code><code><a href="http://agents.md">agents.md</a></code> (Memory Example: UI)</h2></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="8e9aa408-974d-4c93-b008-a62410eb703a" class="code code-wrap"><code class="language-Markdown" style="white-space:pre-wrap;word-break:break-all"># 🧠 Agent Memory: Components Layer
+
+## ⚠️ Critical Lessons (DO NOT REPEAT MISTAKES)
+- **2023-11-01:** The `Button` component crashes if 
+  `isLoading` is undefined. Always provide a default 
+  `false`.
+- **2023-11-05:** We use `lucide-react` for icons. 
+  Do NOT import from `react-icons`.
+
+## 📌 Standards
+- All components must export as **Named Exports** 
+  (e.g., `export function Button`).
+- Props must be defined via a TypeScript `interface`.</code></pre></div><div style="display:contents" dir="auto"><p id="72e5afe2-c4a4-4848-9888-b04b4d62b726" class="">
+</p></div><div style="display:contents" dir="auto"><h2 id="6e388ec5-e07a-41ab-9767-b70a8287b0bd" class="">🧠 <code>src/api/</code><code><a href="http://agents.md">agents.md</a></code> (Memory Example: Backend)</h2></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="21d71248-26cd-4fc7-9dcb-4085e7b2e50e" class="code code-wrap"><code class="language-Markdown" style="white-space:pre-wrap;word-break:break-all"># 🧠 Agent Memory: API Layer
+
+## ⚠️ Critical Lessons
+- **2023-12-10:** The `fetch` wrapper does not 
+  automatically parse 204 No Content. Check status 
+  before `res.json()`.
+- **2023-12-12:** Auth tokens must be passed in the 
+  header `X-Strata-Auth`, NOT `Authorization`.
+
+## 🔒 Security
+- Never log full request bodies in error handlers.</code></pre></div><div style="display:contents" dir="auto"><p id="31a79b40-3e03-460d-a3ef-84be8db2d69c" class="">
+</p></div><div style="display:contents" dir="auto"><h2 id="4bb18bb2-5018-40c1-ba5c-ff56275fd4fc" class="">📜 <code>docs/specs/stories.json</code> (The Contract)</h2></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="2977fd48-a60f-4e21-a3f7-3967ce88ab99" class="code code-wrap"><code class="language-JSON" style="white-space:pre-wrap;word-break:break-all">{
+  &quot;epic&quot;: &quot;User Dashboard V1&quot;,
+  &quot;stories&quot;: [
+    {
+      &quot;id&quot;: &quot;DASH-01&quot;,
+      &quot;description&quot;: &quot;Scaffold the Dashboard layout 
+                      with a sidebar navigation.&quot;,
+      &quot;files_to_touch&quot;: [
+        &quot;src/layout/DashboardLayout.tsx&quot;, 
+        &quot;src/App.tsx&quot;
+      ],
+      &quot;acceptance_criteria&quot;: [
+        &quot;Layout renders a sidebar on the left (w-64)&quot;,
+        &quot;Sidebar contains links to &#x27;Home&#x27; and &#x27;Settings&#x27;&quot;,
+        &quot;Main content area renders children props&quot;,
+        &quot;Mobile view hides sidebar behind hamburger menu&quot;
+      ],
+      &quot;passes&quot;: true
+    },
+    {
+      &quot;id&quot;: &quot;DASH-02&quot;,
+      &quot;description&quot;: &quot;Create UserProfile card component 
+                      fetching data from API.&quot;,
+      &quot;files_to_touch&quot;: [
+        &quot;src/components/UserProfile.tsx&quot;, 
+        &quot;src/api/user.ts&quot;
+      ],
+      &quot;acceptance_criteria&quot;: [
+        &quot;Component accepts `userId` prop&quot;,
+        &quot;Fetches data from `/api/users/:id`&quot;,
+        &quot;Displays user avatar (rounded-full)&quot;,
+        &quot;Displays &#x27;Loading...&#x27; state while fetching&quot;,
+        &quot;Handles 404 error gracefully with 
+         &#x27;User not found&#x27; message&quot;
+      ],
+      &quot;passes&quot;: false
+    }
+  ]
+}</code></pre></div><div style="display:contents" dir="auto"><p id="b93576b9-e440-496d-8ba0-b2f5464c6408" class="">
+</p></div><div style="display:contents" dir="auto"><h2 id="f4a0d3e6-53a7-43dc-90f1-55d09276d9e4" class="">📝 <code>logs/progress.txt</code> (Short-Term Memory)</h2></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="42245d55-87a0-4548-89ef-ad0929134276" class="code code-wrap"><code class="language-undefined" style="white-space:pre-wrap;word-break:break-all">[2023-10-25 09:00] SYSTEM INIT: Strata Framework v2.0
+[2023-10-25 09:15] COMPLETED DASH-01: Layout Scaffold.
+[2023-10-25 09:15] NOTE: encountered z-index issue on 
+                    sidebar, added rule to 
+                    src/layout/agents.md.
+[2023-10-25 09:20] STARTED DASH-02: User Profile 
+                    Component.</code></pre></div><div style="display:contents" dir="auto"><p id="c678cada-b5a4-4a0e-9e01-a9faae0b3c73" class="">
+</p></div><div style="display:contents" dir="auto"><h2 id="fbe70d89-9ed5-4a22-9d79-92e13eb735fb" class="">🔧 <code>scripts/</code><code><a href="http://autopilot.sh">autopilot.sh</a></code> (The Engine)</h2></div><div style="display:contents" dir="auto"><p id="1eab1bf6-3b11-4f98-b28c-ed9e6dadfce0" class="">Use the complete script from the Autopilot Script Example page.</p></div><div style="display:contents" dir="auto"><p id="3877d41f-6b51-4ef7-8dcf-c6702de640fc" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="30147604-7565-4d47-b081-416c04d8b0cc"/></div><div style="display:contents" dir="auto"><p id="1148f154-d3ed-4d2f-9572-28b4c54d2a83" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="1caefbac-cce3-4fd7-b563-75046cfbb94f" class="">3. 📖 <a href="http://README.md">README.md</a> (Setup Guide)</h1></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="d2b8615d-efd6-436d-86a6-cc3133fccf1d" class="code code-wrap"><code class="language-Markdown" style="white-space:pre-wrap;word-break:break-all"># 🏗️ Strata Example Project
+
+This repository demonstrates the **Strata Dev Framework** 
+architecture.
+
+## 🚀 How to Run &quot;The Loop&quot;
+
+1. **Install Dependencies:**</code></pre></div><div style="display:contents" dir="auto"><p id="928d6d0f-30a9-4ab6-9563-b6dc5472e9d9" class="">npm install &amp;&amp; brew install jq</p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="316a7751-fc40-47b5-829b-0cf2f1333680" class="code code-wrap"><code class="language-undefined" style="white-space:pre-wrap;word-break:break-all">
+2. **Check the Contract:**
+   Open `docs/specs/stories.json`. 
+   Find first story where `&quot;passes&quot;: false`.
+
+3. **Start Autopilot:**</code></pre></div><div style="display:contents" dir="auto"><p id="7abf716f-1232-4957-bdd3-98838128af23" class="">./scripts/<a href="http://autopilot.sh">autopilot.sh</a></p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="f3a1dcb3-e0d0-48af-bc67-a06f12d5f62b" class="code code-wrap"><code class="language-undefined" style="white-space:pre-wrap;word-break:break-all">
+4. **Manual Intervention:**
+   If not using the script, follow the **PPRE Cycle**:
+   - **PRIME:** Drag `stories.json` + `global.mdc` 
+                into Chat.
+   - **PLAN:** Ask for a plan.
+   - **RESET:** `Cmd+K` to wipe memory.
+   - **EXECUTE:** Paste the plan and code.
+
+## 🧠 Memory Locations
+
+- **Global Rules:** `.cursor/rules/global.mdc`
+- **Folder Specific:** Look for `agents.md` in any 
+                       directory.
+
+## 📘 Documentation
+
+For complete framework documentation, visit the main 
+framework pages.
+
+## 🎓 Certification
+
+Complete the [Strata Certification Quiz]
+(https://forms.gle/ABvRg4qtwXCZZdqB7) to validate 
+your understanding.</code></pre></div><div style="display:contents" dir="auto"><p id="e3aa3e27-6f04-4aa8-95a7-468db057f822" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="caf0fb8d-29b0-44a4-9d11-ee80225a3acc"/></div><div style="display:contents" dir="auto"><p id="e42ed282-0096-48eb-ba2c-439b2bc6664b" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="543e2fd2-0794-423c-9c62-937d16e2e0ba" class="">🚀 Implementation Steps</h1></div><div style="display:contents" dir="auto"><h3 id="f0b6628f-25ad-4b5c-adad-2e5d69155fa0" class="">Step 1: Create the Repository</h3></div><div style="display:contents" dir="auto"><ol type="1" id="74f62232-a4b6-409a-b117-c5255432b5c9" class="numbered-list" start="1"><li>Go to GitHub and create new public repo: <div style="display:contents" dir="auto"><p id="789c75ee-ae2f-487c-9bab-a724122de167" class=""><code>strata-reference-impl</code></p></div></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="6a41f93d-57e2-4086-becb-78e0fb5ba1e0" class="numbered-list" start="2"><li>Clone locally:<div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="e6eca4f1-5922-4735-817c-701e891b0ae6" class="code code-wrap"><code class="language-Bash" style="white-space:pre-wrap;word-break:break-all">git clone https://github.com/YOUR-USERNAME/strata-reference-impl.git
+cd strata-reference-impl</code></pre></div></li></ol></div><div style="display:contents" dir="auto"><h3 id="bcfdfe5c-2c8f-44c5-bc41-d7acb20c1ca0" class="">Step 2: Copy All Files</h3></div><div style="display:contents" dir="auto"><ol type="1" id="2d50a305-54a1-487b-a72e-717dd18b7a20" class="numbered-list" start="1"><li>Copy all files from this page to the repo</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="5b8549fd-27bf-4389-9f74-e3a8c40961e8" class="numbered-list" start="2"><li>Create the exact directory structure</li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="72c12e76-7e81-42a9-8420-eb9f1a2e9711" class="numbered-list" start="3"><li>Make <code><a href="http://autopilot.sh">autopilot.sh</a></code> executable:<div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="cae54f76-c3a1-412d-ad50-a15ff1148a1d" class="code code-wrap"><code class="language-Bash" style="white-space:pre-wrap;word-break:break-all">chmod +x scripts/autopilot.sh</code></pre></div></li></ol></div><div style="display:contents" dir="auto"><h3 id="4069e075-97d8-41cc-a7ee-e791f3102e88" class="">Step 3: Commit &amp; Push</h3></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="62aabc4a-4ab1-4b9c-b31f-041337780a0c" class="code code-wrap"><code class="language-Bash" style="white-space:pre-wrap;word-break:break-all">git add .
+git commit -m &quot;feat: initial Strata reference 
+                   implementation&quot;
+git push origin main</code></pre></div><div style="display:contents" dir="auto"><h3 id="7f5dfd56-7ff7-4ceb-8c95-14590c8981d1" class="">Step 4: Link in Documentation</h3></div><div style="display:contents" dir="auto"><p id="c31dc818-4a9b-4bc3-8452-c4b95688dadb" class="">Once created, add the link to:</p></div><div style="display:contents" dir="auto"><ul id="08aba3e7-fe06-4852-967a-70cd1a33b818" class="bulleted-list"><li style="list-style-type:disc"><a href="Learning%20Resources%20&amp;%20References%2059c24ed933d449a8ab26223067c280df.html"><span class="icon">🔗</span>Learning Resources &amp; References</a></li></ul></div><div style="display:contents" dir="auto"><ul id="97c6e470-c79d-448d-9fc8-c15a9ae72f23" class="bulleted-list"><li style="list-style-type:disc">This page (links section below)</li></ul></div><div style="display:contents" dir="auto"><p id="74c9f36c-21c3-4649-aea0-04cdc627c63a" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="8cdb6e48-4368-46ce-94e7-a5dec6e91778"/></div><div style="display:contents" dir="auto"><p id="3717b8b5-acca-42c7-ac17-f611efa734b2" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="afb53ba0-815e-4637-81d5-faf94ab787e8" class="">🔗 Repository Link</h1></div><div style="display:contents" dir="ltr"><figure class="block-color-gray callout" style="white-space:pre-wrap;display:flex" id="bb50b9c4-6bef-4800-b213-5427d61274dc"><div style="font-size:1.5em"><span class="icon">👉</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="c0dede6c-96b8-49da-bdc0-b0010a1e8a0d" class=""><strong>🚧 Pending:</strong> Once the repo is created, add the link here:<br/></p></div><div style="display:contents" dir="auto"><p id="86dfa182-7697-4a01-8f82-7432186aa548" class=""><code><a href="https://github.com/YOUR-ORG/strata-reference-impl">https://github.com/YOUR-ORG/strata-reference-impl</a></code></p></div></div></figure></div><div style="display:contents" dir="auto"><p id="22f3ba2c-e50d-4c2a-8538-fa39f7060411" class="">
+</p></div><div style="display:contents" dir="auto"><hr id="1888a4ad-a6a9-4b47-a685-72421a87aa98"/></div><div style="display:contents" dir="auto"><p id="3fd037ad-3da7-4a22-8369-9b0a8a8e4edb" class="">
+</p></div><div style="display:contents" dir="auto"><h1 id="8645b67e-067c-4c80-bdf8-4b2ddc624685" class="">🔗 Related Resources</h1></div><div style="display:contents" dir="auto"><ul id="409a2e1a-9fe9-4de3-a8b3-2c7f47d30e71" class="bulleted-list"><li style="list-style-type:disc"><a href="Core%20Technical%20Specification%2061087d4cd5cd48d2a9a58048d24689d7.html"><span class="icon">⚙️</span>Core Technical Specification</a> - Detailed explanation of each component</li></ul></div><div style="display:contents" dir="auto"><ul id="5fd0c604-f298-424f-be5a-e1b2967a0392" class="bulleted-list"><li style="list-style-type:disc"><a href="PRD%20Template%20&amp;%20Creation%20Guide%202c60d2a752124229a1230002eadbafba.html"><span class="icon">📋</span>PRD Template &amp; Creation Guide</a> - How to create more stories.json</li></ul></div><div style="display:contents" dir="auto"><ul id="71f76a05-772d-4fe1-beaa-2fcbf4499999" class="bulleted-list"><li style="list-style-type:disc"><a href="Learning%20Resources%20&amp;%20References%2059c24ed933d449a8ab26223067c280df.html"><span class="icon">🔗</span>Learning Resources &amp; References</a> - External tools and tutorials</li></ul></div><div style="display:contents" dir="auto"><ul id="1b43da02-56e1-4106-8094-daf225ba7434" class="bulleted-list"><li style="list-style-type:disc"><a href="https://forms.gle/ABvRg4qtwXCZZdqB7">Certification Quiz</a> - Validate your understanding</li></ul></div><div style="display:contents" dir="ltr"><figure class="block-color-teal callout" style="white-space:pre-wrap;display:flex" id="64490352-114d-48c3-af4b-b53316cd2865"><div style="font-size:1.5em"><span class="icon">✅</span></div><div style="width:100%"><div style="display:contents" dir="auto"><p id="07a770d5-29af-47f0-96d2-5fc82dae381b" class=""><strong>Pro Tip:</strong> This repo is your perfect &quot;starting point&quot;. Clone it every time you start a new Strata project and you&#x27;ll have the complete structure ready in seconds.</p></div></div></figure></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
