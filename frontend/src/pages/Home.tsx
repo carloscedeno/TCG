@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { CardGrid } from '../components/Card/CardGrid';
 import { CardModal } from '../components/Card/CardModal';
 import type { CardProps } from '../components/Card/Card';
-import { fetchCards, fetchSets } from '../utils/api';
+import { fetchCards, fetchSets, fetchProducts } from '../utils/api';
 import { SearchBar } from '../components/SearchBar/SearchBar';
 import { FiltersPanel } from '../components/Filters/FiltersPanel';
 import type { Filters } from '../components/Filters/FiltersPanel';
 import { useAuth } from '../context/AuthContext';
 import { AuthModal } from '../components/Auth/AuthModal';
 import { UserMenu } from '../components/Navigation/UserMenu';
+import { HeroSection } from '../components/Home/HeroSection';
 import { LogIn, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -35,6 +36,8 @@ const Home: React.FC = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
   const [debouncedQuery, setDebouncedQuery] = useState('');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [activeTab, setActiveTab] = useState<'marketplace' | 'reference'>('marketplace');
   const LIMIT = 50;
 
   useEffect(() => {
@@ -47,40 +50,75 @@ const Home: React.FC = () => {
   useEffect(() => {
     // Reset page when filters change
     setPage(0);
-  }, [debouncedQuery, filters, activeRarity]);
+  }, [debouncedQuery, filters, activeRarity, activeTab]);
 
   useEffect(() => {
-    setLoading(true);
-    // Use activeRarity tab if not 'All'
-    const rarityToFilter = activeRarity !== 'All' ? activeRarity : (filters.rarities && filters.rarities.length > 0 ? filters.rarities.join(',') : null);
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      const offset = page * LIMIT;
 
-    fetchCards({
-      q: debouncedQuery || undefined,
-      rarity: rarityToFilter || undefined,
-      game: filters.games && filters.games.length > 0 ? filters.games.join(',') : undefined,
-      set: filters.sets && filters.sets.length > 0 ? filters.sets.join(',') : undefined,
-      color: filters.colors && filters.colors.length > 0 ? filters.colors.join(',') : undefined,
-      type: filters.types && filters.types.length > 0 ? filters.types.join(',') : undefined,
-      limit: LIMIT,
-      offset: page * LIMIT
-    })
-      .then(({ cards: fetchedCards, total_count }) => {
-        setTotalCount(total_count);
-        // Sort cards in frontend for now
-        const sorted = [...fetchedCards].sort((a, b) => {
-          if (sortBy === 'price') return b.price - a.price;
-          return a.name.localeCompare(b.name);
-        });
+      try {
+        let result: { cards: (CardProps & { card_id: string })[], total_count: number };
 
-        if (page === 0) {
-          setCards(sorted);
+        if (activeTab === 'marketplace') {
+          const productRes = await fetchProducts({
+            q: debouncedQuery || undefined,
+            game: filters.games && filters.games.length > 0 ? filters.games.join(',') : undefined,
+            limit: LIMIT,
+            offset,
+            sort: sortBy === 'name' ? 'name' : (sortBy === 'price' ? 'price_desc' : 'newest')
+          });
+
+          result = {
+            cards: productRes.products.map(p => ({
+              card_id: p.printing_id || p.id,
+              name: p.name,
+              set: p.set_code || 'Unknown',
+              price: p.price || 0,
+              image_url: p.image_url,
+              rarity: p.rarity,
+            })),
+            total_count: productRes.total_count
+          };
         } else {
-          setCards(prev => [...prev, ...sorted]);
+          const cardRes = await fetchCards({
+            q: debouncedQuery || undefined,
+            rarity: activeRarity !== 'All' ? activeRarity : (filters.rarities && filters.rarities.length > 0 ? filters.rarities.join(',') : undefined),
+            game: filters.games && filters.games.length > 0 ? filters.games.join(',') : undefined,
+            set: filters.sets && filters.sets.length > 0 ? filters.sets.join(',') : undefined,
+            color: filters.colors && filters.colors.length > 0 ? filters.colors.join(',') : undefined,
+            type: filters.types && filters.types.length > 0 ? filters.types.join(',') : undefined,
+            limit: LIMIT,
+            offset,
+            sort: sortBy === 'name' ? 'name' : 'release_date'
+          });
+
+          result = {
+            cards: cardRes.cards.map(c => ({
+              ...c,
+              card_id: c.card_id
+            })),
+            total_count: cardRes.total_count
+          };
         }
-      })
-      .catch((e) => setError(e.message))
-      .finally(() => setLoading(false));
-  }, [debouncedQuery, filters, activeRarity, sortBy, page]);
+
+        if (offset === 0) {
+          setCards(result.cards);
+        } else {
+          setCards(prev => [...prev, ...result.cards]);
+        }
+        setTotalCount(result.total_count);
+      } catch (err: any) {
+        setError('Failed to fetch cards. Please try again later.');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [debouncedQuery, filters, activeRarity, sortBy, page, activeTab]);
 
   useEffect(() => {
     const gameToFetch = filters.games && filters.games.length === 1 ? filters.games[0] : 'MTG';
@@ -155,32 +193,23 @@ const Home: React.FC = () => {
               <span className="text-blue-500">Universes Beyond</span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-              <div className="relative group rounded-[2.5rem] overflow-hidden cursor-pointer border border-white/5 shadow-2xl transition-all duration-500 hover:shadow-red-600/10 hover:border-red-500/20 active:scale-[0.98]" onClick={() => {
-                setFilters({ ...filters, sets: ["Marvel's Spider-Man"] });
-                setQuery('');
-              }}>
-                <div className="absolute inset-0 bg-gradient-to-br from-red-600 via-red-900 to-black opacity-90 group-hover:scale-110 transition-transform duration-1000"></div>
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.1),transparent)] group-hover:opacity-100 opacity-50 transition-opacity"></div>
-                <div className="relative p-10 flex flex-col justify-end h-64">
-                  <div className="inline-block px-3 py-1 bg-red-500/20 border border-red-500/30 rounded-full text-[9px] font-black tracking-[0.2em] text-red-400 uppercase mb-4 w-fit">Featured Drop</div>
-                  <h3 className="text-4xl font-black italic uppercase text-white mb-2 tracking-tighter leading-none">Marvel x Magic</h3>
-                  <p className="text-sm font-medium text-white/60 max-w-xs">Assemble your heroes with the limited edition Spiderman collection.</p>
-                </div>
-              </div>
+            <div className="mb-16">
+              <HeroSection />
+            </div>
 
-              <div className="relative group rounded-[2.5rem] overflow-hidden cursor-pointer border border-white/5 shadow-2xl transition-all duration-500 hover:shadow-cyan-600/10 hover:border-cyan-500/20 active:scale-[0.98]" onClick={() => {
-                setFilters({ ...filters, sets: ['Avatar: The Last Airbender'] });
-                setQuery('');
-              }}>
-                <div className="absolute inset-0 bg-gradient-to-br from-cyan-600 via-blue-900 to-black opacity-90 group-hover:scale-110 transition-transform duration-1000"></div>
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.1),transparent)] group-hover:opacity-100 opacity-50 transition-opacity"></div>
-                <div className="relative p-10 flex flex-col justify-end h-64">
-                  <div className="inline-block px-3 py-1 bg-cyan-500/20 border border-cyan-500/30 rounded-full text-[9px] font-black tracking-[0.2em] text-cyan-400 uppercase mb-4 w-fit">Collector Choice</div>
-                  <h3 className="text-4xl font-black italic uppercase text-white mb-2 tracking-tighter leading-none">Avatar: Eclipsed</h3>
-                  <p className="text-sm font-medium text-white/60 max-w-xs">Return to Lorwyn with a touch of elemental airbending power.</p>
-                </div>
-              </div>
+            <div className="flex items-center gap-1 bg-black/40 p-1.5 rounded-2xl border border-white/5 shadow-inner mb-6 w-fit mx-auto md:mx-0">
+              <button
+                onClick={() => setActiveTab('marketplace')}
+                className={`px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'marketplace' ? 'bg-geeko-cyan text-white shadow-[0_0_20px_rgba(0,229,255,0.4)]' : 'text-neutral-500 hover:text-neutral-300'}`}
+              >
+                Inventory
+              </button>
+              <button
+                onClick={() => setActiveTab('reference')}
+                className={`px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'reference' ? 'bg-neutral-800 text-white' : 'text-neutral-500 hover:text-neutral-300'}`}
+              >
+                Knowledge base
+              </button>
             </div>
 
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -239,8 +268,24 @@ const Home: React.FC = () => {
                   className="bg-neutral-900/50 text-white text-xs font-bold px-4 py-2 rounded-full border border-neutral-800 focus:outline-none focus:border-blue-500/50 transition-colors cursor-pointer"
                 >
                   <option value="name">Name (A-Z)</option>
-                  <option value="price">Price (High to Low)</option>
                 </select>
+              </div>
+
+              <div className="flex bg-neutral-900/50 p-1 rounded-lg border border-neutral-800">
+                <button
+                  onClick={() => setViewMode('grid')}
+                  className={`p-2 rounded-md transition-all ${viewMode === 'grid' ? 'bg-neutral-800 text-geeko-cyan shadow-inner' : 'text-neutral-500 hover:text-neutral-300'}`}
+                  title="Grid View"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" /></svg>
+                </button>
+                <button
+                  onClick={() => setViewMode('list')}
+                  className={`p-2 rounded-md transition-all ${viewMode === 'list' ? 'bg-neutral-800 text-geeko-cyan shadow-inner' : 'text-neutral-500 hover:text-neutral-300'}`}
+                  title="List View"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" /><line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" /></svg>
+                </button>
               </div>
             </div>
           </div>
@@ -330,7 +375,7 @@ const Home: React.FC = () => {
                     </div>
                   )}
 
-                  <CardGrid cards={cards} onCardClick={setSelectedCardId} />
+                  <CardGrid cards={cards} onCardClick={setSelectedCardId} viewMode={viewMode} />
                   {cards.length < totalCount && (
                     <div className="flex justify-center pb-20">
                       <button

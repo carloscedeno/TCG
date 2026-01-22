@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .routes import cards, admin, collections, webhooks
+from .routes import cards, admin, collections, webhooks, products
 from .utils.supabase_client import load_dotenv
 
 load_dotenv()
@@ -25,6 +25,7 @@ app.include_router(cards.router)
 app.include_router(admin.router)
 app.include_router(collections.router)
 app.include_router(webhooks.router)
+app.include_router(products.router)
 
 @app.get("/health")
 async def health_check():

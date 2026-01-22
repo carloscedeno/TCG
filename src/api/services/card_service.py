@@ -12,7 +12,8 @@ class CardService:
         color: Optional[str] = None,
         card_type: Optional[str] = None,
         limit: int = 50,
-        offset: int = 0
+        offset: int = 0,
+        sort: Optional[str] = "name"
     ) -> Dict[str, Any]:
         try:
             # Base selection: We query CARDS (Unique Oracles)
@@ -68,7 +69,14 @@ class CardService:
                     query = query.ilike('type_line', f'%{t}%')
 
             # Pagination and Execution
-            query = query.order('card_name', desc=False).range(offset, offset + limit - 1)
+            if sort == "release_date":
+                # For release date sort, we need a slightly different approach as it's a nested field
+                # Actually, ordering by nested fields in Postgrest (Supabase) is done via 'nested.field'
+                query = query.order('card_printings.sets.release_date', desc=True)
+            else:
+                query = query.order('card_name', desc=False)
+                
+            query = query.range(offset, offset + limit - 1)
             response = query.execute()
             
             cards = []

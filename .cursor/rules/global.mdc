@@ -1,0 +1,13 @@
+---
+description: "The Immutable Laws of El Emporio Engineering"
+globs: ["**/*"]
+---
+
+# Global Rules
+
+1. **Stack**: React 19, Vite, TailwindCSS 4, Supabase.
+2. **PPRE Cycle**: You MUST Follow Prime -> Plan -> Reset -> Execute.
+3. **Intelligence on Disk**: Update `agents.md` in the current folder after every bug fix.
+4. **Atomic Stories**: Never work on more than one story from `stories.json`.
+5. **No Vibe Coding**: Always obtain approval for the Plan before coding.
+6. **Mobile First**: All designs must be responsive capabilities.

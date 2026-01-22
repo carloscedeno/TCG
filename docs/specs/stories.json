@@ -1,0 +1,49 @@
+{
+    "epic": "El Emporio MVP - Phase 1",
+    "status": "active",
+    "stories": [
+        {
+            "id": "INIT-001",
+            "description": "Verify React/Vite/Tailwind Environment and Project Structure",
+            "files_to_touch": [
+                "frontend/src/App.jsx",
+                "frontend/package.json"
+            ],
+            "acceptance_criteria": [
+                "Frontend server starts with `npm run dev`",
+                "Tailwind classes render correctly",
+                "Folder structure matches `frontend/src/{components,pages,context,hooks}`"
+            ],
+            "passes": false
+        },
+        {
+            "id": "UX-001",
+            "description": "Implement 'Geekorium' Design System and Global Styles",
+            "files_to_touch": [
+                "frontend/src/index.css",
+                "frontend/tailwind.config.js"
+            ],
+            "acceptance_criteria": [
+                "Dark mode enabled by default",
+                "Primary color defines 'Geekorium Neon'",
+                "Font family set to modern sans-serif (Inter/Rubik)",
+                "Glassmorphism utility classes available"
+            ],
+            "passes": false
+        },
+        {
+            "id": "FEAT-001",
+            "description": "Create Supabase Connection and Product Context",
+            "files_to_touch": [
+                "frontend/src/context/SupabaseContext.jsx",
+                "frontend/src/hooks/useProducts.js"
+            ],
+            "acceptance_criteria": [
+                "Supabase client initializes with env vars",
+                "useProducts hook fetches data from 'products' table",
+                "Error state handled gracefully"
+            ],
+            "passes": false
+        }
+    ]
+}

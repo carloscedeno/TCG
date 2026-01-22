@@ -23,9 +23,10 @@ export const fetchCards = async (params: {
   color?: string,
   type?: string,
   limit?: number,
-  offset?: number
-}): Promise<{ cards: CardApi[], total_count: number }> => {
-  const { q, game, set, rarity, color, type, limit = 50, offset = 0 } = params;
+  offset?: number,
+  sort?: string
+} = {}): Promise<{ cards: CardApi[], total_count: number }> => {
+  const { q, game, set, rarity, color, type, limit = 50, offset = 0, sort = 'name' } = params;
 
   try {
     // Construct URL with params
@@ -36,6 +37,7 @@ export const fetchCards = async (params: {
     if (rarity) url.searchParams.append('rarity', rarity);
     if (color) url.searchParams.append('color', color);
     if (type) url.searchParams.append('type', type);
+    if (sort) url.searchParams.append('sort', sort);
     url.searchParams.append('limit', limit.toString());
     url.searchParams.append('offset', offset.toString());
 
@@ -105,6 +107,34 @@ export const fetchUserCollection = async (): Promise<any[]> => {
   } catch (error) {
     console.error('Error fetching user collection:', error);
     return [];
+  }
+};
+
+export const fetchProducts = async (params: {
+  q?: string,
+  game?: string,
+  in_stock?: boolean,
+  limit?: number,
+  offset?: number,
+  sort?: string
+} = {}): Promise<{ products: any[], total_count: number }> => {
+  const { q, game, in_stock = true, limit = 50, offset = 0, sort = 'newest' } = params;
+
+  try {
+    const url = new URL(`${API_BASE}/api/products`);
+    if (q) url.searchParams.append('q', q);
+    if (game) url.searchParams.append('game', game);
+    url.searchParams.append('in_stock', in_stock.toString());
+    url.searchParams.append('sort', sort);
+    url.searchParams.append('limit', limit.toString());
+    url.searchParams.append('offset', offset.toString());
+
+    const response = await fetch(url.toString());
+    if (!response.ok) throw new Error('API request failed');
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    return { products: [], total_count: 0 };
   }
 };
 

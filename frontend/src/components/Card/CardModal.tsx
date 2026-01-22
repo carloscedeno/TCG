@@ -140,10 +140,10 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
 
     return (
         <div
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200"
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-xl p-4 animate-in fade-in zoom-in-95 duration-300"
             onClick={handleBackdropClick}
         >
-            <div className="relative w-full max-w-6xl h-[90vh] glass-card rounded-3xl border border-white/10 shadow-2xl flex flex-col md:flex-row overflow-hidden">
+            <div className="relative w-full max-w-6xl h-[90vh] glass-panel rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0,163,255,0.15)] flex flex-col md:flex-row overflow-hidden">
 
                 {/* Close Button */}
                 <button onClick={onClose} className="absolute top-6 right-6 z-50 p-2 hover:bg-white/10 rounded-full transition-colors text-neutral-400">
@@ -158,11 +158,14 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
                                 <div className="w-10 h-10 border-4 border-t-geeko-cyan border-white/10 rounded-full animate-spin" />
                             </div>
                         ) : (
-                            <img
-                                src={currentImage}
-                                alt={details?.name}
-                                className="w-full max-w-sm rounded-[24px] shadow-2xl z-10 hover:scale-[1.02] transition-transform duration-500"
-                            />
+                            <div className="relative group perspective-1000">
+                                <div className="absolute inset-0 bg-geeko-cyan/20 blur-[60px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                                <img
+                                    src={currentImage}
+                                    alt={details?.name}
+                                    className="w-full max-w-sm rounded-[24px] shadow-[0_30px_60px_rgba(0,0,0,0.8)] z-10 hover:rotate-y-12 transition-transform duration-700 foil-shimmer"
+                                />
+                            </div>
                         )}
                         {hasMultipleFaces && !loading && (
                             <button
@@ -215,7 +218,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
                     ) : details ? (
                         <>
                             <div className="space-y-4">
-                                <h2 className="text-5xl font-black tracking-tighter text-white">
+                                <h2 className="text-6xl font-black tracking-tighter text-white text-gradient-cyan">
                                     {details.name}
                                 </h2>
                                 <div className="flex items-center gap-3 text-xl font-medium text-neutral-400">
@@ -241,13 +244,17 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
                                 <div className="space-y-4">
                                     <h3 className="text-xs font-black uppercase tracking-widest text-neutral-500">Marketplace</h3>
 
-                                    <div className="p-6 rounded-2xl bg-gradient-to-br from-geeko-gold/20 to-transparent border border-geeko-gold/30 group">
-                                        <div className="text-[10px] font-black uppercase text-geeko-gold tracking-widest mb-1">Geekorium Price</div>
+                                    <div className="p-8 rounded-3xl bg-gradient-to-br from-geeko-cyan/10 via-transparent to-transparent border border-white/10 group relative overflow-hidden">
+                                        <div className="absolute top-0 right-0 w-32 h-32 bg-geeko-cyan/5 rounded-full blur-[40px]" />
+                                        <div className="text-[10px] font-black uppercase text-geeko-cyan tracking-widest mb-1">Geekorium Price</div>
                                         <div className="flex items-center justify-between">
-                                            <div className="text-4xl font-black text-white font-mono">${details.price ? details.price.toFixed(2) : '---'}</div>
-                                            <div className="h-12 w-12 rounded-full bg-geeko-gold text-black flex items-center justify-center shadow-lg shadow-geeko-gold/20">
-                                                <ShoppingCart size={24} />
+                                            <div className="text-5xl font-black text-white font-mono tracking-tighter">
+                                                ${details.price ? details.price.toFixed(2) : '---'}
                                             </div>
+                                            <button className="h-14 px-8 rounded-2xl bg-geeko-cyan text-black font-black text-xs uppercase tracking-widest flex items-center gap-3 shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_40px_rgba(0,229,255,0.6)] hover:scale-105 active:scale-95 transition-all">
+                                                <ShoppingCart size={20} fill="currentColor" />
+                                                Add to Cart
+                                            </button>
                                         </div>
                                     </div>
 

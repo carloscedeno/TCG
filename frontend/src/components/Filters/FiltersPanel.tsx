@@ -41,7 +41,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
   const hasActiveFilters = Object.values(selected).some(v => v && v.length > 0);
 
   return (
-    <aside className="w-full bg-[#0d0d0d] border border-white/5 p-6 rounded-3xl shadow-2xl space-y-8">
+    <aside className="w-full glass-panel border border-white/5 p-8 rounded-[32px] shadow-2xl space-y-10">
       <div className="flex items-center justify-between mb-2">
         <h2 className="text-lg font-black italic tracking-tighter text-white flex items-center gap-2">
           <Sliders size={18} className="text-blue-500" />
@@ -60,8 +60,8 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
 
       {/* Juegos */}
       <section>
-        <h3 className="text-[11px] font-black uppercase tracking-widest text-neutral-600 mb-4 flex items-center gap-2">
-          <div className="w-1 h-3 bg-blue-600 rounded-full"></div>
+        <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
+          <div className="w-1.5 h-1.5 bg-blue-500 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.8)]"></div>
           Game Universe
         </h3>
         <div className="flex flex-wrap gap-2">
@@ -85,8 +85,8 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
 
       {/* Sets / Ediciones Dinámicas */}
       <section>
-        <h3 className="text-[11px] font-black uppercase tracking-widest text-neutral-600 mb-4 flex items-center gap-2">
-          <div className="w-1 h-3 bg-purple-600 rounded-full"></div>
+        <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
+          <div className="w-1.5 h-1.5 bg-purple-500 rounded-full shadow-[0_0_10px_rgba(168,85,247,0.8)]"></div>
           Expansion / Set
         </h3>
         <div className="relative mb-3">
@@ -122,8 +122,8 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
 
       {/* Rareza */}
       <section>
-        <h3 className="text-[11px] font-black uppercase tracking-widest text-neutral-600 mb-4 flex items-center gap-2">
-          <div className="w-1 h-3 bg-geeko-gold rounded-full"></div>
+        <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
+          <div className="w-1.5 h-1.5 bg-geeko-gold rounded-full shadow-[0_0_10px_rgba(255,215,0,0.8)]"></div>
           Power Rarity
         </h3>
         <div className="grid grid-cols-2 gap-2">
@@ -148,8 +148,8 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
 
       {/* Colores */}
       <section>
-        <h3 className="text-[11px] font-black uppercase tracking-widest text-neutral-600 mb-4 flex items-center gap-2">
-          <div className="w-1 h-3 bg-cyan-500 rounded-full"></div>
+        <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
+          <div className="w-1.5 h-1.5 bg-cyan-500 rounded-full shadow-[0_0_10px_rgba(0,229,255,0.8)]"></div>
           Mana Essence
         </h3>
         <div className="grid grid-cols-4 gap-2">
@@ -201,8 +201,8 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
                 key={type}
                 onClick={() => handleCheckbox('types', type)}
                 className={`px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all border ${isSelected
-                    ? 'bg-red-600/10 border-red-500/50 text-red-400'
-                    : 'bg-neutral-900/50 border-neutral-800 text-neutral-500 hover:text-neutral-300'
+                  ? 'bg-red-600/10 border-red-500/50 text-red-400'
+                  : 'bg-neutral-900/50 border-neutral-800 text-neutral-500 hover:text-neutral-300'
                   }`}
               >
                 {type}
@@ -212,14 +212,15 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
         </div>
       </section>
 
-      <div className="pt-4 mt-8 border-t border-white/5">
-        <div className="bg-blue-600/5 rounded-2xl p-4 border border-blue-600/10">
-          <p className="text-[10px] font-medium text-neutral-500 mb-2 leading-tight">
-            Filters are applied dynamically based on CardKingdom market availability.
+      <div className="pt-6 mt-10 border-t border-white/5">
+        <div className="bg-geeko-cyan/5 rounded-2xl p-5 border border-geeko-cyan/20 relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+          <p className="text-[10px] font-medium text-neutral-400 mb-3 leading-relaxed relative z-10">
+            Real-time synchronization active via <span className="text-geeko-cyan">Neural Link</span> with global TCG market hubs.
           </p>
-          <div className="flex items-center gap-2 text-[10px] font-bold text-blue-400 lowercase italic">
-            <Filter size={10} />
-            Auto-Sync Active
+          <div className="flex items-center gap-2 text-[10px] font-black text-geeko-cyan uppercase tracking-widest relative z-10">
+            <Filter size={12} className="animate-pulse" />
+            Quantum Sync: ON
           </div>
         </div>
       </div>
