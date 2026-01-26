@@ -20,6 +20,7 @@
   - [x] Example Templates for MTG, PKM, and Geekorium.
   - [x] Fixed CSV Download logic (Blob handling fixes).
 - [x] **API Integrity Verification**: Suite of automated tests in `tests/` to prevent regressions.
+- [x] **Supabase Backend Migration**: Centralized API into Edge Functions, enabling a 100% serverless frontend-to-cloud architecture.
 
 ---
 
