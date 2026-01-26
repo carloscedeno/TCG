@@ -12,7 +12,6 @@ export interface CardApi {
 }
 
 // Detect if we are in a production environment (like GitHub Pages)
-const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 const SUPABASE_PROJECT_ID = 'sxuotvogwvmxuvwbsscv';
 const API_BASE = (import.meta as any).env?.VITE_API_BASE || `https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/tcg-api`;
 
