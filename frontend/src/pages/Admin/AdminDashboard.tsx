@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Play, Settings, Users, Database, Shield, AlertCircle } from 'lucide-react';
 
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000';
+const SUPABASE_PROJECT_ID = 'sxuotvogwvmxuvwbsscv';
+const API_BASE = import.meta.env.VITE_API_BASE || `https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/tcg-api`;
 
 export const AdminDashboard = () => {
     const { user, session, isAdmin, loading } = useAuth();

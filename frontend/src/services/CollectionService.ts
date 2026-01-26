@@ -1,4 +1,5 @@
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000';
+const SUPABASE_PROJECT_ID = 'sxuotvogwvmxuvwbsscv';
+const API_BASE = import.meta.env.VITE_API_BASE || `https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/tcg-api`;
 
 export interface Valuation {
     store_price: number;

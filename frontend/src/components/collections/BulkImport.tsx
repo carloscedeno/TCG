@@ -94,7 +94,8 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
     const handleImport = async () => {
         setLoading(true);
         try {
-            const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000';
+            const SUPABASE_PROJECT_ID = 'sxuotvogwvmxuvwbsscv';
+            const API_BASE = import.meta.env.VITE_API_BASE || `https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/tcg-api`;
             const response = await fetch(`${API_BASE}/api/collections/import?import_type=${importType}`, {
                 method: 'POST',
                 headers: {

@@ -85,6 +85,9 @@ serve(async (req) => {
     else if (path.startsWith('/api/watchlists')) {
       response = await handleWatchlistsEndpoint(supabase, path, method, params)
     }
+    else if (path.startsWith('/api/products')) {
+      response = await handleProductsEndpoint(supabase, path, method, params)
+    }
     else if (path.startsWith('/api/stats')) {
       response = await handleStatsEndpoint(supabase, path, method, params)
     }
@@ -530,6 +533,50 @@ async function handleStatsEndpoint(supabase, path, method, params) {
 
       if (error) throw error
       return { price_trends: data }
+    }
+  }
+
+  throw new Error('Method not allowed')
+}
+
+async function handleProductsEndpoint(supabase, path, method, params) {
+  if (method === 'GET') {
+    const { q, game, in_stock = 'true', limit = 50, offset = 0, sort = 'newest' } = params
+
+    let query = supabase.from('products').select('*', { count: 'planned' })
+
+    if (q) {
+      query = query.ilike('name', `%${q}%`)
+    }
+
+    if (game) {
+      query = query.eq('game', game)
+    }
+
+    if (in_stock === 'true') {
+      query = query.gt('stock', 0)
+    }
+
+    // Sorting
+    if (sort === "price_asc") {
+      query = query.order('price', { ascending: true })
+    } else if (sort === "price_desc") {
+      query = query.order('price', { ascending: false })
+    } else if (sort === "newest") {
+      query = query.order('created_at', { ascending: false })
+    } else {
+      query = query.order('name', { ascending: true })
+    }
+
+    query = query.range(parseInt(offset), parseInt(offset) + parseInt(limit) - 1)
+
+    const { data, error, count } = await query
+
+    if (error) throw error
+
+    return {
+      products: data,
+      total_count: count || 0
     }
   }
 

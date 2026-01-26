@@ -13,14 +13,14 @@ mtg-tcg-web-app/
 ├── PRD.md                 # Product Requirements Document (Source of Truth)
 ├── PLAN.md                # Project Roadmap & Step-by-step Planning
 ├── src/                    # Main application source code
-│   ├── api/               # FastAPI application
+│   ├── api/               # FastAPI application (Secondary/Legacy/Scrapers)
 │   │   ├── routes/        # API route definitions
-│   │   ├── middleware/    # Custom middleware
-│   │   ├── controllers/   # Request/response handlers
 │   │   ├── services/      # Business logic services
-│   │   ├── models/        # Data models
-│   │   ├── schemas/       # Pydantic schemas
-│   │   └── utils/         # API utilities
+│   │   └── supabase/      # Client logic for Supabase interactions
+├── supabase/               # Infrastructure and deployment (Primary Backend)
+│   ├── functions/         # Edge functions (TCG-API is the main entry point)
+│   │   └── tcg-api/       # Main TypeScript API handler
+│   └── migrations/        # SQL Migrations for database schema
 │   ├── core/              # Core application logic
 │   │   ├── config/        # Configuration management
 │   │   ├── database/      # Database related code
@@ -132,6 +132,7 @@ mtg-tcg-web-app/
 ### Migration Guide
 
 From Old Structure:
+
 1. Backend files → src/api/
 2. Scraper files → data/scrapers/
 3. Documentation → docs/
@@ -139,6 +140,7 @@ From Old Structure:
 5. Tests → tests/
 
 New Files Created:
+
 1. Configuration: Modern Python project configuration
 2. Docker: Containerization setup
 3. CI/CD: GitHub Actions workflows
@@ -146,6 +148,7 @@ New Files Created:
 5. Documentation: Comprehensive documentation structure
 
 Next Steps:
+
 1. Update imports in existing files to match new structure
 2. Configure environment variables
 3. Set up database with new migrations
