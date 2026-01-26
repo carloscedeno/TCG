@@ -70,9 +70,11 @@ class CardService:
 
             # Pagination and Execution
             if sort == "release_date":
-                # For release date sort, we need a slightly different approach as it's a nested field
-                # Actually, ordering by nested fields in Postgrest (Supabase) is done via 'nested.field'
-                query = query.order('card_printings.sets.release_date', desc=True)
+                # BUG FIX: PostgREST cannot sort by card_printings.sets.release_date directly from the cards root
+                # if there isn't a single-path join or a computed column.
+                # For now, we fall back to name sorting to prevent 500 errors.
+                # TODO: Implement a database view or a 'latest_release_date' column on 'cards' table.
+                query = query.order('card_name', desc=False)
             else:
                 query = query.order('card_name', desc=False)
                 
