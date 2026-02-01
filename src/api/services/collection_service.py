@@ -219,3 +219,27 @@ class CollectionService:
             collection.append(item)
             
         return collection
+
+    @staticmethod
+    async def update_item(user_id: str, item_id: str, quantity: int, condition: Optional[str] = None) -> Dict[str, Any]:
+        """Updates quantity or condition of a specific item in the collection."""
+        try:
+            update_data = {'quantity': quantity}
+            if condition:
+                update_data['condition'] = condition
+            
+            res = supabase.table('user_collections').update(update_data).eq('id', item_id).eq('user_id', user_id).execute()
+            if not res.data:
+                raise HTTPException(status_code=404, detail="Item not found or unauthorized")
+            return res.data[0]
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+
+    @staticmethod
+    async def remove_item(user_id: str, item_id: str) -> bool:
+        """Deletes an item from the collection."""
+        try:
+            res = supabase.table('user_collections').delete().eq('id', item_id).eq('user_id', user_id).execute()
+            return True
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))

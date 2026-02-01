@@ -29,3 +29,16 @@ async def import_collection(
     user_id: str = Depends(get_current_user)
 ):
     return await CollectionService.import_data(user_id, data, mapping, import_type)
+
+@router.patch("/{item_id}")
+async def update_item(
+    item_id: str,
+    quantity: int = Body(..., embed=True),
+    condition: Optional[str] = Body(None, embed=True),
+    user_id: str = Depends(get_current_user)
+):
+    return await CollectionService.update_item(user_id, item_id, quantity, condition)
+
+@router.delete("/{item_id}")
+async def delete_item(item_id: str, user_id: str = Depends(get_current_user)):
+    return await CollectionService.remove_item(user_id, item_id)

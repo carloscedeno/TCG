@@ -53,9 +53,16 @@ def main():
     print("Report generated in SESION_COMPLETADA.md")
     
     if all_passed:
+        # Process Price Alerts
+        print("Checking Price Alerts...")
+        from src.api.services.alert_service import AlertService
+        import asyncio
+        asyncio.run(AlertService.process_all_alerts())
+        print("Price Alerts processed.")
+
         # Commit progress
         subprocess.run(["git", "add", "."])
-        subprocess.run(["git", "commit", "-m", f"🤖 Nightly Sync {datetime.now().strftime('%Y-%m-%d')}: Success"])
+        subprocess.run(["git", "commit", "-m", f"🤖 Nightly Sync {datetime.now().strftime('%Y-%m-%d')}: Success + Alerts Processed"])
         print("Progress committed to Git.")
 
 if __name__ == "__main__":

@@ -52,8 +52,8 @@
 
 ## 📅 Roadmap for Next Sessions
 
-1. **Price Alerts**: Real-time notifications for market shifts.
-2. **Advanced Analytics**: Compare collection value against market indexes.
+1. [x] **Price Alerts**: Real-time notifications for market shifts (Backend + Automation).
+2. [x] **Advanced Analytics**: Portfolio performance tracking and dual-valuation engine.
 
 ---
 

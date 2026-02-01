@@ -43,7 +43,7 @@ class CartService:
         """Retrieves items in the user's cart with product details."""
         cart_id = await CartService.get_or_create_cart(user_id)
         res = supabase.table('cart_items').select(
-            'id, quantity, product_id, products(id, name, price, image_url, stock)'
+            'id, quantity, product_id, cart_id, products(id, name, price, image_url, stock)'
         ).eq('cart_id', cart_id).execute()
         return res.data or []
 
