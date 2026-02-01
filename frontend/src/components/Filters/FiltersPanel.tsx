@@ -7,6 +7,7 @@ export interface Filters {
   rarities: string[];
   colors: string[];
   types: string[];
+  yearRange: [number, number];
 }
 
 export interface FiltersPanelProps {
@@ -24,8 +25,8 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
     return setsOptions.filter(s => s.toLowerCase().includes(setSearch.toLowerCase())).slice(0, 50);
   }, [setsOptions, setSearch]);
 
-  const handleCheckbox = (key: keyof Filters, value: string) => {
-    const prev = selected[key] || [];
+  const handleCheckbox = (key: keyof Omit<Filters, 'yearRange'>, value: string) => {
+    const prev = (selected[key] as string[]) || [];
     if (prev.includes(value)) {
       onChange({ ...selected, [key]: prev.filter((v: string) => v !== value) });
     } else {
@@ -187,7 +188,34 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
         </div>
       </section>
 
-      {/* Tipo de Carta */}
+      {/* Timeline / Año */}
+      <section>
+        <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
+          <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.8)]"></div>
+          Temporal Orbit (Year)
+        </h3>
+        <div className="flex items-center gap-3">
+          <input
+            type="number"
+            placeholder="From"
+            value={selected.yearRange?.[0] || ''}
+            onChange={(e) => onChange({ ...selected, yearRange: [parseInt(e.target.value) || 1993, selected.yearRange?.[1] || 2026] })}
+            className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-emerald-500/50 transition-all"
+          />
+          <span className="text-neutral-700 font-bold">→</span>
+          <input
+            type="number"
+            placeholder="To"
+            value={selected.yearRange?.[1] || ''}
+            onChange={(e) => onChange({ ...selected, yearRange: [selected.yearRange?.[0] || 1993, parseInt(e.target.value) || 2026] })}
+            className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-emerald-500/50 transition-all"
+          />
+        </div>
+        <div className="mt-3 flex justify-between text-[8px] font-black tracking-widest text-neutral-600 uppercase">
+          <span>Origins (1993)</span>
+          <span>Present (2026)</span>
+        </div>
+      </section>
       <section>
         <h3 className="text-[11px] font-black uppercase tracking-widest text-neutral-600 mb-4 flex items-center gap-2">
           <div className="w-1 h-3 bg-red-600 rounded-full"></div>

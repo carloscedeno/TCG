@@ -11,9 +11,11 @@ class CardService:
         rarity: Optional[str] = None,
         color: Optional[str] = None,
         card_type: Optional[str] = None,
-        limit: int = 50,
-        offset: int = 0,
-        sort: Optional[str] = "name"
+        sort: Optional[str] = "name",
+        year_from: Optional[int] = None,
+        year_to: Optional[int] = None,
+        limit: int = 20,
+        offset: int = 0
     ) -> Dict[str, Any]:
         try:
             # Base selection: We query CARDS (Unique Oracles)
@@ -24,8 +26,8 @@ class CardService:
                 'card_printings(printing_id, image_url, sets(set_name, set_code, release_date), aggregated_prices(avg_market_price_usd))'
             ]
             
-            # If set_name is filtered, we need to ensure the card has a printing in that set
-            if set_name:
+            # If set_name or date filters are applied, we need an inner join on printings
+            if set_name or year_from or year_to:
                 select_parts[1] = 'card_printings!inner(printing_id, image_url, sets!inner(set_name, set_code, release_date), aggregated_prices(avg_market_price_usd))'
 
             query = supabase.table('cards').select(
@@ -67,6 +69,11 @@ class CardService:
                 types = [t.strip() for t in card_type.split(',')]
                 for t in types:
                     query = query.ilike('type_line', f'%{t}%')
+
+            if year_from:
+                query = query.gte('card_printings.sets.release_date', f'{year_from}-01-01')
+            if year_to:
+                query = query.lte('card_printings.sets.release_date', f'{year_to}-12-31')
 
             # Pagination and Execution
             if sort == "release_date":

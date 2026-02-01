@@ -22,11 +22,13 @@ export const fetchCards = async (params: {
   rarity?: string,
   color?: string,
   type?: string,
+  year_from?: number,
+  year_to?: number,
   limit?: number,
   offset?: number,
   sort?: string
 } = {}): Promise<{ cards: CardApi[], total_count: number }> => {
-  const { q, game, set, rarity, color, type, limit = 50, offset = 0, sort = 'name' } = params;
+  const { q, game, set, rarity, color, type, year_from, year_to, limit = 50, offset = 0, sort = 'name' } = params;
 
   try {
     // Construct URL with params
@@ -37,6 +39,8 @@ export const fetchCards = async (params: {
     if (rarity) url.searchParams.append('rarity', rarity);
     if (color) url.searchParams.append('color', color);
     if (type) url.searchParams.append('type', type);
+    if (year_from) url.searchParams.append('year_from', year_from.toString());
+    if (year_to) url.searchParams.append('year_to', year_to.toString());
     if (sort) url.searchParams.append('sort', sort);
     url.searchParams.append('limit', limit.toString());
     url.searchParams.append('offset', offset.toString());
@@ -72,6 +76,8 @@ export const fetchCards = async (params: {
       }
       if (set) query = query.in('sets.set_name', set.split(',').map(s => s.trim()));
       if (type) query = query.ilike('cards.type_line', `%${type}%`);
+      if (year_from) query = query.gte('sets.release_date', `${year_from}-01-01`);
+      if (year_to) query = query.lte('sets.release_date', `${year_to}-12-31`);
 
       query = query.range(offset, offset + limit - 1);
       // Remove complex ordering if it causes timeout

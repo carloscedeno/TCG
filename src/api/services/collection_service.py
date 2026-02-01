@@ -73,17 +73,35 @@ class CollectionService:
                 printing_lookup[c_name] = m['printing_id']
 
         # Step 4: Prepare items for the specific import type
-        items_to_upsert = []
+        unmatched_rows = []
         for r in normalized_rows:
             card_name_l = r['name'].lower()
             set_val_l = (r['set'] or "").lower()
             lookup_key = f"{card_name_l}|{set_val_l}" if set_val_l else card_name_l
             
             p_id = printing_lookup.get(lookup_key) or printing_lookup.get(card_name_l)
-            
             if not p_id:
-                errors.append(f"Row {r['row_index'] + 1}: Card '{r['name']}' not found in database.")
-                continue
+                unmatched_rows.append(r)
+            else:
+                r['printing_id'] = p_id
+
+        # Fallback to smart matching for remaining
+        if unmatched_rows:
+            from .matcher_service import MatcherService
+            names_to_match = list(set([r['name'] for r in unmatched_rows]))
+            smart_matches = await MatcherService.match_cards(names_to_match)
+            
+            for r in unmatched_rows:
+                p_id = smart_matches.get(r['name'])
+                if p_id:
+                    r['printing_id'] = p_id
+                else:
+                    errors.append(f"Row {r['row_index'] + 1}: Card '{r['name']}' not found in database.")
+
+        items_to_upsert = []
+        for r in normalized_rows:
+            p_id = r.get('printing_id')
+            if not p_id: continue
             
             if import_type == 'collection':
                 items_to_upsert.append({

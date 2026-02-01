@@ -21,6 +21,7 @@
   - [x] Fixed CSV Download logic (Blob handling fixes).
 - [x] **API Integrity Verification**: Suite of automated tests in `tests/` to prevent regressions.
 - [x] **Supabase Backend Migration**: Centralized API into Edge Functions, enabling a 100% serverless frontend-to-cloud architecture.
+- [x] **Autonomous Nightly Workflow**: Created `/nightly-sync` with `turbo-all` for agent-led maintenance and evaluation.
 
 ---
 
@@ -38,7 +39,8 @@
 
 - [x] **Batch Collection Fetch**: Optimized `CollectionService` to eliminate N+1 queries when loading user portfolios.
 - [x] **Batch Database Upsert**: Optimized the `import_data` logic to handle 1000+ rows efficiently with batch queries.
-- [ ] **Printing Matcher AI**: Improve the search logic to match card names/sets even with slight typos.
+- [x] **Printing Matcher AI**: Improved search logic using `pg_trgm` fuzzy matching to handle typos and partial names.
+- [x] **Autonomous Mode**: Enabled `AUTO_APPROVE=true` and updated methodology for 100% agentic execution.
 
 ### Task 2.3: Market Data Integration (CardKingdom)
 

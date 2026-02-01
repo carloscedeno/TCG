@@ -10,10 +10,10 @@ key = os.getenv('SUPABASE_SERVICE_ROLE_KEY') or os.getenv('SUPABASE_ANON_KEY')
 supabase = create_client(url, key)
 
 def fix_prices():
-    print("🛠️ Starting Price Repair Tool...")
+    print("Starting Price Repair Tool...")
     
     # 1. Update existing price_history records without condition_id or timestamp
-    print("🔍 Checking for price entries that need repair...")
+    print("Checking for price entries that need repair...")
     now = datetime.now(timezone.utc).isoformat()
     
     # Update both condition and timestamp for any record lacking them
@@ -22,7 +22,7 @@ def fix_prices():
         'timestamp': now
     }).is_('timestamp', 'null').execute()
     
-    print(f"✅ Repaired {len(res.data) if res.data else 0} records (Condition 16 + Timestamp).")
+    print(f"Repaired {len(res.data) if res.data else 0} records (Condition 16 + Timestamp).")
     
     # 2. Trigger aggregation
     # Since we can't run a complex SQL query easily via the client, 
@@ -30,7 +30,7 @@ def fix_prices():
     # OR we can just rely on the trigger if we update them one by one.
     # But a better way is to do a small update to all price_history to fire the trigger.
     
-    print("🔄 Triggering aggregation for all current prices...")
+    print("Triggering aggregation for all current prices...")
     all_prices = supabase.table('price_history').select('printing_id, condition_id, price_usd').limit(1000).execute().data
     
     if not all_prices:
@@ -61,12 +61,19 @@ def fix_prices():
         # so we'll use upsert if available or insert.
         try:
             supabase.table('aggregated_prices').upsert(to_upsert, on_conflict='printing_id,condition_id').execute()
-            print(f"✨ Successfully aggregated {len(to_upsert)} unique card printings.")
+            print(f"Successfully aggregated {len(to_upsert)} unique card printings.")
         except Exception as e:
             print(f"⚠️ Manual upsert failed (likely unique constraint): {e}")
             print("Falling back to trigger-based update...")
+            # Fetch source_id for cardkingdom
+            ck_source_id = 21 # Default
+            try:
+                source_res = supabase.table('price_sources').select('source_id').eq('source_code', 'cardkingdom').single().execute()
+                if source_res.data: ck_source_id = source_res.data['source_id']
+            except: pass
+            
             # Updating a single column to itself fires the trigger
-            supabase.table('price_history').update({'is_foil': False}).eq('source_id', ck_source_id).limit(200).execute()
+            supabase.table('price_history').update({'is_foil': False}).eq('source_id', ck_source_id).execute()
 
 if __name__ == "__main__":
     fix_prices()

@@ -18,7 +18,8 @@ const mockFilters: Filters = {
   rarities: ['Common', 'Uncommon', 'Rare', 'Mythic'],
   colors: ['White', 'Blue', 'Black', 'Red', 'Green', 'Colorless', 'Multicolor'],
   types: ['Creature', 'Instant', 'Sorcery', 'Enchantment', 'Artifact', 'Planeswalker', 'Land'],
-  sets: []
+  sets: [],
+  yearRange: [1993, 2026]
 };
 
 const Home: React.FC = () => {
@@ -37,7 +38,7 @@ const Home: React.FC = () => {
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [activeTab, setActiveTab] = useState<'marketplace' | 'reference'>('marketplace');
+  const [activeTab, setActiveTab] = useState<'marketplace' | 'reference'>('reference');
   const LIMIT = 50;
 
   useEffect(() => {
@@ -89,6 +90,8 @@ const Home: React.FC = () => {
             set: filters.sets && filters.sets.length > 0 ? filters.sets.join(',') : undefined,
             color: filters.colors && filters.colors.length > 0 ? filters.colors.join(',') : undefined,
             type: filters.types && filters.types.length > 0 ? filters.types.join(',') : undefined,
+            year_from: filters.yearRange ? filters.yearRange[0] : undefined,
+            year_to: filters.yearRange ? filters.yearRange[1] : undefined,
             limit: LIMIT,
             offset,
             sort: sortBy === 'name' ? 'name' : 'release_date'
@@ -137,7 +140,7 @@ const Home: React.FC = () => {
   const rarities = ['All', 'Mythic', 'Rare', 'Uncommon', 'Common'];
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white font-sans relative selection:bg-cyan-500/30 overflow-hidden">
+    <div className="min-h-screen bg-[#050505] text-white font-sans relative selection:bg-cyan-500/30">
 
       {/* Ambient Background Mesh */}
       <div className="fixed inset-0 z-0 pointer-events-none">
@@ -150,7 +153,7 @@ const Home: React.FC = () => {
       <div className="relative z-10">
 
         {/* Header */}
-        <header className="bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-white/5 sticky top-0 z-50 shadow-2xl shadow-black/50">
+        <header className="h-[70px] bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-white/5 sticky top-0 z-50 shadow-2xl flex items-center">
           <nav className="max-w-[1600px] mx-auto px-6 py-3 flex items-center justify-between">
             <div className="flex items-center gap-8">
               <div className="flex items-center gap-4">
@@ -163,10 +166,13 @@ const Home: React.FC = () => {
                 <Link to="/profile" className="hover:text-white transition-colors">My Profile</Link>
               </div>
             </div>
-            <div className="flex-1 max-w-xl mx-8 hidden md:block">
-              <SearchBar value={query} onChange={setQuery} />
+            <div className="flex-1 max-w-xl mx-8 hidden lg:block">
+              <SearchBar value={query} onChange={setQuery} placeholder="Search by card name or set..." />
             </div>
             <div className="flex items-center gap-4">
+              <div className="lg:hidden">
+                <SearchBar value={query} onChange={setQuery} />
+              </div>
               {user ? (
                 <UserMenu />
               ) : (
@@ -174,12 +180,9 @@ const Home: React.FC = () => {
                   onClick={() => setIsAuthModalOpen(true)}
                   className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-5 rounded-full shadow-lg shadow-blue-600/20 transition-all transform active:scale-95 flex items-center gap-2 text-xs"
                 >
-                  <LogIn size={14} /> Iniciar Sesión
+                  <LogIn size={14} /> <span className="hidden sm:inline">Iniciar Sesión</span>
                 </button>
               )}
-              <div className="md:hidden">
-                <SearchBar value={query} onChange={setQuery} />
-              </div>
             </div>
           </nav>
         </header>
@@ -197,20 +200,7 @@ const Home: React.FC = () => {
               <HeroSection />
             </div>
 
-            <div className="flex items-center gap-1 bg-black/40 p-1.5 rounded-2xl border border-white/5 shadow-inner mb-6 w-fit mx-auto md:mx-0">
-              <button
-                onClick={() => setActiveTab('marketplace')}
-                className={`px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'marketplace' ? 'bg-geeko-cyan text-white shadow-[0_0_20px_rgba(0,229,255,0.4)]' : 'text-neutral-500 hover:text-neutral-300'}`}
-              >
-                Inventory
-              </button>
-              <button
-                onClick={() => setActiveTab('reference')}
-                className={`px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'reference' ? 'bg-neutral-800 text-white' : 'text-neutral-500 hover:text-neutral-300'}`}
-              >
-                Knowledge base
-              </button>
-            </div>
+            {/* Mode switch moved to sticky bar for better visibility */}
 
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
               <div>
@@ -243,21 +233,44 @@ const Home: React.FC = () => {
         </div>
 
         {/* Rarity Filter Tabs & Sort */}
-        <div className="bg-[#0a0a0a] border-b border-neutral-800 sticky top-[65px] z-40 backdrop-blur-md bg-opacity-80">
+        <div className="bg-[#0a0a0a]/95 border-b border-neutral-800 sticky top-[70px] z-40 backdrop-blur-md">
           <div className="max-w-[1600px] mx-auto px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex bg-neutral-900/50 p-1 rounded-full border border-neutral-800">
-              {rarities.map(r => (
+            <div className="flex flex-col sm:flex-row items-center gap-4">
+              <div className="flex bg-neutral-900/50 p-1 rounded-full border border-neutral-800">
                 <button
-                  key={r}
-                  onClick={() => setActiveRarity(r)}
-                  className={`px-6 py-2 rounded-full text-[11px] font-black tracking-widest uppercase transition-all ${activeRarity === r
+                  onClick={() => setActiveTab('marketplace')}
+                  className={`px-6 py-2 rounded-full text-[11px] font-black tracking-widest uppercase transition-all ${activeTab === 'marketplace'
+                    ? 'bg-geeko-cyan text-black shadow-lg shadow-geeko-cyan/20'
+                    : 'text-neutral-500 hover:text-neutral-300'
+                    }`}
+                >
+                  Inventory
+                </button>
+                <button
+                  onClick={() => setActiveTab('reference')}
+                  className={`px-6 py-2 rounded-full text-[11px] font-black tracking-widest uppercase transition-all ${activeTab === 'reference'
                     ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20'
                     : 'text-neutral-500 hover:text-neutral-300'
                     }`}
                 >
-                  {r}
+                  Archives
                 </button>
-              ))}
+              </div>
+
+              <div className="flex bg-neutral-900/50 p-1 rounded-full border border-neutral-800">
+                {rarities.map(r => (
+                  <button
+                    key={r}
+                    onClick={() => setActiveRarity(r)}
+                    className={`px-6 py-2 rounded-full text-[11px] font-black tracking-widest uppercase transition-all ${activeRarity === r
+                      ? 'bg-neutral-700 text-white shadow-lg'
+                      : 'text-neutral-500 hover:text-neutral-300'
+                      }`}
+                  >
+                    {r}
+                  </button>
+                ))}
+              </div>
             </div>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-3">
@@ -265,9 +278,11 @@ const Home: React.FC = () => {
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="bg-neutral-900/50 text-white text-xs font-bold px-4 py-2 rounded-full border border-neutral-800 focus:outline-none focus:border-blue-500/50 transition-colors cursor-pointer"
+                  className="bg-neutral-900/50 text-white text-[11px] font-black uppercase px-6 py-2 rounded-full border border-neutral-800 focus:outline-none focus:border-blue-500/50 transition-all cursor-pointer hover:bg-neutral-800"
                 >
-                  <option value="name">Name (A-Z)</option>
+                  <option value="name">Nombre (A-Z)</option>
+                  <option value="release_date">Lo más nuevo</option>
+                  {activeTab === 'marketplace' && <option value="price">Precio: Menor a Mayor</option>}
                 </select>
               </div>
 
