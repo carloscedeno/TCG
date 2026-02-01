@@ -5,43 +5,42 @@ from ..utils.supabase_client import supabase
 class PortfolioService:
     @staticmethod
     async def get_portfolio_analytics(user_id: str) -> Dict[str, Any]:
-        """
-        Calculates performance metrics for a user's collection.
-        Returns: Total Value (Store vs Market), Top Gainers, Top Losers.
-        """
-        # 1. Fetch collection with current prices
-        # We join with aggregated_prices for current market value
-        res = supabase.table('user_collections').select(
-            'quantity, printing_id, products(price), aggregated_prices!printing_id(avg_market_price_usd)'
-        ).eq('user_id', user_id).execute()
-        
-        if not res.data:
+        """Calculates performance metrics using manual join for robustness."""
+        # 1. Fetch collection
+        col_res = supabase.table('user_collections').select('quantity, printing_id').eq('user_id', user_id).execute()
+        if not col_res.data:
             return {"total_market_value": 0, "total_store_value": 0, "gainers": [], "losers": []}
+
+        printing_ids = [item['printing_id'] for item in col_res.data]
+        qty_map = {item['printing_id']: item['quantity'] for item in col_res.data}
+
+        # 2. Fetch prices (Market & Store)
+        # Market Prices
+        market_res = supabase.table('aggregated_prices').select('printing_id, avg_market_price_usd').in_('printing_id', printing_ids).execute()
+        market_map = {m['printing_id']: m['avg_market_price_usd'] or 0 for m in market_res.data}
+
+        # Store Prices
+        store_res = supabase.table('products').select('printing_id, price').in_('printing_id', printing_ids).execute()
+        store_map = {s['printing_id']: s['price'] or 0 for s in store_res.data}
 
         total_market = 0
         total_store = 0
         perf_data = []
 
-        for item in res.data:
-            qty = item['quantity']
-            store_p = (item.get('products') or {}).get('price') or 0
-            market_p = (item.get('aggregated_prices') or [{}])[0].get('avg_market_price_usd') or 0
-            
-            total_store += store_p * qty
-            total_market += market_p * qty
-            
-            # To calculate 24h change, we need historical price
-            # This is expensive per item, so we might want to optimize this later
-            # For now, let's just use the current values and mock the growth if history is sparse
+        for p_id in printing_ids:
+            qty = qty_map[p_id]
+            m_price = market_map.get(p_id, 0)
+            s_price = store_map.get(p_id, 0)
+
+            total_market += m_price * qty
+            total_store += s_price * qty
+
             perf_data.append({
-                "printing_id": item['printing_id'],
-                "current_price": market_p,
-                "store_price": store_p
+                "printing_id": p_id,
+                "current_price": m_price,
+                "store_price": s_price
             })
 
-        # 2. Mocking/Calculating price evolution (Logic placeholder for real history query)
-        # In a real app, we'd fetch price_history from 24h ago for all printing_ids in the portfolio
-        
         return {
             "total_market_value": round(total_market, 2),
             "total_store_value": round(total_store, 2),

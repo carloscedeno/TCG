@@ -191,7 +191,7 @@ class CollectionService:
         from .valuation_service import ValuationService
         
         response = supabase.table('user_collections').select(
-            'id, printing_id, quantity, condition, purchase_price, '
+            'id, printing_id, quantity, condition_id, purchase_price, '
             'card_printings(printing_id, image_url, '
             'cards(card_name, rarity, game_id), '
             'sets(set_name, set_code))'
@@ -221,12 +221,12 @@ class CollectionService:
         return collection
 
     @staticmethod
-    async def update_item(user_id: str, item_id: str, quantity: int, condition: Optional[str] = None) -> Dict[str, Any]:
+    async def update_item(user_id: str, item_id: str, quantity: int, condition_id: Optional[int] = None) -> Dict[str, Any]:
         """Updates quantity or condition of a specific item in the collection."""
         try:
             update_data = {'quantity': quantity}
-            if condition:
-                update_data['condition'] = condition
+            if condition_id is not None:
+                update_data['condition_id'] = condition_id
             
             res = supabase.table('user_collections').update(update_data).eq('id', item_id).eq('user_id', user_id).execute()
             if not res.data:

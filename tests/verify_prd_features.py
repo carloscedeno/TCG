@@ -8,7 +8,7 @@ from src.api.utils.supabase_client import supabase
 
 async def verify_everything():
     print("\n--- [VERIFICACIÓN INTEGRAL DEL PRD] ---")
-    user_id = "demo-user-id"
+    user_id = "ba28e77c-db6a-4ea3-812b-dd9ece48bcac"
     
     # 1. Test Portfolio & Analytics
     print("1. Verificando Analíticas de Portafolio...")
