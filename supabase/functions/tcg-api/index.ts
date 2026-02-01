@@ -58,7 +58,9 @@ serve(async (req) => {
           '/api/prices',
           '/api/search',
           '/api/collections',
-          '/api/watchlists',
+          '/api/cart',
+          '/api/analytics',
+          '/api/products',
           '/api/stats'
         ],
         documentation: 'Use the endpoints above to access TCG data and functionality'
@@ -82,8 +84,11 @@ serve(async (req) => {
     else if (path.startsWith('/api/collections')) {
       response = await handleCollectionsEndpoint(supabase, path, method, params)
     }
-    else if (path.startsWith('/api/watchlists')) {
-      response = await handleWatchlistsEndpoint(supabase, path, method, params)
+    else if (path.startsWith('/api/cart')) {
+      response = await handleCartEndpoint(supabase, path, method, params)
+    }
+    else if (path.startsWith('/api/analytics')) {
+      response = await handleAnalyticsEndpoint(supabase, path, method, params)
     }
     else if (path.startsWith('/api/products')) {
       response = await handleProductsEndpoint(supabase, path, method, params)
@@ -383,13 +388,12 @@ async function handleCollectionsEndpoint(supabase, path, method, params) {
     const { data, error } = await supabase
       .from('user_collections')
       .select(`
-        *,
+        id, printing_id, quantity, condition_id, purchase_price,
         card_printings(
           *,
           cards(card_name),
           sets(set_name)
-        ),
-        conditions(condition_name)
+        )
       `)
       .eq('user_id', user.id)
 
@@ -414,15 +418,15 @@ async function handleCollectionsEndpoint(supabase, path, method, params) {
     return { collection_item: data }
   }
 
-  if (method === 'PUT') {
+  if (method === 'PATCH' || method === 'PUT') {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) throw new Error('Unauthorized')
 
-    const collectionId = path.split('/').pop()
+    const itemId = path.split('/').pop()
     const { data, error } = await supabase
       .from('user_collections')
       .update(params)
-      .eq('collection_id', collectionId)
+      .eq('id', itemId)
       .eq('user_id', user.id)
       .select()
       .single()
@@ -435,11 +439,13 @@ async function handleCollectionsEndpoint(supabase, path, method, params) {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) throw new Error('Unauthorized')
 
-    const collectionId = path.split('/').pop()
+    const itemId = path.split('/').pop()
+    if (!itemId || itemId === 'collections') throw new Error('Missing ID')
+
     const { error } = await supabase
       .from('user_collections')
       .delete()
-      .eq('collection_id', collectionId)
+      .eq('id', itemId)
       .eq('user_id', user.id)
 
     if (error) throw error
@@ -447,6 +453,98 @@ async function handleCollectionsEndpoint(supabase, path, method, params) {
   }
 
   throw new Error('Method not allowed')
+}
+
+async function handleCartEndpoint(supabase, path, method, params) {
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('Unauthorized')
+
+  if (method === 'GET') {
+    // Get or create cart
+    let { data: cart } = await supabase.table('carts').select('id').eq('user_id', user.id).single()
+    if (!cart) {
+      const { data: newCart } = await supabase.table('carts').insert({ user_id: user.id }).select().single()
+      cart = newCart
+    }
+
+    const { data: items } = await supabase.table('cart_items').select('*, products(*)').eq('cart_id', cart.id)
+    return { cart_id: cart.id, items }
+  }
+
+  if (method === 'POST' && path.endsWith('/add')) {
+    const { printing_id, product_id, quantity = 1 } = params
+    let { data: cart } = await supabase.table('carts').select('id').eq('user_id', user.id).single()
+    if (!cart) {
+      const { data: newCart } = await supabase.table('carts').insert({ user_id: user.id }).select().single()
+      cart = newCart
+    }
+
+    const target_prod_id = product_id || (printing_id ? (await supabase.table('products').select('id').eq('printing_id', printing_id).single()).data?.id : null)
+    if (!target_prod_id) throw new Error('Product not found')
+
+    const { data, error } = await supabase.table('cart_items').upsert({
+      cart_id: cart.id,
+      product_id: target_prod_id,
+      quantity
+    }).select().single()
+
+    if (error) throw error
+    return { item: data }
+  }
+
+  if (method === 'POST' && path.endsWith('/checkout')) {
+    // Logic for checkout as implemented in CartService
+    // This is a simplified version for the edge function
+    const { data: cart } = await supabase.table('carts').select('id').eq('user_id', user.id).single()
+    if (!cart) throw new Error('No cart found')
+
+    const { data: items } = await supabase.table('cart_items').select('*, products(*)').eq('cart_id', cart.id)
+    if (!items?.length) throw new Error('Cart is empty')
+
+    const total = items.reduce((sum, i) => sum + (i.products.price * i.quantity), 0)
+
+    const { data: order } = await supabase.table('orders').insert({
+      user_id: user.id,
+      total_amount: total,
+      status: 'completed'
+    }).select().single()
+
+    // Clear cart
+    await supabase.table('cart_items').delete().eq('cart_id', cart.id)
+
+    return { success: true, order_id: order.id, total }
+  }
+
+  throw new Error('Method not allowed')
+}
+
+async function handleAnalyticsEndpoint(supabase, path, method, params) {
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('Unauthorized')
+
+  // Simplifed analytics logic for Edge Function
+  const { data: col } = await supabase.table('user_collections').select('quantity, printing_id, purchase_price').eq('user_id', user.id)
+  if (!col?.length) return { total_market_value: 0, total_store_value: 0 }
+
+  const pids = col.map(i => i.printing_id)
+  const { data: prices } = await supabase.table('aggregated_prices').select('printing_id, avg_market_price_usd').in('printing_id', pids)
+  const { data: prods } = await supabase.table('products').select('printing_id, price').in('printing_id', pids)
+
+  const m_map = Object.fromEntries(prices?.map(p => [p.printing_id, p.avg_market_price_usd]) || [])
+  const s_map = Object.fromEntries(prods?.map(p => [p.printing_id, p.price]) || [])
+
+  let total_market = 0
+  let total_store = 0
+
+  col.forEach(i => {
+    total_market += (m_map[i.printing_id] || 0) * i.quantity
+    total_store += (s_map[i.printing_id] || 0) * i.quantity
+  })
+
+  return {
+    total_market_value: total_market,
+    total_store_value: total_store
+  }
 }
 
 async function handleWatchlistsEndpoint(supabase, path, method, params) {
