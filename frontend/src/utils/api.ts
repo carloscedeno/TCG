@@ -148,7 +148,10 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
   try {
     if (API_BASE) {
       const response = await fetch(`${API_BASE}/api/cards/${printingId}`);
-      if (response.ok) return await response.json();
+      if (response.ok) {
+        const data = await response.json();
+        return data.card || data;
+      }
     }
     throw new Error('API unavailable or returned error');
   } catch (error) {

@@ -81,8 +81,13 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
         setCurrentFaceIndex(0);
 
         try {
-            const data = await fetchCardDetails(id);
+            let data = await fetchCardDetails(id);
             if (!data) throw new Error("No data found");
+
+            // Resilience: Handle both flat and wrapped data formats
+            if ((data as any).card) {
+                data = (data as any).card;
+            }
 
             // Mandatory: Always show the latest version (first in the list)
             if (data.all_versions && data.all_versions.length > 0) {
