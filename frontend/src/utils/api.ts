@@ -232,3 +232,40 @@ export const fetchSets = async (game_code?: string): Promise<any[]> => {
     return [];
   }
 };
+
+export const fetchCart = async (): Promise<any[]> => {
+  try {
+    const response = await fetch(`${API_BASE}/api/cart`);
+    if (!response.ok) throw new Error('Failed to fetch cart');
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching cart:', error);
+    return [];
+  }
+};
+
+export const addToCart = async (productId: string, quantity: number = 1): Promise<any> => {
+  try {
+    const response = await fetch(`${API_BASE}/api/cart/add?product_id=${productId}&quantity=${quantity}`, {
+      method: 'POST'
+    });
+    if (!response.ok) throw new Error('Failed to add to cart');
+    return await response.json();
+  } catch (error) {
+    console.error('Error adding to cart:', error);
+    return { success: false };
+  }
+};
+
+export const checkout = async (): Promise<any> => {
+  try {
+    const response = await fetch(`${API_BASE}/api/cart/checkout`, {
+      method: 'POST'
+    });
+    if (!response.ok) throw new Error('Checkout failed');
+    return await response.json();
+  } catch (error) {
+    console.error('Error during checkout:', error);
+    return { success: false };
+  }
+};

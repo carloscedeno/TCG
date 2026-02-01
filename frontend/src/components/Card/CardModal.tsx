@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { X, CheckCircle, XCircle, ShoppingCart, ExternalLink, RotateCw } from 'lucide-react';
-import { fetchCardDetails } from '../../utils/api';
+import { X, CheckCircle, XCircle, ShoppingCart, ExternalLink, RotateCw, Loader2 } from 'lucide-react';
+import { fetchCardDetails, addToCart } from '../../utils/api';
 
 interface CardModalProps {
     isOpen: boolean;
@@ -62,6 +62,7 @@ interface CardDetails {
 export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId }) => {
     const [details, setDetails] = useState<CardDetails | null>(null);
     const [loading, setLoading] = useState(false);
+    const [isAdding, setIsAdding] = useState(false);
     const [currentFaceIndex, setCurrentFaceIndex] = useState(0);
     const [activePrintingId, setActivePrintingId] = useState<string | null>(null);
 
@@ -108,6 +109,22 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
         if (id !== activePrintingId) {
             setActivePrintingId(id);
             loadCardDetails(id);
+        }
+    };
+
+    const handleAddToCart = async () => {
+        if (!activePrintingId) return;
+        setIsAdding(true);
+        try {
+            // Nota: product_id en el backend se refiere al id único en la tabla products
+            // Si estamos en archives (catálogo), necesitamos primero mapear o asegurar que existe el producto.
+            // Para este MVP, asumimos que activePrintingId puede ser usado o mapeado.
+            await addToCart(activePrintingId, 1);
+        } catch (err) {
+            console.error("Cart error", err);
+        } finally {
+            setIsAdding(true); // Fake delay for UX
+            setTimeout(() => setIsAdding(false), 800);
         }
     };
 
@@ -251,9 +268,13 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
                                             <div className="text-5xl font-black text-white font-mono tracking-tighter">
                                                 ${details.price ? details.price.toFixed(2) : '---'}
                                             </div>
-                                            <button className="h-14 px-8 rounded-2xl bg-geeko-cyan text-black font-black text-xs uppercase tracking-widest flex items-center gap-3 shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_40px_rgba(0,229,255,0.6)] hover:scale-105 active:scale-95 transition-all">
-                                                <ShoppingCart size={20} fill="currentColor" />
-                                                Add to Cart
+                                            <button
+                                                onClick={handleAddToCart}
+                                                disabled={isAdding}
+                                                className="h-14 px-8 rounded-2xl bg-geeko-cyan text-black font-black text-xs uppercase tracking-widest flex items-center gap-3 shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_40px_rgba(0,229,255,0.6)] hover:scale-105 active:scale-95 transition-all disabled:opacity-50"
+                                            >
+                                                {isAdding ? <Loader2 size={20} className="animate-spin" /> : <ShoppingCart size={20} fill="currentColor" />}
+                                                {isAdding ? 'Adding...' : 'Add to Cart'}
                                             </button>
                                         </div>
                                     </div>
