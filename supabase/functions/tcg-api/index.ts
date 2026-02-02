@@ -249,7 +249,7 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
         printing_id, 
         image_url,
         ${cardsJoin}(card_id, card_name, type_line, rarity, game_id, colors),
-        ${setsJoin}(set_name, release_date),
+        ${setsJoin}(set_name, set_code, release_date),
         aggregated_prices(avg_market_price_usd),
         products(price)
       `, { count: 'exact' })
@@ -349,6 +349,7 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
       const mappedCards = [];
       for (const entry of cardMap.values()) {
         const { item, cardData, setData } = entry;
+
         const marketPrice = item.aggregated_prices?.[0]?.avg_market_price_usd || 0;
         const storePrice = item.products?.[0]?.price || 0;
         const displayPrice = marketPrice || storePrice;
@@ -415,6 +416,7 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
       `)
         .eq('card_id', printing.card_id)
         .order('collector_number', { ascending: true })
+      // Note: we'll sort history in-memory for each version
 
       if (versionsError) throw versionsError
 
@@ -426,9 +428,27 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
         .limit(1)
         .maybeSingle()
 
-      // 4. Map versions with price fallback
+      // 4. Fetch latest history prices in batch for all versions to avoid missing data
+      const printingIds = allPrintings.map((p: any) => p.printing_id)
+      const { data: historyData } = await supabase
+        .from('price_history')
+        .select('printing_id, price_usd, timestamp')
+        .in('printing_id', printingIds)
+        .order('timestamp', { ascending: false })
+
+      const latestPriceMap = new Map()
+      if (historyData) {
+        for (const hp of historyData) {
+          if (!latestPriceMap.has(hp.printing_id)) {
+            latestPriceMap.set(hp.printing_id, hp.price_usd)
+          }
+        }
+      }
+
+      // 5. Map versions with price fallback
       const all_versions = allPrintings.map((p: any) => {
-        const marketPriceV = p.aggregated_prices?.[0]?.avg_market_price_usd || 0;
+        const historyPriceV = latestPriceMap.get(p.printing_id) || 0;
+        const marketPriceV = historyPriceV || p.aggregated_prices?.[0]?.avg_market_price_usd || 0;
         const storePriceV = p.products?.[0]?.price || 0;
         return {
           printing_id: p.printing_id,
@@ -447,7 +467,7 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
       const currentPrintingData = allPrintings.find((p: any) => p.printing_id === printingId)
       // Try to find NM condition (usually id 1) or just the first available
       const marketPriceObj = currentPrintingData?.aggregated_prices?.find((ap: any) => ap.condition_id === 1) || currentPrintingData?.aggregated_prices?.[0]
-      const marketPrice = marketPriceObj?.avg_market_price_usd || 0
+      const marketPrice = latestPriceMap.get(printingId) || marketPriceObj?.avg_market_price_usd || 0
 
       return {
         card_id: printing.printing_id,

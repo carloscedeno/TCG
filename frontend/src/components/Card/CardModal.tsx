@@ -177,27 +177,27 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
 
                 {/* LEFT: IMAGE & VERSIONS LIST */}
                 <div className="w-full md:w-[450px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden shrink-0">
-                    <div className="flex-1 min-h-[400px] md:min-h-0 flex items-center justify-center p-6 md:p-8 relative">
+                    <div className="flex-1 min-h-[450px] md:min-h-0 flex items-center justify-center p-8 relative bg-gradient-to-b from-white/[0.02] to-transparent">
                         {loading ? (
                             <div className="w-64 h-90 rounded-xl bg-white/5 animate-pulse flex items-center justify-center">
                                 <div className="w-10 h-10 border-4 border-t-geeko-cyan border-white/10 rounded-full animate-spin" />
                             </div>
                         ) : (
-                            <div className="relative w-full max-w-[280px] sm:max-w-[320px] md:max-w-[360px] aspect-[1/1.4] mx-auto flex items-center justify-center">
-                                <div className="absolute inset-0 bg-geeko-cyan/15 blur-[60px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                            <div className="relative w-full max-w-[280px] sm:max-w-[320px] md:max-w-[400px] flex items-center justify-center p-2">
+                                <div className="absolute inset-0 bg-geeko-cyan/20 blur-[100px] rounded-full opacity-40" />
                                 <img
                                     src={currentImage}
                                     alt={details?.name}
-                                    className="w-full h-full object-contain rounded-[18px] md:rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.8)] z-10 transition-all duration-500 hover:scale-[1.02] border border-white/5"
+                                    className="w-full h-auto max-h-[40vh] md:max-h-[75vh] object-contain rounded-[16px] md:rounded-[24px] shadow-[0_40px_100px_rgba(0,0,0,0.9)] border border-white/10 relative z-10 transition-transform duration-700 hover:scale-[1.02]"
                                 />
                             </div>
                         )}
                         {hasMultipleFaces && !loading && (
                             <button
                                 onClick={(e) => { e.stopPropagation(); setCurrentFaceIndex(prev => (prev + 1) % 2); }}
-                                className="absolute top-10 left-10 p-3 bg-white/10 hover:bg-white/20 rounded-full border border-white/20 transition-all z-20 group"
+                                className="absolute bottom-6 left-6 p-4 bg-black/60 hover:bg-geeko-cyan text-white hover:text-black rounded-full border border-white/10 backdrop-blur-md transition-all z-30 group shadow-xl"
                             >
-                                <RotateCw size={20} className="text-geeko-cyan group-hover:rotate-180 transition-transform duration-500" />
+                                <RotateCw size={22} className="group-hover:rotate-180 transition-transform duration-500" />
                             </button>
                         )}
                     </div>
