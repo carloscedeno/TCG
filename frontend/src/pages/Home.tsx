@@ -10,11 +10,12 @@ import { useAuth } from '../context/AuthContext';
 import { AuthModal } from '../components/Auth/AuthModal';
 import { UserMenu } from '../components/Navigation/UserMenu';
 import { HeroSection } from '../components/Home/HeroSection';
-import { LogIn, X } from 'lucide-react';
+import { LogIn, X, ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { CartDrawer } from '../components/Navigation/CartDrawer';
 
 const mockFilters: Filters = {
-  games: ['Magic: The Gathering', 'Pokémon', 'Yu-Gi-Oh!', 'Lorcana'],
+  games: ['Magic: The Gathering'],
   rarities: ['Common', 'Uncommon', 'Rare', 'Mythic'],
   colors: ['White', 'Blue', 'Black', 'Red', 'Green', 'Colorless', 'Multicolor'],
   types: ['Creature', 'Instant', 'Sorcery', 'Enchantment', 'Artifact', 'Planeswalker', 'Land'],
@@ -29,7 +30,7 @@ const Home: React.FC = () => {
   const [query, setQuery] = useState('');
   const [filters, setFilters] = useState<Partial<Filters>>({});
   const [sets, setSets] = useState<string[]>([]);
-  const [sortBy, setSortBy] = useState('name');
+  const [sortBy, setSortBy] = useState('release_date');
   const [activeRarity, setActiveRarity] = useState('All');
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(0);
@@ -39,6 +40,7 @@ const Home: React.FC = () => {
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [activeTab, setActiveTab] = useState<'marketplace' | 'reference'>('reference');
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const LIMIT = 50;
 
   useEffect(() => {
@@ -72,7 +74,7 @@ const Home: React.FC = () => {
           });
 
           result = {
-            cards: productRes.products.map(p => ({
+            cards: productRes.products.map((p: any) => ({
               card_id: p.printing_id || p.id,
               name: p.name,
               set: p.set_code || 'Unknown',
@@ -124,12 +126,9 @@ const Home: React.FC = () => {
   }, [debouncedQuery, filters, activeRarity, sortBy, page, activeTab]);
 
   useEffect(() => {
-    const gameToFetch = filters.games && filters.games.length === 1 ? filters.games[0] : 'MTG';
+    const gameToFetch = 'MTG';
     const gameCodeMap: Record<string, string> = {
-      'Magic: The Gathering': 'MTG',
-      'Pokémon': 'PKM',
-      'Yu-Gi-Oh!': 'YGO',
-      'Lorcana': 'LOR'
+      'Magic: The Gathering': 'MTG'
     };
 
     fetchSets(gameCodeMap[gameToFetch] || 'MTG')
@@ -173,6 +172,18 @@ const Home: React.FC = () => {
               <div className="lg:hidden">
                 <SearchBar value={query} onChange={setQuery} />
               </div>
+
+              {/* Cart Button */}
+              {user && (
+                <button
+                  onClick={() => setIsCartOpen(true)}
+                  className="relative p-2.5 bg-neutral-900 border border-white/5 rounded-xl hover:bg-neutral-800 transition-all text-neutral-400 hover:text-geeko-cyan group"
+                >
+                  <ShoppingCart size={20} />
+                  <div className="absolute top-0 right-0 w-2 h-2 bg-geeko-cyan rounded-full border-2 border-[#0a0a0a] group-hover:scale-150 transition-transform" />
+                </button>
+              )}
+
               {user ? (
                 <UserMenu />
               ) : (
@@ -437,6 +448,7 @@ const Home: React.FC = () => {
           onClose={() => setSelectedCardId(null)}
           cardId={selectedCardId}
         />
+        <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
       </div>
     </div>
   );

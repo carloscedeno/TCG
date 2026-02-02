@@ -29,7 +29,7 @@ export interface CardProps {
   onClick?: () => void;
 }
 
-export const Card: React.FC<CardProps> = ({ name, set, imageUrl, image_url, price, rarity, type, card_faces, viewMode = 'grid', onClick }) => {
+export const Card: React.FC<CardProps> = ({ name, set, imageUrl, image_url, price, card_id, rarity, type, card_faces, viewMode = 'grid', onClick }) => {
   const [currentFaceIndex, setCurrentFaceIndex] = useState(0);
   const hasMultipleFaces = card_faces && card_faces.length > 1;
 
@@ -62,8 +62,14 @@ export const Card: React.FC<CardProps> = ({ name, set, imageUrl, image_url, pric
 
   if (viewMode === 'list') {
     return (
-      <div
-        onClick={onClick}
+      <a
+        href={`/TCG/card/${card_id}`}
+        onClick={(e) => {
+          if (!e.ctrlKey && !e.metaKey) {
+            e.preventDefault();
+            onClick?.();
+          }
+        }}
         className="flex items-center gap-4 px-4 py-3 bg-black/40 hover:bg-neutral-900 border border-white/5 hover:border-geeko-cyan/30 rounded-xl transition-all cursor-pointer group"
       >
         <div className="w-12 h-16 bg-[#1a1a1a] rounded-md overflow-hidden flex-shrink-0 relative">
@@ -85,7 +91,7 @@ export const Card: React.FC<CardProps> = ({ name, set, imageUrl, image_url, pric
             <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider px-1.5 py-0.5 bg-white/5 rounded">{set}</span>
             {rarity && (
               <span className={`text-[9px] font-black uppercase tracking-widest ${rarity.toLowerCase() === 'mythic' ? 'text-orange-400' :
-                  rarity.toLowerCase() === 'rare' ? 'text-geeko-gold' : 'text-neutral-500'
+                rarity.toLowerCase() === 'rare' ? 'text-geeko-gold' : 'text-neutral-500'
                 }`}>
                 {rarity}
               </span>
@@ -109,13 +115,19 @@ export const Card: React.FC<CardProps> = ({ name, set, imageUrl, image_url, pric
             <span className="text-lg text-geeko-cyan">›</span>
           </button>
         </div>
-      </div>
+      </a>
     );
   }
 
   return (
-    <div
-      onClick={onClick}
+    <a
+      href={`/TCG/card/${card_id}`}
+      onClick={(e) => {
+        if (!e.ctrlKey && !e.metaKey) {
+          e.preventDefault();
+          onClick?.();
+        }
+      }}
       className={`flex flex-col glass-card rounded-2xl overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:-translate-y-1 group relative ${getRarityStyle(rarity)} cursor-pointer h-full`}
     >
       {/* Flip Button overlay */}
@@ -150,8 +162,8 @@ export const Card: React.FC<CardProps> = ({ name, set, imageUrl, image_url, pric
         {/* Rarity Badge (Overlay) */}
         {rarity && (
           <div className={`absolute top-2 right-2 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider backdrop-blur-md border border-white/10 z-20 ${rarity.toLowerCase() === 'mythic' ? 'bg-orange-500/20 text-orange-400 border-orange-500/30' :
-              rarity.toLowerCase() === 'rare' ? 'bg-geeko-gold/20 text-geeko-gold border-geeko-gold/30' :
-                'bg-black/60 text-neutral-400'
+            rarity.toLowerCase() === 'rare' ? 'bg-geeko-gold/20 text-geeko-gold border-geeko-gold/30' :
+              'bg-black/60 text-neutral-400'
             }`}>
             {rarity}
           </div>
@@ -182,6 +194,6 @@ export const Card: React.FC<CardProps> = ({ name, set, imageUrl, image_url, pric
           </button>
         </div>
       </div>
-    </div>
+    </a>
   );
 };

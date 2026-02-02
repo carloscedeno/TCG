@@ -110,7 +110,10 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
         }
     };
 
-    const handleVersionClick = (id: string) => {
+    const handleVersionClick = (id: string, e?: React.MouseEvent) => {
+        if (e && (e.ctrlKey || e.metaKey)) {
+            return; // Allow native browser behavior for ctrl+click if it's a link
+        }
         if (id !== activePrintingId) {
             setActivePrintingId(id);
             loadCardDetails(id);
@@ -207,9 +210,15 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
                         </div>
                         <div className="flex-1 overflow-y-auto custom-scrollbar">
                             {details?.all_versions?.map((v) => (
-                                <button
+                                <a
                                     key={v.printing_id}
-                                    onClick={() => handleVersionClick(v.printing_id)}
+                                    href={`/TCG/card/${v.printing_id}`}
+                                    onClick={(e) => {
+                                        if (!e.ctrlKey && !e.metaKey) {
+                                            e.preventDefault();
+                                            handleVersionClick(v.printing_id);
+                                        }
+                                    }}
                                     className={`w-full flex items-center gap-4 px-6 py-3 hover:bg-white/5 transition-colors border-b border-white/5 group ${activePrintingId === v.printing_id ? 'bg-geeko-cyan/10' : ''}`}
                                 >
                                     <div className="w-8 h-8 rounded bg-neutral-900 flex items-center justify-center text-[10px] font-black group-hover:text-geeko-cyan transition-colors">
@@ -224,7 +233,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
                                     <div className="text-xs font-mono font-bold text-neutral-400 group-hover:text-white">
                                         ${v.price > 0 ? v.price.toFixed(2) : '---'}
                                     </div>
-                                </button>
+                                </a>
                             ))}
                         </div>
                     </div>
@@ -240,9 +249,19 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
                     ) : details ? (
                         <>
                             <div className="space-y-4">
-                                <h2 className="text-6xl font-black tracking-tighter text-white text-gradient-cyan">
-                                    {details.name}
-                                </h2>
+                                <a
+                                    href={`/TCG/card/${details.card_id}`}
+                                    className="block group/title"
+                                    onClick={(e) => {
+                                        if (!e.ctrlKey && !e.metaKey) {
+                                            e.preventDefault();
+                                        }
+                                    }}
+                                >
+                                    <h2 className="text-6xl font-black tracking-tighter text-white text-gradient-cyan group-hover/title:brightness-125 transition-all">
+                                        {details.name}
+                                    </h2>
+                                </a>
                                 <div className="flex items-center gap-3 text-xl font-medium text-neutral-400">
                                     <span>{details.mana_cost || ''}</span>
                                     {details.mana_cost && <span>•</span>}
@@ -271,7 +290,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
                                         <div className="text-[10px] font-black uppercase text-geeko-cyan tracking-widest mb-1">Geekorium Price</div>
                                         <div className="flex items-center justify-between">
                                             <div className="text-5xl font-black text-white font-mono tracking-tighter">
-                                                ${details.price ? details.price.toFixed(2) : '---'}
+                                                ${details.price > 0 ? details.price.toFixed(2) : '---'}
                                             </div>
                                             <button
                                                 onClick={handleAddToCart}

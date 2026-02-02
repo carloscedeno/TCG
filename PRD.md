@@ -38,6 +38,21 @@ This platform is an advanced web application for aggregating and analyzing Tradi
   - **Price Alerts**: User-configurable thresholds with automatic nightly processing.
 - **Inline Editing**: Quick updates for card quantity and condition.
 
+## 3. Validación de Salud (PRD Compliance)
+
+- **API Health**: Correr suite de verificación de endpoints.
+  - Command: `python check_api_health.py`
+- **Visual & UI Verification**: Levantar el navegador para verificar la carga de la página, capturar el DOM y grabar interacciones.
+  - El agente debe usar `browser_subagent` para:
+    - Entrar a `localhost:5173/TCG/`.
+    - Verificar que no hay pantallas blancas (JS Errors).
+    - Validar que el grid muestra cartas y los filtros funcionan.
+    - Grabar la sesión para auditoría visual.
+- **Product Health**: Verificar integridad de precios y stock.
+  - Command: `python check_products_health.py`
+- **Regression Testing**: Ejecutar pruebas de integración de Supabase.
+  - Command: `python tests/verify_supabase_functions.py`
+
 ### 2.3. Commerce & Inventory (✅ Implemented)
 
 - **Shopping Cart**: Real-time cart management with stock validation.
@@ -76,7 +91,19 @@ This platform is an advanced web application for aggregating and analyzing Tradi
 
 ---
 
-## 4. Source of Truth Documentation
+## 5. Roadmap & Future Phases
+
+### Fase 5: Corrección de Detalles - Parte 1 (In Progress)
+
+- **Regla 1: Agregación por Carta Única**: El grid principal debe mostrar solo la última edición impresa de cada carta (evitar duplicados de la misma carta en diferentes sets). El detalle de la carta permitirá navegar entre ediciones.
+- **Regla 2: Fallback de Precios**: Priorizar el precio de mercado (Market Price). Si es 0 o null, mostrar el precio de Geekorium (Store Price).
+- **Regla 3: Enlaces Externos**: Garantizar que el botón "Standard Market" en el detalle abra el link directo de CardKingdom.
+- **Regla 4: Landing por Novedades**: El landing page debe ordenar por las últimas cartas lanzadas por defecto, independientemente de si tienen precio o no.
+- **Regla 5: Navegación y Títulos**: Añadir el nombre de la carta como título clickeable en el detalle. Soportar navegación nativa (Ctrl+Click / Click derecho) tanto en el grid como en el título del detalle para abrir en nuevas pestañas. Implementar diseño de página de detalle independiente.
+
+---
+
+## 6. Source of Truth Documentation
 
 This PRD is the primary source of truth. Technical details are further expanded in:
 
