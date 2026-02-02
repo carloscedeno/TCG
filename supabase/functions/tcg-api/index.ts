@@ -303,24 +303,50 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
       const sortField = params.sort || 'release_date';
       query = query.order('printing_id', { ascending: false });
 
+
       // Apply range after sorting
       query = query.range(offsetVal, offsetVal + fetchLimit - 1);
 
       const { data, error, count } = await query;
       if (error) throw error;
 
-      // Deduplicate and Map to frontend format
-      const seenCards = new Set();
-      const mappedCards = [];
+      // Deduplicate by card_id and keep only the LATEST printing (most recent release_date)
+      const cardMap = new Map();
 
       for (const item of (data || [])) {
         const cardData = item.cards || {};
         const cardId = cardData.card_id;
-
-        if (unique && seenCards.has(cardId)) continue;
-        if (unique) seenCards.add(cardId);
-
         const setData = item.sets || {};
+        const releaseDate = setData.released_at;
+
+        // If unique mode is enabled, check if we've seen this card
+        if (unique) {
+          const existing = cardMap.get(cardId);
+
+          // If we haven't seen this card, or this printing is newer, use it
+          if (!existing || (releaseDate && releaseDate > existing.release_date)) {
+            cardMap.set(cardId, {
+              item,
+              cardData,
+              setData,
+              release_date: releaseDate
+            });
+          }
+        } else {
+          // Non-unique mode: add all printings
+          cardMap.set(`${cardId}_${item.printing_id}`, {
+            item,
+            cardData,
+            setData,
+            release_date: releaseDate
+          });
+        }
+      }
+
+      // Map to frontend format
+      const mappedCards = [];
+      for (const entry of cardMap.values()) {
+        const { item, cardData, setData } = entry;
         const marketPrice = item.aggregated_prices?.[0]?.avg_market_price_usd || 0;
 
         mappedCards.push({
@@ -329,7 +355,7 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
           set: setData.set_name,
           set_code: setData.set_code,
           image_url: item.image_url,
-          price: marketPrice, // Prioritize market price
+          price: marketPrice,
           rarity: cardData.rarity,
           type: cardData.type_line,
           game_id: cardData.game_id,
