@@ -177,18 +177,18 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
 
                 {/* LEFT: IMAGE & VERSIONS LIST */}
                 <div className="w-full md:w-[450px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden shrink-0">
-                    <div className="flex-1 min-h-[400px] md:min-h-0 flex items-center justify-center p-6 md:p-8 relative overflow-hidden">
+                    <div className="flex-1 min-h-[400px] md:min-h-0 flex items-center justify-center p-6 md:p-8 relative">
                         {loading ? (
                             <div className="w-64 h-90 rounded-xl bg-white/5 animate-pulse flex items-center justify-center">
                                 <div className="w-10 h-10 border-4 border-t-geeko-cyan border-white/10 rounded-full animate-spin" />
                             </div>
                         ) : (
-                            <div className="relative group max-w-full">
+                            <div className="relative w-full max-w-[280px] sm:max-w-[320px] md:max-w-[360px] aspect-[1/1.4] mx-auto flex items-center justify-center">
                                 <div className="absolute inset-0 bg-geeko-cyan/15 blur-[60px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                                 <img
                                     src={currentImage}
                                     alt={details?.name}
-                                    className="w-full max-w-[320px] md:max-w-sm rounded-[24px] shadow-[0_30px_70px_rgba(0,0,0,1)] z-10 transition-all duration-500 hover:scale-[1.02] border border-white/5"
+                                    className="w-full h-full object-contain rounded-[18px] md:rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.8)] z-10 transition-all duration-500 hover:scale-[1.02] border border-white/5"
                                 />
                             </div>
                         )}
