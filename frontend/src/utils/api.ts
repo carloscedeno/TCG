@@ -79,7 +79,7 @@ export const fetchCards = async (filters: any): Promise<{ cards: Card[]; total_c
     if (filters.q) query = query.ilike('cards.card_name', `%${filters.q}%`);
     if (filters.rarity && filters.rarity !== 'All') query = query.eq('cards.rarity', filters.rarity.toLowerCase());
 
-    const { data, error: sbError, count } = await query
+    const { data, count } = await query
       .range(filters.offset || 0, (filters.offset || 0) + (filters.limit || 50) - 1);
 
     return {

@@ -38,7 +38,7 @@ export const HeroSection: React.FC = () => {
     const currentCard = trendingCards[currentIndex];
 
     return (
-        <div className="relative group rounded-[2.5rem] overflow-hidden border border-white/5 shadow-2xl transition-all duration-700 h-[450px] bg-[#050505]">
+        <div className="relative group rounded-[2.5rem] overflow-hidden border border-white/5 shadow-2xl transition-all duration-700 h-[400px] md:h-[450px] bg-[#050505]">
             {/* Background Image with Blur/Gradient */}
             <div className="absolute inset-0 z-0">
                 <img
@@ -51,7 +51,7 @@ export const HeroSection: React.FC = () => {
             </div>
 
             {/* Content Container */}
-            <div className="relative z-10 h-full flex flex-col md:flex-row items-center px-8 md:px-16 gap-12">
+            <div className="relative z-10 h-full flex flex-col md:flex-row items-center px-6 md:px-16 gap-6 md:gap-12">
 
                 {/* Text Content */}
                 <div className="flex-1 text-center md:text-left pt-12 md:pt-0">
@@ -62,7 +62,7 @@ export const HeroSection: React.FC = () => {
                         <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">{currentCard.set}</span>
                     </div>
 
-                    <h2 className="text-5xl md:text-7xl font-black text-white tracking-tighter leading-[0.9] italic uppercase mb-6 drop-shadow-2xl">
+                    <h2 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tighter leading-[0.9] italic uppercase mb-4 md:mb-6 drop-shadow-2xl text-balance">
                         {currentCard.name.split('//')[0]}
                     </h2>
 

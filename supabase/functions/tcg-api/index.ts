@@ -197,17 +197,16 @@ async function handleGamesEndpoint(supabase: SupabaseClient, path: string, metho
 async function handleSetsEndpoint(supabase: SupabaseClient, path: string, method: string, params: RequestParams) {
   if (method === 'GET') {
     if (path === '/api/sets') {
-      const { game_code } = params
-      let query = supabase
+      const { game_code = 'MTG' } = params
+
+      // Use !inner join to filter by game_code
+      const { data, error } = await supabase
         .from('sets')
-        .select('*, games(game_name, game_code)')
+        .select('*, games!inner(game_name, game_code)')
         .eq('is_digital', false)
+        .eq('games.game_code', game_code)
+        .order('release_date', { ascending: false })
 
-      if (game_code) {
-        query = query.eq('games.game_code', game_code)
-      }
-
-      const { data, error } = await query
       if (error) throw error
       return { sets: data }
     }
@@ -250,8 +249,9 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
         printing_id, 
         image_url,
         ${cardsJoin}(card_id, card_name, type_line, rarity, game_id, colors),
-        ${setsJoin}(set_name, released_at),
-        aggregated_prices(avg_market_price_usd)
+        ${setsJoin}(set_name, release_date),
+        aggregated_prices(avg_market_price_usd),
+        products(price)
       `, { count: 'exact' })
 
       // Apply search filter
@@ -310,22 +310,24 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
       const { data, error, count } = await query;
       if (error) throw error;
 
-      // Deduplicate by card_id and keep only the LATEST printing (most recent release_date)
+      // Deduplicate by card name and keep only the LATEST printing (most recent release_date)
       const cardMap = new Map();
 
       for (const item of (data || [])) {
         const cardData = item.cards || {};
-        const cardId = cardData.card_id;
+        const cardName = cardData.card_name;
         const setData = item.sets || {};
-        const releaseDate = setData.released_at;
+        const releaseDate = setData.release_date;
 
-        // If unique mode is enabled, check if we've seen this card
+        if (!cardName) continue;
+
+        // If unique mode is enabled, check if we've seen this card name
         if (unique) {
-          const existing = cardMap.get(cardId);
+          const existing = cardMap.get(cardName);
 
           // If we haven't seen this card, or this printing is newer, use it
           if (!existing || (releaseDate && releaseDate > existing.release_date)) {
-            cardMap.set(cardId, {
+            cardMap.set(cardName, {
               item,
               cardData,
               setData,
@@ -334,7 +336,7 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
           }
         } else {
           // Non-unique mode: add all printings
-          cardMap.set(`${cardId}_${item.printing_id}`, {
+          cardMap.set(`${item.printing_id}`, {
             item,
             cardData,
             setData,
@@ -348,6 +350,8 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
       for (const entry of cardMap.values()) {
         const { item, cardData, setData } = entry;
         const marketPrice = item.aggregated_prices?.[0]?.avg_market_price_usd || 0;
+        const storePrice = item.products?.[0]?.price || 0;
+        const displayPrice = marketPrice || storePrice;
 
         mappedCards.push({
           card_id: item.printing_id,
@@ -355,14 +359,15 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
           set: setData.set_name,
           set_code: setData.set_code,
           image_url: item.image_url,
-          price: marketPrice,
+          price: displayPrice,
           rarity: cardData.rarity,
           type: cardData.type_line,
           game_id: cardData.game_id,
           colors: cardData.colors,
-          release_date: setData.released_at,
+          release_date: setData.release_date,
           valuation: {
             market_price: marketPrice,
+            store_price: storePrice,
             market_url: `https://www.cardkingdom.com/mtg/${sanitizeSlug(setData.set_name)}/${sanitizeSlug(cardData.card_name)}`
           }
         });
@@ -396,7 +401,7 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
       if (prError) throw prError
       if (!printing) throw new Error('Card not found')
 
-      // 2. Get all versions of this card
+      // 2. Get all versions of this card with combined pricing sources
       const { data: allPrintings, error: versionsError } = await supabase
         .from('card_printings')
         .select(`
@@ -404,8 +409,9 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
         collector_number,
         rarity,
         image_url,
-        sets(set_name, set_code),
-        aggregated_prices(avg_market_price_usd)
+        sets(set_name, set_code, release_date),
+        aggregated_prices(avg_market_price_usd),
+        products(price)
       `)
         .eq('card_id', printing.card_id)
         .order('collector_number', { ascending: true })
@@ -420,16 +426,20 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
         .limit(1)
         .maybeSingle()
 
-      // 4. Map versions
-      const all_versions = allPrintings.map((p: any) => ({
-        printing_id: p.printing_id,
-        set_name: p.sets.set_name,
-        set_code: p.sets.set_code,
-        collector_number: p.collector_number,
-        rarity: p.rarity,
-        price: p.aggregated_prices?.[0]?.avg_market_price_usd || 0,
-        image_url: p.image_url
-      }))
+      // 4. Map versions with price fallback
+      const all_versions = allPrintings.map((p: any) => {
+        const marketPriceV = p.aggregated_prices?.[0]?.avg_market_price_usd || 0;
+        const storePriceV = p.products?.[0]?.price || 0;
+        return {
+          printing_id: p.printing_id,
+          set_name: p.sets.set_name,
+          set_code: p.sets.set_code,
+          collector_number: p.collector_number,
+          rarity: p.rarity,
+          price: marketPriceV || storePriceV || 0,
+          image_url: p.image_url
+        };
+      })
 
       // 5. Build final flattened response
       const cardData = printing.cards
