@@ -290,23 +290,19 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
         }
       }
 
-      // Apply sorting - default to release_date if not specified
-      const sortField = params.sort || 'release_date';
-      if (sortField === 'release_date') {
-        query = query.order('sets(released_at)', { ascending: false });
-      } else if (sortField === 'name') {
-        query = query.order('cards(card_name)', { ascending: true });
-      }
-
-      // If we want unique cards (latest version), we fetch more and dedup in memory
-      // because PostgREST doesn't support DISTINCT ON natively in .select()
+      // Calculate limits first
       const unique = params.unique === 'true' || params.unique === undefined; // Default to unique for primary grid
-
       const limitVal = parseInt(params.limit || '50');
       const offsetVal = parseInt(params.offset || '0');
-
-      // If unique, we fetch a larger buffer to allow for deduplication
       const fetchLimit = unique ? limitVal * 3 : limitVal;
+
+      // Apply sorting - simplified to avoid timeout
+      // Note: PostgREST doesn't support ordering by nested relations efficiently
+      // We'll sort by printing_id (which is indexed) and let the frontend handle additional sorting if needed
+      const sortField = params.sort || 'release_date';
+      query = query.order('printing_id', { ascending: false });
+
+      // Apply range after sorting
       query = query.range(offsetVal, offsetVal + fetchLimit - 1);
 
       const { data, error, count } = await query;
