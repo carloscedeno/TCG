@@ -252,7 +252,7 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
         ${setsJoin}(set_name, set_code, release_date),
         aggregated_prices(avg_market_price_usd),
         products(price)
-      `, { count: 'exact' })
+      `, { count: 'planned' })
 
       // Apply search filter
       if (q) {
