@@ -259,6 +259,9 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
         query = query.ilike('cards.card_name', `%${q}%`)
       }
 
+      // Always filter for English versions (or untagged ones which are typically English custom data)
+      query = query.or('lang.eq.en,lang.is.null')
+
       // Apply rarity filter
       if (rarity) {
         const rarities = rarity.split(',').map((r: string) => r.trim().toLowerCase())
@@ -397,6 +400,7 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
         sets(*)
       `)
         .eq('printing_id', printingId)
+        .or('lang.eq.en,lang.is.null')
         .single()
 
       if (prError) throw prError
@@ -415,6 +419,7 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
         products(price)
       `)
         .eq('card_id', printing.card_id)
+        .or('lang.eq.en,lang.is.null')
         .order('collector_number', { ascending: true })
       // Note: we'll sort history in-memory for each version
 
