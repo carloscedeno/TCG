@@ -93,13 +93,13 @@ This platform is an advanced web application for aggregating and analyzing Tradi
 
 ## 5. Roadmap & Future Phases
 
-### Fase 5: Corrección de Detalles - Parte 1 (In Progress)
+### Fase 5: Corrección de Detalles - Parte 1 (✅ Implementing & In Validation)
 
-- **Regla 1: Agregación por Carta Única**: El grid principal debe mostrar solo la última edición impresa de cada carta (evitar duplicados de la misma carta en diferentes sets). El detalle de la carta permitirá navegar entre ediciones.
-- **Regla 2: Fallback de Precios**: Priorizar el precio de mercado (Market Price). Si es 0 o null, mostrar el precio de Geekorium (Store Price).
-- **Regla 3: Enlaces Externos**: Garantizar que el botón "Standard Market" en el detalle abra el link directo de CardKingdom.
-- **Regla 4: Landing por Novedades**: El landing page debe ordenar por las últimas cartas lanzadas por defecto, independientemente de si tienen precio o no.
-- **Regla 5: Navegación y Títulos**: Añadir el nombre de la carta como título clickeable en el detalle. Soportar navegación nativa (Ctrl+Click / Click derecho) tanto en el grid como en el título del detalle para abrir en nuevas pestañas. Implementar diseño de página de detalle independiente.
+- **Regla 1: Agregación por Carta Única (Deduplicación)**: ✅ Implementado en el backend (`tcg-api`). El grid ahora filtra por la edición más reciente.
+- **Regla 2: Fallback de Precios**: ✅ Implementado. Prioridad: `market_price` -> `store_price`.
+- **Regla 3: Enlaces Externos**: ✅ Implementado. Botón "Standard Market" linkea a CardKingdom.
+- **Regla 4: Landing por Novedades**: ✅ Implementado. Orden por `release_date` descendente por defecto.
+- **Regla 5: Navegación y Títulos**: ✅ Implementado. Títulos clickeables, soporte para nuevas pestañas y modal optimizado.
 
 ---
 
