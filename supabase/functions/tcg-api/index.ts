@@ -300,12 +300,9 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
       const offsetVal = parseInt(params.offset || '0');
       const fetchLimit = unique ? limitVal * 3 : limitVal;
 
-      // Apply sorting - simplified to avoid timeout
-      // Note: PostgREST doesn't support ordering by nested relations efficiently
-      // We'll sort by printing_id (which is indexed) and let the frontend handle additional sorting if needed
+      // Apply sorting - use release_date for better user experience
       const sortField = params.sort || 'release_date';
       query = query.order('printing_id', { ascending: false });
-
 
       // Apply range after sorting
       query = query.range(offsetVal, offsetVal + fetchLimit - 1);
@@ -390,116 +387,14 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
     if (path.startsWith('/api/cards/')) {
       const printingId = path.split('/').pop()
 
+      // Optimized: Call the consolidated RPC
+      const { data, error } = await supabase
+        .rpc('get_card_full_details', { p_printing_id: printingId });
 
-      // 1. Get current printing with card and set details
-      const { data: printing, error: prError } = await supabase
-        .from('card_printings')
-        .select(`
-        *,
-        cards(*),
-        sets(*)
-      `)
-        .eq('printing_id', printingId)
-        .or('lang.eq.en,lang.is.null')
-        .single()
+      if (error) throw error;
+      if (!data) throw new Error('Card not found');
 
-      if (prError) throw prError
-      if (!printing) throw new Error('Card not found')
-
-      // 2. Get all versions of this card with combined pricing sources
-      const { data: allPrintings, error: versionsError } = await supabase
-        .from('card_printings')
-        .select(`
-        printing_id,
-        collector_number,
-        rarity,
-        image_url,
-        sets(set_name, set_code, release_date),
-        aggregated_prices(avg_market_price_usd),
-        products(price)
-      `)
-        .eq('card_id', printing.card_id)
-        .or('lang.eq.en,lang.is.null')
-        .order('collector_number', { ascending: true })
-      // Note: we'll sort history in-memory for each version
-
-      if (versionsError) throw versionsError
-
-      // 3. Get valuation (store price from products table)
-      const { data: product } = await supabase
-        .from('products')
-        .select('price, stock')
-        .eq('printing_id', printingId)
-        .limit(1)
-        .maybeSingle()
-
-      // 4. Fetch latest history prices in batch for all versions to avoid missing data
-      const printingIds = allPrintings.map((p: any) => p.printing_id)
-      const { data: historyData } = await supabase
-        .from('price_history')
-        .select('printing_id, price_usd, timestamp')
-        .in('printing_id', printingIds)
-        .order('timestamp', { ascending: false })
-
-      const latestPriceMap = new Map()
-      if (historyData) {
-        for (const hp of historyData) {
-          if (!latestPriceMap.has(hp.printing_id)) {
-            latestPriceMap.set(hp.printing_id, hp.price_usd)
-          }
-        }
-      }
-
-      // 5. Map versions with price fallback
-      const all_versions = allPrintings.map((p: any) => {
-        const historyPriceV = latestPriceMap.get(p.printing_id) || 0;
-        const marketPriceV = historyPriceV || p.aggregated_prices?.[0]?.avg_market_price_usd || 0;
-        const storePriceV = p.products?.[0]?.price || 0;
-        return {
-          printing_id: p.printing_id,
-          set_name: p.sets.set_name,
-          set_code: p.sets.set_code,
-          collector_number: p.collector_number,
-          rarity: p.rarity,
-          price: marketPriceV || storePriceV || 0,
-          image_url: p.image_url
-        };
-      })
-
-      // 5. Build final flattened response
-      const cardData = printing.cards
-      const setData = printing.sets
-      const currentPrintingData = allPrintings.find((p: any) => p.printing_id === printingId)
-      // Try to find NM condition (usually id 1) or just the first available
-      const marketPriceObj = currentPrintingData?.aggregated_prices?.find((ap: any) => ap.condition_id === 1) || currentPrintingData?.aggregated_prices?.[0]
-      const marketPrice = latestPriceMap.get(printingId) || marketPriceObj?.avg_market_price_usd || 0
-
-      return {
-        card_id: printing.printing_id,
-        oracle_id: printing.card_id,
-        name: cardData.card_name,
-        mana_cost: cardData.mana_cost,
-        type: cardData.type_line,
-        oracle_text: cardData.oracle_text,
-        flavor_text: printing.flavor_text,
-        artist: printing.artist,
-        rarity: printing.rarity,
-        set: setData.set_name,
-        set_code: setData.set_code,
-        collector_number: printing.collector_number,
-        image_url: printing.image_url,
-        price: marketPrice || product?.price || 0,
-        valuation: {
-          store_price: product?.price || 0,
-          market_price: marketPrice,
-          market_url: `https://www.cardkingdom.com/mtg/${sanitizeSlug(setData.set_name)}/${sanitizeSlug(cardData.card_name)}`,
-          valuation_avg: (marketPrice || product?.price) || 0
-        },
-        legalities: cardData.legalities,
-        colors: cardData.colors,
-        card_faces: printing.card_faces,
-        all_versions: all_versions
-      }
+      return data;
     }
   }
 
