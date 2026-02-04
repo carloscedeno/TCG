@@ -38,6 +38,21 @@ This platform is an advanced web application for aggregating and analyzing Tradi
   - **Price Alerts**: User-configurable thresholds with automatic nightly processing.
 - **Inline Editing**: Quick updates for card quantity and condition.
 
+## 3. Validación de Salud (PRD Compliance)
+
+- **API Health**: Correr suite de verificación de endpoints.
+  - Command: `python check_api_health.py`
+- **Visual & UI Verification**: Levantar el navegador para verificar la carga de la página, capturar el DOM y grabar interacciones.
+  - El agente debe usar `browser_subagent` para:
+    - Entrar a `localhost:5173/TCG/`.
+    - Verificar que no hay pantallas blancas (JS Errors).
+    - Validar que el grid muestra cartas y los filtros funcionan.
+    - Grabar la sesión para auditoría visual.
+- **Product Health**: Verificar integridad de precios y stock.
+  - Command: `python check_products_health.py`
+- **Regression Testing**: Ejecutar pruebas de integración de Supabase.
+  - Command: `python tests/verify_supabase_functions.py`
+
 ### 2.3. Commerce & Inventory (✅ Implemented)
 
 - **Shopping Cart**: Real-time cart management with stock validation.
@@ -58,6 +73,7 @@ This platform is an advanced web application for aggregating and analyzing Tradi
 ### 3.1. Scraping & Data Ingestion (Mature)
 
 - **Anti-Bot Manager:** Rotating User-Agents, Proxies, rate limiting, and CAPTCHA detection.
+- **Card Image Responsive Fix**: Fixed card image sizing in `CardModal` and `CardDetail`. Images now correctly "fit the box" (80%+ coverage) with premium effects like drop-shadows and glows. Verified via browser subagent.
 - **Data Manager:** Incremental updates, historical snapshots, and anomaly detection.
 - **Variant Detection:** Smart identification of Foil, Alt Art, Secret Rare, etc.
 - **Marketplace Mapping:** Standardized condition mapping across TCGPlayer, Cardmarket, etc.
@@ -76,7 +92,21 @@ This platform is an advanced web application for aggregating and analyzing Tradi
 
 ---
 
-## 4. Source of Truth Documentation
+## 5. Roadmap & Future Phases
+
+### Fase 5: Corrección de Detalles - Parte 1 (✅ Implementing & In Validation)
+
+[x] **Rule 2: Responsive Card Detail Photo.** The card image should be rendered correctly and beautifully on both desktop and mobile, ensuring it fits the modal/page panel ("fit al recuadro") without being too small. (Implemented & Verified Large Scale)
+
+- **Regla 1: Agregación por Carta Única (Deduplicación)**: ✅ Implementado en el backend (`tcg-api`). El grid ahora filtra por la edición más reciente.
+- **Regla 2: Fallback de Precios**: ✅ Implementado. Prioridad: `market_price` -> `store_price`.
+- **Regla 3: Enlaces Externos**: ✅ Implementado. Botón "Standard Market" linkea a CardKingdom.
+- **Regla 4: Landing por Novedades**: ✅ Implementado. Orden por `release_date` descendente por defecto.
+- **Regla 5: Navegación y Títulos**: ✅ Implementado. Títulos clickeables, soporte para nuevas pestañas y modal optimizado.
+
+---
+
+## 6. Source of Truth Documentation
 
 This PRD is the primary source of truth. Technical details are further expanded in:
 

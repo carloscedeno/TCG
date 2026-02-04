@@ -1,12 +1,38 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient, SupabaseClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+// Force redeploy - 2026-02-01 20:45
+interface RequestParams {
+  q?: string
+  game?: string
+  set?: string
+  rarity?: string
+  color?: string
+  limit?: string
+  offset?: string
+  sort?: string
+  [key: string]: any
+}
+
+type ApiHandler = (supabase: SupabaseClient, path: string, method: string, params: RequestParams) => Promise<any>
+
+// UTILS
+function sanitizeSlug(text: string): string {
+  if (!text) return '';
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_]+/g, '-')
+    .replace(/-+/g, '-');
+}
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-serve(async (req) => {
+serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
@@ -116,13 +142,13 @@ serve(async (req) => {
       JSON.stringify(response),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: response.error ? 400 : 200,
+        status: (response as any).error ? 400 : 200,
       },
     )
 
-  } catch (error) {
+  } catch (error: any) {
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: (error as Error).message }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 500,
@@ -131,7 +157,7 @@ serve(async (req) => {
   }
 })
 
-async function handleGamesEndpoint(supabase, path, method, params) {
+async function handleGamesEndpoint(supabase: SupabaseClient, path: string, method: string, params: RequestParams) {
   if (method === 'GET') {
     if (path === '/api/games') {
       const { data, error } = await supabase
@@ -168,20 +194,19 @@ async function handleGamesEndpoint(supabase, path, method, params) {
   throw new Error('Method not allowed')
 }
 
-async function handleSetsEndpoint(supabase, path, method, params) {
+async function handleSetsEndpoint(supabase: SupabaseClient, path: string, method: string, params: RequestParams) {
   if (method === 'GET') {
     if (path === '/api/sets') {
-      const { game_code } = params
-      let query = supabase
+      const { game_code = 'MTG' } = params
+
+      // Use !inner join to filter by game_code
+      const { data, error } = await supabase
         .from('sets')
-        .select('*, games(game_name, game_code)')
+        .select('*, games!inner(game_name, game_code)')
         .eq('is_digital', false)
+        .eq('games.game_code', game_code)
+        .order('release_date', { ascending: false })
 
-      if (game_code) {
-        query = query.eq('games.game_code', game_code)
-      }
-
-      const { data, error } = await query
       if (error) throw error
       return { sets: data }
     }
@@ -211,7 +236,7 @@ async function handleSetsEndpoint(supabase, path, method, params) {
   throw new Error('Method not allowed')
 }
 
-async function handleCardsEndpoint(supabase, path, method, params) {
+async function handleCardsEndpoint(supabase: SupabaseClient, path: string, method: string, params: RequestParams) {
   if (method === 'GET') {
     if (path === '/api/cards') {
       const { q, game, set, rarity, color, limit = 50, offset = 0 } = params
@@ -224,26 +249,30 @@ async function handleCardsEndpoint(supabase, path, method, params) {
         printing_id, 
         image_url,
         ${cardsJoin}(card_id, card_name, type_line, rarity, game_id, colors),
-        ${setsJoin}(set_name),
-        aggregated_prices(avg_market_price_usd)
-      `, { count: 'exact' })
+        ${setsJoin}(set_name, set_code, release_date),
+        aggregated_prices(avg_market_price_usd),
+        products(price)
+      `, { count: 'planned' })
 
       // Apply search filter
       if (q) {
         query = query.ilike('cards.card_name', `%${q}%`)
       }
 
+      // Always filter for English versions (or untagged ones which are typically English custom data)
+      query = query.or('lang.eq.en,lang.is.null')
+
       // Apply rarity filter
       if (rarity) {
-        const rarities = rarity.split(',').map(r => r.trim().toLowerCase())
+        const rarities = rarity.split(',').map((r: string) => r.trim().toLowerCase())
         query = query.in('cards.rarity', rarities)
       }
 
       // Apply game filter
       if (game) {
-        const gameNames = game.split(',').map(g => g.trim())
-        const gameMap = { 'Magic: The Gathering': 22, 'Pokémon': 23, 'Lorcana': 24, 'Yu-Gi-Oh!': 26 }
-        const gameIds = gameNames.map(gn => gameMap[gn]).filter(id => id !== undefined)
+        const gameNames = game.split(',').map((g: string) => g.trim())
+        const gameMap: Record<string, number> = { 'Magic: The Gathering': 22, 'Pokémon': 23, 'Lorcana': 24, 'Yu-Gi-Oh!': 26 }
+        const gameIds = gameNames.map((gn: string) => gameMap[gn]).filter((id?: number) => id !== undefined)
         if (gameIds.length > 0) {
           query = query.in('cards.game_id', gameIds)
         }
@@ -251,68 +280,233 @@ async function handleCardsEndpoint(supabase, path, method, params) {
 
       // Apply set filter
       if (set) {
-        const setNames = set.split(',').map(s => s.trim())
+        const setNames = set.split(',').map((s: string) => s.trim())
         query = query.in('sets.set_name', setNames)
       }
 
       // Apply color filter
       if (color) {
-        const colorNames = color.split(',').map(c => c.trim())
-        const colorMap = { 'White': 'W', 'Blue': 'U', 'Black': 'B', 'Red': 'R', 'Green': 'G', 'Colorless': 'C' }
-        const colorCodes = colorNames.map(cn => colorMap[cn]).filter(code => code !== undefined)
+        const colorNames = color.split(',').map((c: string) => c.trim())
+        const colorMap: Record<string, string> = { 'White': 'W', 'Blue': 'U', 'Black': 'B', 'Red': 'R', 'Green': 'G', 'Colorless': 'C' }
+        const colorCodes = colorNames.map((cn: string) => colorMap[cn]).filter((code?: string) => code !== undefined)
         if (colorCodes.length > 0) {
           query = query.overlap('cards.colors', colorCodes)
         }
       }
 
-      // Apply limit and offset
-      query = query.range(parseInt(offset), parseInt(offset) + parseInt(limit) - 1)
+      // Calculate limits first
+      const unique = params.unique === 'true' || params.unique === undefined; // Default to unique for primary grid
+      const limitVal = parseInt(params.limit || '50');
+      const offsetVal = parseInt(params.offset || '0');
+      const fetchLimit = unique ? limitVal * 3 : limitVal;
 
-      const { data, error, count } = await query
-      if (error) throw error
+      // Apply sorting - simplified to avoid timeout
+      // Note: PostgREST doesn't support ordering by nested relations efficiently
+      // We'll sort by printing_id (which is indexed) and let the frontend handle additional sorting if needed
+      const sortField = params.sort || 'release_date';
+      query = query.order('printing_id', { ascending: false });
+
+
+      // Apply range after sorting
+      query = query.range(offsetVal, offsetVal + fetchLimit - 1);
+
+      const { data, error, count } = await query;
+      if (error) throw error;
+
+      // Deduplicate by card name and keep only the LATEST printing (most recent release_date)
+      const cardMap = new Map();
+
+      for (const item of (data || [])) {
+        const cardData = item.cards || {};
+        const cardName = cardData.card_name;
+        const setData = item.sets || {};
+        const releaseDate = setData.release_date;
+
+        if (!cardName) continue;
+
+        // If unique mode is enabled, check if we've seen this card name
+        if (unique) {
+          const existing = cardMap.get(cardName);
+
+          // If we haven't seen this card, or this printing is newer, use it
+          if (!existing || (releaseDate && releaseDate > existing.release_date)) {
+            cardMap.set(cardName, {
+              item,
+              cardData,
+              setData,
+              release_date: releaseDate
+            });
+          }
+        } else {
+          // Non-unique mode: add all printings
+          cardMap.set(`${item.printing_id}`, {
+            item,
+            cardData,
+            setData,
+            release_date: releaseDate
+          });
+        }
+      }
 
       // Map to frontend format
-      const cards = data.map(item => {
-        const cardData = item.cards || {}
-        const setData = item.sets || {}
-        const priceData = item.aggregated_prices || []
-        const price = priceData.length > 0 ? priceData[0].avg_market_price_usd : 0
+      const mappedCards = [];
+      for (const entry of cardMap.values()) {
+        const { item, cardData, setData } = entry;
 
-        return {
+        const marketPrice = item.aggregated_prices?.[0]?.avg_market_price_usd || 0;
+        const storePrice = item.products?.[0]?.price || 0;
+        const displayPrice = marketPrice || storePrice;
+
+        mappedCards.push({
           card_id: item.printing_id,
           name: cardData.card_name,
-          type: cardData.type_line,
-          set: setData.set_name || '',
-          price: price,
+          set: setData.set_name,
+          set_code: setData.set_code,
           image_url: item.image_url,
-          rarity: cardData.rarity
-        }
-      })
+          price: displayPrice,
+          rarity: cardData.rarity,
+          type: cardData.type_line,
+          game_id: cardData.game_id,
+          colors: cardData.colors,
+          release_date: setData.release_date,
+          valuation: {
+            market_price: marketPrice,
+            store_price: storePrice,
+            market_url: `https://www.cardkingdom.com/mtg/${sanitizeSlug(setData.set_name)}/${sanitizeSlug(cardData.card_name)}`
+          }
+        });
 
-      return { cards, total_count: count }
+        if (mappedCards.length >= limitVal) break;
+      }
+
+      return {
+        cards: mappedCards,
+        total_count: count,
+        offset: offsetVal,
+        limit: limitVal
+      }
     }
 
-    // Single card details
-    const cardId = path.split('/').pop()
-    const { data, error } = await supabase
-      .from('card_printings')
-      .select(`
+    if (path.startsWith('/api/cards/')) {
+      const printingId = path.split('/').pop()
+
+
+      // 1. Get current printing with card and set details
+      const { data: printing, error: prError } = await supabase
+        .from('card_printings')
+        .select(`
         *,
         cards(*),
-        sets(*),
-        aggregated_prices(*)
+        sets(*)
       `)
-      .eq('printing_id', cardId)
-      .single()
+        .eq('printing_id', printingId)
+        .or('lang.eq.en,lang.is.null')
+        .single()
 
-    if (error) throw error
-    return { card: data }
+      if (prError) throw prError
+      if (!printing) throw new Error('Card not found')
+
+      // 2. Get all versions of this card with combined pricing sources
+      const { data: allPrintings, error: versionsError } = await supabase
+        .from('card_printings')
+        .select(`
+        printing_id,
+        collector_number,
+        rarity,
+        image_url,
+        sets(set_name, set_code, release_date),
+        aggregated_prices(avg_market_price_usd),
+        products(price)
+      `)
+        .eq('card_id', printing.card_id)
+        .or('lang.eq.en,lang.is.null')
+        .order('collector_number', { ascending: true })
+      // Note: we'll sort history in-memory for each version
+
+      if (versionsError) throw versionsError
+
+      // 3. Get valuation (store price from products table)
+      const { data: product } = await supabase
+        .from('products')
+        .select('price, stock')
+        .eq('printing_id', printingId)
+        .limit(1)
+        .maybeSingle()
+
+      // 4. Fetch latest history prices in batch for all versions to avoid missing data
+      const printingIds = allPrintings.map((p: any) => p.printing_id)
+      const { data: historyData } = await supabase
+        .from('price_history')
+        .select('printing_id, price_usd, timestamp')
+        .in('printing_id', printingIds)
+        .order('timestamp', { ascending: false })
+
+      const latestPriceMap = new Map()
+      if (historyData) {
+        for (const hp of historyData) {
+          if (!latestPriceMap.has(hp.printing_id)) {
+            latestPriceMap.set(hp.printing_id, hp.price_usd)
+          }
+        }
+      }
+
+      // 5. Map versions with price fallback
+      const all_versions = allPrintings.map((p: any) => {
+        const historyPriceV = latestPriceMap.get(p.printing_id) || 0;
+        const marketPriceV = historyPriceV || p.aggregated_prices?.[0]?.avg_market_price_usd || 0;
+        const storePriceV = p.products?.[0]?.price || 0;
+        return {
+          printing_id: p.printing_id,
+          set_name: p.sets.set_name,
+          set_code: p.sets.set_code,
+          collector_number: p.collector_number,
+          rarity: p.rarity,
+          price: marketPriceV || storePriceV || 0,
+          image_url: p.image_url
+        };
+      })
+
+      // 5. Build final flattened response
+      const cardData = printing.cards
+      const setData = printing.sets
+      const currentPrintingData = allPrintings.find((p: any) => p.printing_id === printingId)
+      // Try to find NM condition (usually id 1) or just the first available
+      const marketPriceObj = currentPrintingData?.aggregated_prices?.find((ap: any) => ap.condition_id === 1) || currentPrintingData?.aggregated_prices?.[0]
+      const marketPrice = latestPriceMap.get(printingId) || marketPriceObj?.avg_market_price_usd || 0
+
+      return {
+        card_id: printing.printing_id,
+        oracle_id: printing.card_id,
+        name: cardData.card_name,
+        mana_cost: cardData.mana_cost,
+        type: cardData.type_line,
+        oracle_text: cardData.oracle_text,
+        flavor_text: printing.flavor_text,
+        artist: printing.artist,
+        rarity: printing.rarity,
+        set: setData.set_name,
+        set_code: setData.set_code,
+        collector_number: printing.collector_number,
+        image_url: printing.image_url,
+        price: marketPrice || product?.price || 0,
+        valuation: {
+          store_price: product?.price || 0,
+          market_price: marketPrice,
+          market_url: `https://www.cardkingdom.com/mtg/${sanitizeSlug(setData.set_name)}/${sanitizeSlug(cardData.card_name)}`,
+          valuation_avg: (marketPrice || product?.price) || 0
+        },
+        legalities: cardData.legalities,
+        colors: cardData.colors,
+        card_faces: printing.card_faces,
+        all_versions: all_versions
+      }
+    }
   }
 
   throw new Error('Method not allowed')
 }
 
-async function handlePricesEndpoint(supabase, path, method, params) {
+async function handlePricesEndpoint(supabase: SupabaseClient, path: string, method: string, params: RequestParams) {
   if (method === 'GET') {
     const { printing_id, condition_id, days = 30 } = params
 
@@ -358,7 +552,7 @@ async function handlePricesEndpoint(supabase, path, method, params) {
   throw new Error('Method not allowed')
 }
 
-async function handleSearchEndpoint(supabase, path, method, params) {
+async function handleSearchEndpoint(supabase: SupabaseClient, path: string, method: string, params: RequestParams) {
   if (method === 'POST') {
     const { query, game_code, limit = 20 } = params
 
@@ -370,7 +564,7 @@ async function handleSearchEndpoint(supabase, path, method, params) {
       .rpc('search_cards_with_prices', {
         search_query: query,
         game_code_filter: game_code,
-        limit_count: parseInt(limit)
+        limit_count: typeof limit === 'string' ? parseInt(limit) : limit
       })
 
     if (error) throw error
@@ -380,7 +574,7 @@ async function handleSearchEndpoint(supabase, path, method, params) {
   throw new Error('Method not allowed')
 }
 
-async function handleCollectionsEndpoint(supabase, path, method, params) {
+async function handleCollectionsEndpoint(supabase: SupabaseClient, path: string, method: string, params: RequestParams) {
   if (method === 'GET') {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) throw new Error('Unauthorized')
@@ -455,62 +649,66 @@ async function handleCollectionsEndpoint(supabase, path, method, params) {
   throw new Error('Method not allowed')
 }
 
-async function handleCartEndpoint(supabase, path, method, params) {
+async function handleCartEndpoint(supabase: any, path: string, method: string, params: any) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error('Unauthorized')
 
   if (method === 'GET') {
     // Get or create cart
-    let { data: cart } = await supabase.table('carts').select('id').eq('user_id', user.id).single()
+    let { data: cart } = await supabase.from('carts').select('id').eq('user_id', user.id).maybeSingle()
     if (!cart) {
-      const { data: newCart } = await supabase.table('carts').insert({ user_id: user.id }).select().single()
+      const { data: newCart, error: cErr } = await supabase.from('carts').insert({ user_id: user.id }).select().single()
+      if (cErr) throw cErr
       cart = newCart
     }
 
-    const { data: items } = await supabase.table('cart_items').select('*, products(*)').eq('cart_id', cart.id)
-    return { cart_id: cart.id, items }
+    const { data: items } = await supabase.from('cart_items').select('*, products(*)').eq('cart_id', cart.id)
+    return { cart_id: cart.id, items: items || [] }
   }
 
   if (method === 'POST' && path.endsWith('/add')) {
     const { printing_id, product_id, quantity = 1 } = params
-    let { data: cart } = await supabase.table('carts').select('id').eq('user_id', user.id).single()
+    let { data: cart } = await supabase.from('carts').select('id').eq('user_id', user.id).maybeSingle()
     if (!cart) {
-      const { data: newCart } = await supabase.table('carts').insert({ user_id: user.id }).select().single()
+      const { data: newCart } = await supabase.from('carts').insert({ user_id: user.id }).select().single()
       cart = newCart
     }
 
-    const target_prod_id = product_id || (printing_id ? (await supabase.table('products').select('id').eq('printing_id', printing_id).single()).data?.id : null)
-    if (!target_prod_id) throw new Error('Product not found')
+    let target_prod_id = product_id
+    if (!target_prod_id && printing_id) {
+      const { data: prod } = await supabase.from('products').select('id').eq('printing_id', printing_id).maybeSingle()
+      target_prod_id = prod?.id
+    }
 
-    const { data, error } = await supabase.table('cart_items').upsert({
+    if (!target_prod_id) throw new Error('Product not found in marketplace inventory')
+
+    const { data, error } = await supabase.from('cart_items').upsert({
       cart_id: cart.id,
       product_id: target_prod_id,
-      quantity
-    }).select().single()
+      quantity: parseInt(quantity)
+    }, { onConflict: 'cart_id,product_id' }).select().single()
 
     if (error) throw error
     return { item: data }
   }
 
   if (method === 'POST' && path.endsWith('/checkout')) {
-    // Logic for checkout as implemented in CartService
-    // This is a simplified version for the edge function
-    const { data: cart } = await supabase.table('carts').select('id').eq('user_id', user.id).single()
+    const { data: cart } = await supabase.from('carts').select('id').eq('user_id', user.id).single()
     if (!cart) throw new Error('No cart found')
 
-    const { data: items } = await supabase.table('cart_items').select('*, products(*)').eq('cart_id', cart.id)
+    const { data: items } = await supabase.from('cart_items').select('*, products(*)').eq('cart_id', cart.id)
     if (!items?.length) throw new Error('Cart is empty')
 
-    const total = items.reduce((sum, i) => sum + (i.products.price * i.quantity), 0)
+    const total = items.reduce((sum: number, i: any) => sum + ((i.products?.price || 0) * i.quantity), 0)
 
-    const { data: order } = await supabase.table('orders').insert({
+    const { data: order } = await supabase.from('orders').insert({
       user_id: user.id,
       total_amount: total,
       status: 'completed'
     }).select().single()
 
     // Clear cart
-    await supabase.table('cart_items').delete().eq('cart_id', cart.id)
+    await supabase.from('cart_items').delete().eq('cart_id', cart.id)
 
     return { success: true, order_id: order.id, total }
   }
@@ -518,25 +716,24 @@ async function handleCartEndpoint(supabase, path, method, params) {
   throw new Error('Method not allowed')
 }
 
-async function handleAnalyticsEndpoint(supabase, path, method, params) {
+async function handleAnalyticsEndpoint(supabase: any, path: string, method: string, params: any) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error('Unauthorized')
 
-  // Simplifed analytics logic for Edge Function
-  const { data: col } = await supabase.table('user_collections').select('quantity, printing_id, purchase_price').eq('user_id', user.id)
+  const { data: col } = await supabase.from('user_collections').select('quantity, printing_id, purchase_price').eq('user_id', user.id)
   if (!col?.length) return { total_market_value: 0, total_store_value: 0 }
 
-  const pids = col.map(i => i.printing_id)
-  const { data: prices } = await supabase.table('aggregated_prices').select('printing_id, avg_market_price_usd').in('printing_id', pids)
-  const { data: prods } = await supabase.table('products').select('printing_id, price').in('printing_id', pids)
+  const pids = col.map((i: any) => i.printing_id)
+  const { data: prices } = await supabase.from('aggregated_prices').select('printing_id, avg_market_price_usd').in('printing_id', pids)
+  const { data: prods } = await supabase.from('products').select('printing_id, price').in('printing_id', pids)
 
-  const m_map = Object.fromEntries(prices?.map(p => [p.printing_id, p.avg_market_price_usd]) || [])
-  const s_map = Object.fromEntries(prods?.map(p => [p.printing_id, p.price]) || [])
+  const m_map = Object.fromEntries(prices?.map((p: any) => [p.printing_id, p.avg_market_price_usd]) || [])
+  const s_map = Object.fromEntries(prods?.map((p: any) => [p.printing_id, p.price]) || [])
 
   let total_market = 0
   let total_store = 0
 
-  col.forEach(i => {
+  col.forEach((i: any) => {
     total_market += (m_map[i.printing_id] || 0) * i.quantity
     total_store += (s_map[i.printing_id] || 0) * i.quantity
   })
@@ -547,7 +744,7 @@ async function handleAnalyticsEndpoint(supabase, path, method, params) {
   }
 }
 
-async function handleWatchlistsEndpoint(supabase, path, method, params) {
+async function handleWatchlistsEndpoint(supabase: SupabaseClient, path: string, method: string, params: RequestParams) {
   if (method === 'GET') {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) throw new Error('Unauthorized')
@@ -603,7 +800,7 @@ async function handleWatchlistsEndpoint(supabase, path, method, params) {
   throw new Error('Method not allowed')
 }
 
-async function handleStatsEndpoint(supabase, path, method, params) {
+async function handleStatsEndpoint(supabase: SupabaseClient, path: string, method: string, params: RequestParams) {
   if (method === 'GET') {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) throw new Error('Unauthorized')
@@ -637,7 +834,7 @@ async function handleStatsEndpoint(supabase, path, method, params) {
   throw new Error('Method not allowed')
 }
 
-async function handleProductsEndpoint(supabase, path, method, params) {
+async function handleProductsEndpoint(supabase: SupabaseClient, path: string, method: string, params: RequestParams) {
   if (method === 'GET') {
     const { q, game, in_stock = 'true', limit = 50, offset = 0, sort = 'newest' } = params
 
@@ -666,7 +863,9 @@ async function handleProductsEndpoint(supabase, path, method, params) {
       query = query.order('name', { ascending: true })
     }
 
-    query = query.range(parseInt(offset), parseInt(offset) + parseInt(limit) - 1)
+    const limitVal = typeof limit === 'string' ? parseInt(limit) : limit
+    const offsetVal = typeof offset === 'string' ? parseInt(offset) : offset
+    query = query.range(offsetVal, offsetVal + limitVal - 1)
 
     const { data, error, count } = await query
 

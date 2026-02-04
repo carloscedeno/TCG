@@ -41,24 +41,6 @@ const ProfilePage: React.FC = () => {
             progress: 92,
             recentDeck: "Dimir Control",
             colorClass: "bg-geeko-red"
-        },
-        {
-            name: "Pokémon TCG",
-            gameCode: "POKEMON",
-            elo: 1150,
-            tier: "PLATINUM",
-            progress: 68,
-            recentDeck: "Mew VMAX Fusion",
-            colorClass: "bg-geeko-blue"
-        },
-        {
-            name: "One Piece TCG",
-            gameCode: "ONEPIECE",
-            elo: 1310,
-            tier: "RUBY",
-            progress: 75,
-            recentDeck: "Trafalgar Law (R/G)",
-            colorClass: "bg-geeko-orange"
         }
     ];
 

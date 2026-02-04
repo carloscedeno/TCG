@@ -10,11 +10,12 @@ import { useAuth } from '../context/AuthContext';
 import { AuthModal } from '../components/Auth/AuthModal';
 import { UserMenu } from '../components/Navigation/UserMenu';
 import { HeroSection } from '../components/Home/HeroSection';
-import { LogIn, X } from 'lucide-react';
+import { LogIn, X, ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { CartDrawer } from '../components/Navigation/CartDrawer';
 
 const mockFilters: Filters = {
-  games: ['Magic: The Gathering', 'Pokémon', 'Yu-Gi-Oh!', 'Lorcana'],
+  games: ['Magic: The Gathering'],
   rarities: ['Common', 'Uncommon', 'Rare', 'Mythic'],
   colors: ['White', 'Blue', 'Black', 'Red', 'Green', 'Colorless', 'Multicolor'],
   types: ['Creature', 'Instant', 'Sorcery', 'Enchantment', 'Artifact', 'Planeswalker', 'Land'],
@@ -29,7 +30,7 @@ const Home: React.FC = () => {
   const [query, setQuery] = useState('');
   const [filters, setFilters] = useState<Partial<Filters>>({});
   const [sets, setSets] = useState<string[]>([]);
-  const [sortBy, setSortBy] = useState('name');
+  const [sortBy, setSortBy] = useState('release_date');
   const [activeRarity, setActiveRarity] = useState('All');
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(0);
@@ -39,6 +40,8 @@ const Home: React.FC = () => {
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [activeTab, setActiveTab] = useState<'marketplace' | 'reference'>('reference');
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
   const LIMIT = 50;
 
   useEffect(() => {
@@ -72,7 +75,7 @@ const Home: React.FC = () => {
           });
 
           result = {
-            cards: productRes.products.map(p => ({
+            cards: productRes.products.map((p: any) => ({
               card_id: p.printing_id || p.id,
               name: p.name,
               set: p.set_code || 'Unknown',
@@ -124,16 +127,19 @@ const Home: React.FC = () => {
   }, [debouncedQuery, filters, activeRarity, sortBy, page, activeTab]);
 
   useEffect(() => {
-    const gameToFetch = filters.games && filters.games.length === 1 ? filters.games[0] : 'MTG';
     const gameCodeMap: Record<string, string> = {
       'Magic: The Gathering': 'MTG',
-      'Pokémon': 'PKM',
-      'Yu-Gi-Oh!': 'YGO',
-      'Lorcana': 'LOR'
+      'MTG': 'MTG'
     };
 
-    fetchSets(gameCodeMap[gameToFetch] || 'MTG')
-      .then(realSets => setSets(realSets.map((s: any) => s.set_name)))
+    // Si no hay juegos seleccionados en filtros, usamos MTG por defecto
+    const activeGame = filters.games && filters.games.length > 0 ? filters.games[0] : 'MTG';
+
+    fetchSets(gameCodeMap[activeGame] || 'MTG')
+      .then(realSets => {
+        const setNames = realSets.map((s: any) => s.set_name);
+        setSets(setNames);
+      })
       .catch(() => setSets([]));
   }, [filters.games]);
 
@@ -173,6 +179,18 @@ const Home: React.FC = () => {
               <div className="lg:hidden">
                 <SearchBar value={query} onChange={setQuery} />
               </div>
+
+              {/* Cart Button */}
+              {user && (
+                <button
+                  onClick={() => setIsCartOpen(true)}
+                  className="relative p-2.5 bg-neutral-900 border border-white/5 rounded-xl hover:bg-neutral-800 transition-all text-neutral-400 hover:text-geeko-cyan group"
+                >
+                  <ShoppingCart size={20} />
+                  <div className="absolute top-0 right-0 w-2 h-2 bg-geeko-cyan rounded-full border-2 border-[#0a0a0a] group-hover:scale-150 transition-transform" />
+                </button>
+              )}
+
               {user ? (
                 <UserMenu />
               ) : (
@@ -204,27 +222,27 @@ const Home: React.FC = () => {
 
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
               <div>
-                <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter leading-none mb-4">
+                <h1 className="text-4xl sm:text-5xl md:text-7xl font-black text-white tracking-tighter leading-none mb-4">
                   TCG <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Price Tracker</span>
                 </h1>
                 <p className="text-neutral-500 text-lg max-w-2xl font-medium mb-10">
                   Showing <span className="text-neutral-300">{cards.length}</span> of <span className="text-neutral-300">{totalCount.toLocaleString()}</span> cards found in the database.
                 </p>
 
-                <div className="flex flex-wrap gap-8 py-8 border-t border-white/5">
+                <div className="flex flex-wrap gap-4 md:gap-8 py-8 border-t border-white/5">
                   <div className="flex flex-col">
                     <span className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-600 mb-1">Vault Scale</span>
-                    <span className="text-2xl font-black text-white italic tracking-tighter">{(totalCount / 1000).toFixed(1)}K <span className="text-xs text-neutral-500 not-italic font-medium">Assets</span></span>
+                    <span className="text-xl md:text-2xl font-black text-white italic tracking-tighter">{(totalCount / 1000).toFixed(1)}K <span className="text-xs text-neutral-500 not-italic font-medium">Assets</span></span>
                   </div>
-                  <div className="w-px h-10 bg-white/5 self-center"></div>
+                  <div className="hidden sm:block w-px h-10 bg-white/5 self-center"></div>
                   <div className="flex flex-col">
                     <span className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-600 mb-1">Market Reach</span>
-                    <span className="text-2xl font-black text-blue-500 italic tracking-tighter">04 <span className="text-xs text-neutral-500 not-italic font-medium">Nodes</span></span>
+                    <span className="text-xl md:text-2xl font-black text-blue-500 italic tracking-tighter">04 <span className="text-xs text-neutral-500 not-italic font-medium">Nodes</span></span>
                   </div>
-                  <div className="w-px h-10 bg-white/5 self-center"></div>
+                  <div className="hidden sm:block w-px h-10 bg-white/5 self-center"></div>
                   <div className="flex flex-col">
                     <span className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-600 mb-1">Sync Latency</span>
-                    <span className="text-2xl font-black text-emerald-500 italic tracking-tighter">99.9% <span className="text-xs text-neutral-500 not-italic font-medium">Uptime</span></span>
+                    <span className="text-xl md:text-2xl font-black text-emerald-500 italic tracking-tighter">99.9% <span className="text-xs text-neutral-500 not-italic font-medium">Uptime</span></span>
                   </div>
                 </div>
               </div>
@@ -262,7 +280,7 @@ const Home: React.FC = () => {
                   <button
                     key={r}
                     onClick={() => setActiveRarity(r)}
-                    className={`px-6 py-2 rounded-full text-[11px] font-black tracking-widest uppercase transition-all ${activeRarity === r
+                    className={`px-3 md:px-6 py-2 rounded-full text-[9px] md:text-[11px] font-black tracking-widest uppercase transition-all ${activeRarity === r
                       ? 'bg-neutral-700 text-white shadow-lg'
                       : 'text-neutral-500 hover:text-neutral-300'
                       }`}
@@ -272,17 +290,30 @@ const Home: React.FC = () => {
                 ))}
               </div>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 md:gap-4">
+              <button
+                onClick={() => setIsMobileFiltersOpen(true)}
+                className="lg:hidden p-2.5 bg-neutral-900 border border-white/5 rounded-xl hover:bg-neutral-800 transition-all text-neutral-400 flex items-center gap-2"
+              >
+                <div className="relative">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" /></svg>
+                  {Object.values(filters).some(v => v && v.length > 0) && (
+                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full" />
+                  )}
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Filters</span>
+              </button>
+
               <div className="flex items-center gap-3">
-                <span className="text-[11px] font-black uppercase tracking-tighter text-neutral-500">Order By:</span>
+                <span className="text-[11px] font-black uppercase tracking-tighter text-neutral-500 hidden sm:inline">Order By:</span>
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="bg-neutral-900/50 text-white text-[11px] font-black uppercase px-6 py-2 rounded-full border border-neutral-800 focus:outline-none focus:border-blue-500/50 transition-all cursor-pointer hover:bg-neutral-800"
+                  className="bg-neutral-900/50 text-white text-[11px] font-black uppercase px-4 md:px-6 py-2 rounded-full border border-neutral-800 focus:outline-none focus:border-blue-500/50 transition-all cursor-pointer hover:bg-neutral-800"
                 >
-                  <option value="name">Nombre (A-Z)</option>
-                  <option value="release_date">Lo más nuevo</option>
-                  {activeTab === 'marketplace' && <option value="price">Precio: Menor a Mayor</option>}
+                  <option value="name">Name (A-Z)</option>
+                  <option value="release_date">Newest</option>
+                  {activeTab === 'marketplace' && <option value="price">Price: Low to High</option>}
                 </select>
               </div>
 
@@ -437,6 +468,34 @@ const Home: React.FC = () => {
           onClose={() => setSelectedCardId(null)}
           cardId={selectedCardId}
         />
+        <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+
+        {/* Mobile Filters Drawer */}
+        {isMobileFiltersOpen && (
+          <div className="fixed inset-0 z-[100] lg:hidden">
+            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setIsMobileFiltersOpen(false)} />
+            <div className="absolute inset-y-0 right-0 w-full max-w-xs bg-[#0a0a0a] border-l border-white/5 p-6 shadow-2xl overflow-y-auto animate-in slide-in-from-right duration-300">
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-xl font-black italic tracking-tighter">FILTERS</h2>
+                <button onClick={() => setIsMobileFiltersOpen(false)} className="p-2 bg-white/5 rounded-lg text-neutral-400">
+                  <X size={20} />
+                </button>
+              </div>
+              <FiltersPanel
+                filters={{ ...mockFilters, sets }}
+                selected={filters}
+                onChange={setFilters}
+                setsOptions={sets}
+              />
+              <button
+                onClick={() => setIsMobileFiltersOpen(false)}
+                className="w-full mt-8 py-4 bg-geeko-cyan text-black font-black text-xs uppercase tracking-widest rounded-xl"
+              >
+                Apply Filters
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -60,12 +60,10 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
 
     const downloadTemplate = (tcg: string) => {
         const templates: Record<string, string> = {
-            'MTG': 'Name,Set Code,Collector Number,Condition,Quantity,Price Paid\nBlack Lotus,LEA,1,NM,1,20000',
-            'Pokemon': 'Name,Set,Rarity,Condition,Quantity\nCharizard,Base Set,Rare,LP,1',
-            'Geekorium': 'Card Name,TCG,Set,Condition,Stock,Sale Price\nSol Ring,MTG,Commander Masters,NM,10,1.50'
+            'MTG': 'Name,Set Code,Collector Number,Condition,Quantity,Price Paid\nBlack Lotus,LEA,1,NM,1,20000'
         };
 
-        const content = templates[tcg] || templates['Geekorium'];
+        const content = templates[tcg] || templates['MTG'];
         const blob = new Blob([content], { type: 'text/csv;charset=utf-8' });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -167,7 +165,7 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
                     <div className="flex flex-col items-center gap-4">
                         <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">¿No tienes un formato? Descarga uno:</p>
                         <div className="flex flex-wrap justify-center gap-3">
-                            {['MTG', 'Pokemon', 'Geekorium'].map(tcg => (
+                            {['MTG'].map(tcg => (
                                 <button
                                     key={tcg}
                                     onClick={(e) => { e.stopPropagation(); downloadTemplate(tcg); }}

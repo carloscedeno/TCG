@@ -42,6 +42,9 @@
   --color-neutral-gray-700: #404040;
   --color-neutral-gray-800: #262626;
   --color-neutral-gray-900: #1C1C1C;
+
+  /* Breakpoints */
+  --breakpoint-xs: 480px;
 }
 
 :root {

@@ -4,6 +4,7 @@ import Profile from './pages/Profile';
 import TournamentHub from './pages/TournamentHub';
 import { AdminDashboard } from './pages/Admin/AdminDashboard';
 import ImportCollection from './pages/ImportCollection';
+import { CardDetail } from './pages/CardDetail';
 import { AuthProvider } from './context/AuthContext';
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
             <Router basename="/TCG">
                 <Routes>
                     <Route path="/" element={<Home />} />
+                    <Route path="/card/:id" element={<CardDetail />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/import" element={<ImportCollection />} />
                     <Route path="/tournaments" element={<TournamentHub />} />
