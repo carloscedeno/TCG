@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { X, CheckCircle, XCircle, ShoppingCart, ExternalLink, RotateCw, Loader2 } from 'lucide-react';
+import { X, ShoppingCart, ExternalLink, RotateCw, Loader2 } from 'lucide-react';
 import { fetchCardDetails, addToCart } from '../../utils/api';
 
 interface CardModalProps {
@@ -70,11 +70,19 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
         if (isOpen && cardId) {
             setActivePrintingId(cardId);
             loadCardDetails(cardId);
+            // Lock background scroll
+            document.body.style.overflow = 'hidden';
         } else {
             setDetails(null);
             setActivePrintingId(null);
+            // Unlock background scroll
+            document.body.style.overflow = 'unset';
         }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
     }, [isOpen, cardId]);
+
 
     const loadCardDetails = async (id: string) => {
         setLoading(true);
@@ -144,10 +152,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
         }
     };
 
-    const getLegalityIcon = (status: string) => {
-        if (status === 'legal') return <CheckCircle size={14} className="text-geeko-green" />;
-        return <XCircle size={14} className="text-neutral-600" />;
-    };
+    // Removal of icon-based legality indicators in favor of color-coded boxes.
 
     const relevantFormats = ['standard', 'pioneer', 'modern', 'legacy', 'commander', 'pauper'];
 
@@ -165,10 +170,10 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
 
     return (
         <div
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-xl p-0 md:p-4 animate-in fade-in zoom-in-95 duration-300"
+            className="fixed inset-0 z-[200] flex items-center justify-center bg-black/95 backdrop-blur-xl p-0 md:p-6 animate-in fade-in zoom-in-95 duration-300 overflow-y-auto md:overflow-hidden"
             onClick={handleBackdropClick}
         >
-            <div className="relative w-full max-w-6xl h-full md:h-[90vh] glass-panel md:rounded-[32px] border-x-0 md:border border-white/10 shadow-[0_0_100px_rgba(0,163,255,0.15)] flex flex-col md:flex-row overflow-hidden">
+            <div className="relative w-full max-w-6xl min-h-full md:min-h-0 md:h-[90vh] md:max-h-[850px] glass-panel md:rounded-[32px] border-x-0 md:border border-white/10 shadow-[0_0_100px_rgba(0,163,255,0.15)] flex flex-col md:flex-row md:overflow-hidden">
 
                 {/* Close Button */}
                 <button onClick={onClose} className="absolute top-6 right-6 z-50 p-2 hover:bg-white/10 rounded-full transition-colors text-neutral-400">
@@ -176,8 +181,8 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
                 </button>
 
                 {/* LEFT: IMAGE & VERSIONS LIST */}
-                <div className="w-full md:w-[520px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden shrink-0 h-full">
-                    <div className="flex-1 min-h-[450px] md:min-h-[600px] flex items-center justify-center p-6 sm:p-8 md:p-10 relative bg-gradient-to-b from-white/[0.04] to-transparent overflow-hidden">
+                <div className="w-full md:w-[420px] lg:w-[480px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden shrink-0 h-auto md:h-full">
+                    <div className="flex-1 min-h-[300px] sm:min-h-[400px] md:min-h-0 flex items-center justify-center p-6 sm:p-8 md:p-10 relative bg-gradient-to-b from-white/[0.04] to-transparent overflow-hidden">
                         {loading ? (
                             <div className="w-64 aspect-[5/7] rounded-xl bg-white/5 animate-pulse flex items-center justify-center">
                                 <div className="w-10 h-10 border-4 border-t-geeko-cyan border-white/10 rounded-full animate-spin" />
@@ -188,9 +193,11 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
                                 <img
                                     src={currentImage}
                                     alt={details?.name}
-                                    className="w-full h-full object-contain drop-shadow-[0_45px_100px_rgba(0,0,0,0.95)] relative z-10 transition-transform duration-700 group-hover/card:scale-[1.03]"
+                                    className="max-w-[85%] max-h-[90%] md:max-w-full md:max-h-full object-contain drop-shadow-[0_45px_100px_rgba(0,0,0,0.95)] relative z-10 transition-transform duration-700 group-hover/card:scale-[1.03]"
                                     style={{
                                         imageRendering: 'auto',
+                                        height: 'auto',
+                                        width: 'auto',
                                     }}
                                 />
                             </div>
@@ -198,20 +205,20 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
                         {hasMultipleFaces && !loading && (
                             <button
                                 onClick={(e) => { e.stopPropagation(); setCurrentFaceIndex(prev => (prev + 1) % 2); }}
-                                className="absolute bottom-6 right-6 p-4 bg-black/80 hover:bg-geeko-cyan text-white hover:text-black rounded-full border border-white/20 backdrop-blur-md transition-all z-30 group shadow-2xl"
+                                className="absolute bottom-6 right-6 p-3 md:p-4 bg-black/80 hover:bg-geeko-cyan text-white hover:text-black rounded-full border border-white/20 backdrop-blur-md transition-all z-30 group shadow-2xl"
                             >
-                                <RotateCw size={22} className="group-hover:rotate-180 transition-transform duration-500" />
+                                <RotateCw size={18} className="group-hover:rotate-180 transition-transform duration-500" />
                             </button>
                         )}
                     </div>
 
-                    {/* MOXFIELD-STYLE VERSIONS LIST */}
-                    <div className="h-[200px] md:h-[240px] border-t border-white/5 bg-[#080808] flex flex-col shrink-0">
-                        <div className="px-6 py-4 flex items-center justify-between border-b border-white/5 bg-[#0a0a0a]/50">
+                    {/* VERSIONS LIST */}
+                    <div className="h-auto max-h-[180px] md:h-[240px] md:max-h-none border-t border-white/5 bg-[#080808] flex flex-col shrink-0">
+                        <div className="px-6 py-3 flex items-center justify-between border-b border-white/5 bg-[#0a0a0a]/50">
                             <h3 className="text-[10px] font-black uppercase tracking-widest text-neutral-500">Edition / Printings</h3>
                             <span className="text-[10px] text-neutral-600 font-bold">{details?.all_versions?.length || 0} Versions</span>
                         </div>
-                        <div className="flex-1 overflow-y-auto custom-scrollbar">
+                        <div className="flex-1 overflow-x-auto md:overflow-y-auto md:overflow-x-hidden custom-scrollbar relative flex md:block whitespace-nowrap md:whitespace-normal p-2 md:p-0">
                             {details?.all_versions?.map((v) => (
                                 <a
                                     key={v.printing_id}
@@ -222,28 +229,29 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
                                             handleVersionClick(v.printing_id);
                                         }
                                     }}
-                                    className={`w-full flex items-center gap-4 px-6 py-3 hover:bg-white/5 transition-colors border-b border-white/5 group ${activePrintingId === v.printing_id ? 'bg-geeko-cyan/10' : ''}`}
+                                    className={`inline-flex md:flex items-center gap-3 md:gap-4 px-4 md:px-6 py-2 md:py-3 hover:bg-white/5 transition-colors border-r md:border-r-0 md:border-b border-white/5 group rounded-lg md:rounded-none ${activePrintingId === v.printing_id ? 'bg-geeko-cyan/10 border-geeko-cyan/20' : ''}`}
                                 >
-                                    <div className="w-8 h-8 rounded bg-neutral-900 flex items-center justify-center text-[10px] font-black group-hover:text-geeko-cyan transition-colors">
+                                    <div className="w-8 h-8 rounded bg-neutral-900 flex items-center justify-center text-[10px] font-black group-hover:text-geeko-cyan transition-colors shrink-0">
                                         {v.set_code.toUpperCase()}
                                     </div>
-                                    <div className="flex-1 text-left">
-                                        <div className={`text-xs font-bold leading-tight ${activePrintingId === v.printing_id ? 'text-geeko-cyan' : 'text-neutral-300'}`}>
+                                    <div className="flex-1 text-left min-w-[120px] md:min-w-0">
+                                        <div className={`text-[10px] md:text-xs font-bold leading-tight truncate ${activePrintingId === v.printing_id ? 'text-geeko-cyan' : 'text-neutral-300'}`}>
                                             {v.set_name}
                                         </div>
-                                        <div className="text-[10px] text-neutral-600 font-bold">#{v.collector_number} • {v.rarity}</div>
+                                        <div className="text-[9px] md:text-[10px] text-neutral-600 font-bold">#{v.collector_number} • {v.rarity}</div>
                                     </div>
-                                    <div className="text-xs font-mono font-bold text-neutral-400 group-hover:text-white transition-colors">
+                                    <div className="text-[10px] md:text-xs font-mono font-bold text-neutral-400 group-hover:text-white transition-colors">
                                         {v.price && v.price > 0 ? `$${v.price.toFixed(2)}` : '---'}
                                     </div>
                                 </a>
                             ))}
+                            <div className="sticky bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-[#080808] to-transparent pointer-events-none hidden md:block" />
                         </div>
                     </div>
                 </div>
 
                 {/* RIGHT: CARD TEXT & ACTIONS */}
-                <div className="flex-1 overflow-y-auto custom-scrollbar bg-[#050505] p-6 md:p-10 space-y-6 md:space-y-8">
+                <div className="flex-1 h-auto md:h-full overflow-y-visible md:overflow-y-auto custom-scrollbar bg-[#050505] p-6 sm:p-8 md:p-10 space-y-6 md:space-y-8">
                     {loading ? (
                         <div className="space-y-6">
                             <div className="h-10 w-3/4 bg-white/5 rounded-lg animate-pulse" />
@@ -261,7 +269,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
                                         }
                                     }}
                                 >
-                                    <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter text-white text-gradient-cyan group-hover/title:brightness-125 transition-all text-balance">
+                                    <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter text-white text-gradient-cyan group-hover/title:brightness-125 transition-all text-balance leading-[0.9]">
                                         {details.name}
                                     </h2>
                                 </a>
@@ -283,59 +291,70 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
                                 )}
                             </div>
 
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 pt-4">
-                                {/* Marketplace */}
+                            <div className="space-y-10 pt-4">
+                                {/* Format Legality - Full Width */}
                                 <div className="space-y-4">
-                                    <h3 className="text-xs font-black uppercase tracking-widest text-neutral-500">Marketplace</h3>
+                                    <h3 className="text-xs font-black uppercase tracking-widest text-neutral-500">Format Legality</h3>
+                                    <div className="grid grid-cols-2 xs:grid-cols-3 md:grid-cols-6 gap-2 md:gap-3">
+                                        {relevantFormats.map(fmt => {
+                                            const isLegal = details.legalities?.[fmt] === 'legal';
+                                            return (
+                                                <div
+                                                    key={fmt}
+                                                    className={`flex items-center justify-center p-3 md:p-4 rounded-xl border transition-all duration-300 ${isLegal
+                                                        ? 'bg-geeko-green/10 border-geeko-green/40 text-geeko-green shadow-[0_0_20px_rgba(0,255,133,0.1)]'
+                                                        : 'bg-neutral-900/40 border-white/5 text-neutral-600 opacity-60'
+                                                        }`}
+                                                >
+                                                    <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest">{fmt}</span>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
 
-                                    <div className="p-8 rounded-3xl bg-gradient-to-br from-geeko-cyan/10 via-transparent to-transparent border border-white/10 group relative overflow-hidden">
+                                {/* Marketplace Actions - Side by Side */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                                    {/* Geekorium Price Box */}
+                                    <div className="p-6 md:p-8 rounded-[32px] bg-gradient-to-br from-geeko-cyan/10 via-transparent to-transparent border border-white/10 group relative overflow-hidden flex flex-col justify-between gap-6">
                                         <div className="absolute top-0 right-0 w-32 h-32 bg-geeko-cyan/5 rounded-full blur-[40px]" />
-                                        <div className="text-[10px] font-black uppercase text-geeko-cyan tracking-widest mb-1">Geekorium Price</div>
-                                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                                            <span className="text-2xl md:text-3xl font-black text-white tracking-tighter">
+                                        <div className="space-y-1 relative z-10">
+                                            <div className="text-[10px] font-black uppercase text-geeko-cyan tracking-widest">Geekorium Price</div>
+                                            <div className="text-4xl md:text-5xl font-black text-white tracking-tighter leading-none">
                                                 {details?.price && details.price > 0 ? `$${details.price.toFixed(2)}` : (details?.valuation?.market_price && details.valuation.market_price > 0 ? `$${details.valuation.market_price.toFixed(2)}` : '---')}
-                                            </span>
-                                            <button
-                                                onClick={handleAddToCart}
-                                                disabled={isAdding}
-                                                className="w-full sm:w-auto h-12 md:h-14 px-8 rounded-2xl bg-geeko-cyan text-black font-black text-[10px] md:text-xs uppercase tracking-widest flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_40px_rgba(0,229,255,0.6)] hover:scale-105 active:scale-95 transition-all disabled:opacity-50 shrink-0"
-                                            >
-                                                {isAdding ? <Loader2 size={18} className="animate-spin" /> : <ShoppingCart size={18} fill="currentColor" />}
-                                                {isAdding ? 'Adding...' : 'Add to Cart'}
-                                            </button>
+                                            </div>
                                         </div>
+                                        <button
+                                            onClick={handleAddToCart}
+                                            disabled={isAdding}
+                                            className="w-full h-14 rounded-2xl bg-geeko-cyan text-black font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_40px_rgba(0,229,255,0.6)] hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 shrink-0 relative z-10"
+                                        >
+                                            {isAdding ? <Loader2 size={18} className="animate-spin" /> : <ShoppingCart size={18} fill="currentColor" />}
+                                            {isAdding ? 'Adding...' : 'Add to Cart'}
+                                        </button>
                                     </div>
 
+                                    {/* External Market Box */}
                                     <a
                                         href={details.valuation?.market_url || `https://www.cardkingdom.com/mtg/search?filter[name]=${encodeURIComponent(details.name)}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="w-full flex items-center justify-between p-5 rounded-2xl bg-neutral-900 hover:bg-geeko-cyan/10 border border-white/5 hover:border-geeko-cyan transition-all group mt-4"
+                                        className="w-full h-full flex flex-col justify-between p-6 md:p-8 rounded-[32px] bg-neutral-900 hover:bg-geeko-cyan/10 border border-white/5 hover:border-geeko-cyan transition-all group relative overflow-hidden gap-6"
                                     >
-                                        <div className="flex flex-col">
+                                        <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity" />
+                                        <div className="space-y-1 relative z-10">
                                             <span className="text-[10px] font-black uppercase text-neutral-500 tracking-widest group-hover:text-geeko-cyan transition-colors">External Market</span>
-                                            <span className="text-base md:text-lg font-bold">Buy @ CardKingdom</span>
+                                            <div className="text-lg font-bold leading-tight">Buy @ CardKingdom</div>
                                         </div>
-                                        <div className="flex items-center gap-4">
-                                            <span className="text-lg md:text-xl font-mono font-black text-white group-hover:text-geeko-cyan transition-colors">
+                                        <div className="flex items-center justify-between gap-4 w-full relative z-10">
+                                            <span className="text-2xl md:text-3xl font-mono font-black text-white group-hover:text-geeko-cyan transition-colors">
                                                 {details.valuation?.market_price && details.valuation.market_price > 0 ? `$${details.valuation.market_price.toFixed(2)}` : 'Check Site'}
                                             </span>
-                                            <ExternalLink size={18} className="text-neutral-500 group-hover:text-geeko-cyan group-hover:translate-x-1 transition-all" />
+                                            <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-geeko-cyan group-hover:text-black transition-all">
+                                                <ExternalLink size={20} />
+                                            </div>
                                         </div>
                                     </a>
-                                </div>
-
-                                {/* Legality */}
-                                <div className="space-y-4">
-                                    <h3 className="text-xs font-black uppercase tracking-widest text-neutral-500">Format Legality</h3>
-                                    <div className="grid grid-cols-2 gap-3">
-                                        {relevantFormats.map(fmt => (
-                                            <div key={fmt} className="flex items-center justify-between p-3 rounded-xl bg-neutral-900/50 border border-white/5">
-                                                <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">{fmt}</span>
-                                                {getLegalityIcon(details.legalities?.[fmt] || 'not_legal')}
-                                            </div>
-                                        ))}
-                                    </div>
                                 </div>
                             </div>
                         </>
