@@ -177,28 +177,31 @@ export const CardDetail: React.FC = () => {
                 ) : details ? (
                     <div className="glass-panel rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0,163,255,0.15)] flex flex-col md:flex-row overflow-hidden min-h-[80vh]">
                         {/* LEFT: IMAGE & VERSIONS LIST */}
-                        <div className="w-full md:w-[450px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden">
-                            <div className="flex-1 flex items-center justify-center p-8 relative min-h-[400px]">
-                                <div className="relative group perspective-1000">
-                                    <div className="absolute inset-0 bg-geeko-cyan/20 blur-[60px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                        <div className="w-full md:w-[520px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden h-full">
+                            <div className="flex-1 min-h-[450px] md:min-h-[600px] flex items-center justify-center p-6 sm:p-8 md:p-10 relative bg-gradient-to-b from-white/[0.04] to-transparent overflow-hidden">
+                                <div className="relative group w-full h-full flex items-center justify-center">
+                                    <div className="absolute inset-0 bg-geeko-cyan/25 blur-[120px] rounded-full opacity-40 group-hover:opacity-60 transition-opacity duration-700 animate-pulse pointer-events-none" />
                                     <img
                                         src={currentImage}
                                         alt={details.name}
-                                        className="w-full max-w-sm rounded-[24px] shadow-[0_30px_60px_rgba(0,0,0,0.8)] z-10 hover:rotate-y-12 transition-transform duration-700 foil-shimmer"
+                                        className="w-full h-full object-contain drop-shadow-[0_45px_100px_rgba(0,0,0,0.95)] z-10 hover:scale-[1.03] transition-all duration-700 foil-shimmer"
+                                        style={{
+                                            imageRendering: 'auto',
+                                        }}
                                     />
                                 </div>
                                 {hasMultipleFaces && (
                                     <button
                                         onClick={() => setCurrentFaceIndex(prev => (prev + 1) % 2)}
-                                        className="absolute top-10 left-10 p-3 bg-white/10 hover:bg-white/20 rounded-full border border-white/20 transition-all z-20 group"
+                                        className="absolute bottom-6 right-6 p-4 bg-black/80 hover:bg-geeko-cyan text-white hover:text-black rounded-full border border-white/20 transition-all z-20 group shadow-2xl backdrop-blur-md"
                                     >
-                                        <RotateCw size={20} className="text-geeko-cyan group-hover:rotate-180 transition-transform duration-500" />
+                                        <RotateCw size={22} className="group-hover:rotate-180 transition-transform duration-500" />
                                     </button>
                                 )}
                             </div>
 
-                            {/* VERSIONS LIST */}
-                            <div className="h-[350px] border-t border-white/5 bg-[#080808] flex flex-col">
+                            {/* MOXFIELD-STYLE VERSIONS LIST */}
+                            <div className="h-[200px] md:h-[250px] border-t border-white/5 bg-[#080808] flex flex-col shrink-0">
                                 <div className="px-6 py-4 flex items-center justify-between border-b border-white/5">
                                     <h3 className="text-xs font-black uppercase tracking-widest text-neutral-500">Edition / Printings</h3>
                                     <span className="text-[10px] text-neutral-600 font-bold">{details.all_versions?.length || 0} Versions</span>

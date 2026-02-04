@@ -176,26 +176,29 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
                 </button>
 
                 {/* LEFT: IMAGE & VERSIONS LIST */}
-                <div className="w-full md:w-[450px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden shrink-0">
-                    <div className="flex-1 min-h-[450px] md:min-h-0 flex items-center justify-center p-8 relative bg-gradient-to-b from-white/[0.02] to-transparent">
+                <div className="w-full md:w-[520px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden shrink-0 h-full">
+                    <div className="flex-1 min-h-[450px] md:min-h-[600px] flex items-center justify-center p-6 sm:p-8 md:p-10 relative bg-gradient-to-b from-white/[0.04] to-transparent overflow-hidden">
                         {loading ? (
-                            <div className="w-64 h-90 rounded-xl bg-white/5 animate-pulse flex items-center justify-center">
+                            <div className="w-64 aspect-[5/7] rounded-xl bg-white/5 animate-pulse flex items-center justify-center">
                                 <div className="w-10 h-10 border-4 border-t-geeko-cyan border-white/10 rounded-full animate-spin" />
                             </div>
                         ) : (
-                            <div className="relative w-full max-w-[280px] sm:max-w-[320px] md:max-w-[400px] flex items-center justify-center p-2">
-                                <div className="absolute inset-0 bg-geeko-cyan/20 blur-[100px] rounded-full opacity-40" />
+                            <div className="relative w-full h-full flex items-center justify-center group/card">
+                                <div className="absolute inset-0 bg-geeko-cyan/20 blur-[120px] rounded-full opacity-40 animate-pulse pointer-events-none" />
                                 <img
                                     src={currentImage}
                                     alt={details?.name}
-                                    className="w-full h-auto max-h-[40vh] md:max-h-[75vh] object-contain rounded-[16px] md:rounded-[24px] shadow-[0_40px_100px_rgba(0,0,0,0.9)] border border-white/10 relative z-10 transition-transform duration-700 hover:scale-[1.02]"
+                                    className="w-full h-full object-contain drop-shadow-[0_45px_100px_rgba(0,0,0,0.95)] relative z-10 transition-transform duration-700 group-hover/card:scale-[1.03]"
+                                    style={{
+                                        imageRendering: 'auto',
+                                    }}
                                 />
                             </div>
                         )}
                         {hasMultipleFaces && !loading && (
                             <button
                                 onClick={(e) => { e.stopPropagation(); setCurrentFaceIndex(prev => (prev + 1) % 2); }}
-                                className="absolute bottom-6 left-6 p-4 bg-black/60 hover:bg-geeko-cyan text-white hover:text-black rounded-full border border-white/10 backdrop-blur-md transition-all z-30 group shadow-xl"
+                                className="absolute bottom-6 right-6 p-4 bg-black/80 hover:bg-geeko-cyan text-white hover:text-black rounded-full border border-white/20 backdrop-blur-md transition-all z-30 group shadow-2xl"
                             >
                                 <RotateCw size={22} className="group-hover:rotate-180 transition-transform duration-500" />
                             </button>
@@ -203,7 +206,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
                     </div>
 
                     {/* MOXFIELD-STYLE VERSIONS LIST */}
-                    <div className="h-[250px] md:h-[300px] border-t border-white/5 bg-[#080808] flex flex-col shrink-0">
+                    <div className="h-[200px] md:h-[240px] border-t border-white/5 bg-[#080808] flex flex-col shrink-0">
                         <div className="px-6 py-4 flex items-center justify-between border-b border-white/5 bg-[#0a0a0a]/50">
                             <h3 className="text-[10px] font-black uppercase tracking-widest text-neutral-500">Edition / Printings</h3>
                             <span className="text-[10px] text-neutral-600 font-bold">{details?.all_versions?.length || 0} Versions</span>

@@ -73,6 +73,7 @@ This platform is an advanced web application for aggregating and analyzing Tradi
 ### 3.1. Scraping & Data Ingestion (Mature)
 
 - **Anti-Bot Manager:** Rotating User-Agents, Proxies, rate limiting, and CAPTCHA detection.
+- **Card Image Responsive Fix**: Fixed card image sizing in `CardModal` and `CardDetail`. Images now correctly "fit the box" (80%+ coverage) with premium effects like drop-shadows and glows. Verified via browser subagent.
 - **Data Manager:** Incremental updates, historical snapshots, and anomaly detection.
 - **Variant Detection:** Smart identification of Foil, Alt Art, Secret Rare, etc.
 - **Marketplace Mapping:** Standardized condition mapping across TCGPlayer, Cardmarket, etc.
@@ -94,6 +95,8 @@ This platform is an advanced web application for aggregating and analyzing Tradi
 ## 5. Roadmap & Future Phases
 
 ### Fase 5: Corrección de Detalles - Parte 1 (✅ Implementing & In Validation)
+
+[x] **Rule 2: Responsive Card Detail Photo.** The card image should be rendered correctly and beautifully on both desktop and mobile, ensuring it fits the modal/page panel ("fit al recuadro") without being too small. (Implemented & Verified Large Scale)
 
 - **Regla 1: Agregación por Carta Única (Deduplicación)**: ✅ Implementado en el backend (`tcg-api`). El grid ahora filtra por la edición más reciente.
 - **Regla 2: Fallback de Precios**: ✅ Implementado. Prioridad: `market_price` -> `store_price`.
