@@ -89,27 +89,8 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
         setCurrentFaceIndex(0);
 
         try {
-            let data = await fetchCardDetails(id);
+            const data = await fetchCardDetails(id);
             if (!data) throw new Error("No data found");
-
-            // Resilience: Handle both flat and wrapped data formats
-            if ((data as any).card) {
-                data = (data as any).card;
-            }
-
-            // Mandatory: Always show the latest version (first in the list)
-            if (data.all_versions && data.all_versions.length > 0) {
-                const latestId = data.all_versions[0].printing_id;
-                if (latestId !== id && !activePrintingId) {
-                    // Stop current loading and fetch the latest instead
-                    setActivePrintingId(latestId);
-                    const latestData = await fetchCardDetails(latestId);
-                    setDetails(latestData);
-                    setLoading(false);
-                    return;
-                }
-            }
-
             setDetails(data);
         } catch (err) {
             console.error("Failed to load details", err);
@@ -219,7 +200,18 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
                             <span className="text-[10px] text-neutral-600 font-bold">{details?.all_versions?.length || 0} Versions</span>
                         </div>
                         <div className="flex-1 overflow-x-auto md:overflow-y-auto md:overflow-x-hidden custom-scrollbar relative flex md:block whitespace-nowrap md:whitespace-normal p-2 md:p-0">
-                            {details?.all_versions?.map((v) => (
+                            {loading ? (
+                                // Versions Skeleton
+                                [...Array(5)].map((_, i) => (
+                                    <div key={i} className="inline-flex md:flex items-center gap-4 px-6 py-3 border-b border-white/5 animate-pulse">
+                                        <div className="w-8 h-8 rounded bg-white/5" />
+                                        <div className="flex-1 space-y-2">
+                                            <div className="h-3 w-32 bg-white/5 rounded" />
+                                            <div className="h-2 w-16 bg-white/5 rounded" />
+                                        </div>
+                                    </div>
+                                ))
+                            ) : details?.all_versions?.map((v) => (
                                 <a
                                     key={v.printing_id}
                                     href={`/TCG/card/${v.printing_id}`}
@@ -253,9 +245,22 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
                 {/* RIGHT: CARD TEXT & ACTIONS */}
                 <div className="flex-1 h-auto md:h-full overflow-y-visible md:overflow-y-auto custom-scrollbar bg-[#050505] p-6 sm:p-8 md:p-10 space-y-6 md:space-y-8">
                     {loading ? (
-                        <div className="space-y-6">
-                            <div className="h-10 w-3/4 bg-white/5 rounded-lg animate-pulse" />
-                            <div className="h-32 w-full bg-white/5 rounded-lg animate-pulse" />
+                        <div className="space-y-12 animate-pulse">
+                            <div className="space-y-4">
+                                <div className="h-16 w-3/4 bg-white/5 rounded-2xl" />
+                                <div className="h-6 w-1/2 bg-white/5 rounded-lg" />
+                            </div>
+                            <div className="h-48 w-full bg-white/5 rounded-[32px]" />
+                            <div className="space-y-4">
+                                <div className="h-4 w-32 bg-white/5 rounded" />
+                                <div className="grid grid-cols-6 gap-3">
+                                    {[...Array(6)].map((_, i) => <div key={i} className="h-12 bg-white/5 rounded-xl" />)}
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-2 gap-6 pt-4">
+                                <div className="h-40 bg-white/5 rounded-[32px]" />
+                                <div className="h-40 bg-white/5 rounded-[32px]" />
+                            </div>
                         </div>
                     ) : details ? (
                         <>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { RotateCw, Shield } from 'lucide-react';
+import { fetchCardDetails } from '../../utils/api';
 
 export interface CardFace {
   image_url?: string;
@@ -60,6 +61,15 @@ export const Card: React.FC<CardProps> = ({ name, set, imageUrl, image_url, pric
     }
   };
 
+  const handleMouseEnter = () => {
+    // Pre-fetch card details on hover
+    try {
+      fetchCardDetails(card_id);
+    } catch (err) {
+      // Ignore errors during pre-fetch
+    }
+  };
+
   if (viewMode === 'list') {
     return (
       <a
@@ -70,6 +80,7 @@ export const Card: React.FC<CardProps> = ({ name, set, imageUrl, image_url, pric
             onClick?.();
           }
         }}
+        onMouseEnter={handleMouseEnter}
         className="flex items-center gap-4 px-4 py-3 bg-black/40 hover:bg-neutral-900 border border-white/5 hover:border-geeko-cyan/30 rounded-xl transition-all cursor-pointer group"
       >
         <div className="w-12 h-16 bg-[#1a1a1a] rounded-md overflow-hidden flex-shrink-0 relative">
@@ -128,6 +139,7 @@ export const Card: React.FC<CardProps> = ({ name, set, imageUrl, image_url, pric
           onClick?.();
         }
       }}
+      onMouseEnter={handleMouseEnter}
       className={`flex flex-col glass-card rounded-2xl overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:-translate-y-1 group relative ${getRarityStyle(rarity)} cursor-pointer h-full`}
     >
       {/* Flip Button overlay */}

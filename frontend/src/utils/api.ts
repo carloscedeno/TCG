@@ -133,26 +133,42 @@ export const fetchProducts = async (params: any = {}): Promise<any> => {
   return await response.json();
 };
 
+const detailsCache = new Map<string, any>();
+
 export const fetchCardDetails = async (printingId: string): Promise<any> => {
+  if (detailsCache.has(printingId)) {
+    return detailsCache.get(printingId);
+  }
+
   try {
+    let data;
     if (API_BASE) {
       const response = await fetch(`${API_BASE}/api/cards/${printingId}`);
       if (response.ok) {
-        const data = await response.json();
-        return data.card || data;
+        const json = await response.json();
+        data = json.card || json;
       }
     }
-    throw new Error('API unavailable or returned error');
-  } catch (error) {
-    console.warn('Local API failed for details, falling back to direct Supabase fetch:', error);
-    const { data, error: sbError } = await supabase
-      .from('card_printings')
-      .select('*, cards(*), sets(*)')
-      .eq('printing_id', printingId)
-      .single();
 
-    if (sbError) throw sbError;
+    if (!data) {
+      console.warn('Local API failed for details, falling back to direct Supabase fetch');
+      const { data: sbData, error: sbError } = await supabase
+        .from('card_printings')
+        .select('*, cards(*), sets(*)')
+        .eq('printing_id', printingId)
+        .single();
+
+      if (sbError) throw sbError;
+      data = sbData;
+    }
+
+    if (data) {
+      detailsCache.set(printingId, data);
+    }
     return data;
+  } catch (error) {
+    console.error('Error fetching card details:', error);
+    throw error;
   }
 };
 
