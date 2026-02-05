@@ -19,7 +19,7 @@ const createMissingConfigProxy = (path = 'supabase'): any => {
             if (prop === 'auth') {
                 return {
                     getSession: async () => ({ data: { session: null }, error: null }),
-                    onAuthStateChange: (cb: (event: any, session: any) => void) => {
+                    onAuthStateChange: (_cb: (event: any, session: any) => void) => {
                         // Return a dummy Subscription-like object
                         return { data: { subscription: { unsubscribe: () => { } } } };
                     },
