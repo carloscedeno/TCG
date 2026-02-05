@@ -154,7 +154,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
             className="fixed inset-0 z-[200] flex items-center justify-center bg-black/95 backdrop-blur-xl p-0 md:p-6 animate-in fade-in zoom-in-95 duration-300 overflow-y-auto md:overflow-hidden"
             onClick={handleBackdropClick}
         >
-            <div className="relative w-full max-w-6xl min-h-full md:min-h-0 md:h-[90vh] md:max-h-[850px] glass-panel md:rounded-[32px] border-x-0 md:border border-white/10 shadow-[0_0_100px_rgba(0,163,255,0.15)] flex flex-col md:flex-row md:overflow-hidden">
+            <div className="relative w-full max-w-6xl min-h-full md:min-h-0 md:h-[95vh] md:max-h-[95vh] glass-panel md:rounded-[32px] border-x-0 md:border border-white/10 shadow-[0_0_100px_rgba(0,163,255,0.15)] flex flex-col md:flex-row md:overflow-hidden">
 
                 {/* Close Button */}
                 <button onClick={onClose} className="absolute top-6 right-6 z-50 p-2 hover:bg-white/10 rounded-full transition-colors text-neutral-400">
@@ -163,7 +163,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
 
                 {/* LEFT: IMAGE & VERSIONS LIST */}
                 <div className="w-full md:w-[420px] lg:w-[480px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden shrink-0 h-auto md:h-full">
-                    <div className="flex-1 min-h-[300px] sm:min-h-[400px] md:min-h-0 flex items-center justify-center p-6 sm:p-8 md:p-10 relative bg-gradient-to-b from-white/[0.04] to-transparent overflow-hidden">
+                    <div className="flex-1 min-h-[300px] sm:min-h-[400px] md:min-h-0 flex items-center justify-center p-4 sm:p-6 md:p-6 relative bg-gradient-to-b from-white/[0.04] to-transparent overflow-hidden">
                         {loading ? (
                             <div className="w-64 aspect-[5/7] rounded-xl bg-white/5 animate-pulse flex items-center justify-center">
                                 <div className="w-10 h-10 border-4 border-t-geeko-cyan border-white/10 rounded-full animate-spin" />
@@ -243,7 +243,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
                 </div>
 
                 {/* RIGHT: CARD TEXT & ACTIONS */}
-                <div className="flex-1 h-auto md:h-full overflow-y-visible md:overflow-y-auto custom-scrollbar bg-[#050505] p-6 sm:p-8 md:p-10 space-y-6 md:space-y-8">
+                <div className="flex-1 h-auto md:h-full overflow-y-visible md:overflow-y-auto custom-scrollbar bg-[#050505] p-4 sm:p-6 md:p-6 space-y-4 md:space-y-5">
                     {loading ? (
                         <div className="space-y-12 animate-pulse">
                             <div className="space-y-4">
@@ -264,7 +264,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
                         </div>
                     ) : details ? (
                         <>
-                            <div className="space-y-4">
+                            <div className="space-y-2">
                                 <a
                                     href={`/TCG/card/${details.card_id}`}
                                     className="block group/title"
@@ -274,39 +274,39 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
                                         }
                                     }}
                                 >
-                                    <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black tracking-tighter text-white text-gradient-cyan group-hover/title:brightness-125 transition-all text-balance leading-tight">
+                                    <h2 className="text-xl sm:text-2xl md:text-2xl font-black tracking-tight text-white text-gradient-cyan group-hover/title:brightness-125 transition-all leading-tight">
                                         {details.name}
                                     </h2>
                                 </a>
-                                <div className="flex flex-wrap items-center gap-3 text-lg md:text-xl font-medium text-neutral-400">
+                                <div className="flex flex-wrap items-center gap-2 text-sm md:text-base font-semibold text-neutral-400">
                                     <span className="text-white/80">{details.mana_cost || ''}</span>
                                     {details.mana_cost && <span className="opacity-30">•</span>}
                                     <span className="italic">{details.type}</span>
                                 </div>
                             </div>
 
-                            <div className="p-6 md:p-8 rounded-3xl bg-white/[0.03] border border-white/5 space-y-4 md:space-y-6">
-                                <div className="text-base md:text-lg leading-relaxed text-neutral-300 font-medium whitespace-pre-wrap">
+                            <div className="p-4 md:p-5 rounded-2xl bg-white/[0.03] border border-white/5 space-y-3">
+                                <div className="text-sm md:text-base leading-relaxed text-neutral-300 whitespace-pre-wrap">
                                     {details.oracle_text}
                                 </div>
                                 {details.flavor_text && (
-                                    <p className="text-sm italic text-neutral-500 font-serif border-t border-white/10 pt-6">
+                                    <p className="text-xs italic text-neutral-500 font-serif border-t border-white/10 pt-3">
                                         "{details.flavor_text}"
                                     </p>
                                 )}
                             </div>
 
-                            <div className="space-y-10 pt-4">
+                            <div className="space-y-5 pt-2">
                                 {/* Format Legality - Full Width */}
-                                <div className="space-y-4">
-                                    <h3 className="text-xs font-black uppercase tracking-widest text-neutral-500">Format Legality</h3>
-                                    <div className="grid grid-cols-2 xs:grid-cols-3 md:grid-cols-6 gap-2 md:gap-3">
+                                <div className="space-y-3">
+                                    <h3 className="text-xs font-extrabold uppercase tracking-widest text-neutral-500">Format Legality</h3>
+                                    <div className="grid grid-cols-2 xs:grid-cols-3 md:grid-cols-6 gap-2">
                                         {relevantFormats.map(fmt => {
                                             const isLegal = details.legalities?.[fmt] === 'legal';
                                             return (
                                                 <div
                                                     key={fmt}
-                                                    className={`flex items-center justify-center p-3 md:p-4 rounded-xl border transition-all duration-300 ${isLegal
+                                                    className={`flex items-center justify-center p-2.5 rounded-lg border transition-all duration-300 ${isLegal
                                                         ? 'bg-geeko-green/10 border-geeko-green/40 text-geeko-green shadow-[0_0_20px_rgba(0,255,133,0.1)]'
                                                         : 'bg-neutral-900/40 border-white/5 text-neutral-600 opacity-60'
                                                         }`}
@@ -319,22 +319,22 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
                                 </div>
 
                                 {/* Marketplace Actions - Side by Side */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                                     {/* Geekorium Price Box */}
-                                    <div className="p-6 md:p-8 rounded-[32px] bg-gradient-to-br from-geeko-cyan/10 via-transparent to-transparent border border-white/10 group relative overflow-hidden flex flex-col justify-between gap-6">
+                                    <div className="p-4 md:p-5 rounded-2xl bg-gradient-to-br from-geeko-cyan/10 via-transparent to-transparent border border-white/10 group relative overflow-hidden flex flex-col justify-between gap-4">
                                         <div className="absolute top-0 right-0 w-32 h-32 bg-geeko-cyan/5 rounded-full blur-[40px]" />
                                         <div className="space-y-1 relative z-10">
                                             <div className="text-[10px] font-black uppercase text-geeko-cyan tracking-widest">Geekorium Price</div>
-                                            <div className="text-4xl md:text-5xl font-black text-white tracking-tighter leading-none">
+                                            <div className="text-3xl md:text-4xl font-black text-white tracking-tighter leading-none">
                                                 {details?.price && details.price > 0 ? `$${details.price.toFixed(2)}` : (details?.valuation?.market_price && details.valuation.market_price > 0 ? `$${details.valuation.market_price.toFixed(2)}` : '---')}
                                             </div>
                                         </div>
                                         <button
                                             onClick={handleAddToCart}
                                             disabled={isAdding}
-                                            className="w-full h-14 rounded-2xl bg-geeko-cyan text-black font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_40px_rgba(0,229,255,0.6)] hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 shrink-0 relative z-10"
+                                            className="w-full h-12 rounded-xl bg-geeko-cyan text-black font-black text-xs uppercase tracking-widest flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_40px_rgba(0,229,255,0.6)] hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 shrink-0 relative z-10"
                                         >
-                                            {isAdding ? <Loader2 size={18} className="animate-spin" /> : <ShoppingCart size={18} fill="currentColor" />}
+                                            {isAdding ? <Loader2 size={16} className="animate-spin" /> : <ShoppingCart size={16} fill="currentColor" />}
                                             {isAdding ? 'Adding...' : 'Add to Cart'}
                                         </button>
                                     </div>
@@ -344,19 +344,19 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
                                         href={details.valuation?.market_url || `https://www.cardkingdom.com/mtg/search?filter[name]=${encodeURIComponent(details.name)}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="w-full h-full flex flex-col justify-between p-6 md:p-8 rounded-[32px] bg-neutral-900 hover:bg-geeko-cyan/10 border border-white/5 hover:border-geeko-cyan transition-all group relative overflow-hidden gap-6"
+                                        className="w-full h-full flex flex-col justify-between p-4 md:p-5 rounded-2xl bg-neutral-900 hover:bg-geeko-cyan/10 border border-white/5 hover:border-geeko-cyan transition-all group relative overflow-hidden gap-4"
                                     >
                                         <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity" />
                                         <div className="space-y-1 relative z-10">
                                             <span className="text-[10px] font-black uppercase text-neutral-500 tracking-widest group-hover:text-geeko-cyan transition-colors">External Market</span>
-                                            <div className="text-lg font-bold leading-tight">Buy @ CardKingdom</div>
+                                            <div className="text-base font-bold leading-tight">Buy @ CardKingdom</div>
                                         </div>
-                                        <div className="flex items-center justify-between gap-4 w-full relative z-10">
-                                            <span className="text-2xl md:text-3xl font-mono font-black text-white group-hover:text-geeko-cyan transition-colors">
+                                        <div className="flex items-center justify-between gap-3 w-full relative z-10">
+                                            <span className="text-xl md:text-2xl font-mono font-black text-white group-hover:text-geeko-cyan transition-colors">
                                                 {details.valuation?.market_price && details.valuation.market_price > 0 ? `$${details.valuation.market_price.toFixed(2)}` : 'Check Site'}
                                             </span>
-                                            <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-geeko-cyan group-hover:text-black transition-all">
-                                                <ExternalLink size={20} />
+                                            <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-geeko-cyan group-hover:text-black transition-all">
+                                                <ExternalLink size={18} />
                                             </div>
                                         </div>
                                     </a>
