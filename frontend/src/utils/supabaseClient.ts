@@ -7,12 +7,34 @@ if (!supabaseUrl || !supabaseAnonKey) {
     console.warn('Supabase environment variables are missing. Some features may not work in production if not configured in your deployment platform.');
 }
 
-// Create client only if variables are present to avoid startup crash
+// Helper to create a recursive proxy that throws a descriptive error when any property is accessed or called
+const createMissingConfigProxy = (path = 'supabase'): any => {
+    // We use a function as the target so it's also "callable"
+    const target = () => { };
+    return new Proxy(target, {
+        get: (_target, prop) => {
+            // Special case for common React/Vite dev tools check or symbols
+            if (typeof prop === 'symbol' || prop === 'then' || prop === 'toJSON') return undefined;
+
+            if (prop === 'auth') {
+                return {
+                    getSession: async () => ({ data: { session: null }, error: null }),
+                    onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => { } } } }),
+                    getUser: async () => ({ data: { user: null }, error: null }),
+                    signOut: async () => { }
+                };
+            }
+
+            const newPath = `${path}.${String(prop)}`;
+            return createMissingConfigProxy(newPath);
+        },
+        apply: (_target, _thisArg, _args) => {
+            console.warn(`Supabase Call Ignored: ${path}() was called but configuration is missing.`);
+            return Promise.resolve({ data: null, error: new Error('Supabase not configured') });
+        }
+    });
+};
+
 export const supabase = (supabaseUrl && supabaseAnonKey)
     ? createClient(supabaseUrl, supabaseAnonKey)
-    : new Proxy({}, {
-        get: (_target, prop) => {
-            console.error(`Supabase error: Attempted to access property "${String(prop)}" but Supabase environment variables are missing.`);
-            return () => { throw new Error('Supabase is not configured. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your deployment environment.'); };
-        }
-    }) as any;
+    : createMissingConfigProxy();
