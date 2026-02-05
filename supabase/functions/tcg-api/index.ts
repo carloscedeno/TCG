@@ -413,7 +413,8 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
           collector_number,
           sets(set_name, set_code, release_date),
           cards(rarity),
-          aggregated_prices(avg_market_price_usd)
+          aggregated_prices(avg_market_price_usd),
+          products(price)
         `)
         .eq('card_id', cardData.card_id)
         .order('sets(release_date)', { ascending: false });
@@ -461,15 +462,22 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
         legalities: cardData.legalities || {},
         colors: cardData.colors || [],
         card_faces: cardData.card_faces || null,
-        all_versions: (allVersions || []).map((v: any) => ({
-          printing_id: v.printing_id,
-          set_name: v.sets?.set_name || '',
-          set_code: v.sets?.set_code || '',
-          collector_number: v.collector_number || '',
-          rarity: v.cards?.rarity || 'common',
-          price: v.aggregated_prices?.avg_market_price_usd || 0,
-          image_url: v.image_url || ''
-        }))
+        all_versions: (allVersions || []).map((v: any) => {
+          // aggregated_prices and products are arrays, get first element
+          const marketPrice = v.aggregated_prices?.[0]?.avg_market_price_usd || 0;
+          const storePrice = v.products?.[0]?.price || 0;
+          const displayPrice = storePrice || marketPrice;
+
+          return {
+            printing_id: v.printing_id,
+            set_name: v.sets?.set_name || '',
+            set_code: v.sets?.set_code || '',
+            collector_number: v.collector_number || '',
+            rarity: v.cards?.rarity || 'common',
+            price: displayPrice,
+            image_url: v.image_url || ''
+          };
+        })
       };
     }
   }

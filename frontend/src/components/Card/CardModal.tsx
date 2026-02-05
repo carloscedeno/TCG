@@ -274,7 +274,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
                                         }
                                     }}
                                 >
-                                    <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter text-white text-gradient-cyan group-hover/title:brightness-125 transition-all text-balance leading-[0.9]">
+                                    <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black tracking-tighter text-white text-gradient-cyan group-hover/title:brightness-125 transition-all text-balance leading-tight">
                                         {details.name}
                                     </h2>
                                 </a>
