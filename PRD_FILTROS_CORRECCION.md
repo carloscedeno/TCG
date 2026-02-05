@@ -30,6 +30,18 @@ Según `PRD.md` líneas 28-31:
 - ✓ **Color** (Red, Blue, Green, White, Black, Colorless)
 - ✓ **Type** (Creature, Instant, Sorcery, etc.)
 - ✓ **Year Range** (filtro por año de lanzamiento)
+- ✓ **Search/Query** (búsqueda parcial con ILIKE - ya implementado)
+
+**Nota**: El filtro de búsqueda (`q` parameter) ya está implementado con `ILIKE` para búsqueda parcial en:
+
+- Backend (línea 259): `query.ilike('cards.card_name',`%${q}%`)`
+- Frontend fallback (línea 81): `query.ilike('cards.card_name',`%${filters.q}%`)`
+
+Si el usuario reporta que no funciona, verificar:
+
+1. Que el Edge Function esté desplegado correctamente
+2. Que no haya errores 500 en los logs
+3. Que el parámetro `q` se esté pasando correctamente desde el frontend
 
 ---
 

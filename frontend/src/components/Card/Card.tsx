@@ -30,7 +30,7 @@ export interface CardProps {
   onClick?: () => void;
 }
 
-export const Card: React.FC<CardProps> = ({ name, set, imageUrl, image_url, price, card_id, rarity, type, card_faces, viewMode = 'grid', onClick }) => {
+export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, price, card_id, rarity, type, card_faces, viewMode = 'grid', onClick }) => {
   const [currentFaceIndex, setCurrentFaceIndex] = useState(0);
   const hasMultipleFaces = card_faces && card_faces.length > 1;
 
@@ -85,7 +85,7 @@ export const Card: React.FC<CardProps> = ({ name, set, imageUrl, image_url, pric
       >
         <div className="w-12 h-16 bg-[#1a1a1a] rounded-md overflow-hidden flex-shrink-0 relative">
           {imgSrc ? (
-            <img src={imgSrc} alt={currentName} className="w-full h-full object-cover" />
+            <img src={imgSrc} alt={currentName} className="w-full h-full object-cover" loading="lazy" decoding="async" />
           ) : (
             <Shield size={20} className="absolute inset-0 m-auto opacity-10" />
           )}
@@ -163,6 +163,7 @@ export const Card: React.FC<CardProps> = ({ name, set, imageUrl, image_url, pric
             alt={currentName}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
             loading="lazy"
+            decoding="async"
           />
         ) : (
           <div className="flex flex-col items-center justify-center w-full h-full text-neutral-600 p-4">
@@ -208,4 +209,9 @@ export const Card: React.FC<CardProps> = ({ name, set, imageUrl, image_url, pric
       </div>
     </a>
   );
-};
+}, (prevProps, nextProps) => {
+  // Only re-render if these props change
+  return prevProps.card_id === nextProps.card_id &&
+    prevProps.price === nextProps.price &&
+    prevProps.viewMode === nextProps.viewMode;
+});
