@@ -53,7 +53,7 @@ export const fetchCards = async (filters: any): Promise<{ cards: Card[]; total_c
       const { data: gamesData } = await supabase
         .from('games')
         .select('game_id')
-        .in('name', filters.game.split(',')); // Assuming filters.game is comma-separated string from URL params or logic
+        .in('game_name', filters.game.split(',')); // Assuming filters.game is comma-separated string from URL params or logic
 
       if (gamesData && gamesData.length > 0) {
         gameIds = gamesData.map(g => g.game_id);
