@@ -9,13 +9,13 @@ import type { Filters } from '../components/Filters/FiltersPanel';
 import { useAuth } from '../context/AuthContext';
 import { AuthModal } from '../components/Auth/AuthModal';
 import { UserMenu } from '../components/Navigation/UserMenu';
-import { HeroSection } from '../components/Home/HeroSection';
+
 import { LogIn, X, ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { CartDrawer } from '../components/Navigation/CartDrawer';
 
 const mockFilters: Filters = {
-  games: ['Magic: The Gathering', 'Pokémon', 'Lorcana', 'Yu-Gi-Oh!'],
+  games: ['Magic: The Gathering'],
   rarities: ['Common', 'Uncommon', 'Rare', 'Mythic'],
   colors: ['White', 'Blue', 'Black', 'Red', 'Green', 'Colorless', 'Multicolor'],
   types: ['Creature', 'Instant', 'Sorcery', 'Enchantment', 'Artifact', 'Planeswalker', 'Land'],
@@ -205,50 +205,7 @@ const Home: React.FC = () => {
           </nav>
         </header>
 
-        {/* Page Title Section */}
-        <div className="bg-[#121212]/50 border-b border-neutral-800">
-          <div className="max-w-[1600px] mx-auto px-6 py-12">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-neutral-500 mb-8">
-              <span className="text-geeko-gold">New Arrivals</span>
-              <span className="text-[10px]">▶</span>
-              <span className="text-blue-500">Universes Beyond</span>
-            </div>
 
-            <div className="mb-16">
-              <HeroSection />
-            </div>
-
-            {/* Mode switch moved to sticky bar for better visibility */}
-
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-              <div>
-                <h1 className="text-4xl sm:text-5xl md:text-7xl font-black text-white tracking-tighter leading-none mb-4">
-                  TCG <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Price Tracker</span>
-                </h1>
-                <p className="text-neutral-500 text-lg max-w-2xl font-medium mb-10">
-                  Showing <span className="text-neutral-300">{cards.length}</span> of <span className="text-neutral-300">{totalCount.toLocaleString()}</span> cards found in the database.
-                </p>
-
-                <div className="flex flex-wrap gap-4 md:gap-8 py-8 border-t border-white/5">
-                  <div className="flex flex-col">
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-600 mb-1">Vault Scale</span>
-                    <span className="text-xl md:text-2xl font-black text-white italic tracking-tighter">{(totalCount / 1000).toFixed(1)}K <span className="text-xs text-neutral-500 not-italic font-medium">Assets</span></span>
-                  </div>
-                  <div className="hidden sm:block w-px h-10 bg-white/5 self-center"></div>
-                  <div className="flex flex-col">
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-600 mb-1">Market Reach</span>
-                    <span className="text-xl md:text-2xl font-black text-blue-500 italic tracking-tighter">04 <span className="text-xs text-neutral-500 not-italic font-medium">Nodes</span></span>
-                  </div>
-                  <div className="hidden sm:block w-px h-10 bg-white/5 self-center"></div>
-                  <div className="flex flex-col">
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-600 mb-1">Sync Latency</span>
-                    <span className="text-xl md:text-2xl font-black text-emerald-500 italic tracking-tighter">99.9% <span className="text-xs text-neutral-500 not-italic font-medium">Uptime</span></span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
 
         {/* Rarity Filter Tabs & Sort */}
         <div className="bg-[#0a0a0a]/95 border-b border-neutral-800 sticky top-[70px] z-40 backdrop-blur-md">
