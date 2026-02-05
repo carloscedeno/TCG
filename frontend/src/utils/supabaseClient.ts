@@ -12,14 +12,17 @@ const createMissingConfigProxy = (path = 'supabase'): any => {
     // We use a function as the target so it's also "callable"
     const target = () => { };
     return new Proxy(target, {
-        get: (_target, prop) => {
+        get: (_target: any, prop: string | symbol) => {
             // Special case for common React/Vite dev tools check or symbols
             if (typeof prop === 'symbol' || prop === 'then' || prop === 'toJSON') return undefined;
 
             if (prop === 'auth') {
                 return {
                     getSession: async () => ({ data: { session: null }, error: null }),
-                    onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => { } } } }),
+                    onAuthStateChange: (cb: (event: any, session: any) => void) => {
+                        // Return a dummy Subscription-like object
+                        return { data: { subscription: { unsubscribe: () => { } } } };
+                    },
                     getUser: async () => ({ data: { user: null }, error: null }),
                     signOut: async () => { }
                 };
@@ -28,7 +31,7 @@ const createMissingConfigProxy = (path = 'supabase'): any => {
             const newPath = `${path}.${String(prop)}`;
             return createMissingConfigProxy(newPath);
         },
-        apply: (_target, _thisArg, _args) => {
+        apply: (_target: any, _thisArg: any, _args: any[]) => {
             console.warn(`Supabase Call Ignored: ${path}() was called but configuration is missing.`);
             return Promise.resolve({ data: null, error: new Error('Supabase not configured') });
         }
