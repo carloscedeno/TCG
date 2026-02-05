@@ -239,11 +239,11 @@ async function handleSetsEndpoint(supabase: SupabaseClient, path: string, method
 async function handleCardsEndpoint(supabase: SupabaseClient, path: string, method: string, params: RequestParams) {
   if (method === 'GET') {
     if (path === '/api/cards') {
-      const { q, game, set, rarity, color, limit = 50, offset = 0 } = params
+      const { q, game, set, rarity, color, type, year_from, year_to, limit = 50, offset = 0 } = params
 
       // Determine if we need to force inner joins for filtering
-      const cardsJoin = (q || rarity || game || color) ? "cards!inner" : "cards"
-      const setsJoin = set ? "sets!inner" : "sets"
+      const cardsJoin = (q || rarity || game || color || type) ? "cards!inner" : "cards"
+      const setsJoin = (set || year_from || year_to) ? "sets!inner" : "sets"
 
       let query = supabase.from('card_printings').select(`
         printing_id, 
@@ -292,6 +292,21 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
         if (colorCodes.length > 0) {
           query = query.overlap('cards.colors', colorCodes)
         }
+      }
+
+      // Apply type filter
+      if (type) {
+        const typeNames = type.split(',').map((t: string) => t.trim())
+        // Use OR condition for multiple types
+        const typeConditions = typeNames.map((t: string) => `cards.type_line.ilike.%${t}%`).join(',')
+        query = query.or(typeConditions)
+      }
+
+      // Apply year range filter
+      if (year_from || year_to) {
+        const fromDate = year_from ? `${year_from}-01-01` : '1900-01-01'
+        const toDate = year_to ? `${year_to}-12-31` : '2100-12-31'
+        query = query.gte('sets.release_date', fromDate).lte('sets.release_date', toDate)
       }
 
       // Calculate limits first

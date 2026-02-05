@@ -15,7 +15,7 @@ import { Link } from 'react-router-dom';
 import { CartDrawer } from '../components/Navigation/CartDrawer';
 
 const mockFilters: Filters = {
-  games: ['Magic: The Gathering'],
+  games: ['Magic: The Gathering', 'Pokémon', 'Lorcana', 'Yu-Gi-Oh!'],
   rarities: ['Common', 'Uncommon', 'Rare', 'Mythic'],
   colors: ['White', 'Blue', 'Black', 'Red', 'Green', 'Colorless', 'Multicolor'],
   types: ['Creature', 'Instant', 'Sorcery', 'Enchantment', 'Artifact', 'Planeswalker', 'Land'],
