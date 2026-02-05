@@ -387,14 +387,90 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
     if (path.startsWith('/api/cards/')) {
       const printingId = path.split('/').pop()
 
-      // Optimized: Call the consolidated RPC
-      const { data, error } = await supabase
-        .rpc('get_card_full_details', { p_printing_id: printingId });
+      // Fetch the main card printing with all related data
+      const { data: printing, error: printingError } = await supabase
+        .from('card_printings')
+        .select(`
+          *,
+          cards(*),
+          sets(*)
+        `)
+        .eq('printing_id', printingId)
+        .single();
 
-      if (error) throw error;
-      if (!data) throw new Error('Card not found');
+      if (printingError) throw printingError;
+      if (!printing) throw new Error('Card not found');
 
-      return data;
+      const cardData = printing.cards || {};
+      const setData = printing.sets || {};
+
+      // Fetch all versions of this card
+      const { data: allVersions } = await supabase
+        .from('card_printings')
+        .select(`
+          printing_id,
+          image_url,
+          collector_number,
+          sets(set_name, set_code, release_date),
+          cards(rarity),
+          aggregated_prices(avg_market_price_usd)
+        `)
+        .eq('card_id', cardData.card_id)
+        .order('sets(release_date)', { ascending: false });
+
+      // Fetch latest price for this specific printing
+      const { data: priceData } = await supabase
+        .from('aggregated_prices')
+        .select('avg_market_price_usd')
+        .eq('printing_id', printingId)
+        .order('last_updated', { ascending: false })
+        .limit(1)
+        .single();
+
+      // Fetch store price from products table
+      const { data: productData } = await supabase
+        .from('products')
+        .select('price')
+        .eq('printing_id', printingId)
+        .limit(1)
+        .single();
+
+      const marketPrice = priceData?.avg_market_price_usd || 0;
+      const storePrice = productData?.price || 0;
+
+      return {
+        card_id: printing.printing_id,
+        name: cardData.card_name,
+        mana_cost: cardData.mana_cost || '',
+        type: cardData.type_line || '',
+        oracle_text: cardData.oracle_text || '',
+        flavor_text: printing.flavor_text || '',
+        artist: printing.artist || '',
+        rarity: cardData.rarity || 'common',
+        set: setData.set_name || '',
+        set_code: setData.set_code || '',
+        collector_number: printing.collector_number || '',
+        image_url: printing.image_url || '',
+        price: storePrice || marketPrice,
+        valuation: {
+          store_price: storePrice,
+          market_price: marketPrice,
+          market_url: `https://www.cardkingdom.com/mtg/${sanitizeSlug(setData.set_name)}/${sanitizeSlug(cardData.card_name)}`,
+          valuation_avg: (storePrice + marketPrice) / 2
+        },
+        legalities: cardData.legalities || {},
+        colors: cardData.colors || [],
+        card_faces: cardData.card_faces || null,
+        all_versions: (allVersions || []).map((v: any) => ({
+          printing_id: v.printing_id,
+          set_name: v.sets?.set_name || '',
+          set_code: v.sets?.set_code || '',
+          collector_number: v.collector_number || '',
+          rarity: v.cards?.rarity || 'common',
+          price: v.aggregated_prices?.avg_market_price_usd || 0,
+          image_url: v.image_url || ''
+        }))
+      };
     }
   }
 
