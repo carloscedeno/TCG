@@ -66,28 +66,55 @@ export const fetchCards = async (filters: any): Promise<{ cards: Card[]; total_c
   } catch (error) {
     console.warn('Local API failed, falling back to direct Supabase fetch:', error);
 
-    // Simplified fallback to avoid Timeout 500
-    // We remove the join with sets and products in the fallback if it's too heavy
+    // Fetch more data to allow for deduplication
+    const fetchLimit = (filters.limit || 50) * 3;
+
     let query = supabase
       .from('card_printings')
       .select(`
         printing_id,
         image_url,
-        cards!inner(card_name, type_line, rarity)
+        cards!inner(card_id, card_name, type_line, rarity),
+        sets(set_name, set_code, release_date)
       `, { count: 'estimated' });
 
     if (filters.q) query = query.ilike('cards.card_name', `%${filters.q}%`);
     if (filters.rarity && filters.rarity !== 'All') query = query.eq('cards.rarity', filters.rarity.toLowerCase());
 
+    // Always filter for English versions
+    query = query.or('lang.eq.en,lang.is.null');
+
     const { data, count } = await query
-      .range(filters.offset || 0, (filters.offset || 0) + (filters.limit || 50) - 1);
+      .order('printing_id', { ascending: false })
+      .range(filters.offset || 0, (filters.offset || 0) + fetchLimit - 1);
+
+    // Deduplicate by card_name, keeping only the latest printing
+    const cardMap = new Map<string, any>();
+
+    for (const item of (data || [])) {
+      const cardName = item.cards?.card_name;
+      const releaseDate = item.sets?.release_date;
+
+      if (!cardName) continue;
+
+      const existing = cardMap.get(cardName);
+      if (!existing || (releaseDate && releaseDate > existing.release_date)) {
+        cardMap.set(cardName, {
+          ...item,
+          release_date: releaseDate
+        });
+      }
+    }
+
+    // Convert to array and limit to requested amount
+    const uniqueCards = Array.from(cardMap.values()).slice(0, filters.limit || 50);
 
     return {
-      cards: (data || []).map((item: any) => ({
+      cards: uniqueCards.map((item: any) => ({
         card_id: item.printing_id,
         name: item.cards?.card_name || 'Unknown',
         type: item.cards?.type_line || 'Unknown',
-        set: 'Reference',
+        set: item.sets?.set_name || 'Reference',
         price: 0,
         image_url: item.image_url,
         rarity: item.cards?.rarity || 'common'
