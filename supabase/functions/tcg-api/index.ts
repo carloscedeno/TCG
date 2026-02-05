@@ -289,8 +289,14 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
         const colorNames = color.split(',').map((c: string) => c.trim())
         const colorMap: Record<string, string> = { 'White': 'W', 'Blue': 'U', 'Black': 'B', 'Red': 'R', 'Green': 'G', 'Colorless': 'C' }
         const colorCodes = colorNames.map((cn: string) => colorMap[cn]).filter((code?: string) => code !== undefined)
-        if (colorCodes.length > 0) {
-          query = query.overlap('cards.colors', colorCodes)
+
+        // Use OR conditions for multiple colors
+        if (colorCodes.length === 1) {
+          query = query.contains('cards.colors', [colorCodes[0]])
+        } else if (colorCodes.length > 1) {
+          // For multiple colors, check if ANY of them are present
+          const orConditions = colorCodes.map((code: string) => `colors.cs.{${code}}`).join(',')
+          query = query.or(orConditions, { foreignTable: 'cards' })
         }
       }
 
