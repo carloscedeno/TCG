@@ -297,9 +297,14 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
       // Apply type filter
       if (type) {
         const typeNames = type.split(',').map((t: string) => t.trim())
-        // Use OR condition for multiple types
-        const typeConditions = typeNames.map((t: string) => `cards.type_line.ilike.%${t}%`).join(',')
-        query = query.or(typeConditions)
+        // For single type, use ilike. For multiple types, use or with ilike conditions
+        if (typeNames.length === 1) {
+          query = query.ilike('cards.type_line', `%${typeNames[0]}%`)
+        } else {
+          // Build OR conditions for multiple types
+          const orConditions = typeNames.map((t: string) => `type_line.ilike.%${t}%`).join(',')
+          query = query.or(orConditions, { foreignTable: 'cards' })
+        }
       }
 
       // Apply year range filter
