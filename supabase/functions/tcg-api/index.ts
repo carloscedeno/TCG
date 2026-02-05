@@ -239,172 +239,94 @@ async function handleSetsEndpoint(supabase: SupabaseClient, path: string, method
 async function handleCardsEndpoint(supabase: SupabaseClient, path: string, method: string, params: RequestParams) {
   if (method === 'GET') {
     if (path === '/api/cards') {
-      const { q, game, set, rarity, color, type, year_from, year_to, limit = 50, offset = 0 } = params
+      const { q, game, set, rarity, color, type, year_from, year_to, limit = 50, offset = 0, sort = 'release_date' } = params
 
-      // Determine if we need to force inner joins for filtering
-      const cardsJoin = (q || rarity || game || color || type) ? "cards!inner" : "cards"
-      const setsJoin = (set || year_from || year_to) ? "sets!inner" : "sets"
+      // Parse parameters for SQL function
+      const limitVal = parseInt(limit as string);
+      const offsetVal = parseInt(offset as string);
 
-      let query = supabase.from('card_printings').select(`
-        printing_id, 
-        image_url,
-        ${cardsJoin}(card_id, card_name, type_line, rarity, game_id, colors),
-        ${setsJoin}(set_name, set_code, release_date),
-        aggregated_prices(avg_market_price_usd),
-        products(price)
-      `, { count: 'planned' })
-
-      // Apply search filter
-      if (q) {
-        query = query.ilike('cards.card_name', `%${q}%`)
-      }
-
-      // Always filter for English versions (or untagged ones which are typically English custom data)
-      query = query.or('lang.eq.en,lang.is.null')
-
-      // Apply rarity filter
-      if (rarity) {
-        const rarities = rarity.split(',').map((r: string) => r.trim().toLowerCase())
-        query = query.in('cards.rarity', rarities)
-      }
-
-      // Apply game filter
+      // Parse game IDs
+      let gameIds = null;
       if (game) {
-        const gameNames = game.split(',').map((g: string) => g.trim())
-        const gameMap: Record<string, number> = { 'Magic: The Gathering': 22, 'Pokémon': 23, 'Lorcana': 24, 'Yu-Gi-Oh!': 26 }
-        const gameIds = gameNames.map((gn: string) => gameMap[gn]).filter((id?: number) => id !== undefined)
-        if (gameIds.length > 0) {
-          query = query.in('cards.game_id', gameIds)
-        }
+        const gameNames = (game as string).split(',').map((g: string) => g.trim());
+        const gameMap: Record<string, number> = { 'Magic: The Gathering': 22, 'Pokémon': 23, 'Lorcana': 24, 'Yu-Gi-Oh!': 26 };
+        gameIds = gameNames.map((gn: string) => gameMap[gn]).filter((id?: number) => id !== undefined);
       }
 
-      // Apply set filter
+      // Parse rarities (lowercase for case-insensitive matching)
+      let rarities = null;
+      if (rarity) {
+        rarities = (rarity as string).split(',').map((r: string) => r.trim().toLowerCase());
+      }
+
+      // Parse sets
+      let setNames = null;
       if (set) {
-        const setNames = set.split(',').map((s: string) => s.trim())
-        query = query.in('sets.set_name', setNames)
+        setNames = (set as string).split(',').map((s: string) => s.trim());
       }
 
-      // Apply color filter
+      // Parse colors
+      let colorCodes = null;
       if (color) {
-        const colorNames = color.split(',').map((c: string) => c.trim())
-        const colorMap: Record<string, string> = { 'White': 'W', 'Blue': 'U', 'Black': 'B', 'Red': 'R', 'Green': 'G', 'Colorless': 'C' }
-        const colorCodes = colorNames.map((cn: string) => colorMap[cn]).filter((code?: string) => code !== undefined)
-
-        // Use OR conditions for multiple colors
-        if (colorCodes.length === 1) {
-          query = query.contains('cards.colors', [colorCodes[0]])
-        } else if (colorCodes.length > 1) {
-          // For multiple colors, check if ANY of them are present
-          const orConditions = colorCodes.map((code: string) => `colors.cs.{${code}}`).join(',')
-          query = query.or(orConditions, { foreignTable: 'cards' })
-        }
+        const colorNames = (color as string).split(',').map((c: string) => c.trim());
+        const colorMap: Record<string, string> = { 'White': 'W', 'Blue': 'U', 'Black': 'B', 'Red': 'R', 'Green': 'G', 'Colorless': 'C' };
+        colorCodes = colorNames.map((cn: string) => colorMap[cn]).filter((code?: string) => code !== undefined);
       }
 
-      // Apply type filter
+      // Parse types
+      let typeFilter = null;
       if (type) {
-        const typeNames = type.split(',').map((t: string) => t.trim())
-        // For single type, use ilike. For multiple types, use or with ilike conditions
-        if (typeNames.length === 1) {
-          query = query.ilike('cards.type_line', `%${typeNames[0]}%`)
-        } else {
-          // Build OR conditions for multiple types
-          const orConditions = typeNames.map((t: string) => `type_line.ilike.%${t}%`).join(',')
-          query = query.or(orConditions, { foreignTable: 'cards' })
-        }
+        typeFilter = (type as string).split(',').map((t: string) => t.trim());
       }
 
-      // Apply year range filter
-      if (year_from || year_to) {
-        const fromDate = year_from ? `${year_from}-01-01` : '1900-01-01'
-        const toDate = year_to ? `${year_to}-12-31` : '2100-12-31'
-        query = query.gte('sets.release_date', fromDate).lte('sets.release_date', toDate)
-      }
+      // Parse year range
+      const yearFrom = year_from ? parseInt(year_from as string) : null;
+      const yearTo = year_to ? parseInt(year_to as string) : null;
 
-      // Calculate limits first
-      const unique = params.unique === 'true' || params.unique === undefined; // Default to unique for primary grid
-      const limitVal = parseInt(params.limit || '50');
-      const offsetVal = parseInt(params.offset || '0');
-      const fetchLimit = unique ? limitVal * 3 : limitVal;
+      // Call optimized SQL function
+      const { data, error } = await supabase.rpc('get_unique_cards_optimized', {
+        search_query: q || null,
+        game_ids: gameIds,
+        rarity_filter: rarities,
+        set_names: setNames,
+        color_codes: colorCodes,
+        type_filter: typeFilter,
+        year_from: yearFrom,
+        year_to: yearTo,
+        limit_count: limitVal,
+        offset_count: offsetVal,
+        sort_by: sort as string
+      });
 
-      // Apply sorting - use release_date for better user experience
-      const sortField = params.sort || 'release_date';
-      query = query.order('printing_id', { ascending: false });
-
-      // Apply range after sorting
-      query = query.range(offsetVal, offsetVal + fetchLimit - 1);
-
-      const { data, error, count } = await query;
       if (error) throw error;
 
-      // Deduplicate by card name and keep only the LATEST printing (most recent release_date)
-      const cardMap = new Map();
-
-      for (const item of (data || [])) {
-        const cardData = item.cards || {};
-        const cardName = cardData.card_name;
-        const setData = item.sets || {};
-        const releaseDate = setData.release_date;
-
-        if (!cardName) continue;
-
-        // If unique mode is enabled, check if we've seen this card name
-        if (unique) {
-          const existing = cardMap.get(cardName);
-
-          // If we haven't seen this card, or this printing is newer, use it
-          if (!existing || (releaseDate && releaseDate > existing.release_date)) {
-            cardMap.set(cardName, {
-              item,
-              cardData,
-              setData,
-              release_date: releaseDate
-            });
-          }
-        } else {
-          // Non-unique mode: add all printings
-          cardMap.set(`${item.printing_id}`, {
-            item,
-            cardData,
-            setData,
-            release_date: releaseDate
-          });
-        }
-      }
-
       // Map to frontend format
-      const mappedCards = [];
-      for (const entry of cardMap.values()) {
-        const { item, cardData, setData } = entry;
+      const mappedCards = (data || []).map((row: any) => ({
+        card_id: row.printing_id,
+        name: row.card_name,
+        set: row.set_name,
+        set_code: row.set_code,
+        image_url: row.image_url,
+        price: row.avg_market_price_usd || row.store_price || 0,
+        rarity: row.rarity,
+        type: row.type_line,
+        game_id: row.game_id,
+        colors: row.colors,
+        release_date: row.release_date,
+        valuation: {
+          market_price: row.avg_market_price_usd || 0,
+          store_price: row.store_price || 0,
+          market_url: `https://www.cardkingdom.com/mtg/${sanitizeSlug(row.set_name)}/${sanitizeSlug(row.card_name)}`
+        }
+      }));
 
-        const marketPrice = item.aggregated_prices?.[0]?.avg_market_price_usd || 0;
-        const storePrice = item.products?.[0]?.price || 0;
-        const displayPrice = marketPrice || storePrice;
-
-        mappedCards.push({
-          card_id: item.printing_id,
-          name: cardData.card_name,
-          set: setData.set_name,
-          set_code: setData.set_code,
-          image_url: item.image_url,
-          price: displayPrice,
-          rarity: cardData.rarity,
-          type: cardData.type_line,
-          game_id: cardData.game_id,
-          colors: cardData.colors,
-          release_date: setData.release_date,
-          valuation: {
-            market_price: marketPrice,
-            store_price: storePrice,
-            market_url: `https://www.cardkingdom.com/mtg/${sanitizeSlug(setData.set_name)}/${sanitizeSlug(cardData.card_name)}`
-          }
-        });
-
-        if (mappedCards.length >= limitVal) break;
-      }
+      // Get total count (estimate for performance)
+      // TODO: Implement proper count in SQL function if exact count is needed
+      const estimatedTotal = mappedCards.length < limitVal ? offsetVal + mappedCards.length : offsetVal + limitVal + 1;
 
       return {
         cards: mappedCards,
-        total_count: count,
+        total_count: estimatedTotal,
         offset: offsetVal,
         limit: limitVal
       }
