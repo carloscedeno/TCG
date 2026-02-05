@@ -74,7 +74,7 @@ export const fetchCards = async (filters: any): Promise<{ cards: Card[]; total_c
         printing_id,
         image_url,
         cards!inner(card_name, type_line, rarity)
-      `, { count: 'exact' });
+      `, { count: 'estimated' });
 
     if (filters.q) query = query.ilike('cards.card_name', `%${filters.q}%`);
     if (filters.rarity && filters.rarity !== 'All') query = query.eq('cards.rarity', filters.rarity.toLowerCase());
@@ -180,8 +180,23 @@ export const fetchSets = async (gameCode?: string): Promise<any[]> => {
     const data = await response.json();
     return data.sets || [];
   } catch (err) {
-    console.warn("API Sets failed, falling back", err);
-    return [];
+    console.warn("API Sets failed, falling back to Supabase", err);
+
+    let query = supabase
+      .from('sets')
+      .select('set_id, set_name, set_code, release_date');
+
+    if (gameCode) {
+      // Game codes are MTG, PKM, etc. linked via games table
+      // We could join, but usually sets dropdown is for the current game
+      // If we don't have game_id easily, we might just fetch all and filter in JS if needed
+      // but let's try a simple join if we know the schema
+      const { data: game } = await supabase.from('games').select('game_id').eq('game_code', gameCode).single();
+      if (game) query = query.eq('game_id', game.game_id);
+    }
+
+    const { data } = await query.order('release_date', { ascending: false });
+    return data || [];
   }
 };
 
