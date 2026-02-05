@@ -66,7 +66,7 @@ export const fetchCards = async (filters: any): Promise<{ cards: Card[]; total_c
       rarity_filter: filters.rarity && filters.rarity !== 'All' ? filters.rarity.split(',') : null,
       set_names: filters.set && filters.set !== 'All' ? filters.set.split(',') : null,
       color_codes: filters.color && filters.color !== 'All' ? filters.color.split(',') : null,
-      type_filter: filters.types ? filters.types.split(',') : null, // Mapped from filters.types in Home.tsx? Check logic.
+      type_filter: filters.type ? filters.type.split(',') : null, // Mapped from filters.types in Home.tsx? Check logic.
       // Home.tsx sends: type: filters.types.join(',')
 
       // Handle year range if present (Home.tsx sends year_from/year_to directly params to API, need to map)
