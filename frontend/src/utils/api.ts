@@ -45,82 +45,77 @@ export interface CardDetails extends Card {
 
 export const fetchCards = async (filters: any): Promise<{ cards: Card[]; total_count: number }> => {
   try {
-    if (API_BASE) {
-      const params = new URLSearchParams();
-      if (filters.q) params.append('q', filters.q);
-      if (filters.game && filters.game !== 'All') params.append('game', filters.game);
-      if (filters.set && filters.set !== 'All') params.append('set', filters.set);
-      if (filters.rarity && filters.rarity !== 'All') params.append('rarity', filters.rarity);
-      if (filters.color && filters.color !== 'All') params.append('color', filters.color);
-      if (filters.sort) params.append('sort', filters.sort);
-      params.append('limit', filters.limit?.toString() || '50');
-      params.append('offset', filters.offset?.toString() || '0');
+    console.log('Fetching cards with filters:', filters);
 
-      const response = await fetch(`${API_BASE}/api/cards?${params.toString()}`);
-      if (response.ok) {
-        return (await response.json()) as { cards: CardApi[]; total_count: number };
+    // Resolve Game IDs if necessary
+    let gameIds: number[] | null = null;
+    if (filters.game && filters.game !== 'All') {
+      const { data: gamesData } = await supabase
+        .from('games')
+        .select('game_id')
+        .in('name', filters.game.split(',')); // Assuming filters.game is comma-separated string from URL params or logic
+
+      if (gamesData && gamesData.length > 0) {
+        gameIds = gamesData.map(g => g.game_id);
       }
-      console.warn(`API responded with ${response.status} for cards`);
     }
-    throw new Error('API unavailable or returned error');
+
+    const { data, error } = await supabase.rpc('get_unique_cards_optimized', {
+      search_query: filters.q || null,
+      game_ids: gameIds, // Pass the array of numbers
+      rarity_filter: filters.rarity && filters.rarity !== 'All' ? filters.rarity.split(',') : null,
+      set_names: filters.set && filters.set !== 'All' ? filters.set.split(',') : null,
+      color_codes: filters.color && filters.color !== 'All' ? filters.color.split(',') : null,
+      type_filter: filters.types ? filters.types.split(',') : null, // Mapped from filters.types in Home.tsx? Check logic.
+      // Home.tsx sends: type: filters.types.join(',')
+
+      // Handle year range if present (Home.tsx sends year_from/year_to directly params to API, need to map)
+      year_from: filters.year_from,
+      year_to: filters.year_to,
+
+      limit_count: filters.limit || 50,
+      offset_count: filters.offset || 0,
+      sort_by: filters.sort || 'release_date'
+    });
+
+    if (error) {
+      console.error('RPC Error:', error);
+      throw error;
+    }
+
+    // Map RPC result to Frontend Card format
+    const cards = (data || []).map((row: any) => ({
+      card_id: row.printing_id, // Use printing_id as the unique ID for the frontend
+      name: row.card_name,
+      set: row.set_name,
+      set_code: row.set_code,
+      image_url: row.image_url,
+      price: row.avg_market_price_usd || row.store_price || 0,
+      rarity: row.rarity,
+      type: row.type_line,
+      cmc: row.cmc, // Now included!
+      game_id: row.game_id,
+      colors: row.colors,
+      release_date: row.release_date,
+      valuation: {
+        market_price: row.avg_market_price_usd || 0,
+        store_price: row.store_price || 0,
+        market_url: `https://www.cardkingdom.com/mtg/${row.set_name?.replace(/\s+/g, '-').toLowerCase()}/${row.card_name?.replace(/\s+/g, '-').toLowerCase()}`
+      }
+    }));
+
+    // Estimate total count (RPC doesn't return total count for performance)
+    // We assume there are more pages if we got a full page back
+    const total_count = cards.length < (filters.limit || 50)
+      ? (filters.offset || 0) + cards.length
+      : (filters.offset || 0) + (filters.limit || 50) + 1; // Show "next page" available
+
+    return { cards, total_count };
+
   } catch (error) {
-    console.warn('Local API failed, falling back to direct Supabase fetch:', error);
-
-    // Fetch more data to allow for deduplication
-    const fetchLimit = (filters.limit || 50) * 3;
-
-    let query = supabase
-      .from('card_printings')
-      .select(`
-        printing_id,
-        image_url,
-        cards!inner(card_id, card_name, type_line, rarity),
-        sets(set_name, set_code, release_date)
-      `, { count: 'estimated' });
-
-    if (filters.q) query = query.ilike('cards.card_name', `%${filters.q}%`);
-    if (filters.rarity && filters.rarity !== 'All') query = query.eq('cards.rarity', filters.rarity.toLowerCase());
-
-    // Always filter for English versions
-    query = query.or('lang.eq.en,lang.is.null');
-
-    const { data, count } = await query
-      .order('printing_id', { ascending: false })
-      .range(filters.offset || 0, (filters.offset || 0) + fetchLimit - 1);
-
-    // Deduplicate by card_name, keeping only the latest printing
-    const cardMap = new Map<string, any>();
-
-    for (const item of (data || [])) {
-      const cardName = item.cards?.card_name;
-      const releaseDate = item.sets?.release_date;
-
-      if (!cardName) continue;
-
-      const existing = cardMap.get(cardName);
-      if (!existing || (releaseDate && releaseDate > existing.release_date)) {
-        cardMap.set(cardName, {
-          ...item,
-          release_date: releaseDate
-        });
-      }
-    }
-
-    // Convert to array and limit to requested amount
-    const uniqueCards = Array.from(cardMap.values()).slice(0, filters.limit || 50);
-
-    return {
-      cards: uniqueCards.map((item: any) => ({
-        card_id: item.printing_id,
-        name: item.cards?.card_name || 'Unknown',
-        type: item.cards?.type_line || 'Unknown',
-        set: item.sets?.set_name || 'Reference',
-        price: 0,
-        image_url: item.image_url,
-        rarity: item.cards?.rarity || 'common'
-      })) as CardApi[],
-      total_count: count || 0
-    };
+    console.error('Fetch Cards Failed:', error);
+    // Fallback to empty to prevent UI crash
+    return { cards: [], total_count: 0 };
   }
 };
 
