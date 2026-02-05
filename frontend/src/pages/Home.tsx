@@ -69,6 +69,10 @@ const Home: React.FC = () => {
           const productRes = await fetchProducts({
             q: debouncedQuery || undefined,
             game: filters.games && filters.games.length > 0 ? filters.games.join(',') : undefined,
+            set: filters.sets && filters.sets.length > 0 ? filters.sets.join(',') : undefined,
+            rarity: activeRarity !== 'All' ? activeRarity : (filters.rarities && filters.rarities.length > 0 ? filters.rarities.join(',') : undefined),
+            color: filters.colors && filters.colors.length > 0 ? filters.colors.join(',') : undefined,
+            type: filters.types && filters.types.length > 0 ? filters.types.join(',') : undefined,
             limit: LIMIT,
             offset,
             sort: sortBy === 'price' ? 'price_desc' : sortBy

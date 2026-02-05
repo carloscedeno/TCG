@@ -149,10 +149,44 @@ export const fetchUserCollections = async (): Promise<any[]> => {
 };
 
 export const fetchProducts = async (params: any = {}): Promise<any> => {
-  const queryParams = new URLSearchParams(params);
-  const response = await fetch(`${API_BASE}/api/products?${queryParams.toString()}`);
-  if (!response.ok) throw new Error('Failed to fetch products');
-  return await response.json();
+  try {
+    const { data, error } = await supabase.rpc('get_products_filtered', {
+      search_query: params.q || null,
+      game_filter: params.game ? params.game.split(',')[0] : null, // Take first game if multiple
+      set_filter: params.set ? params.set.split(',') : null,
+      rarity_filter: params.rarity && params.rarity !== 'All' ? params.rarity.split(',') : null,
+      type_filter: params.type ? params.type.split(',') : null,
+      color_filter: params.color ? params.color.split(',') : null,
+      sort_by: params.sort || 'newest',
+      limit_count: params.limit || 50,
+      offset_count: params.offset || 0
+    });
+
+    if (error) throw error;
+
+    // Estimate count (RPC doesn't return total)
+    // For pagination UIs that need total_count, we might need a separate count query or an estimate.
+    // Home.tsx uses total_count to show "Load More" button (if cards.length < total_count).
+    // If we return a large number (e.g. offset + limit + 1) when we have full page, it allows next page.
+    const returnedCount = data ? data.length : 0;
+    const requestedLimit = params.limit || 50;
+    const currentOffset = params.offset || 0;
+
+    // Simple heuristic: if we got full page, assume there's more.
+    const total_count = returnedCount < requestedLimit
+      ? currentOffset + returnedCount
+      : currentOffset + requestedLimit + 1;
+
+    return {
+      products: data || [],
+      total_count
+    };
+
+  } catch (error) {
+    console.error('Fetch Products Failed:', error);
+    // Fallback: try old endpoint if RPC fails? No, simpler to fail gracefully or empty.
+    return { products: [], total_count: 0 };
+  }
 };
 
 const detailsCache = new Map<string, any>();
