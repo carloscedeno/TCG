@@ -71,7 +71,7 @@ const Home: React.FC = () => {
             game: filters.games && filters.games.length > 0 ? filters.games.join(',') : undefined,
             limit: LIMIT,
             offset,
-            sort: sortBy === 'name' ? 'name' : (sortBy === 'price' ? 'price_desc' : 'newest')
+            sort: sortBy === 'price' ? 'price_desc' : sortBy
           });
 
           result = {
@@ -97,7 +97,7 @@ const Home: React.FC = () => {
             year_to: filters.yearRange ? filters.yearRange[1] : undefined,
             limit: LIMIT,
             offset,
-            sort: sortBy === 'name' ? 'name' : 'release_date'
+            sort: sortBy
           });
 
           result = {
@@ -268,9 +268,16 @@ const Home: React.FC = () => {
                   onChange={(e) => setSortBy(e.target.value)}
                   className="bg-neutral-900/50 text-white text-[11px] font-black uppercase px-4 md:px-6 py-2 rounded-full border border-neutral-800 focus:outline-none focus:border-blue-500/50 transition-all cursor-pointer hover:bg-neutral-800"
                 >
-                  <option value="name">Name (A-Z)</option>
                   <option value="release_date">Newest</option>
-                  {activeTab === 'marketplace' && <option value="price">Price: Low to High</option>}
+                  <option value="name">Name (A-Z)</option>
+                  <option value="price_asc">Price: Low to High</option>
+                  <option value="price_desc">Price: High to Low</option>
+                  {activeTab !== 'marketplace' && (
+                    <>
+                      <option value="mana_asc">Mana: Low to High</option>
+                      <option value="mana_desc">Mana: High to Low</option>
+                    </>
+                  )}
                 </select>
               </div>
 

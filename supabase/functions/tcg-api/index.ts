@@ -310,6 +310,7 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
         price: row.avg_market_price_usd || row.store_price || 0,
         rarity: row.rarity,
         type: row.type_line,
+        cmc: row.cmc,
         game_id: row.game_id,
         colors: row.colors,
         release_date: row.release_date,
