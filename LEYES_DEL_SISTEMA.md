@@ -1,7 +1,7 @@
 # ⚖️ LEYES DEL SISTEMA - TCG Application
 
-**Versión**: 2.0  
-**Última Actualización**: 2026-02-05  
+**Versión**: 2.1
+**Última Actualización**: 2026-02-06
 **Propósito**: Definir reglas inmutables para operación autónoma del agente
 
 ---
@@ -72,6 +72,18 @@
 - Tomar decisiones de diseño
 
 **Excepciones**: Bugfixes que no afectan funcionalidad
+
+---
+
+### Ley 6: Performance Garantizado (La Regla del Timeout)
+
+**Siempre** validar que las consultas críticas respondan en <200ms.
+
+- **Vistas Materializadas**: OBLIGATORIAS para consultas que involucren `DISTINCT ON` + `JOIN` + `ORDER BY` en tablas principales (>10k registros). No confiar en queries dinámicas complejas para la vista principal.
+- **Indices**: OBLIGATORIO crear índices B-Tree o GIN para CADA columna usada en filtros o sorts ANTES de desplegar código que los use.
+- **Timeouts**: Si una query da timeout (500), la solución NO es aumentar el timeout, es optimizar la query (generalmente pasando a Materialized View).
+
+**Excepciones**: Consultas analíticas offline o scripts de migración manual.
 
 ---
 
@@ -260,6 +272,10 @@ Antes de merge a `main`:
 ---
 
 ## 📝 CHANGELOG DE LEYES
+
+### v2.1 (2026-02-06)
+
+- ✅ Agregada Ley 6: Performance Garantizado (Uso obligatorio de Vistas Materializadas para queries masivas).
 
 ### v2.0 (2026-02-05)
 

@@ -7,6 +7,8 @@ import ImportCollection from './pages/ImportCollection';
 import { CardDetail } from './pages/CardDetail';
 import { AuthProvider } from './context/AuthContext';
 import { AlertCircle } from 'lucide-react';
+import { CheckoutPage } from './pages/CheckoutPage';
+import { CheckoutSuccessPage } from './pages/CheckoutSuccessPage';
 
 const isSupabaseConfigured = !!import.meta.env.VITE_SUPABASE_URL && !!import.meta.env.VITE_SUPABASE_ANON_KEY;
 
@@ -55,6 +57,8 @@ function App() {
                     <Route path="/import" element={<ImportCollection />} />
                     <Route path="/tournaments" element={<TournamentHub />} />
                     <Route path="/admin" element={<AdminDashboard />} />
+                    <Route path="/checkout" element={<CheckoutPage />} />
+                    <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
                 </Routes>
             </Router>
         </AuthProvider>

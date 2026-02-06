@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ShoppingCart, X, CreditCard, Loader2 } from 'lucide-react';
-import { fetchCart, checkoutCart } from '../../utils/api';
+import { fetchCart } from '../../utils/api';
 
 interface CartItem {
     id: string;
@@ -23,7 +24,6 @@ interface CartDrawerProps {
 export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
     const [items, setItems] = useState<CartItem[]>([]);
     const [loading, setLoading] = useState(false);
-    const [isCheckingOut, setIsCheckingOut] = useState(false);
 
     useEffect(() => {
         if (isOpen) {
@@ -43,19 +43,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
         }
     };
 
-    const handleCheckout = async () => {
-        setIsCheckingOut(true);
-        try {
-            await checkoutCart();
-            setItems([]);
-            alert("¡Compra completada con éxito!");
-            onClose();
-        } catch (err) {
-            console.error("Checkout failed", err);
-            alert("Error al procesar la compra.");
-        } finally {
-            setIsCheckingOut(false);
-        }
+    const navigate = useNavigate();
+
+    const handleCheckout = () => {
+        onClose();
+        navigate('/checkout');
     };
 
     const subtotal = items.reduce((acc, item) => acc + (item.products?.price || 0) * item.quantity, 0);
@@ -143,11 +135,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
 
                             <button
                                 onClick={handleCheckout}
-                                disabled={isCheckingOut}
-                                className="w-full h-14 bg-geeko-cyan hover:bg-cyan-400 text-black font-black uppercase tracking-widest text-xs rounded-2xl flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(0,229,255,0.2)] hover:shadow-[0_0_50px_rgba(0,229,255,0.4)] transition-all transform active:scale-[0.98] disabled:opacity-50"
+                                className="w-full h-14 bg-geeko-cyan hover:bg-cyan-400 text-black font-black uppercase tracking-widest text-xs rounded-2xl flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(0,229,255,0.2)] hover:shadow-[0_0_50px_rgba(0,229,255,0.4)] transition-all transform active:scale-[0.98]"
                             >
-                                {isCheckingOut ? <Loader2 size={18} className="animate-spin" /> : <CreditCard size={18} />}
-                                {isCheckingOut ? 'Procesando...' : 'Finalizar Compra'}
+                                <CreditCard size={18} />
+                                Finalizar Compra
                             </button>
 
                             <p className="text-[10px] text-center text-neutral-600 font-medium">

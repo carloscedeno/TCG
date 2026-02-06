@@ -46,15 +46,13 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDebouncedQuery(query);
+      if (query !== debouncedQuery) {
+        setDebouncedQuery(query);
+        setPage(0);
+      }
     }, 300); // Optimized from 500ms for better responsiveness
     return () => clearTimeout(timer);
-  }, [query]);
-
-  useEffect(() => {
-    // Reset page when filters change
-    setPage(0);
-  }, [debouncedQuery, filters, activeRarity, activeTab]);
+  }, [query, debouncedQuery]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -116,7 +114,12 @@ const Home: React.FC = () => {
         if (offset === 0) {
           setCards(result.cards);
         } else {
-          setCards(prev => [...prev, ...result.cards]);
+          setCards(prev => {
+            // Prevent duplicates when appending
+            const existingIds = new Set(prev.map(c => c.card_id));
+            const newCards = result.cards.filter(c => !existingIds.has(c.card_id));
+            return [...prev, ...newCards];
+          });
         }
         setTotalCount(result.total_count);
       } catch (err: any) {
@@ -148,6 +151,27 @@ const Home: React.FC = () => {
   }, [filters.games]);
 
   const rarities = ['All', 'Mythic', 'Rare', 'Uncommon', 'Common'];
+
+  // Helper to update filters and reset page
+  const handleFilterChange = (newFilters: Partial<Filters>) => {
+    setFilters(newFilters);
+    setPage(0);
+  };
+
+  const handleRarityChange = (rarity: string) => {
+    setActiveRarity(rarity);
+    setPage(0);
+  };
+
+  const handleTabChange = (tab: 'marketplace' | 'reference') => {
+    setActiveTab(tab);
+    setPage(0);
+  };
+
+  const handleSortChange = (sort: string) => {
+    setSortBy(sort);
+    setPage(0);
+  };
 
   return (
     <div className="min-h-screen bg-[#050505] text-white font-sans relative selection:bg-cyan-500/30">
@@ -217,7 +241,7 @@ const Home: React.FC = () => {
             <div className="flex flex-col sm:flex-row items-center gap-4">
               <div className="flex bg-neutral-900/50 p-1 rounded-full border border-neutral-800">
                 <button
-                  onClick={() => setActiveTab('marketplace')}
+                  onClick={() => handleTabChange('marketplace')}
                   className={`px-6 py-2 rounded-full text-[11px] font-black tracking-widest uppercase transition-all ${activeTab === 'marketplace'
                     ? 'bg-geeko-cyan text-black shadow-lg shadow-geeko-cyan/20'
                     : 'text-neutral-500 hover:text-neutral-300'
@@ -226,7 +250,7 @@ const Home: React.FC = () => {
                   Inventory
                 </button>
                 <button
-                  onClick={() => setActiveTab('reference')}
+                  onClick={() => handleTabChange('reference')}
                   className={`px-6 py-2 rounded-full text-[11px] font-black tracking-widest uppercase transition-all ${activeTab === 'reference'
                     ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20'
                     : 'text-neutral-500 hover:text-neutral-300'
@@ -240,7 +264,7 @@ const Home: React.FC = () => {
                 {rarities.map(r => (
                   <button
                     key={r}
-                    onClick={() => setActiveRarity(r)}
+                    onClick={() => handleRarityChange(r)}
                     className={`px-3 md:px-6 py-2 rounded-full text-[9px] md:text-[11px] font-black tracking-widest uppercase transition-all ${activeRarity === r
                       ? 'bg-neutral-700 text-white shadow-lg'
                       : 'text-neutral-500 hover:text-neutral-300'
@@ -269,7 +293,7 @@ const Home: React.FC = () => {
                 <span className="text-[11px] font-black uppercase tracking-tighter text-neutral-500 hidden sm:inline">Order By:</span>
                 <select
                   value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
+                  onChange={(e) => handleSortChange(e.target.value)}
                   className="bg-neutral-900/50 text-white text-[11px] font-black uppercase px-4 md:px-6 py-2 rounded-full border border-neutral-800 focus:outline-none focus:border-blue-500/50 transition-all cursor-pointer hover:bg-neutral-800"
                 >
                   <option value="release_date">Newest</option>
@@ -314,7 +338,7 @@ const Home: React.FC = () => {
                 <FiltersPanel
                   filters={{ ...mockFilters, sets }}
                   selected={filters}
-                  onChange={setFilters}
+                  onChange={handleFilterChange}
                   setsOptions={sets}
                 />
               </div>
@@ -349,41 +373,41 @@ const Home: React.FC = () => {
                       <span className="text-[10px] font-black uppercase tracking-widest text-neutral-600 mr-2">Active:</span>
 
                       {debouncedQuery && (
-                        <button onClick={() => setQuery('')} className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600/10 border border-blue-500/30 rounded-full text-[10px] font-bold text-blue-400 hover:bg-blue-600/20 transition-all group">
+                        <button onClick={() => { setQuery(''); setPage(0); }} className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600/10 border border-blue-500/30 rounded-full text-[10px] font-bold text-blue-400 hover:bg-blue-600/20 transition-all group">
                           Search: {debouncedQuery}
                           <X size={10} className="group-hover:rotate-90 transition-transform" />
                         </button>
                       )}
 
                       {filters.games?.map(g => (
-                        <button key={g} onClick={() => setFilters({ ...filters, games: filters.games?.filter(x => x !== g) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-600/10 border border-purple-500/30 rounded-full text-[10px] font-bold text-purple-400 hover:bg-purple-600/20 transition-all group">
+                        <button key={g} onClick={() => handleFilterChange({ ...filters, games: filters.games?.filter(x => x !== g) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-600/10 border border-purple-500/30 rounded-full text-[10px] font-bold text-purple-400 hover:bg-purple-600/20 transition-all group">
                           {g}
                           <X size={10} className="group-hover:rotate-90 transition-transform" />
                         </button>
                       ))}
 
                       {filters.sets?.map(s => (
-                        <button key={s} onClick={() => setFilters({ ...filters, sets: filters.sets?.filter(x => x !== s) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600/10 border border-emerald-500/30 rounded-full text-[10px] font-bold text-emerald-400 hover:bg-emerald-600/20 transition-all group">
+                        <button key={s} onClick={() => handleFilterChange({ ...filters, sets: filters.sets?.filter(x => x !== s) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600/10 border border-emerald-500/30 rounded-full text-[10px] font-bold text-emerald-400 hover:bg-emerald-600/20 transition-all group">
                           Set: {s}
                           <X size={10} className="group-hover:rotate-90 transition-transform" />
                         </button>
                       ))}
 
                       {filters.colors?.map(c => (
-                        <button key={c} onClick={() => setFilters({ ...filters, colors: filters.colors?.filter(x => x !== c) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-cyan-600/10 border border-cyan-500/30 rounded-full text-[10px] font-bold text-cyan-400 hover:bg-cyan-600/20 transition-all group">
+                        <button key={c} onClick={() => handleFilterChange({ ...filters, colors: filters.colors?.filter(x => x !== c) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-cyan-600/10 border border-cyan-500/30 rounded-full text-[10px] font-bold text-cyan-400 hover:bg-cyan-600/20 transition-all group">
                           {c}
                           <X size={10} className="group-hover:rotate-90 transition-transform" />
                         </button>
                       ))}
 
                       {filters.types?.map(t => (
-                        <button key={t} onClick={() => setFilters({ ...filters, types: filters.types?.filter(x => x !== t) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600/10 border border-red-500/30 rounded-full text-[10px] font-bold text-red-400 hover:bg-red-600/20 transition-all group">
+                        <button key={t} onClick={() => handleFilterChange({ ...filters, types: filters.types?.filter(x => x !== t) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600/10 border border-red-500/30 rounded-full text-[10px] font-bold text-red-400 hover:bg-red-600/20 transition-all group">
                           {t}
                           <X size={10} className="group-hover:rotate-90 transition-transform" />
                         </button>
                       ))}
 
-                      <button onClick={() => { setFilters({}); setQuery(''); setActiveRarity('All'); }} className="text-[10px] font-black uppercase tracking-widest text-neutral-500 hover:text-white transition-colors ml-2 underline underline-offset-4 decoration-neutral-800">
+                      <button onClick={() => { setFilters({}); setQuery(''); setActiveRarity('All'); setPage(0); }} className="text-[10px] font-black uppercase tracking-widest text-neutral-500 hover:text-white transition-colors ml-2 underline underline-offset-4 decoration-neutral-800">
                         Clear All
                       </button>
                     </div>
@@ -452,7 +476,7 @@ const Home: React.FC = () => {
               <FiltersPanel
                 filters={{ ...mockFilters, sets }}
                 selected={filters}
-                onChange={setFilters}
+                onChange={handleFilterChange}
                 setsOptions={sets}
               />
               <button

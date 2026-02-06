@@ -317,3 +317,51 @@ export const checkoutCart = async (): Promise<any> => {
     return { success: false };
   }
 };
+
+export const createOrder = async (orderData: {
+  userId: string;
+  items: { product_id: string; quantity: number; price: number }[];
+  shippingAddress: any;
+  totalAmount: number;
+}): Promise<any> => {
+  try {
+    const { data, error } = await supabase.rpc('create_order_atomic', {
+      p_user_id: orderData.userId,
+      p_items: orderData.items,
+      p_shipping_address: orderData.shippingAddress, // Currently unused in RPC logic but good for future
+      p_total_amount: orderData.totalAmount
+    });
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error('Order creation failed:', error);
+    throw error;
+  }
+};
+
+export const fetchUserAddresses = async () => {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return [];
+
+  const { data, error } = await supabase
+    .from('user_addresses')
+    .select('*')
+    .eq('user_id', user.id);
+
+  if (error) throw error;
+  return data || [];
+};
+
+export const saveUserAddress = async (address: any) => {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("User not logged in");
+
+  const { data, error } = await supabase
+    .from('user_addresses')
+    .insert({ ...address, user_id: user.id })
+    .select();
+
+  if (error) throw error;
+  return data;
+};

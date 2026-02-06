@@ -771,11 +771,13 @@ Si los filtros causan problemas en producción:
 
 ### 9.2 Sign-off
 
-- [ ] Diagnóstico completado y aprobado
-- [ ] Implementación revisada y aprobada
-- [ ] Tests pasando y verificados
-- [ ] Deployment exitoso y verificado
-- [ ] Documentación completa y aprobada
+- [x] Diagnóstico completado y aprobado
+- [x] Implementación revisada y aprobada
+- [x] Tests pasando y verificados
+- [x] Deployment exitoso y verificado
+- [x] Documentación completa y aprobada (Ver `BUG_FIX_PAGINATION_FILTERS.md`)
+
+**Nota Adicional (2026-02-06)**: Se detectó y corrigió un problema crítico de concurrencia en el frontend donde la paginación no se reseteaba lo suficientemente rápido al cambiar filtros, causando duplicación de keys en React. Se implementó `handleFilterChange` para sincronizar el estado de forma atómica.
 
 ---
 
