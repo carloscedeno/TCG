@@ -256,6 +256,28 @@ export const fetchSets = async (gameCode?: string): Promise<any[]> => {
   }
 };
 
+export const searchCardNames = async (query: string): Promise<string[]> => {
+  if (!query || query.length < 2) return [];
+
+  try {
+    const { data, error } = await supabase.rpc('search_card_names', {
+      query_text: query,
+      limit_count: 10
+    });
+
+    if (error) {
+      console.error('Autocomplete Error:', error);
+      throw error;
+    }
+
+    // data is array of objects { card_name: "X" } due to TABLE return
+    return (data || []).map((row: any) => row.card_name);
+  } catch (error) {
+    console.warn('Autocomplete request failed:', error);
+    return [];
+  }
+};
+
 export const fetchCart = async (): Promise<any> => {
   try {
     const response = await fetch(`${API_BASE}/api/cart`);
