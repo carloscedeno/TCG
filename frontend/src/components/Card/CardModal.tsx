@@ -2,11 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { X, ShoppingCart, ExternalLink, RotateCw, Loader2 } from 'lucide-react';
 import { fetchCardDetails, addToCart } from '../../utils/api';
 
+import { useAuth } from '../../context/AuthContext';
+
 interface CardModalProps {
     isOpen: boolean;
     onClose: () => void;
     cardId: string | null;
+    onAddToCartSuccess?: () => void;
+    onRequireAuth?: () => void;
 }
+
 
 interface CardFace {
     image_url?: string;
@@ -59,12 +64,15 @@ interface CardDetails {
     all_versions?: Version[];
 }
 
-export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId }) => {
+export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, onAddToCartSuccess, onRequireAuth }) => {
+    const { user } = useAuth();
     const [details, setDetails] = useState<CardDetails | null>(null);
     const [loading, setLoading] = useState(false);
     const [isAdding, setIsAdding] = useState(false);
     const [currentFaceIndex, setCurrentFaceIndex] = useState(0);
     const [activePrintingId, setActivePrintingId] = useState<string | null>(null);
+
+    // ... useEffect ...
 
     useEffect(() => {
         if (isOpen && cardId) {
@@ -82,7 +90,6 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
             document.body.style.overflow = 'unset';
         };
     }, [isOpen, cardId]);
-
 
     const loadCardDetails = async (id: string) => {
         setLoading(true);
@@ -111,16 +118,25 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId })
 
     const handleAddToCart = async () => {
         if (!activePrintingId) return;
+
+        if (!user) {
+            if (onRequireAuth) onRequireAuth();
+            else alert("Please login to add items to cart.");
+            return;
+        }
+
         setIsAdding(true);
         try {
-            // Nota: product_id en el backend se refiere al id único en la tabla products
-            // Si estamos en archives (catálogo), necesitamos primero mapear o asegurar que existe el producto.
-            // Para este MVP, asumimos que activePrintingId puede ser usado o mapeado.
             await addToCart(activePrintingId, 1);
+            if (onAddToCartSuccess) {
+                setTimeout(() => {
+                    onClose();
+                    onAddToCartSuccess();
+                }, 500);
+            }
         } catch (err) {
             console.error("Cart error", err);
         } finally {
-            setIsAdding(true); // Fake delay for UX
             setTimeout(() => setIsAdding(false), 800);
         }
     };

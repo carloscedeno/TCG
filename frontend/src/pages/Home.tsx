@@ -208,16 +208,19 @@ const Home: React.FC = () => {
                 <SearchBar value={query} onChange={setQuery} />
               </div>
 
-              {/* Cart Button */}
-              {user && (
-                <button
-                  onClick={() => setIsCartOpen(true)}
-                  className="relative p-2.5 bg-neutral-900 border border-white/5 rounded-xl hover:bg-neutral-800 transition-all text-neutral-400 hover:text-geeko-cyan group"
-                >
-                  <ShoppingCart size={20} />
+              {/* Cart Button - Always Visible */}
+              <button
+                onClick={() => {
+                  if (user) setIsCartOpen(true);
+                  else setIsAuthModalOpen(true);
+                }}
+                className="relative p-2.5 bg-neutral-900 border border-white/5 rounded-xl hover:bg-neutral-800 transition-all text-neutral-400 hover:text-geeko-cyan group"
+              >
+                <ShoppingCart size={20} />
+                {user && (
                   <div className="absolute top-0 right-0 w-2 h-2 bg-geeko-cyan rounded-full border-2 border-[#0a0a0a] group-hover:scale-150 transition-transform" />
-                </button>
-              )}
+                )}
+              </button>
 
               {user ? (
                 <UserMenu />
@@ -459,6 +462,11 @@ const Home: React.FC = () => {
           isOpen={!!selectedCardId}
           onClose={() => setSelectedCardId(null)}
           cardId={selectedCardId}
+          onAddToCartSuccess={() => {
+            setIsCartOpen(true);
+            // trigger cart refresh? CartDrawer loads on open, so yes.
+          }}
+          onRequireAuth={() => setIsAuthModalOpen(true)}
         />
         <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
 
