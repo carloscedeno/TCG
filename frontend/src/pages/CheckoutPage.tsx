@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchCart, createOrder, fetchUserAddresses, saveUserAddress } from '../utils/api';
 import { ShieldCheck, Truck, CreditCard, CheckCircle, MapPin, Plus, Loader2 } from 'lucide-react';

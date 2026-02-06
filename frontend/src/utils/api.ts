@@ -56,7 +56,7 @@ export const fetchCards = async (filters: any): Promise<{ cards: Card[]; total_c
         .in('game_name', filters.game.split(',')); // Assuming filters.game is comma-separated string from URL params or logic
 
       if (gamesData && gamesData.length > 0) {
-        gameIds = gamesData.map(g => g.game_id);
+        gameIds = gamesData.map((g: { game_id: number }) => g.game_id);
       }
     }
 
