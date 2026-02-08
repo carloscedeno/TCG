@@ -30,7 +30,8 @@ export interface CardDetails extends Card {
     valuation_avg: number;
   };
   legalities?: any;
-  colors?: string[];
+  colors: string[];
+  total_stock: number;
   card_faces?: any[];
   all_versions: {
     printing_id: string;
@@ -62,17 +63,21 @@ export const fetchCards = async (filters: any): Promise<{ cards: Card[]; total_c
 
     const { data, error } = await supabase.rpc('get_unique_cards_optimized', {
       search_query: filters.q || null,
-      game_ids: gameIds, // Pass the array of numbers
-      rarity_filter: filters.rarity && filters.rarity !== 'All' ? filters.rarity.split(',') : null,
-      set_names: filters.set && filters.set !== 'All' ? filters.set.split(',') : null,
-      color_codes: filters.color && filters.color !== 'All' ? filters.color.split(',') : null,
-      type_filter: filters.type ? filters.type.split(',') : null, // Mapped from filters.types in Home.tsx? Check logic.
-      // Home.tsx sends: type: filters.types.join(',')
-
-      // Handle year range if present (Home.tsx sends year_from/year_to directly params to API, need to map)
+      game_ids: gameIds,
+      rarity_filter: filters.rarity && filters.rarity !== 'All'
+        ? (Array.isArray(filters.rarity) ? filters.rarity : filters.rarity.split(','))
+        : null,
+      set_names: filters.set && filters.set !== 'All'
+        ? (Array.isArray(filters.set) ? filters.set : filters.set.split(','))
+        : null,
+      color_codes: filters.color && filters.color !== 'All'
+        ? (Array.isArray(filters.color) ? filters.color : filters.color.split(','))
+        : null,
+      type_filter: filters.type
+        ? (Array.isArray(filters.type) ? filters.type : filters.type.split(','))
+        : null,
       year_from: filters.year_from,
       year_to: filters.year_to,
-
       limit_count: filters.limit || 50,
       offset_count: filters.offset || 0,
       sort_by: filters.sort || 'release_date'
@@ -95,8 +100,9 @@ export const fetchCards = async (filters: any): Promise<{ cards: Card[]; total_c
       type: row.type_line,
       cmc: row.cmc, // Now included!
       game_id: row.game_id,
-      colors: row.colors,
+      colors: row.colors || [],
       release_date: row.release_date,
+      total_stock: row.total_stock || 0,
       valuation: {
         market_price: row.avg_market_price_usd || 0,
         store_price: row.store_price || 0,
@@ -152,11 +158,13 @@ export const fetchProducts = async (params: any = {}): Promise<any> => {
   try {
     const { data, error } = await supabase.rpc('get_products_filtered', {
       search_query: params.q || null,
-      game_filter: params.game ? params.game.split(',')[0] : null, // Take first game if multiple
-      set_filter: params.set ? params.set.split(',') : null,
-      rarity_filter: params.rarity && params.rarity !== 'All' ? params.rarity.split(',') : null,
-      type_filter: params.type ? params.type.split(',') : null,
-      color_filter: params.color ? params.color.split(',') : null,
+      game_filter: params.game ? (Array.isArray(params.game) ? params.game[0] : params.game.split(',')[0]) : null,
+      set_filter: params.set ? (Array.isArray(params.set) ? params.set : params.set.split(',')) : null,
+      rarity_filter: params.rarity && params.rarity !== 'All'
+        ? (Array.isArray(params.rarity) ? params.rarity : params.rarity.split(',')).map((r: string) => r.toLowerCase())
+        : null,
+      type_filter: params.type ? (Array.isArray(params.type) ? params.type : params.type.split(',')) : null,
+      color_filter: params.color ? (Array.isArray(params.color) ? params.color : params.color.split(',')) : null,
       sort_by: params.sort || 'newest',
       limit_count: params.limit || 50,
       offset_count: params.offset || 0
@@ -208,6 +216,7 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
 
     if (!data) {
       console.warn('Local API failed for details, falling back to direct Supabase fetch');
+      // Fetch the printing
       const { data: sbData, error: sbError } = await supabase
         .from('card_printings')
         .select('*, cards(*), sets(*)')
@@ -215,10 +224,46 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
         .single();
 
       if (sbError) throw sbError;
-      data = sbData;
+
+      // Fetch all versions for this card
+      const { data: versionsData } = await supabase
+        .from('card_printings')
+        .select('*, sets(*), aggregated_prices(avg_market_price_usd)')
+        .eq('card_id', sbData.card_id);
+
+      data = {
+        ...sbData,
+        all_versions: (versionsData || []).map((v: any) => ({
+          printing_id: v.printing_id,
+          set_name: v.sets?.set_name,
+          set_code: v.sets?.set_code,
+          collector_number: v.collector_number,
+          rarity: v.rarity,
+          price: v.aggregated_prices?.[0]?.avg_market_price_usd || 0,
+          image_url: v.image_url
+        }))
+      };
     }
 
     if (data) {
+      // Ensure data has all_versions if it's missing from API
+      if (!data.all_versions && data.cards?.card_id) {
+        const { data: versionsData } = await supabase
+          .from('card_printings')
+          .select('*, sets(*), aggregated_prices(avg_market_price_usd)')
+          .eq('card_id', data.cards.card_id);
+
+        data.all_versions = (versionsData || []).map((v: any) => ({
+          printing_id: v.printing_id,
+          set_name: v.sets?.set_name,
+          set_code: v.sets?.set_code,
+          collector_number: v.collector_number,
+          rarity: v.rarity,
+          price: v.aggregated_prices?.[0]?.avg_market_price_usd || 0,
+          image_url: v.image_url
+        }));
+      }
+
       detailsCache.set(printingId, data);
     }
     return data;
@@ -280,7 +325,13 @@ export const searchCardNames = async (query: string): Promise<string[]> => {
 
 export const fetchCart = async (): Promise<any> => {
   try {
-    const response = await fetch(`${API_BASE}/api/cart`);
+    const session = await supabase.auth.getSession();
+    const headers: Record<string, string> = {};
+    if (session.data.session?.access_token) {
+      headers['Authorization'] = `Bearer ${session.data.session.access_token}`;
+    }
+
+    const response = await fetch(`${API_BASE}/api/cart`, { headers });
     if (!response.ok) throw new Error('Failed to fetch cart');
     return await response.json();
   } catch (error) {
@@ -291,9 +342,15 @@ export const fetchCart = async (): Promise<any> => {
 
 export const addToCart = async (printingId: string, quantity: number = 1): Promise<any> => {
   try {
+    const session = await supabase.auth.getSession();
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (session.data.session?.access_token) {
+      headers['Authorization'] = `Bearer ${session.data.session.access_token}`;
+    }
+
     const response = await fetch(`${API_BASE}/api/cart/add`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify({ printing_id: printingId, quantity })
     });
     if (!response.ok) throw new Error('Failed to add to cart');
@@ -306,9 +363,15 @@ export const addToCart = async (printingId: string, quantity: number = 1): Promi
 
 export const checkoutCart = async (): Promise<any> => {
   try {
+    const session = await supabase.auth.getSession();
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (session.data.session?.access_token) {
+      headers['Authorization'] = `Bearer ${session.data.session.access_token}`;
+    }
+
     const response = await fetch(`${API_BASE}/api/cart/checkout`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' }
+      headers
     });
     if (!response.ok) throw new Error('Checkout failed');
     return await response.json();

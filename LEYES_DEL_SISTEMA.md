@@ -271,7 +271,19 @@ Antes de merge a `main`:
 
 ---
 
+## 🔵 REGLAS DE NEGOCIO (TCG Specific)
+
+### Regla 1: Precios de Geekorium
+
+**Siempre** usar el precio de **Card Kingdom** para los ítems de **Geekorium**, a menos que un administrador especifique lo contrario explícitamente.
+
+---
+
 ## 📝 CHANGELOG DE LEYES
+
+### v2.2 (2026-02-08)
+
+- ✅ Agregada Regla de Negocio 1: Sincronización de precios Geekorium con Card Kingdom.
 
 ### v2.1 (2026-02-06)
 

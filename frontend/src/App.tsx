@@ -4,6 +4,7 @@ import Profile from './pages/Profile';
 import TournamentHub from './pages/TournamentHub';
 import { AdminDashboard } from './pages/Admin/AdminDashboard';
 import ImportCollection from './pages/ImportCollection';
+import InventoryPage from './pages/Admin/InventoryPage';
 import { CardDetail } from './pages/CardDetail';
 import { AuthProvider } from './context/AuthContext';
 import { AlertCircle } from 'lucide-react';
@@ -58,6 +59,7 @@ function App() {
                     <Route path="/import" element={<ImportCollection />} />
                     <Route path="/tournaments" element={<TournamentHub />} />
                     <Route path="/admin" element={<AdminDashboard />} />
+                    <Route path="/admin/inventory" element={<InventoryPage />} />
                     <Route path="/checkout" element={<CheckoutPage />} />
                     <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
                     <Route path="/update-password" element={<UpdatePassword />} />
