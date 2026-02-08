@@ -150,25 +150,25 @@ export const CheckoutPage = () => {
                             ) : (
                                 <div className="space-y-4 max-w-lg">
                                     <div className="grid grid-cols-2 gap-4">
-                                        <input placeholder="Full Name" className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 focus:border-geeko-cyan outline-none transition-colors"
+                                        <input data-testid="full-name-input" placeholder="Full Name" className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 focus:border-geeko-cyan outline-none transition-colors"
                                             value={newAddress.full_name} onChange={(e) => setNewAddress({ ...newAddress, full_name: e.target.value })} />
                                     </div>
-                                    <input placeholder="Address Line 1" className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 focus:border-geeko-cyan outline-none transition-colors"
+                                    <input data-testid="address-line1-input" placeholder="Address Line 1" className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 focus:border-geeko-cyan outline-none transition-colors"
                                         value={newAddress.address_line1} onChange={(e) => setNewAddress({ ...newAddress, address_line1: e.target.value })} />
                                     <div className="grid grid-cols-2 gap-4">
-                                        <input placeholder="City" className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 focus:border-geeko-cyan outline-none transition-colors"
+                                        <input data-testid="city-input" placeholder="City" className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 focus:border-geeko-cyan outline-none transition-colors"
                                             value={newAddress.city} onChange={(e) => setNewAddress({ ...newAddress, city: e.target.value })} />
-                                        <input placeholder="State" className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 focus:border-geeko-cyan outline-none transition-colors"
+                                        <input data-testid="state-input" placeholder="State" className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 focus:border-geeko-cyan outline-none transition-colors"
                                             value={newAddress.state} onChange={(e) => setNewAddress({ ...newAddress, state: e.target.value })} />
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">
-                                        <input placeholder="ZIP Code" className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 focus:border-geeko-cyan outline-none transition-colors"
+                                        <input data-testid="zip-code-input" placeholder="ZIP Code" className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 focus:border-geeko-cyan outline-none transition-colors"
                                             value={newAddress.zip_code} onChange={(e) => setNewAddress({ ...newAddress, zip_code: e.target.value })} />
                                         <input placeholder="Country" disabled value="USA" className="w-full bg-black/20 border border-white/5 rounded-lg px-4 py-3 text-neutral-500 cursor-not-allowed" />
                                     </div>
                                     <div className="flex justify-end gap-3 pt-4">
                                         {addresses.length > 0 && <button onClick={() => setIsNewAddress(false)} className="px-6 py-2 rounded-lg text-sm font-bold text-neutral-400 hover:text-white">Cancelar</button>}
-                                        <button onClick={handleSaveAddress} className="px-6 py-2 bg-white text-black rounded-lg text-sm font-bold hover:bg-neutral-200">Guardar Dirección</button>
+                                        <button data-testid="save-address-button" onClick={handleSaveAddress} className="px-6 py-2 bg-white text-black rounded-lg text-sm font-bold hover:bg-neutral-200">Guardar Dirección</button>
                                     </div>
                                 </div>
                             )}
@@ -177,6 +177,7 @@ export const CheckoutPage = () => {
                                 <button
                                     onClick={() => selectedAddress && setStep(2)}
                                     disabled={!selectedAddress}
+                                    data-testid="continue-to-payment"
                                     className="px-8 py-4 bg-geeko-cyan text-black font-black uppercase rounded-xl hover:bg-cyan-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                                 >
                                     Continuar al Pago
@@ -223,6 +224,7 @@ export const CheckoutPage = () => {
                                 <button
                                     onClick={() => handlePlaceOrder()}
                                     disabled={isProcessing}
+                                    data-testid="place-order-button"
                                     className="px-8 py-4 bg-geeko-cyan text-black font-black uppercase rounded-xl hover:bg-cyan-400 shadow-[0_0_20px_rgba(0,229,255,0.3)] transition-all flex items-center gap-2"
                                 >
                                     {isProcessing ? <Loader2 className="animate-spin" /> : 'Confirmar y Pagar'}

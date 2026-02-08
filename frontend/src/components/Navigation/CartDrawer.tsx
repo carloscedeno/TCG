@@ -93,7 +93,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                             </div>
                         ) : (
                             items.map((item) => (
-                                <div key={item.id} className="flex gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-white/10 transition-all group">
+                                <div key={item.id} data-testid="cart-item" className="flex gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-white/10 transition-all group">
                                     <div className="w-20 h-28 bg-neutral-900 rounded-lg overflow-hidden flex-shrink-0 border border-white/10">
                                         <img src={item.products?.image_url} alt={item.products?.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                                     </div>
@@ -135,6 +135,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
 
                             <button
                                 onClick={handleCheckout}
+                                data-testid="checkout-button"
                                 className="w-full h-14 bg-geeko-cyan hover:bg-cyan-400 text-black font-black uppercase tracking-widest text-xs rounded-2xl flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(0,229,255,0.2)] hover:shadow-[0_0_50px_rgba(0,229,255,0.4)] transition-all transform active:scale-[0.98]"
                             >
                                 <CreditCard size={18} />

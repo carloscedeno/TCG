@@ -27,10 +27,11 @@ export interface CardProps {
   type?: string;
   card_faces?: CardFace[];
   viewMode?: 'grid' | 'list';
+  total_stock?: number;
   onClick?: () => void;
 }
 
-export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, price, card_id, rarity, type, card_faces, viewMode = 'grid', onClick }) => {
+export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, price, card_id, rarity, type, card_faces, viewMode = 'grid', total_stock, onClick }) => {
   const [currentFaceIndex, setCurrentFaceIndex] = useState(0);
   const hasMultipleFaces = card_faces && card_faces.length > 1;
 
@@ -73,7 +74,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
   if (viewMode === 'list') {
     return (
       <a
-        href={`/TCG/card/${card_id}`}
+        href={`card/${card_id}`}
         onClick={(e) => {
           if (!e.ctrlKey && !e.metaKey) {
             e.preventDefault();
@@ -107,6 +108,14 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
                 {rarity}
               </span>
             )}
+            {total_stock !== undefined && total_stock > 0 && (
+              <>
+                <span className="opacity-30">•</span>
+                <span className="text-[9px] font-black uppercase tracking-widest text-geeko-cyan">
+                  Stock: {total_stock}
+                </span>
+              </>
+            )}
           </div>
         </div>
 
@@ -132,7 +141,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
 
   return (
     <a
-      href={`/TCG/card/${card_id}`}
+      href={`card/${card_id}`}
       onClick={(e) => {
         if (!e.ctrlKey && !e.metaKey) {
           e.preventDefault();
@@ -140,6 +149,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         }
       }}
       onMouseEnter={handleMouseEnter}
+      data-testid="product-card"
       className={`flex flex-col glass-card rounded-2xl overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:-translate-y-1 group relative ${getRarityStyle(rarity)} cursor-pointer h-full`}
     >
       {/* Flip Button overlay */}
@@ -164,11 +174,19 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
             loading="lazy"
             decoding="async"
+            data-testid="product-image"
           />
         ) : (
           <div className="flex flex-col items-center justify-center w-full h-full text-neutral-600 p-4">
             <Shield size={40} className="mb-2 opacity-20" />
             <span className="text-[10px] uppercase tracking-widest font-bold opacity-50 text-center">No Image Available</span>
+          </div>
+        )}
+
+        {/* Stock display */}
+        {total_stock !== undefined && total_stock > 0 && (
+          <div className="absolute top-2 left-2 z-20 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider backdrop-blur-md border border-white/10 bg-geeko-cyan/20 text-geeko-cyan">
+            Stock: {total_stock}
           </div>
         )}
 
@@ -213,5 +231,6 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
   // Only re-render if these props change
   return prevProps.card_id === nextProps.card_id &&
     prevProps.price === nextProps.price &&
-    prevProps.viewMode === nextProps.viewMode;
+    prevProps.viewMode === nextProps.viewMode &&
+    prevProps.total_stock === nextProps.total_stock;
 });

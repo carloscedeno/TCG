@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
 from .routes import cards, admin, collections, webhooks, products, cart, analytics
 
 load_dotenv()

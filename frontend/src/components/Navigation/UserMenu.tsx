@@ -9,6 +9,7 @@ import {
     Home,
     ChevronDown
 } from 'lucide-react';
+import { QuickStockPanel } from './QuickStockPanel';
 
 export const UserMenu: React.FC = () => {
     const { user, isAdmin, signOut } = useAuth();
@@ -129,6 +130,9 @@ export const UserMenu: React.FC = () => {
                             </Link>
                         ))}
                     </div>
+
+                    {/* Admin Quick Stock Section */}
+                    {isAdmin && <QuickStockPanel />}
 
                     {/* Sign Out */}
                     <div className="border-t border-white/5 p-2">

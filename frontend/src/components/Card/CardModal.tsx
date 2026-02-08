@@ -36,6 +36,7 @@ interface Version {
     rarity: string;
     price: number;
     image_url: string;
+    stock?: number;
 }
 
 interface CardDetails {
@@ -60,6 +61,7 @@ interface CardDetails {
     };
     legalities: Record<string, string>;
     colors: string[];
+    total_stock: number;
     card_faces?: CardFace[];
     all_versions?: Version[];
 }
@@ -141,6 +143,23 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
         }
     };
 
+    const handleVersionAddToCart = async (v: any) => {
+        if (!user) {
+            if (onRequireAuth) onRequireAuth();
+            else alert("Please login to add items to cart.");
+            return;
+        }
+
+        try {
+            await addToCart(v.printing_id, 1);
+            if (onAddToCartSuccess) {
+                onAddToCartSuccess();
+            }
+        } catch (err) {
+            console.error("Cart error", err);
+        }
+    };
+
     if (!isOpen) return null;
 
     const handleBackdropClick = (e: React.MouseEvent) => {
@@ -170,7 +189,10 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
             className="fixed inset-0 z-[200] flex items-center justify-center bg-black/95 backdrop-blur-xl p-0 md:p-6 animate-in fade-in zoom-in-95 duration-300 overflow-y-auto md:overflow-hidden"
             onClick={handleBackdropClick}
         >
-            <div className="relative w-full max-w-6xl min-h-full md:min-h-0 md:h-[95vh] md:max-h-[95vh] glass-panel md:rounded-[32px] border-x-0 md:border border-white/10 shadow-[0_0_100px_rgba(0,163,255,0.15)] flex flex-col md:flex-row md:overflow-hidden">
+            <div
+                data-testid="card-modal"
+                className="relative w-full max-w-6xl min-h-full md:min-h-0 md:h-[95vh] md:max-h-[95vh] glass-panel md:rounded-[32px] border-x-0 md:border border-white/10 shadow-[0_0_100px_rgba(0,163,255,0.15)] flex flex-col md:flex-row md:overflow-hidden"
+            >
 
                 {/* Close Button */}
                 <button onClick={onClose} className="absolute top-6 right-6 z-50 p-2 hover:bg-white/10 rounded-full transition-colors text-neutral-400">
@@ -212,8 +234,8 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                     {/* VERSIONS LIST */}
                     <div className="h-auto max-h-[180px] md:h-[240px] md:max-h-none border-t border-white/5 bg-[#080808] flex flex-col shrink-0">
                         <div className="px-6 py-3 flex items-center justify-between border-b border-white/5 bg-[#0a0a0a]/50">
-                            <h3 className="text-[10px] font-black uppercase tracking-widest text-neutral-500">Edition / Printings</h3>
-                            <span className="text-[10px] text-neutral-600 font-bold">{details?.all_versions?.length || 0} Versions</span>
+                            <h3 className="text-[10px] font-black uppercase tracking-widest text-neutral-500">Edición / Impresiones</h3>
+                            <span className="text-[10px] text-neutral-600 font-bold">{details?.all_versions?.length || 0} Versiones</span>
                         </div>
                         <div className="flex-1 overflow-x-auto md:overflow-y-auto md:overflow-x-hidden custom-scrollbar relative flex md:block whitespace-nowrap md:whitespace-normal p-2 md:p-0">
                             {loading ? (
@@ -230,7 +252,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                             ) : details?.all_versions?.map((v) => (
                                 <a
                                     key={v.printing_id}
-                                    href={`/TCG/card/${v.printing_id}`}
+                                    href={`card/${v.printing_id}`}
                                     onClick={(e) => {
                                         if (!e.ctrlKey && !e.metaKey) {
                                             e.preventDefault();
@@ -248,9 +270,25 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                         </div>
                                         <div className="text-[9px] md:text-[10px] text-neutral-600 font-bold">#{v.collector_number} • {v.rarity}</div>
                                     </div>
-                                    <div className="text-[10px] md:text-xs font-mono font-bold text-neutral-400 group-hover:text-white transition-colors">
-                                        {v.price && v.price > 0 ? `$${v.price.toFixed(2)}` : '---'}
+                                    <div className="text-right shrink-0">
+                                        <div className="text-[10px] md:text-xs font-mono font-bold text-neutral-400 group-hover:text-white transition-colors">
+                                            {v.price && v.price > 0 ? `$${v.price.toFixed(2)}` : '---'}
+                                        </div>
+                                        <div className="text-[8px] font-black text-geeko-cyan uppercase tracking-tighter">
+                                            Stock: {v.stock || 0}
+                                        </div>
                                     </div>
+                                    <button
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            handleVersionAddToCart(v);
+                                        }}
+                                        aria-label={`Add ${v.set_name} version to cart`}
+                                        className="p-1.5 md:p-2 rounded-lg bg-white/5 hover:bg-geeko-cyan text-neutral-400 hover:text-black transition-all opacity-0 group-hover:opacity-100 shrink-0"
+                                    >
+                                        <ShoppingCart size={14} />
+                                    </button>
                                 </a>
                             ))}
                             <div className="sticky bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-[#080808] to-transparent pointer-events-none hidden md:block" />
@@ -313,9 +351,15 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                             </div>
 
                             <div className="space-y-5 pt-2">
-                                {/* Format Legality - Full Width */}
-                                <div className="space-y-3">
-                                    <h3 className="text-xs font-extrabold uppercase tracking-widest text-neutral-500">Format Legality</h3>
+                                <div className="space-y-4 pt-2">
+                                    <h3 className="text-xs font-extrabold uppercase tracking-widest text-neutral-500 flex items-center justify-between">
+                                        Legalidad de Formato
+                                        {details.total_stock > 0 && (
+                                            <span className="text-[10px] text-geeko-cyan bg-geeko-cyan/10 px-3 py-1 rounded-full border border-geeko-cyan/20">
+                                                Existencia Total: {details.total_stock}
+                                            </span>
+                                        )}
+                                    </h3>
                                     <div className="grid grid-cols-2 xs:grid-cols-3 md:grid-cols-6 gap-2">
                                         {relevantFormats.map(fmt => {
                                             const isLegal = details.legalities?.[fmt] === 'legal';
@@ -340,7 +384,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                     <div className="p-4 md:p-5 rounded-2xl bg-gradient-to-br from-geeko-cyan/10 via-transparent to-transparent border border-white/10 group relative overflow-hidden flex flex-col justify-between gap-4">
                                         <div className="absolute top-0 right-0 w-32 h-32 bg-geeko-cyan/5 rounded-full blur-[40px]" />
                                         <div className="space-y-1 relative z-10">
-                                            <div className="text-[10px] font-black uppercase text-geeko-cyan tracking-widest">Geekorium Price</div>
+                                            <div className="text-[10px] font-black uppercase text-geeko-cyan tracking-widest">Precio Geekorium</div>
                                             <div className="text-3xl md:text-4xl font-black text-white tracking-tighter leading-none">
                                                 {details?.price && details.price > 0 ? `$${details.price.toFixed(2)}` : (details?.valuation?.market_price && details.valuation.market_price > 0 ? `$${details.valuation.market_price.toFixed(2)}` : '---')}
                                             </div>
@@ -348,10 +392,11 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                         <button
                                             onClick={handleAddToCart}
                                             disabled={isAdding}
+                                            data-testid="add-to-cart-button"
                                             className="w-full h-12 rounded-xl bg-geeko-cyan text-black font-black text-xs uppercase tracking-widest flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_40px_rgba(0,229,255,0.6)] hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 shrink-0 relative z-10"
                                         >
                                             {isAdding ? <Loader2 size={16} className="animate-spin" /> : <ShoppingCart size={16} fill="currentColor" />}
-                                            {isAdding ? 'Adding...' : 'Add to Cart'}
+                                            {isAdding ? 'Agregando...' : 'Agregar al Carrito'}
                                         </button>
                                     </div>
 
@@ -364,12 +409,12 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                     >
                                         <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity" />
                                         <div className="space-y-1 relative z-10">
-                                            <span className="text-[10px] font-black uppercase text-neutral-500 tracking-widest group-hover:text-geeko-cyan transition-colors">External Market</span>
-                                            <div className="text-base font-bold leading-tight">Buy @ CardKingdom</div>
+                                            <span className="text-[10px] font-black uppercase text-neutral-500 tracking-widest group-hover:text-geeko-cyan transition-colors">Mercado Externo</span>
+                                            <div className="text-base font-bold leading-tight">Comprar @ CardKingdom</div>
                                         </div>
                                         <div className="flex items-center justify-between gap-3 w-full relative z-10">
                                             <span className="text-xl md:text-2xl font-mono font-black text-white group-hover:text-geeko-cyan transition-colors">
-                                                {details.valuation?.market_price && details.valuation.market_price > 0 ? `$${details.valuation.market_price.toFixed(2)}` : 'Check Site'}
+                                                {details.valuation?.market_price && details.valuation.market_price > 0 ? `$${details.valuation.market_price.toFixed(2)}` : 'Ver en Sitio'}
                                             </span>
                                             <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-geeko-cyan group-hover:text-black transition-all">
                                                 <ExternalLink size={18} />

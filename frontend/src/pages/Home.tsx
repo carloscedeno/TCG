@@ -11,7 +11,7 @@ import { AuthModal } from '../components/Auth/AuthModal';
 import { UserMenu } from '../components/Navigation/UserMenu';
 
 import { LogIn, X, ShoppingCart } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { CartDrawer } from '../components/Navigation/CartDrawer';
 
 const mockFilters: Filters = {
@@ -24,20 +24,28 @@ const mockFilters: Filters = {
 };
 
 const Home: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [cards, setCards] = useState<(CardProps & { card_id: string })[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [query, setQuery] = useState('');
-  const [filters, setFilters] = useState<Partial<Filters>>({});
+  const [query, setQuery] = useState(searchParams.get('q') || '');
+  const [filters, setFilters] = useState<Partial<Filters>>({
+    games: searchParams.get('game')?.split(',').map(g => {
+      if (g === 'MTG') return 'Magic: The Gathering';
+      return g;
+    }).filter(Boolean) || ['Magic: The Gathering'],
+    sets: searchParams.get('set')?.split(',').filter(Boolean) || [],
+    rarities: searchParams.get('rarity')?.split(',').filter(Boolean) || []
+  });
   const [sets, setSets] = useState<string[]>([]);
-  const [sortBy, setSortBy] = useState('release_date');
-  const [activeRarity, setActiveRarity] = useState('All');
+  const [sortBy, setSortBy] = useState(searchParams.get('sort') || 'release_date');
+  const [activeRarity, setActiveRarity] = useState(searchParams.get('rarity') || 'All');
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(0);
   const { user } = useAuth();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
-  const [debouncedQuery, setDebouncedQuery] = useState('');
+  const [debouncedQuery, setDebouncedQuery] = useState(searchParams.get('q') || '');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [activeTab, setActiveTab] = useState<'marketplace' | 'reference'>('reference');
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -64,13 +72,20 @@ const Home: React.FC = () => {
         let result: { cards: (CardProps & { card_id: string })[], total_count: number };
 
         if (activeTab === 'marketplace') {
+          // Normalize game names for RPC mapping
+          const mappedGame = filters.games?.[0] ? (
+            filters.games[0] === 'Magic: The Gathering' ? 'MTG' :
+              filters.games[0] === 'Pokémon' ? 'PKM' :
+                filters.games[0]
+          ) : undefined;
+
           const productRes = await fetchProducts({
             q: debouncedQuery || undefined,
-            game: filters.games && filters.games.length > 0 ? filters.games.join(',') : undefined,
+            game: mappedGame,
             set: filters.sets && filters.sets.length > 0 ? filters.sets.join(',') : undefined,
             rarity: activeRarity !== 'All' ? activeRarity : (filters.rarities && filters.rarities.length > 0 ? filters.rarities.join(',') : undefined),
-            color: filters.colors && filters.colors.length > 0 ? filters.colors.join(',') : undefined,
-            type: filters.types && filters.types.length > 0 ? filters.types.join(',') : undefined,
+            color: filters.colors && filters.colors.length > 0 ? filters.colors : undefined,
+            type: filters.types && filters.types.length > 0 ? filters.types : undefined,
             limit: LIMIT,
             offset,
             sort: sortBy === 'price' ? 'price_desc' : sortBy
@@ -131,6 +146,23 @@ const Home: React.FC = () => {
     };
 
     fetchData();
+
+    // Update URL Search Params
+    const newParams = new URLSearchParams();
+    if (debouncedQuery) newParams.set('q', debouncedQuery);
+    if (filters.games && filters.games.length > 0) {
+      newParams.set('game', filters.games.map(g => {
+        if (g === 'Magic: The Gathering') return 'MTG';
+        return g;
+      }).join(','));
+    }
+    if (filters.sets && filters.sets.length > 0) newParams.set('set', filters.sets.join(','));
+    if (activeRarity !== 'All') newParams.set('rarity', activeRarity);
+    else if (filters.rarities && filters.rarities.length > 0) newParams.set('rarity', filters.rarities.join(','));
+    if (sortBy !== 'release_date') newParams.set('sort', sortBy);
+    if (activeTab !== 'reference') newParams.set('tab', activeTab);
+
+    setSearchParams(newParams, { replace: true });
   }, [debouncedQuery, filters, activeRarity, sortBy, page, activeTab]);
 
   useEffect(() => {
@@ -166,6 +198,7 @@ const Home: React.FC = () => {
   const handleTabChange = (tab: 'marketplace' | 'reference') => {
     setActiveTab(tab);
     setPage(0);
+    setCards([]); // Clear cards to avoid showing stale data during tab switch
   };
 
   const handleSortChange = (sort: string) => {
@@ -188,24 +221,19 @@ const Home: React.FC = () => {
 
         {/* Header */}
         <header className="h-[70px] bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-white/5 sticky top-0 z-50 shadow-2xl flex items-center">
-          <nav className="max-w-[1600px] mx-auto px-6 py-3 flex items-center justify-between">
+          <nav className="max-w-[1600px] w-full mx-auto px-6 py-3 flex items-center justify-between">
             <div className="flex items-center gap-8">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center font-black text-xl italic shadow-lg shadow-blue-600/20">T</div>
-                <h1 className="text-xl font-black tracking-tighter text-white">TCG HUB</h1>
-              </div>
-              <div className="hidden lg:flex items-center gap-6 text-[13px] font-medium text-neutral-400">
-                <a href="#" className="hover:text-white transition-colors">Home</a>
-                <Link to="/tournaments" className="hover:text-white transition-colors">Tournaments</Link>
-                <Link to="/profile" className="hover:text-white transition-colors">My Profile</Link>
-              </div>
+              <Link to="/" className="flex items-center gap-4 group">
+                <div className="w-10 h-10 bg-geeko-cyan rounded-xl flex items-center justify-center font-black text-xl italic shadow-lg shadow-geeko-cyan/20 group-hover:scale-110 transition-transform text-black">G</div>
+                <h1 className="text-xl font-black tracking-tighter text-white uppercase italic">Geekorium <span className="text-geeko-cyan">singles</span></h1>
+              </Link>
             </div>
             <div className="flex-1 max-w-xl mx-8 hidden lg:block">
-              <SearchBar value={query} onChange={setQuery} placeholder="Search by card name or set..." />
+              <SearchBar value={query} onChange={setQuery} placeholder="Buscar por nombre de carta o edición..." />
             </div>
             <div className="flex items-center gap-4">
-              <div className="lg:hidden">
-                <SearchBar value={query} onChange={setQuery} />
+              <div className="lg:hidden text-black">
+                <SearchBar value={query} onChange={setQuery} placeholder="Buscar..." />
               </div>
 
               {/* Cart Button - Always Visible */}
@@ -214,6 +242,7 @@ const Home: React.FC = () => {
                   if (user) setIsCartOpen(true);
                   else setIsAuthModalOpen(true);
                 }}
+                data-testid="cart-button"
                 className="relative p-2.5 bg-neutral-900 border border-white/5 rounded-xl hover:bg-neutral-800 transition-all text-neutral-400 hover:text-geeko-cyan group"
               >
                 <ShoppingCart size={20} />
@@ -227,9 +256,9 @@ const Home: React.FC = () => {
               ) : (
                 <button
                   onClick={() => setIsAuthModalOpen(true)}
-                  className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-5 rounded-full shadow-lg shadow-blue-600/20 transition-all transform active:scale-95 flex items-center gap-2 text-xs"
+                  className="bg-geeko-cyan hover:bg-geeko-cyan/80 text-black font-black py-2 px-5 rounded-full shadow-lg shadow-geeko-cyan/20 transition-all transform active:scale-95 flex items-center gap-2 text-xs uppercase tracking-widest"
                 >
-                  <LogIn size={14} /> <span className="hidden sm:inline">Iniciar Sesión</span>
+                  <LogIn size={14} /> <span className="hidden sm:inline">Conectarse</span>
                 </button>
               )}
             </div>
@@ -245,21 +274,23 @@ const Home: React.FC = () => {
               <div className="flex bg-neutral-900/50 p-1 rounded-full border border-neutral-800">
                 <button
                   onClick={() => handleTabChange('marketplace')}
-                  className={`px-6 py-2 rounded-full text-[11px] font-black tracking-widest uppercase transition-all ${activeTab === 'marketplace'
-                    ? 'bg-geeko-cyan text-black shadow-lg shadow-geeko-cyan/20'
+                  data-testid="inventory-tab"
+                  className={`px-6 py-2 rounded-full text-[11px] font-black tracking-widest uppercase transition-all ring-2 ring-geeko-cyan/30 ${activeTab === 'marketplace'
+                    ? 'bg-geeko-cyan text-black shadow-[0_0_15px_rgba(0,229,255,0.4)]'
                     : 'text-neutral-500 hover:text-neutral-300'
                     }`}
                 >
-                  Inventory
+                  Stok Geekorium
                 </button>
                 <button
                   onClick={() => handleTabChange('reference')}
+                  data-testid="archives-tab"
                   className={`px-6 py-2 rounded-full text-[11px] font-black tracking-widest uppercase transition-all ${activeTab === 'reference'
-                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20'
+                    ? 'bg-neutral-700 text-white shadow-lg'
                     : 'text-neutral-500 hover:text-neutral-300'
                     }`}
                 >
-                  Archives
+                  Archivo
                 </button>
               </div>
 
@@ -293,20 +324,20 @@ const Home: React.FC = () => {
               </button>
 
               <div className="flex items-center gap-3">
-                <span className="text-[11px] font-black uppercase tracking-tighter text-neutral-500 hidden sm:inline">Order By:</span>
+                <span className="text-[11px] font-black uppercase tracking-tighter text-neutral-500 hidden sm:inline">Ordenar por:</span>
                 <select
                   value={sortBy}
                   onChange={(e) => handleSortChange(e.target.value)}
                   className="bg-neutral-900/50 text-white text-[11px] font-black uppercase px-4 md:px-6 py-2 rounded-full border border-neutral-800 focus:outline-none focus:border-blue-500/50 transition-all cursor-pointer hover:bg-neutral-800"
                 >
-                  <option value="release_date">Newest</option>
-                  <option value="name">Name (A-Z)</option>
-                  <option value="price_asc">Price: Low to High</option>
-                  <option value="price_desc">Price: High to Low</option>
+                  <option value="release_date">Más Recientes</option>
+                  <option value="name">Nombre (A-Z)</option>
+                  <option value="price_asc">Precio: Bajo a Alto</option>
+                  <option value="price_desc">Precio: Alto a Bajo</option>
                   {activeTab !== 'marketplace' && (
                     <>
-                      <option value="mana_asc">Mana: Low to High</option>
-                      <option value="mana_desc">Mana: High to Low</option>
+                      <option value="mana_asc">Mana: Bajo a Alto</option>
+                      <option value="mana_desc">Mana: Alto a Bajo</option>
                     </>
                   )}
                 </select>
@@ -444,15 +475,15 @@ const Home: React.FC = () => {
         <footer className="border-t border-neutral-800 bg-[#121212] py-20 mt-20">
           <div className="max-w-[1600px] mx-auto px-6 grid grid-cols-1 md:grid-cols-3 items-center gap-12 text-center md:text-left">
             <div className="flex items-center gap-3 justify-center md:justify-start">
-              <div className="w-8 h-8 bg-neutral-800 rounded-lg flex items-center justify-center font-bold text-sm italic">T</div>
-              <span className="text-lg font-black tracking-tighter uppercase italic">TCG HUB</span>
+              <div className="w-8 h-8 bg-geeko-cyan rounded-lg flex items-center justify-center font-bold text-sm italic text-black shadow-lg shadow-geeko-cyan/20">G</div>
+              <span className="text-lg font-black tracking-tighter uppercase italic">Geekorium <span className="text-geeko-cyan">singles</span></span>
             </div>
             <div className="text-neutral-500 text-xs font-medium text-center">
-              © 2026 TCG Price Tracker. Advanced Data Analytics Platform.
+              © 2026 Geekorium singles. Plataforma Avanzada de TCG.
             </div>
             <div className="flex gap-8 text-neutral-500 text-xs font-bold uppercase tracking-widest justify-center md:justify-end">
-              <a href="#" className="hover:text-blue-500 transition-colors">Privacy</a>
-              <a href="#" className="hover:text-blue-500 transition-colors">API docs</a>
+              <a href="#" className="hover:text-geeko-cyan transition-colors">Privacidad</a>
+              <a href="#" className="hover:text-geeko-cyan transition-colors">Términos</a>
             </div>
           </div>
         </footer>

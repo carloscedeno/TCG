@@ -621,24 +621,33 @@ async function handleCartEndpoint(supabase: any, path: string, method: string, p
   }
 
   if (method === 'POST' && path.endsWith('/checkout')) {
+    const { shipping_address } = params
+
+    // Get cart items
     const { data: cart } = await supabase.from('carts').select('id').eq('user_id', user.id).single()
     if (!cart) throw new Error('No cart found')
 
-    const { data: items } = await supabase.from('cart_items').select('*, products(*)').eq('cart_id', cart.id)
-    if (!items?.length) throw new Error('Cart is empty')
+    const { data: cartItems } = await supabase.from('cart_items').select('*, products(*)').eq('cart_id', cart.id)
+    if (!cartItems?.length) throw new Error('Cart is empty')
 
-    const total = items.reduce((sum: number, i: any) => sum + ((i.products?.price || 0) * i.quantity), 0)
+    const total = cartItems.reduce((sum: number, i: any) => sum + ((i.products?.price || 0) * i.quantity), 0)
 
-    const { data: order } = await supabase.from('orders').insert({
-      user_id: user.id,
-      total_amount: total,
-      status: 'completed'
-    }).select().single()
+    const simplifiedItems = cartItems.map((item: any) => ({
+      product_id: item.product_id,
+      quantity: item.quantity,
+      price: item.products?.price || 0
+    }))
 
-    // Clear cart
-    await supabase.from('cart_items').delete().eq('cart_id', cart.id)
+    // Use the atomic RPC for consistent logic
+    const { data, error } = await supabase.rpc('create_order_atomic', {
+      p_user_id: user.id,
+      p_items: simplifiedItems,
+      p_shipping_address: shipping_address || {},
+      p_total_amount: total
+    })
 
-    return { success: true, order_id: order.id, total }
+    if (error) throw error
+    return data
   }
 
   throw new Error('Method not allowed')

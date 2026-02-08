@@ -235,7 +235,7 @@ export const CardDetail: React.FC = () => {
                         <div className="flex-1 overflow-y-auto custom-scrollbar bg-[#050505] p-10 lg:p-16 space-y-12">
                             <div className="space-y-6">
                                 <a
-                                    href={`/TCG/card/${activePrintingId}`}
+                                    href={`card/${activePrintingId}`}
                                     onClick={(e) => {
                                         if (!e.ctrlKey && !e.metaKey) e.preventDefault();
                                     }}
