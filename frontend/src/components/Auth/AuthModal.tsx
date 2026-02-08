@@ -144,7 +144,7 @@ export const AuthModal = ({ isOpen, onClose, initialMode = 'login' }: {
                                         onChange={(e) => setPassword(e.target.value)}
                                         className="w-full bg-slate-800/50 border border-slate-700 rounded-xl py-3 pl-11 pr-4 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all"
                                         placeholder="••••••••"
-                                        required={mode !== 'forgot-password'}
+                                        required
                                     />
                                 </div>
                             </div>
