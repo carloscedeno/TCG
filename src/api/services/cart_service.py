@@ -21,20 +21,28 @@ class CartService:
         """Adds or updates an item in the cart."""
         cart_id = await CartService.get_or_create_cart(user_id)
         
-        # Check stock first
-        prod = supabase.table('products').select('stock').eq('id', product_id).single().execute()
-        if not prod.data or prod.data['stock'] < quantity:
+        # Check stock first (try by id or printing_id)
+        res = supabase.table('products').select('*').eq('id', product_id).execute()
+        if not res.data:
+            res = supabase.table('products').select('*').eq('printing_id', product_id).execute()
+            
+        if not res.data:
+            raise HTTPException(status_code=400, detail="Product not found in inventory")
+        
+        prod = res.data[0]
+        if prod['stock'] < quantity:
             raise HTTPException(status_code=400, detail="Insufficient stock")
 
         try:
-            # Upsert into cart_items
-            res = supabase.table('cart_items').upsert({
+            # Upsert into cart_items using the actual internal product UUID
+            actual_product_id = prod['id']
+            res_item = supabase.table('cart_items').upsert({
                 'cart_id': cart_id,
-                'product_id': product_id,
+                'product_id': actual_product_id,
                 'quantity': quantity
             }, on_conflict='cart_id,product_id').execute()
             
-            return {"success": True, "item": res.data[0]}
+            return {"success": True, "item": res_item.data[0]}
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 

@@ -15,7 +15,7 @@ async def get_current_user(authorization: str = Header(None)):
         user_resp = supabase.auth.get_user(authorization.replace("Bearer ", ""))
         return user_resp.user.id
     except:
-        return "demo-user-id"
+        return "00000000-0000-0000-0000-000000000000"
 
 @router.get("/")
 async def get_collection(user_id: str = Depends(get_current_user)):

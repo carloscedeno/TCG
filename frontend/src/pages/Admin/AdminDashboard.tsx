@@ -377,7 +377,7 @@ export const AdminDashboard = () => {
 
                 <div className="mt-12 flex justify-center">
                     <button
-                        onClick={() => window.location.href = '/'}
+                        onClick={() => window.location.href = './'}
                         className="text-slate-500 hover:text-geeko-cyan transition-all text-xs font-black uppercase tracking-[0.3em] flex items-center gap-3 group"
                     >
                         <span className="group-hover:-translate-x-1 transition-transform">←</span> Return to Deck

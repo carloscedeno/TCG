@@ -45,8 +45,8 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
     <aside className="w-full glass-panel border border-white/5 p-8 rounded-[32px] shadow-2xl space-y-10">
       <div className="flex items-center justify-between mb-2">
         <h2 className="text-lg font-black italic tracking-tighter text-white flex items-center gap-2">
-          <Sliders size={18} className="text-blue-500" />
-          FILTERS
+          <Sliders size={18} className="text-geeko-cyan" />
+          FILTROS
         </h2>
         {hasActiveFilters && (
           <button
@@ -54,7 +54,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
             className="text-[10px] font-bold uppercase tracking-widest text-neutral-500 hover:text-red-400 transition-colors flex items-center gap-1 group"
           >
             <X size={10} className="group-hover:rotate-90 transition-transform" />
-            Reset
+            Reiniciar
           </button>
         )}
       </div>
@@ -62,8 +62,8 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
       {/* Juegos */}
       <section>
         <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
-          <div className="w-1.5 h-1.5 bg-blue-500 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.8)]"></div>
-          Game Universe
+          <div className="w-1.5 h-1.5 bg-geeko-cyan rounded-full shadow-[0_0_10px_rgba(0,229,255,0.8)]"></div>
+          Universo de Juegos
         </h3>
         <div className="flex flex-wrap gap-2">
           {filters.games.map(game => {
@@ -72,6 +72,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
               <button
                 key={game}
                 onClick={() => handleCheckbox('games', game)}
+                data-active={isSelected}
                 className={`px-4 py-2 rounded-xl text-[11px] font-bold transition-all border ${isSelected
                   ? 'bg-blue-600/10 border-blue-500/50 text-blue-400 shadow-lg shadow-blue-500/10'
                   : 'bg-neutral-900/50 border-neutral-800 text-neutral-500 hover:border-neutral-700 hover:text-neutral-300'
@@ -88,13 +89,13 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
       <section>
         <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
           <div className="w-1.5 h-1.5 bg-purple-500 rounded-full shadow-[0_0_10px_rgba(168,85,247,0.8)]"></div>
-          Expansion / Set
+          Expansión / Set
         </h3>
         <div className="relative mb-3">
           <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-600" />
           <input
             type="text"
-            placeholder="Search sets..."
+            placeholder="Buscar sets..."
             value={setSearch}
             onChange={(e) => setSetSearch(e.target.value)}
             className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2.5 pl-9 pr-4 text-xs text-white placeholder:text-neutral-600 focus:outline-none focus:border-purple-500/50 transition-all font-medium"
@@ -125,7 +126,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
       <section>
         <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
           <div className="w-1.5 h-1.5 bg-geeko-gold rounded-full shadow-[0_0_10px_rgba(255,215,0,0.8)]"></div>
-          Power Rarity
+          Rareza
         </h3>
         <div className="grid grid-cols-2 gap-2">
           {filters.rarities.map(rarity => {
@@ -151,7 +152,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
       <section>
         <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
           <div className="w-1.5 h-1.5 bg-cyan-500 rounded-full shadow-[0_0_10px_rgba(0,229,255,0.8)]"></div>
-          Mana Essence
+          Esencia de Mana (Colores)
         </h3>
         <div className="grid grid-cols-4 gap-2">
           {filters.colors.map(color => {
@@ -192,12 +193,12 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
       <section>
         <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
           <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.8)]"></div>
-          Temporal Orbit (Year)
+          Órbita Temporal (Año)
         </h3>
         <div className="flex items-center gap-3">
           <input
             type="number"
-            placeholder="From"
+            placeholder="Desde"
             value={selected.yearRange?.[0] || ''}
             onChange={(e) => onChange({ ...selected, yearRange: [parseInt(e.target.value) || 1993, selected.yearRange?.[1] || 2026] })}
             className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-emerald-500/50 transition-all"
@@ -205,21 +206,21 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
           <span className="text-neutral-700 font-bold">→</span>
           <input
             type="number"
-            placeholder="To"
+            placeholder="Hasta"
             value={selected.yearRange?.[1] || ''}
             onChange={(e) => onChange({ ...selected, yearRange: [selected.yearRange?.[0] || 1993, parseInt(e.target.value) || 2026] })}
             className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-emerald-500/50 transition-all"
           />
         </div>
         <div className="mt-3 flex justify-between text-[8px] font-black tracking-widest text-neutral-600 uppercase">
-          <span>Origins (1993)</span>
-          <span>Present (2026)</span>
+          <span>Orígenes (1993)</span>
+          <span>Presente (2026)</span>
         </div>
       </section>
       <section>
         <h3 className="text-[11px] font-black uppercase tracking-widest text-neutral-600 mb-4 flex items-center gap-2">
           <div className="w-1 h-3 bg-red-600 rounded-full"></div>
-          Card Essence (Type)
+          Esencia de Carta (Tipo)
         </h3>
         <div className="flex flex-wrap gap-2">
           {['Creature', 'Instant', 'Sorcery', 'Enchantment', 'Artifact', 'Planeswalker', 'Land'].map(type => {
@@ -244,11 +245,11 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
         <div className="bg-geeko-cyan/5 rounded-2xl p-5 border border-geeko-cyan/20 relative overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
           <p className="text-[10px] font-medium text-neutral-400 mb-3 leading-relaxed relative z-10">
-            Real-time synchronization active via <span className="text-geeko-cyan">Neural Link</span> with global TCG market hubs.
+            Sincronización en tiempo real activa vía <span className="text-geeko-cyan">Neural Link</span> con mercados globales.
           </p>
           <div className="flex items-center gap-2 text-[10px] font-black text-geeko-cyan uppercase tracking-widest relative z-10">
             <Filter size={12} className="animate-pulse" />
-            Quantum Sync: ON
+            Sincro Cuántica: ON
           </div>
         </div>
       </div>
