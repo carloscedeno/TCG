@@ -96,9 +96,10 @@ const Home: React.FC = () => {
               card_id: p.printing_id || p.id,
               name: p.name,
               set: p.set_code || 'Unknown',
-              price: p.price || 0,
+              price: Number(p.price) || 0,
               image_url: p.image_url,
               rarity: p.rarity,
+              total_stock: Number(p.stock) || 0,
             })),
             total_count: productRes.total_count
           };
@@ -201,10 +202,7 @@ const Home: React.FC = () => {
     setCards([]); // Clear cards to avoid showing stale data during tab switch
   };
 
-  const handleSortChange = (sort: string) => {
-    setSortBy(sort);
-    setPage(0);
-  };
+
 
   return (
     <div className="min-h-screen bg-[#050505] text-white font-sans relative selection:bg-cyan-500/30">
@@ -224,8 +222,10 @@ const Home: React.FC = () => {
           <nav className="max-w-[1600px] w-full mx-auto px-6 py-3 flex items-center justify-between">
             <div className="flex items-center gap-8">
               <Link to="/" className="flex items-center gap-4 group">
-                <div className="w-10 h-10 bg-geeko-cyan rounded-xl flex items-center justify-center font-black text-xl italic shadow-lg shadow-geeko-cyan/20 group-hover:scale-110 transition-transform text-black">G</div>
-                <h1 className="text-xl font-black tracking-tighter text-white uppercase italic">Geekorium <span className="text-geeko-cyan">singles</span></h1>
+                <div className="flex items-center justify-center font-black text-xl italic text-white group-hover:scale-110 transition-transform">
+                  <span className="text-geeko-cyan">El</span>&nbsp;Emporio
+                </div>
+                <h1 className="hidden">El Emporio</h1>
               </Link>
             </div>
             <div className="flex-1 max-w-xl mx-8 hidden lg:block">
@@ -323,24 +323,28 @@ const Home: React.FC = () => {
                 <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Filters</span>
               </button>
 
-              <div className="flex items-center gap-3">
-                <span className="text-[11px] font-black uppercase tracking-tighter text-neutral-500 hidden sm:inline">Ordenar por:</span>
-                <select
-                  value={sortBy}
-                  onChange={(e) => handleSortChange(e.target.value)}
-                  className="bg-neutral-900/50 text-white text-[11px] font-black uppercase px-4 md:px-6 py-2 rounded-full border border-neutral-800 focus:outline-none focus:border-blue-500/50 transition-all cursor-pointer hover:bg-neutral-800"
-                >
-                  <option value="release_date">Más Recientes</option>
-                  <option value="name">Nombre (A-Z)</option>
-                  <option value="price_asc">Precio: Bajo a Alto</option>
-                  <option value="price_desc">Precio: Alto a Bajo</option>
-                  {activeTab !== 'marketplace' && (
-                    <>
-                      <option value="mana_asc">Mana: Bajo a Alto</option>
-                      <option value="mana_desc">Mana: Alto a Bajo</option>
-                    </>
-                  )}
-                </select>
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] font-black uppercase tracking-tighter text-neutral-500 hidden sm:inline">Ordenar:</span>
+                <div className="flex bg-neutral-900/50 p-1 rounded-full border border-neutral-800">
+                  <button
+                    onClick={() => setSortBy(sortBy === 'name' ? 'name_desc' : 'name')}
+                    className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase transition-all ${sortBy.includes('name') ? 'bg-neutral-700 text-white' : 'text-neutral-500 hover:text-neutral-300'}`}
+                  >
+                    Nombre {sortBy === 'name' ? '↓' : (sortBy === 'name_desc' ? '↑' : '⇅')}
+                  </button>
+                  <button
+                    onClick={() => setSortBy(sortBy === 'price_asc' ? 'price_desc' : 'price_asc')}
+                    className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase transition-all ${sortBy.includes('price') ? 'bg-neutral-700 text-white' : 'text-neutral-500 hover:text-neutral-300'}`}
+                  >
+                    Precio {sortBy === 'price_asc' ? '↑' : (sortBy === 'price_desc' ? '↓' : '⇅')}
+                  </button>
+                  <button
+                    onClick={() => setSortBy(sortBy === 'release_date' ? 'release_date_asc' : 'release_date')}
+                    className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase transition-all ${sortBy.includes('release_date') ? 'bg-neutral-700 text-white' : 'text-neutral-500 hover:text-neutral-300'}`}
+                  >
+                    Fecha {sortBy === 'release_date' ? '↓' : (sortBy === 'release_date_asc' ? '↑' : '⇅')}
+                  </button>
+                </div>
               </div>
 
               <div className="flex bg-neutral-900/50 p-1 rounded-lg border border-neutral-800">
@@ -474,16 +478,28 @@ const Home: React.FC = () => {
         {/* Footer */}
         <footer className="border-t border-neutral-800 bg-[#121212] py-20 mt-20">
           <div className="max-w-[1600px] mx-auto px-6 grid grid-cols-1 md:grid-cols-3 items-center gap-12 text-center md:text-left">
-            <div className="flex items-center gap-3 justify-center md:justify-start">
-              <div className="w-8 h-8 bg-geeko-cyan rounded-lg flex items-center justify-center font-bold text-sm italic text-black shadow-lg shadow-geeko-cyan/20">G</div>
-              <span className="text-lg font-black tracking-tighter uppercase italic">Geekorium <span className="text-geeko-cyan">singles</span></span>
+            <div className="flex flex-col gap-4 justify-center md:justify-start">
+              <div className="flex items-center gap-3 justify-center md:justify-start">
+                <span className="text-xl font-black tracking-tighter uppercase italic"><span className="text-geeko-cyan">El</span> Emporio</span>
+              </div>
+              <div className="flex flex-col gap-2 text-xs font-medium text-neutral-400">
+                <a href="https://wa.me/584128042832" target="_blank" rel="noopener noreferrer" className="hover:text-geeko-cyan transition-colors">WhatsApp Principal: +58 412-8042832</a>
+                <a href="https://wa.me/584242507802" target="_blank" rel="noopener noreferrer" className="hover:text-geeko-cyan transition-colors">WhatsApp Singles: +58 424-2507802</a>
+              </div>
+              <div className="flex gap-4 justify-center md:justify-start mt-2">
+                {/* Social Placeholders */}
+                <span className="w-8 h-8 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-500 hover:bg-geeko-cyan hover:text-black transition-all cursor-pointer">IG</span>
+                <span className="w-8 h-8 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-500 hover:bg-geeko-cyan hover:text-black transition-all cursor-pointer">TK</span>
+                <span className="w-8 h-8 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-500 hover:bg-geeko-cyan hover:text-black transition-all cursor-pointer">FB</span>
+              </div>
             </div>
             <div className="text-neutral-500 text-xs font-medium text-center">
-              © 2026 Geekorium singles. Plataforma Avanzada de TCG.
+              © 2026 El Emporio. Plataforma Avanzada de TCG.
             </div>
             <div className="flex gap-8 text-neutral-500 text-xs font-bold uppercase tracking-widest justify-center md:justify-end">
               <a href="#" className="hover:text-geeko-cyan transition-colors">Privacidad</a>
               <a href="#" className="hover:text-geeko-cyan transition-colors">Términos</a>
+              <a href="#" className="hover:text-geeko-cyan transition-colors">Cómo Comprar</a>
             </div>
           </div>
         </footer>

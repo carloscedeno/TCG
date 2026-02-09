@@ -43,17 +43,7 @@ export const UserMenu: React.FC = () => {
     ];
 
     if (!user) {
-        return (
-            <Link
-                to="/profile"
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-geeko-cyan/10 border border-geeko-cyan/30 hover:bg-geeko-cyan/20 transition-all"
-            >
-                <User size={18} className="text-geeko-cyan" />
-                <span className="text-xs font-black uppercase tracking-wider text-geeko-cyan">
-                    Iniciar Sesión
-                </span>
-            </Link>
-        );
+        return null;
     }
 
     const userEmail = user.email || 'Usuario';

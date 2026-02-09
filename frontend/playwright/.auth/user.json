@@ -1,0 +1,25 @@
+{
+  "cookies": [
+    {
+      "name": "__cf_bm",
+      "value": "BNDx9X8RbTXtDkXRA4L2Pi9UcvKjgOk4XeVEze5AO2s-1770566529-1.0.1.1-AVEyJvqYjbS2c_y.Y3Lnh60FiasxPQvUfLZt9sKfoBHD5S1uPTAljGeSqVNy3kFodlfx33M.A9Ymjl.yE5j.VabPAP1KV5RtvMQJyzcWkJc",
+      "domain": "supabase.co",
+      "path": "/",
+      "expires": 1770568329,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "http://localhost:5174",
+      "localStorage": [
+        {
+          "name": "sb-sxuotvogwvmxuvwbsscv-auth-token",
+          "value": "{\"access_token\":\"eyJhbGciOiJFUzI1NiIsImtpZCI6IjQ4MmI5OTU5LTk3MjMtNGU5NS1iODVjLTc3ZWU4NjUzMTgyNiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3N4dW90dm9nd3ZteHV2d2Jzc2N2LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI0ZTJkNWFmYS03NzNjLTRiYjUtOGY0Mi1mYTBlZWViYzU1YTMiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzcwNTcwMTI5LCJpYXQiOjE3NzA1NjY1MjksImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnt9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzcwNTY2NTI5fV0sInNlc3Npb25faWQiOiI1NmFkMGNmNS1kMjkzLTQ5ZWUtYjk2OS0yNDcxZjc3NDQ3ZjEiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.W_uWArO5mUne2cwV-6GWjW0WNErKAwQteBVAjYphHI3_FU0tfGWfRZBnyos31tFk4bWZhJuAQnjsVUAT8o7g0w\",\"token_type\":\"bearer\",\"expires_in\":3600,\"expires_at\":1770570129,\"refresh_token\":\"jlku46offj7i\",\"user\":{\"id\":\"4e2d5afa-773c-4bb5-8f42-fa0eeebc55a3\",\"aud\":\"authenticated\",\"role\":\"authenticated\",\"email\":\"test@example.com\",\"email_confirmed_at\":\"2026-02-07T15:51:11.557913Z\",\"phone\":\"\",\"confirmed_at\":\"2026-02-07T15:51:11.557913Z\",\"recovery_sent_at\":\"2026-02-07T15:51:11.557913Z\",\"last_sign_in_at\":\"2026-02-08T16:02:09.571953048Z\",\"app_metadata\":{\"provider\":\"email\",\"providers\":[\"email\"]},\"user_metadata\":{},\"identities\":[],\"created_at\":\"2026-02-07T15:51:11.557913Z\",\"updated_at\":\"2026-02-08T16:02:09.577478Z\",\"is_anonymous\":false},\"weak_password\":null}"
+        }
+      ]
+    }
+  ]
+}

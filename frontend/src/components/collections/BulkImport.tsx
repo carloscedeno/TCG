@@ -1,19 +1,24 @@
 import React, { useState, useRef } from 'react';
 import { Upload, FileText, CheckCircle2, X, ArrowRight } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 import { GlassCard } from '../ui/GlassCard';
 
 interface BulkImportProps {
     onImportComplete: (data: any) => void;
-    importType: 'collection' | 'prices';
+    importType: 'collection' | 'prices' | 'inventory';
 }
 
 export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, importType }) => {
+    const { session } = useAuth();
     const [isDragging, setIsDragging] = useState(false);
     const [file, setFile] = useState<File | null>(null);
     const [step, setStep] = useState<1 | 2 | 3>(1); // 1: Upload, 2: Mapping, 3: Success
     const [rows, setRows] = useState<string[][]>([]);
     const [headers, setHeaders] = useState<string[]>([]);
+    const [isAutoMapped, setIsAutoMapped] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const TXT_FORMAT_REGEX = /^(\d+)\s+(.+?)\s+\((.+?)\)\s+(\d+)$/;
 
     const handleDragOver = (e: React.DragEvent) => {
         e.preventDefault();
@@ -34,13 +39,44 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
         reader.onload = (e) => {
             const text = e.target?.result as string;
             const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
-            const parsedRows = lines.map(line => line.split(',').map(cell => cell.trim().replace(/^"|"$/g, '')));
 
-            if (parsedRows.length > 0) {
-                setHeaders(parsedRows[0]);
-                setRows(parsedRows.slice(1));
-                setFile(selectedFile);
-                setStep(2);
+            // Detect special .txt format: "1 Agatha's Soul Cauldron (WOE) 242"
+            const isSpecialTxt = selectedFile.name.endsWith('.txt') && lines.length > 0 && TXT_FORMAT_REGEX.test(lines[0]);
+
+            if (isSpecialTxt) {
+                const parsedRows = lines.map(line => {
+                    const match = line.match(TXT_FORMAT_REGEX);
+                    if (match) {
+                        return [match[1], match[2], match[3], match[4]];
+                    }
+                    return null;
+                }).filter(row => row !== null) as string[][];
+
+                if (parsedRows.length > 0) {
+                    setHeaders(['quantity', 'name', 'set', 'collector_number']);
+                    setMapping({
+                        quantity: 'quantity',
+                        name: 'name',
+                        set: 'set',
+                        collector_number: 'collector_number',
+                        condition: '',
+                        price: '',
+                        tcg: ''
+                    });
+                    setRows(parsedRows);
+                    setFile(selectedFile);
+                    setIsAutoMapped(true);
+                    setStep(2);
+                }
+            } else {
+                const parsedRows = lines.map(line => line.split(',').map(cell => cell.trim().replace(/^"|"$/g, '')));
+                if (parsedRows.length > 0) {
+                    setHeaders(parsedRows[0]);
+                    setRows(parsedRows.slice(1));
+                    setFile(selectedFile);
+                    setIsAutoMapped(false);
+                    setStep(2);
+                }
             }
         };
         reader.readAsText(selectedFile);
@@ -78,9 +114,51 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
         document.body.removeChild(a);
     };
 
+    const downloadFailedRows = () => {
+        if (!result?.failed_indices || result.failed_indices.length === 0) return;
+
+        const failedRows = rows.filter((_, index) => result.failed_indices.includes(index));
+
+        // Reconstruct content based on original format estimation
+        // For simplicity, we'll try to keep the original structure if possible, 
+        // or just dump the values we have.
+        // If it was the special TXT format:
+        let content = "";
+
+        // Check if we are in special TXT mode by checking headers
+        const isSpecialTxt = headers.includes('collector_number') && headers.includes('set') && headers.length === 4;
+
+        if (isSpecialTxt) {
+            // Reconstruct: "Quantity Name (Set) CollectorNumber"
+            content = failedRows.map(row => {
+                const qty = row[headers.indexOf('quantity')] || '1';
+                const name = row[headers.indexOf('name')] || '';
+                const set = row[headers.indexOf('set')] || '';
+                const num = row[headers.indexOf('collector_number')] || '';
+                return `${qty} ${name} (${set}) ${num}`;
+            }).join('\n');
+        } else {
+            // CSV fallback
+            content = [headers.join(',')].concat(failedRows.map(r => r.join(','))).join('\n');
+        }
+
+        const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = `failed_import_rows_${new Date().toISOString().split('T')[0]}.txt`;
+        document.body.appendChild(a);
+        a.click();
+
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+    };
+
     const [mapping, setMapping] = useState<Record<string, string>>({
         name: '',
         set: '',
+        collector_number: '',
         quantity: '',
         price: '',
         condition: '',
@@ -90,6 +168,10 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
     const [result, setResult] = useState<any>(null);
 
     const handleImport = async () => {
+        if (!session) {
+            alert('Por favor, inicia sesión para importar tu colección.');
+            return;
+        }
         setLoading(true);
         try {
             const SUPABASE_PROJECT_ID = 'sxuotvogwvmxuvwbsscv';
@@ -98,7 +180,7 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('supabase.auth.token')}`
+                    'Authorization': `Bearer ${session?.access_token}`
                 },
                 body: JSON.stringify({
                     data: rows.map(row => {
@@ -109,11 +191,18 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
                     mapping: mapping
                 })
             });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ detail: response.statusText }));
+                throw new Error(errorData.detail || `Error ${response.status}: ${response.statusText}`);
+            }
+
             const data = await response.json();
             setResult(data);
             setStep(3);
-        } catch (err) {
-            alert('Error al importar datos');
+        } catch (err: any) {
+            console.error("Import error:", err);
+            alert(`Error al importar datos: ${err.message}`);
         } finally {
             setLoading(false);
         }
@@ -123,6 +212,7 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
         { id: 'name', label: 'Nombre de Carta' },
         { id: 'tcg', label: 'Juego (TCG)' },
         { id: 'set', label: 'Set/Código' },
+        { id: 'collector_number', label: 'Num. Coleccionista' },
         { id: 'quantity', label: 'Cantidad' },
         { id: 'price', label: 'Precio/Valor' },
         { id: 'condition', label: 'Condición' }
@@ -153,7 +243,7 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
                             </div>
                             <div>
                                 <h2 className="text-3xl font-black italic tracking-tighter uppercase mb-2">
-                                    Carga Masiva <span className="text-geeko-cyan">{importType === 'prices' ? 'PRECIOS' : 'COLECCIÓN'}</span>
+                                    Carga Masiva <span className="text-geeko-cyan">{importType === 'prices' ? 'PRECIOS' : importType === 'inventory' ? 'INVENTARIO' : 'COLECCIÓN'}</span>
                                 </h2>
                                 <p className="text-slate-400 font-bold text-sm">
                                     Arrastra tu archivo CSV o haz clic para buscar.
@@ -198,22 +288,57 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
                     </div>
 
                     <div className="space-y-4">
-                        <h4 className="text-xs font-black uppercase tracking-[0.2em] text-geeko-cyan">Mapeo de Columnas</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {systemFields.map((field) => (
-                                <div key={field.id} className="bg-black/20 p-4 rounded-2xl border border-white/5 flex items-center justify-between">
-                                    <span className="text-[11px] font-bold text-slate-300">{field.label}</span>
-                                    <select
-                                        value={mapping[field.id]}
-                                        onChange={(e) => setMapping(prev => ({ ...prev, [field.id]: e.target.value }))}
-                                        className="bg-slate-900 border border-white/10 rounded-lg text-[10px] px-3 py-1.5 focus:border-geeko-cyan/50 outline-none"
-                                    >
-                                        <option value="">Seleccionar columna...</option>
-                                        {headers.map(h => <option key={h} value={h}>{h}</option>)}
-                                    </select>
+                        {isAutoMapped ? (
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-2 text-geeko-cyan">
+                                    <CheckCircle2 size={16} />
+                                    <h4 className="text-xs font-black uppercase tracking-[0.2em]">Formato Detectado Automáticamente</h4>
                                 </div>
-                            ))}
-                        </div>
+                                <div className="bg-black/20 rounded-xl border border-white/5 overflow-hidden flex flex-col max-h-[400px]">
+                                    <div className="overflow-y-auto scrollbar-thin scrollbar-thumb-geeko-cyan/20 scrollbar-track-transparent">
+                                        <table className="w-full text-left text-[10px]">
+                                            <thead className="bg-[#0c0c0c] sticky top-0 z-10 text-slate-400 font-bold uppercase tracking-wider shadow-sm">
+                                                <tr>
+                                                    <th className="p-3">Cantidad</th>
+                                                    <th className="p-3">Nombre</th>
+                                                    <th className="p-3">Set</th>
+                                                    <th className="p-3">#</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="text-slate-300 divide-y divide-white/5">
+                                                {rows.map((row, i) => (
+                                                    <tr key={i} className="hover:bg-white/5 transition-colors">
+                                                        <td className="p-3 w-20">{row[0]}</td>
+                                                        <td className="p-3 font-bold text-white">{row[1]}</td>
+                                                        <td className="p-3 w-24">{row[2]}</td>
+                                                        <td className="p-3 w-24">{row[3]}</td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            <>
+                                <h4 className="text-xs font-black uppercase tracking-[0.2em] text-geeko-cyan">Mapeo de Columnas</h4>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {systemFields.map((field) => (
+                                        <div key={field.id} className="bg-black/20 p-4 rounded-2xl border border-white/5 flex items-center justify-between">
+                                            <span className="text-[11px] font-bold text-slate-300">{field.label}</span>
+                                            <select
+                                                value={mapping[field.id]}
+                                                onChange={(e) => setMapping(prev => ({ ...prev, [field.id]: e.target.value }))}
+                                                className="bg-slate-900 border border-white/10 rounded-lg text-[10px] px-3 py-1.5 focus:border-geeko-cyan/50 outline-none"
+                                            >
+                                                <option value="">Seleccionar columna...</option>
+                                                {headers.map(h => <option key={h} value={h}>{h}</option>)}
+                                            </select>
+                                        </div>
+                                    ))}
+                                </div>
+                            </>
+                        )}
                     </div>
 
                     <button
@@ -232,12 +357,30 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
                         <CheckCircle2 className="text-emerald-500 w-12 h-12" />
                     </div>
                     <div>
-                        <h2 className="text-4xl font-black italic uppercase tracking-tighter mb-2">¡Sincronización Exitosa!</h2>
-                        <p className="text-slate-400 font-bold">Hemos procesado {result?.imported_count || rows.length} cartas correctamente.</p>
+                        <h2 className="text-4xl font-black italic uppercase tracking-tighter mb-2">¡Sincronización Finalizada!</h2>
+                        <p className="text-slate-400 font-bold">
+                            Hemos importado <span className="text-geeko-cyan">{result?.imported_count || 0}</span> de <span className="text-white">{rows.length}</span> cartas detectadas.
+                        </p>
                         {result?.errors?.length > 0 && (
-                            <p className="text-yellow-500 text-[10px] mt-4 font-bold uppercase tracking-widest">
-                                {result.errors.length} filas tuvieron inconsistencias.
-                            </p>
+                            <div className="mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-left max-h-40 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10">
+                                <p className="text-red-500 text-[10px] font-black uppercase tracking-widest mb-2 sticky top-0 bg-[#0c0c0c]/90 backdrop-blur p-1">
+                                    Inconsistencias ({result.errors.length}):
+                                </p>
+                                <ul className="text-[10px] text-slate-400 font-medium space-y-1">
+                                    {result.errors.map((err: string, i: number) => (
+                                        <li key={i}>• {err}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
+
+                        {result?.failed_indices?.length > 0 && (
+                            <button
+                                onClick={downloadFailedRows}
+                                className="mt-2 text-[10px] font-black uppercase tracking-widest text-geeko-cyan hover:underline hover:text-white transition-colors"
+                            >
+                                Descargar {result.failed_indices.length} filas fallidas (.txt)
+                            </button>
                         )}
                     </div>
                     <div className="flex justify-center gap-4">

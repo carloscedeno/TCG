@@ -5,8 +5,9 @@ import {
     Plus, Search, Trash2, Package, Save, X,
     ChevronUp, ChevronDown, Check,
     ArrowUpDown, AlertTriangle,
-    ShieldAlert
+    ShieldAlert, FileUp
 } from "lucide-react";
+import { ImportInventoryModal } from "../../components/Admin/ImportInventoryModal";
 
 interface InventoryItem {
     product_id: string;
@@ -30,6 +31,7 @@ export function InventoryPage() {
     const [items, setItems] = useState<InventoryItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [isImportModalOpen, setIsImportModalOpen] = useState(false);
 
     // Filtering & Sorting
     const [searchQuery, setSearchQuery] = useState("");
@@ -276,6 +278,16 @@ export function InventoryPage() {
                                 Push New Product
                             </span>
                             <div className="absolute inset-0 bg-purple-500 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                        </button>
+
+                        <button
+                            onClick={() => setIsImportModalOpen(true)}
+                            className="group relative px-6 py-4 bg-black border border-white/10 text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl overflow-hidden active:scale-95 transition-all w-full md:w-auto hover:border-purple-500/50"
+                        >
+                            <span className="relative z-10 flex items-center gap-3">
+                                <FileUp size={18} className="text-neutral-500 group-hover:text-purple-400 transition-colors" />
+                                Bulk Import
+                            </span>
                         </button>
                     </div>
                 </div>
@@ -650,6 +662,16 @@ export function InventoryPage() {
                 }}
                 prefillCard={prefillCard}
                 onSuccess={() => fetchInventory()}
+            />
+
+            <ImportInventoryModal
+                isOpen={isImportModalOpen}
+                onClose={() => setIsImportModalOpen(false)}
+                onSuccess={() => {
+                    fetchInventory();
+                    // Keep modal open or let it handle its own state? 
+                    // The modal has its own success step, so we just refresh data here.
+                }}
             />
         </div>
     );

@@ -326,14 +326,47 @@ export const searchCardNames = async (query: string): Promise<string[]> => {
 export const fetchCart = async (): Promise<any> => {
   try {
     const session = await supabase.auth.getSession();
-    const headers: Record<string, string> = {};
-    if (session.data.session?.access_token) {
-      headers['Authorization'] = `Bearer ${session.data.session.access_token}`;
+
+    // If logged in, fetch from API
+    if (session.data.session?.user) {
+      const headers: Record<string, string> = {};
+      if (session.data.session?.access_token) {
+        headers['Authorization'] = `Bearer ${session.data.session.access_token}`;
+      }
+
+      const response = await fetch(`${API_BASE}/api/cart`, { headers });
+      if (!response.ok) throw new Error('Failed to fetch cart');
+      return await response.json();
     }
 
-    const response = await fetch(`${API_BASE}/api/cart`, { headers });
-    if (!response.ok) throw new Error('Failed to fetch cart');
-    return await response.json();
+    // Guest Cart Logic
+    const guestCart = JSON.parse(localStorage.getItem('guest_cart') || '[]');
+    if (guestCart.length === 0) return { items: [] };
+
+    // Fetch details for each item in guest cart
+    const items = await Promise.all(guestCart.map(async (item: any) => {
+      try {
+        const details = await fetchCardDetails(item.printing_id);
+        return {
+          id: `guest-${item.printing_id}`, // temporary ID
+          product_id: item.printing_id,
+          quantity: item.quantity,
+          products: {
+            id: details.card_id,
+            name: details.name,
+            price: details.price || details.valuation?.market_price || 0,
+            image_url: details.image_url,
+            set_code: details.set_code
+          }
+        };
+      } catch (e) {
+        console.error(`Failed to load details for ${item.printing_id}`, e);
+        return null;
+      }
+    }));
+
+    return { items: items.filter(i => i !== null) };
+
   } catch (error) {
     console.error('Error fetching cart:', error);
     return { items: [] };
@@ -343,18 +376,39 @@ export const fetchCart = async (): Promise<any> => {
 export const addToCart = async (printingId: string, quantity: number = 1): Promise<any> => {
   try {
     const session = await supabase.auth.getSession();
-    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-    if (session.data.session?.access_token) {
-      headers['Authorization'] = `Bearer ${session.data.session.access_token}`;
+
+    // If logged in, use API
+    if (session.data.session?.user) {
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (session.data.session?.access_token) {
+        headers['Authorization'] = `Bearer ${session.data.session.access_token}`;
+      }
+
+      const response = await fetch(`${API_BASE}/api/cart/add`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ printing_id: printingId, quantity })
+      });
+      if (!response.ok) throw new Error('Failed to add to cart');
+      return await response.json();
     }
 
-    const response = await fetch(`${API_BASE}/api/cart/add`, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({ printing_id: printingId, quantity })
-    });
-    if (!response.ok) throw new Error('Failed to add to cart');
-    return await response.json();
+    // Guest Cart Logic
+    const guestCart = JSON.parse(localStorage.getItem('guest_cart') || '[]');
+    const existingItemIndex = guestCart.findIndex((item: any) => item.printing_id === printingId);
+
+    if (existingItemIndex >= 0) {
+      guestCart[existingItemIndex].quantity += quantity;
+    } else {
+      guestCart.push({ printing_id: printingId, quantity });
+    }
+
+    localStorage.setItem('guest_cart', JSON.stringify(guestCart));
+    // Dispatch event to update cart drawer if open
+    window.dispatchEvent(new Event('cart-updated'));
+
+    return { success: true, message: "Added to guest cart" };
+
   } catch (error) {
     console.error('Error adding to cart:', error);
     return { success: false };
@@ -382,20 +436,29 @@ export const checkoutCart = async (): Promise<any> => {
 };
 
 export const createOrder = async (orderData: {
-  userId: string;
+  userId: string | null;
   items: { product_id: string; quantity: number; price: number }[];
   shippingAddress: any;
   totalAmount: number;
+  guestInfo?: { email: string; phone: string };
 }): Promise<any> => {
   try {
     const { data, error } = await supabase.rpc('create_order_atomic', {
-      p_user_id: orderData.userId,
+      p_user_id: orderData.userId, // RPC must handle NULL or we need updated RPC
       p_items: orderData.items,
-      p_shipping_address: orderData.shippingAddress, // Currently unused in RPC logic but good for future
-      p_total_amount: orderData.totalAmount
+      p_shipping_address: orderData.shippingAddress,
+      p_total_amount: orderData.totalAmount,
+      p_guest_info: orderData.guestInfo || null // Pass guest info if available
     });
 
     if (error) throw error;
+
+    // Clear guest cart if successful
+    if (!orderData.userId) {
+      localStorage.removeItem('guest_cart');
+      window.dispatchEvent(new Event('cart-updated'));
+    }
+
     return data;
   } catch (error) {
     console.error('Order creation failed:', error);

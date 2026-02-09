@@ -26,9 +26,19 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+        const handleCartUpdate = () => {
+            loadCart();
+        };
+
+        window.addEventListener('cart-updated', handleCartUpdate);
+
         if (isOpen) {
             loadCart();
         }
+
+        return () => {
+            window.removeEventListener('cart-updated', handleCartUpdate);
+        };
     }, [isOpen]);
 
     const loadCart = async () => {

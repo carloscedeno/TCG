@@ -1,16 +1,16 @@
 import React from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { BulkImport } from '../components/collections/BulkImport';
 import { Shield, ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 import { UserMenu } from '../components/Navigation/UserMenu';
 import { useAuth } from '../context/AuthContext';
 
 const ImportCollection: React.FC = () => {
-    const { user } = useAuth();
-    const handleImportComplete = (data: any) => {
-        console.log('Import data:', data);
-        // Here we would call the backend service
+    const { user, isAdmin } = useAuth();
+    const navigate = useNavigate();
+    const handleImportComplete = () => {
+        navigate('/profile');
     };
 
     return (
@@ -26,14 +26,10 @@ const ImportCollection: React.FC = () => {
                 <nav className="max-w-[1600px] mx-auto px-6 py-3 flex items-center justify-between">
                     <div className="flex items-center gap-8">
                         <Link to="/" className="flex items-center gap-4 hover:opacity-80 transition-opacity">
-                            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center font-black text-xl italic shadow-lg shadow-blue-600/20">T</div>
-                            <h1 className="text-xl font-black tracking-tighter text-white">TCG HUB</h1>
+                            <div className="flex items-center justify-center font-black text-xl italic text-white shadow-lg shadow-blue-600/20">
+                                <span className="text-geeko-cyan">El</span>&nbsp;Emporio
+                            </div>
                         </Link>
-                        <div className="hidden lg:flex items-center gap-6 text-[13px] font-medium text-neutral-400">
-                            <Link to="/" className="hover:text-white transition-colors">Home</Link>
-                            <Link to="/tournaments" className="hover:text-white transition-colors">Tournaments</Link>
-                            <Link to="/profile" className="hover:text-white transition-colors">My Profile</Link>
-                        </div>
                     </div>
                     <div className="flex items-center gap-4">
                         {user && <UserMenu />}
@@ -62,7 +58,7 @@ const ImportCollection: React.FC = () => {
                 </div>
 
                 <BulkImport
-                    importType="collection"
+                    importType={isAdmin ? "inventory" : "collection"}
                     onImportComplete={handleImportComplete}
                 />
 

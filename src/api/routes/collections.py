@@ -12,10 +12,15 @@ async def get_current_user(authorization: str = Header(None)):
     # Note: AdminService has a verify_admin, we can use a simpler one here.
     from ..utils.supabase_client import supabase
     try:
+        # print(f"Validating token: {authorization[:20]}...") 
         user_resp = supabase.auth.get_user(authorization.replace("Bearer ", ""))
+        # print(f"User validated: {user_resp.user.id}")
         return user_resp.user.id
-    except:
-        return "00000000-0000-0000-0000-000000000000"
+    except Exception as e:
+        print(f"Auth Error: {type(e).__name__}: {e}")
+        # If token is invalid or missing, we must fail here to avoid 
+        # foreign key constraint errors in the database later.
+        raise HTTPException(status_code=401, detail=f"Authentication failed: {str(e)}")
 
 @router.get("/")
 async def get_collection(user_id: str = Depends(get_current_user)):

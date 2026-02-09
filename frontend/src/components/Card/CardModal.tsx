@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { X, ShoppingCart, ExternalLink, RotateCw, Loader2 } from 'lucide-react';
 import { fetchCardDetails, addToCart } from '../../utils/api';
 
-import { useAuth } from '../../context/AuthContext';
+
 
 interface CardModalProps {
     isOpen: boolean;
@@ -66,8 +66,7 @@ interface CardDetails {
     all_versions?: Version[];
 }
 
-export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, onAddToCartSuccess, onRequireAuth }) => {
-    const { user } = useAuth();
+export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, onAddToCartSuccess }) => {
     const [details, setDetails] = useState<CardDetails | null>(null);
     const [loading, setLoading] = useState(false);
     const [isAdding, setIsAdding] = useState(false);
@@ -121,12 +120,6 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
     const handleAddToCart = async () => {
         if (!activePrintingId) return;
 
-        if (!user) {
-            if (onRequireAuth) onRequireAuth();
-            else alert("Please login to add items to cart.");
-            return;
-        }
-
         setIsAdding(true);
         try {
             await addToCart(activePrintingId, 1);
@@ -144,12 +137,6 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
     };
 
     const handleVersionAddToCart = async (v: any) => {
-        if (!user) {
-            if (onRequireAuth) onRequireAuth();
-            else alert("Please login to add items to cart.");
-            return;
-        }
-
         try {
             await addToCart(v.printing_id, 1);
             if (onAddToCartSuccess) {
@@ -159,6 +146,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
             console.error("Cart error", err);
         }
     };
+
 
     if (!isOpen) return null;
 

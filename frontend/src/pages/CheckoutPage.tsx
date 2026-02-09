@@ -18,7 +18,9 @@ export const CheckoutPage = () => {
         city: '',
         state: '',
         zip_code: '',
-        country: 'USA'
+        country: 'USA',
+        email: '',
+        phone: ''
     });
     const [isProcessing, setIsProcessing] = useState(false);
 
@@ -65,7 +67,7 @@ export const CheckoutPage = () => {
         setIsProcessing(true);
         try {
             const { data: { user } } = await supabase.auth.getUser();
-            if (!user) throw new Error("User required");
+            // if (!user) throw new Error("User required");
 
             const total = cartItems.reduce((acc, item) => acc + (item.products?.price || 0) * item.quantity, 0);
 
@@ -76,10 +78,14 @@ export const CheckoutPage = () => {
             }));
 
             await createOrder({
-                userId: user.id,
+                userId: user?.id || null, // Allow null for guest
                 items: simplifiedItems,
-                shippingAddress: selectedAddress,
-                totalAmount: total
+                shippingAddress: selectedAddress || newAddress, // Use newAddress if guest
+                totalAmount: total,
+                guestInfo: !user ? {
+                    email: newAddress.email, // Assume email added to address form or separate
+                    phone: newAddress.phone
+                } : undefined
             });
 
             // Navigate to success
@@ -166,6 +172,12 @@ export const CheckoutPage = () => {
                                             value={newAddress.zip_code} onChange={(e) => setNewAddress({ ...newAddress, zip_code: e.target.value })} />
                                         <input placeholder="Country" disabled value="USA" className="w-full bg-black/20 border border-white/5 rounded-lg px-4 py-3 text-neutral-500 cursor-not-allowed" />
                                     </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <input type="email" placeholder="Email (para confirmación)" className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 focus:border-geeko-cyan outline-none transition-colors"
+                                            value={newAddress.email} onChange={(e) => setNewAddress({ ...newAddress, email: e.target.value })} />
+                                        <input type="tel" placeholder="Teléfono" className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 focus:border-geeko-cyan outline-none transition-colors"
+                                            value={newAddress.phone} onChange={(e) => setNewAddress({ ...newAddress, phone: e.target.value })} />
+                                    </div>
                                     <div className="flex justify-end gap-3 pt-4">
                                         {addresses.length > 0 && <button onClick={() => setIsNewAddress(false)} className="px-6 py-2 rounded-lg text-sm font-bold text-neutral-400 hover:text-white">Cancelar</button>}
                                         <button data-testid="save-address-button" onClick={handleSaveAddress} className="px-6 py-2 bg-white text-black rounded-lg text-sm font-bold hover:bg-neutral-200">Guardar Dirección</button>
@@ -203,19 +215,59 @@ export const CheckoutPage = () => {
 
                             <div className="flex gap-4 mb-8">
                                 <button className="flex-1 py-4 border border-geeko-cyan bg-geeko-cyan/10 text-white rounded-xl font-bold flex items-center justify-center gap-2">
-                                    <CreditCard size={20} /> Tarjeta de Crédito
+                                    <CreditCard size={20} /> Transferencia / Pago Móvil
                                 </button>
-                                <button className="flex-1 py-4 border border-white/10 bg-black/20 text-neutral-500 rounded-xl font-bold flex items-center justify-center gap-2 cursor-not-allowed">
+                                {/* <button className="flex-1 py-4 border border-white/10 bg-black/20 text-neutral-500 rounded-xl font-bold flex items-center justify-center gap-2 cursor-not-allowed">
                                     PayPal (Pronto)
-                                </button>
+                                </button> */}
                             </div>
 
-                            {/* Fake Form */}
-                            <div className="space-y-4 max-w-md opacity-75">
-                                <input placeholder="Card Number" className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3" disabled value="4242 4242 4242 4242" />
-                                <div className="grid grid-cols-2 gap-4">
-                                    <input placeholder="MM/YY" className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3" disabled value="12/28" />
-                                    <input placeholder="CVC" className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3" disabled value="123" />
+                            {/* Manual Payment Instructions */}
+                            <div className="space-y-6">
+                                <div className="p-4 bg-neutral-900 border border-white/10 rounded-xl space-y-4">
+                                    <div className="flex items-center gap-3 border-b border-white/5 pb-3">
+                                        <div className="w-10 h-10 rounded-lg bg-geeko-cyan/10 flex items-center justify-center text-geeko-cyan">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2" /><path d="M12 18h.01" /></svg>
+                                        </div>
+                                        <div>
+                                            <h4 className="font-bold text-white">Pago Móvil</h4>
+                                            <p className="text-xs text-neutral-400">Banco Mercantil (0105)</p>
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4 text-sm">
+                                        <div>
+                                            <span className="text-neutral-500 block text-xs uppercase tracking-wider">Teléfono</span>
+                                            <span className="font-mono text-white font-bold">0414-1234567</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-neutral-500 block text-xs uppercase tracking-wider">Cédula / RIF</span>
+                                            <span className="font-mono text-white font-bold">V-12345678</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="p-4 bg-neutral-900 border border-white/10 rounded-xl space-y-4">
+                                    <div className="flex items-center gap-3 border-b border-white/5 pb-3">
+                                        <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400">
+                                            <span className="font-black text-xs">Z</span>
+                                        </div>
+                                        <div>
+                                            <h4 className="font-bold text-white">Zelle</h4>
+                                            <p className="text-xs text-neutral-400">pagos@elemporio.com</p>
+                                        </div>
+                                    </div>
+                                    <div className="text-sm">
+                                        <span className="text-neutral-500 block text-xs uppercase tracking-wider">Titular</span>
+                                        <span className="font-mono text-white font-bold">El Emporio TCG LLC</span>
+                                    </div>
+                                </div>
+
+                                <div className="pt-4 border-t border-white/5">
+                                    <label className="block text-sm font-bold text-neutral-400 mb-2">Comprobante de Pago (Opcional)</label>
+                                    <div className="border-2 border-dashed border-white/10 rounded-xl p-8 flex flex-col items-center justify-center gap-2 hover:border-geeko-cyan/50 hover:bg-white/5 transition-all cursor-pointer">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-neutral-500"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" x2="12" y1="3" y2="15" /></svg>
+                                        <span className="text-xs font-bold text-neutral-500">Click para subir captura</span>
+                                    </div>
                                 </div>
                             </div>
 

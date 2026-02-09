@@ -4,22 +4,16 @@ from ..utils.supabase_client import supabase
 class ValuationService:
     @staticmethod
     async def get_batch_valuations(printing_ids: List[str]) -> Dict[str, Dict[str, Any]]:
-        """
-        Calculates valuations for a batch of printing_ids to optimize performance.
-        Returns a dictionary keyed by printing_id.
-        """
         if not printing_ids:
             return {}
 
         try:
-            # 1. Fetch latest prices for all printing_ids
-            # We use a custom RPC or just a raw query. 
-            # Since Supabase JS/Python client doesn't support "distinct on" securely in simple select for heavy loads,
-            # we will fetch recent history and process in memory.
-            # Ideally this should be a Postgres View or Function.
-            
+            # Fetch sources map
+            sources_resp = supabase.table('sources').select('source_id, source_code').execute()
+            source_map = {s['source_id']: s['source_code'] for s in sources_resp.data} if sources_resp.data else {}
+
             response = supabase.table('price_history').select(
-                'printing_id, price_usd, url, source:source_id(source_code)'
+                'printing_id, price_usd, url, source_id'
             ).in_('printing_id', printing_ids)\
              .order('price_entry_id', desc=True)\
              .limit(len(printing_ids) * 10)\
@@ -28,36 +22,45 @@ class ValuationService:
             raw_prices = response.data
             valuations: Dict[str, Dict[str, Any]] = {}
             
-            # Group by printing_id
             grouped_prices: Dict[str, List[Any]] = {pid: [] for pid in printing_ids}
             for p in raw_prices:
                 pid = p['printing_id']
                 if pid in grouped_prices:
                     grouped_prices[pid].append(p)
             
+            # Fetch aggregated_prices for fallback
+            agg_resp = supabase.table('aggregated_prices').select('printing_id, avg_market_price_usd').in_('printing_id', printing_ids).execute()
+            agg_map = {a['printing_id']: float(a.get('avg_market_price_usd') or 0) for a in agg_resp.data} if agg_resp.data else {}
+
             for pid, prices in grouped_prices.items():
                 geek_price = 0.0
                 ck_price = 0.0
                 ck_url = None
                 
                 for p in prices:
-                    source_code = p.get('source', {}).get('source_code')
+                    sid = p.get('source_id')
+                    try:
+                        source_code = source_map.get(sid, "").lower()
+                    except AttributeError:
+                        source_code = ""
                     
                     if not geek_price and source_code == 'geekorium':
                         geek_price = float(p.get('price_usd') or 0)
                     
-                    if not ck_price and source_code == 'cardkingdom':
+                    if not ck_price and (source_code == 'cardkingdom' or sid == 1):
                         ck_price = float(p.get('price_usd') or 0)
                         ck_url = p.get('url')
                     
                     if geek_price and ck_price:
                         break
                 
-                # Check for Fallback in aggregated_prices if missing
-                # (Batching this fallback is complex without a second query, 
-                #  for now we skip fallback or do a second batch query if critical)
+                # Fallback to aggregated_prices
+                if not geek_price and not ck_price:
+                    fallback = agg_map.get(pid, 0.0)
+                    if fallback > 0:
+                        geek_price = fallback
+                        ck_price = fallback
                 
-                # Basic calculation without fallback to avoid N+1 on fallback too
                 val_avg = 0.0
                 if geek_price and ck_price:
                     val_avg = (geek_price + ck_price) / 2
@@ -79,12 +82,11 @@ class ValuationService:
 
     @staticmethod
     async def get_two_factor_valuation(printing_id: str) -> Dict[str, float]:
-        """
-        Calculates valuation based on Geekorium (Internal) and CardKingdom (External).
-        """
         try:
-            # Fetch latest prices including source metadata
-            response = supabase.table('price_history').select('price_usd, url, source:source_id(source_code)')\
+            sources_resp = supabase.table('sources').select('source_id, source_code').execute()
+            source_map = {s['source_id']: s['source_code'] for s in sources_resp.data} if sources_resp.data else {}
+
+            response = supabase.table('price_history').select('price_usd, url, source_id')\
                 .eq('printing_id', printing_id)\
                 .order('price_entry_id', desc=True)\
                 .limit(20)\
@@ -97,26 +99,21 @@ class ValuationService:
             ck_url = None
             
             for p in prices:
-                source_code = p.get('source', {}).get('source_code')
+                sid = p.get('source_id')
+                source_code = source_map.get(sid)
                 
-                # Store Value (Geekorium)
                 if not geek_price and source_code == 'geekorium':
                     geek_price = float(p['price_usd'] or 0)
                 
                 if not ck_price and source_code == 'cardkingdom':
                     ck_price = float(p.get('price_usd') or 0)
-                    # Check if URL looks like CardKingdom
                     url = p.get('url')
                     if url and 'cardkingdom.com' in url:
                         ck_url = url
-                    else:
-                        # If URL is missing or wrong, we will generate it later
-                        pass
                 
                 if geek_price and ck_price and ck_url:
                     break
             
-            # Fallback to aggregated_prices if specific sources not found
             if not geek_price or not ck_price:
                 agg = supabase.table('aggregated_prices').select('avg_market_price_usd')\
                     .eq('printing_id', printing_id).execute()
@@ -125,12 +122,8 @@ class ValuationService:
                     geek_price = geek_price or fallback
                     ck_price = ck_price or fallback
 
-            # Fallback for URL generation if missing (and if we have a price or as a general service)
             if not ck_url:
                 try:
-                    # Fetch card and set info for URL construction
-                    # We need set name and card name. 
-                    # Note: This is an approximation. CardKingdom set names might differ from Scryfall/DB.
                     info = supabase.table('card_printings').select('card:cards(card_name), set:sets(set_name)')\
                         .eq('printing_id', printing_id).single().execute()
                     
@@ -139,7 +132,6 @@ class ValuationService:
                         set_name = info.data.get('set', {}).get('set_name', '')
                         
                         if card_name and set_name:
-                            # Simple Slugify: lowercase, replace spaces with hyphens, remove chars
                             def slugify(text):
                                 import re
                                 text = text.lower()
