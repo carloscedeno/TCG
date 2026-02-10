@@ -7,6 +7,29 @@ test.describe('Shopping Cart & Checkout', () => {
         // Use relative URL to avoid any base path stripping issues
         await page.goto('/');
         await page.waitForLoadState('networkidle');
+
+        // Clear cart before each test
+        try {
+            await page.getByTestId('cart-button').click();
+
+            // Wait for cart to open
+            await page.waitForTimeout(500);
+
+            // Remove all items if any exist
+            const removeButtons = page.getByTestId('remove-item-button');
+            const count = await removeButtons.count();
+
+            for (let i = 0; i < count; i++) {
+                await removeButtons.first().click();
+                await page.waitForTimeout(300); // Wait for removal animation
+            }
+
+            // Close cart
+            await page.getByTestId('cart-button').click();
+            await page.waitForTimeout(300);
+        } catch (error) {
+            console.log('Cart cleanup skipped (cart may already be empty):', error);
+        }
     });
 
     test('should persist cart items after refresh', async ({ page }) => {
@@ -44,8 +67,56 @@ test.describe('Shopping Cart & Checkout', () => {
     });
 
     test('should update totals when quantity changes', async ({ page }) => {
-        // TBD: Logic for quantity updates if/when UI elements are added
-        test.skip();
+        // Add item from inventory
+        await page.getByTestId('inventory-tab').click();
+        await expect(page.getByTestId('product-card').first()).toBeVisible({ timeout: 20000 });
+
+        const productCard = page.locator('[data-testid="product-card"]').first();
+        await productCard.click();
+        await page.getByTestId('add-to-cart-button').click();
+
+        // Wait for cart to show item
+        await expect(page.getByTestId('cart-item')).toBeVisible({ timeout: 10000 });
+
+        // Get initial quantity and total
+        const quantityText = await page.locator('[data-testid="cart-item"] span:has-text("x")').textContent();
+        expect(quantityText).toContain('x1');
+
+        // Increase quantity
+        await page.getByTestId('increase-quantity-button').click();
+        await page.waitForTimeout(500); // Wait for update
+
+        // Verify quantity increased
+        const newQuantityText = await page.locator('[data-testid="cart-item"] span:has-text("x")').textContent();
+        expect(newQuantityText).toContain('x2');
+
+        // Decrease quantity
+        await page.getByTestId('decrease-quantity-button').click();
+        await page.waitForTimeout(500); // Wait for update
+
+        // Verify quantity decreased back to 1
+        const finalQuantityText = await page.locator('[data-testid="cart-item"] span:has-text("x")').textContent();
+        expect(finalQuantityText).toContain('x1');
+    });
+
+    test('should remove items from cart', async ({ page }) => {
+        // Add item from inventory
+        await page.getByTestId('inventory-tab').click();
+        await expect(page.getByTestId('product-card').first()).toBeVisible({ timeout: 20000 });
+
+        const productCard = page.locator('[data-testid="product-card"]').first();
+        await productCard.click();
+        await page.getByTestId('add-to-cart-button').click();
+
+        // Wait for cart to show item
+        await expect(page.getByTestId('cart-item')).toBeVisible({ timeout: 10000 });
+
+        // Remove item
+        await page.getByTestId('remove-item-button').click();
+        await page.waitForTimeout(500); // Wait for removal
+
+        // Verify cart is empty
+        await expect(page.getByText('Tu carrito está vacío')).toBeVisible({ timeout: 5000 });
     });
 
     test('should complete a full atomic checkout flow', async ({ page }) => {
