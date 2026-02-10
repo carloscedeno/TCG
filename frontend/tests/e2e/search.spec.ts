@@ -6,7 +6,7 @@ test.describe('Search & Filter System', () => {
     });
 
     test('should show autocomplete suggestions', async ({ page }) => {
-        const searchInput = page.getByPlaceholder(/Buscar cartas|Search/i);
+        const searchInput = page.getByPlaceholder(/Buscar|Search/i);
         await searchInput.fill('Sol');
 
         // Wait for suggestions
@@ -26,7 +26,8 @@ test.describe('Search & Filter System', () => {
 
         // Select Rarity: Rare
         const rarityFilter = page.getByLabel(/Rareza|Rarity/i);
-        if (await rarityFilter.tagName() === 'SELECT') {
+        const tagName = await rarityFilter.evaluate(e => e.tagName);
+        if (tagName === 'SELECT') {
             await rarityFilter.selectOption({ label: 'Rare' });
         } else {
             await page.getByText('Rare', { exact: true }).click();
@@ -45,7 +46,7 @@ test.describe('Search & Filter System', () => {
     });
 
     test('should show empty state for non-matching search', async ({ page }) => {
-        const searchInput = page.getByPlaceholder(/Buscar cartas|Search/i);
+        const searchInput = page.getByPlaceholder(/Buscar|Search/i);
         await searchInput.fill('XYZABC123INVALID');
         await searchInput.press('Enter');
 

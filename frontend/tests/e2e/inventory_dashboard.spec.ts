@@ -16,7 +16,7 @@ test.describe('Professional Inventory Dashboard', () => {
 
     test('should show batch actions bar when items are selected', async ({ page }) => {
         // Wait for table to load
-        await expect(page.locator('tbody tr')).toBeVisible({ timeout: 15000 });
+        await expect(page.locator('tbody tr').first()).toBeVisible({ timeout: 15000 });
 
         // Select first item - using the checkbox button
         const firstRow = page.locator('tbody tr').first();
@@ -46,11 +46,11 @@ test.describe('Professional Inventory Dashboard', () => {
         await page.locator('button:has-text("Lotus")').first().click();
 
         // Selection preview should show
-        await expect(page.locator('text=Identify Card')).locator('..').locator('text=Lotus').toBeVisible();
+        await expect(page.locator('text=Identify Card').locator('..').locator('text=Lotus')).toBeVisible();
     });
 
     test('should perform inline price editing', async ({ page }) => {
-        await expect(page.locator('tbody tr')).toBeVisible({ timeout: 15000 });
+        await expect(page.locator('tbody tr').first()).toBeVisible({ timeout: 15000 });
 
         const firstPriceButton = page.locator('tbody tr').first().locator('button.font-mono').first();
         await firstPriceButton.click();
@@ -68,7 +68,7 @@ test.describe('Professional Inventory Dashboard', () => {
     });
 
     test('should adjust stock using quick-adjust buttons', async ({ page }) => {
-        await expect(page.locator('tbody tr')).toBeVisible({ timeout: 15000 });
+        await expect(page.locator('tbody tr').first()).toBeVisible({ timeout: 15000 });
 
         const firstRow = page.locator('tbody tr').first();
         const stockDisplay = firstRow.locator('.font-mono').last();

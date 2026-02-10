@@ -5,14 +5,14 @@ test('shopping cart flow', async ({ page }) => {
 
     // 1. Find a card and open the modal
     // We'll look for any "Buy" or "Add" button if available, or just click a card image
-    const card = page.locator('img').first();
+    await page.waitForSelector('[data-testid="product-image"]');
+    const card = page.getByTestId('product-image').first();
     await card.click();
 
     // 2. Add to cart form the modal
-    const addToCartButton = page.getByRole('button', { name: /Agregar|Add/i });
-    if (await addToCartButton.isVisible()) {
-        await addToCartButton.click();
-    }
+    const addToCartButton = page.getByTestId('add-to-cart-button');
+    await expect(addToCartButton).toBeVisible();
+    await addToCartButton.click();
 
     // 3. Verify cart drawer opens and shows the item
     await expect(page.locator('text=Tu Carrito|Your Cart')).toBeVisible();

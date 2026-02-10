@@ -120,8 +120,7 @@ export const fetchCards = async (filters: any): Promise<{ cards: Card[]; total_c
 
   } catch (error) {
     console.error('Fetch Cards Failed:', error);
-    // Fallback to empty to prevent UI crash
-    return { cards: [], total_count: 0 };
+    throw error;
   }
 };
 
