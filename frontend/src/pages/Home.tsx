@@ -238,10 +238,7 @@ const Home: React.FC = () => {
 
               {/* Cart Button - Always Visible */}
               <button
-                onClick={() => {
-                  if (user) setIsCartOpen(true);
-                  else setIsAuthModalOpen(true);
-                }}
+                onClick={() => setIsCartOpen(true)}
                 data-testid="cart-button"
                 className="relative p-2.5 bg-neutral-900 border border-white/5 rounded-xl hover:bg-neutral-800 transition-all text-neutral-400 hover:text-geeko-cyan group"
               >

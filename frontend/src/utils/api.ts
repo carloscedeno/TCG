@@ -207,10 +207,14 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
   try {
     let data;
     if (API_BASE) {
-      const response = await fetch(`${API_BASE}/api/cards/${printingId}`);
-      if (response.ok) {
-        const json = await response.json();
-        data = json.card || json;
+      try {
+        const response = await fetch(`${API_BASE}/api/cards/${printingId}`);
+        if (response.ok) {
+          const json = await response.json();
+          data = json.card || json;
+        }
+      } catch (e) {
+        console.warn('API fetch failed, will try fallback', e);
       }
     }
 

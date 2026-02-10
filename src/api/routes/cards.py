@@ -14,9 +14,24 @@ async def get_cards(
     color: Optional[str] = Query(None, description="Color filter"),
     sort: Optional[str] = Query("name", description="Sort field (name, release_date)"),
     year_from: Optional[int] = Query(None, description="Start year"),
-    year_to: Optional[int] = Query(None, description="End year")
+    year_to: Optional[int] = Query(None, description="End year"),
+    type: Optional[str] = Query(None, description="Card type filter"),
+    limit: int = Query(20, description="Items per page"),
+    offset: int = Query(0, description="Pagination offset")
 ):
-    return await CardService.get_cards(q, game, set, rarity, color, type, limit, offset, sort, year_from, year_to)
+    return await CardService.get_cards(
+        q=q, 
+        game=game, 
+        set_name=set, 
+        rarity=rarity, 
+        color=color, 
+        card_type=type, 
+        limit=limit, 
+        offset=offset, 
+        sort=sort, 
+        year_from=year_from, 
+        year_to=year_to
+    )
 
 @router.get("/cards/{printing_id}")
 async def get_card_details(printing_id: str):

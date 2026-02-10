@@ -92,17 +92,29 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
         };
     }, [isOpen, cardId]);
 
+
+    const [error, setError] = useState<string | null>(null);
+
     const loadCardDetails = async (id: string) => {
+        console.log("CardModal: Start loading details for:", id);
         setLoading(true);
+        setError(null);
         setCurrentFaceIndex(0);
 
         try {
+            console.log("CardModal: Fetching details...");
             const data = await fetchCardDetails(id);
+            console.log("CardModal: Data received:", data ? "yes" : "no");
             if (!data) throw new Error("No data found");
             setDetails(data);
-        } catch (err) {
-            console.error("Failed to load details", err);
+            if (data.printing_id) setActivePrintingId(data.printing_id);
+            else if (data.all_versions && data.all_versions.length > 0) setActivePrintingId(data.all_versions[0].printing_id);
+            console.log("CardModal: Details set");
+        } catch (err: any) {
+            console.error("CardModal: Failed to load details", err);
+            setError(err.message || "Failed to load details");
         } finally {
+            console.log("CardModal: Loading finished");
             setLoading(false);
         }
     };
@@ -303,6 +315,20 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                 <div className="h-40 bg-white/5 rounded-[32px]" />
                                 <div className="h-40 bg-white/5 rounded-[32px]" />
                             </div>
+                        </div>
+                    ) : error ? (
+                        <div className="flex flex-col items-center justify-center h-full text-center p-8 space-y-4 animate-in fade-in">
+                            <div className="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 border border-red-500/20 mb-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" x2="12" y1="8" y2="12" /><line x1="12" x2="12.01" y1="16" y2="16" /></svg>
+                            </div>
+                            <h3 className="text-xl font-black text-red-500 uppercase tracking-widest">Error Loading Card</h3>
+                            <p className="text-sm text-neutral-400 font-medium max-w-xs mx-auto">{error}</p>
+                            <button
+                                onClick={() => activePrintingId && loadCardDetails(activePrintingId)}
+                                className="px-6 py-2 bg-white/5 hover:bg-white/10 rounded-full text-white font-bold text-xs uppercase tracking-widest transition-all border border-white/5 hover:border-white/20 mt-4"
+                            >
+                                Try Again
+                            </button>
                         </div>
                     ) : details ? (
                         <>

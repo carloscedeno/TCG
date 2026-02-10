@@ -54,11 +54,21 @@ export const CheckoutPage = () => {
 
     const handleSaveAddress = async () => {
         try {
-            const saved = await saveUserAddress({ ...newAddress, is_default: addresses.length === 0 });
-            setAddresses([...addresses, saved[0]]);
-            setSelectedAddress(saved[0]);
+            const { data: { user } } = await supabase.auth.getUser();
+
+            if (user) {
+                const saved = await saveUserAddress({ ...newAddress, is_default: addresses.length === 0 });
+                setAddresses([...addresses, saved[0]]);
+                setSelectedAddress(saved[0]);
+            } else {
+                // Guest mode: save locally only
+                const guestAddress = { ...newAddress, id: 'guest-' + Date.now() };
+                setAddresses([...addresses, guestAddress]);
+                setSelectedAddress(guestAddress);
+            }
             setIsNewAddress(false);
         } catch (err) {
+            console.error(err);
             alert('Error saving address');
         }
     };
