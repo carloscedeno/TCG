@@ -64,6 +64,7 @@ const Home: React.FC = () => {
   }, [query, debouncedQuery]);
 
   useEffect(() => {
+    let ignore = false;
     const fetchData = async () => {
       setLoading(true);
       setError(null);
@@ -128,6 +129,8 @@ const Home: React.FC = () => {
           };
         }
 
+        if (ignore) return;
+
         if (offset === 0) {
           setCards(result.cards);
         } else {
@@ -140,10 +143,14 @@ const Home: React.FC = () => {
         }
         setTotalCount(result.total_count);
       } catch (err: any) {
-        setError('Failed to fetch cards. Please try again later.');
-        console.error(err);
+        if (!ignore) {
+          setError('Failed to fetch cards. Please try again later.');
+          console.error(err);
+        }
       } finally {
-        setLoading(false);
+        if (!ignore) {
+          setLoading(false);
+        }
       }
     };
 
@@ -165,6 +172,10 @@ const Home: React.FC = () => {
     if (activeTab !== 'reference') newParams.set('tab', activeTab);
 
     setSearchParams(newParams, { replace: true });
+
+    return () => {
+      ignore = true;
+    };
   }, [debouncedQuery, filters, activeRarity, sortBy, page, activeTab]);
 
   useEffect(() => {
