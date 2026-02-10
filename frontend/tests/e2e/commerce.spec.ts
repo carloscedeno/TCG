@@ -5,7 +5,7 @@ test.describe('Shopping Cart & Checkout', () => {
 
     test.beforeEach(async ({ page }) => {
         // Use absolute URL to avoid any base path stripping issues
-        await page.goto('http://localhost:5174/TCG/');
+        await page.goto('/TCG/');
         await page.waitForLoadState('networkidle');
     });
 

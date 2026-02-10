@@ -36,8 +36,8 @@ test.describe('Guest Checkout Flow', () => {
             const spinner = page.getByText('Summoning Cards...');
             await expect(spinner).not.toBeVisible({ timeout: 30000 });
 
-            // Check for error message
-            const errorMsg = page.getByText('Error Connection');
+            // Check for error message (English or Spanish)
+            const errorMsg = page.getByText(/Error Connection|Error de Conexión/i);
             if (await errorMsg.count() > 0) {
                 console.log('Error Connection found on page');
                 throw new Error('Frontend failed to load cards: Connection Error displayed');
