@@ -28,7 +28,9 @@ test.describe('Guest Checkout Flow', () => {
             page.on('response', response => {
                 if (response.url().includes('get_unique_cards_optimized')) {
                     console.log('<<', response.status(), response.url());
-                    // Optionally verify body? Playwright response body is async.
+                }
+                if (response.url().includes('get_products_filtered')) {
+                    console.log('<< MARKETPLACE', response.status(), response.url());
                 }
             });
 
@@ -47,6 +49,12 @@ test.describe('Guest Checkout Flow', () => {
             // Switch to Marketplace/Inventory tab to ensure we select in-stock items
             console.log('Switching to Marketplace tab...');
             await page.getByTestId('inventory-tab').click();
+
+            // Verify tab is active
+            await expect(page.getByTestId('inventory-tab')).toHaveClass(/bg-geeko-cyan/);
+
+            // Wait for products filtered request NOT unique cards
+            await page.waitForResponse(response => response.url().includes('get_products_filtered') && response.status() === 200, { timeout: 10000 }).catch(() => console.log('Wait for get_products_filtered timed out or already happened'));
 
             // Wait for cards to load
             const firstCard = page.getByTestId('product-card').first();
