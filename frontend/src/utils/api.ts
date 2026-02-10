@@ -512,3 +512,77 @@ export const saveUserAddress = async (address: any) => {
   if (error) throw error;
   return data;
 };
+
+// Cart Management Functions
+
+export const updateCartItemQuantity = async (cartItemId: string, quantity: number): Promise<any> => {
+  try {
+    const session = await supabase.auth.getSession();
+
+    // If logged in, use RPC
+    if (session.data.session?.user) {
+      const { data, error } = await supabase.rpc('update_cart_item_quantity', {
+        p_cart_item_id: cartItemId,
+        p_new_quantity: quantity
+      });
+
+      if (error) throw error;
+
+      // Trigger cart update event
+      window.dispatchEvent(new Event('cart-updated'));
+
+      return data;
+    }
+
+    // Guest Cart Logic
+    const guestCart = JSON.parse(localStorage.getItem('guest_cart') || '[]');
+    const itemIndex = guestCart.findIndex((item: any) => `guest-${item.printing_id}` === cartItemId);
+
+    if (itemIndex >= 0) {
+      if (quantity > 0) {
+        guestCart[itemIndex].quantity = quantity;
+      } else {
+        guestCart.splice(itemIndex, 1);
+      }
+      localStorage.setItem('guest_cart', JSON.stringify(guestCart));
+      window.dispatchEvent(new Event('cart-updated'));
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating cart item:', error);
+    throw error;
+  }
+};
+
+export const removeFromCart = async (cartItemId: string): Promise<any> => {
+  try {
+    const session = await supabase.auth.getSession();
+
+    // If logged in, use RPC
+    if (session.data.session?.user) {
+      const { data, error } = await supabase.rpc('remove_from_cart', {
+        p_cart_item_id: cartItemId
+      });
+
+      if (error) throw error;
+
+      // Trigger cart update event
+      window.dispatchEvent(new Event('cart-updated'));
+
+      return data;
+    }
+
+    // Guest Cart Logic
+    const guestCart = JSON.parse(localStorage.getItem('guest_cart') || '[]');
+    const filteredCart = guestCart.filter((item: any) => `guest-${item.printing_id}` !== cartItemId);
+
+    localStorage.setItem('guest_cart', JSON.stringify(filteredCart));
+    window.dispatchEvent(new Event('cart-updated'));
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error removing from cart:', error);
+    throw error;
+  }
+};

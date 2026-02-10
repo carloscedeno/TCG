@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ShoppingCart, X, CreditCard, Loader2 } from 'lucide-react';
-import { fetchCart } from '../../utils/api';
+import { ShoppingCart, X, CreditCard, Loader2, Plus, Minus, Trash2 } from 'lucide-react';
+import { fetchCart, updateCartItemQuantity, removeFromCart } from '../../utils/api';
 
 interface CartItem {
     id: string;
@@ -24,6 +24,7 @@ interface CartDrawerProps {
 export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
     const [items, setItems] = useState<CartItem[]>([]);
     const [loading, setLoading] = useState(false);
+    const [updating, setUpdating] = useState<string | null>(null);
 
     useEffect(() => {
         const handleCartUpdate = () => {
@@ -50,6 +51,37 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
             console.error("Failed to load cart", err);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleUpdateQuantity = async (cartItemId: string, newQuantity: number) => {
+        if (newQuantity < 1) {
+            handleRemoveItem(cartItemId);
+            return;
+        }
+
+        setUpdating(cartItemId);
+        try {
+            await updateCartItemQuantity(cartItemId, newQuantity);
+            await loadCart(); // Refresh cart
+        } catch (err) {
+            console.error('Failed to update quantity', err);
+            alert('Error al actualizar cantidad');
+        } finally {
+            setUpdating(null);
+        }
+    };
+
+    const handleRemoveItem = async (cartItemId: string) => {
+        setUpdating(cartItemId);
+        try {
+            await removeFromCart(cartItemId);
+            await loadCart(); // Refresh cart
+        } catch (err) {
+            console.error('Failed to remove item', err);
+            alert('Error al eliminar item');
+        } finally {
+            setUpdating(null);
         }
     };
 
@@ -114,8 +146,57 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                                         </div>
                                         <div className="flex items-center justify-between">
                                             <span className="text-sm font-mono font-black text-geeko-cyan">${(item.products?.price || 0).toFixed(2)}</span>
-                                            <div className="flex items-center gap-3 bg-black/40 px-3 py-1.5 rounded-full border border-white/5">
-                                                <span className="text-xs font-bold">x{item.quantity}</span>
+
+                                            {/* Quantity Controls */}
+                                            <div className="flex items-center gap-2">
+                                                <button
+                                                    onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)}
+                                                    data-testid="decrease-quantity-button"
+                                                    className="w-7 h-7 bg-black/40 hover:bg-red-500/20 border border-white/5 
+                                                               hover:border-red-500/50 rounded-lg flex items-center justify-center 
+                                                               transition-all group/btn disabled:opacity-50 disabled:cursor-not-allowed"
+                                                    disabled={item.quantity <= 1 || updating === item.id}
+                                                >
+                                                    {updating === item.id ? (
+                                                        <Loader2 size={14} className="text-neutral-400 animate-spin" />
+                                                    ) : (
+                                                        <Minus size={14} className="text-neutral-400 group-hover/btn:text-red-500" />
+                                                    )}
+                                                </button>
+
+                                                <span className="text-xs font-bold min-w-[2rem] text-center">
+                                                    x{item.quantity}
+                                                </span>
+
+                                                <button
+                                                    onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}
+                                                    data-testid="increase-quantity-button"
+                                                    className="w-7 h-7 bg-black/40 hover:bg-geeko-cyan/20 border border-white/5 
+                                                               hover:border-geeko-cyan/50 rounded-lg flex items-center justify-center 
+                                                               transition-all group/btn disabled:opacity-50 disabled:cursor-not-allowed"
+                                                    disabled={updating === item.id}
+                                                >
+                                                    {updating === item.id ? (
+                                                        <Loader2 size={14} className="text-neutral-400 animate-spin" />
+                                                    ) : (
+                                                        <Plus size={14} className="text-neutral-400 group-hover/btn:text-geeko-cyan" />
+                                                    )}
+                                                </button>
+
+                                                <button
+                                                    onClick={() => handleRemoveItem(item.id)}
+                                                    data-testid="remove-item-button"
+                                                    className="w-7 h-7 bg-black/40 hover:bg-red-500/20 border border-white/5 
+                                                               hover:border-red-500/50 rounded-lg flex items-center justify-center 
+                                                               transition-all group/btn ml-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                    disabled={updating === item.id}
+                                                >
+                                                    {updating === item.id ? (
+                                                        <Loader2 size={14} className="text-neutral-400 animate-spin" />
+                                                    ) : (
+                                                        <Trash2 size={14} className="text-neutral-400 group-hover/btn:text-red-500" />
+                                                    )}
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
