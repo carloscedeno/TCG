@@ -83,7 +83,7 @@ export function SearchBar({ onSelect, placeholder, mobile = false, value = "", o
       />
 
       {showSuggestions && suggestions.length > 0 && (
-        <div className="absolute z-50 w-full mt-1 bg-neutral-900/90 backdrop-blur-md border border-neutral-700 rounded-lg shadow-xl overflow-hidden max-h-60 overflow-y-auto">
+        <div data-testid="suggestions-list" className="absolute z-50 w-full mt-1 bg-neutral-900/90 backdrop-blur-md border border-neutral-700 rounded-lg shadow-xl overflow-hidden max-h-60 overflow-y-auto">
           {suggestions.map((suggestion, index) => (
             <button
               key={index}

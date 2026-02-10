@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchCart, createOrder, fetchUserAddresses, saveUserAddress } from '../utils/api';
-import { ShieldCheck, Truck, CreditCard, CheckCircle, MapPin, Plus, Loader2 } from 'lucide-react';
+import { ShieldCheck, Truck, CreditCard, CheckCircle, MapPin, Plus, Loader2, AlertCircle } from 'lucide-react';
 import { supabase } from '../utils/supabaseClient';
 
 export const CheckoutPage = () => {
@@ -22,6 +22,7 @@ export const CheckoutPage = () => {
         email: '',
         phone: ''
     });
+    const [validationError, setValidationError] = useState<string | null>(null);
     const [isProcessing, setIsProcessing] = useState(false);
 
     useEffect(() => {
@@ -53,6 +54,12 @@ export const CheckoutPage = () => {
     };
 
     const handleSaveAddress = async () => {
+        setValidationError(null);
+        if (!newAddress.full_name || !newAddress.phone || !newAddress.address_line1 || !newAddress.city || !newAddress.state || !newAddress.zip_code) {
+            setValidationError('Todos los campos son requeridos (All fields required)');
+            return;
+        }
+
         try {
             const { data: { user } } = await supabase.auth.getUser();
 
@@ -165,6 +172,12 @@ export const CheckoutPage = () => {
                                 </div>
                             ) : (
                                 <div className="space-y-4 max-w-lg">
+                                    {validationError && (
+                                        <div className="bg-red-500/10 border border-red-500/50 text-red-500 p-3 rounded-lg flex items-center gap-2 text-sm error-message">
+                                            <AlertCircle size={16} />
+                                            {validationError}
+                                        </div>
+                                    )}
                                     <div className="grid grid-cols-2 gap-4">
                                         <input data-testid="full-name-input" placeholder="Full Name" className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 focus:border-geeko-cyan outline-none transition-colors"
                                             value={newAddress.full_name} onChange={(e) => setNewAddress({ ...newAddress, full_name: e.target.value })} />

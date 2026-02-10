@@ -1,0 +1,673 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e4]:
+  - banner [ref=e5]:
+    - navigation [ref=e6]:
+      - link "El Emporio" [ref=e8] [cursor=pointer]:
+        - /url: /TCG
+        - generic [ref=e9]:
+          - generic [ref=e10]: El
+          - text: Emporio
+      - search [ref=e12]:
+        - generic:
+          - img
+        - textbox "Buscar por nombre de carta o edición..." [ref=e13]
+      - generic [ref=e14]:
+        - button [ref=e15]:
+          - img [ref=e16]
+        - button "T test Admin" [ref=e22]:
+          - generic [ref=e23]: T
+          - generic [ref=e24]:
+            - generic [ref=e25]: test
+            - generic [ref=e26]: Admin
+          - img [ref=e27]
+  - generic [ref=e30]:
+    - generic [ref=e31]:
+      - generic [ref=e32]:
+        - button "Stock Geekorium" [ref=e33]
+        - button "Archivo" [ref=e34]
+      - generic [ref=e35]:
+        - button "Todas" [ref=e36]
+        - button "Mítica" [ref=e37]
+        - button "Rara" [ref=e38]
+        - button "Infrecuente" [ref=e39]
+        - button "Común" [ref=e40]
+    - generic [ref=e41]:
+      - generic [ref=e42]:
+        - generic [ref=e43]: "Ordenar:"
+        - generic [ref=e44]:
+          - button "Nombre ⇅" [ref=e45]
+          - button "Precio ⇅" [ref=e46]
+          - button "Fecha ↓" [ref=e47]
+      - generic [ref=e48]:
+        - button "Grid View" [ref=e49]:
+          - img [ref=e50]
+        - button "List View" [ref=e55]:
+          - img [ref=e56]
+  - main [ref=e57]:
+    - generic [ref=e58]:
+      - complementary [ref=e59]:
+        - complementary [ref=e61]:
+          - generic [ref=e62]:
+            - heading "FILTROS" [level=2] [ref=e63]:
+              - img [ref=e64]
+              - text: FILTROS
+            - button "Reiniciar" [ref=e65]:
+              - img [ref=e66]
+              - text: Reiniciar
+          - generic [ref=e69]:
+            - heading "Universo de Juegos" [level=3] [ref=e70]: Universo de Juegos
+            - 'button "Magic: The Gathering" [ref=e73]'
+          - generic [ref=e74]:
+            - heading "Expansión / Set" [level=3] [ref=e75]: Expansión / Set
+            - generic [ref=e77]:
+              - img [ref=e78]
+              - textbox "Buscar sets..." [ref=e81]
+            - generic [ref=e82]:
+              - button "Marvel Super Heroes" [ref=e83]:
+                - generic [ref=e84]: Marvel Super Heroes
+              - button "Secrets of Strixhaven" [ref=e85]:
+                - generic [ref=e86]: Secrets of Strixhaven
+              - button "Teenage Mutant Ninja Turtles" [ref=e87]:
+                - generic [ref=e88]: Teenage Mutant Ninja Turtles
+              - button "Year of the Horse 2026" [ref=e89]:
+                - generic [ref=e90]: Year of the Horse 2026
+              - button "Lorwyn Eclipsed" [ref=e91]:
+                - generic [ref=e92]: Lorwyn Eclipsed
+              - button "Wizards Play Network 2026" [ref=e93]:
+                - generic [ref=e94]: Wizards Play Network 2026
+              - button "MagicFest 2026" [ref=e95]:
+                - generic [ref=e96]: MagicFest 2026
+              - 'button "Avatar: The Last Airbender" [ref=e97]':
+                - generic [ref=e98]: "Avatar: The Last Airbender"
+              - button "Marvel's Spider-Man" [ref=e99]:
+                - generic [ref=e100]: Marvel's Spider-Man
+              - button "Marvel Universe" [ref=e101]:
+                - generic [ref=e102]: Marvel Universe
+              - button "Marvel's Spider-Man Eternal" [ref=e103]:
+                - generic [ref=e104]: Marvel's Spider-Man Eternal
+              - button "Marvel's Spider-Man Art Series" [ref=e105]:
+                - generic [ref=e106]: Marvel's Spider-Man Art Series
+              - button "Arena Anthology 4" [ref=e107]:
+                - generic [ref=e108]: Arena Anthology 4
+              - button "Arena Anthology 3" [ref=e109]:
+                - generic [ref=e110]: Arena Anthology 3
+              - button "2023 Heroes of the Realm" [ref=e111]:
+                - generic [ref=e112]: 2023 Heroes of the Realm
+              - button "Arena Anthology 2" [ref=e113]:
+                - generic [ref=e114]: Arena Anthology 2
+              - button "Arena Anthology 1" [ref=e115]:
+                - generic [ref=e116]: Arena Anthology 1
+              - button "Edge of Eternities" [ref=e117]:
+                - generic [ref=e118]: Edge of Eternities
+              - button "Final Fantasy" [ref=e119]:
+                - generic [ref=e120]: Final Fantasy
+              - button "Pioneer Anthology 1" [ref=e121]:
+                - generic [ref=e122]: Pioneer Anthology 1
+              - 'button "Tarkir: Dragonstorm" [ref=e123]':
+                - generic [ref=e124]: "Tarkir: Dragonstorm"
+              - button "Love Your LGS 2025" [ref=e125]:
+                - generic [ref=e126]: Love Your LGS 2025
+              - button "Year of the Snake 2025" [ref=e127]:
+                - generic [ref=e128]: Year of the Snake 2025
+              - button "Aetherdrift" [ref=e129]:
+                - generic [ref=e130]: Aetherdrift
+              - button "Japan Standard Cup" [ref=e131]:
+                - generic [ref=e132]: Japan Standard Cup
+              - button "Innistrad Remastered" [ref=e133]:
+                - generic [ref=e134]: Innistrad Remastered
+              - button "Spotlight Series" [ref=e135]:
+                - generic [ref=e136]: Spotlight Series
+              - button "MagicFest 2025" [ref=e137]:
+                - generic [ref=e138]: MagicFest 2025
+              - button "Wizards Play Network 2025" [ref=e139]:
+                - generic [ref=e140]: Wizards Play Network 2025
+              - button "Pioneer Masters" [ref=e141]:
+                - generic [ref=e142]: Pioneer Masters
+              - button "Foundations" [ref=e143]:
+                - generic [ref=e144]: Foundations
+              - 'button "Duskmourn: House of Horror" [ref=e145]':
+                - generic [ref=e146]: "Duskmourn: House of Horror"
+              - button "Love Your LGS 2024" [ref=e147]:
+                - generic [ref=e148]: Love Your LGS 2024
+              - button "Bloomburrow" [ref=e149]:
+                - generic [ref=e150]: Bloomburrow
+              - button "Mystery Booster 2" [ref=e151]:
+                - generic [ref=e152]: Mystery Booster 2
+              - button "Cowboy Bebop" [ref=e153]:
+                - generic [ref=e154]: Cowboy Bebop
+              - button "Assassin's Creed" [ref=e155]:
+                - generic [ref=e156]: Assassin's Creed
+              - button "Modern Horizons 3" [ref=e157]:
+                - generic [ref=e158]: Modern Horizons 3
+              - button "Outlaws of Thunder Junction" [ref=e159]:
+                - generic [ref=e160]: Outlaws of Thunder Junction
+              - button "Fallout" [ref=e161]:
+                - generic [ref=e162]: Fallout
+              - button "Murders at Karlov Manor" [ref=e163]:
+                - generic [ref=e164]: Murders at Karlov Manor
+              - button "Year of the Dragon 2024" [ref=e165]:
+                - generic [ref=e166]: Year of the Dragon 2024
+              - button "Ravnica Remastered" [ref=e167]:
+                - generic [ref=e168]: Ravnica Remastered
+              - button "MagicFest 2024" [ref=e169]:
+                - generic [ref=e170]: MagicFest 2024
+              - button "Wizards Play Network 2024" [ref=e171]:
+                - generic [ref=e172]: Wizards Play Network 2024
+              - button "The Lost Caverns of Ixalan" [ref=e173]:
+                - generic [ref=e174]: The Lost Caverns of Ixalan
+              - button "Special Guests" [ref=e175]:
+                - generic [ref=e176]: Special Guests
+              - button "Doctor Who" [ref=e177]:
+                - generic [ref=e178]: Doctor Who
+              - button "Wilds of Eldraine" [ref=e179]:
+                - generic [ref=e180]: Wilds of Eldraine
+              - button "Magic × Duel Masters Promos" [ref=e181]:
+                - generic [ref=e182]: Magic × Duel Masters Promos
+          - generic [ref=e183]:
+            - heading "Rareza" [level=3] [ref=e184]: Rareza
+            - generic [ref=e186]:
+              - button "Común" [ref=e187]:
+                - generic [ref=e189]: Común
+              - button "Infrecuente" [ref=e190]:
+                - generic [ref=e192]: Infrecuente
+              - button "Rara" [ref=e193]:
+                - generic [ref=e195]: Rara
+              - button "Mítica" [ref=e196]:
+                - generic [ref=e198]: Mítica
+          - generic [ref=e199]:
+            - heading "Esencia de Mana (Colores)" [level=3] [ref=e200]: Esencia de Mana (Colores)
+            - generic [ref=e202]:
+              - button "Blanco" [ref=e203]
+              - button "Azul" [ref=e205]
+              - button "Negro" [ref=e207]
+              - button "Rojo" [ref=e209]
+              - button "Verde" [ref=e211]
+              - button "Incoloro" [ref=e213]
+              - button "Multicolor" [ref=e215]
+          - generic [ref=e217]:
+            - heading "Órbita Temporal (Año)" [level=3] [ref=e218]: Órbita Temporal (Año)
+            - generic [ref=e220]:
+              - spinbutton [ref=e221]
+              - generic [ref=e222]: →
+              - spinbutton [ref=e223]
+            - generic [ref=e224]:
+              - generic [ref=e225]: Orígenes (1993)
+              - generic [ref=e226]: Presente (2026)
+          - generic [ref=e227]:
+            - heading "Esencia de Carta (Tipo)" [level=3] [ref=e228]: Esencia de Carta (Tipo)
+            - generic [ref=e230]:
+              - button "Criatura" [ref=e231]
+              - button "Instantáneo" [ref=e232]
+              - button "Conjuro" [ref=e233]
+              - button "Encantamiento" [ref=e234]
+              - button "Artefacto" [ref=e235]
+              - button "Planeswalker" [ref=e236]
+              - button "Tierra" [ref=e237]
+          - generic [ref=e239]:
+            - paragraph [ref=e241]: Sincronización en tiempo real activa vía Neural Link con mercados globales.
+            - generic [ref=e242]:
+              - img [ref=e243]
+              - text: "Sincro Cuántica: ON"
+      - generic [ref=e246]:
+        - generic [ref=e247]:
+          - generic [ref=e248]: "Activo:"
+          - 'button "Magic: The Gathering" [ref=e249]':
+            - text: "Magic: The Gathering"
+            - img [ref=e250]
+          - button "Limpiar Todo" [ref=e253]
+        - generic [ref=e255]:
+          - 'link "Kaya''s Guile Existencia: 100 rare Kaya''s Guile mh1 Mercado $2.14 ›" [ref=e256] [cursor=pointer]':
+            - /url: card/179bd74b-c458-49d6-90ac-6075454e43dd
+            - generic [ref=e257]:
+              - img "Kaya's Guile" [ref=e258]
+              - generic [ref=e259]: "Existencia: 100"
+              - generic [ref=e260]: rare
+            - generic [ref=e261]:
+              - heading "Kaya's Guile" [level=3] [ref=e262]
+              - generic [ref=e264]: mh1
+              - generic [ref=e265]:
+                - generic [ref=e266]:
+                  - generic [ref=e267]: Mercado
+                  - generic [ref=e268]: $2.14
+                - button "›" [ref=e269]:
+                  - generic [ref=e270]: ›
+          - 'link "Shadowy Backstreet Existencia: 100 rare Shadowy Backstreet mkm Mercado $17.99 ›" [ref=e271] [cursor=pointer]':
+            - /url: card/69c1b656-1d67-499c-bf0f-417682a86c7d
+            - generic [ref=e272]:
+              - img "Shadowy Backstreet" [ref=e273]
+              - generic [ref=e274]: "Existencia: 100"
+              - generic [ref=e275]: rare
+            - generic [ref=e276]:
+              - heading "Shadowy Backstreet" [level=3] [ref=e277]
+              - generic [ref=e279]: mkm
+              - generic [ref=e280]:
+                - generic [ref=e281]:
+                  - generic [ref=e282]: Mercado
+                  - generic [ref=e283]: $17.99
+                - button "›" [ref=e284]:
+                  - generic [ref=e285]: ›
+          - 'link "Solitude Existencia: 100 mythic Solitude mh2 Mercado $35.52 ›" [ref=e286] [cursor=pointer]':
+            - /url: card/47a6234f-309f-4e03-9263-66da48b57153
+            - generic [ref=e287]:
+              - img "Solitude" [ref=e288]
+              - generic [ref=e289]: "Existencia: 100"
+              - generic [ref=e290]: mythic
+            - generic [ref=e291]:
+              - heading "Solitude" [level=3] [ref=e292]
+              - generic [ref=e294]: mh2
+              - generic [ref=e295]:
+                - generic [ref=e296]:
+                  - generic [ref=e297]: Mercado
+                  - generic [ref=e298]: $35.52
+                - button "›" [ref=e299]:
+                  - generic [ref=e300]: ›
+          - 'link "Restless Fortress Existencia: 100 rare Restless Fortress woe Mercado $1.32 ›" [ref=e301] [cursor=pointer]':
+            - /url: card/675213bb-28d7-460c-a4f3-950f5b9090af
+            - generic [ref=e302]:
+              - img "Restless Fortress" [ref=e303]
+              - generic [ref=e304]: "Existencia: 100"
+              - generic [ref=e305]: rare
+            - generic [ref=e306]:
+              - heading "Restless Fortress" [level=3] [ref=e307]
+              - generic [ref=e309]: woe
+              - generic [ref=e310]:
+                - generic [ref=e311]:
+                  - generic [ref=e312]: Mercado
+                  - generic [ref=e313]: $1.32
+                - button "›" [ref=e314]:
+                  - generic [ref=e315]: ›
+          - 'link "Dauthi Voidwalker Existencia: 100 rare Dauthi Voidwalker mh2 Mercado $5.99 ›" [ref=e316] [cursor=pointer]':
+            - /url: card/dce5db87-4a78-4b8d-b5c2-918ccd1ba4e3
+            - generic [ref=e317]:
+              - img "Dauthi Voidwalker" [ref=e318]
+              - generic [ref=e319]: "Existencia: 100"
+              - generic [ref=e320]: rare
+            - generic [ref=e321]:
+              - heading "Dauthi Voidwalker" [level=3] [ref=e322]
+              - generic [ref=e324]: mh2
+              - generic [ref=e325]:
+                - generic [ref=e326]:
+                  - generic [ref=e327]: Mercado
+                  - generic [ref=e328]: $5.99
+                - button "›" [ref=e329]:
+                  - generic [ref=e330]: ›
+          - 'link "Takenuma, Abandoned Mire Existencia: 100 rare Takenuma, Abandoned Mire neo Mercado $14.24 ›" [ref=e331] [cursor=pointer]':
+            - /url: card/499037cc-a577-41cb-8ca2-5e117945634f
+            - generic [ref=e332]:
+              - img "Takenuma, Abandoned Mire" [ref=e333]
+              - generic [ref=e334]: "Existencia: 100"
+              - generic [ref=e335]: rare
+            - generic [ref=e336]:
+              - heading "Takenuma, Abandoned Mire" [level=3] [ref=e337]
+              - generic [ref=e339]: neo
+              - generic [ref=e340]:
+                - generic [ref=e341]:
+                  - generic [ref=e342]: Mercado
+                  - generic [ref=e343]: $14.24
+                - button "›" [ref=e344]:
+                  - generic [ref=e345]: ›
+          - 'link "Kaya, Orzhov Usurper Existencia: 100 mythic Kaya, Orzhov Usurper rvr Mercado $0.49 ›" [ref=e346] [cursor=pointer]':
+            - /url: card/307efe3d-291c-4c9f-8ce6-4bd2ba1452ad
+            - generic [ref=e347]:
+              - img "Kaya, Orzhov Usurper" [ref=e348]
+              - generic [ref=e349]: "Existencia: 100"
+              - generic [ref=e350]: mythic
+            - generic [ref=e351]:
+              - heading "Kaya, Orzhov Usurper" [level=3] [ref=e352]
+              - generic [ref=e354]: rvr
+              - generic [ref=e355]:
+                - generic [ref=e356]:
+                  - generic [ref=e357]: Mercado
+                  - generic [ref=e358]: $0.49
+                - button "›" [ref=e359]:
+                  - generic [ref=e360]: ›
+          - 'link "Winter Orb Existencia: 100 rare Winter Orb ema Mercado $14.99 ›" [ref=e361] [cursor=pointer]':
+            - /url: card/ab3cec7e-513e-400d-a1a8-2c71cdde02c6
+            - generic [ref=e362]:
+              - img "Winter Orb" [ref=e363]
+              - generic [ref=e364]: "Existencia: 100"
+              - generic [ref=e365]: rare
+            - generic [ref=e366]:
+              - heading "Winter Orb" [level=3] [ref=e367]
+              - generic [ref=e369]: ema
+              - generic [ref=e370]:
+                - generic [ref=e371]:
+                  - generic [ref=e372]: Mercado
+                  - generic [ref=e373]: $14.99
+                - button "›" [ref=e374]:
+                  - generic [ref=e375]: ›
+          - 'link "Static Orb Existencia: 100 rare Static Orb 7ed Mercado $13.99 ›" [ref=e376] [cursor=pointer]':
+            - /url: card/86bf43b1-8d4e-4759-bb2d-0b2e03ba7012
+            - generic [ref=e377]:
+              - img "Static Orb" [ref=e378]
+              - generic [ref=e379]: "Existencia: 100"
+              - generic [ref=e380]: rare
+            - generic [ref=e381]:
+              - heading "Static Orb" [level=3] [ref=e382]
+              - generic [ref=e384]: 7ed
+              - generic [ref=e385]:
+                - generic [ref=e386]:
+                  - generic [ref=e387]: Mercado
+                  - generic [ref=e388]: $13.99
+                - button "›" [ref=e389]:
+                  - generic [ref=e390]: ›
+          - 'link "Agatha''s Soul Cauldron Existencia: 100 mythic Agatha''s Soul Cauldron woe Mercado $38.27 ›" [ref=e391] [cursor=pointer]':
+            - /url: card/019b51b0-e5c6-4208-922b-7736686dddcd
+            - generic [ref=e392]:
+              - img "Agatha's Soul Cauldron" [ref=e393]
+              - generic [ref=e394]: "Existencia: 100"
+              - generic [ref=e395]: mythic
+            - generic [ref=e396]:
+              - heading "Agatha's Soul Cauldron" [level=3] [ref=e397]
+              - generic [ref=e399]: woe
+              - generic [ref=e400]:
+                - generic [ref=e401]:
+                  - generic [ref=e402]: Mercado
+                  - generic [ref=e403]: $38.27
+                - button "›" [ref=e404]:
+                  - generic [ref=e405]: ›
+          - 'link "Ghost Vacuum Existencia: 100 rare Ghost Vacuum dsk Mercado $3.99 ›" [ref=e406] [cursor=pointer]':
+            - /url: card/8ac39c01-127f-4471-bc74-11a90c48e306
+            - generic [ref=e407]:
+              - img "Ghost Vacuum" [ref=e408]
+              - generic [ref=e409]: "Existencia: 100"
+              - generic [ref=e410]: rare
+            - generic [ref=e411]:
+              - heading "Ghost Vacuum" [level=3] [ref=e412]
+              - generic [ref=e414]: dsk
+              - generic [ref=e415]:
+                - generic [ref=e416]:
+                  - generic [ref=e417]: Mercado
+                  - generic [ref=e418]: $3.99
+                - button "›" [ref=e419]:
+                  - generic [ref=e420]: ›
+          - 'link "Ghostly Prison Existencia: 100 uncommon Ghostly Prison c21 Mercado $8.49 ›" [ref=e421] [cursor=pointer]':
+            - /url: card/c601064b-9edd-4c7b-aea2-782ae63851ce
+            - generic [ref=e422]:
+              - img "Ghostly Prison" [ref=e423]
+              - generic [ref=e424]: "Existencia: 100"
+              - generic [ref=e425]: uncommon
+            - generic [ref=e426]:
+              - heading "Ghostly Prison" [level=3] [ref=e427]
+              - generic [ref=e429]: c21
+              - generic [ref=e430]:
+                - generic [ref=e431]:
+                  - generic [ref=e432]: Mercado
+                  - generic [ref=e433]: $8.49
+                - button "›" [ref=e434]:
+                  - generic [ref=e435]: ›
+          - 'link "Cataclysm Existencia: 100 rare Cataclysm exo Mercado $14.99 ›" [ref=e436] [cursor=pointer]':
+            - /url: card/024ae668-a1ae-4020-89c8-acbd8bd0a691
+            - generic [ref=e437]:
+              - img "Cataclysm" [ref=e438]
+              - generic [ref=e439]: "Existencia: 100"
+              - generic [ref=e440]: rare
+            - generic [ref=e441]:
+              - heading "Cataclysm" [level=3] [ref=e442]
+              - generic [ref=e444]: exo
+              - generic [ref=e445]:
+                - generic [ref=e446]:
+                  - generic [ref=e447]: Mercado
+                  - generic [ref=e448]: $14.99
+                - button "›" [ref=e449]:
+                  - generic [ref=e450]: ›
+          - 'link "Gonti, Night Minister Existencia: 100 rare Gonti, Night Minister dft Mercado $1.79 ›" [ref=e451] [cursor=pointer]':
+            - /url: card/d79ca40a-e5c0-4956-8df0-ecbd2a25656f
+            - generic [ref=e452]:
+              - img "Gonti, Night Minister" [ref=e453]
+              - generic [ref=e454]: "Existencia: 100"
+              - generic [ref=e455]: rare
+            - generic [ref=e456]:
+              - heading "Gonti, Night Minister" [level=3] [ref=e457]
+              - generic [ref=e459]: dft
+              - generic [ref=e460]:
+                - generic [ref=e461]:
+                  - generic [ref=e462]: Mercado
+                  - generic [ref=e463]: $1.79
+                - button "›" [ref=e464]:
+                  - generic [ref=e465]: ›
+          - 'link "Hive of the Eye Tyrant Existencia: 100 rare Hive of the Eye Tyrant afr Mercado $0.53 ›" [ref=e466] [cursor=pointer]':
+            - /url: card/9eb391dc-0378-4793-a5de-899b09792a4b
+            - generic [ref=e467]:
+              - img "Hive of the Eye Tyrant" [ref=e468]
+              - generic [ref=e469]: "Existencia: 100"
+              - generic [ref=e470]: rare
+            - generic [ref=e471]:
+              - heading "Hive of the Eye Tyrant" [level=3] [ref=e472]
+              - generic [ref=e474]: afr
+              - generic [ref=e475]:
+                - generic [ref=e476]:
+                  - generic [ref=e477]: Mercado
+                  - generic [ref=e478]: $0.53
+                - button "›" [ref=e479]:
+                  - generic [ref=e480]: ›
+          - 'link "Hymn to Tourach Existencia: 100 common Hymn to Tourach ema Mercado $1.29 ›" [ref=e481] [cursor=pointer]':
+            - /url: card/3faa8c5e-9e1b-4cee-b322-a033bf33dcbc
+            - generic [ref=e482]:
+              - img "Hymn to Tourach" [ref=e483]
+              - generic [ref=e484]: "Existencia: 100"
+              - generic [ref=e485]: common
+            - generic [ref=e486]:
+              - heading "Hymn to Tourach" [level=3] [ref=e487]
+              - generic [ref=e489]: ema
+              - generic [ref=e490]:
+                - generic [ref=e491]:
+                  - generic [ref=e492]: Mercado
+                  - generic [ref=e493]: $1.29
+                - button "›" [ref=e494]:
+                  - generic [ref=e495]: ›
+          - 'link "Kaya''s Ghostform Existencia: 100 common Kaya''s Ghostform war Mercado $2.29 ›" [ref=e496] [cursor=pointer]':
+            - /url: card/98f3be88-24e2-433f-9138-f0cb59d09a0f
+            - generic [ref=e497]:
+              - img "Kaya's Ghostform" [ref=e498]
+              - generic [ref=e499]: "Existencia: 100"
+              - generic [ref=e500]: common
+            - generic [ref=e501]:
+              - heading "Kaya's Ghostform" [level=3] [ref=e502]
+              - generic [ref=e504]: war
+              - generic [ref=e505]:
+                - generic [ref=e506]:
+                  - generic [ref=e507]: Mercado
+                  - generic [ref=e508]: $2.29
+                - button "›" [ref=e509]:
+                  - generic [ref=e510]: ›
+          - 'link "Leyline of the Void Existencia: 100 rare Leyline of the Void dsk Mercado $0.81 ›" [ref=e511] [cursor=pointer]':
+            - /url: card/aeaa3aff-608d-4723-bb7c-8daedebe9f36
+            - generic [ref=e512]:
+              - img "Leyline of the Void" [ref=e513]
+              - generic [ref=e514]: "Existencia: 100"
+              - generic [ref=e515]: rare
+            - generic [ref=e516]:
+              - heading "Leyline of the Void" [level=3] [ref=e517]
+              - generic [ref=e519]: dsk
+              - generic [ref=e520]:
+                - generic [ref=e521]:
+                  - generic [ref=e522]: Mercado
+                  - generic [ref=e523]: $0.81
+                - button "›" [ref=e524]:
+                  - generic [ref=e525]: ›
+          - 'link "Abaddon the Despoiler Existencia: 100 mythic Abaddon the Despoiler 40k Mercado $0.99 ›" [ref=e526] [cursor=pointer]':
+            - /url: card/de313e48-4e68-48ea-973e-37aef5b9c1d0
+            - generic [ref=e527]:
+              - img "Abaddon the Despoiler" [ref=e528]
+              - generic [ref=e529]: "Existencia: 100"
+              - generic [ref=e530]: mythic
+            - generic [ref=e531]:
+              - heading "Abaddon the Despoiler" [level=3] [ref=e532]
+              - generic [ref=e534]: 40k
+              - generic [ref=e535]:
+                - generic [ref=e536]:
+                  - generic [ref=e537]: Mercado
+                  - generic [ref=e538]: $0.99
+                - button "›" [ref=e539]:
+                  - generic [ref=e540]: ›
+          - 'link "Abaddon the Despoiler Existencia: 100 mythic Abaddon the Despoiler 40k Mercado $0.99 ›" [ref=e541] [cursor=pointer]':
+            - /url: card/de313e48-4e68-48ea-973e-37aef5b9c1d0
+            - generic [ref=e542]:
+              - img "Abaddon the Despoiler" [ref=e543]
+              - generic [ref=e544]: "Existencia: 100"
+              - generic [ref=e545]: mythic
+            - generic [ref=e546]:
+              - heading "Abaddon the Despoiler" [level=3] [ref=e547]
+              - generic [ref=e549]: 40k
+              - generic [ref=e550]:
+                - generic [ref=e551]:
+                  - generic [ref=e552]: Mercado
+                  - generic [ref=e553]: $0.99
+                - button "›" [ref=e554]:
+                  - generic [ref=e555]: ›
+          - 'link "Ketramose, the New Dawn Existencia: 100 mythic Ketramose, the New Dawn dft Mercado $8.49 ›" [ref=e556] [cursor=pointer]':
+            - /url: card/3c8a81bf-f63c-40ca-a4da-db68df3f3e1a
+            - generic [ref=e557]:
+              - img "Ketramose, the New Dawn" [ref=e558]
+              - generic [ref=e559]: "Existencia: 100"
+              - generic [ref=e560]: mythic
+            - generic [ref=e561]:
+              - heading "Ketramose, the New Dawn" [level=3] [ref=e562]
+              - generic [ref=e564]: dft
+              - generic [ref=e565]:
+                - generic [ref=e566]:
+                  - generic [ref=e567]: Mercado
+                  - generic [ref=e568]: $8.49
+                - button "›" [ref=e569]:
+                  - generic [ref=e570]: ›
+          - 'link "Llanowar Elves Existencia: 100 common Llanowar Elves m12 Mercado $0.69 ›" [ref=e571] [cursor=pointer]':
+            - /url: card/01c6f877-6b00-4d57-8a88-36cd3b16edbc
+            - generic [ref=e572]:
+              - img "Llanowar Elves" [ref=e573]
+              - generic [ref=e574]: "Existencia: 100"
+              - generic [ref=e575]: common
+            - generic [ref=e576]:
+              - heading "Llanowar Elves" [level=3] [ref=e577]
+              - generic [ref=e579]: m12
+              - generic [ref=e580]:
+                - generic [ref=e581]:
+                  - generic [ref=e582]: Mercado
+                  - generic [ref=e583]: $0.69
+                - button "›" [ref=e584]:
+                  - generic [ref=e585]: ›
+          - 'link "Shivan Dragon Existencia: 100 rare Shivan Dragon 10e Mercado $0.01 ›" [ref=e586] [cursor=pointer]':
+            - /url: card/0dcdd2db-1a4b-48dd-94cf-bd719ff40da9
+            - generic [ref=e587]:
+              - img "Shivan Dragon" [ref=e588]
+              - generic [ref=e589]: "Existencia: 100"
+              - generic [ref=e590]: rare
+            - generic [ref=e591]:
+              - heading "Shivan Dragon" [level=3] [ref=e592]
+              - generic [ref=e594]: 10e
+              - generic [ref=e595]:
+                - generic [ref=e596]:
+                  - generic [ref=e597]: Mercado
+                  - generic [ref=e598]: $0.01
+                - button "›" [ref=e599]:
+                  - generic [ref=e600]: ›
+          - 'link "Mox Emerald Existencia: 100 rare Mox Emerald prm Mercado $5000.00 ›" [ref=e601] [cursor=pointer]':
+            - /url: card/cc38ccf8-67fe-4dc8-816a-9f3c68efbecd
+            - generic [ref=e602]:
+              - img "Mox Emerald" [ref=e603]
+              - generic [ref=e604]: "Existencia: 100"
+              - generic [ref=e605]: rare
+            - generic [ref=e606]:
+              - heading "Mox Emerald" [level=3] [ref=e607]
+              - generic [ref=e609]: prm
+              - generic [ref=e610]:
+                - generic [ref=e611]:
+                  - generic [ref=e612]: Mercado
+                  - generic [ref=e613]: $5000.00
+                - button "›" [ref=e614]:
+                  - generic [ref=e615]: ›
+          - 'link "Sol Ring Existencia: 100 rare Sol Ring sld Mercado $7.43 ›" [ref=e616] [cursor=pointer]':
+            - /url: card/3e10052f-b3e5-4a2c-b268-9a12ce354eb9
+            - generic [ref=e617]:
+              - img "Sol Ring" [ref=e618]
+              - generic [ref=e619]: "Existencia: 100"
+              - generic [ref=e620]: rare
+            - generic [ref=e621]:
+              - heading "Sol Ring" [level=3] [ref=e622]
+              - generic [ref=e624]: sld
+              - generic [ref=e625]:
+                - generic [ref=e626]:
+                  - generic [ref=e627]: Mercado
+                  - generic [ref=e628]: $7.43
+                - button "›" [ref=e629]:
+                  - generic [ref=e630]: ›
+          - 'link "Black Lotus Existencia: 100 Rare Black Lotus LEA Mercado $149999.99 ›" [ref=e631] [cursor=pointer]':
+            - /url: card/b0faa7f2-b547-42c4-a810-839da50dadfe
+            - generic [ref=e632]:
+              - img "Black Lotus" [ref=e633]
+              - generic [ref=e634]: "Existencia: 100"
+              - generic [ref=e635]: Rare
+            - generic [ref=e636]:
+              - heading "Black Lotus" [level=3] [ref=e637]
+              - generic [ref=e639]: LEA
+              - generic [ref=e640]:
+                - generic [ref=e641]:
+                  - generic [ref=e642]: Mercado
+                  - generic [ref=e643]: $149999.99
+                - button "›" [ref=e644]:
+                  - generic [ref=e645]: ›
+  - contentinfo [ref=e646]:
+    - generic [ref=e647]:
+      - generic [ref=e648]:
+        - generic [ref=e650]: El Emporio
+        - generic [ref=e651]:
+          - 'link "WhatsApp Principal: +58 412-8042832" [ref=e652] [cursor=pointer]':
+            - /url: https://wa.me/584128042832
+          - 'link "WhatsApp Singles: +58 424-2507802" [ref=e653] [cursor=pointer]':
+            - /url: https://wa.me/584242507802
+        - generic [ref=e654]:
+          - generic [ref=e655] [cursor=pointer]: IG
+          - generic [ref=e656] [cursor=pointer]: TK
+          - generic [ref=e657] [cursor=pointer]: FB
+      - generic [ref=e658]: © 2026 El Emporio. Plataforma Avanzada de TCG.
+      - generic [ref=e659]:
+        - link "Privacidad" [ref=e660] [cursor=pointer]:
+          - /url: "#"
+        - link "Términos" [ref=e661] [cursor=pointer]:
+          - /url: "#"
+        - link "Cómo Comprar" [ref=e662] [cursor=pointer]:
+          - /url: "#"
+  - generic [ref=e666]:
+    - generic [ref=e667]:
+      - generic [ref=e668]:
+        - img [ref=e670]
+        - heading "Tu Carrito" [level=2] [ref=e674]
+      - button [ref=e675]:
+        - img [ref=e676]
+    - generic [ref=e679]:
+      - generic [ref=e680]:
+        - img "Kaya's Ghostform" [ref=e682]
+        - generic [ref=e683]:
+          - generic [ref=e684]:
+            - heading "Kaya's Ghostform" [level=4] [ref=e685]
+            - paragraph [ref=e686]: war
+          - generic [ref=e687]:
+            - generic [ref=e688]: $2.29
+            - generic [ref=e690]: x2
+      - generic [ref=e691]:
+        - img "Kaya's Guile" [ref=e693]
+        - generic [ref=e694]:
+          - generic [ref=e695]:
+            - heading "Kaya's Guile" [level=4] [ref=e696]
+            - paragraph [ref=e697]: mh1
+          - generic [ref=e698]:
+            - generic [ref=e699]: $2.14
+            - generic [ref=e701]: x1
+    - generic [ref=e702]:
+      - generic [ref=e703]:
+        - generic [ref=e704]:
+          - generic [ref=e705]: Subtotal
+          - generic [ref=e706]: $6.72
+        - generic [ref=e707]:
+          - generic [ref=e708]: Envío
+          - generic [ref=e709]: Gratis
+        - generic [ref=e711]:
+          - generic [ref=e712]: Total
+          - generic [ref=e713]: $6.72
+      - button "Finalizar Compra" [ref=e714]:
+        - img [ref=e715]
+        - text: Finalizar Compra
+      - paragraph [ref=e717]: Pago seguro procesado por Geekorium Engine.
+```

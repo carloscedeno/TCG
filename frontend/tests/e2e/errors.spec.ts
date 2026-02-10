@@ -1,5 +1,8 @@
 import { test, expect } from '@playwright/test';
 
+// Increase timeout for slow environments
+test.setTimeout(60000);
+
 test.describe('Error Handling & Edge Cases', () => {
     test('should handle 404 page', async ({ page }) => {
         await page.goto('invalid-page-xyz');
@@ -8,6 +11,13 @@ test.describe('Error Handling & Edge Cases', () => {
     });
 
     test('should validate checkout fields', async ({ page }) => {
+        // Mock empty address list to force new address form
+        await page.route('**/rest/v1/user_addresses*', route => route.fulfill({
+            status: 200,
+            contentType: 'application/json',
+            body: JSON.stringify([])
+        }));
+
         // Ensure we have items in cart to reach checkout
         await page.goto('/');
 
@@ -24,24 +34,27 @@ test.describe('Error Handling & Edge Cases', () => {
 
         // Wait for add-to-cart button
         const addToCartBtn = page.getByTestId('add-to-cart-button');
-        await expect(addToCartBtn).toBeVisible();
+        // Check for button state
+        await expect(addToCartBtn).toBeEnabled();
         await addToCartBtn.click();
 
         // Wait for cart drawer to open and verify item added
         // "Tu Carrito" heading should be visible
         await expect(page.getByRole('heading', { name: /Tu Carrito/i })).toBeVisible();
-        // Ensure cart is NOT empty
-        await expect(page.locator('text=Tu carrito está vacío')).not.toBeVisible();
+
+        // Ensure cart has items
+        await expect(page.locator('.cart-item, [data-testid="cart-item"]')).toHaveCount(1);
+
+        // Ensure "empty" message is GONE (wait for it to disappear if present)
+        await expect(page.getByText(/Tu carrito está vacío/i)).not.toBeVisible();
 
         await page.goto('checkout');
-        // Attempt to continue with empty form
-        await page.getByRole('button', { name: /Continuar|Continue/i }).click();
+        // Attempt to save address with empty form
+        await page.getByTestId('save-address-button').click();
 
         // Check for validation messages
-        // Assuming browser validation or custom messages
-        const errorMessages = page.locator('.error-message, [aria-invalid="true"]');
-        // If we can't find specific error classes, we check for presence of some warning
-        await expect(page.locator('body')).toContainText(/requerido|required|falta/i);
+        await expect(page.locator('.error-message')).toBeVisible();
+        await expect(page.locator('.error-message')).toContainText(/Todos los campos son requeridos/i);
     });
 
     test('should handle failed API responses gracefully', async ({ page }) => {

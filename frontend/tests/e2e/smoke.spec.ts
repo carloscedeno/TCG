@@ -4,7 +4,7 @@ test('has title', async ({ page }) => {
     await page.goto('/');
 
     // Expect a title "to contain" a substring.
-    await expect(page).toHaveTitle(/Vite \+ React \+ TS/);
+    await expect(page).toHaveTitle(/El Emporio/);
 });
 
 test('marketplace link works', async ({ page }) => {
