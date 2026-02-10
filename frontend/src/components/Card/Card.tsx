@@ -112,7 +112,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
               <>
                 <span className="opacity-30">•</span>
                 <span className="text-[9px] font-black uppercase tracking-widest text-geeko-cyan">
-                  Stock: {total_stock}
+                  Existencia: {total_stock}
                 </span>
               </>
             )}
@@ -124,7 +124,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         </div>
 
         <div className="text-right flex flex-col items-end">
-          <span className="text-[9px] uppercase text-neutral-500 font-bold tracking-wider">Market</span>
+          <span className="text-[9px] uppercase text-neutral-500 font-bold tracking-wider">Mercado</span>
           <span className="text-geeko-cyan font-mono font-bold text-base leading-none">
             {typeof price === 'number' && price > 0 ? `$${price.toFixed(2)}` : '---'}
           </span>
@@ -179,14 +179,14 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         ) : (
           <div className="flex flex-col items-center justify-center w-full h-full text-neutral-600 p-4">
             <Shield size={40} className="mb-2 opacity-20" />
-            <span className="text-[10px] uppercase tracking-widest font-bold opacity-50 text-center">No Image Available</span>
+            <span className="text-[10px] uppercase tracking-widest font-bold opacity-50 text-center">Imagen No Disponible</span>
           </div>
         )}
 
         {/* Stock display */}
         {total_stock !== undefined && total_stock > 0 && (
           <div className="absolute top-2 left-2 z-20 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider backdrop-blur-md border border-white/10 bg-geeko-cyan/20 text-geeko-cyan">
-            Stock: {total_stock}
+            Existencia: {total_stock}
           </div>
         )}
 
@@ -215,7 +215,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         {/* Price Row */}
         <div className="mt-4 pt-3 flex items-center justify-between border-t border-white/5">
           <div className="flex flex-col">
-            <span className="text-[9px] uppercase text-neutral-500 font-bold tracking-wider">Market</span>
+            <span className="text-[9px] uppercase text-neutral-500 font-bold tracking-wider">Mercado</span>
             <span className="text-geeko-cyan font-mono font-bold text-lg leading-none">
               {typeof price === 'number' && price > 0 ? `$${price.toFixed(2)}` : '---'}
             </span>

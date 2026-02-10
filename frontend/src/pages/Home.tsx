@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { rarityMap } from '../utils/translations';
 import { CardGrid } from '../components/Card/CardGrid';
 import { CardModal } from '../components/Card/CardModal';
 import type { CardProps } from '../components/Card/Card';
@@ -277,7 +278,7 @@ const Home: React.FC = () => {
                     : 'text-neutral-500 hover:text-neutral-300'
                     }`}
                 >
-                  Stok Geekorium
+                  Stock Geekorium
                 </button>
                 <button
                   onClick={() => handleTabChange('reference')}
@@ -301,7 +302,7 @@ const Home: React.FC = () => {
                       : 'text-neutral-500 hover:text-neutral-300'
                       }`}
                   >
-                    {r}
+                    {rarityMap[r] || r}
                   </button>
                 ))}
               </div>
@@ -317,7 +318,7 @@ const Home: React.FC = () => {
                     <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full" />
                   )}
                 </div>
-                <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Filters</span>
+                <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Filtros</span>
               </button>
 
               <div className="flex items-center gap-2">
@@ -384,20 +385,20 @@ const Home: React.FC = () => {
               {loading && page === 0 ? (
                 <div className="flex flex-col items-center justify-center py-32 gap-6">
                   <div className="w-16 h-16 border-4 border-blue-600/20 border-t-blue-600 rounded-full animate-spin"></div>
-                  <p className="text-neutral-500 font-black text-xs tracking-widest uppercase animate-pulse">Summoning Cards...</p>
+                  <p className="text-neutral-500 font-black text-xs tracking-widest uppercase animate-pulse">Invocando Cartas...</p>
                 </div>
               ) : error ? (
                 <div className="text-center py-20 bg-red-900/5 border border-red-900/10 rounded-3xl">
                   <div className="w-16 h-16 bg-red-900/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
                     <div className="text-2xl text-red-500">!</div>
                   </div>
-                  <h3 className="text-xl font-bold text-red-500 mb-2">Error Connection</h3>
+                  <h3 className="text-xl font-bold text-red-500 mb-2">Error de Conexión</h3>
                   <p className="text-neutral-500 text-sm max-w-md mx-auto">{error}</p>
                   <button
                     onClick={() => window.location.reload()}
                     className="mt-8 px-8 py-3 bg-red-600 text-white rounded-full font-bold text-sm hover:bg-red-500 transition-all shadow-lg shadow-red-600/20"
                   >
-                    Reload Page
+                    Recargar Página
                   </button>
                 </div>
               ) : (
@@ -405,11 +406,11 @@ const Home: React.FC = () => {
                   {/* Active Filters Tokens */}
                   {(Object.values(filters).some(v => v && v.length > 0) || activeRarity !== 'All' || debouncedQuery) && (
                     <div className="flex flex-wrap items-center gap-2 mb-2 animate-in fade-in slide-in-from-left-2 duration-300">
-                      <span className="text-[10px] font-black uppercase tracking-widest text-neutral-600 mr-2">Active:</span>
+                      <span className="text-[10px] font-black uppercase tracking-widest text-neutral-600 mr-2">Activo:</span>
 
                       {debouncedQuery && (
                         <button onClick={() => { setQuery(''); setPage(0); }} className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600/10 border border-blue-500/30 rounded-full text-[10px] font-bold text-blue-400 hover:bg-blue-600/20 transition-all group">
-                          Search: {debouncedQuery}
+                          Búsqueda: {debouncedQuery}
                           <X size={10} className="group-hover:rotate-90 transition-transform" />
                         </button>
                       )}
@@ -423,7 +424,7 @@ const Home: React.FC = () => {
 
                       {filters.sets?.map(s => (
                         <button key={s} onClick={() => handleFilterChange({ ...filters, sets: filters.sets?.filter(x => x !== s) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600/10 border border-emerald-500/30 rounded-full text-[10px] font-bold text-emerald-400 hover:bg-emerald-600/20 transition-all group">
-                          Set: {s}
+                          Edición: {s}
                           <X size={10} className="group-hover:rotate-90 transition-transform" />
                         </button>
                       ))}
@@ -443,7 +444,7 @@ const Home: React.FC = () => {
                       ))}
 
                       <button onClick={() => { setFilters({}); setQuery(''); setActiveRarity('All'); setPage(0); }} className="text-[10px] font-black uppercase tracking-widest text-neutral-500 hover:text-white transition-colors ml-2 underline underline-offset-4 decoration-neutral-800">
-                        Clear All
+                        Limpiar Todo
                       </button>
                     </div>
                   )}
@@ -460,7 +461,7 @@ const Home: React.FC = () => {
                         {loading ? (
                           <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
                         ) : (
-                          'Load More Archives'
+                          'Cargar Más Cartas'
                         )}
                         {!loading && <span className="text-neutral-600 bg-neutral-800 px-2 py-0.5 rounded-md">[{totalCount - cards.length}]</span>}
                       </button>
@@ -520,7 +521,7 @@ const Home: React.FC = () => {
             <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setIsMobileFiltersOpen(false)} />
             <div className="absolute inset-y-0 right-0 w-full max-w-xs bg-[#0a0a0a] border-l border-white/5 p-6 shadow-2xl overflow-y-auto animate-in slide-in-from-right duration-300">
               <div className="flex items-center justify-between mb-8">
-                <h2 className="text-xl font-black italic tracking-tighter">FILTERS</h2>
+                <h2 className="text-xl font-black italic tracking-tighter">FILTROS</h2>
                 <button onClick={() => setIsMobileFiltersOpen(false)} className="p-2 bg-white/5 rounded-lg text-neutral-400">
                   <X size={20} />
                 </button>
@@ -535,7 +536,7 @@ const Home: React.FC = () => {
                 onClick={() => setIsMobileFiltersOpen(false)}
                 className="w-full mt-8 py-4 bg-geeko-cyan text-black font-black text-xs uppercase tracking-widest rounded-xl"
               >
-                Apply Filters
+                Aplicar Filtros
               </button>
             </div>
           </div>

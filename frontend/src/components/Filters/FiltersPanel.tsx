@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Search, X, Sliders, Filter, Check } from 'lucide-react';
+import { rarityMap, typeMap, colorMap } from '../../utils/translations';
 
 export interface Filters {
   games: string[];
@@ -117,7 +118,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
               </button>
             ))
           ) : (
-            <p className="text-[10px] text-neutral-600 italic py-4 text-center">No sets found matching "{setSearch}"</p>
+            <p className="text-[10px] text-neutral-600 italic py-4 text-center">No se encontraron sets para "{setSearch}"</p>
           )}
         </div>
       </section>
@@ -141,7 +142,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
                   }`}
               >
                 <div className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-geeko-gold animate-pulse' : 'bg-neutral-700'}`} />
-                <span className="text-[10px] font-black uppercase tracking-tight">{rarity}</span>
+                <span className="text-[10px] font-black uppercase tracking-tight">{rarityMap[rarity] || rarity}</span>
               </button>
             );
           })}
@@ -157,7 +158,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
         <div className="grid grid-cols-4 gap-2">
           {filters.colors.map(color => {
             const isSelected = selected.colors?.includes(color);
-            const colorMap: Record<string, string> = {
+            const colorClassMap: Record<string, string> = {
               'White': 'bg-white',
               'Blue': 'bg-blue-500',
               'Black': 'bg-neutral-400',
@@ -171,13 +172,13 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
               <button
                 key={color}
                 onClick={() => handleCheckbox('colors', color)}
-                title={color}
+                title={colorMap[color] || color}
                 className={`relative group w-full aspect-square rounded-xl border flex items-center justify-center transition-all ${isSelected
                   ? 'border-cyan-500/50 bg-cyan-500/5'
                   : 'border-neutral-800 bg-neutral-900/50 hover:border-neutral-600'
                   }`}
               >
-                <div className={`w-3 h-3 rounded-full ${colorMap[color] || 'bg-neutral-500'} ${isSelected ? 'ring-2 ring-white/50 scale-110 shadow-lg' : 'opacity-60 group-hover:opacity-100'} transition-all`} />
+                <div className={`w-3 h-3 rounded-full ${colorClassMap[color] || 'bg-neutral-500'} ${isSelected ? 'ring-2 ring-white/50 scale-110 shadow-lg' : 'opacity-60 group-hover:opacity-100'} transition-all`} />
                 {isSelected && (
                   <div className="absolute top-1 right-1">
                     <Check size={8} className="text-cyan-400" />
@@ -234,7 +235,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
                   : 'bg-neutral-900/50 border-neutral-800 text-neutral-500 hover:text-neutral-300'
                   }`}
               >
-                {type}
+                {typeMap[type] || type}
               </button>
             );
           })}
