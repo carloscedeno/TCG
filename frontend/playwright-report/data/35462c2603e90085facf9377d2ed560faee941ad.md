@@ -1,0 +1,1052 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e4]:
+  - banner [ref=e5]:
+    - navigation [ref=e6]:
+      - link "El Emporio" [ref=e8] [cursor=pointer]:
+        - /url: /TCG
+        - generic [ref=e9]:
+          - generic [ref=e10]: El
+          - text: Emporio
+      - search [ref=e12]:
+        - generic:
+          - img
+        - textbox "Buscar por nombre de carta o edición..." [ref=e13]
+      - generic [ref=e14]:
+        - button [ref=e15]:
+          - img [ref=e16]
+        - button "T test Admin" [ref=e22]:
+          - generic [ref=e23]: T
+          - generic [ref=e24]:
+            - generic [ref=e25]: test
+            - generic [ref=e26]: Admin
+          - img [ref=e27]
+  - generic [ref=e30]:
+    - generic [ref=e31]:
+      - generic [ref=e32]:
+        - button "Stock Geekorium" [ref=e33]
+        - button "Archivo" [ref=e34]
+      - generic [ref=e35]:
+        - button "Todas" [ref=e36]
+        - button "Mítica" [ref=e37]
+        - button "Rara" [ref=e38]
+        - button "Infrecuente" [ref=e39]
+        - button "Común" [ref=e40]
+    - generic [ref=e41]:
+      - generic [ref=e42]:
+        - generic [ref=e43]: "Ordenar:"
+        - generic [ref=e44]:
+          - button "Nombre ⇅" [ref=e45]
+          - button "Precio ⇅" [ref=e46]
+          - button "Fecha ↓" [ref=e47]
+      - generic [ref=e48]:
+        - button "Grid View" [ref=e49]:
+          - img [ref=e50]
+        - button "List View" [ref=e55]:
+          - img [ref=e56]
+  - main [ref=e57]:
+    - generic [ref=e58]:
+      - complementary [ref=e59]:
+        - complementary [ref=e61]:
+          - generic [ref=e62]:
+            - heading "FILTROS" [level=2] [ref=e63]:
+              - img [ref=e64]
+              - text: FILTROS
+            - button "Reiniciar" [ref=e65]:
+              - img [ref=e66]
+              - text: Reiniciar
+          - generic [ref=e69]:
+            - heading "Universo de Juegos" [level=3] [ref=e70]: Universo de Juegos
+            - 'button "Magic: The Gathering" [ref=e73]'
+          - generic [ref=e74]:
+            - heading "Expansión / Set" [level=3] [ref=e75]: Expansión / Set
+            - generic [ref=e77]:
+              - img [ref=e78]
+              - textbox "Buscar sets..." [ref=e81]
+            - generic [ref=e82]:
+              - button "Marvel Super Heroes" [ref=e83]:
+                - generic [ref=e84]: Marvel Super Heroes
+              - button "Secrets of Strixhaven" [ref=e85]:
+                - generic [ref=e86]: Secrets of Strixhaven
+              - button "Teenage Mutant Ninja Turtles" [ref=e87]:
+                - generic [ref=e88]: Teenage Mutant Ninja Turtles
+              - button "Year of the Horse 2026" [ref=e89]:
+                - generic [ref=e90]: Year of the Horse 2026
+              - button "Lorwyn Eclipsed" [ref=e91]:
+                - generic [ref=e92]: Lorwyn Eclipsed
+              - button "Wizards Play Network 2026" [ref=e93]:
+                - generic [ref=e94]: Wizards Play Network 2026
+              - button "MagicFest 2026" [ref=e95]:
+                - generic [ref=e96]: MagicFest 2026
+              - 'button "Avatar: The Last Airbender" [ref=e97]':
+                - generic [ref=e98]: "Avatar: The Last Airbender"
+              - button "Marvel's Spider-Man" [ref=e99]:
+                - generic [ref=e100]: Marvel's Spider-Man
+              - button "Marvel Universe" [ref=e101]:
+                - generic [ref=e102]: Marvel Universe
+              - button "Marvel's Spider-Man Eternal" [ref=e103]:
+                - generic [ref=e104]: Marvel's Spider-Man Eternal
+              - button "Marvel's Spider-Man Art Series" [ref=e105]:
+                - generic [ref=e106]: Marvel's Spider-Man Art Series
+              - button "Arena Anthology 4" [ref=e107]:
+                - generic [ref=e108]: Arena Anthology 4
+              - button "Arena Anthology 3" [ref=e109]:
+                - generic [ref=e110]: Arena Anthology 3
+              - button "2023 Heroes of the Realm" [ref=e111]:
+                - generic [ref=e112]: 2023 Heroes of the Realm
+              - button "Arena Anthology 2" [ref=e113]:
+                - generic [ref=e114]: Arena Anthology 2
+              - button "Arena Anthology 1" [ref=e115]:
+                - generic [ref=e116]: Arena Anthology 1
+              - button "Edge of Eternities" [ref=e117]:
+                - generic [ref=e118]: Edge of Eternities
+              - button "Final Fantasy" [ref=e119]:
+                - generic [ref=e120]: Final Fantasy
+              - button "Pioneer Anthology 1" [ref=e121]:
+                - generic [ref=e122]: Pioneer Anthology 1
+              - 'button "Tarkir: Dragonstorm" [ref=e123]':
+                - generic [ref=e124]: "Tarkir: Dragonstorm"
+              - button "Love Your LGS 2025" [ref=e125]:
+                - generic [ref=e126]: Love Your LGS 2025
+              - button "Year of the Snake 2025" [ref=e127]:
+                - generic [ref=e128]: Year of the Snake 2025
+              - button "Aetherdrift" [ref=e129]:
+                - generic [ref=e130]: Aetherdrift
+              - button "Japan Standard Cup" [ref=e131]:
+                - generic [ref=e132]: Japan Standard Cup
+              - button "Innistrad Remastered" [ref=e133]:
+                - generic [ref=e134]: Innistrad Remastered
+              - button "Spotlight Series" [ref=e135]:
+                - generic [ref=e136]: Spotlight Series
+              - button "MagicFest 2025" [ref=e137]:
+                - generic [ref=e138]: MagicFest 2025
+              - button "Wizards Play Network 2025" [ref=e139]:
+                - generic [ref=e140]: Wizards Play Network 2025
+              - button "Pioneer Masters" [ref=e141]:
+                - generic [ref=e142]: Pioneer Masters
+              - button "Foundations" [ref=e143]:
+                - generic [ref=e144]: Foundations
+              - 'button "Duskmourn: House of Horror" [ref=e145]':
+                - generic [ref=e146]: "Duskmourn: House of Horror"
+              - button "Love Your LGS 2024" [ref=e147]:
+                - generic [ref=e148]: Love Your LGS 2024
+              - button "Bloomburrow" [ref=e149]:
+                - generic [ref=e150]: Bloomburrow
+              - button "Mystery Booster 2" [ref=e151]:
+                - generic [ref=e152]: Mystery Booster 2
+              - button "Cowboy Bebop" [ref=e153]:
+                - generic [ref=e154]: Cowboy Bebop
+              - button "Assassin's Creed" [ref=e155]:
+                - generic [ref=e156]: Assassin's Creed
+              - button "Modern Horizons 3" [ref=e157]:
+                - generic [ref=e158]: Modern Horizons 3
+              - button "Outlaws of Thunder Junction" [ref=e159]:
+                - generic [ref=e160]: Outlaws of Thunder Junction
+              - button "Fallout" [ref=e161]:
+                - generic [ref=e162]: Fallout
+              - button "Murders at Karlov Manor" [ref=e163]:
+                - generic [ref=e164]: Murders at Karlov Manor
+              - button "Year of the Dragon 2024" [ref=e165]:
+                - generic [ref=e166]: Year of the Dragon 2024
+              - button "Ravnica Remastered" [ref=e167]:
+                - generic [ref=e168]: Ravnica Remastered
+              - button "MagicFest 2024" [ref=e169]:
+                - generic [ref=e170]: MagicFest 2024
+              - button "Wizards Play Network 2024" [ref=e171]:
+                - generic [ref=e172]: Wizards Play Network 2024
+              - button "The Lost Caverns of Ixalan" [ref=e173]:
+                - generic [ref=e174]: The Lost Caverns of Ixalan
+              - button "Special Guests" [ref=e175]:
+                - generic [ref=e176]: Special Guests
+              - button "Doctor Who" [ref=e177]:
+                - generic [ref=e178]: Doctor Who
+              - button "Wilds of Eldraine" [ref=e179]:
+                - generic [ref=e180]: Wilds of Eldraine
+              - button "Magic × Duel Masters Promos" [ref=e181]:
+                - generic [ref=e182]: Magic × Duel Masters Promos
+          - generic [ref=e183]:
+            - heading "Rareza" [level=3] [ref=e184]: Rareza
+            - generic [ref=e186]:
+              - button "Común" [ref=e187]:
+                - generic [ref=e189]: Común
+              - button "Infrecuente" [ref=e190]:
+                - generic [ref=e192]: Infrecuente
+              - button "Rara" [ref=e193]:
+                - generic [ref=e195]: Rara
+              - button "Mítica" [ref=e196]:
+                - generic [ref=e198]: Mítica
+          - generic [ref=e199]:
+            - heading "Esencia de Mana (Colores)" [level=3] [ref=e200]: Esencia de Mana (Colores)
+            - generic [ref=e202]:
+              - button "Blanco" [ref=e203]
+              - button "Azul" [ref=e205]
+              - button "Negro" [ref=e207]
+              - button "Rojo" [ref=e209]
+              - button "Verde" [ref=e211]
+              - button "Incoloro" [ref=e213]
+              - button "Multicolor" [ref=e215]
+          - generic [ref=e217]:
+            - heading "Órbita Temporal (Año)" [level=3] [ref=e218]: Órbita Temporal (Año)
+            - generic [ref=e220]:
+              - spinbutton [ref=e221]
+              - generic [ref=e222]: →
+              - spinbutton [ref=e223]
+            - generic [ref=e224]:
+              - generic [ref=e225]: Orígenes (1993)
+              - generic [ref=e226]: Presente (2026)
+          - generic [ref=e227]:
+            - heading "Esencia de Carta (Tipo)" [level=3] [ref=e228]: Esencia de Carta (Tipo)
+            - generic [ref=e230]:
+              - button "Criatura" [ref=e231]
+              - button "Instantáneo" [ref=e232]
+              - button "Conjuro" [ref=e233]
+              - button "Encantamiento" [ref=e234]
+              - button "Artefacto" [ref=e235]
+              - button "Planeswalker" [ref=e236]
+              - button "Tierra" [ref=e237]
+          - generic [ref=e239]:
+            - paragraph [ref=e241]: Sincronización en tiempo real activa vía Neural Link con mercados globales.
+            - generic [ref=e242]:
+              - img [ref=e243]
+              - text: "Sincro Cuántica: ON"
+      - generic [ref=e246]:
+        - generic [ref=e247]:
+          - generic [ref=e248]: "Activo:"
+          - 'button "Magic: The Gathering" [ref=e249]':
+            - text: "Magic: The Gathering"
+            - img [ref=e250]
+          - button "Limpiar Todo" [ref=e253]
+        - generic [ref=e255]:
+          - 'link "Super-Skrull Existencia: 100 rare Super-Skrull Marvel Super Heroes Legendary Creature Mercado --- ›" [active] [ref=e256] [cursor=pointer]':
+            - /url: card/11fc8221-756a-4919-9272-38793e9c1ad9
+            - generic [ref=e257]:
+              - img "Super-Skrull" [ref=e258]
+              - generic [ref=e259]: "Existencia: 100"
+              - generic [ref=e260]: rare
+            - generic [ref=e261]:
+              - heading "Super-Skrull" [level=3] [ref=e262]
+              - generic [ref=e263]:
+                - generic [ref=e264]: Marvel Super Heroes
+                - generic [ref=e265]: Legendary Creature
+              - generic [ref=e266]:
+                - generic [ref=e267]:
+                  - generic [ref=e268]: Mercado
+                  - generic [ref=e269]: "---"
+                - button "›" [ref=e270]:
+                  - generic [ref=e271]: ›
+          - link "Doom Reigns Supreme rare Doom Reigns Supreme Marvel Super Heroes Enchantment Mercado --- ›" [ref=e272] [cursor=pointer]:
+            - /url: card/9b99894b-c774-45c2-9ee9-4d6a8e7522f5
+            - generic [ref=e273]:
+              - img "Doom Reigns Supreme" [ref=e274]
+              - generic [ref=e275]: rare
+            - generic [ref=e276]:
+              - heading "Doom Reigns Supreme" [level=3] [ref=e277]
+              - generic [ref=e278]:
+                - generic [ref=e279]: Marvel Super Heroes
+                - generic [ref=e280]: Enchantment
+              - generic [ref=e281]:
+                - generic [ref=e282]:
+                  - generic [ref=e283]: Mercado
+                  - generic [ref=e284]: "---"
+                - button "›" [ref=e285]:
+                  - generic [ref=e286]: ›
+          - link "The Sentry, Golden Guardian rare The Sentry, Golden Guardian Marvel Super Heroes Legendary Creature Mercado --- ›" [ref=e287] [cursor=pointer]:
+            - /url: card/3f56c0e7-5b07-48e3-b0ca-5d09ddc8de9a
+            - generic [ref=e288]:
+              - img "The Sentry, Golden Guardian" [ref=e289]
+              - generic [ref=e290]: rare
+            - generic [ref=e291]:
+              - heading "The Sentry, Golden Guardian" [level=3] [ref=e292]
+              - generic [ref=e293]:
+                - generic [ref=e294]: Marvel Super Heroes
+                - generic [ref=e295]: Legendary Creature
+              - generic [ref=e296]:
+                - generic [ref=e297]:
+                  - generic [ref=e298]: Mercado
+                  - generic [ref=e299]: "---"
+                - button "›" [ref=e300]:
+                  - generic [ref=e301]: ›
+          - link "Namor the Sub-Mariner mythic Namor the Sub-Mariner Marvel Super Heroes Legendary Creature Mercado --- ›" [ref=e302] [cursor=pointer]:
+            - /url: card/7aaefcf9-fbe1-4767-92a5-09825761d116
+            - generic [ref=e303]:
+              - img "Namor the Sub-Mariner" [ref=e304]
+              - generic [ref=e305]: mythic
+            - generic [ref=e306]:
+              - heading "Namor the Sub-Mariner" [level=3] [ref=e307]
+              - generic [ref=e308]:
+                - generic [ref=e309]: Marvel Super Heroes
+                - generic [ref=e310]: Legendary Creature
+              - generic [ref=e311]:
+                - generic [ref=e312]:
+                  - generic [ref=e313]: Mercado
+                  - generic [ref=e314]: "---"
+                - button "›" [ref=e315]:
+                  - generic [ref=e316]: ›
+          - link "Doctor Doom mythic Doctor Doom Marvel Super Heroes Legendary Creature Mercado --- ›" [ref=e317] [cursor=pointer]:
+            - /url: card/06255e9e-5395-41ed-ad89-1e7b2b5478d3
+            - generic [ref=e318]:
+              - img "Doctor Doom" [ref=e319]
+              - generic [ref=e320]: mythic
+            - generic [ref=e321]:
+              - heading "Doctor Doom" [level=3] [ref=e322]
+              - generic [ref=e323]:
+                - generic [ref=e324]: Marvel Super Heroes
+                - generic [ref=e325]: Legendary Creature
+              - generic [ref=e326]:
+                - generic [ref=e327]:
+                  - generic [ref=e328]: Mercado
+                  - generic [ref=e329]: "---"
+                - button "›" [ref=e330]:
+                  - generic [ref=e331]: ›
+          - link "Baron Helmut Zemo rare Baron Helmut Zemo Marvel Super Heroes Legendary Creature Mercado --- ›" [ref=e332] [cursor=pointer]:
+            - /url: card/c2aadc25-7755-4bc8-a8af-b01d27eec364
+            - generic [ref=e333]:
+              - img "Baron Helmut Zemo" [ref=e334]
+              - generic [ref=e335]: rare
+            - generic [ref=e336]:
+              - heading "Baron Helmut Zemo" [level=3] [ref=e337]
+              - generic [ref=e338]:
+                - generic [ref=e339]: Marvel Super Heroes
+                - generic [ref=e340]: Legendary Creature
+              - generic [ref=e341]:
+                - generic [ref=e342]:
+                  - generic [ref=e343]: Mercado
+                  - generic [ref=e344]: "---"
+                - button "›" [ref=e345]:
+                  - generic [ref=e346]: ›
+          - link "Thunderbolts Conspiracy rare Thunderbolts Conspiracy Marvel Super Heroes Enchantment Mercado --- ›" [ref=e347] [cursor=pointer]:
+            - /url: card/f498c1a4-54d2-4e87-952f-8cf7e408930c
+            - generic [ref=e348]:
+              - img "Thunderbolts Conspiracy" [ref=e349]
+              - generic [ref=e350]: rare
+            - generic [ref=e351]:
+              - heading "Thunderbolts Conspiracy" [level=3] [ref=e352]
+              - generic [ref=e353]:
+                - generic [ref=e354]: Marvel Super Heroes
+                - generic [ref=e355]: Enchantment
+              - generic [ref=e356]:
+                - generic [ref=e357]:
+                  - generic [ref=e358]: Mercado
+                  - generic [ref=e359]: "---"
+                - button "›" [ref=e360]:
+                  - generic [ref=e361]: ›
+          - link "Attuma, Atlantean Warlord uncommon Attuma, Atlantean Warlord Marvel Super Heroes Legendary Creature Mercado --- ›" [ref=e362] [cursor=pointer]:
+            - /url: card/c3d5add1-0d0e-414b-a964-8da326472d35
+            - generic [ref=e363]:
+              - img "Attuma, Atlantean Warlord" [ref=e364]
+              - generic [ref=e365]: uncommon
+            - generic [ref=e366]:
+              - heading "Attuma, Atlantean Warlord" [level=3] [ref=e367]
+              - generic [ref=e368]:
+                - generic [ref=e369]: Marvel Super Heroes
+                - generic [ref=e370]: Legendary Creature
+              - generic [ref=e371]:
+                - generic [ref=e372]:
+                  - generic [ref=e373]: Mercado
+                  - generic [ref=e374]: "---"
+                - button "›" [ref=e375]:
+                  - generic [ref=e376]: ›
+          - link "Bruce Banner // The Incredible Hulk mythic Bruce Banner // The Incredible Hulk Marvel Super Heroes Legendary Creature Mercado --- ›" [ref=e377] [cursor=pointer]:
+            - /url: card/481166c5-6a16-469c-91bd-abf291b5db49
+            - generic [ref=e378]:
+              - img "Bruce Banner // The Incredible Hulk" [ref=e379]
+              - generic [ref=e380]: mythic
+            - generic [ref=e381]:
+              - heading "Bruce Banner // The Incredible Hulk" [level=3] [ref=e382]
+              - generic [ref=e383]:
+                - generic [ref=e384]: Marvel Super Heroes
+                - generic [ref=e385]: Legendary Creature
+              - generic [ref=e386]:
+                - generic [ref=e387]:
+                  - generic [ref=e388]: Mercado
+                  - generic [ref=e389]: "---"
+                - button "›" [ref=e390]:
+                  - generic [ref=e391]: ›
+          - link "Quicksilver, Brash Blur rare Quicksilver, Brash Blur Marvel Super Heroes Legendary Creature Mercado --- ›" [ref=e392] [cursor=pointer]:
+            - /url: card/2d5819ca-165d-4f4c-9500-3ac206994880
+            - generic [ref=e393]:
+              - img "Quicksilver, Brash Blur" [ref=e394]
+              - generic [ref=e395]: rare
+            - generic [ref=e396]:
+              - heading "Quicksilver, Brash Blur" [level=3] [ref=e397]
+              - generic [ref=e398]:
+                - generic [ref=e399]: Marvel Super Heroes
+                - generic [ref=e400]: Legendary Creature
+              - generic [ref=e401]:
+                - generic [ref=e402]:
+                  - generic [ref=e403]: Mercado
+                  - generic [ref=e404]: "---"
+                - button "›" [ref=e405]:
+                  - generic [ref=e406]: ›
+          - link "Moon Girl and Devil Dinosaur rare Moon Girl and Devil Dinosaur Marvel Super Heroes Legendary Creature Mercado --- ›" [ref=e407] [cursor=pointer]:
+            - /url: card/8c6a6d11-45cb-4def-a04b-51b91e1747db
+            - generic [ref=e408]:
+              - img "Moon Girl and Devil Dinosaur" [ref=e409]
+              - generic [ref=e410]: rare
+            - generic [ref=e411]:
+              - heading "Moon Girl and Devil Dinosaur" [level=3] [ref=e412]
+              - generic [ref=e413]:
+                - generic [ref=e414]: Marvel Super Heroes
+                - generic [ref=e415]: Legendary Creature
+              - generic [ref=e416]:
+                - generic [ref=e417]:
+                  - generic [ref=e418]: Mercado
+                  - generic [ref=e419]: "---"
+                - button "›" [ref=e420]:
+                  - generic [ref=e421]: ›
+          - link "The Coming of Galactus mythic The Coming of Galactus Marvel Super Heroes Enchantment Mercado --- ›" [ref=e422] [cursor=pointer]:
+            - /url: card/04a38b92-619e-4fe8-b0cb-6fa31f0824ff
+            - generic [ref=e423]:
+              - img "The Coming of Galactus" [ref=e424]
+              - generic [ref=e425]: mythic
+            - generic [ref=e426]:
+              - heading "The Coming of Galactus" [level=3] [ref=e427]
+              - generic [ref=e428]:
+                - generic [ref=e429]: Marvel Super Heroes
+                - generic [ref=e430]: Enchantment
+              - generic [ref=e431]:
+                - generic [ref=e432]:
+                  - generic [ref=e433]: Mercado
+                  - generic [ref=e434]: "---"
+                - button "›" [ref=e435]:
+                  - generic [ref=e436]: ›
+          - link "World War Hulk rare World War Hulk Marvel Super Heroes Enchantment Mercado --- ›" [ref=e437] [cursor=pointer]:
+            - /url: card/51524f8a-030c-4522-bfc0-d55c2c7c9326
+            - generic [ref=e438]:
+              - img "World War Hulk" [ref=e439]
+              - generic [ref=e440]: rare
+            - generic [ref=e441]:
+              - heading "World War Hulk" [level=3] [ref=e442]
+              - generic [ref=e443]:
+                - generic [ref=e444]: Marvel Super Heroes
+                - generic [ref=e445]: Enchantment
+              - generic [ref=e446]:
+                - generic [ref=e447]:
+                  - generic [ref=e448]: Mercado
+                  - generic [ref=e449]: "---"
+                - button "›" [ref=e450]:
+                  - generic [ref=e451]: ›
+          - link "Captain America, Super-Soldier mythic Captain America, Super-Soldier Marvel Super Heroes Legendary Creature Mercado --- ›" [ref=e452] [cursor=pointer]:
+            - /url: card/7ffdca9d-3ee4-4572-b1ad-4f03523968fd
+            - generic [ref=e453]:
+              - img "Captain America, Super-Soldier" [ref=e454]
+              - generic [ref=e455]: mythic
+            - generic [ref=e456]:
+              - heading "Captain America, Super-Soldier" [level=3] [ref=e457]
+              - generic [ref=e458]:
+                - generic [ref=e459]: Marvel Super Heroes
+                - generic [ref=e460]: Legendary Creature
+              - generic [ref=e461]:
+                - generic [ref=e462]:
+                  - generic [ref=e463]: Mercado
+                  - generic [ref=e464]: "---"
+                - button "›" [ref=e465]:
+                  - generic [ref=e466]: ›
+          - link "Mathemagics mythic Mathemagics Secrets of Strixhaven Sorcery Mercado --- ›" [ref=e467] [cursor=pointer]:
+            - /url: card/102d4882-9774-4370-aff3-370f7729d7dd
+            - generic [ref=e468]:
+              - img "Mathemagics" [ref=e469]
+              - generic [ref=e470]: mythic
+            - generic [ref=e471]:
+              - heading "Mathemagics" [level=3] [ref=e472]
+              - generic [ref=e473]:
+                - generic [ref=e474]: Secrets of Strixhaven
+                - generic [ref=e475]: Sorcery
+              - generic [ref=e476]:
+                - generic [ref=e477]:
+                  - generic [ref=e478]: Mercado
+                  - generic [ref=e479]: "---"
+                - button "›" [ref=e480]:
+                  - generic [ref=e481]: ›
+          - link "Lorehold, the Historian mythic Lorehold, the Historian Secrets of Strixhaven Legendary Creature Mercado --- ›" [ref=e482] [cursor=pointer]:
+            - /url: card/71a6701f-40f1-43ef-bff5-a5907fd67cd6
+            - generic [ref=e483]:
+              - img "Lorehold, the Historian" [ref=e484]
+              - generic [ref=e485]: mythic
+            - generic [ref=e486]:
+              - heading "Lorehold, the Historian" [level=3] [ref=e487]
+              - generic [ref=e488]:
+                - generic [ref=e489]: Secrets of Strixhaven
+                - generic [ref=e490]: Legendary Creature
+              - generic [ref=e491]:
+                - generic [ref=e492]:
+                  - generic [ref=e493]: Mercado
+                  - generic [ref=e494]: "---"
+                - button "›" [ref=e495]:
+                  - generic [ref=e496]: ›
+          - link "Casey Jones, Jury-Rig Justiciar uncommon Casey Jones, Jury-Rig Justiciar Teenage Mutant Ninja Turtles Legendary Creature Mercado $0.49 ›" [ref=e497] [cursor=pointer]:
+            - /url: card/808a5bc0-0999-47cf-854c-30db6277efe5
+            - generic [ref=e498]:
+              - img "Casey Jones, Jury-Rig Justiciar" [ref=e499]
+              - generic [ref=e500]: uncommon
+            - generic [ref=e501]:
+              - heading "Casey Jones, Jury-Rig Justiciar" [level=3] [ref=e502]
+              - generic [ref=e503]:
+                - generic [ref=e504]: Teenage Mutant Ninja Turtles
+                - generic [ref=e505]: Legendary Creature
+              - generic [ref=e506]:
+                - generic [ref=e507]:
+                  - generic [ref=e508]: Mercado
+                  - generic [ref=e509]: $0.49
+                - button "›" [ref=e510]:
+                  - generic [ref=e511]: ›
+          - link "Casey Jones, Vigilante rare Casey Jones, Vigilante Teenage Mutant Ninja Turtles Legendary Creature Mercado $1.99 ›" [ref=e512] [cursor=pointer]:
+            - /url: card/a6a3258d-2e9b-4862-b2e3-bbfae9bd4d33
+            - generic [ref=e513]:
+              - img "Casey Jones, Vigilante" [ref=e514]
+              - generic [ref=e515]: rare
+            - generic [ref=e516]:
+              - heading "Casey Jones, Vigilante" [level=3] [ref=e517]
+              - generic [ref=e518]:
+                - generic [ref=e519]: Teenage Mutant Ninja Turtles
+                - generic [ref=e520]: Legendary Creature
+              - generic [ref=e521]:
+                - generic [ref=e522]:
+                  - generic [ref=e523]: Mercado
+                  - generic [ref=e524]: $1.99
+                - button "›" [ref=e525]:
+                  - generic [ref=e526]: ›
+          - link "Mondo Gecko mythic Mondo Gecko Teenage Mutant Ninja Turtles Legendary Creature Mercado $5.99 ›" [ref=e527] [cursor=pointer]:
+            - /url: card/665e44f9-bc0d-40aa-83a4-f7fe64f2506d
+            - generic [ref=e528]:
+              - img "Mondo Gecko" [ref=e529]
+              - generic [ref=e530]: mythic
+            - generic [ref=e531]:
+              - heading "Mondo Gecko" [level=3] [ref=e532]
+              - generic [ref=e533]:
+                - generic [ref=e534]: Teenage Mutant Ninja Turtles
+                - generic [ref=e535]: Legendary Creature
+              - generic [ref=e536]:
+                - generic [ref=e537]:
+                  - generic [ref=e538]: Mercado
+                  - generic [ref=e539]: $5.99
+                - button "›" [ref=e540]:
+                  - generic [ref=e541]: ›
+          - link "Mikey & Leo, Chaos & Order rare Mikey & Leo, Chaos & Order Teenage Mutant Ninja Turtles Legendary Creature Mercado $3.99 ›" [ref=e542] [cursor=pointer]:
+            - /url: card/9cfeb2b4-937c-4bcc-bb03-467cc0effba2
+            - generic [ref=e543]:
+              - img "Mikey & Leo, Chaos & Order" [ref=e544]
+              - generic [ref=e545]: rare
+            - generic [ref=e546]:
+              - heading "Mikey & Leo, Chaos & Order" [level=3] [ref=e547]
+              - generic [ref=e548]:
+                - generic [ref=e549]: Teenage Mutant Ninja Turtles
+                - generic [ref=e550]: Legendary Creature
+              - generic [ref=e551]:
+                - generic [ref=e552]:
+                  - generic [ref=e553]: Mercado
+                  - generic [ref=e554]: $3.99
+                - button "›" [ref=e555]:
+                  - generic [ref=e556]: ›
+          - link "Broadcast Takeover mythic Broadcast Takeover Teenage Mutant Ninja Turtles Sorcery Mercado $7.99 ›" [ref=e557] [cursor=pointer]:
+            - /url: card/e640e930-0907-40f2-9015-88f8c1e8ee5c
+            - generic [ref=e558]:
+              - img "Broadcast Takeover" [ref=e559]
+              - generic [ref=e560]: mythic
+            - generic [ref=e561]:
+              - heading "Broadcast Takeover" [level=3] [ref=e562]
+              - generic [ref=e563]:
+                - generic [ref=e564]: Teenage Mutant Ninja Turtles
+                - generic [ref=e565]: Sorcery
+              - generic [ref=e566]:
+                - generic [ref=e567]:
+                  - generic [ref=e568]: Mercado
+                  - generic [ref=e569]: $7.99
+                - button "›" [ref=e570]:
+                  - generic [ref=e571]: ›
+          - link "Michelangelo, Weirdness to 11 rare Michelangelo, Weirdness to 11 Teenage Mutant Ninja Turtles Legendary Creature Mercado $7.99 ›" [ref=e572] [cursor=pointer]:
+            - /url: card/18477047-218d-4b2a-a086-37431b6a3025
+            - generic [ref=e573]:
+              - img "Michelangelo, Weirdness to 11" [ref=e574]
+              - generic [ref=e575]: rare
+            - generic [ref=e576]:
+              - heading "Michelangelo, Weirdness to 11" [level=3] [ref=e577]
+              - generic [ref=e578]:
+                - generic [ref=e579]: Teenage Mutant Ninja Turtles
+                - generic [ref=e580]: Legendary Creature
+              - generic [ref=e581]:
+                - generic [ref=e582]:
+                  - generic [ref=e583]: Mercado
+                  - generic [ref=e584]: $7.99
+                - button "›" [ref=e585]:
+                  - generic [ref=e586]: ›
+          - link "Mountain common Mountain Teenage Mutant Ninja Turtles Basic Land Mercado --- ›" [ref=e587] [cursor=pointer]:
+            - /url: card/50e349f8-9860-4197-a40f-610659057365
+            - generic [ref=e588]:
+              - img "Mountain" [ref=e589]
+              - generic [ref=e590]: common
+            - generic [ref=e591]:
+              - heading "Mountain" [level=3] [ref=e592]
+              - generic [ref=e593]:
+                - generic [ref=e594]: Teenage Mutant Ninja Turtles
+                - generic [ref=e595]: Basic Land
+              - generic [ref=e596]:
+                - generic [ref=e597]:
+                  - generic [ref=e598]: Mercado
+                  - generic [ref=e599]: "---"
+                - button "›" [ref=e600]:
+                  - generic [ref=e601]: ›
+          - link "Michelangelo, Improviser mythic Michelangelo, Improviser Teenage Mutant Ninja Turtles Legendary Creature Mercado $9.99 ›" [ref=e602] [cursor=pointer]:
+            - /url: card/955848c0-5092-4e13-97c9-5978d44d5586
+            - generic [ref=e603]:
+              - img "Michelangelo, Improviser" [ref=e604]
+              - generic [ref=e605]: mythic
+            - generic [ref=e606]:
+              - heading "Michelangelo, Improviser" [level=3] [ref=e607]
+              - generic [ref=e608]:
+                - generic [ref=e609]: Teenage Mutant Ninja Turtles
+                - generic [ref=e610]: Legendary Creature
+              - generic [ref=e611]:
+                - generic [ref=e612]:
+                  - generic [ref=e613]: Mercado
+                  - generic [ref=e614]: $9.99
+                - button "›" [ref=e615]:
+                  - generic [ref=e616]: ›
+          - link "Mikey & Don, Party Planners rare Mikey & Don, Party Planners Teenage Mutant Ninja Turtles Legendary Creature Mercado $5.99 ›" [ref=e617] [cursor=pointer]:
+            - /url: card/6353df1a-9a1b-41fd-985b-8c8acba36c23
+            - generic [ref=e618]:
+              - img "Mikey & Don, Party Planners" [ref=e619]
+              - generic [ref=e620]: rare
+            - generic [ref=e621]:
+              - heading "Mikey & Don, Party Planners" [level=3] [ref=e622]
+              - generic [ref=e623]:
+                - generic [ref=e624]: Teenage Mutant Ninja Turtles
+                - generic [ref=e625]: Legendary Creature
+              - generic [ref=e626]:
+                - generic [ref=e627]:
+                  - generic [ref=e628]: Mercado
+                  - generic [ref=e629]: $5.99
+                - button "›" [ref=e630]:
+                  - generic [ref=e631]: ›
+          - link "Michelangelo's Technique rare Michelangelo's Technique Teenage Mutant Ninja Turtles Sorcery Mercado $3.99 ›" [ref=e632] [cursor=pointer]:
+            - /url: card/3a63c06a-7c59-4b72-b916-e5b6ad78c684
+            - generic [ref=e633]:
+              - img "Michelangelo's Technique" [ref=e634]
+              - generic [ref=e635]: rare
+            - generic [ref=e636]:
+              - heading "Michelangelo's Technique" [level=3] [ref=e637]
+              - generic [ref=e638]:
+                - generic [ref=e639]: Teenage Mutant Ninja Turtles
+                - generic [ref=e640]: Sorcery
+              - generic [ref=e641]:
+                - generic [ref=e642]:
+                  - generic [ref=e643]: Mercado
+                  - generic [ref=e644]: $3.99
+                - button "›" [ref=e645]:
+                  - generic [ref=e646]: ›
+          - link "Ninja Teen rare Ninja Teen Teenage Mutant Ninja Turtles Enchantment Mercado $5.99 ›" [ref=e647] [cursor=pointer]:
+            - /url: card/0825a28f-f60b-4f80-83e3-cad6f9b266ce
+            - generic [ref=e648]:
+              - img "Ninja Teen" [ref=e649]
+              - generic [ref=e650]: rare
+            - generic [ref=e651]:
+              - heading "Ninja Teen" [level=3] [ref=e652]
+              - generic [ref=e653]:
+                - generic [ref=e654]: Teenage Mutant Ninja Turtles
+                - generic [ref=e655]: Enchantment
+              - generic [ref=e656]:
+                - generic [ref=e657]:
+                  - generic [ref=e658]: Mercado
+                  - generic [ref=e659]: $5.99
+                - button "›" [ref=e660]:
+                  - generic [ref=e661]: ›
+          - link "Agent Bishop, Man in Black rare Agent Bishop, Man in Black Teenage Mutant Ninja Turtles Legendary Creature Mercado $0.99 ›" [ref=e662] [cursor=pointer]:
+            - /url: card/9c769202-178c-442a-a9e2-aa08b5ae5c9a
+            - generic [ref=e663]:
+              - img "Agent Bishop, Man in Black" [ref=e664]
+              - generic [ref=e665]: rare
+            - generic [ref=e666]:
+              - heading "Agent Bishop, Man in Black" [level=3] [ref=e667]
+              - generic [ref=e668]:
+                - generic [ref=e669]: Teenage Mutant Ninja Turtles
+                - generic [ref=e670]: Legendary Creature
+              - generic [ref=e671]:
+                - generic [ref=e672]:
+                  - generic [ref=e673]: Mercado
+                  - generic [ref=e674]: $0.99
+                - button "›" [ref=e675]:
+                  - generic [ref=e676]: ›
+          - link "Bebop & Rocksteady rare Bebop & Rocksteady Teenage Mutant Ninja Turtles Legendary Creature Mercado $1.49 ›" [ref=e677] [cursor=pointer]:
+            - /url: card/535461bd-f763-408b-816f-64b7bfb9210d
+            - generic [ref=e678]:
+              - img "Bebop & Rocksteady" [ref=e679]
+              - generic [ref=e680]: rare
+            - generic [ref=e681]:
+              - heading "Bebop & Rocksteady" [level=3] [ref=e682]
+              - generic [ref=e683]:
+                - generic [ref=e684]: Teenage Mutant Ninja Turtles
+                - generic [ref=e685]: Legendary Creature
+              - generic [ref=e686]:
+                - generic [ref=e687]:
+                  - generic [ref=e688]: Mercado
+                  - generic [ref=e689]: $1.49
+                - button "›" [ref=e690]:
+                  - generic [ref=e691]: ›
+          - link "Leonardo's Technique rare Leonardo's Technique Teenage Mutant Ninja Turtles Sorcery Mercado $4.99 ›" [ref=e692] [cursor=pointer]:
+            - /url: card/405e4057-e26c-4882-89a9-706868548c37
+            - generic [ref=e693]:
+              - img "Leonardo's Technique" [ref=e694]
+              - generic [ref=e695]: rare
+            - generic [ref=e696]:
+              - heading "Leonardo's Technique" [level=3] [ref=e697]
+              - generic [ref=e698]:
+                - generic [ref=e699]: Teenage Mutant Ninja Turtles
+                - generic [ref=e700]: Sorcery
+              - generic [ref=e701]:
+                - generic [ref=e702]:
+                  - generic [ref=e703]: Mercado
+                  - generic [ref=e704]: $4.99
+                - button "›" [ref=e705]:
+                  - generic [ref=e706]: ›
+          - link "Leader's Talent rare Leader's Talent Teenage Mutant Ninja Turtles Enchantment Mercado $1.99 ›" [ref=e707] [cursor=pointer]:
+            - /url: card/4cbcb622-1aff-460f-b8fa-4502d991e0ad
+            - generic [ref=e708]:
+              - img "Leader's Talent" [ref=e709]
+              - generic [ref=e710]: rare
+            - generic [ref=e711]:
+              - heading "Leader's Talent" [level=3] [ref=e712]
+              - generic [ref=e713]:
+                - generic [ref=e714]: Teenage Mutant Ninja Turtles
+                - generic [ref=e715]: Enchantment
+              - generic [ref=e716]:
+                - generic [ref=e717]:
+                  - generic [ref=e718]: Mercado
+                  - generic [ref=e719]: $1.99
+                - button "›" [ref=e720]:
+                  - generic [ref=e721]: ›
+          - link "Leonardo, Cutting Edge rare Leonardo, Cutting Edge Teenage Mutant Ninja Turtles Legendary Creature Mercado $7.99 ›" [ref=e722] [cursor=pointer]:
+            - /url: card/74c11ee3-19d1-4ad5-a727-1d74c565d6a5
+            - generic [ref=e723]:
+              - img "Leonardo, Cutting Edge" [ref=e724]
+              - generic [ref=e725]: rare
+            - generic [ref=e726]:
+              - heading "Leonardo, Cutting Edge" [level=3] [ref=e727]
+              - generic [ref=e728]:
+                - generic [ref=e729]: Teenage Mutant Ninja Turtles
+                - generic [ref=e730]: Legendary Creature
+              - generic [ref=e731]:
+                - generic [ref=e732]:
+                  - generic [ref=e733]: Mercado
+                  - generic [ref=e734]: $7.99
+                - button "›" [ref=e735]:
+                  - generic [ref=e736]: ›
+          - link "Krang, Master Mind rare Krang, Master Mind Teenage Mutant Ninja Turtles Legendary Artifact Creature Mercado $5.99 ›" [ref=e737] [cursor=pointer]:
+            - /url: card/d27fa497-e842-4812-80fe-28517544e1c5
+            - generic [ref=e738]:
+              - img "Krang, Master Mind" [ref=e739]
+              - generic [ref=e740]: rare
+            - generic [ref=e741]:
+              - heading "Krang, Master Mind" [level=3] [ref=e742]
+              - generic [ref=e743]:
+                - generic [ref=e744]: Teenage Mutant Ninja Turtles
+                - generic [ref=e745]: Legendary Artifact Creature
+              - generic [ref=e746]:
+                - generic [ref=e747]:
+                  - generic [ref=e748]: Mercado
+                  - generic [ref=e749]: $5.99
+                - button "›" [ref=e750]:
+                  - generic [ref=e751]: ›
+          - link "Kitsune, Dragon's Daughter rare Kitsune, Dragon's Daughter Teenage Mutant Ninja Turtles Legendary Creature Mercado $1.99 ›" [ref=e752] [cursor=pointer]:
+            - /url: card/a87a9257-4535-4286-8b59-a842ac45d05e
+            - generic [ref=e753]:
+              - img "Kitsune, Dragon's Daughter" [ref=e754]
+              - generic [ref=e755]: rare
+            - generic [ref=e756]:
+              - heading "Kitsune, Dragon's Daughter" [level=3] [ref=e757]
+              - generic [ref=e758]:
+                - generic [ref=e759]: Teenage Mutant Ninja Turtles
+                - generic [ref=e760]: Legendary Creature
+              - generic [ref=e761]:
+                - generic [ref=e762]:
+                  - generic [ref=e763]: Mercado
+                  - generic [ref=e764]: $1.99
+                - button "›" [ref=e765]:
+                  - generic [ref=e766]: ›
+          - link "Krang, Utrom Warlord mythic Krang, Utrom Warlord Teenage Mutant Ninja Turtles Legendary Artifact Creature Mercado $34.99 ›" [ref=e767] [cursor=pointer]:
+            - /url: card/88d36c32-d6f9-46e4-9cc8-08e6c0ff05d2
+            - generic [ref=e768]:
+              - img "Krang, Utrom Warlord" [ref=e769]
+              - generic [ref=e770]: mythic
+            - generic [ref=e771]:
+              - heading "Krang, Utrom Warlord" [level=3] [ref=e772]
+              - generic [ref=e773]:
+                - generic [ref=e774]: Teenage Mutant Ninja Turtles
+                - generic [ref=e775]: Legendary Artifact Creature
+              - generic [ref=e776]:
+                - generic [ref=e777]:
+                  - generic [ref=e778]: Mercado
+                  - generic [ref=e779]: $34.99
+                - button "›" [ref=e780]:
+                  - generic [ref=e781]: ›
+          - link "Madame Null, Power Broker rare Madame Null, Power Broker Teenage Mutant Ninja Turtles Legendary Creature Mercado $3.99 ›" [ref=e782] [cursor=pointer]:
+            - /url: card/4e712d5c-d6fe-40bb-b8e5-5f50c6ea8d4f
+            - generic [ref=e783]:
+              - img "Madame Null, Power Broker" [ref=e784]
+              - generic [ref=e785]: rare
+            - generic [ref=e786]:
+              - heading "Madame Null, Power Broker" [level=3] [ref=e787]
+              - generic [ref=e788]:
+                - generic [ref=e789]: Teenage Mutant Ninja Turtles
+                - generic [ref=e790]: Legendary Creature
+              - generic [ref=e791]:
+                - generic [ref=e792]:
+                  - generic [ref=e793]: Mercado
+                  - generic [ref=e794]: $3.99
+                - button "›" [ref=e795]:
+                  - generic [ref=e796]: ›
+          - link "Donatello, Mutant Mechanic mythic Donatello, Mutant Mechanic Teenage Mutant Ninja Turtles Legendary Creature Mercado $9.99 ›" [ref=e797] [cursor=pointer]:
+            - /url: card/3271b821-8efc-49e2-96fd-c48e2b2585c6
+            - generic [ref=e798]:
+              - img "Donatello, Mutant Mechanic" [ref=e799]
+              - generic [ref=e800]: mythic
+            - generic [ref=e801]:
+              - heading "Donatello, Mutant Mechanic" [level=3] [ref=e802]
+              - generic [ref=e803]:
+                - generic [ref=e804]: Teenage Mutant Ninja Turtles
+                - generic [ref=e805]: Legendary Creature
+              - generic [ref=e806]:
+                - generic [ref=e807]:
+                  - generic [ref=e808]: Mercado
+                  - generic [ref=e809]: $9.99
+                - button "›" [ref=e810]:
+                  - generic [ref=e811]: ›
+          - link "Forest common Forest Teenage Mutant Ninja Turtles Basic Land Mercado $0.49 ›" [ref=e812] [cursor=pointer]:
+            - /url: card/2f60db2d-7594-43af-8554-ba54e9023306
+            - generic [ref=e813]:
+              - img "Forest" [ref=e814]
+              - generic [ref=e815]: common
+            - generic [ref=e816]:
+              - heading "Forest" [level=3] [ref=e817]
+              - generic [ref=e818]:
+                - generic [ref=e819]: Teenage Mutant Ninja Turtles
+                - generic [ref=e820]: Basic Land
+              - generic [ref=e821]:
+                - generic [ref=e822]:
+                  - generic [ref=e823]: Mercado
+                  - generic [ref=e824]: $0.49
+                - button "›" [ref=e825]:
+                  - generic [ref=e826]: ›
+          - link "Improvised Arsenal rare Improvised Arsenal Teenage Mutant Ninja Turtles Artifact Mercado $3.99 ›" [ref=e827] [cursor=pointer]:
+            - /url: card/003265d9-b2fc-4916-afc8-53ed2d6aa053
+            - generic [ref=e828]:
+              - img "Improvised Arsenal" [ref=e829]
+              - generic [ref=e830]: rare
+            - generic [ref=e831]:
+              - heading "Improvised Arsenal" [level=3] [ref=e832]
+              - generic [ref=e833]:
+                - generic [ref=e834]: Teenage Mutant Ninja Turtles
+                - generic [ref=e835]: Artifact
+              - generic [ref=e836]:
+                - generic [ref=e837]:
+                  - generic [ref=e838]: Mercado
+                  - generic [ref=e839]: $3.99
+                - button "›" [ref=e840]:
+                  - generic [ref=e841]: ›
+          - link "Island common Island Teenage Mutant Ninja Turtles Basic Land Mercado --- ›" [ref=e842] [cursor=pointer]:
+            - /url: card/affd8e02-5bae-447a-8621-d8fcfeff7135
+            - generic [ref=e843]:
+              - img "Island" [ref=e844]
+              - generic [ref=e845]: common
+            - generic [ref=e846]:
+              - heading "Island" [level=3] [ref=e847]
+              - generic [ref=e848]:
+                - generic [ref=e849]: Teenage Mutant Ninja Turtles
+                - generic [ref=e850]: Basic Land
+              - generic [ref=e851]:
+                - generic [ref=e852]:
+                  - generic [ref=e853]: Mercado
+                  - generic [ref=e854]: "---"
+                - button "›" [ref=e855]:
+                  - generic [ref=e856]: ›
+          - link "Kitsune's Technique rare Kitsune's Technique Teenage Mutant Ninja Turtles Instant Mercado $4.99 ›" [ref=e857] [cursor=pointer]:
+            - /url: card/9ca5327e-df90-483c-875f-73a23781f56d
+            - generic [ref=e858]:
+              - img "Kitsune's Technique" [ref=e859]
+              - generic [ref=e860]: rare
+            - generic [ref=e861]:
+              - heading "Kitsune's Technique" [level=3] [ref=e862]
+              - generic [ref=e863]:
+                - generic [ref=e864]: Teenage Mutant Ninja Turtles
+                - generic [ref=e865]: Instant
+              - generic [ref=e866]:
+                - generic [ref=e867]:
+                  - generic [ref=e868]: Mercado
+                  - generic [ref=e869]: $4.99
+                - button "›" [ref=e870]:
+                  - generic [ref=e871]: ›
+          - link "Krang & Shredder rare Krang & Shredder Teenage Mutant Ninja Turtles Legendary Creature Mercado $4.99 ›" [ref=e872] [cursor=pointer]:
+            - /url: card/9b5437e2-e3f4-4c19-a2aa-a75f65a001bb
+            - generic [ref=e873]:
+              - img "Krang & Shredder" [ref=e874]
+              - generic [ref=e875]: rare
+            - generic [ref=e876]:
+              - heading "Krang & Shredder" [level=3] [ref=e877]
+              - generic [ref=e878]:
+                - generic [ref=e879]: Teenage Mutant Ninja Turtles
+                - generic [ref=e880]: Legendary Creature
+              - generic [ref=e881]:
+                - generic [ref=e882]:
+                  - generic [ref=e883]: Mercado
+                  - generic [ref=e884]: $4.99
+                - button "›" [ref=e885]:
+                  - generic [ref=e886]: ›
+          - link "Armaggon, Future Shark rare Armaggon, Future Shark Teenage Mutant Ninja Turtles Legendary Creature Mercado $0.99 ›" [ref=e887] [cursor=pointer]:
+            - /url: card/5989378b-0eac-43cf-bc83-8f7765536789
+            - generic [ref=e888]:
+              - img "Armaggon, Future Shark" [ref=e889]
+              - generic [ref=e890]: rare
+            - generic [ref=e891]:
+              - heading "Armaggon, Future Shark" [level=3] [ref=e892]
+              - generic [ref=e893]:
+                - generic [ref=e894]: Teenage Mutant Ninja Turtles
+                - generic [ref=e895]: Legendary Creature
+              - generic [ref=e896]:
+                - generic [ref=e897]:
+                  - generic [ref=e898]: Mercado
+                  - generic [ref=e899]: $0.99
+                - button "›" [ref=e900]:
+                  - generic [ref=e901]: ›
+          - link "Leatherhead, Swamp Stalker rare Leatherhead, Swamp Stalker Teenage Mutant Ninja Turtles Legendary Creature Mercado $4.99 ›" [ref=e902] [cursor=pointer]:
+            - /url: card/b1f6b5b5-12ca-468d-bc53-dd0cde60e7b6
+            - generic [ref=e903]:
+              - img "Leatherhead, Swamp Stalker" [ref=e904]
+              - generic [ref=e905]: rare
+            - generic [ref=e906]:
+              - heading "Leatherhead, Swamp Stalker" [level=3] [ref=e907]
+              - generic [ref=e908]:
+                - generic [ref=e909]: Teenage Mutant Ninja Turtles
+                - generic [ref=e910]: Legendary Creature
+              - generic [ref=e911]:
+                - generic [ref=e912]:
+                  - generic [ref=e913]: Mercado
+                  - generic [ref=e914]: $4.99
+                - button "›" [ref=e915]:
+                  - generic [ref=e916]: ›
+          - link "April O'Neil, Hacktivist rare April O'Neil, Hacktivist Teenage Mutant Ninja Turtles Legendary Creature Mercado $0.99 ›" [ref=e917] [cursor=pointer]:
+            - /url: card/f0147f6d-b797-4d5e-aca2-a9d309896eca
+            - generic [ref=e918]:
+              - img "April O'Neil, Hacktivist" [ref=e919]
+              - generic [ref=e920]: rare
+            - generic [ref=e921]:
+              - heading "April O'Neil, Hacktivist" [level=3] [ref=e922]
+              - generic [ref=e923]:
+                - generic [ref=e924]: Teenage Mutant Ninja Turtles
+                - generic [ref=e925]: Legendary Creature
+              - generic [ref=e926]:
+                - generic [ref=e927]:
+                  - generic [ref=e928]: Mercado
+                  - generic [ref=e929]: $0.99
+                - button "›" [ref=e930]:
+                  - generic [ref=e931]: ›
+          - link "Leonardo, Sewer Samurai mythic Leonardo, Sewer Samurai Teenage Mutant Ninja Turtles Legendary Creature Mercado $99.99 ›" [ref=e932] [cursor=pointer]:
+            - /url: card/74628e5a-7500-45d3-8147-30d2ef06da50
+            - generic [ref=e933]:
+              - img "Leonardo, Sewer Samurai" [ref=e934]
+              - generic [ref=e935]: mythic
+            - generic [ref=e936]:
+              - heading "Leonardo, Sewer Samurai" [level=3] [ref=e937]
+              - generic [ref=e938]:
+                - generic [ref=e939]: Teenage Mutant Ninja Turtles
+                - generic [ref=e940]: Legendary Creature
+              - generic [ref=e941]:
+                - generic [ref=e942]:
+                  - generic [ref=e943]: Mercado
+                  - generic [ref=e944]: $99.99
+                - button "›" [ref=e945]:
+                  - generic [ref=e946]: ›
+          - link "Don & Raph, Hard Science rare Don & Raph, Hard Science Teenage Mutant Ninja Turtles Legendary Creature Mercado $1.99 ›" [ref=e947] [cursor=pointer]:
+            - /url: card/4f38126c-26a9-4447-801f-4f19e84c4aa5
+            - generic [ref=e948]:
+              - img "Don & Raph, Hard Science" [ref=e949]
+              - generic [ref=e950]: rare
+            - generic [ref=e951]:
+              - heading "Don & Raph, Hard Science" [level=3] [ref=e952]
+              - generic [ref=e953]:
+                - generic [ref=e954]: Teenage Mutant Ninja Turtles
+                - generic [ref=e955]: Legendary Creature
+              - generic [ref=e956]:
+                - generic [ref=e957]:
+                  - generic [ref=e958]: Mercado
+                  - generic [ref=e959]: $1.99
+                - button "›" [ref=e960]:
+                  - generic [ref=e961]: ›
+          - link "Donatello, Gadget Master rare Donatello, Gadget Master Teenage Mutant Ninja Turtles Legendary Creature Mercado $3.99 ›" [ref=e962] [cursor=pointer]:
+            - /url: card/8b5dd830-dab8-4628-845f-3d17973f9ffa
+            - generic [ref=e963]:
+              - img "Donatello, Gadget Master" [ref=e964]
+              - generic [ref=e965]: rare
+            - generic [ref=e966]:
+              - heading "Donatello, Gadget Master" [level=3] [ref=e967]
+              - generic [ref=e968]:
+                - generic [ref=e969]: Teenage Mutant Ninja Turtles
+                - generic [ref=e970]: Legendary Creature
+              - generic [ref=e971]:
+                - generic [ref=e972]:
+                  - generic [ref=e973]: Mercado
+                  - generic [ref=e974]: $3.99
+                - button "›" [ref=e975]:
+                  - generic [ref=e976]: ›
+          - link "Dark Leo & Shredder mythic Dark Leo & Shredder Teenage Mutant Ninja Turtles Legendary Creature Mercado $9.99 ›" [ref=e977] [cursor=pointer]:
+            - /url: card/bab93474-2f98-49a1-874f-b794bf81bd0c
+            - generic [ref=e978]:
+              - img "Dark Leo & Shredder" [ref=e979]
+              - generic [ref=e980]: mythic
+            - generic [ref=e981]:
+              - heading "Dark Leo & Shredder" [level=3] [ref=e982]
+              - generic [ref=e983]:
+                - generic [ref=e984]: Teenage Mutant Ninja Turtles
+                - generic [ref=e985]: Legendary Creature
+              - generic [ref=e986]:
+                - generic [ref=e987]:
+                  - generic [ref=e988]: Mercado
+                  - generic [ref=e989]: $9.99
+                - button "›" [ref=e990]:
+                  - generic [ref=e991]: ›
+          - link "Does Machines rare Does Machines Teenage Mutant Ninja Turtles Enchantment Mercado $2.99 ›" [ref=e992] [cursor=pointer]:
+            - /url: card/989da63a-2cbd-41a9-9bbb-99f4ad1c6a25
+            - generic [ref=e993]:
+              - img "Does Machines" [ref=e994]
+              - generic [ref=e995]: rare
+            - generic [ref=e996]:
+              - heading "Does Machines" [level=3] [ref=e997]
+              - generic [ref=e998]:
+                - generic [ref=e999]: Teenage Mutant Ninja Turtles
+                - generic [ref=e1000]: Enchantment
+              - generic [ref=e1001]:
+                - generic [ref=e1002]:
+                  - generic [ref=e1003]: Mercado
+                  - generic [ref=e1004]: $2.99
+                - button "›" [ref=e1005]:
+                  - generic [ref=e1006]: ›
+        - button "Cargar Más Cartas [1]" [ref=e1008]:
+          - text: Cargar Más Cartas
+          - generic [ref=e1010]: "[1]"
+  - contentinfo [ref=e1011]:
+    - generic [ref=e1012]:
+      - generic [ref=e1013]:
+        - generic [ref=e1015]: El Emporio
+        - generic [ref=e1016]:
+          - 'link "WhatsApp Principal: +58 412-8042832" [ref=e1017] [cursor=pointer]':
+            - /url: https://wa.me/584128042832
+          - 'link "WhatsApp Singles: +58 424-2507802" [ref=e1018] [cursor=pointer]':
+            - /url: https://wa.me/584242507802
+        - generic [ref=e1019]:
+          - generic [ref=e1020] [cursor=pointer]: IG
+          - generic [ref=e1021] [cursor=pointer]: TK
+          - generic [ref=e1022] [cursor=pointer]: FB
+      - generic [ref=e1023]: © 2026 El Emporio. Plataforma Avanzada de TCG.
+      - generic [ref=e1024]:
+        - link "Privacidad" [ref=e1025] [cursor=pointer]:
+          - /url: "#"
+        - link "Términos" [ref=e1026] [cursor=pointer]:
+          - /url: "#"
+        - link "Cómo Comprar" [ref=e1027] [cursor=pointer]:
+          - /url: "#"
+  - generic [ref=e1029]:
+    - button [ref=e1030]:
+      - img [ref=e1031]
+    - generic [ref=e1039]:
+      - heading "Edición / Impresiones" [level=3] [ref=e1040]
+      - generic [ref=e1041]: 0 Versiones
+```

@@ -235,11 +235,16 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
       const printingIds = (versionsData || []).map((v: any) => v.printing_id);
 
       // Fetch stock data from products table separately
-      const { data: productsData } = await supabase
-        .from('products')
-        .select('id, printing_id, stock, price')
-        .in('printing_id', printingIds)
-        .gt('stock', 0);
+      // Fetch stock data using RPC to avoid URL length limits
+      const { data: productsData, error: rpcError } = await supabase
+        .rpc('get_products_stock_by_printing_ids', {
+          p_printing_ids: printingIds
+        });
+
+      if (rpcError) {
+        console.error('Stock RPC Error:', rpcError);
+        // Fallback or empty if RPC fails
+      }
 
       // Create a map for quick lookup
       const stockMap = new Map<string, { id: string; stock: number; price: number }>();
@@ -282,10 +287,9 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
         const printingIds = (versionsData || []).map((v: any) => v.printing_id);
 
         const { data: productsData } = await supabase
-          .from('products')
-          .select('id, printing_id, stock, price')
-          .in('printing_id', printingIds)
-          .gt('stock', 0);
+          .rpc('get_products_stock_by_printing_ids', {
+            p_printing_ids: printingIds
+          });
 
         const stockMap = new Map<string, { id: string; stock: number; price: number }>();
         (productsData || []).forEach((p: any) => {
@@ -315,10 +319,9 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
         const printingIds = data.all_versions.map((v: any) => v.printing_id);
 
         const { data: productsData } = await supabase
-          .from('products')
-          .select('id, printing_id, stock, price')
-          .in('printing_id', printingIds)
-          .gt('stock', 0);
+          .rpc('get_products_stock_by_printing_ids', {
+            p_printing_ids: printingIds
+          });
 
         const stockMap = new Map<string, { id: string; stock: number; price: number }>();
         (productsData || []).forEach((p: any) => {
@@ -412,7 +415,7 @@ export const fetchCart = async (): Promise<any> => {
       // Map RPC result to Frontend Cart Item format
       const items = (data || []).map((row: any) => ({
         id: row.cart_item_id,
-        product_id: row.product_id,
+        product_id: row.printing_id, // Use printing_id instead of products.id for consistency!
         quantity: row.quantity,
         products: {
           id: row.printing_id, // Frontend uses nested structure
@@ -435,7 +438,7 @@ export const fetchCart = async (): Promise<any> => {
         const details = await fetchCardDetails(item.printing_id);
         return {
           id: `guest-${item.printing_id}`, // temporary ID
-          product_id: item.printing_id,
+          product_id: item.printing_id, // use printing_id consistently
           quantity: item.quantity,
           products: {
             id: details.card_id,

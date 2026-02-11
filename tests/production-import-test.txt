@@ -1,0 +1,95 @@
+1 Ezio Auditore da Firenze (ACR) 131
+1 Abstergo Entertainment (ACR) 79
+1 Achilles Davenport (ACR) 294
+1 Altaïr Ibn-La'Ahad (ACR) 45
+1 Amunet, Tyrants' End (SLD) 1559 *F*
+1 Arcane Signet (OTC) 252
+1 Assassin Initiate (ACR) 22 *F*
+1 Aveline de Grandpré (ACR) 40
+1 Aya of Alexandria (ACR) 140
+1 Basim Ibn Ishaq (ACR) 49
+1 Basim, Master Assassin (SLD) 1560 *F*
+1 Bayek of Siwa (ACR) 50
+1 Beseech the Mirror (WOE) 82
+1 Black Market Connections (ACR) 87
+1 Bloodstained Mire (KTK) 230
+1 Brainstorm (A25) 46
+1 Brotherhood Headquarters (ACR) 80
+1 Brotherhood Spy (ACR) 282
+1 Chameleon, Master of Disguise (SPM) 27
+1 Changeling Outcast (OTC) 128
+1 Chromatic Lantern (RTR) 226
+1 Chthonian Nightmare (MH3) 83 *F*
+1 City of Brass (7ED) 327
+1 Command Beacon (OTC) 279
+1 Command Tower (ONC) 151
+1 Conqueror's Flail (SLD) 1571
+1 Consult the Star Charts (EOE) 51
+1 Cover of Darkness (ACR) 89
+1 Daily Bugle Building (SPM) 179
+1 Dance of the Dead (ICE) 118
+1 Dark Ritual (4ED) 129
+1 Desmond Miles (ACR) 24
+1 Diabolic Intent (PLS) 42
+1 Dimir Signet (RAV) 260
+1 Drowned Catacomb (XLN) 253
+1 Eivor, Wolf-Kissed (ACR) 54
+1 Etrata, Deadly Fugitive (MKM) 200
+1 Exotic Orchard (OTC) 293
+1 Ezio, Blade of Vengeance (ACR) 275 *F*
+1 Fellwar Stone (CMM) 657
+1 Fetid Heath (OTC) 295
+1 Firdoch Core (ECL) 255
+1 Flawless Maneuver (ONC) 68
+1 Force of Negation (2X2) 50
+1 Force Spike (7ED) 76
+1 Graven Cairns (SHM) 272
+1 Guul Draz Assassin (ROE) 112
+1 Impostor Syndrome (SPM) 34
+1 Iridescent Vinelasher (BLB) 99
+4 Island (ACR) 303
+1 Layla Hassan (ACR) 7
+1 Lightning Greaves (F09) 8 *F*
+1 Lórien Revealed (LTR) 60
+1 Lydia Frye (ACR) 149 *F*
+1 Mari, the Killing Quill (OTC) 138
+1 Marsh Flats (ZEN) 219
+1 Massacre Girl, Known Killer (MKM) 94
+1 Multiversal Passage (SPM) 180
+1 Narset, Parter of Veils (WAR) 61
+1 Olivia, Opulent Outlaw (OTC) 2 *F*
+1 Otawara, Soaring City (NEO) 271
+1 Path of Ancestry (PIP) 279
+1 Ponder (P08) 6
+1 Prismatic Vista (MH1) 244
+1 Profane Tutor (MH2) 97 *F*
+1 Ratonhnhaké꞉ton (ACR) 62
+1 Ravenloft Adventurer (PCLB) 142s *F*
+1 Reanimate (ARC) 21
+1 Reflecting Pool (CLB) 358
+1 Rhystic Study (PCY) 45
+1 Roaming Throne (LCI) 344
+1 Royal Assassin (ACR) 306 *F*
+1 Scalding Tarn (MH2) 254
+1 Sensei's Divining Top (CHK) 268
+1 Shay Cormac (ACR) 153 *F*
+1 Shipwreck Marsh (WHO) 305
+1 Sol Ring (ONC) 140
+1 Spell Pierce (ZEN) 67 *F*
+1 Spell Snare (ECL) 71 *F*
+1 Spider-Sense (SPM) 46
+1 Springleaf Drum (LRW) 261
+5 Swamp (ACR) 304
+1 Swan Song (THS) 65
+1 Tainted Isle (TOR) 141
+1 Talisman of Dominance (MRD) 253
+1 The One Ring (LTR) 246
+1 Thorn of the Black Rose (CMM) 190
+1 Thraximundar (C13) 221
+1 Toxic Deluge (MH3) 277
+1 Underground River (LTC) 342
+1 Unstoppable Slasher (DSK) 119
+1 Vein Ripper (MKM) 110
+1 Vraska, the Silencer (OTJ) 237
+1 Watery Grave (EOE) 261
+1 Whispersilk Cloak (SLD) 1574

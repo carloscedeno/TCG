@@ -1,0 +1,947 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e4]:
+  - banner [ref=e5]:
+    - navigation [ref=e6]:
+      - link "El Emporio" [ref=e8] [cursor=pointer]:
+        - /url: /TCG
+        - generic [ref=e9]:
+          - generic [ref=e10]: El
+          - text: Emporio
+      - search [ref=e12]:
+        - generic:
+          - img
+        - textbox "Buscar por nombre de carta o edición..." [ref=e13]
+      - generic [ref=e14]:
+        - button [ref=e15]:
+          - img [ref=e16]
+        - button "T test Admin" [ref=e22]:
+          - generic [ref=e23]: T
+          - generic [ref=e24]:
+            - generic [ref=e25]: test
+            - generic [ref=e26]: Admin
+          - img [ref=e27]
+  - generic [ref=e30]:
+    - generic [ref=e31]:
+      - generic [ref=e32]:
+        - button "Stock Geekorium" [active] [ref=e33]
+        - button "Archivo" [ref=e34]
+      - generic [ref=e35]:
+        - button "Todas" [ref=e36]
+        - button "Mítica" [ref=e37]
+        - button "Rara" [ref=e38]
+        - button "Infrecuente" [ref=e39]
+        - button "Común" [ref=e40]
+    - generic [ref=e41]:
+      - generic [ref=e42]:
+        - generic [ref=e43]: "Ordenar:"
+        - generic [ref=e44]:
+          - button "Nombre ⇅" [ref=e45]
+          - button "Precio ⇅" [ref=e46]
+          - button "Fecha ↓" [ref=e47]
+      - generic [ref=e48]:
+        - button "Grid View" [ref=e49]:
+          - img [ref=e50]
+        - button "List View" [ref=e55]:
+          - img [ref=e56]
+  - main [ref=e57]:
+    - generic [ref=e58]:
+      - complementary [ref=e59]:
+        - complementary [ref=e61]:
+          - generic [ref=e62]:
+            - heading "FILTROS" [level=2] [ref=e63]:
+              - img [ref=e64]
+              - text: FILTROS
+            - button "Reiniciar" [ref=e65]:
+              - img [ref=e66]
+              - text: Reiniciar
+          - generic [ref=e69]:
+            - heading "Universo de Juegos" [level=3] [ref=e70]: Universo de Juegos
+            - 'button "Magic: The Gathering" [ref=e73]'
+          - generic [ref=e74]:
+            - heading "Expansión / Set" [level=3] [ref=e75]: Expansión / Set
+            - generic [ref=e77]:
+              - img [ref=e78]
+              - textbox "Buscar sets..." [ref=e81]
+            - generic [ref=e82]:
+              - button "Marvel Super Heroes" [ref=e83]:
+                - generic [ref=e84]: Marvel Super Heroes
+              - button "Secrets of Strixhaven" [ref=e85]:
+                - generic [ref=e86]: Secrets of Strixhaven
+              - button "Teenage Mutant Ninja Turtles" [ref=e87]:
+                - generic [ref=e88]: Teenage Mutant Ninja Turtles
+              - button "Year of the Horse 2026" [ref=e89]:
+                - generic [ref=e90]: Year of the Horse 2026
+              - button "Lorwyn Eclipsed" [ref=e91]:
+                - generic [ref=e92]: Lorwyn Eclipsed
+              - button "Wizards Play Network 2026" [ref=e93]:
+                - generic [ref=e94]: Wizards Play Network 2026
+              - button "MagicFest 2026" [ref=e95]:
+                - generic [ref=e96]: MagicFest 2026
+              - 'button "Avatar: The Last Airbender" [ref=e97]':
+                - generic [ref=e98]: "Avatar: The Last Airbender"
+              - button "Marvel's Spider-Man" [ref=e99]:
+                - generic [ref=e100]: Marvel's Spider-Man
+              - button "Marvel Universe" [ref=e101]:
+                - generic [ref=e102]: Marvel Universe
+              - button "Marvel's Spider-Man Eternal" [ref=e103]:
+                - generic [ref=e104]: Marvel's Spider-Man Eternal
+              - button "Marvel's Spider-Man Art Series" [ref=e105]:
+                - generic [ref=e106]: Marvel's Spider-Man Art Series
+              - button "Arena Anthology 4" [ref=e107]:
+                - generic [ref=e108]: Arena Anthology 4
+              - button "Arena Anthology 3" [ref=e109]:
+                - generic [ref=e110]: Arena Anthology 3
+              - button "2023 Heroes of the Realm" [ref=e111]:
+                - generic [ref=e112]: 2023 Heroes of the Realm
+              - button "Arena Anthology 2" [ref=e113]:
+                - generic [ref=e114]: Arena Anthology 2
+              - button "Arena Anthology 1" [ref=e115]:
+                - generic [ref=e116]: Arena Anthology 1
+              - button "Edge of Eternities" [ref=e117]:
+                - generic [ref=e118]: Edge of Eternities
+              - button "Final Fantasy" [ref=e119]:
+                - generic [ref=e120]: Final Fantasy
+              - button "Pioneer Anthology 1" [ref=e121]:
+                - generic [ref=e122]: Pioneer Anthology 1
+              - 'button "Tarkir: Dragonstorm" [ref=e123]':
+                - generic [ref=e124]: "Tarkir: Dragonstorm"
+              - button "Love Your LGS 2025" [ref=e125]:
+                - generic [ref=e126]: Love Your LGS 2025
+              - button "Year of the Snake 2025" [ref=e127]:
+                - generic [ref=e128]: Year of the Snake 2025
+              - button "Aetherdrift" [ref=e129]:
+                - generic [ref=e130]: Aetherdrift
+              - button "Japan Standard Cup" [ref=e131]:
+                - generic [ref=e132]: Japan Standard Cup
+              - button "Innistrad Remastered" [ref=e133]:
+                - generic [ref=e134]: Innistrad Remastered
+              - button "Spotlight Series" [ref=e135]:
+                - generic [ref=e136]: Spotlight Series
+              - button "MagicFest 2025" [ref=e137]:
+                - generic [ref=e138]: MagicFest 2025
+              - button "Wizards Play Network 2025" [ref=e139]:
+                - generic [ref=e140]: Wizards Play Network 2025
+              - button "Pioneer Masters" [ref=e141]:
+                - generic [ref=e142]: Pioneer Masters
+              - button "Foundations" [ref=e143]:
+                - generic [ref=e144]: Foundations
+              - 'button "Duskmourn: House of Horror" [ref=e145]':
+                - generic [ref=e146]: "Duskmourn: House of Horror"
+              - button "Love Your LGS 2024" [ref=e147]:
+                - generic [ref=e148]: Love Your LGS 2024
+              - button "Bloomburrow" [ref=e149]:
+                - generic [ref=e150]: Bloomburrow
+              - button "Mystery Booster 2" [ref=e151]:
+                - generic [ref=e152]: Mystery Booster 2
+              - button "Cowboy Bebop" [ref=e153]:
+                - generic [ref=e154]: Cowboy Bebop
+              - button "Assassin's Creed" [ref=e155]:
+                - generic [ref=e156]: Assassin's Creed
+              - button "Modern Horizons 3" [ref=e157]:
+                - generic [ref=e158]: Modern Horizons 3
+              - button "Outlaws of Thunder Junction" [ref=e159]:
+                - generic [ref=e160]: Outlaws of Thunder Junction
+              - button "Fallout" [ref=e161]:
+                - generic [ref=e162]: Fallout
+              - button "Murders at Karlov Manor" [ref=e163]:
+                - generic [ref=e164]: Murders at Karlov Manor
+              - button "Year of the Dragon 2024" [ref=e165]:
+                - generic [ref=e166]: Year of the Dragon 2024
+              - button "Ravnica Remastered" [ref=e167]:
+                - generic [ref=e168]: Ravnica Remastered
+              - button "MagicFest 2024" [ref=e169]:
+                - generic [ref=e170]: MagicFest 2024
+              - button "Wizards Play Network 2024" [ref=e171]:
+                - generic [ref=e172]: Wizards Play Network 2024
+              - button "The Lost Caverns of Ixalan" [ref=e173]:
+                - generic [ref=e174]: The Lost Caverns of Ixalan
+              - button "Special Guests" [ref=e175]:
+                - generic [ref=e176]: Special Guests
+              - button "Doctor Who" [ref=e177]:
+                - generic [ref=e178]: Doctor Who
+              - button "Wilds of Eldraine" [ref=e179]:
+                - generic [ref=e180]: Wilds of Eldraine
+              - button "Magic × Duel Masters Promos" [ref=e181]:
+                - generic [ref=e182]: Magic × Duel Masters Promos
+          - generic [ref=e183]:
+            - heading "Rareza" [level=3] [ref=e184]: Rareza
+            - generic [ref=e186]:
+              - button "Común" [ref=e187]:
+                - generic [ref=e189]: Común
+              - button "Infrecuente" [ref=e190]:
+                - generic [ref=e192]: Infrecuente
+              - button "Rara" [ref=e193]:
+                - generic [ref=e195]: Rara
+              - button "Mítica" [ref=e196]:
+                - generic [ref=e198]: Mítica
+          - generic [ref=e199]:
+            - heading "Esencia de Mana (Colores)" [level=3] [ref=e200]: Esencia de Mana (Colores)
+            - generic [ref=e202]:
+              - button "Blanco" [ref=e203]
+              - button "Azul" [ref=e205]
+              - button "Negro" [ref=e207]
+              - button "Rojo" [ref=e209]
+              - button "Verde" [ref=e211]
+              - button "Incoloro" [ref=e213]
+              - button "Multicolor" [ref=e215]
+          - generic [ref=e217]:
+            - heading "Órbita Temporal (Año)" [level=3] [ref=e218]: Órbita Temporal (Año)
+            - generic [ref=e220]:
+              - spinbutton [ref=e221]
+              - generic [ref=e222]: →
+              - spinbutton [ref=e223]
+            - generic [ref=e224]:
+              - generic [ref=e225]: Orígenes (1993)
+              - generic [ref=e226]: Presente (2026)
+          - generic [ref=e227]:
+            - heading "Esencia de Carta (Tipo)" [level=3] [ref=e228]: Esencia de Carta (Tipo)
+            - generic [ref=e230]:
+              - button "Criatura" [ref=e231]
+              - button "Instantáneo" [ref=e232]
+              - button "Conjuro" [ref=e233]
+              - button "Encantamiento" [ref=e234]
+              - button "Artefacto" [ref=e235]
+              - button "Planeswalker" [ref=e236]
+              - button "Tierra" [ref=e237]
+          - generic [ref=e239]:
+            - paragraph [ref=e241]: Sincronización en tiempo real activa vía Neural Link con mercados globales.
+            - generic [ref=e242]:
+              - img [ref=e243]
+              - text: "Sincro Cuántica: ON"
+      - generic [ref=e246]:
+        - generic [ref=e247]:
+          - generic [ref=e248]: "Activo:"
+          - 'button "Magic: The Gathering" [ref=e249]':
+            - text: "Magic: The Gathering"
+            - img [ref=e250]
+          - button "Limpiar Todo" [ref=e253]
+        - generic [ref=e255]:
+          - 'link "Imagen No Disponible Existencia: 99 Auto-Created Product Unknown Mercado --- ›" [ref=e256] [cursor=pointer]':
+            - /url: card/8b49e2c5-c447-45f4-979d-68556f6cd647
+            - generic [ref=e257]:
+              - generic [ref=e258]:
+                - img [ref=e259]
+                - generic [ref=e261]: Imagen No Disponible
+              - generic [ref=e262]: "Existencia: 99"
+            - generic [ref=e263]:
+              - heading "Auto-Created Product" [level=3] [ref=e264]
+              - generic [ref=e266]: Unknown
+              - generic [ref=e267]:
+                - generic [ref=e268]:
+                  - generic [ref=e269]: Mercado
+                  - generic [ref=e270]: "---"
+                - button "›" [ref=e271]:
+                  - generic [ref=e272]: ›
+          - 'link "Whispersilk Cloak Existencia: 1 Whispersilk Cloak SLD Mercado $20.87 ›" [ref=e273] [cursor=pointer]':
+            - /url: card/0a7a90bb-5ff0-48ec-b578-63ebcf7f1e70
+            - generic [ref=e274]:
+              - img "Whispersilk Cloak" [ref=e275]
+              - generic [ref=e276]: "Existencia: 1"
+            - generic [ref=e277]:
+              - heading "Whispersilk Cloak" [level=3] [ref=e278]
+              - generic [ref=e280]: SLD
+              - generic [ref=e281]:
+                - generic [ref=e282]:
+                  - generic [ref=e283]: Mercado
+                  - generic [ref=e284]: $20.87
+                - button "›" [ref=e285]:
+                  - generic [ref=e286]: ›
+          - 'link "Watery Grave Existencia: 1 Watery Grave EOE Mercado $14.99 ›" [ref=e287] [cursor=pointer]':
+            - /url: card/5b8170dc-6a90-46fc-9989-7575f3d402b5
+            - generic [ref=e288]:
+              - img "Watery Grave" [ref=e289]
+              - generic [ref=e290]: "Existencia: 1"
+            - generic [ref=e291]:
+              - heading "Watery Grave" [level=3] [ref=e292]
+              - generic [ref=e294]: EOE
+              - generic [ref=e295]:
+                - generic [ref=e296]:
+                  - generic [ref=e297]: Mercado
+                  - generic [ref=e298]: $14.99
+                - button "›" [ref=e299]:
+                  - generic [ref=e300]: ›
+          - 'link "Vraska, the Silencer Existencia: 1 Vraska, the Silencer OTJ Mercado $1.79 ›" [ref=e301] [cursor=pointer]':
+            - /url: card/b042abf2-c40b-4235-a4fa-2e4901c375c3
+            - generic [ref=e302]:
+              - img "Vraska, the Silencer" [ref=e303]
+              - generic [ref=e304]: "Existencia: 1"
+            - generic [ref=e305]:
+              - heading "Vraska, the Silencer" [level=3] [ref=e306]
+              - generic [ref=e308]: OTJ
+              - generic [ref=e309]:
+                - generic [ref=e310]:
+                  - generic [ref=e311]: Mercado
+                  - generic [ref=e312]: $1.79
+                - button "›" [ref=e313]:
+                  - generic [ref=e314]: ›
+          - 'link "Vein Ripper Existencia: 1 Vein Ripper MKM Mercado $10.99 ›" [ref=e315] [cursor=pointer]':
+            - /url: card/078933b3-6d82-45f2-94e8-addf54cf1704
+            - generic [ref=e316]:
+              - img "Vein Ripper" [ref=e317]
+              - generic [ref=e318]: "Existencia: 1"
+            - generic [ref=e319]:
+              - heading "Vein Ripper" [level=3] [ref=e320]
+              - generic [ref=e322]: MKM
+              - generic [ref=e323]:
+                - generic [ref=e324]:
+                  - generic [ref=e325]: Mercado
+                  - generic [ref=e326]: $10.99
+                - button "›" [ref=e327]:
+                  - generic [ref=e328]: ›
+          - 'link "Unstoppable Slasher Existencia: 1 Unstoppable Slasher DSK Mercado $6.32 ›" [ref=e329] [cursor=pointer]':
+            - /url: card/c78da035-6b5b-4136-9ab6-f622b64fdc54
+            - generic [ref=e330]:
+              - img "Unstoppable Slasher" [ref=e331]
+              - generic [ref=e332]: "Existencia: 1"
+            - generic [ref=e333]:
+              - heading "Unstoppable Slasher" [level=3] [ref=e334]
+              - generic [ref=e336]: DSK
+              - generic [ref=e337]:
+                - generic [ref=e338]:
+                  - generic [ref=e339]: Mercado
+                  - generic [ref=e340]: $6.32
+                - button "›" [ref=e341]:
+                  - generic [ref=e342]: ›
+          - 'link "Underground River Existencia: 1 Underground River ICE Mercado $34.99 ›" [ref=e343] [cursor=pointer]':
+            - /url: card/92369d7e-5e5a-46f9-bb31-c57d62410283
+            - generic [ref=e344]:
+              - img "Underground River" [ref=e345]
+              - generic [ref=e346]: "Existencia: 1"
+            - generic [ref=e347]:
+              - heading "Underground River" [level=3] [ref=e348]
+              - generic [ref=e350]: ICE
+              - generic [ref=e351]:
+                - generic [ref=e352]:
+                  - generic [ref=e353]: Mercado
+                  - generic [ref=e354]: $34.99
+                - button "›" [ref=e355]:
+                  - generic [ref=e356]: ›
+          - 'link "Toxic Deluge Existencia: 1 Toxic Deluge MH3 Mercado $12.99 ›" [ref=e357] [cursor=pointer]':
+            - /url: card/5aa02b7d-db31-4924-b75e-eb02f332ca3a
+            - generic [ref=e358]:
+              - img "Toxic Deluge" [ref=e359]
+              - generic [ref=e360]: "Existencia: 1"
+            - generic [ref=e361]:
+              - heading "Toxic Deluge" [level=3] [ref=e362]
+              - generic [ref=e364]: MH3
+              - generic [ref=e365]:
+                - generic [ref=e366]:
+                  - generic [ref=e367]: Mercado
+                  - generic [ref=e368]: $12.99
+                - button "›" [ref=e369]:
+                  - generic [ref=e370]: ›
+          - 'link "Thraximundar Existencia: 1 Thraximundar C13 Mercado $0.99 ›" [ref=e371] [cursor=pointer]':
+            - /url: card/199d862e-d043-47f1-b097-76877b260608
+            - generic [ref=e372]:
+              - img "Thraximundar" [ref=e373]
+              - generic [ref=e374]: "Existencia: 1"
+            - generic [ref=e375]:
+              - heading "Thraximundar" [level=3] [ref=e376]
+              - generic [ref=e378]: C13
+              - generic [ref=e379]:
+                - generic [ref=e380]:
+                  - generic [ref=e381]: Mercado
+                  - generic [ref=e382]: $0.99
+                - button "›" [ref=e383]:
+                  - generic [ref=e384]: ›
+          - 'link "Thorn of the Black Rose Existencia: 1 Thorn of the Black Rose CMM Mercado $0.35 ›" [ref=e385] [cursor=pointer]':
+            - /url: card/b4b266e2-1cad-40df-bc0e-3e1464b299b3
+            - generic [ref=e386]:
+              - img "Thorn of the Black Rose" [ref=e387]
+              - generic [ref=e388]: "Existencia: 1"
+            - generic [ref=e389]:
+              - heading "Thorn of the Black Rose" [level=3] [ref=e390]
+              - generic [ref=e392]: CMM
+              - generic [ref=e393]:
+                - generic [ref=e394]:
+                  - generic [ref=e395]: Mercado
+                  - generic [ref=e396]: $0.35
+                - button "›" [ref=e397]:
+                  - generic [ref=e398]: ›
+          - 'link "The One Ring Existencia: 1 The One Ring LTR Mercado $109.99 ›" [ref=e399] [cursor=pointer]':
+            - /url: card/d5806e68-1054-458e-866d-1f2470f682b2
+            - generic [ref=e400]:
+              - img "The One Ring" [ref=e401]
+              - generic [ref=e402]: "Existencia: 1"
+            - generic [ref=e403]:
+              - heading "The One Ring" [level=3] [ref=e404]
+              - generic [ref=e406]: LTR
+              - generic [ref=e407]:
+                - generic [ref=e408]:
+                  - generic [ref=e409]: Mercado
+                  - generic [ref=e410]: $109.99
+                - button "›" [ref=e411]:
+                  - generic [ref=e412]: ›
+          - 'link "Talisman of Dominance Existencia: 1 Talisman of Dominance MRD Mercado $3.49 ›" [ref=e413] [cursor=pointer]':
+            - /url: card/991037a2-fea2-49f5-8ace-ebbf9f678cff
+            - generic [ref=e414]:
+              - img "Talisman of Dominance" [ref=e415]
+              - generic [ref=e416]: "Existencia: 1"
+            - generic [ref=e417]:
+              - heading "Talisman of Dominance" [level=3] [ref=e418]
+              - generic [ref=e420]: MRD
+              - generic [ref=e421]:
+                - generic [ref=e422]:
+                  - generic [ref=e423]: Mercado
+                  - generic [ref=e424]: $3.49
+                - button "›" [ref=e425]:
+                  - generic [ref=e426]: ›
+          - 'link "Tainted Isle Existencia: 1 Tainted Isle TOR Mercado $1.29 ›" [ref=e427] [cursor=pointer]':
+            - /url: card/b462e121-015c-49c4-838a-ab788f213322
+            - generic [ref=e428]:
+              - img "Tainted Isle" [ref=e429]
+              - generic [ref=e430]: "Existencia: 1"
+            - generic [ref=e431]:
+              - heading "Tainted Isle" [level=3] [ref=e432]
+              - generic [ref=e434]: TOR
+              - generic [ref=e435]:
+                - generic [ref=e436]:
+                  - generic [ref=e437]: Mercado
+                  - generic [ref=e438]: $1.29
+                - button "›" [ref=e439]:
+                  - generic [ref=e440]: ›
+          - 'link "Swan Song Existencia: 1 Swan Song THS Mercado $16.99 ›" [ref=e441] [cursor=pointer]':
+            - /url: card/efd26041-059b-4a1e-9ce8-c3cfd69a3721
+            - generic [ref=e442]:
+              - img "Swan Song" [ref=e443]
+              - generic [ref=e444]: "Existencia: 1"
+            - generic [ref=e445]:
+              - heading "Swan Song" [level=3] [ref=e446]
+              - generic [ref=e448]: THS
+              - generic [ref=e449]:
+                - generic [ref=e450]:
+                  - generic [ref=e451]: Mercado
+                  - generic [ref=e452]: $16.99
+                - button "›" [ref=e453]:
+                  - generic [ref=e454]: ›
+          - 'link "Swamp Existencia: 5 Swamp ACR Mercado $0.49 ›" [ref=e455] [cursor=pointer]':
+            - /url: card/36aaa8d9-4b03-4dd2-9b3c-d8b3bf19da73
+            - generic [ref=e456]:
+              - img "Swamp" [ref=e457]
+              - generic [ref=e458]: "Existencia: 5"
+            - generic [ref=e459]:
+              - heading "Swamp" [level=3] [ref=e460]
+              - generic [ref=e462]: ACR
+              - generic [ref=e463]:
+                - generic [ref=e464]:
+                  - generic [ref=e465]: Mercado
+                  - generic [ref=e466]: $0.49
+                - button "›" [ref=e467]:
+                  - generic [ref=e468]: ›
+          - 'link "Springleaf Drum Existencia: 1 Springleaf Drum LRW Mercado $0.79 ›" [ref=e469] [cursor=pointer]':
+            - /url: card/fa8b09d0-fbd2-4441-9d87-02450412e0db
+            - generic [ref=e470]:
+              - img "Springleaf Drum" [ref=e471]
+              - generic [ref=e472]: "Existencia: 1"
+            - generic [ref=e473]:
+              - heading "Springleaf Drum" [level=3] [ref=e474]
+              - generic [ref=e476]: LRW
+              - generic [ref=e477]:
+                - generic [ref=e478]:
+                  - generic [ref=e479]: Mercado
+                  - generic [ref=e480]: $0.79
+                - button "›" [ref=e481]:
+                  - generic [ref=e482]: ›
+          - 'link "Spider-Sense Existencia: 1 Spider-Sense SPM Mercado $4.49 ›" [ref=e483] [cursor=pointer]':
+            - /url: card/4499a25b-f4a5-4f2c-9ebd-bc68c7840b39
+            - generic [ref=e484]:
+              - img "Spider-Sense" [ref=e485]
+              - generic [ref=e486]: "Existencia: 1"
+            - generic [ref=e487]:
+              - heading "Spider-Sense" [level=3] [ref=e488]
+              - generic [ref=e490]: SPM
+              - generic [ref=e491]:
+                - generic [ref=e492]:
+                  - generic [ref=e493]: Mercado
+                  - generic [ref=e494]: $4.49
+                - button "›" [ref=e495]:
+                  - generic [ref=e496]: ›
+          - 'link "Spell Snare Existencia: 1 Spell Snare ECL Mercado $0.69 ›" [ref=e497] [cursor=pointer]':
+            - /url: card/b7551b61-656e-4f37-b9da-73174db983b7
+            - generic [ref=e498]:
+              - img "Spell Snare" [ref=e499]
+              - generic [ref=e500]: "Existencia: 1"
+            - generic [ref=e501]:
+              - heading "Spell Snare" [level=3] [ref=e502]
+              - generic [ref=e504]: ECL
+              - generic [ref=e505]:
+                - generic [ref=e506]:
+                  - generic [ref=e507]: Mercado
+                  - generic [ref=e508]: $0.69
+                - button "›" [ref=e509]:
+                  - generic [ref=e510]: ›
+          - 'link "Spell Pierce Existencia: 1 Spell Pierce ZEN Mercado $0.84 ›" [ref=e511] [cursor=pointer]':
+            - /url: card/cb3d3901-e4a6-45ab-a7b5-c65d91e1875e
+            - generic [ref=e512]:
+              - img "Spell Pierce" [ref=e513]
+              - generic [ref=e514]: "Existencia: 1"
+            - generic [ref=e515]:
+              - heading "Spell Pierce" [level=3] [ref=e516]
+              - generic [ref=e518]: ZEN
+              - generic [ref=e519]:
+                - generic [ref=e520]:
+                  - generic [ref=e521]: Mercado
+                  - generic [ref=e522]: $0.84
+                - button "›" [ref=e523]:
+                  - generic [ref=e524]: ›
+          - 'link "Sol Ring Existencia: 1 Sol Ring WHO Mercado $2.29 ›" [ref=e525] [cursor=pointer]':
+            - /url: card/0f44a54b-512e-45ef-80ee-7982d2eaf762
+            - generic [ref=e526]:
+              - img "Sol Ring" [ref=e527]
+              - generic [ref=e528]: "Existencia: 1"
+            - generic [ref=e529]:
+              - heading "Sol Ring" [level=3] [ref=e530]
+              - generic [ref=e532]: WHO
+              - generic [ref=e533]:
+                - generic [ref=e534]:
+                  - generic [ref=e535]: Mercado
+                  - generic [ref=e536]: $2.29
+                - button "›" [ref=e537]:
+                  - generic [ref=e538]: ›
+          - 'link "Shipwreck Marsh Existencia: 1 Shipwreck Marsh WHO Mercado $9.49 ›" [ref=e539] [cursor=pointer]':
+            - /url: card/9d0dfc2d-5d13-4051-b24c-108b566b5e23
+            - generic [ref=e540]:
+              - img "Shipwreck Marsh" [ref=e541]
+              - generic [ref=e542]: "Existencia: 1"
+            - generic [ref=e543]:
+              - heading "Shipwreck Marsh" [level=3] [ref=e544]
+              - generic [ref=e546]: WHO
+              - generic [ref=e547]:
+                - generic [ref=e548]:
+                  - generic [ref=e549]: Mercado
+                  - generic [ref=e550]: $9.49
+                - button "›" [ref=e551]:
+                  - generic [ref=e552]: ›
+          - 'link "Shay Cormac Existencia: 1 Shay Cormac ACR Mercado $0.35 ›" [ref=e553] [cursor=pointer]':
+            - /url: card/bf3012ba-1537-4f54-bb4a-65b909b87e59
+            - generic [ref=e554]:
+              - img "Shay Cormac" [ref=e555]
+              - generic [ref=e556]: "Existencia: 1"
+            - generic [ref=e557]:
+              - heading "Shay Cormac" [level=3] [ref=e558]
+              - generic [ref=e560]: ACR
+              - generic [ref=e561]:
+                - generic [ref=e562]:
+                  - generic [ref=e563]: Mercado
+                  - generic [ref=e564]: $0.35
+                - button "›" [ref=e565]:
+                  - generic [ref=e566]: ›
+          - 'link "Sensei''s Divining Top Existencia: 1 Sensei''s Divining Top CHK Mercado $44.99 ›" [ref=e567] [cursor=pointer]':
+            - /url: card/4a08ca06-58db-4ce6-b490-be4bea8956a1
+            - generic [ref=e568]:
+              - img "Sensei's Divining Top" [ref=e569]
+              - generic [ref=e570]: "Existencia: 1"
+            - generic [ref=e571]:
+              - heading "Sensei's Divining Top" [level=3] [ref=e572]
+              - generic [ref=e574]: CHK
+              - generic [ref=e575]:
+                - generic [ref=e576]:
+                  - generic [ref=e577]: Mercado
+                  - generic [ref=e578]: $44.99
+                - button "›" [ref=e579]:
+                  - generic [ref=e580]: ›
+          - 'link "Scalding Tarn Existencia: 1 Scalding Tarn MH2 Mercado $34.99 ›" [ref=e581] [cursor=pointer]':
+            - /url: card/71e491c5-8c07-449b-b2f1-ffa052e6d311
+            - generic [ref=e582]:
+              - img "Scalding Tarn" [ref=e583]
+              - generic [ref=e584]: "Existencia: 1"
+            - generic [ref=e585]:
+              - heading "Scalding Tarn" [level=3] [ref=e586]
+              - generic [ref=e588]: MH2
+              - generic [ref=e589]:
+                - generic [ref=e590]:
+                  - generic [ref=e591]: Mercado
+                  - generic [ref=e592]: $34.99
+                - button "›" [ref=e593]:
+                  - generic [ref=e594]: ›
+          - 'link "Royal Assassin Existencia: 1 Royal Assassin ACR Mercado $1.49 ›" [ref=e595] [cursor=pointer]':
+            - /url: card/b7d9cde9-8937-4861-8eec-17a94e1602c7
+            - generic [ref=e596]:
+              - img "Royal Assassin" [ref=e597]
+              - generic [ref=e598]: "Existencia: 1"
+            - generic [ref=e599]:
+              - heading "Royal Assassin" [level=3] [ref=e600]
+              - generic [ref=e602]: ACR
+              - generic [ref=e603]:
+                - generic [ref=e604]:
+                  - generic [ref=e605]: Mercado
+                  - generic [ref=e606]: $1.49
+                - button "›" [ref=e607]:
+                  - generic [ref=e608]: ›
+          - 'link "Roaming Throne Existencia: 1 Roaming Throne LCI Mercado $59.49 ›" [ref=e609] [cursor=pointer]':
+            - /url: card/0ff7858d-f18d-4e5a-9467-ebef3ef53ac1
+            - generic [ref=e610]:
+              - img "Roaming Throne" [ref=e611]
+              - generic [ref=e612]: "Existencia: 1"
+            - generic [ref=e613]:
+              - heading "Roaming Throne" [level=3] [ref=e614]
+              - generic [ref=e616]: LCI
+              - generic [ref=e617]:
+                - generic [ref=e618]:
+                  - generic [ref=e619]: Mercado
+                  - generic [ref=e620]: $59.49
+                - button "›" [ref=e621]:
+                  - generic [ref=e622]: ›
+          - 'link "Rhystic Study Existencia: 1 Rhystic Study PCY Mercado $69.99 ›" [ref=e623] [cursor=pointer]':
+            - /url: card/3394cefd-a3c6-4917-8f46-234e441ecfb6
+            - generic [ref=e624]:
+              - img "Rhystic Study" [ref=e625]
+              - generic [ref=e626]: "Existencia: 1"
+            - generic [ref=e627]:
+              - heading "Rhystic Study" [level=3] [ref=e628]
+              - generic [ref=e630]: PCY
+              - generic [ref=e631]:
+                - generic [ref=e632]:
+                  - generic [ref=e633]: Mercado
+                  - generic [ref=e634]: $69.99
+                - button "›" [ref=e635]:
+                  - generic [ref=e636]: ›
+          - 'link "Reflecting Pool Existencia: 1 Reflecting Pool CLB Mercado $15.99 ›" [ref=e637] [cursor=pointer]':
+            - /url: card/18a1b3f5-473d-45ca-be0d-e67e77ba30ce
+            - generic [ref=e638]:
+              - img "Reflecting Pool" [ref=e639]
+              - generic [ref=e640]: "Existencia: 1"
+            - generic [ref=e641]:
+              - heading "Reflecting Pool" [level=3] [ref=e642]
+              - generic [ref=e644]: CLB
+              - generic [ref=e645]:
+                - generic [ref=e646]:
+                  - generic [ref=e647]: Mercado
+                  - generic [ref=e648]: $15.99
+                - button "›" [ref=e649]:
+                  - generic [ref=e650]: ›
+          - 'link "Reanimate Existencia: 1 Reanimate ARC Mercado $15.56 ›" [ref=e651] [cursor=pointer]':
+            - /url: card/bee3dad4-88d8-424c-b3f8-d089b6891fb8
+            - generic [ref=e652]:
+              - img "Reanimate" [ref=e653]
+              - generic [ref=e654]: "Existencia: 1"
+            - generic [ref=e655]:
+              - heading "Reanimate" [level=3] [ref=e656]
+              - generic [ref=e658]: ARC
+              - generic [ref=e659]:
+                - generic [ref=e660]:
+                  - generic [ref=e661]: Mercado
+                  - generic [ref=e662]: $15.56
+                - button "›" [ref=e663]:
+                  - generic [ref=e664]: ›
+          - 'link "Ravenloft Adventurer Existencia: 1 Ravenloft Adventurer CLB Mercado $0.88 ›" [ref=e665] [cursor=pointer]':
+            - /url: card/a5e27c36-d883-4681-8430-b4d0ad7f1df0
+            - generic [ref=e666]:
+              - img "Ravenloft Adventurer" [ref=e667]
+              - generic [ref=e668]: "Existencia: 1"
+            - generic [ref=e669]:
+              - heading "Ravenloft Adventurer" [level=3] [ref=e670]
+              - generic [ref=e672]: CLB
+              - generic [ref=e673]:
+                - generic [ref=e674]:
+                  - generic [ref=e675]: Mercado
+                  - generic [ref=e676]: $0.88
+                - button "›" [ref=e677]:
+                  - generic [ref=e678]: ›
+          - 'link "Ratonhnhaké꞉ton Existencia: 1 Ratonhnhaké꞉ton ACR Mercado $0.49 ›" [ref=e679] [cursor=pointer]':
+            - /url: card/2b16a212-602c-4839-9e34-fc5c5b0388f0
+            - generic [ref=e680]:
+              - img "Ratonhnhaké꞉ton" [ref=e681]
+              - generic [ref=e682]: "Existencia: 1"
+            - generic [ref=e683]:
+              - heading "Ratonhnhaké꞉ton" [level=3] [ref=e684]
+              - generic [ref=e686]: ACR
+              - generic [ref=e687]:
+                - generic [ref=e688]:
+                  - generic [ref=e689]: Mercado
+                  - generic [ref=e690]: $0.49
+                - button "›" [ref=e691]:
+                  - generic [ref=e692]: ›
+          - 'link "Profane Tutor Existencia: 1 Profane Tutor MH2 Mercado $3.99 ›" [ref=e693] [cursor=pointer]':
+            - /url: card/2afc6f7d-ab59-4d64-bd11-6bd0fd4bfcd2
+            - generic [ref=e694]:
+              - img "Profane Tutor" [ref=e695]
+              - generic [ref=e696]: "Existencia: 1"
+            - generic [ref=e697]:
+              - heading "Profane Tutor" [level=3] [ref=e698]
+              - generic [ref=e700]: MH2
+              - generic [ref=e701]:
+                - generic [ref=e702]:
+                  - generic [ref=e703]: Mercado
+                  - generic [ref=e704]: $3.99
+                - button "›" [ref=e705]:
+                  - generic [ref=e706]: ›
+          - 'link "Prismatic Vista Existencia: 1 Prismatic Vista MH1 Mercado $39.99 ›" [ref=e707] [cursor=pointer]':
+            - /url: card/e37da81e-be12-45a2-9128-376f1ad7b3e8
+            - generic [ref=e708]:
+              - img "Prismatic Vista" [ref=e709]
+              - generic [ref=e710]: "Existencia: 1"
+            - generic [ref=e711]:
+              - heading "Prismatic Vista" [level=3] [ref=e712]
+              - generic [ref=e714]: MH1
+              - generic [ref=e715]:
+                - generic [ref=e716]:
+                  - generic [ref=e717]: Mercado
+                  - generic [ref=e718]: $39.99
+                - button "›" [ref=e719]:
+                  - generic [ref=e720]: ›
+          - 'link "Ponder Existencia: 1 Ponder P08 Mercado $21.29 ›" [ref=e721] [cursor=pointer]':
+            - /url: card/15813b4a-9eee-4724-97f3-c1b845cba330
+            - generic [ref=e722]:
+              - img "Ponder" [ref=e723]
+              - generic [ref=e724]: "Existencia: 1"
+            - generic [ref=e725]:
+              - heading "Ponder" [level=3] [ref=e726]
+              - generic [ref=e728]: P08
+              - generic [ref=e729]:
+                - generic [ref=e730]:
+                  - generic [ref=e731]: Mercado
+                  - generic [ref=e732]: $21.29
+                - button "›" [ref=e733]:
+                  - generic [ref=e734]: ›
+          - 'link "Path of Ancestry Existencia: 1 Path of Ancestry PIP Mercado $0.35 ›" [ref=e735] [cursor=pointer]':
+            - /url: card/ff6415d9-14fb-4a58-aa86-bf2063037684
+            - generic [ref=e736]:
+              - img "Path of Ancestry" [ref=e737]
+              - generic [ref=e738]: "Existencia: 1"
+            - generic [ref=e739]:
+              - heading "Path of Ancestry" [level=3] [ref=e740]
+              - generic [ref=e742]: PIP
+              - generic [ref=e743]:
+                - generic [ref=e744]:
+                  - generic [ref=e745]: Mercado
+                  - generic [ref=e746]: $0.35
+                - button "›" [ref=e747]:
+                  - generic [ref=e748]: ›
+          - 'link "Otawara, Soaring City Existencia: 1 Otawara, Soaring City NEO Mercado $32.99 ›" [ref=e749] [cursor=pointer]':
+            - /url: card/486d7edc-d983-41f0-8b78-c99aecd72996
+            - generic [ref=e750]:
+              - img "Otawara, Soaring City" [ref=e751]
+              - generic [ref=e752]: "Existencia: 1"
+            - generic [ref=e753]:
+              - heading "Otawara, Soaring City" [level=3] [ref=e754]
+              - generic [ref=e756]: NEO
+              - generic [ref=e757]:
+                - generic [ref=e758]:
+                  - generic [ref=e759]: Mercado
+                  - generic [ref=e760]: $32.99
+                - button "›" [ref=e761]:
+                  - generic [ref=e762]: ›
+          - 'link "Narset, Parter of Veils Existencia: 1 Narset, Parter of Veils WAR Mercado $1.99 ›" [ref=e763] [cursor=pointer]':
+            - /url: card/8c39f9b4-02b9-4d44-b8d6-4fd02ebbb0c5
+            - generic [ref=e764]:
+              - img "Narset, Parter of Veils" [ref=e765]
+              - generic [ref=e766]: "Existencia: 1"
+            - generic [ref=e767]:
+              - heading "Narset, Parter of Veils" [level=3] [ref=e768]
+              - generic [ref=e770]: WAR
+              - generic [ref=e771]:
+                - generic [ref=e772]:
+                  - generic [ref=e773]: Mercado
+                  - generic [ref=e774]: $1.99
+                - button "›" [ref=e775]:
+                  - generic [ref=e776]: ›
+          - 'link "Multiversal Passage Existencia: 1 Multiversal Passage SPM Mercado $21.66 ›" [ref=e777] [cursor=pointer]':
+            - /url: card/f5fb426a-5618-4dd4-9c51-0cc847be8c1d
+            - generic [ref=e778]:
+              - img "Multiversal Passage" [ref=e779]
+              - generic [ref=e780]: "Existencia: 1"
+            - generic [ref=e781]:
+              - heading "Multiversal Passage" [level=3] [ref=e782]
+              - generic [ref=e784]: SPM
+              - generic [ref=e785]:
+                - generic [ref=e786]:
+                  - generic [ref=e787]: Mercado
+                  - generic [ref=e788]: $21.66
+                - button "›" [ref=e789]:
+                  - generic [ref=e790]: ›
+          - 'link "Massacre Girl, Known Killer Existencia: 1 Massacre Girl, Known Killer MKM Mercado $5.99 ›" [ref=e791] [cursor=pointer]':
+            - /url: card/cb1c8800-9d33-485c-b776-042003b9ea92
+            - generic [ref=e792]:
+              - img "Massacre Girl, Known Killer" [ref=e793]
+              - generic [ref=e794]: "Existencia: 1"
+            - generic [ref=e795]:
+              - heading "Massacre Girl, Known Killer" [level=3] [ref=e796]
+              - generic [ref=e798]: MKM
+              - generic [ref=e799]:
+                - generic [ref=e800]:
+                  - generic [ref=e801]: Mercado
+                  - generic [ref=e802]: $5.99
+                - button "›" [ref=e803]:
+                  - generic [ref=e804]: ›
+          - 'link "Marsh Flats Existencia: 1 Marsh Flats ZEN Mercado $39.99 ›" [ref=e805] [cursor=pointer]':
+            - /url: card/45026d57-0324-4312-8b86-2e7d4f581ee9
+            - generic [ref=e806]:
+              - img "Marsh Flats" [ref=e807]
+              - generic [ref=e808]: "Existencia: 1"
+            - generic [ref=e809]:
+              - heading "Marsh Flats" [level=3] [ref=e810]
+              - generic [ref=e812]: ZEN
+              - generic [ref=e813]:
+                - generic [ref=e814]:
+                  - generic [ref=e815]: Mercado
+                  - generic [ref=e816]: $39.99
+                - button "›" [ref=e817]:
+                  - generic [ref=e818]: ›
+          - 'link "Lydia Frye Existencia: 1 Lydia Frye ACR Mercado $0.35 ›" [ref=e819] [cursor=pointer]':
+            - /url: card/910570c8-c868-4513-8b27-22268d0cff68
+            - generic [ref=e820]:
+              - img "Lydia Frye" [ref=e821]
+              - generic [ref=e822]: "Existencia: 1"
+            - generic [ref=e823]:
+              - heading "Lydia Frye" [level=3] [ref=e824]
+              - generic [ref=e826]: ACR
+              - generic [ref=e827]:
+                - generic [ref=e828]:
+                  - generic [ref=e829]: Mercado
+                  - generic [ref=e830]: $0.35
+                - button "›" [ref=e831]:
+                  - generic [ref=e832]: ›
+          - 'link "Lórien Revealed Existencia: 1 Lórien Revealed LTR Mercado $4.63 ›" [ref=e833] [cursor=pointer]':
+            - /url: card/0ce44270-a684-4489-9077-521456e6dfaa
+            - generic [ref=e834]:
+              - img "Lórien Revealed" [ref=e835]
+              - generic [ref=e836]: "Existencia: 1"
+            - generic [ref=e837]:
+              - heading "Lórien Revealed" [level=3] [ref=e838]
+              - generic [ref=e840]: LTR
+              - generic [ref=e841]:
+                - generic [ref=e842]:
+                  - generic [ref=e843]: Mercado
+                  - generic [ref=e844]: $4.63
+                - button "›" [ref=e845]:
+                  - generic [ref=e846]: ›
+          - 'link "Lightning Greaves Existencia: 1 Lightning Greaves F09 Mercado $13.99 ›" [ref=e847] [cursor=pointer]':
+            - /url: card/342408be-4280-4c91-b431-ffa02d317aff
+            - generic [ref=e848]:
+              - img "Lightning Greaves" [ref=e849]
+              - generic [ref=e850]: "Existencia: 1"
+            - generic [ref=e851]:
+              - heading "Lightning Greaves" [level=3] [ref=e852]
+              - generic [ref=e854]: F09
+              - generic [ref=e855]:
+                - generic [ref=e856]:
+                  - generic [ref=e857]: Mercado
+                  - generic [ref=e858]: $13.99
+                - button "›" [ref=e859]:
+                  - generic [ref=e860]: ›
+          - 'link "Layla Hassan Existencia: 1 Layla Hassan ACR Mercado $0.79 ›" [ref=e861] [cursor=pointer]':
+            - /url: card/2278d97e-791a-4843-a385-65bac79bde7a
+            - generic [ref=e862]:
+              - img "Layla Hassan" [ref=e863]
+              - generic [ref=e864]: "Existencia: 1"
+            - generic [ref=e865]:
+              - heading "Layla Hassan" [level=3] [ref=e866]
+              - generic [ref=e868]: ACR
+              - generic [ref=e869]:
+                - generic [ref=e870]:
+                  - generic [ref=e871]: Mercado
+                  - generic [ref=e872]: $0.79
+                - button "›" [ref=e873]:
+                  - generic [ref=e874]: ›
+          - 'link "Island Existencia: 4 Island ACR Mercado $0.59 ›" [ref=e875] [cursor=pointer]':
+            - /url: card/68dbf10c-a813-4f76-9066-b3cdd9cfd5d4
+            - generic [ref=e876]:
+              - img "Island" [ref=e877]
+              - generic [ref=e878]: "Existencia: 4"
+            - generic [ref=e879]:
+              - heading "Island" [level=3] [ref=e880]
+              - generic [ref=e882]: ACR
+              - generic [ref=e883]:
+                - generic [ref=e884]:
+                  - generic [ref=e885]: Mercado
+                  - generic [ref=e886]: $0.59
+                - button "›" [ref=e887]:
+                  - generic [ref=e888]: ›
+          - 'link "Iridescent Vinelasher Existencia: 1 Iridescent Vinelasher BLB Mercado $2.57 ›" [ref=e889] [cursor=pointer]':
+            - /url: card/b2bc854c-4e72-48e0-a098-e3451d6e511d
+            - generic [ref=e890]:
+              - img "Iridescent Vinelasher" [ref=e891]
+              - generic [ref=e892]: "Existencia: 1"
+            - generic [ref=e893]:
+              - heading "Iridescent Vinelasher" [level=3] [ref=e894]
+              - generic [ref=e896]: BLB
+              - generic [ref=e897]:
+                - generic [ref=e898]:
+                  - generic [ref=e899]: Mercado
+                  - generic [ref=e900]: $2.57
+                - button "›" [ref=e901]:
+                  - generic [ref=e902]: ›
+          - 'link "Impostor Syndrome Existencia: 1 Impostor Syndrome SPM Mercado $9.21 ›" [ref=e903] [cursor=pointer]':
+            - /url: card/08da9f92-0e25-4f39-aaa4-d8974af81a41
+            - generic [ref=e904]:
+              - img "Impostor Syndrome" [ref=e905]
+              - generic [ref=e906]: "Existencia: 1"
+            - generic [ref=e907]:
+              - heading "Impostor Syndrome" [level=3] [ref=e908]
+              - generic [ref=e910]: SPM
+              - generic [ref=e911]:
+                - generic [ref=e912]:
+                  - generic [ref=e913]: Mercado
+                  - generic [ref=e914]: $9.21
+                - button "›" [ref=e915]:
+                  - generic [ref=e916]: ›
+          - 'link "Guul Draz Assassin Existencia: 1 Guul Draz Assassin ROE Mercado $2.49 ›" [ref=e917] [cursor=pointer]':
+            - /url: card/72de01ef-cdf2-44ad-bf2f-a927d82a4f72
+            - generic [ref=e918]:
+              - img "Guul Draz Assassin" [ref=e919]
+              - generic [ref=e920]: "Existencia: 1"
+            - generic [ref=e921]:
+              - heading "Guul Draz Assassin" [level=3] [ref=e922]
+              - generic [ref=e924]: ROE
+              - generic [ref=e925]:
+                - generic [ref=e926]:
+                  - generic [ref=e927]: Mercado
+                  - generic [ref=e928]: $2.49
+                - button "›" [ref=e929]:
+                  - generic [ref=e930]: ›
+          - 'link "Graven Cairns Existencia: 1 Graven Cairns SHM Mercado $7.88 ›" [ref=e931] [cursor=pointer]':
+            - /url: card/c355bf63-f456-43ad-a6df-6c2a17511f43
+            - generic [ref=e932]:
+              - img "Graven Cairns" [ref=e933]
+              - generic [ref=e934]: "Existencia: 1"
+            - generic [ref=e935]:
+              - heading "Graven Cairns" [level=3] [ref=e936]
+              - generic [ref=e938]: SHM
+              - generic [ref=e939]:
+                - generic [ref=e940]:
+                  - generic [ref=e941]: Mercado
+                  - generic [ref=e942]: $7.88
+                - button "›" [ref=e943]:
+                  - generic [ref=e944]: ›
+          - 'link "Force Spike Existencia: 1 Force Spike 7ED Mercado $2.99 ›" [ref=e945] [cursor=pointer]':
+            - /url: card/1d03d73f-0530-4125-8689-1c43e502e331
+            - generic [ref=e946]:
+              - img "Force Spike" [ref=e947]
+              - generic [ref=e948]: "Existencia: 1"
+            - generic [ref=e949]:
+              - heading "Force Spike" [level=3] [ref=e950]
+              - generic [ref=e952]: 7ED
+              - generic [ref=e953]:
+                - generic [ref=e954]:
+                  - generic [ref=e955]: Mercado
+                  - generic [ref=e956]: $2.99
+                - button "›" [ref=e957]:
+                  - generic [ref=e958]: ›
+        - button "Cargar Más Cartas [1]" [ref=e960]:
+          - text: Cargar Más Cartas
+          - generic [ref=e962]: "[1]"
+  - contentinfo [ref=e963]:
+    - generic [ref=e964]:
+      - generic [ref=e965]:
+        - generic [ref=e967]: El Emporio
+        - generic [ref=e968]:
+          - 'link "WhatsApp Principal: +58 412-8042832" [ref=e969] [cursor=pointer]':
+            - /url: https://wa.me/584128042832
+          - 'link "WhatsApp Singles: +58 424-2507802" [ref=e970] [cursor=pointer]':
+            - /url: https://wa.me/584242507802
+        - generic [ref=e971]:
+          - generic [ref=e972] [cursor=pointer]: IG
+          - generic [ref=e973] [cursor=pointer]: TK
+          - generic [ref=e974] [cursor=pointer]: FB
+      - generic [ref=e975]: © 2026 El Emporio. Plataforma Avanzada de TCG.
+      - generic [ref=e976]:
+        - link "Privacidad" [ref=e977] [cursor=pointer]:
+          - /url: "#"
+        - link "Términos" [ref=e978] [cursor=pointer]:
+          - /url: "#"
+        - link "Cómo Comprar" [ref=e979] [cursor=pointer]:
+          - /url: "#"
+```
