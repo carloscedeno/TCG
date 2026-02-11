@@ -396,13 +396,8 @@ export const addToCart = async (printingId: string, quantity: number = 1): Promi
   try {
     const session = await supabase.auth.getSession();
 
-    // If logged in, use API
+    // If logged in, use RPC
     if (session.data.session?.user) {
-      // Use RPC for adding to cart
-      // p_user_id is theoretically handled by auth.uid() in RPC if using RLS/security definer properly,
-      // but to be safe and match our detailed RPC, we pass it if needed, OR relies on auth context.
-      // My RPC definition uses p_user_id arg.
-
       const { data, error } = await supabase.rpc('add_to_cart', {
         p_printing_id: printingId,
         p_quantity: quantity,
@@ -411,10 +406,15 @@ export const addToCart = async (printingId: string, quantity: number = 1): Promi
 
       if (error) throw error;
 
+      // Check if RPC returned an error in the data
+      if (data && !data.success) {
+        return data; // Return the error object from RPC
+      }
+
       // Dispatch event to update cart drawer
       window.dispatchEvent(new Event('cart-updated'));
 
-      return { success: true, ...data };
+      return data || { success: true };
     }
 
     // Guest Cart Logic
@@ -435,7 +435,7 @@ export const addToCart = async (printingId: string, quantity: number = 1): Promi
 
   } catch (error) {
     console.error('Error adding to cart:', error);
-    return { success: false };
+    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
   }
 };
 

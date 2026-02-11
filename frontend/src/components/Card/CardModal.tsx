@@ -134,15 +134,22 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
 
         setIsAdding(true);
         try {
-            await addToCart(activePrintingId, 1);
+            const result = await addToCart(activePrintingId, 1);
+            if (result && !result.success) {
+                // Show error message to user
+                alert(result.message || result.error || 'No se pudo agregar al carrito');
+                setIsAdding(false);
+                return;
+            }
             if (onAddToCartSuccess) {
                 setTimeout(() => {
                     onClose();
                     onAddToCartSuccess();
                 }, 500);
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error("Cart error", err);
+            alert(err.message || 'Error al agregar al carrito');
         } finally {
             setTimeout(() => setIsAdding(false), 800);
         }
@@ -150,12 +157,18 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
 
     const handleVersionAddToCart = async (v: any) => {
         try {
-            await addToCart(v.printing_id, 1);
+            const result = await addToCart(v.printing_id, 1);
+            if (result && !result.success) {
+                // Show error message to user
+                alert(result.message || result.error || 'No se pudo agregar al carrito');
+                return;
+            }
             if (onAddToCartSuccess) {
                 onAddToCartSuccess();
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error("Cart error", err);
+            alert(err.message || 'Error al agregar al carrito');
         }
     };
 
@@ -284,8 +297,12 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                             e.stopPropagation();
                                             handleVersionAddToCart(v);
                                         }}
+                                        disabled={!v.stock || v.stock === 0}
                                         aria-label={`Add ${v.set_name} version to cart`}
-                                        className="p-1.5 md:p-2 rounded-lg bg-white/5 hover:bg-geeko-cyan text-neutral-400 hover:text-black transition-all opacity-0 group-hover:opacity-100 shrink-0"
+                                        className={`p-1.5 md:p-2 rounded-lg transition-all shrink-0 ${!v.stock || v.stock === 0
+                                                ? 'bg-neutral-800 text-neutral-600 cursor-not-allowed opacity-50'
+                                                : 'bg-white/5 hover:bg-geeko-cyan text-neutral-400 hover:text-black opacity-0 group-hover:opacity-100'
+                                            }`}
                                     >
                                         <ShoppingCart size={14} />
                                     </button>
