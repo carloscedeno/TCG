@@ -196,13 +196,10 @@ export const fetchProducts = async (params: any = {}): Promise<any> => {
   }
 };
 
-const detailsCache = new Map<string, any>();
+
 
 export const fetchCardDetails = async (printingId: string): Promise<any> => {
-  if (detailsCache.has(printingId)) {
-    return detailsCache.get(printingId);
-  }
-
+  // Don't use cache - we want fresh stock data every time
   try {
     let data;
     if (API_BASE) {
@@ -228,31 +225,49 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
 
       if (sbError) throw sbError;
 
-      // Fetch all versions for this card that have stock > 0
+      // Fetch ALL versions for this card
       const { data: versionsData } = await supabase
         .from('card_printings')
-        .select(`
-          *,
-          sets(*),
-          aggregated_prices(avg_market_price_usd),
-          products!inner(id, stock, price)
-        `)
-        .eq('card_id', sbData.card_id)
-        .gt('products.stock', 0);
+        .select('*, sets(*), aggregated_prices(avg_market_price_usd)')
+        .eq('card_id', sbData.card_id);
+
+      // Get printing IDs for stock lookup
+      const printingIds = (versionsData || []).map((v: any) => v.printing_id);
+
+      // Fetch stock data from products table separately
+      const { data: productsData } = await supabase
+        .from('products')
+        .select('id, printing_id, stock, price')
+        .in('printing_id', printingIds)
+        .gt('stock', 0);
+
+      // Create a map for quick lookup
+      const stockMap = new Map<string, { id: string; stock: number; price: number }>();
+      (productsData || []).forEach((p: any) => {
+        stockMap.set(p.printing_id, { id: p.id, stock: p.stock, price: p.price });
+      });
+
+      // Only include versions that have stock > 0
+      const versionsWithStock = (versionsData || [])
+        .filter((v: any) => stockMap.has(v.printing_id))
+        .map((v: any) => {
+          const product = stockMap.get(v.printing_id)!;
+          return {
+            printing_id: v.printing_id,
+            set_name: v.sets?.set_name,
+            set_code: v.sets?.set_code,
+            collector_number: v.collector_number,
+            rarity: v.rarity,
+            price: product.price || v.aggregated_prices?.[0]?.avg_market_price_usd || 0,
+            image_url: v.image_url,
+            stock: product.stock,
+            product_id: product.id
+          };
+        });
 
       data = {
         ...sbData,
-        all_versions: (versionsData || []).map((v: any) => ({
-          printing_id: v.printing_id,
-          set_name: v.sets?.set_name,
-          set_code: v.sets?.set_code,
-          collector_number: v.collector_number,
-          rarity: v.rarity,
-          price: v.products?.[0]?.price || v.aggregated_prices?.[0]?.avg_market_price_usd || 0,
-          image_url: v.image_url,
-          stock: v.products?.[0]?.stock || 0,
-          product_id: v.products?.[0]?.id
-        }))
+        all_versions: versionsWithStock
       };
     }
 
@@ -261,29 +276,65 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
       if (!data.all_versions && data.cards?.card_id) {
         const { data: versionsData } = await supabase
           .from('card_printings')
-          .select(`
-            *,
-            sets(*),
-            aggregated_prices(avg_market_price_usd),
-            products!inner(id, stock, price)
-          `)
-          .eq('card_id', data.cards.card_id)
-          .gt('products.stock', 0);
+          .select('*, sets(*), aggregated_prices(avg_market_price_usd)')
+          .eq('card_id', data.cards.card_id);
 
-        data.all_versions = (versionsData || []).map((v: any) => ({
-          printing_id: v.printing_id,
-          set_name: v.sets?.set_name,
-          set_code: v.sets?.set_code,
-          collector_number: v.collector_number,
-          rarity: v.rarity,
-          price: v.products?.[0]?.price || v.aggregated_prices?.[0]?.avg_market_price_usd || 0,
-          image_url: v.image_url,
-          stock: v.products?.[0]?.stock || 0,
-          product_id: v.products?.[0]?.id
-        }));
+        const printingIds = (versionsData || []).map((v: any) => v.printing_id);
+
+        const { data: productsData } = await supabase
+          .from('products')
+          .select('id, printing_id, stock, price')
+          .in('printing_id', printingIds)
+          .gt('stock', 0);
+
+        const stockMap = new Map<string, { id: string; stock: number; price: number }>();
+        (productsData || []).forEach((p: any) => {
+          stockMap.set(p.printing_id, { id: p.id, stock: p.stock, price: p.price });
+        });
+
+        data.all_versions = (versionsData || [])
+          .filter((v: any) => stockMap.has(v.printing_id))
+          .map((v: any) => {
+            const product = stockMap.get(v.printing_id)!;
+            return {
+              printing_id: v.printing_id,
+              set_name: v.sets?.set_name,
+              set_code: v.sets?.set_code,
+              collector_number: v.collector_number,
+              rarity: v.rarity,
+              price: product.price || v.aggregated_prices?.[0]?.avg_market_price_usd || 0,
+              image_url: v.image_url,
+              stock: product.stock,
+              product_id: product.id
+            };
+          });
       }
 
-      detailsCache.set(printingId, data);
+      // If data has all_versions from API but no stock info, enrich it
+      if (data.all_versions && data.all_versions.length > 0 && data.all_versions[0].stock === undefined) {
+        const printingIds = data.all_versions.map((v: any) => v.printing_id);
+
+        const { data: productsData } = await supabase
+          .from('products')
+          .select('id, printing_id, stock, price')
+          .in('printing_id', printingIds)
+          .gt('stock', 0);
+
+        const stockMap = new Map<string, { id: string; stock: number; price: number }>();
+        (productsData || []).forEach((p: any) => {
+          stockMap.set(p.printing_id, { id: p.id, stock: p.stock, price: p.price });
+        });
+
+        // Filter to only versions with stock
+        data.all_versions = data.all_versions
+          .filter((v: any) => stockMap.has(v.printing_id))
+          .map((v: any) => ({
+            ...v,
+            stock: stockMap.get(v.printing_id)!.stock,
+            product_id: stockMap.get(v.printing_id)!.id,
+            price: stockMap.get(v.printing_id)!.price || v.price
+          }));
+      }
     }
     return data;
   } catch (error) {
