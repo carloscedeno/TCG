@@ -100,7 +100,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
         <div className="fixed inset-0 z-[150] overflow-hidden">
             <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onClick={onClose} />
 
-            <div className="absolute inset-y-0 right-0 max-w-full flex">
+            <div
+                data-testid="cart-drawer"
+                className="absolute inset-y-0 right-0 max-w-full flex"
+            >
                 <div className="w-screen max-w-md flex flex-col bg-[#0a0a0a] border-l border-white/10 shadow-2xl animate-in slide-in-from-right duration-300">
 
                     {/* Header */}

@@ -10,12 +10,16 @@ test.describe('Shopping Cart & Checkout', () => {
 
         // Clear cart before each test
         try {
-            await page.getByTestId('cart-button').click();
+            // Check if cart drawer is already open by looking for the drawer element
+            const drawerVisible = await page.locator('[data-testid="cart-drawer"]').isVisible().catch(() => false);
 
-            // Wait for cart to open
-            await page.waitForTimeout(500);
+            if (!drawerVisible) {
+                // Cart is closed, open it
+                await page.getByTestId('cart-button').click({ timeout: 5000 });
+                await page.waitForTimeout(500);
+            }
 
-            // Remove all items if any exist
+            // Now cart should be open, remove all items if any exist
             const removeButtons = page.getByTestId('remove-item-button');
             const count = await removeButtons.count();
 
@@ -24,11 +28,23 @@ test.describe('Shopping Cart & Checkout', () => {
                 await page.waitForTimeout(300); // Wait for removal animation
             }
 
-            // Close cart
-            await page.getByTestId('cart-button').click();
-            await page.waitForTimeout(300);
+            // Close cart if it's still open
+            const stillOpen = await page.locator('[data-testid="cart-drawer"]').isVisible().catch(() => false);
+            if (stillOpen) {
+                await page.getByTestId('cart-button').click({ timeout: 5000 });
+                await page.waitForTimeout(300);
+            }
         } catch (error) {
-            console.log('Cart cleanup skipped (cart may already be empty):', error);
+            console.log('Cart cleanup error:', error);
+            // Try to close cart if something went wrong
+            try {
+                const isOpen = await page.locator('[data-testid="cart-drawer"]').isVisible().catch(() => false);
+                if (isOpen) {
+                    await page.getByTestId('cart-button').click({ timeout: 5000 });
+                }
+            } catch (e) {
+                // Ignore cleanup errors
+            }
         }
     });
 
