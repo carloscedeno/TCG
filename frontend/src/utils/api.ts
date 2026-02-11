@@ -228,11 +228,17 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
 
       if (sbError) throw sbError;
 
-      // Fetch all versions for this card
+      // Fetch all versions for this card that have stock > 0
       const { data: versionsData } = await supabase
         .from('card_printings')
-        .select('*, sets(*), aggregated_prices(avg_market_price_usd)')
-        .eq('card_id', sbData.card_id);
+        .select(`
+          *,
+          sets(*),
+          aggregated_prices(avg_market_price_usd),
+          products!inner(id, stock, price)
+        `)
+        .eq('card_id', sbData.card_id)
+        .gt('products.stock', 0);
 
       data = {
         ...sbData,
@@ -242,8 +248,10 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
           set_code: v.sets?.set_code,
           collector_number: v.collector_number,
           rarity: v.rarity,
-          price: v.aggregated_prices?.[0]?.avg_market_price_usd || 0,
-          image_url: v.image_url
+          price: v.products?.[0]?.price || v.aggregated_prices?.[0]?.avg_market_price_usd || 0,
+          image_url: v.image_url,
+          stock: v.products?.[0]?.stock || 0,
+          product_id: v.products?.[0]?.id
         }))
       };
     }
@@ -253,8 +261,14 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
       if (!data.all_versions && data.cards?.card_id) {
         const { data: versionsData } = await supabase
           .from('card_printings')
-          .select('*, sets(*), aggregated_prices(avg_market_price_usd)')
-          .eq('card_id', data.cards.card_id);
+          .select(`
+            *,
+            sets(*),
+            aggregated_prices(avg_market_price_usd),
+            products!inner(id, stock, price)
+          `)
+          .eq('card_id', data.cards.card_id)
+          .gt('products.stock', 0);
 
         data.all_versions = (versionsData || []).map((v: any) => ({
           printing_id: v.printing_id,
@@ -262,8 +276,10 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
           set_code: v.sets?.set_code,
           collector_number: v.collector_number,
           rarity: v.rarity,
-          price: v.aggregated_prices?.[0]?.avg_market_price_usd || 0,
-          image_url: v.image_url
+          price: v.products?.[0]?.price || v.aggregated_prices?.[0]?.avg_market_price_usd || 0,
+          image_url: v.image_url,
+          stock: v.products?.[0]?.stock || 0,
+          product_id: v.products?.[0]?.id
         }));
       }
 

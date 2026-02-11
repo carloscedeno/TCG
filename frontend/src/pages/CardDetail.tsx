@@ -207,26 +207,45 @@ export const CardDetail: React.FC = () => {
                                     <span className="text-[10px] text-neutral-600 font-bold">{details.all_versions?.length || 0} Versions</span>
                                 </div>
                                 <div className="flex-1 overflow-y-auto custom-scrollbar">
-                                    {details.all_versions?.map((v: any) => (
-                                        <button
-                                            key={v.printing_id}
-                                            onClick={() => handleVersionClick(v.printing_id)}
-                                            className={`w-full flex items-center gap-4 px-6 py-3 hover:bg-white/5 transition-colors border-b border-white/5 group ${activePrintingId === v.printing_id ? 'bg-geeko-cyan/10' : ''}`}
-                                        >
-                                            <div className="w-8 h-8 rounded bg-neutral-900 flex items-center justify-center text-[10px] font-black group-hover:text-geeko-cyan transition-colors">
-                                                {v.set_code.toUpperCase()}
-                                            </div>
-                                            <div className="flex-1 text-left">
-                                                <div className={`text-xs font-bold leading-tight ${activePrintingId === v.printing_id ? 'text-geeko-cyan' : 'text-neutral-300'}`}>
-                                                    {v.set_name}
+                                    {details.all_versions && details.all_versions.length > 0 ? (
+                                        details.all_versions.map((v: any) => (
+                                            <button
+                                                key={v.printing_id}
+                                                onClick={() => handleVersionClick(v.printing_id)}
+                                                className={`w-full flex items-center gap-4 px-6 py-3 hover:bg-white/5 transition-colors border-b border-white/5 group ${activePrintingId === v.printing_id ? 'bg-geeko-cyan/10' : ''}`}
+                                            >
+                                                <div className="w-8 h-8 rounded bg-neutral-900 flex items-center justify-center text-[10px] font-black group-hover:text-geeko-cyan transition-colors">
+                                                    {v.set_code.toUpperCase()}
                                                 </div>
-                                                <div className="text-[10px] text-neutral-600 font-bold">#{v.collector_number} • {v.rarity}</div>
-                                            </div>
-                                            <div className="text-xs font-mono font-bold text-neutral-400 group-hover:text-white">
-                                                ${v.price > 0 ? v.price.toFixed(2) : '--'}
-                                            </div>
-                                        </button>
-                                    ))}
+                                                <div className="flex-1 text-left">
+                                                    <div className={`text-xs font-bold leading-tight ${activePrintingId === v.printing_id ? 'text-geeko-cyan' : 'text-neutral-300'}`}>
+                                                        {v.set_name}
+                                                    </div>
+                                                    <div className="text-[10px] text-neutral-600 font-bold flex items-center gap-2">
+                                                        <span>#{v.collector_number} • {v.rarity}</span>
+                                                        {v.stock > 0 && (
+                                                            <div className="flex items-center gap-1">
+                                                                <div className={`w-2 h-2 rounded-full ${v.stock > 10 ? 'bg-green-500' :
+                                                                        v.stock > 3 ? 'bg-yellow-500' :
+                                                                            'bg-red-500'
+                                                                    }`} />
+                                                                <span className="text-[8px] font-black text-geeko-cyan uppercase">
+                                                                    STOCK: {v.stock}
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <div className="text-xs font-mono font-bold text-neutral-400 group-hover:text-white">
+                                                    ${v.price > 0 ? v.price.toFixed(2) : '--'}
+                                                </div>
+                                            </button>
+                                        ))
+                                    ) : (
+                                        <div className="px-6 py-8 text-center">
+                                            <p className="text-sm text-neutral-500 font-bold">⚠️ No hay versiones disponibles en inventario</p>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
