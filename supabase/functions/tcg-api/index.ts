@@ -14,7 +14,7 @@ interface RequestParams {
   [key: string]: any
 }
 
-type ApiHandler = (supabase: SupabaseClient, path: string, method: string, params: RequestParams) => Promise<any>
+type ApiHandler = (supabase: SupabaseClient, path: string, method: string, params: RequestParams, authToken?: string) => Promise<any>
 
 // UTILS
 function sanitizeSlug(text: string): string {
@@ -56,17 +56,23 @@ serve(async (req: Request) => {
       path = path.replace('/tcg-api', '')
     }
 
+    // Extract auth token from request
+    const authHeader = req.headers.get('Authorization')
+    const authToken = authHeader?.replace('Bearer ', '') || undefined
+
     // Parse parameters based on method
-    let params = {}
+    let params: RequestParams = {}
     if (method === 'GET') {
       // For GET requests, get parameters from query string
       params = Object.fromEntries(url.searchParams.entries())
     } else if (method === 'POST' || method === 'PUT' || method === 'PATCH') {
-      // For other methods, get parameters from request body
+      // For other methods, get parameters from request body + URL search params
+      const queryParams = Object.fromEntries(url.searchParams.entries())
       try {
-        params = await req.json()
+        const bodyParams = await req.json()
+        params = { ...queryParams, ...bodyParams }
       } catch {
-        params = {}
+        params = { ...queryParams }
       }
     }
 
@@ -107,8 +113,11 @@ serve(async (req: Request) => {
     else if (path.startsWith('/api/search')) {
       response = await handleSearchEndpoint(supabase, path, method, params)
     }
+    else if (path.startsWith('/api/collections/import')) {
+      response = await handleImportEndpoint(supabase, path, method, params, authToken)
+    }
     else if (path.startsWith('/api/collections')) {
-      response = await handleCollectionsEndpoint(supabase, path, method, params)
+      response = await handleCollectionsEndpoint(supabase, path, method, params, authToken)
     }
     else if (path.startsWith('/api/cart')) {
       response = await handleCartEndpoint(supabase, path, method, params)
@@ -502,9 +511,130 @@ async function handleSearchEndpoint(supabase: SupabaseClient, path: string, meth
   throw new Error('Method not allowed')
 }
 
-async function handleCollectionsEndpoint(supabase: SupabaseClient, path: string, method: string, params: RequestParams) {
+async function handleImportEndpoint(supabase: SupabaseClient, path: string, method: string, params: RequestParams, authToken?: string) {
+  if (method !== 'POST') throw new Error('Method not allowed')
+
+  // Authenticate user
+  if (!authToken) throw new Error('Unauthorized: No auth token provided')
+  const { data: { user }, error: authError } = await supabase.auth.getUser(authToken)
+  if (authError || !user) throw new Error('Unauthorized: Invalid token')
+
+  const importType = params.import_type || 'collection'
+  const importData = params.data as any[]
+  const mapping = params.mapping as Record<string, string>
+
+  if (!importData || !Array.isArray(importData) || importData.length === 0) {
+    throw new Error('No data provided for import')
+  }
+
+  const errors: string[] = []
+  const failedIndices: number[] = []
+  let importedCount = 0
+
+  // Process each row
+  for (let i = 0; i < importData.length; i++) {
+    const row = importData[i]
+    try {
+      const cardName = row[mapping?.name || 'name'] || row['name']
+      const setCode = row[mapping?.set || 'set'] || row['set']
+      const collectorNum = row[mapping?.collector_number || 'collector_number'] || row['collector_number']
+      const quantity = parseInt(row[mapping?.quantity || 'quantity'] || row['quantity'] || '1')
+      const price = parseFloat(row[mapping?.price || 'price'] || row['price'] || '0')
+      const condition = row[mapping?.condition || 'condition'] || row['condition'] || 'NM'
+
+      if (!cardName) {
+        errors.push(`Row ${i + 1}: Missing card name`)
+        failedIndices.push(i)
+        continue
+      }
+
+      // Look up card_printing by card name + set_code + collector_number
+      let query = supabase
+        .from('card_printings')
+        .select('printing_id, cards!inner(card_name), sets!inner(set_code)')
+        .ilike('cards.card_name', cardName.trim())
+
+      if (setCode) {
+        query = query.ilike('sets.set_code', setCode.trim())
+      }
+
+      if (collectorNum) {
+        query = query.eq('collector_number', collectorNum.trim())
+      }
+
+      const { data: printings, error: lookupError } = await query.limit(1)
+
+      if (lookupError) {
+        errors.push(`Row ${i + 1} (${cardName}): Lookup error - ${lookupError.message}`)
+        failedIndices.push(i)
+        continue
+      }
+
+      if (!printings || printings.length === 0) {
+        errors.push(`Row ${i + 1} (${cardName} [${setCode || '?'}] #${collectorNum || '?'}): Card not found in database`)
+        failedIndices.push(i)
+        continue
+      }
+
+      const printingId = printings[0].printing_id
+
+      if (importType === 'inventory') {
+        // Use upsert_product_inventory RPC (SECURITY DEFINER, bypasses RLS)
+        const { data: result, error: upsertError } = await supabase.rpc('upsert_product_inventory', {
+          p_printing_id: printingId,
+          p_price: price,
+          p_stock: quantity,
+          p_condition: condition
+        })
+
+        if (upsertError) {
+          errors.push(`Row ${i + 1} (${cardName}): Upsert error - ${upsertError.message}`)
+          failedIndices.push(i)
+          continue
+        }
+
+        if (result?.error) {
+          errors.push(`Row ${i + 1} (${cardName}): ${result.error}`)
+          failedIndices.push(i)
+          continue
+        }
+      } else {
+        // Collection import - add to user_collections
+        const { error: insertError } = await supabase
+          .from('user_collections')
+          .upsert({
+            user_id: user.id,
+            printing_id: printingId,
+            quantity: quantity,
+            purchase_price: price,
+            condition_id: null
+          }, { onConflict: 'user_id,printing_id' })
+
+        if (insertError) {
+          errors.push(`Row ${i + 1} (${cardName}): Insert error - ${insertError.message}`)
+          failedIndices.push(i)
+          continue
+        }
+      }
+
+      importedCount++
+    } catch (rowErr: any) {
+      errors.push(`Row ${i + 1}: Unexpected error - ${rowErr.message}`)
+      failedIndices.push(i)
+    }
+  }
+
+  return {
+    imported_count: importedCount,
+    total_rows: importData.length,
+    errors: errors,
+    failed_indices: failedIndices
+  }
+}
+
+async function handleCollectionsEndpoint(supabase: SupabaseClient, path: string, method: string, params: RequestParams, authToken?: string) {
   if (method === 'GET') {
-    const { data: { user } } = await supabase.auth.getUser()
+    const { data: { user } } = await supabase.auth.getUser(authToken)
     if (!user) throw new Error('Unauthorized')
 
     const { data, error } = await supabase
@@ -524,7 +654,7 @@ async function handleCollectionsEndpoint(supabase: SupabaseClient, path: string,
   }
 
   if (method === 'POST') {
-    const { data: { user } } = await supabase.auth.getUser()
+    const { data: { user } } = await supabase.auth.getUser(authToken)
     if (!user) throw new Error('Unauthorized')
 
     const { data, error } = await supabase

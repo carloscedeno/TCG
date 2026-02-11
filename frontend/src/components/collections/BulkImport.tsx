@@ -18,7 +18,7 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
     const [isAutoMapped, setIsAutoMapped] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const TXT_FORMAT_REGEX = /^(\d+)\s+(.+?)\s+\((.+?)\)\s+(\d+)$/;
+    const TXT_FORMAT_REGEX = /^(\d+)\s+(.+?)\s+\((.+?)\)\s+(\d+)(?:\s+\*F\*)?$/;
 
     const handleDragOver = (e: React.DragEvent) => {
         e.preventDefault();
