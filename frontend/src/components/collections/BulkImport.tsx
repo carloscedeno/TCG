@@ -184,8 +184,8 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
                 return obj;
             });
 
-            // Chunks of 50 for max safety. 150s is the limit, let's play it safe.
-            const CHUNK_SIZE = 50;
+            // Chunks of 200 for high speed with the new v3 optimized SQL
+            const CHUNK_SIZE = 200;
             const chunks = [];
             for (let i = 0; i < importData.length; i += CHUNK_SIZE) {
                 chunks.push(importData.slice(i, i + CHUNK_SIZE));
@@ -197,40 +197,54 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
             let allErrors: string[] = [];
             let allFailedIndices: number[] = [];
 
-            for (let i = 0; i < chunks.length; i++) {
-                const response = await fetch(`${API_BASE}/api/collections/import?import_type=${importType}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${session?.access_token}`
-                    },
-                    body: JSON.stringify({
-                        data: chunks[i],
-                        mapping: mapping
-                    })
+            // Process chunks in parallel batches of 3 for max speed
+            const CONCURRENCY = 3;
+            for (let i = 0; i < chunks.length; i += CONCURRENCY) {
+                const batch = chunks.slice(i, i + CONCURRENCY);
+                const promises = batch.map(async (chunk, batchIdx) => {
+                    const response = await fetch(`${API_BASE}/api/collections/import?import_type=${importType}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${session?.access_token}`
+                        },
+                        body: JSON.stringify({
+                            data: chunk,
+                            mapping: mapping
+                        })
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({ detail: response.statusText }));
+                        throw new Error(`Error en lote ${i + batchIdx + 1}: ${errorData.detail || errorData.error || response.statusText}`);
+                    }
+
+                    return response.json();
                 });
 
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({ detail: response.statusText }));
-                    throw new Error(`Error en lote ${i + 1}: ${errorData.detail || errorData.error || response.statusText}`);
-                }
+                const chunkResults = await Promise.all(promises);
 
-                const chunkResult = await response.json();
-                totalImported += chunkResult.imported_count || 0;
-                if (chunkResult.errors) {
-                    allErrors = [...allErrors, ...chunkResult.errors];
-                }
-                if (chunkResult.failed_indices) {
-                    // Offset the indices by the current chunk start
-                    const offset = i * CHUNK_SIZE;
-                    allFailedIndices = [...allFailedIndices, ...chunkResult.failed_indices.map((idx: number) => idx + offset)];
-                }
+                chunkResults.forEach((chunkResult, batchIdx) => {
+                    totalImported += chunkResult.imported_count || 0;
+                    if (chunkResult.errors) {
+                        allErrors = [...allErrors, ...chunkResult.errors];
+                    }
+                    if (chunkResult.failed_indices) {
+                        const offset = (i + batchIdx) * CHUNK_SIZE;
+                        allFailedIndices = [...allFailedIndices, ...chunkResult.failed_indices.map((idx: number) => idx + offset)];
+                    }
+                });
 
-                setProgress(prev => ({ ...prev, current: i + 1, items: totalImported }));
+                const completedCount = Math.min(i + CONCURRENCY, chunks.length);
+                setProgress({
+                    current: completedCount,
+                    total: chunks.length,
+                    items: totalImported
+                });
 
-                // Add a small delay between batches to prevent DB saturation
-                if (i < chunks.length - 1) {
-                    await new Promise(resolve => setTimeout(resolve, 500));
+                // Small cooldown between parallel batches to stay safe
+                if (i + CONCURRENCY < chunks.length) {
+                    await new Promise(resolve => setTimeout(resolve, 300));
                 }
             }
 
