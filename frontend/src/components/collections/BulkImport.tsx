@@ -166,6 +166,7 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
     });
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState<any>(null);
+    const [progress, setProgress] = useState({ current: 0, total: 0, items: 0 });
 
     const handleImport = async () => {
         if (!session) {
@@ -176,29 +177,64 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
         try {
             const SUPABASE_PROJECT_ID = 'sxuotvogwvmxuvwbsscv';
             const API_BASE = import.meta.env.VITE_API_BASE || `https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/tcg-api`;
-            const response = await fetch(`${API_BASE}/api/collections/import?import_type=${importType}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${session?.access_token}`
-                },
-                body: JSON.stringify({
-                    data: rows.map(row => {
-                        const obj: any = {};
-                        headers.forEach((h, i) => obj[h] = row[i]);
-                        return obj;
-                    }),
-                    mapping: mapping
-                })
+
+            const importData = rows.map(row => {
+                const obj: any = {};
+                headers.forEach((h, i) => obj[h] = row[i]);
+                return obj;
             });
 
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({ detail: response.statusText }));
-                throw new Error(errorData.detail || `Error ${response.status}: ${response.statusText}`);
+            // Chunks of 500 to prevent timeouts even with bulk RPC
+            const CHUNK_SIZE = 500;
+            const chunks = [];
+            for (let i = 0; i < importData.length; i += CHUNK_SIZE) {
+                chunks.push(importData.slice(i, i + CHUNK_SIZE));
             }
 
-            const data = await response.json();
-            setResult(data);
+            setProgress({ current: 0, total: chunks.length, items: 0 });
+
+            let totalImported = 0;
+            let allErrors: string[] = [];
+            let allFailedIndices: number[] = [];
+
+            for (let i = 0; i < chunks.length; i++) {
+                const response = await fetch(`${API_BASE}/api/collections/import?import_type=${importType}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${session?.access_token}`
+                    },
+                    body: JSON.stringify({
+                        data: chunks[i],
+                        mapping: mapping
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({ detail: response.statusText }));
+                    throw new Error(`Error en lote ${i + 1}: ${errorData.detail || errorData.error || response.statusText}`);
+                }
+
+                const chunkResult = await response.json();
+                totalImported += chunkResult.imported_count || 0;
+                if (chunkResult.errors) {
+                    allErrors = [...allErrors, ...chunkResult.errors];
+                }
+                if (chunkResult.failed_indices) {
+                    // Offset the indices by the current chunk start
+                    const offset = i * CHUNK_SIZE;
+                    allFailedIndices = [...allFailedIndices, ...chunkResult.failed_indices.map((idx: number) => idx + offset)];
+                }
+
+                setProgress(prev => ({ ...prev, current: i + 1, items: totalImported }));
+            }
+
+            setResult({
+                imported_count: totalImported,
+                total_rows: importData.length,
+                errors: allErrors,
+                failed_indices: allFailedIndices
+            });
             setStep(3);
         } catch (err: any) {
             console.error("Import error:", err);
@@ -341,13 +377,83 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
                         )}
                     </div>
 
-                    <button
-                        onClick={handleImport}
-                        disabled={loading}
-                        className="w-full bg-geeko-cyan text-black py-4 rounded-2xl font-black uppercase tracking-widest text-sm hover:scale-[1.02] active:scale-95 transition-all shadow-[0_0_30px_rgba(0,229,255,0.2)] flex items-center justify-center gap-2 disabled:opacity-50"
-                    >
-                        {loading ? 'Procesando...' : 'Confirmar Importación'} <ArrowRight size={18} />
-                    </button>
+                    {loading ? (
+                        <div className="w-full space-y-6 p-8 bg-black/40 backdrop-blur-xl rounded-[2rem] border border-white/10 shadow-2xl animate-in fade-in zoom-in-95 duration-500 relative overflow-hidden">
+                            {/* Background glow decoration */}
+                            <div className="absolute -top-24 -right-24 w-48 h-48 bg-geeko-cyan/10 blur-[100px] rounded-full" />
+
+                            <div className="flex justify-between items-end relative z-10">
+                                <div className="space-y-2">
+                                    <div className="flex items-center gap-3">
+                                        <div className="relative">
+                                            <div className="w-3 h-3 bg-geeko-cyan rounded-full animate-ping absolute inset-0" />
+                                            <div className="w-3 h-3 bg-geeko-cyan rounded-full relative shadow-[0_0_10px_#00E5FF]" />
+                                        </div>
+                                        <h4 className="text-xs font-black uppercase tracking-[0.3em] text-geeko-cyan neon-text-cyan">
+                                            Procesando Bloque {progress.current} de {progress.total}
+                                        </h4>
+                                    </div>
+                                    <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                        Importando <span className="text-white font-black">{progress.items.toLocaleString()}</span> de <span className="text-white/60">{rows.length.toLocaleString()}</span> ítems...
+                                    </p>
+                                </div>
+                                <div className="text-right">
+                                    <span className="text-4xl font-black italic text-white tracking-tighter leading-none block">
+                                        {Math.round((progress.current / progress.total) * 100)}%
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div className="relative">
+                                {/* Track */}
+                                <div className="h-4 bg-white/5 rounded-full overflow-hidden border border-white/10 p-[3px] backdrop-blur-md">
+                                    {/* Fill */}
+                                    <div
+                                        className="h-full bg-geeko-cyan rounded-full shadow-[0_0_25px_rgba(0,229,255,0.7)] transition-all duration-700 ease-out relative overflow-hidden"
+                                        style={{ width: `${(progress.current / progress.total) * 100}%` }}
+                                    >
+                                        {/* Shimmer effect */}
+                                        <div className="absolute inset-0 shimmer bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[-20deg]" />
+
+                                        {/* Inner glow pulse */}
+                                        <div className="absolute inset-0 bg-white/20 animate-pulse" />
+                                    </div>
+                                </div>
+
+                                {/* Glow under the bar */}
+                                <div
+                                    className="absolute -bottom-4 h-8 bg-geeko-cyan/20 blur-2xl transition-all duration-700 rounded-full"
+                                    style={{
+                                        width: `${(progress.current / progress.total) * 100}%`,
+                                        left: 0
+                                    }}
+                                />
+                            </div>
+
+                            <div className="flex justify-between items-center relative z-10">
+                                <p className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em]">
+                                    Arquitectura Geekorium v2.0 <span className="mx-2">|</span> Optimización Activa
+                                </p>
+                                <div className="flex gap-1">
+                                    {[1, 2, 3].map(i => (
+                                        <div
+                                            key={i}
+                                            className="w-1 h-1 bg-geeko-cyan rounded-full animate-bounce"
+                                            style={{ animationDelay: `${i * 0.2}s` }}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        <button
+                            onClick={handleImport}
+                            disabled={loading}
+                            className="w-full bg-geeko-cyan text-black py-4 rounded-2xl font-black uppercase tracking-widest text-sm hover:scale-[1.02] active:scale-95 transition-all shadow-[0_0_30px_rgba(0,229,255,0.2)] flex items-center justify-center gap-2 disabled:opacity-50"
+                        >
+                            Confirmar Importación <ArrowRight size={18} />
+                        </button>
+                    )}
                 </GlassCard>
             )}
 
