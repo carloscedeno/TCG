@@ -184,8 +184,9 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
                 return obj;
             });
 
-            // Chunks of 500 to prevent timeouts even with bulk RPC
-            const CHUNK_SIZE = 500;
+            // Chunks of 100 to prevent timeouts. Even with optimized RPC, 
+            // smaller batches provide better reliability and feedback.
+            const CHUNK_SIZE = 100;
             const chunks = [];
             for (let i = 0; i < importData.length; i += CHUNK_SIZE) {
                 chunks.push(importData.slice(i, i + CHUNK_SIZE));
