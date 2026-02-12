@@ -902,7 +902,7 @@ async function handleProductsEndpoint(supabase: SupabaseClient, path: string, me
   if (method === 'GET') {
     const { q, game, in_stock = 'true', limit = 50, offset = 0, sort = 'newest' } = params
 
-    let query = supabase.from('products').select('*', { count: 'planned' })
+    let query = supabase.from('products').select('*, aggregated_prices(avg_market_price_usd)', { count: 'planned' })
 
     if (q) {
       query = query.ilike('name', `%${q}%`)
@@ -935,8 +935,18 @@ async function handleProductsEndpoint(supabase: SupabaseClient, path: string, me
 
     if (error) throw error
 
+    // Flatten and coalesce prices: use store price if > 0, otherwise fallback to market price
+    const processedProducts = (data || []).map((p: any) => {
+      const marketPrice = p.aggregated_prices?.avg_market_price_usd || 0;
+      return {
+        ...p,
+        price: (Number(p.price) > 0) ? p.price : marketPrice,
+        market_price: marketPrice
+      };
+    });
+
     return {
-      products: data,
+      products: processedProducts,
       total_count: count || 0
     }
   }
