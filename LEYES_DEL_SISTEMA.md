@@ -275,11 +275,20 @@ Antes de merge a `main`:
 
 ### Regla 1: Precios de Geekorium
 
-**Siempre** usar el precio de **Card Kingdom** para los ítems de **Geekorium**, a menos que un administrador especifique lo contrario explícitamente.
+**Siempre** usar el precio de **Card Kingdom** para los ítems de **Geekorium**, a menos que un administrador especifique lo contrario explícitamente. Si el precio en inventario es 0, el sistema debe mostrar el precio de mercado automáticamente.
+
+### Regla 2: Importación Ambigua
+
+Al importar cartas sin edición (Set) específica, el sistema **siempre** debe priorizar la impresión con el **valor de mercado más alto**.
 
 ---
 
 ## 📝 CHANGELOG DE LEYES
+
+### v2.3 (2026-02-12)
+
+- ✅ Agregada Regla de Negocio 2: Priorización de valor más alto en importaciones ambiguas.
+- ✅ Actualizada Regla de Negocio 1: Definición de Fallback de precios (Store -> Market).
 
 ### v2.2 (2026-02-08)
 
