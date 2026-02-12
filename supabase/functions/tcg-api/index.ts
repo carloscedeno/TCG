@@ -527,11 +527,30 @@ async function handleImportEndpoint(supabase: SupabaseClient, path: string, meth
     throw new Error('No data provided for import')
   }
 
+  if (importType === 'inventory') {
+    // Optimized bulk import for inventory using RPC
+    const mappedData = importData.map((row) => ({
+      name: row[mapping?.name || 'name'] || row['name'],
+      set: row[mapping?.set || 'set'] || row['set'],
+      collector_number: row[mapping?.collector_number || 'collector_number'] || row['collector_number'],
+      quantity: row[mapping?.quantity || 'quantity'] || row['quantity'] || '1',
+      price: row[mapping?.price || 'price'] || row['price'] || '0',
+      condition: row[mapping?.condition || 'condition'] || row['condition'] || 'NM'
+    }))
+
+    const { data: result, error: rpcError } = await supabase.rpc('bulk_import_inventory', {
+      p_items: mappedData
+    })
+
+    if (rpcError) throw rpcError
+    return result
+  }
+
   const errors: string[] = []
   const failedIndices: number[] = []
   let importedCount = 0
 
-  // Process each row
+  // Fallback for collection import - keep current row-by-row logic for now
   for (let i = 0; i < importData.length; i++) {
     const row = importData[i]
     try {
@@ -578,43 +597,21 @@ async function handleImportEndpoint(supabase: SupabaseClient, path: string, meth
 
       const printingId = printings[0].printing_id
 
-      if (importType === 'inventory') {
-        // Use upsert_product_inventory RPC (SECURITY DEFINER, bypasses RLS)
-        const { data: result, error: upsertError } = await supabase.rpc('upsert_product_inventory', {
-          p_printing_id: printingId,
-          p_price: price,
-          p_stock: quantity,
-          p_condition: condition
-        })
+      // Collection import - add to user_collections
+      const { error: insertError } = await supabase
+        .from('user_collections')
+        .upsert({
+          user_id: user.id,
+          printing_id: printingId,
+          quantity: quantity,
+          purchase_price: price,
+          condition_id: null
+        }, { onConflict: 'user_id,printing_id' })
 
-        if (upsertError) {
-          errors.push(`Row ${i + 1} (${cardName}): Upsert error - ${upsertError.message}`)
-          failedIndices.push(i)
-          continue
-        }
-
-        if (result?.error) {
-          errors.push(`Row ${i + 1} (${cardName}): ${result.error}`)
-          failedIndices.push(i)
-          continue
-        }
-      } else {
-        // Collection import - add to user_collections
-        const { error: insertError } = await supabase
-          .from('user_collections')
-          .upsert({
-            user_id: user.id,
-            printing_id: printingId,
-            quantity: quantity,
-            purchase_price: price,
-            condition_id: null
-          }, { onConflict: 'user_id,printing_id' })
-
-        if (insertError) {
-          errors.push(`Row ${i + 1} (${cardName}): Insert error - ${insertError.message}`)
-          failedIndices.push(i)
-          continue
-        }
+      if (insertError) {
+        errors.push(`Row ${i + 1} (${cardName}): Insert error - ${insertError.message}`)
+        failedIndices.push(i)
+        continue
       }
 
       importedCount++
