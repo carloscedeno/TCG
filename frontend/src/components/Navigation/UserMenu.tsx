@@ -47,7 +47,6 @@ export const UserMenu: React.FC = () => {
     }
 
     const userEmail = user.email || 'Usuario';
-    const userInitial = userEmail.charAt(0).toUpperCase();
 
     return (
         <div className="relative" ref={menuRef}>
@@ -55,10 +54,11 @@ export const UserMenu: React.FC = () => {
                 onClick={() => setIsOpen(!isOpen)}
                 className="flex items-center gap-3 px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group"
             >
-                {/* Avatar */}
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-geeko-cyan to-geeko-purple flex items-center justify-center text-white font-black text-sm">
-                    {userInitial}
-                </div>
+                <img
+                    src="/src/assets/branding/Geekomunidad.jpg"
+                    alt="Avatar"
+                    className="w-10 h-10 rounded-full border border-white/10 shadow-lg shadow-geeko-purple/20"
+                />
 
                 {/* User Info */}
                 <div className="hidden md:block text-left">
@@ -85,9 +85,11 @@ export const UserMenu: React.FC = () => {
                     {/* User Info Header */}
                     <div className="p-4 border-b border-white/5 bg-white/5">
                         <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-geeko-cyan to-geeko-purple flex items-center justify-center text-white font-black text-lg">
-                                {userInitial}
-                            </div>
+                            <img
+                                src="/src/assets/branding/Geekomunidad.jpg"
+                                alt="Avatar"
+                                className="w-14 h-14 rounded-full border border-white/10 shadow-lg shadow-geeko-purple/20"
+                            />
                             <div>
                                 <div className="text-sm font-bold text-white">
                                     {userEmail.split('@')[0]}

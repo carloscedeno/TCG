@@ -25,7 +25,7 @@ function App() {
                         <AlertCircle className="text-red-500" size={32} />
                     </div>
                     <h1 className="text-2xl font-black text-white uppercase tracking-tighter italic mb-4">
-                        Configuration Error
+                        El Emporio
                     </h1>
                     <p className="text-neutral-400 text-sm font-medium mb-8 leading-relaxed">
                         Supabase environment variables are missing. Please configure <code className="text-geeko-cyan bg-geeko-cyan/10 px-1.5 py-0.5 rounded">VITE_SUPABASE_URL</code> and <code className="text-geeko-cyan bg-geeko-cyan/10 px-1.5 py-0.5 rounded">VITE_SUPABASE_ANON_KEY</code> in your deployment environment.

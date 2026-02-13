@@ -411,13 +411,27 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
 
                                 {/* Marketplace Actions - Side by Side */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
-                                    {/* Geekorium Price Box */}
+                                    {/* GK Price Box */}
                                     <div className="p-4 md:p-5 rounded-2xl bg-gradient-to-br from-geeko-cyan/10 via-transparent to-transparent border border-white/10 group relative overflow-hidden flex flex-col justify-between gap-4">
                                         <div className="absolute top-0 right-0 w-32 h-32 bg-geeko-cyan/5 rounded-full blur-[40px]" />
                                         <div className="space-y-1 relative z-10">
-                                            <div className="text-[10px] font-black uppercase text-geeko-cyan tracking-widest">Precio Geekorium</div>
-                                            <div className="text-3xl md:text-4xl font-black text-white tracking-tighter leading-none">
-                                                {details?.price && details.price > 0 ? `$${details.price.toFixed(2)}` : (details?.valuation?.market_price && details.valuation.market_price > 0 ? `$${details.valuation.market_price.toFixed(2)}` : '---')}
+                                            <div className="text-[10px] font-black uppercase text-geeko-cyan tracking-widest flex items-center justify-between">
+                                                <span>GK Price</span>
+                                                {details?.valuation?.market_price && details.price && details.price < details.valuation.market_price && (
+                                                    <span className="text-[9px] text-geeko-green bg-geeko-green/10 px-2 py-0.5 rounded-full border border-geeko-green/20">
+                                                        Ahorro: ${(details.valuation.market_price - details.price).toFixed(2)}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <div className="flex items-baseline gap-3">
+                                                <div className="text-3xl md:text-4xl font-black text-white tracking-tighter leading-none">
+                                                    {details?.price && details.price > 0 ? `$${details.price.toFixed(2)}` : (details?.valuation?.market_price && details.valuation.market_price > 0 ? `$${details.valuation.market_price.toFixed(2)}` : '---')}
+                                                </div>
+                                                {details?.valuation?.market_price && details.price && details.price !== details.valuation.market_price && (
+                                                    <div className="text-sm md:text-base font-bold text-neutral-600 line-through decoration-red-500/50">
+                                                        ${details.valuation.market_price.toFixed(2)}
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                         <button

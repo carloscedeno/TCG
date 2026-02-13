@@ -246,7 +246,8 @@ const Home: React.FC = () => {
           <nav className="max-w-[1600px] w-full mx-auto px-6 py-3 flex items-center justify-between">
             <div className="flex items-center gap-8">
               <Link to="/" className="flex items-center gap-4 group">
-                <div className="flex items-center justify-center font-black text-xl italic text-white group-hover:scale-110 transition-transform">
+                <div className="flex items-center justify-center font-black text-2xl italic text-white group-hover:scale-105 transition-transform tracking-tighter">
+                  <img src="/src/assets/branding/Logo.jpg" alt="Logo" className="w-10 h-10 rounded-full mr-3 border border-white/10 shadow-lg shadow-geeko-cyan/10" />
                   <span className="text-geeko-cyan">El</span>&nbsp;Emporio
                 </div>
                 <h1 className="hidden">El Emporio</h1>
@@ -296,21 +297,23 @@ const Home: React.FC = () => {
                 <button
                   onClick={() => handleTabChange('marketplace')}
                   data-testid="inventory-tab"
-                  className={`px-6 py-2 rounded-full text-[11px] font-black tracking-widest uppercase transition-all ring-2 ring-geeko-cyan/30 ${activeTab === 'marketplace'
+                  className={`px-6 py-2 rounded-full text-[11px] font-black tracking-widest uppercase transition-all ring-2 ring-geeko-cyan/30 flex items-center gap-2 ${activeTab === 'marketplace'
                     ? 'bg-geeko-cyan text-black shadow-[0_0_15px_rgba(0,229,255,0.4)]'
                     : 'text-neutral-500 hover:text-neutral-300'
                     }`}
                 >
+                  <img src="/src/assets/branding/Emporio.jpg" alt="Icon" className="w-5 h-5 rounded-full" />
                   Stock Geekorium
                 </button>
                 <button
                   onClick={() => handleTabChange('reference')}
                   data-testid="archives-tab"
-                  className={`px-6 py-2 rounded-full text-[11px] font-black tracking-widest uppercase transition-all ${activeTab === 'reference'
+                  className={`px-6 py-2 rounded-full text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'reference'
                     ? 'bg-neutral-700 text-white shadow-lg'
                     : 'text-neutral-500 hover:text-neutral-300'
                     }`}
                 >
+                  <img src="/src/assets/branding/Misiones.jpg" alt="Icon" className="w-5 h-5 rounded-full" />
                   Archivo
                 </button>
               </div>
@@ -496,22 +499,84 @@ const Home: React.FC = () => {
           </div>
         </main>
 
+        {/* How to Buy Section */}
+        <section id="how-to-buy" className="max-w-[1600px] mx-auto px-6 mb-20">
+          <div className="relative overflow-hidden rounded-3xl bg-[#f4e4bc] p-12 shadow-2xl">
+            {/* Decorative Parchment Elements */}
+            <div className="absolute top-0 left-0 w-full h-4 bg-black/5" />
+            <div className="absolute bottom-0 left-0 w-full h-4 bg-black/5" />
+
+            <div className="relative z-10 flex flex-col md:flex-row gap-12 items-center">
+              <div className="flex-1 text-center md:text-left">
+                <h2 className="text-4xl font-black text-black italic tracking-tighter mb-6 uppercase flex items-center gap-4 justify-center md:justify-start">
+                  <img src="/src/assets/branding/Misiones.jpg" alt="Scroll" className="w-12 h-12 rounded-full border-2 border-black/10 shadow-lg" />
+                  ¿Cómo comprar en El Emporio?
+                </h2>
+                <p className="text-black/70 font-medium text-lg leading-relaxed max-w-2xl mb-8">
+                  Nuestra plataforma es un <strong>Portafolio Online</strong> diseñado para ofrecerte la mejor experiencia de búsqueda y selección de singles. Sigue estos pasos para completar tu pedido:
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+                  <div className="flex flex-col gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-black/5 flex items-center justify-center text-2xl font-black text-black italic">1</div>
+                    <div className="font-bold text-black uppercase tracking-wider text-sm">Explora el Stock</div>
+                    <p className="text-black/60 text-xs font-medium leading-relaxed">Filtra por TCG, rareza o edición. Encuentra exactamente lo que buscas en nuestro inventario real.</p>
+                  </div>
+                  <div className="flex flex-col gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-black/5 flex items-center justify-center text-2xl font-black text-black italic">2</div>
+                    <div className="font-bold text-black uppercase tracking-wider text-sm">Prepara tu Orden</div>
+                    <p className="text-black/60 text-xs font-medium leading-relaxed">Añade al carrito. Verás el <strong>Market Price</strong> y nuestro <strong>GK Price</strong> especial.</p>
+                  </div>
+                  <div className="flex flex-col gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-black/5 flex items-center justify-center text-2xl font-black text-black italic">3</div>
+                    <div className="font-bold text-black uppercase tracking-wider text-sm">Finaliza con un Asesor</div>
+                    <p className="text-black/60 text-xs font-medium leading-relaxed">Tu pedido llegará a WhatsApp, donde un Geeko-Asesor validará disponibilidad y coordinará el pago.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="w-full md:w-1/3 flex justify-center">
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-geeko-cyan/20 blur-3xl rounded-full group-hover:bg-geeko-cyan/30 transition-all" />
+                  <img
+                    src="/src/assets/branding/Emporio.jpg"
+                    alt="Emporio Seal"
+                    className="relative w-48 h-48 rounded-full border-8 border-white/20 shadow-2xl group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Footer */}
         <footer className="border-t border-neutral-800 bg-[#121212] py-20 mt-20">
           <div className="max-w-[1600px] mx-auto px-6 grid grid-cols-1 md:grid-cols-3 items-center gap-12 text-center md:text-left">
-            <div className="flex flex-col gap-4 justify-center md:justify-start">
-              <div className="flex items-center gap-3 justify-center md:justify-start">
-                <span className="text-xl font-black tracking-tighter uppercase italic"><span className="text-geeko-cyan">El</span> Emporio</span>
+            <div className="flex flex-col gap-6 justify-center md:justify-start">
+              <div className="flex items-center gap-4 justify-center md:justify-start group cursor-pointer">
+                <img src="/src/assets/branding/Logo.jpg" alt="Logo" className="w-12 h-12 rounded-full border border-white/10 group-hover:scale-110 transition-transform" />
+                <span className="text-2xl font-black tracking-tighter uppercase italic"><span className="text-geeko-cyan">El</span> Emporio</span>
               </div>
-              <div className="flex flex-col gap-2 text-xs font-medium text-neutral-400">
+              <div className="flex flex-col gap-3 text-sm font-medium text-neutral-400">
                 <a href="https://wa.me/584128042832" target="_blank" rel="noopener noreferrer" className="hover:text-geeko-cyan transition-colors">WhatsApp Principal: +58 412-8042832</a>
                 <a href="https://wa.me/584242507802" target="_blank" rel="noopener noreferrer" className="hover:text-geeko-cyan transition-colors">WhatsApp Singles: +58 424-2507802</a>
               </div>
-              <div className="flex gap-4 justify-center md:justify-start mt-2">
-                {/* Social Placeholders */}
-                <span className="w-8 h-8 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-500 hover:bg-geeko-cyan hover:text-black transition-all cursor-pointer">IG</span>
-                <span className="w-8 h-8 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-500 hover:bg-geeko-cyan hover:text-black transition-all cursor-pointer">TK</span>
-                <span className="w-8 h-8 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-500 hover:bg-geeko-cyan hover:text-black transition-all cursor-pointer">FB</span>
+              <div className="flex flex-wrap gap-4 justify-center md:justify-start mt-6">
+                <a href="https://instagram.com/geekorium/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-500 hover:bg-geeko-cyan hover:text-black transition-all shadow-lg hover:shadow-geeko-cyan/20">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" /></svg>
+                </a>
+                <a href="https://www.tiktok.com/@geekorium" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-500 hover:bg-geeko-cyan hover:text-black transition-all shadow-lg hover:shadow-geeko-cyan/20">
+                  <span className="font-black text-[10px]">TK</span>
+                </a>
+                <a href="https://www.facebook.com/profile.php?id=61573984506104" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-500 hover:bg-geeko-cyan hover:text-black transition-all shadow-lg hover:shadow-geeko-cyan/20">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /></svg>
+                </a>
+                <a href="https://www.youtube.com/@Geekorium" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-500 hover:bg-geeko-cyan hover:text-black transition-all shadow-lg hover:shadow-geeko-cyan/20">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 2-2 10 10 0 0 1 15 0 2 2 0 0 1 2 2 24.12 24.12 0 0 1 0 10 2 2 0 0 1-2 2 10 10 0 0 1-15 0 2 2 0 0 1-2-2Z" /><path d="m10 15 5-3-5-3z" /></svg>
+                </a>
+                <a href="https://www.twitch.tv/geekorium" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-500 hover:bg-geeko-cyan hover:text-black transition-all shadow-lg hover:shadow-geeko-cyan/20">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7" /></svg>
+                </a>
               </div>
             </div>
             <div className="text-neutral-500 text-xs font-medium text-center">
@@ -539,33 +604,35 @@ const Home: React.FC = () => {
         <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
 
         {/* Mobile Filters Drawer */}
-        {isMobileFiltersOpen && (
-          <div className="fixed inset-0 z-[100] lg:hidden">
-            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setIsMobileFiltersOpen(false)} />
-            <div className="absolute inset-y-0 right-0 w-full max-w-xs bg-[#0a0a0a] border-l border-white/5 p-6 shadow-2xl overflow-y-auto animate-in slide-in-from-right duration-300">
-              <div className="flex items-center justify-between mb-8">
-                <h2 className="text-xl font-black italic tracking-tighter">FILTROS</h2>
-                <button onClick={() => setIsMobileFiltersOpen(false)} className="p-2 bg-white/5 rounded-lg text-neutral-400">
-                  <X size={20} />
+        {
+          isMobileFiltersOpen && (
+            <div className="fixed inset-0 z-[100] lg:hidden">
+              <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setIsMobileFiltersOpen(false)} />
+              <div className="absolute inset-y-0 right-0 w-full max-w-xs bg-[#0a0a0a] border-l border-white/5 p-6 shadow-2xl overflow-y-auto animate-in slide-in-from-right duration-300">
+                <div className="flex items-center justify-between mb-8">
+                  <h2 className="text-xl font-black italic tracking-tighter">FILTROS</h2>
+                  <button onClick={() => setIsMobileFiltersOpen(false)} className="p-2 bg-white/5 rounded-lg text-neutral-400">
+                    <X size={20} />
+                  </button>
+                </div>
+                <FiltersPanel
+                  filters={{ ...mockFilters, sets }}
+                  selected={filters}
+                  onChange={handleFilterChange}
+                  setsOptions={sets}
+                />
+                <button
+                  onClick={() => setIsMobileFiltersOpen(false)}
+                  className="w-full mt-8 py-4 bg-geeko-cyan text-black font-black text-xs uppercase tracking-widest rounded-xl"
+                >
+                  Aplicar Filtros
                 </button>
               </div>
-              <FiltersPanel
-                filters={{ ...mockFilters, sets }}
-                selected={filters}
-                onChange={handleFilterChange}
-                setsOptions={sets}
-              />
-              <button
-                onClick={() => setIsMobileFiltersOpen(false)}
-                className="w-full mt-8 py-4 bg-geeko-cyan text-black font-black text-xs uppercase tracking-widest rounded-xl"
-              >
-                Aplicar Filtros
-              </button>
             </div>
-          </div>
-        )}
-      </div>
-    </div>
+          )
+        }
+      </div >
+    </div >
   );
 };
 
