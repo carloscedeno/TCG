@@ -902,7 +902,7 @@ async function handleProductsEndpoint(supabase: SupabaseClient, path: string, me
   if (method === 'GET') {
     const { q, game, in_stock = 'true', limit = 50, offset = 0, sort = 'newest' } = params
 
-    let query = supabase.from('products').select('*, aggregated_prices(avg_market_price_usd)', { count: 'planned' })
+    let query = supabase.from('products_with_prices').select('*', { count: 'planned' })
 
     if (q) {
       query = query.ilike('name', `%${q}%`)
@@ -916,11 +916,11 @@ async function handleProductsEndpoint(supabase: SupabaseClient, path: string, me
       query = query.gt('stock', 0)
     }
 
-    // Sorting
+    // Sorting - Now uses effective_price from the view for correct ordering
     if (sort === "price_asc") {
-      query = query.order('price', { ascending: true })
+      query = query.order('effective_price', { ascending: true })
     } else if (sort === "price_desc") {
-      query = query.order('price', { ascending: false })
+      query = query.order('effective_price', { ascending: false })
     } else if (sort === "newest") {
       query = query.order('created_at', { ascending: false })
     } else {
@@ -935,15 +935,11 @@ async function handleProductsEndpoint(supabase: SupabaseClient, path: string, me
 
     if (error) throw error
 
-    // Flatten and coalesce prices: use store price if > 0, otherwise fallback to market price
-    const processedProducts = (data || []).map((p: any) => {
-      const marketPrice = p.aggregated_prices?.avg_market_price_usd || 0;
-      return {
-        ...p,
-        price: (Number(p.price) > 0) ? p.price : marketPrice,
-        market_price: marketPrice
-      };
-    });
+    // Map effective_price to price for frontend compatibility
+    const processedProducts = (data || []).map((p: any) => ({
+      ...p,
+      price: p.effective_price
+    }));
 
     return {
       products: processedProducts,

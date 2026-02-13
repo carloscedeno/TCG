@@ -126,7 +126,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         <div className="text-right flex flex-col items-end">
           <span className="text-[9px] uppercase text-neutral-500 font-bold tracking-wider">Mercado</span>
           <span className="text-geeko-cyan font-mono font-bold text-base leading-none">
-            {typeof price === 'number' && price > 0 ? `$${price.toFixed(2)}` : '---'}
+            {typeof price === 'number' ? `$${price.toFixed(2)}` : '---'}
           </span>
         </div>
 
@@ -217,7 +217,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
           <div className="flex flex-col">
             <span className="text-[9px] uppercase text-neutral-500 font-bold tracking-wider">Mercado</span>
             <span className="text-geeko-cyan font-mono font-bold text-lg leading-none">
-              {typeof price === 'number' && price > 0 ? `$${price.toFixed(2)}` : '---'}
+              {typeof price === 'number' ? `$${price.toFixed(2)}` : '---'}
             </span>
           </div>
           <button className="w-8 h-8 rounded-full bg-white/5 hover:bg-geeko-cyan/20 hover:text-geeko-cyan flex items-center justify-center transition-all text-neutral-400 border border-white/10 group/btn">
