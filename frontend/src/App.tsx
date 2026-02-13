@@ -13,6 +13,7 @@ import { CheckoutSuccessPage } from './pages/CheckoutSuccessPage';
 import UpdatePassword from './pages/UpdatePassword';
 import { AdminRoute } from './components/Auth/AdminRoute';
 import NotFound from './pages/NotFound';
+import { WhatsAppWidget } from './components/Navigation/WhatsAppWidget';
 
 const isSupabaseConfigured = !!import.meta.env.VITE_SUPABASE_URL && !!import.meta.env.VITE_SUPABASE_ANON_KEY;
 
@@ -68,6 +69,7 @@ function App() {
                     <Route path="/update-password" element={<UpdatePassword />} />
                     <Route path="*" element={<NotFound />} />
                 </Routes>
+                <WhatsAppWidget />
             </Router>
         </AuthProvider>
     );
