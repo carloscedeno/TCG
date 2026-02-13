@@ -599,7 +599,7 @@ const Home: React.FC = () => {
             <div className="flex gap-8 text-neutral-500 text-xs font-bold uppercase tracking-widest justify-center md:justify-end">
               <a href="#" className="hover:text-geeko-cyan transition-colors">Privacidad</a>
               <a href="#" className="hover:text-geeko-cyan transition-colors">Términos</a>
-              <a href="#" className="hover:text-geeko-cyan transition-colors">Cómo Comprar</a>
+              <Link to="/help" className="hover:text-geeko-cyan transition-colors">¿Cómo Comprar?</Link>
             </div>
           </div>
         </footer>
