@@ -300,8 +300,8 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                         disabled={!v.stock || v.stock === 0}
                                         aria-label={`Add ${v.set_name} version to cart`}
                                         className={`p-1.5 md:p-2 rounded-lg transition-all shrink-0 ${!v.stock || v.stock === 0
-                                                ? 'bg-neutral-800 text-neutral-600 cursor-not-allowed opacity-50'
-                                                : 'bg-white/5 hover:bg-geeko-cyan text-neutral-400 hover:text-black opacity-0 group-hover:opacity-100'
+                                            ? 'bg-neutral-800 text-neutral-600 cursor-not-allowed opacity-50'
+                                            : 'bg-white/5 hover:bg-geeko-cyan text-neutral-400 hover:text-black opacity-0 group-hover:opacity-100'
                                             }`}
                                     >
                                         <ShoppingCart size={14} />
@@ -351,7 +351,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                         <>
                             <div className="space-y-2">
                                 <a
-                                    href={`/TCG/card/${details.card_id}`}
+                                    href={`/card/${details.card_id}`}
                                     className="block group/title"
                                     onClick={(e) => {
                                         if (!e.ctrlKey && !e.metaKey) {

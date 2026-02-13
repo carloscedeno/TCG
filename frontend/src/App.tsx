@@ -53,7 +53,7 @@ function App() {
 
     return (
         <AuthProvider>
-            <Router basename="/TCG">
+            <Router basename="/">
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/card/:id" element={<CardDetail />} />
