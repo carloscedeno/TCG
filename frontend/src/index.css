@@ -225,3 +225,13 @@ body {
   text-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
   color: var(--color-geeko-cyan);
 }
+
+@layer utilities {
+  .text-shadow-glow {
+    text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+  }
+
+  .animate-bounce-slow {
+    animation: bounce 3s infinite;
+  }
+}
