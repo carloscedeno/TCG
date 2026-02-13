@@ -2,14 +2,12 @@ import React, { useState } from 'react';
 import {
     Search,
     Filter,
-    ShoppingBag,
     MessageSquare,
     ChevronDown,
     Play,
     Compass,
     Hand,
-    Backpack,
-    Sparkles
+    Backpack
 } from 'lucide-react';
 
 export const HelpSection: React.FC = () => {
