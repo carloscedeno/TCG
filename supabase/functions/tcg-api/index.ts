@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient, SupabaseClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-// Force redeploy - 2026-02-01 20:45
+// Force redeploy - 2026-02-12 19:05
 interface RequestParams {
   q?: string
   game?: string
