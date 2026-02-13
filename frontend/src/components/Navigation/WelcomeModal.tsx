@@ -60,7 +60,7 @@ export const WelcomeModal: React.FC = () => {
                             />
                             <div className="flex items-center justify-center gap-1 text-geeko-cyan">
                                 <Sparkles size={14} />
-                                <span className="text-[10px] font-black uppercase tracking-[0.3em] italic">Est. 2026</span>
+                                <span className="text-[10px] font-black uppercase tracking-[0.3em] italic">Est. 2025</span>
                             </div>
                         </div>
                     </div>

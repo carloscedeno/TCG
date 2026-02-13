@@ -594,7 +594,7 @@ const Home: React.FC = () => {
               </div>
             </div>
             <div className="text-neutral-500 text-xs font-medium text-center">
-              © 2026 Geekorium El Emporio. Plataforma Avanzada de TCG.
+              © 2025 Geekorium El Emporio. Plataforma Avanzada de TCG.
             </div>
             <div className="flex gap-8 text-neutral-500 text-xs font-bold uppercase tracking-widest justify-center md:justify-end">
               <a href="#" className="hover:text-geeko-cyan transition-colors">Privacidad</a>
