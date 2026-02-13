@@ -128,6 +128,9 @@ serve(async (req: Request) => {
     else if (path.startsWith('/api/products')) {
       response = await handleProductsEndpoint(supabase, path, method, params)
     }
+    else if (path.startsWith('/api/debug-products')) {
+      response = { status: 'ok', message: 'Deployment confirmed - 2026-02-12 19:10' }
+    }
     else if (path.startsWith('/api/stats')) {
       response = await handleStatsEndpoint(supabase, path, method, params)
     }
