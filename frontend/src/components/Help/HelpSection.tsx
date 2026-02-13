@@ -2,13 +2,16 @@ import React, { useState } from 'react';
 import {
     Search,
     Filter,
-    MessageSquare,
     ChevronDown,
     Play,
-    Compass,
-    Hand,
-    Backpack
 } from 'lucide-react';
+import {
+    DiscoveryIcon,
+    SelectionIcon,
+    PreparationIcon,
+    PactIcon,
+    VideoPlaceholder
+} from './HelpIcons';
 
 export const HelpSection: React.FC = () => {
     const [activeFaq, setActiveFaq] = useState<string | null>(null);
@@ -17,25 +20,25 @@ export const HelpSection: React.FC = () => {
         {
             title: 'El Descubrimiento',
             desc: 'Usa los filtros de Mana Essence para encontrar cartas específicas.',
-            icon: Compass,
+            icon: DiscoveryIcon,
             color: 'text-geeko-cyan'
         },
         {
             title: 'La Selección',
             desc: 'Añade al carrito y descubre tu ahorro exclusivo.',
-            icon: Hand,
+            icon: SelectionIcon,
             color: 'text-geeko-purple'
         },
         {
             title: 'La Preparación',
             desc: 'Revisa tu botín en el cofre antes de finalizar.',
-            icon: Backpack,
+            icon: PreparationIcon,
             color: 'text-geeko-gold'
         },
         {
             title: 'El Pacto',
             desc: 'Finaliza vía WhatsApp con un Geeko-Asesor.',
-            icon: MessageSquare,
+            icon: PactIcon,
             color: 'text-green-500'
         }
     ];
@@ -80,8 +83,8 @@ export const HelpSection: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-24">
                     {steps.map((step, idx) => (
                         <div key={idx} className="relative group text-center">
-                            <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-black/5 border-4 border-black/10 flex items-center justify-center group-hover:scale-110 group-hover:bg-white transition-all shadow-xl">
-                                <step.icon size={40} className={step.color} />
+                            <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-black/5 border-4 border-black/10 flex items-center justify-center group-hover:scale-110 group-hover:bg-white transition-all shadow-xl p-6">
+                                <step.icon className={`w-full h-full ${step.color}`} />
                             </div>
                             <h3 className="text-xl font-black text-black italic uppercase mb-2">{step.title}</h3>
                             <p className="text-sm text-black/60 font-medium px-4">{step.desc}</p>
@@ -94,14 +97,19 @@ export const HelpSection: React.FC = () => {
 
                 {/* Video & FAQ Layout */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-                    {/* Video Player Mockup */}
+                    {/* Video Player Mockup with FAKE CONTENT */}
                     <div className="relative group">
                         <div className="absolute -inset-4 bg-gradient-to-br from-geeko-cyan/20 to-geeko-purple/20 blur-2xl opacity-50 rounded-[4rem]" />
                         <div className="relative aspect-video bg-neutral-900 rounded-[2.5rem] border-[12px] border-neutral-800 shadow-2xl overflow-hidden flex items-center justify-center">
-                            <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all" />
-                            <button className="w-20 h-20 rounded-full bg-geeko-cyan text-black flex items-center justify-center shadow-[0_0_30px_rgba(0,229,255,0.5)] hover:scale-110 transition-transform">
-                                <Play size={32} fill="currentColor" />
-                            </button>
+                            {/* Insert Video Placeholder Here */}
+                            <VideoPlaceholder />
+
+                            {/* Overlay Play Button */}
+                            <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all flex items-center justify-center cursor-pointer">
+                                <button className="w-20 h-20 rounded-full bg-geeko-cyan text-black flex items-center justify-center shadow-[0_0_30px_rgba(0,229,255,0.5)] hover:scale-110 transition-transform">
+                                    <Play size={32} fill="currentColor" />
+                                </button>
+                            </div>
                             <div className="absolute bottom-6 left-6 text-white font-black italic tracking-tighter uppercase text-lg">
                                 Crónicas Visionarias: Tutorial
                             </div>
