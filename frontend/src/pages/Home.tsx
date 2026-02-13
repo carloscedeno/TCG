@@ -267,7 +267,9 @@ const Home: React.FC = () => {
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" /></svg>
                 </a>
                 <a href="https://www.tiktok.com/@geekorium" target="_blank" rel="noopener noreferrer" title="TikTok" className="p-2 text-neutral-400 hover:text-geeko-cyan transition-colors">
-                  <span className="font-black text-[9px]">TK</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="opacity-80">
+                    <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.17-2.89-.6-4.13-1.47V18.77a6.738 6.738 0 01-1.45 4.15c-1.29 1.41-3.14 2.21-5.04 2.1c-1.95.05-3.89-.72-5.18-2.18-1.34-1.52-1.92-3.66-1.58-5.64.3-1.84 1.64-3.47 3.44-4.04 1.02-.34 2.13-.39 3.19-.15V17c-.89-.28-1.93-.11-2.69.49-.66.52-1 1.34-1.02 2.17.02 1.35 1.45 2.18 2.63 1.8 1.07-.32 1.83-1.4 1.81-2.5V3.81c0-1.27-.01-2.53-.01-3.79h-.02z" />
+                  </svg>
                 </a>
               </div>
 
@@ -576,7 +578,9 @@ const Home: React.FC = () => {
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" /></svg>
                 </a>
                 <a href="https://www.tiktok.com/@geekorium" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-500 hover:bg-geeko-cyan hover:text-black transition-all shadow-lg hover:shadow-geeko-cyan/20">
-                  <span className="font-black text-[10px]">TK</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.17-2.89-.6-4.13-1.47V18.77a6.738 6.738 0 01-1.45 4.15c-1.29 1.41-3.14 2.21-5.04 2.1c-1.95.05-3.89-.72-5.18-2.18-1.34-1.52-1.92-3.66-1.58-5.64.3-1.84 1.64-3.47 3.44-4.04 1.02-.34 2.13-.39 3.19-.15V17c-.89-.28-1.93-.11-2.69.49-.66.52-1 1.34-1.02 2.17.02 1.35 1.45 2.18 2.63 1.8 1.07-.32 1.83-1.4 1.81-2.5V3.81c0-1.27-.01-2.53-.01-3.79h-.02z" />
+                  </svg>
                 </a>
                 <a href="https://www.facebook.com/profile.php?id=61573984506104" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-500 hover:bg-geeko-cyan hover:text-black transition-all shadow-lg hover:shadow-geeko-cyan/20">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /></svg>
