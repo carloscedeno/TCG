@@ -164,6 +164,8 @@ export const fetchProducts = async (params: any = {}): Promise<any> => {
         : null,
       type_filter: params.type ? (Array.isArray(params.type) ? params.type : params.type.split(',')) : null,
       color_filter: params.color ? (Array.isArray(params.color) ? params.color : params.color.split(',')) : null,
+      year_from: params.year_from || null,
+      year_to: params.year_to || null,
       sort_by: params.sort || 'newest',
       limit_count: params.limit || 50,
       offset_count: params.offset || 0

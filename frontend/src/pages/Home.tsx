@@ -24,6 +24,16 @@ const mockFilters: Filters = {
   yearRange: [1993, 2026]
 };
 
+const colorCodeMap: Record<string, string> = {
+  'White': 'W',
+  'Blue': 'U',
+  'Black': 'B',
+  'Red': 'R',
+  'Green': 'G',
+  'Colorless': 'C',
+  'Multicolor': 'M'
+};
+
 const Home: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [cards, setCards] = useState<(CardProps & { card_id: string })[]>([]);
@@ -86,8 +96,10 @@ const Home: React.FC = () => {
             game: mappedGame,
             set: filters.sets && filters.sets.length > 0 ? filters.sets.join(',') : undefined,
             rarity: activeRarity !== 'All' ? activeRarity : (filters.rarities && filters.rarities.length > 0 ? filters.rarities.join(',') : undefined),
-            color: filters.colors && filters.colors.length > 0 ? filters.colors : undefined,
+            color: filters.colors && filters.colors.length > 0 ? filters.colors.map(c => colorCodeMap[c] || c) : undefined,
             type: filters.types && filters.types.length > 0 ? filters.types : undefined,
+            year_from: filters.yearRange ? filters.yearRange[0] : undefined,
+            year_to: filters.yearRange ? filters.yearRange[1] : undefined,
             limit: LIMIT,
             offset,
             sort: sortBy === 'price' ? 'price_desc' : sortBy
@@ -111,7 +123,7 @@ const Home: React.FC = () => {
             rarity: activeRarity !== 'All' ? activeRarity : (filters.rarities && filters.rarities.length > 0 ? filters.rarities.join(',') : undefined),
             game: filters.games && filters.games.length > 0 ? filters.games.join(',') : undefined,
             set: filters.sets && filters.sets.length > 0 ? filters.sets.join(',') : undefined,
-            color: filters.colors && filters.colors.length > 0 ? filters.colors.join(',') : undefined,
+            color: filters.colors && filters.colors.length > 0 ? filters.colors.map(c => colorCodeMap[c] || c).join(',') : undefined,
             type: filters.types && filters.types.length > 0 ? filters.types.join(',') : undefined,
             year_from: filters.yearRange ? filters.yearRange[0] : undefined,
             year_to: filters.yearRange ? filters.yearRange[1] : undefined,
@@ -381,7 +393,7 @@ const Home: React.FC = () => {
           <div className="flex flex-col lg:flex-row gap-10">
             {/* Sidebar Filters */}
             <aside className="hidden lg:block w-72 flex-shrink-0">
-              <div className="sticky top-[140px]">
+              <div className="sticky top-[140px] max-h-[calc(100vh-160px)] overflow-y-auto pr-2 custom-scrollbar">
                 <FiltersPanel
                   filters={{ ...mockFilters, sets }}
                   selected={filters}
