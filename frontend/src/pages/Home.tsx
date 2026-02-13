@@ -247,18 +247,28 @@ const Home: React.FC = () => {
             <div className="flex items-center gap-8">
               <Link to="/" className="flex items-center gap-4 group">
                 <div className="flex items-center justify-center font-black text-2xl italic text-white group-hover:scale-105 transition-transform tracking-tighter">
-                  <img src="/src/assets/branding/Logo.jpg" alt="Logo" className="w-10 h-10 rounded-full mr-3 border border-white/10 shadow-lg shadow-geeko-cyan/10" />
-                  <span className="text-geeko-cyan">El</span>&nbsp;Emporio
+                  <img src="/branding/Logo.jpg" alt="Logo" className="w-10 h-10 rounded-full mr-3 border border-white/10 shadow-lg shadow-geeko-cyan/10" />
+                  <span className="text-geeko-cyan">Geekorium</span>&nbsp;El Emporio
                 </div>
-                <h1 className="hidden">El Emporio</h1>
+                <h1 className="hidden">Geekorium El Emporio</h1>
               </Link>
             </div>
             <div className="flex-1 max-w-xl mx-8 hidden lg:block">
               <SearchBar value={query} onChange={setQuery} placeholder="Buscar por nombre de carta o edición..." />
             </div>
-            <div className="flex items-center gap-4">
-              <div className="lg:hidden text-black">
+            <div className="flex items-center gap-3">
+              <div className="lg:hidden text-black mr-2">
                 <SearchBar value={query} onChange={setQuery} placeholder="Buscar..." />
+              </div>
+
+              {/* Social Icons at Top */}
+              <div className="hidden sm:flex items-center gap-1 mr-2 px-3 border-r border-white/10">
+                <a href="https://instagram.com/geekorium/" target="_blank" rel="noopener noreferrer" title="Instagram" className="p-2 text-neutral-400 hover:text-geeko-cyan transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" /></svg>
+                </a>
+                <a href="https://www.tiktok.com/@geekorium" target="_blank" rel="noopener noreferrer" title="TikTok" className="p-2 text-neutral-400 hover:text-geeko-cyan transition-colors">
+                  <span className="font-black text-[9px]">TK</span>
+                </a>
               </div>
 
               {/* Cart Button - Always Visible */}
@@ -302,7 +312,7 @@ const Home: React.FC = () => {
                     : 'text-neutral-500 hover:text-neutral-300'
                     }`}
                 >
-                  <img src="/src/assets/branding/Emporio.jpg" alt="Icon" className="w-5 h-5 rounded-full" />
+                  <img src="/branding/Emporio.jpg" alt="Icon" className="w-5 h-5 rounded-full" />
                   Stock Geekorium
                 </button>
                 <button
@@ -313,7 +323,7 @@ const Home: React.FC = () => {
                     : 'text-neutral-500 hover:text-neutral-300'
                     }`}
                 >
-                  <img src="/src/assets/branding/Misiones.jpg" alt="Icon" className="w-5 h-5 rounded-full" />
+                  <img src="/branding/Misiones.jpg" alt="Icon" className="w-5 h-5 rounded-full" />
                   Archivo
                 </button>
               </div>
@@ -509,8 +519,8 @@ const Home: React.FC = () => {
             <div className="relative z-10 flex flex-col md:flex-row gap-12 items-center">
               <div className="flex-1 text-center md:text-left">
                 <h2 className="text-4xl font-black text-black italic tracking-tighter mb-6 uppercase flex items-center gap-4 justify-center md:justify-start">
-                  <img src="/src/assets/branding/Misiones.jpg" alt="Scroll" className="w-12 h-12 rounded-full border-2 border-black/10 shadow-lg" />
-                  ¿Cómo comprar en El Emporio?
+                  <img src="/branding/Misiones.jpg" alt="Scroll" className="w-12 h-12 rounded-full border-2 border-black/10 shadow-lg" />
+                  ¿Cómo comprar en Geekorium El Emporio?
                 </h2>
                 <p className="text-black/70 font-medium text-lg leading-relaxed max-w-2xl mb-8">
                   Nuestra plataforma es un <strong>Portafolio Online</strong> diseñado para ofrecerte la mejor experiencia de búsqueda y selección de singles. Sigue estos pasos para completar tu pedido:
@@ -539,7 +549,7 @@ const Home: React.FC = () => {
                 <div className="relative group">
                   <div className="absolute inset-0 bg-geeko-cyan/20 blur-3xl rounded-full group-hover:bg-geeko-cyan/30 transition-all" />
                   <img
-                    src="/src/assets/branding/Emporio.jpg"
+                    src="/branding/Emporio.jpg"
                     alt="Emporio Seal"
                     className="relative w-48 h-48 rounded-full border-8 border-white/20 shadow-2xl group-hover:scale-105 transition-transform duration-500"
                   />
@@ -554,8 +564,8 @@ const Home: React.FC = () => {
           <div className="max-w-[1600px] mx-auto px-6 grid grid-cols-1 md:grid-cols-3 items-center gap-12 text-center md:text-left">
             <div className="flex flex-col gap-6 justify-center md:justify-start">
               <div className="flex items-center gap-4 justify-center md:justify-start group cursor-pointer">
-                <img src="/src/assets/branding/Logo.jpg" alt="Logo" className="w-12 h-12 rounded-full border border-white/10 group-hover:scale-110 transition-transform" />
-                <span className="text-2xl font-black tracking-tighter uppercase italic"><span className="text-geeko-cyan">El</span> Emporio</span>
+                <img src="/branding/Logo.jpg" alt="Logo" className="w-12 h-12 rounded-full border border-white/10 group-hover:scale-110 transition-transform" />
+                <span className="text-2xl font-black tracking-tighter uppercase italic"><span className="text-geeko-cyan">Geekorium</span> El Emporio</span>
               </div>
               <div className="flex flex-col gap-3 text-sm font-medium text-neutral-400">
                 <a href="https://wa.me/584128042832" target="_blank" rel="noopener noreferrer" className="hover:text-geeko-cyan transition-colors">WhatsApp Principal: +58 412-8042832</a>
@@ -580,7 +590,7 @@ const Home: React.FC = () => {
               </div>
             </div>
             <div className="text-neutral-500 text-xs font-medium text-center">
-              © 2026 El Emporio. Plataforma Avanzada de TCG.
+              © 2026 Geekorium El Emporio. Plataforma Avanzada de TCG.
             </div>
             <div className="flex gap-8 text-neutral-500 text-xs font-bold uppercase tracking-widest justify-center md:justify-end">
               <a href="#" className="hover:text-geeko-cyan transition-colors">Privacidad</a>

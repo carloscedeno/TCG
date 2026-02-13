@@ -55,7 +55,7 @@ export const UserMenu: React.FC = () => {
                 className="flex items-center gap-3 px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group"
             >
                 <img
-                    src="/src/assets/branding/Geekomunidad.jpg"
+                    src="/branding/Geekomunidad.jpg"
                     alt="Avatar"
                     className="w-10 h-10 rounded-full border border-white/10 shadow-lg shadow-geeko-purple/20"
                 />
@@ -86,7 +86,7 @@ export const UserMenu: React.FC = () => {
                     <div className="p-4 border-b border-white/5 bg-white/5">
                         <div className="flex items-center gap-3">
                             <img
-                                src="/src/assets/branding/Geekomunidad.jpg"
+                                src="/branding/Geekomunidad.jpg"
                                 alt="Avatar"
                                 className="w-14 h-14 rounded-full border border-white/10 shadow-lg shadow-geeko-purple/20"
                             />
