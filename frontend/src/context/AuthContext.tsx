@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             setSession(session);
             setUser(session?.user ?? null);
             if (session?.user) {
-                checkAdmin(session.user.id);
+                checkAdmin();
             } else {
                 setLoading(false);
             }
@@ -53,7 +53,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         };
     }, []);
 
-    const checkAdmin = async (userId: string) => {
+    const checkAdmin = async () => {
         setIsAdmin(true);
         setLoading(false);
     };
