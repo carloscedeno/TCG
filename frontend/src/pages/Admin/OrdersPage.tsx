@@ -196,13 +196,13 @@ const OrdersPage = () => {
                                     className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-6 cursor-pointer hover:bg-white/5 active:scale-[0.99] transition-all duration-200"
                                     onClick={() => toggleExpand(order.id)}
                                 >
-                                    <div className="flex items-center gap-6 pointer-events-none"> {/* Prevent text selection blocking click */}
-                                        <div className={`p-3 rounded-xl ${order.status === 'cancelled' ? 'bg-red-500/10 text-red-500' : 'bg-emerald-500/10 text-emerald-500'}`}>
+                                    <div className="flex items-center gap-6 pointer-events-none w-full md:w-auto">
+                                        <div className={`p-3 rounded-xl flex-shrink-0 ${order.status === 'cancelled' ? 'bg-red-500/10 text-red-500' : 'bg-emerald-500/10 text-emerald-500'}`}>
                                             {order.status === 'cancelled' ? <X size={24} /> : <Package size={24} />}
                                         </div>
-                                        <div>
-                                            <div className="flex items-center gap-3 mb-1">
-                                                <h3 className="text-lg font-black font-mono tracking-tight text-white">
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex items-center gap-3 mb-1 flex-wrap">
+                                                <h3 className="text-lg font-black font-mono tracking-tight text-white whitespace-nowrap">
                                                     #{order.id.slice(0, 8)}
                                                 </h3>
                                                 <div className="relative group pointer-events-auto" onClick={(e) => e.stopPropagation()}>
@@ -225,12 +225,12 @@ const OrdersPage = () => {
                                             </div>
                                             <div className="flex items-center gap-4 text-xs text-neutral-400 font-medium">
                                                 <span className="flex items-center gap-1"><Calendar size={12} /> {new Date(order.created_at).toLocaleDateString()}</span>
-                                                <span className="flex items-center gap-1"><User size={12} /> {order.user_id ? order.user_id.slice(0, 8) : 'Invitado'}...</span>
+                                                <span className="flex items-center gap-1"><User size={12} /> {order.user_id ? order.user_id.slice(0, 8) : 'Invitado'}</span>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="flex items-center gap-8 pointer-events-auto">
+                                    <div className="flex items-center gap-4 md:gap-8 pointer-events-auto mt-4 md:mt-0 justify-between md:justify-end w-full md:w-auto">
                                         <div className="text-right pointer-events-none">
                                             <div className="text-[10px] uppercase tracking-widest text-neutral-500 font-black mb-1">Monto Total</div>
                                             <div className="text-2xl font-black italic font-mono text-white">
@@ -238,10 +238,10 @@ const OrdersPage = () => {
                                             </div>
                                         </div>
 
-                                        <div className="flex items-center gap-4">
+                                        <div className="flex items-center gap-2 md:gap-4">
                                             {/* Status Actions Replaced by Dropdown */}
                                             {updatingId === order.id && (
-                                                <span className="text-[10px] uppercase text-neutral-500 animate-pulse">Actualizando...</span>
+                                                <span className="text-[10px] uppercase text-neutral-500 animate-pulse hidden md:block">Actualizando...</span>
                                             )}
 
                                             {/* Delete Action */}
