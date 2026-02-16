@@ -43,9 +43,10 @@ def main():
     all_sets = resp.json()['data']
     print(f"Total de sets encontrados en Scryfall: {len(all_sets)}")
 
-    # Filtrar solo sets principales (sin parent_set_code)
-    mtg_sets = [s for s in all_sets if s.get('parent_set_code') is None]
-    print(f"Sets de MTG a procesar: {len(mtg_sets)}")
+    # Filtrar sets que no son cartas jugables (tokens, memorabilia)
+    excluded_types = ['token', 'memorabilia']
+    mtg_sets = [s for s in all_sets if s.get('set_type') not in excluded_types]
+    print(f"Sets de MTG a procesar (excluyendo {excluded_types}): {len(mtg_sets)}")
 
     # Mapear datos
     mapped_sets = [map_scryfall_set(s) for s in mtg_sets]
