@@ -57,7 +57,7 @@ class CartService:
 
     @staticmethod
     async def checkout(user_id: str) -> Dict[str, Any]:
-        """Finalizes the purchase, reduces stock, and clears the cart."""
+        """Finalizes the purchase, records items, reduces stock, and clears the cart."""
         items = await CartService.get_cart_items(user_id)
         if not items:
             raise HTTPException(status_code=400, detail="Cart is empty")
@@ -66,23 +66,38 @@ class CartService:
         
         try:
             # 1. Create Order record
-            order = supabase.table('orders').insert({
+            order_res = supabase.table('orders').insert({
                 'user_id': user_id,
                 'total_amount': total,
                 'status': 'completed'
             }).execute()
             
-            # 2. Update Stock (Atomically if possible, but here we do it in a loop for MVP)
+            order_id = order_res.data[0]['id']
+
+            # 2. Record Order Items (New Step)
+            order_items_payload = []
+            for item in items:
+                order_items_payload.append({
+                    'order_id': order_id,
+                    'product_id': item['product_id'],
+                    'quantity': item['quantity'],
+                    'price_at_purchase': item['products']['price']
+                })
+            
+            if order_items_payload:
+                supabase.table('order_items').insert(order_items_payload).execute()
+            
+            # 3. Update Stock (Atomically if possible, but here we do it in a loop for MVP)
             for item in items:
                 new_stock = item['products']['stock'] - item['quantity']
                 supabase.table('products').update({'stock': new_stock}).eq('id', item['product_id']).execute()
             
-            # 3. Clear Cart
-            cart_id = items[0]['cart_id'] if 'cart_id' in items[0] else None # Need to fix select above to include cart_id
-            # Re-fetch cart_id since it wasn't in the select
-            cart_id = await CartService.get_or_create_cart(user_id)
+            # 4. Clear Cart
+            # Re-fetch cart_id since we need to ensure we have it
+            cart_id = items[0]['cart_id']
             supabase.table('cart_items').delete().eq('cart_id', cart_id).execute()
             
-            return {"success": True, "order_id": order.data[0]['id'], "total": total}
+            return {"success": True, "order_id": order_id, "total": total}
         except Exception as e:
+            # In a real app, we'd want a transaction or rollback mechanism here
             raise HTTPException(status_code=500, detail=f"Checkout failed: {str(e)}")

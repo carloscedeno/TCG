@@ -52,6 +52,10 @@ export function InventoryPage() {
     const [totalItems, setTotalItems] = useState(0);
     const [lastSavedId, setLastSavedId] = useState<string | null>(null);
 
+    // State for Stock Editing
+    const [editingStockId, setEditingStockId] = useState<string | null>(null);
+    const [tempStock, setTempStock] = useState<string>("");
+
     const pageSize = 50;
 
     const fetchInventory = useCallback(async () => {
@@ -166,7 +170,7 @@ export function InventoryPage() {
             setLastSavedId(productId);
             setTimeout(() => setLastSavedId(null), 2000);
         } catch (err: any) {
-            alert("Error updating stock: " + err.message);
+            alert("Error al actualizar el stock: " + err.message);
             fetchInventory(); // Revert
         }
     };
@@ -192,13 +196,39 @@ export function InventoryPage() {
             setLastSavedId(productId);
             setTimeout(() => setLastSavedId(null), 2000);
         } catch (err: any) {
-            alert("Error updating price: " + err.message);
+            alert("Error al actualizar el precio: " + err.message);
+            fetchInventory(); // Revert
+        }
+    };
+
+    const handleSaveStock = async (productId: string) => {
+        const newStock = parseInt(tempStock);
+        if (isNaN(newStock) || newStock < 0) return;
+
+        // Optimistic Update
+        setItems(prev => prev.map(item =>
+            item.product_id === productId ? { ...item, stock: newStock } : item
+        ));
+        setEditingStockId(null);
+
+        try {
+            const { error } = await supabase.rpc('update_product_stock', {
+                p_product_id: productId,
+                p_new_quantity: newStock
+            });
+
+            if (error) throw error;
+
+            setLastSavedId(productId);
+            setTimeout(() => setLastSavedId(null), 2000);
+        } catch (err: any) {
+            alert("Error al actualizar el stock: " + err.message);
             fetchInventory(); // Revert
         }
     };
 
     const handleBatchDelete = async () => {
-        if (!confirm(`Are you sure you want to delete ${selectedIds.size} items?`)) return;
+        if (!confirm(`¿Estás seguro de que deseas eliminar ${selectedIds.size} artículos?`)) return;
 
         setLoading(true);
         try {
@@ -211,14 +241,14 @@ export function InventoryPage() {
             setSelectedIds(new Set());
             fetchInventory();
         } catch (err: any) {
-            alert("Batch delete failed: " + err.message);
+            alert("Error en eliminación por lotes: " + err.message);
         } finally {
             setLoading(false);
         }
     };
 
     const handleBatchPriceUpdate = async (percentage: number) => {
-        if (!confirm(`Apply ${percentage}% price change to ${selectedIds.size} items?`)) return;
+        if (!confirm(`¿Aplicar un cambio de precio del ${percentage}% a ${selectedIds.size} artículos?`)) return;
 
         setLoading(true);
         try {
@@ -232,7 +262,7 @@ export function InventoryPage() {
             setSelectedIds(new Set());
             fetchInventory();
         } catch (err: any) {
-            alert("Batch update failed: " + err.message);
+            alert("Error en actualización por lotes: " + err.message);
         } finally {
             setLoading(false);
         }
@@ -260,11 +290,11 @@ export function InventoryPage() {
                                 <Package className="text-white" size={24} />
                             </div>
                             <h1 className="text-4xl font-black italic tracking-tighter uppercase">
-                                Global <span className="text-purple-500">Inventory</span>
+                                Inventario <span className="text-purple-500">Global</span>
                             </h1>
                         </div>
                         <p className="text-neutral-500 text-xs font-bold uppercase tracking-[0.2em] ml-1">
-                            System Terminal v2.1 • {totalItems} Unique Nodes Indexed
+                            Terminal del Sistema v2.1 • {totalItems} Nodos Únicos Indexados
                         </p>
                     </div>
 
@@ -275,7 +305,7 @@ export function InventoryPage() {
                         >
                             <span className="relative z-10 flex items-center gap-3">
                                 <Plus size={18} />
-                                Push New Product
+                                Agregar Producto
                             </span>
                             <div className="absolute inset-0 bg-purple-500 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                         </button>
@@ -286,7 +316,7 @@ export function InventoryPage() {
                         >
                             <span className="relative z-10 flex items-center gap-3">
                                 <FileUp size={18} className="text-neutral-500 group-hover:text-purple-400 transition-colors" />
-                                Bulk Import
+                                Importar Lote
                             </span>
                         </button>
                     </div>
@@ -298,7 +328,7 @@ export function InventoryPage() {
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-600 group-focus-within:text-purple-500 transition-colors" size={20} />
                         <input
                             type="text"
-                            placeholder="Identify Card by Name..."
+                            placeholder="Identificar Carta por Nombre..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             className="w-full bg-black/40 border border-white/5 rounded-2xl pl-12 pr-4 py-4 text-sm text-white focus:outline-none focus:border-purple-500/50 transition-all placeholder:text-neutral-700 font-medium"
@@ -326,12 +356,12 @@ export function InventoryPage() {
                             onChange={(e) => setSelectedCondition(e.target.value || null)}
                             className="flex-1 lg:flex-none bg-black/40 border border-white/5 rounded-2xl px-4 py-4 text-[10px] font-black uppercase tracking-widest text-neutral-400 focus:outline-none focus:border-purple-500/50"
                         >
-                            <option value="">Status: All Conditions</option>
+                            <option value="">Estado: Todas las Condiciones</option>
                             <option value="NM">Mint/NM</option>
-                            <option value="LP">Lightly Played</option>
-                            <option value="MP">Moderately Played</option>
-                            <option value="HP">Heavily Played</option>
-                            <option value="DMG">Damaged</option>
+                            <option value="LP">Lightly Played (LP)</option>
+                            <option value="MP">Moderately Played (MP)</option>
+                            <option value="HP">Heavily Played (HP)</option>
+                            <option value="DMG">Dañada (DMG)</option>
                         </select>
 
                         <button
@@ -342,7 +372,7 @@ export function InventoryPage() {
                                 setPage(0);
                             }}
                             className="p-4 bg-white/5 hover:bg-white/10 rounded-2xl text-neutral-500 hover:text-white transition-all border border-white/5"
-                            title="Reset Filters"
+                            title="Reiniciar Filtros"
                         >
                             <X size={20} />
                         </button>
@@ -355,8 +385,8 @@ export function InventoryPage() {
                         <div className="bg-purple-600 rounded-3xl p-4 flex items-center justify-between shadow-[0_20px_40px_rgba(147,51,234,0.3)]">
                             <div className="flex items-center gap-6 ml-4">
                                 <div className="flex flex-col">
-                                    <span className="text-[10px] font-black text-white/60 uppercase tracking-widest">Selected Nodes</span>
-                                    <span className="text-lg font-black italic">{selectedIds.size} Items</span>
+                                    <span className="text-[10px] font-black text-white/60 uppercase tracking-widest">Nodos Seleccionados</span>
+                                    <span className="text-lg font-black italic">{selectedIds.size} Artículos</span>
                                 </div>
                                 <div className="h-8 w-px bg-white/20" />
                                 <div className="flex items-center gap-2">
@@ -364,13 +394,13 @@ export function InventoryPage() {
                                         onClick={() => handleBatchPriceUpdate(10)}
                                         className="bg-white/10 hover:bg-white/20 px-4 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
                                     >
-                                        +10% Price
+                                        +10% Precio
                                     </button>
                                     <button
                                         onClick={() => handleBatchPriceUpdate(-10)}
                                         className="bg-white/10 hover:bg-white/20 px-4 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
                                     >
-                                        -10% Price
+                                        -10% Precio
                                     </button>
                                 </div>
                             </div>
@@ -380,7 +410,7 @@ export function InventoryPage() {
                                     onClick={handleBatchDelete}
                                     className="bg-red-500 hover:bg-red-600 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2"
                                 >
-                                    <Trash2 size={14} /> Kill Selection
+                                    <Trash2 size={14} /> Eliminar Selección
                                 </button>
                                 <button
                                     onClick={() => setSelectedIds(new Set())}
@@ -398,15 +428,15 @@ export function InventoryPage() {
                     {loading && items.length === 0 ? (
                         <div className="flex flex-col items-center justify-center h-[500px] gap-4">
                             <div className="w-12 h-12 border-4 border-purple-500/30 border-t-purple-500 rounded-full animate-spin" />
-                            <span className="font-black text-xs uppercase tracking-[0.3em] text-neutral-500">Scanning Database...</span>
+                            <span className="font-black text-xs uppercase tracking-[0.3em] text-neutral-500">Escaneando Base de Datos...</span>
                         </div>
                     ) : items.length === 0 ? (
                         <div className="flex flex-col items-center justify-center min-h-[500px] p-8 space-y-12">
                             <div className="flex flex-col items-center justify-center grayscale opacity-30 gap-6">
                                 <Package size={80} />
                                 <div className="text-center space-y-2">
-                                    <p className="text-xl font-black italic uppercase tracking-tighter">Inventory Node Empty</p>
-                                    <p className="text-xs uppercase tracking-widest font-bold">Query: "{searchQuery}" not found in local warehouse</p>
+                                    <p className="text-xl font-black italic uppercase tracking-tighter">Nodo de Inventario Vacío</p>
+                                    <p className="text-xs uppercase tracking-widest font-bold">Consulta: "{searchQuery}" no encontrada en el almacén local</p>
                                 </div>
                             </div>
 
@@ -415,7 +445,7 @@ export function InventoryPage() {
                                 <div className="w-full max-w-4xl space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
                                     <div className="flex items-center gap-4">
                                         <div className="h-px flex-1 bg-gradient-to-r from-transparent to-white/10" />
-                                        <h3 className="text-[10px] font-black text-purple-400 uppercase tracking-[0.3em]">Found in Global Catalog</h3>
+                                        <h3 className="text-[10px] font-black text-purple-400 uppercase tracking-[0.3em]">Encontrado en Catálogo Global</h3>
                                         <div className="h-px flex-1 bg-gradient-to-l from-transparent to-white/10" />
                                     </div>
 
@@ -436,7 +466,7 @@ export function InventoryPage() {
                                                     }}
                                                     className="w-full py-2 bg-purple-500 hover:bg-purple-600 text-white text-[9px] font-black uppercase tracking-widest rounded-lg transition-all shadow-lg shadow-purple-500/20"
                                                 >
-                                                    Push to Stock
+                                                    Agregar al Stock
                                                 </button>
                                             </div>
                                         ))}
@@ -462,18 +492,18 @@ export function InventoryPage() {
                                         </th>
                                         <th className="px-6 py-6 font-black text-[10px] text-neutral-500 uppercase tracking-widest">
                                             <button onClick={() => toggleSort('name')} className="flex items-center gap-2 hover:text-white transition-colors">
-                                                Entity Identification <ArrowUpDown size={12} className={sortBy === 'name' ? 'text-purple-500' : ''} />
+                                                Identificación de Entidad <ArrowUpDown size={12} className={sortBy === 'name' ? 'text-purple-500' : ''} />
                                             </button>
                                         </th>
-                                        <th className="px-6 py-6 font-black text-[10px] text-neutral-500 uppercase tracking-widest text-center">Quality</th>
+                                        <th className="px-6 py-6 font-black text-[10px] text-neutral-500 uppercase tracking-widest text-center">Calidad</th>
                                         <th className="px-6 py-6 font-black text-[10px] text-neutral-500 uppercase tracking-widest text-right">
                                             <button onClick={() => toggleSort('price')} className="flex items-center gap-2 justify-end float-right hover:text-white transition-colors">
-                                                Valuation <ArrowUpDown size={12} className={sortBy === 'price' ? 'text-purple-500' : ''} />
+                                                Valoración <ArrowUpDown size={12} className={sortBy === 'price' ? 'text-purple-500' : ''} />
                                             </button>
                                         </th>
                                         <th className="px-6 py-6 font-black text-[10px] text-neutral-500 uppercase tracking-widest text-center">
                                             <button onClick={() => toggleSort('stock')} className="flex items-center gap-2 justify-center mx-auto hover:text-white transition-colors">
-                                                Stock Nodes <ArrowUpDown size={12} className={sortBy === 'stock' ? 'text-purple-500' : ''} />
+                                                Nodos de Stock <ArrowUpDown size={12} className={sortBy === 'stock' ? 'text-purple-500' : ''} />
                                             </button>
                                         </th>
                                         <th className="pr-8 py-6 font-black text-[10px] text-neutral-500 uppercase tracking-widest text-right">Ops</th>
@@ -553,52 +583,77 @@ export function InventoryPage() {
                                                             {item.price === 0 ? 'AUTO [CK]' : `$${item.price.toFixed(2)}`}
                                                         </button>
                                                         {lastSavedId === item.product_id && (
-                                                            <span className="text-[8px] font-black text-emerald-500 uppercase tracking-widest animate-pulse">SAVED</span>
+                                                            <span className="text-[8px] font-black text-emerald-500 uppercase tracking-widest animate-pulse">GUARDADO</span>
                                                         )}
                                                     </div>
                                                 )}
                                             </td>
                                             <td className="px-6 py-4 text-center">
-                                                <div className="flex flex-col items-center gap-2">
-                                                    <div className="flex items-center justify-center gap-1.5 p-1 bg-black/60 rounded-xl border border-white/5">
-                                                        <button
-                                                            onClick={() => handleUpdateStock(item.product_id, item.stock, -1)}
-                                                            className="w-8 h-8 flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-lg text-neutral-400 hover:text-white transition-all active:scale-90"
-                                                        >
-                                                            -
-                                                        </button>
-                                                        <div className="min-w-[3ch] text-sm font-black font-mono text-center">
-                                                            {item.stock}
-                                                        </div>
-                                                        <button
-                                                            onClick={() => handleUpdateStock(item.product_id, item.stock, 1)}
-                                                            className="w-8 h-8 flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-lg text-neutral-400 hover:text-white transition-all active:scale-90"
-                                                        >
-                                                            +
+                                                {editingStockId === item.product_id ? (
+                                                    <div className="flex items-center justify-center gap-2 animate-in fade-in zoom-in duration-200">
+                                                        <input
+                                                            type="number"
+                                                            value={tempStock}
+                                                            onChange={(e) => setTempStock(e.target.value)}
+                                                            className="w-16 bg-black border border-purple-500/50 rounded-xl px-2 py-2 text-center text-xs font-mono focus:outline-none shadow-xl shadow-purple-500/10"
+                                                            autoFocus
+                                                            onKeyDown={(e) => {
+                                                                if (e.key === 'Enter') handleSaveStock(item.product_id);
+                                                                if (e.key === 'Escape') setEditingStockId(null);
+                                                            }}
+                                                        />
+                                                        <button onClick={() => handleSaveStock(item.product_id)} className="p-2 bg-purple-500/10 text-purple-400 rounded-lg hover:bg-purple-500 hover:text-white transition-all">
+                                                            <Save size={14} />
                                                         </button>
                                                     </div>
+                                                ) : (
+                                                    <div className="flex flex-col items-center gap-2">
+                                                        <div className="flex items-center justify-center gap-1.5 p-1 bg-black/60 rounded-xl border border-white/5">
+                                                            <button
+                                                                onClick={() => handleUpdateStock(item.product_id, item.stock, -1)}
+                                                                className="w-8 h-8 flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-lg text-neutral-400 hover:text-white transition-all active:scale-90"
+                                                            >
+                                                                -
+                                                            </button>
+                                                            <button
+                                                                onClick={() => {
+                                                                    setEditingStockId(item.product_id);
+                                                                    setTempStock(item.stock.toString());
+                                                                }}
+                                                                className="min-w-[3ch] text-sm font-black font-mono text-center hover:text-purple-400 transition-colors"
+                                                            >
+                                                                {item.stock}
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handleUpdateStock(item.product_id, item.stock, 1)}
+                                                                className="w-8 h-8 flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-lg text-neutral-400 hover:text-white transition-all active:scale-90"
+                                                            >
+                                                                +
+                                                            </button>
+                                                        </div>
 
-                                                    {item.stock === 0 ? (
-                                                        <span className="flex items-center gap-1 text-[8px] font-black text-red-500 uppercase tracking-widest bg-red-500/10 px-2 py-0.5 rounded-full">
-                                                            <ShieldAlert size={8} /> Depleted
-                                                        </span>
-                                                    ) : item.stock < 10 ? (
-                                                        <span className="flex items-center gap-1 text-[8px] font-black text-yellow-500 uppercase tracking-widest bg-yellow-500/10 px-2 py-0.5 rounded-full">
-                                                            <AlertTriangle size={8} /> Low Node
-                                                        </span>
-                                                    ) : null}
-                                                </div>
+                                                        {item.stock === 0 ? (
+                                                            <span className="flex items-center gap-1 text-[8px] font-black text-red-500 uppercase tracking-widest bg-red-500/10 px-2 py-0.5 rounded-full">
+                                                                <ShieldAlert size={8} /> Agotado
+                                                            </span>
+                                                        ) : item.stock < 10 ? (
+                                                            <span className="flex items-center gap-1 text-[8px] font-black text-yellow-500 uppercase tracking-widest bg-yellow-500/10 px-2 py-0.5 rounded-full">
+                                                                <AlertTriangle size={8} /> Stock Bajo
+                                                            </span>
+                                                        ) : null}
+                                                    </div>
+                                                )}
                                             </td>
                                             <td className="pr-8 py-4 text-right">
                                                 <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                                     <button
                                                         onClick={() => {
-                                                            if (confirm("Delete this node?")) {
+                                                            if (confirm("¿Eliminar este nodo?")) {
                                                                 supabase.from('products').delete().eq('id', item.product_id).then(() => fetchInventory());
                                                             }
                                                         }}
                                                         className="p-3 bg-red-500/10 text-red-500/70 hover:bg-red-500 hover:text-white rounded-xl transition-all"
-                                                        title="Delete Item"
+                                                        title="Eliminar Articulo"
                                                     >
                                                         <Trash2 size={16} />
                                                     </button>
@@ -614,7 +669,7 @@ export function InventoryPage() {
                     {/* Footer / Pagination */}
                     <div className="p-8 bg-[#0f0f0f] border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6">
                         <div className="text-[10px] font-black text-neutral-600 uppercase tracking-widest">
-                            Showing {items.length} of {totalItems} items • Page {page + 1}
+                            Mostrando {items.length} de {totalItems} artículos • Página {page + 1}
                         </div>
 
                         <div className="flex items-center gap-4">
@@ -623,7 +678,7 @@ export function InventoryPage() {
                                 disabled={page === 0 || loading}
                                 className="px-6 py-3 bg-white/5 border border-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-white/10 disabled:opacity-20 transition-all flex items-center gap-2 group"
                             >
-                                <ChevronUp size={16} className="-rotate-90 group-hover:-translate-x-1 transition-transform" /> Prev
+                                <ChevronUp size={16} className="-rotate-90 group-hover:-translate-x-1 transition-transform" /> Ant
                             </button>
 
                             <div className="flex gap-2">
@@ -646,7 +701,7 @@ export function InventoryPage() {
                                 disabled={items.length < pageSize || loading}
                                 className="px-6 py-3 bg-white/5 border border-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-white/10 disabled:opacity-20 transition-all flex items-center gap-2 group"
                             >
-                                Next <ChevronDown size={16} className="-rotate-90 group-hover:translate-x-1 transition-transform" />
+                                Sig <ChevronDown size={16} className="-rotate-90 group-hover:translate-x-1 transition-transform" />
                             </button>
                         </div>
                     </div>

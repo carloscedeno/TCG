@@ -146,13 +146,13 @@ export function AddProductDrawer({ isOpen, onClose, onSuccess, prefillCard }: Ad
         e.preventDefault();
 
         if (!selectedCard) {
-            setError("Please select a card from the results.");
+            setError("Por favor selecciona una carta de los resultados.");
             return;
         }
 
         const numericPrice = parseFloat(price);
         if (isNaN(numericPrice) || numericPrice < 0) {
-            setError("Price must be 0 or greater.");
+            setError("El precio debe ser 0 o mayor.");
             return;
         }
 
@@ -169,7 +169,7 @@ export function AddProductDrawer({ isOpen, onClose, onSuccess, prefillCard }: Ad
 
             if (rpcError) throw rpcError;
 
-            setSuccessMsg(`Added ${selectedCard.card.name}!`);
+            setSuccessMsg(`¡Agregado ${selectedCard.card.name}!`);
             onSuccess();
 
             // Auto close after success? or stay open? 
@@ -179,7 +179,7 @@ export function AddProductDrawer({ isOpen, onClose, onSuccess, prefillCard }: Ad
             }, 800);
 
         } catch (err: any) {
-            setError(err.message || "Failed to add product");
+            setError(err.message || "Error al agregar producto");
         } finally {
             setLoading(false);
         }
@@ -197,8 +197,8 @@ export function AddProductDrawer({ isOpen, onClose, onSuccess, prefillCard }: Ad
                     {/* Header */}
                     <div className="flex items-center justify-between p-6 border-b border-white/5 bg-white/5">
                         <div>
-                            <h2 className="text-xl font-black text-white italic tracking-tighter uppercase">Add Product</h2>
-                            <p className="text-xs text-neutral-500 font-bold uppercase tracking-widest mt-1">Catalog Entry</p>
+                            <h2 className="text-xl font-black text-white italic tracking-tighter uppercase">Agregar Producto</h2>
+                            <p className="text-xs text-neutral-500 font-bold uppercase tracking-widest mt-1">Entrada de Catálogo</p>
                         </div>
                         <button
                             onClick={onClose}
@@ -212,12 +212,12 @@ export function AddProductDrawer({ isOpen, onClose, onSuccess, prefillCard }: Ad
                     <div className="flex-1 overflow-y-auto p-6 space-y-8">
                         {/* Search Section */}
                         <div className="space-y-4">
-                            <label className="text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em]">Identify Card</label>
+                            <label className="text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em]">Identificar Carta</label>
                             <div className="relative">
                                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-600" size={18} />
                                 <input
                                     type="text"
-                                    placeholder="Search by name..."
+                                    placeholder="Buscar por nombre..."
                                     value={searchQuery}
                                     onChange={(e) => handleSearch(e.target.value)}
                                     className="w-full bg-black/40 border border-white/5 rounded-2xl pl-12 pr-4 py-4 text-white placeholder:text-neutral-700 focus:outline-none focus:border-purple-500/50 transition-all text-sm"
@@ -280,7 +280,7 @@ export function AddProductDrawer({ isOpen, onClose, onSuccess, prefillCard }: Ad
                         <form onSubmit={handleSubmit} className="space-y-8 pt-4">
                             <div className="grid grid-cols-2 gap-6">
                                 <div className="space-y-3">
-                                    <label className="text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em]">Market Price</label>
+                                    <label className="text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em]">Precio de Mercado</label>
                                     <div className="relative">
                                         <span className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500 font-black">$</span>
                                         <input
@@ -296,7 +296,7 @@ export function AddProductDrawer({ isOpen, onClose, onSuccess, prefillCard }: Ad
                                     </div>
                                 </div>
                                 <div className="space-y-3">
-                                    <label className="text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em]">Quantity</label>
+                                    <label className="text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em]">Cantidad</label>
                                     <input
                                         type="number"
                                         min="0"
@@ -309,7 +309,7 @@ export function AddProductDrawer({ isOpen, onClose, onSuccess, prefillCard }: Ad
                             </div>
 
                             <div className="space-y-4">
-                                <label className="text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em]">Item Condition</label>
+                                <label className="text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em]">Condición del Artículo</label>
                                 <div className="grid grid-cols-5 gap-2">
                                     {['NM', 'LP', 'MP', 'HP', 'DMG'].map((cond) => (
                                         <button
@@ -355,9 +355,9 @@ export function AddProductDrawer({ isOpen, onClose, onSuccess, prefillCard }: Ad
                             {loading ? (
                                 <div className="flex items-center justify-center gap-3">
                                     <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
-                                    Synchronizing...
+                                    Sincronizando...
                                 </div>
-                            ) : 'Push to Inventory'}
+                            ) : 'Agregar al Inventario'}
                         </button>
                     </div>
                 </div>

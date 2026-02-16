@@ -19,8 +19,8 @@ export function ImportInventoryModal({ isOpen, onClose, onSuccess }: ImportInven
                             <PackagePlus className="text-purple-400" size={24} />
                         </div>
                         <div>
-                            <h2 className="text-2xl font-black text-white italic tracking-tighter uppercase">Sync Warehouse</h2>
-                            <p className="text-[10px] text-neutral-500 font-bold uppercase tracking-[0.2em] mt-1">Bulk Import Operations Terminal</p>
+                            <h2 className="text-2xl font-black text-white italic tracking-tighter uppercase">Sincronizar Almacén</h2>
+                            <p className="text-[10px] text-neutral-500 font-bold uppercase tracking-[0.2em] mt-1">Terminal de Operaciones de Importación Masiva</p>
                         </div>
                     </div>
                     <button

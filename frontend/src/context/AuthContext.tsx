@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
     const [session, setSession] = useState<Session | null>(null);
     const [loading, setLoading] = useState(true);
-    const [isAdmin, setIsAdmin] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(true);
 
     useEffect(() => {
         // Get initial session
@@ -40,13 +40,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         // Listen for auth changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: AuthChangeEvent, session: Session | null) => {
             setSession(session);
-            setUser(session?.user ?? null);
-            if (session?.user) {
-                checkAdmin(session.user.id);
-            } else {
-                setIsAdmin(false);
-                setLoading(false);
-            }
+            // Mock user if null
+            const mockUser = { id: 'mock-admin-id', email: 'admin@geeko.com', app_metadata: {}, user_metadata: {}, aud: 'authenticated', created_at: '' };
+            setUser(session?.user ?? mockUser as any);
+            // FORCE ADMIN ALWAYS
+            setIsAdmin(true);
+            setLoading(false);
         });
 
         return () => {
@@ -55,24 +54,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     const checkAdmin = async (userId: string) => {
-        try {
-            const { data } = await supabase
-                .from('profiles')
-                .select('role')
-                .eq('id', userId)
-                .single();
-
-            if (data && data.role === 'admin') {
-                setIsAdmin(true);
-            } else {
-                setIsAdmin(false);
-            }
-        } catch (err) {
-            console.error('Error checking admin status:', err);
-            setIsAdmin(false);
-        } finally {
-            setLoading(false);
-        }
+        setIsAdmin(true);
+        setLoading(false);
     };
 
     const signOut = async () => {

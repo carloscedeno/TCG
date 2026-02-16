@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Play, Settings, Users, Database, Shield, AlertCircle } from 'lucide-react';
+import { Play, Settings, Users, Database, Shield, AlertCircle, Package } from 'lucide-react';
+
+import { supabase } from '../../utils/supabaseClient';
 
 const SUPABASE_PROJECT_ID = 'sxuotvogwvmxuvwbsscv';
+// Legacy API Base for external scrapers (currently offline/unused for stats)
 const API_BASE = import.meta.env.VITE_API_BASE || `https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/tcg-api`;
 
 export const AdminDashboard = () => {
@@ -27,10 +31,12 @@ export const AdminDashboard = () => {
         if (user && isAdmin) {
             fetchStats();
             fetchTasks();
+
+            // Only poll stats occasionally
             const interval = setInterval(() => {
                 fetchTasks();
                 fetchStats();
-            }, 5000); // Polling cada 5 segundos
+            }, 30000);
             return () => clearInterval(interval);
         }
     }, [user, isAdmin]);
@@ -61,7 +67,7 @@ export const AdminDashboard = () => {
             });
 
             if (response.ok || response.status === 204) {
-                setResults(prev => ({ ...prev, 'github-sync': { message: 'Workflow de GitHub disparado exitosamente!' } }));
+                setResults(prev => ({ ...prev, 'github-sync': { message: '¡Flujo de trabajo de GitHub iniciado exitosamente!' } }));
             } else {
                 const err = await response.json();
                 setResults(prev => ({ ...prev, 'github-sync': { error: `GitHub error: ${err.message || response.statusText}` } }));
@@ -91,23 +97,24 @@ export const AdminDashboard = () => {
 
     const fetchStats = async () => {
         try {
-            const response = await fetch(`${API_BASE}/api/admin/stats`, {
-                headers: {
-                    'Authorization': `Bearer ${session?.access_token}`
-                }
+            // Parallel fetch for dashboard stats
+            // Use 'estimated' count for large tables (price_history, card_printings) to prevent execution timeouts (500)
+            const [cards, users, updates] = await Promise.all([
+                supabase.from('card_printings').select('*', { count: 'estimated', head: true }),
+                supabase.from('profiles').select('*', { count: 'exact', head: true }), // Profiles is small enough for exact
+                supabase.from('price_history').select('*', { count: 'estimated', head: true })
+            ]);
+
+            setStats({
+                total_cards: (cards.count || 0).toLocaleString(),
+                total_users: (users.count || 0).toLocaleString(),
+                total_updates: (updates.count || 0).toLocaleString()
             });
-            const data = await response.json();
-            if (!data.error) {
-                setStats({
-                    total_cards: data.total_cards.toLocaleString(),
-                    total_users: data.total_users.toLocaleString(),
-                    total_updates: data.total_updates.toLocaleString()
-                });
-            }
         } catch (err) {
-            // Silencioso
+            console.error("Error fetching stats:", err);
         }
     };
+
 
     const runScraper = async (source: string) => {
         setRunning(prev => ({ ...prev, [source]: true }));
@@ -171,7 +178,7 @@ export const AdminDashboard = () => {
         }
     };
 
-    if (loading) return <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white font-black italic">GEEKORIUM LOADING...</div>;
+    if (loading) return <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white font-black italic">GEEKORIUM CARGANDO...</div>;
 
     if (!user || !isAdmin) {
         return (
@@ -186,9 +193,9 @@ export const AdminDashboard = () => {
     }
 
     const scrapers = [
-        { id: 'cardkingdom', name: 'CardKingdom', description: 'Market Reference (USD)', icon: <Database className="text-emerald-400" /> },
-        { id: 'cardmarket', name: 'Cardmarket', description: 'Precios EU (EUR)', icon: <Database className="text-orange-400" /> },
-        { id: 'tcgplayer', name: 'TCGPlayer', description: 'Precios US (USD)', icon: <Database className="text-blue-400" /> },
+        { id: 'cardkingdom', name: 'CardKingdom', description: 'Referencia de Mercado (USD)', icon: <Database className="text-emerald-400" /> },
+        { id: 'cardmarket', name: 'Cardmarket', description: 'Precios UE (EUR)', icon: <Database className="text-orange-400" /> },
+        { id: 'tcgplayer', name: 'TCGPlayer', description: 'Precios EE.UU. (USD)', icon: <Database className="text-blue-400" /> },
     ];
 
     const syncServices = [
@@ -209,15 +216,43 @@ export const AdminDashboard = () => {
                     <div className="flex items-center gap-4">
                         <div className="bg-slate-900 border border-slate-800 px-4 py-2 rounded-xl flex items-center gap-3 shadow-lg">
                             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_#22c55e]"></div>
-                            <span className="text-xs font-bold text-slate-300 uppercase tracking-widest">Live Connection</span>
+                            <span className="text-xs font-bold text-slate-300 uppercase tracking-widest">Conexión Activa</span>
                         </div>
                     </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                    <StatCard title="Usuarios Fleet" value={stats.total_users} change="Online" icon={<Users className="text-blue-400" />} />
-                    <StatCard title="Deep Index" value={stats.total_cards} change="Nodes" icon={<Database className="text-purple-400" />} />
-                    <StatCard title="Price Flux" value={stats.total_updates} change="Ops" icon={<Settings className="text-emerald-400" />} />
+                    <StatCard title="Usuarios Registrados" value={stats.total_users} change="En Línea" icon={<Users className="text-blue-400" />} />
+                    <StatCard title="Índice de Cartas" value={stats.total_cards} change="Cartas" icon={<Database className="text-purple-400" />} />
+                    <StatCard title="Actualizaciones de Precios" value={stats.total_updates} change="Operaciones" icon={<Settings className="text-emerald-400" />} />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+                    <Link to="/admin/inventory" className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-900/50 to-slate-900 border border-white/10 p-8 hover:border-purple-500/50 transition-all">
+                        <div className="absolute inset-0 bg-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="relative z-10 flex items-center justify-between">
+                            <div>
+                                <h3 className="text-2xl font-black italic text-white mb-2">CONSOLA DE INVENTARIO</h3>
+                                <p className="text-purple-300 text-xs font-bold uppercase tracking-widest">Gestionar Stock y Precios</p>
+                            </div>
+                            <div className="w-16 h-16 bg-purple-500/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <Package className="text-purple-400" size={32} />
+                            </div>
+                        </div>
+                    </Link>
+
+                    <Link to="/admin/orders" className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-900/50 to-slate-900 border border-white/10 p-8 hover:border-blue-500/50 transition-all">
+                        <div className="absolute inset-0 bg-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="relative z-10 flex items-center justify-between">
+                            <div>
+                                <h3 className="text-2xl font-black italic text-white mb-2">TERMINAL DE ÓRDENES</h3>
+                                <p className="text-blue-300 text-xs font-bold uppercase tracking-widest">Procesar y Cancelar Órdenes</p>
+                            </div>
+                            <div className="w-16 h-16 bg-blue-500/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <Package className="text-blue-400" size={32} />
+                            </div>
+                        </div>
+                    </Link>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -225,7 +260,7 @@ export const AdminDashboard = () => {
                         <div className="glass-card rounded-3xl p-8 border border-white/5 bg-slate-900/50">
                             <h2 className="text-2xl font-black mb-6 flex items-center gap-3 italic">
                                 <Play className="text-geeko-cyan fill-geeko-cyan" />
-                                EXECUTE SCRAPERS
+                                EJECUTAR SCRAPERS
                             </h2>
                             <div className="space-y-4">
                                 {scrapers.map((scraper) => (
@@ -244,7 +279,7 @@ export const AdminDashboard = () => {
                                             disabled={running[scraper.id]}
                                             className="bg-geeko-cyan/20 border border-geeko-cyan/50 hover:bg-geeko-cyan/40 text-geeko-cyan px-6 py-2 rounded-xl font-black text-xs uppercase tracking-widest transition-all"
                                         >
-                                            {running[scraper.id] ? 'Running...' : 'Deploy'}
+                                            {running[scraper.id] ? 'Ejecutando...' : 'Desplegar'}
                                         </button>
                                     </div>
                                 ))}
@@ -254,7 +289,7 @@ export const AdminDashboard = () => {
                         <div className="glass-card rounded-3xl p-8 border border-white/5 bg-slate-900/50">
                             <h2 className="text-2xl font-black mb-6 flex items-center gap-3 italic text-purple-400">
                                 <Database className="text-purple-400" />
-                                CATALOG SYNC
+                                SINCRONIZACIÓN DE CATÁLOGO
                             </h2>
                             <div className="space-y-4">
                                 {syncServices.map((service) => (
@@ -273,7 +308,7 @@ export const AdminDashboard = () => {
                                             disabled={running[`sync-${service.id}`]}
                                             className="bg-purple-600/20 border border-purple-500/50 hover:bg-purple-600/40 text-purple-400 px-6 py-2 rounded-xl font-black text-xs uppercase tracking-widest transition-all"
                                         >
-                                            {running[`sync-${service.id}`] ? 'Syncing...' : 'Start'}
+                                            {running[`sync-${service.id}`] ? 'Sincronizando...' : 'Iniciar'}
                                         </button>
                                     </div>
                                 ))}
@@ -285,16 +320,16 @@ export const AdminDashboard = () => {
                         <div className="glass-card rounded-3xl p-8 border border-white/5 bg-slate-900/50">
                             <h2 className="text-2xl font-black mb-6 flex items-center gap-3 italic">
                                 <Shield className="text-emerald-400" />
-                                MISSION CONTROL
+                                CONTROL DE MISIÓN
                             </h2>
                             <div className="space-y-4 mb-6">
                                 {activeTasks.length > 0 ? (
                                     activeTasks.map(task => (
                                         <div key={task.id} className="bg-slate-800/20 border border-white/5 rounded-2xl p-4">
                                             <div className="flex items-center justify-between mb-2">
-                                                <span className="font-black text-xs text-slate-300 uppercase tracking-widest">{task.game_code} Task Runner</span>
+                                                <span className="font-black text-xs text-slate-300 uppercase tracking-widest">{task.game_code} Ejecutor de Tareas</span>
                                                 <div className="flex items-center gap-2">
-                                                    <button onClick={() => fetchTaskLogs(task.id)} className="text-[10px] font-black uppercase text-blue-400 hover:underline">View Logs</button>
+                                                    <button onClick={() => fetchTaskLogs(task.id)} className="text-[10px] font-black uppercase text-blue-400 hover:underline">Ver Logs</button>
                                                     <span className={`text-[10px] px-2 py-0.5 rounded font-black uppercase ${task.status === 'running' ? 'bg-blue-500/20 text-blue-400' : 'bg-emerald-500/20 text-emerald-400'}`}>
                                                         {task.status}
                                                     </span>
@@ -309,7 +344,7 @@ export const AdminDashboard = () => {
                                     ))
                                 ) : (
                                     <div className="text-slate-600 font-bold text-center py-6 bg-black/20 rounded-2xl border border-dashed border-white/5">
-                                        NO ACTIVE RUNNERS
+                                        NO HAY TAREAS ACTIVAS
                                     </div>
                                 )}
                             </div>
@@ -323,7 +358,7 @@ export const AdminDashboard = () => {
                                         </span>
                                     </div>
                                 ))}
-                                {Object.keys(results).length === 0 && <div className="text-slate-700 italic">Console output initialized...</div>}
+                                {Object.keys(results).length === 0 && <div className="text-slate-700 italic">Salida de consola inicializada...</div>}
                             </div>
                         </div>
 
@@ -331,7 +366,7 @@ export const AdminDashboard = () => {
                         <div className="glass-card rounded-3xl p-8 border border-white/10 bg-black/40 border-dashed">
                             <h2 className="text-2xl font-black mb-4 flex items-center gap-3 italic">
                                 <Settings className="text-geeko-cyan" />
-                                GITHUB AUTOMATION
+                                AUTOMATIZACIÓN GITHUB
                             </h2>
                             <p className="text-slate-500 text-xs font-bold mb-6 italic">
                                 Dispara la sincronización directamente en GitHub Actions.
@@ -339,7 +374,7 @@ export const AdminDashboard = () => {
 
                             <div className="space-y-4">
                                 <div className="p-4 bg-black/40 rounded-2xl border border-white/5">
-                                    <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">GitHub Personal Access Token</div>
+                                    <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">Token de Acceso Personal de GitHub</div>
                                     <div className="flex gap-2 mb-2">
                                         <input
                                             type="password"
@@ -357,12 +392,12 @@ export const AdminDashboard = () => {
                                         {isTriggeringGit ? (
                                             <>
                                                 <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                                Disparando...
+                                                Iniciando...
                                             </>
                                         ) : (
                                             <>
                                                 <Shield size={14} className="text-geeko-cyan" />
-                                                Trigger Manual Sync (Actions)
+                                                Activar Sincronización Manual (Actions)
                                             </>
                                         )}
                                     </button>
@@ -380,7 +415,7 @@ export const AdminDashboard = () => {
                         onClick={() => window.location.href = './'}
                         className="text-slate-500 hover:text-geeko-cyan transition-all text-xs font-black uppercase tracking-[0.3em] flex items-center gap-3 group"
                     >
-                        <span className="group-hover:-translate-x-1 transition-transform">←</span> Return to Deck
+                        <span className="group-hover:-translate-x-1 transition-transform">←</span> Volver a la Plataforma
                     </button>
                 </div>
             </div>
@@ -391,23 +426,23 @@ export const AdminDashboard = () => {
                         <div className="p-6 border-b border-white/5 flex items-center justify-between bg-white/5">
                             <h3 className="text-xl font-black italic tracking-tighter flex items-center gap-3 uppercase">
                                 <Shield className="text-geeko-cyan w-6 h-6" />
-                                Logs // {selectedTaskLog?.id}
+                                Registros // {selectedTaskLog?.id}
                             </h3>
                             <button onClick={() => setShowLogModal(false)} className="text-slate-500 hover:text-white transition-colors bg-white/5 p-2 rounded-full">
                                 <X size={20} />
                             </button>
                         </div>
                         <div className="p-8 bg-black/60 overflow-y-auto font-mono text-[11px] text-slate-300 whitespace-pre-wrap flex-grow custom-scrollbar">
-                            {selectedTaskLog?.logs || 'Scanning for data...'}
+                            {selectedTaskLog?.logs || 'Escaneando datos...'}
                         </div>
                         <div className="p-6 border-t border-white/5 flex justify-between items-center bg-white/5">
-                            <span className="text-[10px] text-slate-600 font-black uppercase tracking-widest">System Status: Active</span>
+                            <span className="text-[10px] text-slate-600 font-black uppercase tracking-widest">Estado del Sistema: Activo</span>
                             <button
                                 onClick={() => selectedTaskLog && fetchTaskLogs(selectedTaskLog.id)}
                                 disabled={isRefreshingLogs}
                                 className="bg-geeko-cyan text-black px-8 py-3 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_20px_rgba(34,211,238,0.3)]"
                             >
-                                {isRefreshingLogs ? 'Updating...' : 'Refresh Logs'}
+                                {isRefreshingLogs ? 'Actualizando...' : 'Actualizar Registros'}
                             </button>
                         </div>
                     </div>

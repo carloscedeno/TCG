@@ -5,6 +5,7 @@ import TournamentHub from './pages/TournamentHub';
 import { AdminDashboard } from './pages/Admin/AdminDashboard';
 import ImportCollection from './pages/ImportCollection';
 import InventoryPage from './pages/Admin/InventoryPage';
+import OrdersPage from './pages/Admin/OrdersPage';
 import { CardDetail } from './pages/CardDetail';
 import { AuthProvider } from './context/AuthContext';
 import { AlertCircle } from 'lucide-react';
@@ -66,6 +67,7 @@ function App() {
                     <Route path="/help" element={<HelpPage />} />
                     <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
                     <Route path="/admin/inventory" element={<AdminRoute><InventoryPage /></AdminRoute>} />
+                    <Route path="/admin/orders" element={<AdminRoute><OrdersPage /></AdminRoute>} />
                     <Route path="/checkout" element={<CheckoutPage />} />
                     <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
 

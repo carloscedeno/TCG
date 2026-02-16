@@ -1,0 +1,1950 @@
+1 Serene Steward (BFZ) 46
+1 Ghost Warden (10E) 16
+1 Ninth Bridge Patrol (CMR) 33
+5 Swift Maneuver (CSP) 21
+6 Kjeldoran War Cry (CSP) 13
+1 Sightless Brawler (JOU) 24
+1 Nearheath Pilgrim (AVR) 31
+4 Keening Apparition (RTR) 12
+1 Guardian of Pilgrims (EMN) 30
+1 Moorland Inquisitor (M20) 31
+1 Martyr of Dusk (LCC) 132
+1 Mummy Paramount (HOU) 16
+1 Samwise the Stouthearted (LTR) 28
+1 Sunspear Shikari (CMM) 62
+1 Leonin Skyhunter (MBS) 11
+1 Countless Gears Renegade (AER) 13
+1 Steadfast Cathar (EMN) 44
+1 Sigardian Priest (EMN) 42
+1 Wings of the Guard (CN2) 26
+1 Selfless Samurai (NEO) 35
+1 Selfless Police Captain (SPM) 12
+1 Eight-and-a-Half-Tails (CLB) 692
+1 Eiganjo Exemplar (NEO) 10
+2 Shire Shirriff (LTR) 441
+2 Eight-and-a-Half-Tails (CHK) 8
+1 Kemba, Kha Enduring (ONE) 19
+3 Eiganjo Exemplar (NEO) 309
+1 Stone Haven Pilgrim (JMP) 6
+1 Kitsune Ace (NEO) 22
+1 Kor Aeronaut (DDF) 10
+1 Gearshift Ace (KLD) 16
+1 Mesa Falcon (6ED) 31
+2 Thraben Heretic (DDQ) 20
+1 Spirit Weaver (10E) 46
+2 Araba Mothrider (SOK) 2
+1 Dromoka Warrior (DTK) 14
+1 Fortified Rampart (BFZ) 27
+1 Stone Haven Medic (BFZ) 51
+2 Mistral Charger (EMA) 20
+1 Daru Spiritualist (SCG) 5
+1 Metallurgeon (ARC) 2
+1 Pteron Ghost (DST) 10
+1 Cloudreach Cavalry (LGN) 7
+3 Lost Leonin (NPH) 13
+1 Phalanx Leader (PTHS) 26
+1 Knight Errant (7ED) 24
+1 Gustcloak Skirmisher (DDO) 13
+1 Gallant Cavalry (M19) 12
+1 Palace Jailer (CMM) 47
+5 Angelic Favor (NEM) 1
+2 Trenching Steed (PCY) 26
+1 Emeria Angel (ZEN) 11
+1 Pillarfield Ox (CNS) 76 *F*
+1 Odric, Lunarch Marshal (INR) 36
+1 Valor (TSB) 16
+2 Loxodon Punisher (MRD) 14
+1 Battlewise Aven (JUD) 4 *F*
+1 Possessed Nomad (TOR) 13
+1 Skyhunter Patrol (DDG) 19
+1 Alaborn Cavalier (DDG) 18
+1 Grey Host Reinforcements (LTC) 14
+1 Palace Jailer (LTC) 174
+1 Beregond of the Guard (LTC) 9
+1 Lossarnach Captain (LTC) 16
+1 Go-Shintai of Shared Purpose (NEO) 14
+2 Fiend Binder (EMN) 26
+1 Michiko Konda, Truth Seeker (SOK) 19
+3 Auriok Salvagers (2XM) 6
+4 Rimefur Reindeer (WOE) 27
+1 Kabira Vindicator (DDP) 4
+1 Seven-Tail Mentor (NEO) 313
+1 Salt Road Patrol (KTK) 21 *F*
+1 Sanctifier of Souls (EMN) 39
+1 Angel of Condemnation (HOU) 3
+1 Auriok Windwalker (5DN) 5
+1 Riders of Gavony (AVR) 33
+1 Alabaster Kirin (KTK) 4 *F*
+1 Abzan Skycaptain (FRF) 4 *F*
+1 Benalish Commander (TSR) 8
+1 High Sentinels of Arashin (PKTK) 13s *F*
+2 Hokori, Dust Drinker (BOK) 7
+2 Abbey Griffin (ISD) 1
+1 Kor Cartographer (KHC) 28
+1 Selfless Squire (LTC) 176
+1 Kitsune Mystic // Autumn-Tail, Kitsune Sage (CHK) 28
+1 Hikari, Twilight Guardian (CHK) 12
+3 Relief Captain (2X2) 24
+1 Auspicious Ancestor (MIR) 3
+1 Standing Army (UNH) 20
+3 Squad Rallier (FDN) 24
+4 Blessed Orator (9ED) 6
+1 War Oracle (ORI) 41
+7 Timely Hordemate (KTK) 27
+2 Heliod's Emissary (THS) 18
+3 Celebrity Fencer (SNC) 7
+1 Celestial Crusader (TSR) 13
+4 Dragonback Lancer (TDM) 9
+6 Arashin Sunshield (TDM) 3
+2 Lotus-Eye Mystics (UMA) 23
+3 Charging Griffin (ORI) 9
+3 Guardian of the Forgotten (MH3) 28
+2 Prosperity Tycoon (OTJ) 25
+1 Thraben Watcher (MH2) 34
+1 Coalition Skyknight (DMU) 14
+2 Harnessed Snubhorn (MAT) 3
+5 Besotted Knight // Betroth the Beast (WOE) 4
+1 Taj-Nar Swordsmith (C17) 77
+2 Stonybrook Schoolmaster (MOR) 25
+1 Rumor Gatherer (SNC) 29
+4 Heroic Charge (DMU) 20
+15 Protector of Gondor (LTR) 25
+1 Griffnaut Tracker (MKM) 17
+1 Syndicate Messenger (CLU) 75
+3 Museum Nightwatch (MKM) 25
+3 Bridled Bighorn (OTJ) 7
+2 Lightkeeper of Emeria (WWK) 12
+5 Indoctrination Attendant (ONE) 16
+1 Knight of the New Coalition (MOM) 25
+1 Noble Banneret (CN2) 17
+1 Sanctum Gargoyle (C21) 102
+1 Goldnight Commander (TDC) 117
+1 Kjeldoran Escort (ALL) 7b
+1 Glimmerpoint Stag (EMA) 12
+1 Ballynock Trapper (EVE) 2
+6 Daru Cavalier (ONS) 18
+2 Indebted Samurai (BOK) 9
+1 Mausoleum Guard (INR) 33
+3 Armory Guard (RVR) 3
+4 Midvast Protector (AVR) 28
+3 Wall of Swords (8ED) 56
+3 Holy Justiciar (AVR) 25
+4 Takeno's Cavalry (BOK) 24
+8 Zarichi Tiger (GTC) 28
+5 Teroh's Vanguard (TOR) 19
+1 Kor Cartographer (ZEN) 18
+1 Azorius Justiciar (CLU) 55
+1 Midvast Protector (AVR) 28 *F*
+1 Conclave Equenaut (RVR) 13
+1 Bounding Felidar (OTJ) 5
+2 Defenestrated Phantom (MKM) 11
+1 Urbis Protector (RVR) 33
+1 Felidar Sovereign (PBFZ) 26s *F*
+1 Champions of Minas Tirith (LTC) 10
+1 Paladin of Prahv (DDG) 22
+1 Captain of the Watch (DDO) 3
+1 Patron of the Kitsune (BOK) 19
+8 Kjeldoran Gargoyle (DMR) 11
+1 Twinmaw Stormbrood // Charring Bite (TDM) 232
+1 Storm of Souls (VOC) 9
+1 Shepherding Spirits (DSK) 31
+1 Sword-Swallowing Seraph (UNF) 30
+1 Atraxi Warden (WHO) 12
+1 Sunblast Angel (SOM) 22
+1 Captain of the Watch (M13) 8
+1 Aegis Angel (E01) 1
+1 Dearly Departed (LTC) 165
+1 Loxodon Restorer (GRN) 20
+1 Wispweaver Angel (KLD) 35
+1 Urbis Protector (CLU) 79
+1 Nacatl Hunt-Pride (DDH) 20
+1 Knight of the Tusk (M19) 18
+3 Daru Lancer (ONS) 20
+1 Council Guardian (CNS) 15
+1 Spirit of the Hearth (C17) 73
+1 Weathered Bodyguards (TSP) 46
+1 Sentinel of the Eternal Watch (ORI) 30 *F*
+1 Twilight Shepherd (DVD) 11
+2 Takeno, Samurai General (CHK) 46
+1 Dearly Departed (ISD) 9 *F*
+1 Ancestor's Chosen (UMA) 9
+1 Venerable Lammasu (KTK) 28
+1 Arbiter of Knollridge (CM2) 17
+3 Angel of Salvation (MOC) 170
+1 Blazing Archon (RVR) 8
+2 Silent Sentinel (PBNG) 26★ *F*
+1 Ivory Giant (MMA) 19
+1 Pale Wayfarer (SHM) 17
+2 Seraph of the Masses (MOC) 205
+1 Yoked Plowbeast (ALA) 31 *F*
+1 Weathered Wayfarer (LTC) 183
+2 Isamaru, Hound of Konda (CHK) 19
+7 Hundred-Talon Strike (BOK) 8
+1 Empty-Shrine Kannushi (BOK) 2
+1 Starport Security (EOE) 39
+1 Novice Knight (M19) 30
+1 Nova Cleric (ONS) 45
+3 Crawling Chorus (ONE) 8
+1 Dedicated Martyr (ODY) 16
+1 Glint Hawk (SOM) 10
+2 Ardent Recruit (MBS) 2
+1 Town Gossipmonger // Incited Rabble (INR) 46
+1 Akrasan Squire (ALA) 1
+1 Favored Hoplite (THS) 13
+1 Enduring Bondwarden (MOM) 14
+1 Healer's Hawk (FDN) 142
+2 Dragon Hunter (DTK) 10
+5 Mardu Woe-Reaper (FRF) 18
+1 Forum Familiar (MKM) 16
+1 Trade Caravan (HML) 19b
+1 Arcbound Javelineer (MH2) 2
+1 Cheeky House-Mouse // Squeak By (WOE) 7
+1 Leonin Vanguard (FDN) 499
+1 Unholy Officiant (VOW) 41
+1 Miner's Guidewing (LCI) 24
+2 Spurnmage Advocate (JUD) 27
+1 Kitesail Scout (BFZ) 33
+1 Nyxborn Shieldmate (BNG) 21
+1 Resistance Fighter (6ED) 38
+4 Skymarcher Aspirant (RIX) 21
+1 Loyal Sentry (S99) 20
+1 Student of Warfare (ROE) 47
+3 Hada Freeblade (WWK) 7
+1 Hopeful Eidolon (THS) 19 *F*
+1 Expedition Envoy (BFZ) 24 *F*
+2 Herald of Anafenza (KTK) 12
+1 Lagonna-Band Trailblazer (JOU) 14 *F*
+1 Angel's Herald (ALA) 2
+1 Loyal Sentry (DDF) 5
+3 Toolcraft Exemplar (KLD) 32
+1 Dromoka Dunecaster (DTK) 13 *F*
+1 Usher of the Fallen (KHM) 35 *F*
+1 Serra Zealot (USG) 46
+1 Steppe Lynx (ZEN) 36
+3 Soul's Attendant (ROE) 44
+1 Cathedral Sanctifier (DDQ) 3
+1 Honor Guard (STH) 7
+1 Champion of the Parish (ISD) 6
+1 Zack Fair (FIN) 45
+2 Doomed Traveler (2X2) 9 *F*
+1 Dega Disciple (APC) 4
+1 Devoted Hero (S99) 13
+1 Honorable Scout (PLS) 8
+1 Goldmeadow Dodger (LRW) 16
+1 Gavony Trapper (MID) 22 *F*
+1 Netter en-Dal (NEM) 13
+1 Optimistic Scavenger (DSK) 21
+3 Possessed Goat (DSK) 25
+1 Loam Lion (DDH) 5
+2 T.A.P.P.E.R. (UNF) 31
+2 Trapeze Artist (UNF) 32
+1 Savannah Lions (9ED) 41
+1 Sanctum of Tranquil Light (M21) 33
+1 Armored Armadillo (OTJ) 3 *F*
+1 Flourishing Fox (IKO) 13
+1 Goldmeadow Harrier (DDF) 3
+1 Samite Censer-Bearer (FUT) 15
+2 Stormfront Pegasus (W17) 5
+1 Star Pupil (STX) 30
+3 Indebted Spirit (MH3) 31
+1 Infantry Veteran (DDF) 4
+10 Icatian Javelineers (DMR) 9
+1 Rustwing Falcon (M19) 36
+1 Gideon's Lawkeeper (E01) 11
+1 Kor Skyfisher (ZEN) 23
+1 Fencing Ace (RTR) 11
+1 Suture Priest (NPH) 25
+1 Standard Bearer (APC) 18
+1 Sigiled Paladin (ALA) 27
+1 Silvercoat Lion (M13) 35 *F*
+1 Forest (M21) 273
+1 Lightwalker (BBD) 95 *F*
+1 Degavolver (APC) 6
+1 Master of Pearls (KTK) 18
+1 Sigiled Paladin (ALA) 27 *F*
+1 Battlefield Medic (ONS) 9 *F*
+1 Stone Haven Medic (BFZ) 51 *F*
+1 Kor Castigator (BFZ) 35 *F*
+1 Arashin Cleric (FRF) 5 *F*
+1 Aven Squire (M13) 6 *F*
+1 Knight of the Skyward Eye (A25) 19 *F*
+1 Jeskai Student (KTK) 14 *F*
+1 Alabaster Host Sanctifier (MOM) 4 *F*
+1 East-Mark Cavalier (LTR) 9 *F*
+1 Loyal Cathar // Unhallowed Cathar (DKA) 13 *F*
+1 Leonin Snarecaster (THS) 23 *F*
+1 White Orchid Phantom (MH3) 47
+1 Imposing Sovereign (M14) 22
+1 Bladed Ambassador (ONE) 285 *F*
+1 Setessan Battle Priest (THS) 29 *F*
+3 Kazandu Blademaster (ZEN) 16
+1 Auriok Steelshaper (MRD) 4
+1 Sun Sentinel (RIX) 26 *F*
+1 Darklit Gargoyle (CON) 7 *F*
+1 Stonewise Fortifier (JOU) 27 *F*
+1 Kor Outfitter (ZEN) 21
+1 Silverchase Fox (BBD) 106
+2 Wall of Omens (TDC) 138
+1 Lone Missionary (MM3) 14
+1 Ikiral Outrider (ROE) 27
+3 Knight of Cliffhaven (DDP) 5
+3 Ondu Cleric (ZEN) 30
+1 Aven Squire (M13) 6
+2 Leonin Snarecaster (DDN) 4
+2 Arcbound Prototype (MH2) 4
+3 Incisor Glider (ONE) 15
+1 Nyxborn Unicorn (MH3) 37
+1 Guardian of the Great Door (LCI) 16
+1 Neighborhood Guardian (MKM) 339
+2 Sky Crier (SNC) 31
+1 Panicked Bystander // Cackling Culprit (VOW) 28
+1 Daxos, Blessed by the Sun (MUL) 2
+1 Nimble Hobbit (LTR) 23
+1 East-Mark Cavalier (LTR) 9
+1 Fortress Kin-Guard (TDM) 12
+1 Jeskai Barricade (FRF) 15
+1 Wandering Champion (UMA) 42
+3 Consul's Lieutenant (ORI) 11
+2 Angelic Wall (M14) 4
+1 Resolute Reinforcements (DMU) 29
+1 Furious Forebear (TDM) 13
+1 Phyrexian Missionary (DMU) 27
+1 Thousand Moons Crackshot (LCI) 37
+1 Accorder Paladin (MBS) 1
+1 Shrouded Shepherd // Cleave Shadows (WOE) 236
+1 Perimeter Enforcer (MKM) 31
+1 Prairie Dog (OTJ) 24
+1 Bladed Ambassador (ONE) 5
+2 Frostbridge Guard (WOE) 14
+2 Martyr of Dusk (RIX) 14
+1 Benalish Faithbonder (DMU) 7
+1 Knight of the Hokey Pokey (UGL) 6
+1 Errant Doomsayers (TSR) 17
+1 Fear of Surveillance (DSK) 11
+4 Concordia Pegasus (RTR) 8
+6 Samite Healer (10E) 38
+2 Raptor Companion (BBD) 102
+3 Aviary Mechanic (KLD) 6
+2 Cavalry Pegasus (THS) 2 *F*
+5 Knight of the Holy Nimbus (TSR) 23
+3 Cavalry Pegasus (C20) 81
+9 Azorius Arrester (CLU) 54
+6 Anointer Priest (AKH) 3
+8 Leonin Den-Guard (MRD) 9
+5 Alabaster Mage (2XM) 2
+2 Whipcorder (ONS) 60
+2 Traveling Philosopher (THS) 34
+5 Setessan Battle Priest (THS) 29
+4 Jeskai Student (KTK) 14
+3 Catapult Squad (ONS) 11
+3 Disciple of Grace (ONS) 25
+4 Fencing Ace (CMM) 23
+3 Cloistered Youth // Unholy Fiend (ISD) 8
+6 Mandible Justiciar (ONE) 21
+2 Benalish Honor Guard (DOM) 5
+11 Duelist of Deep Faith (ONE) 9
+4 Ainok Bond-Kin (CMM) 7
+5 Audacious Infiltrator (AER) 7
+3 Felidar Cub (FDN) 573
+2 Shimmering Barrier (USG) 50
+2 Trusty Companion (KLD) 33
+2 Swordsworn Cavalier (MOM) 42
+2 Ajani's Sunstriker (CNS) 66
+2 Took Reaper (LTR) 35
+2 Spirited Companion (NEO) 38
+3 Sun-Blessed Guardian // Furnace-Blessed Conqueror (MOM) 38
+3 Konda's Hatamoto (CHK) 31
+6 Auriok Bladewarden (MRD) 3
+3 Oreskos Swiftclaw (M19) 31
+3 Boros Mastiff (DGM) 1
+4 Sword Dancer (8ED) 53
+8 Leonin Squire (5DN) 9
+2 Starlight Invoker (10E) 47
+3 Serra Disciple (DOM) 34
+2 Spectral Rider (ISD) 35
+2 Silvercoat Lion (M13) 35
+5 Reveille Squad (PCY) 18
+8 Ephara's Warden (THS) 10
+4 Dawn Elemental (SCG) 7
+2 Kytheon's Irregulars (ORI) 24
+3 Hundred-Handed One (CN2) 93
+2 Kwende, Pride of Femeref (MUL) 5
+5 Faramir, Field Commander (LTR) 14
+4 Tiller of Flesh (MOM) 44
+4 Knight of Obligation (GTC) 18
+6 Guardian Kirin (MH2) 15
+5 Healer of the Pride (M13) 19
+9 Orthodoxy Enforcer (ONE) 25
+4 Griffin Protector (DMU) 18
+2 Wingmantle Chaplain (TDC) 141
+4 Bola Slinger (MOM) 8
+3 Dapper Shieldmate (SNC) 9
+2 Abzan Battle Priest (MOC) 164
+2 Wax-Wane Witness (BLB) 39
+7 Pillarfield Ox (CNS) 76
+3 Nagao, Bound by Honor (CHK) 36
+5 Seraph of Dawn (CMR) 44
+12 Assault Griffin (GTC) 4
+8 Razorfoot Griffin (M15) 27
+4 Seasoned Marshal (DDF) 15
+4 Loxodon Anchorite (5DN) 10
+6 Sunspire Gatekeepers (DGM) 9
+4 Kami of Old Stone (9ED) 24
+2 Stonehorn Dignitary (M12) 37
+7 Mothrider Samurai (CHK) 34
+4 Griffin Protector (M20) 20
+6 Aven Cloudchaser (10E) 7
+7 Aven Liberator (SCG) 4
+7 Moonlit Strider (MM2) 27
+2 Phantom General (ONC) 85
+14 Kitsune Healer (CHK) 27
+7 Elgaud Inquisitor (DKA) 6
+18 Harsh Deceiver (CHK) 11
+3 Seven-Tail Mentor (NEO) 36
+2 Constricting Sliver (M15) 7
+3 Bulwark Giant (RVR) 11
+5 Argivian Phalanx (DMU) 5
+6 Anointer of Valor (2X2) 6
+2 Angelic Observer (SNC) 1
+7 Gempalm Avenger (DDO) 9
+3 Noble Templar (A25) 25
+3 Winged Shepherd (AKH) 39
+2 Alabaster Host Intercessor (MOM) 3
+3 Apostle of Invasion (ONE) 3
+4 Landscaper Colos (MH2) 18
+7 Voice of the Provinces (DDQ) 23
+9 Soaring Sandwing (LCI) 35
+5 Sunblade Angel (CMM) 61
+3 Salt Road Packbeast (TDM) 23
+3 Conclave Equenaut (DDF) 19
+2 Subjugator Angel (INR) 43
+3 Swooping Talon (LGN) 23
+5 Kami of the Palace Fields (CHK) 24
+8 Silverstorm Samurai (BOK) 22
+3 Goldnight Redeemer (DDQ) 13
+3 Maze Sentinel (DGM) 4
+2 Auriok Survivors (NPH) 3
+2 Grassland Crusader (ONS) 32
+5 War Behemoth (KTK) 29
+4 Ruham Djinn (INV) 35
+2 Angel of Renewal (BFZ) 18
+4 Evangel of Heliod (KHC) 23
+3 Loxodon Mender (MRD) 12
+3 Wayfaring Giant (INV) 44
+2 Sentinel of the Eternal Watch (ORI) 30
+4 Oathsworn Giant (RAV) 27
+2 Samurai Enforcers (CHK) 42
+2 Duskrider Peregrine (TSR) 16
+2 Dearly Departed (MIC) 84
+5 Palisade Giant (RTR) 15
+2 Purity (LRW) 37
+2 Soul of Theros (M15) 34
+6 Archangel (AVR) 5
+6 Glorious Enforcer (MH2) 14
+11 Soul of Migration (MH2) 33
+2 Sky-Blessed Samurai (NEO) 37
+3 Yoked Plowbeast (ALA) 31
+3 Ancestor's Chosen (JUD) 1
+2 Luminate Primordial (GTC) 20
+2 Angel of Retribution (BBD) 86
+2 Kemba's Legion (MBS) 9
+4 Rockcaster Platoon (ALA) 23
+8 Kami of the Honored Dead (BOK) 12
+3 Crowd Favorites (ONS) 15
+7 Caravan Escort (DDP) 3
+2 Lionheart Maverick (DDG) 3
+4 Sanctuary Cat (DKA) 19
+10 Tarkir Duneshaper // Burnished Dunestomper (MOM) 43
+2 Faerie Guidemother // Gift of the Fae (ELD) 274
+3 Sacred Cat (AKH) 27
+6 Kor Duelist (MM2) 22
+3 Kitesail Apprentice (WWK) 10
+3 Thraben Standard Bearer (EMN) 48
+2 Hotshot Mechanic (NEO) 16
+16 Doomed Traveler (CLU) 59
+6 Auriok Transfixer (MRD) 5
+6 Selfless Cathar (M15) 31
+3 Bushi Tenderfoot // Kenzo the Hardhearted (CHK) 2
+4 Deftblade Elite (LGN) 12
+8 Leonin Elder (MRD) 10
+16 Kitsune Diviner (CHK) 26
+3 Devoted Retainer (CHK) 7
+6 Honor Guard (9ED) 20
+2 Valiant Guard (CON) 19
+5 Warclamp Mastiff (M13) 40
+6 Suntail Hawk (9ED) 49
+3 Soulmender (M20) 37
+3 Wall of Hope (LGN) 24
+3 Auriok Glaivemaster (DST) 1
+5 Tundra Wolves (10E) 54
+2 Ghost-Lit Redeemer (SOK) 10
+2 Loyal Pegasus (M20) 28
+5 Cliffside Lookout (BFZ) 20
+4 Martyred Rusalka (GK2) 30
+15 Yoked Ox (M20) 41
+4 Tragic Poet (DOM) 37
+5 Mystic Penitent (ODY) 34
+2 Suntail Hawk (M14) 40
+4 Spurnmage Advocate (CMD) 33
+2 Daru Mender (LGN) 8
+2 Order of the Stars (GPT) 13
+3 Mothrider Patrol (NEO) 30
+4 Savannah Lions (FDN) 146
+3 Pride Guardian (CNS) 77
+15 Elite Vanguard (EMA) 8
+2 Caregiver (RAV) 6
+9 Trained Caracal (RTR) 27
+2 Encampment Keeper (XLN) 11
+3 Foothill Guide (ONS) 29
+11 Tasseled Dromedary (KLD) 30
+5 Frontline Strategist (SCG) 15
+6 Midnight Duelist (AVR) 27
+10 Dutiful Thrull (GTC) 11
+10 Boros Elite (RVR) 10
+9 Mardu Hateblade (KTK) 16
+7 Firehoof Cavalry (KTK) 11
+2 Kinjalli's Caller (XLN) 18
+3 Expedition Envoy (BFZ) 24
+3 Votary of the Conclave (RAV) 35
+5 Snubhorn Sentry (RIX) 23
+4 Swooping Lookout (ONE) 35
+4 Sinew Dancer (ONE) 286
+3 Brokers Initiate (SNC) 5
+4 Mardu Devotee (TDM) 16
+2 Armored Armadillo (OTJ) 3
+4 Clockwork Drawbridge (DMU) 13
+3 Descendant of Storms (TDM) 8
+5 Hunted Witness (GRN) 15
+5 Arcbound Mouser (MH2) 3
+5 Hopeful Eidolon (THS) 19
+2 Eager Cadet (8ED) S1
+4 Gustcloak Runner (ONS) 35
+2 Suntail Hawk (JUD) 28
+7 Lantern Kami (CHK) 32
+3 Plated Sliver (LGN) 19
+13 Esquire of the King (LTR) 13
+3 Ollenbock Escort (VOW) 27
+10 Magitek Infantry (FIN) 25
+4 Market Gnome (LCI) 22
+3 Nesting Bot (DFT) 22
+2 Savannah Lions (DMR) 24
+4 Slumbering Keepguard (WOE) 29
+3 Kor Skyfisher (MM3) 11
+3 Kor Bladewhirl (BFZ) 34
+2 Skyline Scout (GRN) 25
+5 Stalwart Shield-Bearers (ROE) 46
+2 Capashen Knight (M14) 11
+5 Juniper Order Rootweaver (DMU) 22
+2 Norn's Inquisitor (MOM) 29
+4 Samite Herbalist (DMU) 31
+2 Bearer of Glory (TDM) 4
+2 Lifecreed Duo (BLB) 20
+2 Nettle Guard (BLB) 23
+2 Knight of Dawn's Light (DMU) 23
+4 Benalish Sleeper (DMU) 8
+2 Trained Arynx (OTJ) 36
+3 Backup Agent (SNC) 2
+1 Sheltering Light (XLN) 35
+2 Cloudshift (A25) 7
+1 Take Heart (GRN) 28
+1 Veteran's Reflexes (E02) 5
+1 Stand Firm (DDL) 21
+3 Spiritual Visit (SOK) 29
+6 Defiant Strike (KTK) 7
+1 Scent of Jasmine (UDS) 17
+2 Sacred Rites (ODY) 44
+1 Unwanted Remake (DSK) 39
+1 Smite (STH) 17
+1 Blessed Defiance (MID) 5
+1 Blossoming Calm (MH2) 7
+3 Break the Spell (WOE) 5
+1 Bandage (10E) 9
+1 Focus Fire (EOE) 18
+1 Jump Scare (DSK) 17
+3 Now You See Me . . . (UNF) 20
+2 Pull from Eternity (TSP) 35
+1 Rally the Ancestors (FRF) 22
+2 Deicide (JOU) 7
+3 Renounce the Guilds (DGM) 5
+1 Refuse to Yield (SNC) 27
+4 Last Breath (2X2) 15
+2 Resistance Reunited (ONE) 31
+10 Hobbit's Sting (LTR) 20
+3 Battlefield Promotion (2X2) 7
+11 Momentary Blink (DMR) 15
+1 Artillery Blast (DMU) 6
+1 Adamant Will (FDN) 488
+6 Lightfoot Technique (TDM) 14
+8 Cosmium Blast (LCI) 7
+11 Family Reunion (LCI) 13
+1 Dawn Charm (CMR) 371
+5 Osseous Exhale (TDM) 17
+5 Coordinated Maneuver (TDM) 6
+7 Rebellious Strike (TDM) 20
+2 Valorous Stance (FDN) 583
+1 Disenchant (IMA) 15
+1 Gilded Light (MH1) 12
+1 Swords to Plowshares (EMA) 32
+1 Swords to Plowshares (LTC) 178
+1 Elspeth's Smite (FDN) 493
+3 Oteclan Landmark // Oteclan Levitator (LCI) 29
+1 Fleeting Flight (FDN) 13
+1 Wanderer's Intervention (NEO) 41 *F*
+1 Blessed Reversal (8ED) 7
+1 Reprisal (7ED) 33
+1 Reprisal (DDG) 27
+3 Slip On the Ring (LTR) 31
+1 Not on My Watch (MKM) 28
+8 Wing It (MH3) 48
+1 Shelter (ODY) 46
+1 Destroy Evil (DMU) 17
+1 Vengeful Dreams (TOR) 21
+1 Last Breath (THS) 22 *F*
+1 Judge Unworthy (TSR) 21
+4 Wanderer's Intervention (NEO) 41
+1 Guided Strike (IMA) 23
+2 Equal Treatment (TOR) 4
+3 Center Soul (DTK) 8
+4 Echoing Calm (DST) 2
+1 Humble (EMA) 14
+1 Angelsong (ALA) 4
+1 Ephemeral Shields (MOC) 184
+5 Cursebreak (AVR) 14
+1 Renounce (MMQ) 42
+4 Gideon's Reproach (DOM) 19
+1 Graceful Reprieve (MM3) 8
+1 Gallantry (ODY) 23
+1 Dazzling Reflection (OGW) 17
+1 Mighty Leap (OGW) 28
+1 Clear (USG) 7
+1 Aura Extraction (ONS) 5
+1 Pollen Lullaby (CMD) 26
+1 To Arms! (RVR) 30
+1 Bathe in Light (CMA) 6
+1 Fend Off (UDS) 7
+4 Skillful Lunge (DKA) 22
+1 Break of Day (DKA) 3
+3 Artful Maneuver (DTK) 4
+2 Whitesun's Passage (SOM) 27
+2 Hope and Glory (ULG) 9
+1 Benevolent Ancestor (IMA) 12
+3 Benalish Emissary (INV) 5
+1 Warden of the Beyond (M15) 42
+4 Plated Pegasus (TSP) 34
+6 Elite Skirmisher (BNG) 8
+2 Bant Battlemage (ALA) 5
+1 Village Bell-Ringer (MOC) 216
+5 Harvestguard Alseids (JOU) 13
+3 Haazda Snare Squad (DGM) 2
+1 Soulsworn Jury (DIS) 17 *F*
+1 Banisher Priest (MOC) 173
+2 Sergeant-at-Arms (DOM) 32
+1 Makindi Patrol (BFZ) 39 *F*
+2 Aven Mindcensor (FUT) 18
+1 Sanctum Guardian (BRB) 63
+1 Outrider en-Kor (TSR) 30
+1 Eagle of the Watch (ORI) 275
+2 Disposal Mummy (HOU) 9
+6 Lagonna-Band Elder (THS) 21
+1 Pilgrim of Virtue (ODY) 41
+2 Park Bleater (UNF) 21
+1 Aven Flock (9ED) 4
+5 Solitary Camel (HOU) 23
+4 Unwavering Initiate (AKH) 36
+1 Binding Mummy (DRC) 63
+1 Tonic Peddler (MMQ) 54
+1 Ajani's Pridemate (M19) 5
+1 Sungrace Pegasus (M15) 38
+1 Kithkin Shielddare (SHM) 10
+1 Silver Knight (SCG) 23
+2 Hallowed Healer (ODY) 25
+2 Perimeter Sergeant (IKO) 27
+5 Herald of the Fair (KLD) 18
+1 Desperate Sentry (EMN) 21
+1 Ghirapur Osprey (AER) 20
+8 Mardu Hordechief (KTK) 17
+3 Norika Yamazaki, the Poet (NEO) 31
+6 Flensing Raptor (ONE) 12
+5 Annex Sentry (ONE) 2
+1 Blade Instructor (GRN) 1
+1 Hallowed Spiritkeeper (VOC) 88
+1 Territorial Hammerskull (XLN) 41
+10 Nomad Decoy (DMR) 17
+2 Wild Pack Squad (SPM) 23
+8 Sunspire Griffin (RTR) 25
+1 Oketra's Avenger (HOU) 17
+1 Loyal Cathar // Unhallowed Cathar (DKA) 13
+1 Sentinel Sliver (M14) 30
+2 Pilgrim of Justice (ODY) 40
+3 Those Who Serve (AKH) 32
+2 Summon: Choco/Mog (FIN) 35
+1 Elder Cathar (DDQ) 9
+1 Selfless Samurai (NEO) 312
+1 Village Bell-Ringer (LTC) 181
+1 Gilraen, Dúnedain Protector (LTC) 13
+1 Frontline Medic (LTC) 169
+1 Benalish Lancer (DDG) 12
+2 Inspiring Paladin (FDN) 18
+1 Inspiring Paladin (FDN) 18 *F*
+3 Venerable Monk (8ED) 55
+11 Pearlspear Courier (ONS) 48
+1 Intrepid Hero (8ED) 26
+2 Imperial Subduer (NEO) 19
+1 Plant a Sapling // Fully-Grown Treefolk (MB2) 582
+1 Blade-Blizzard Kitsune (NEO) 331 *F*
+8 Attentive Skywarden (MOM) 7
+1 Kithkin Billyrider (MOM) 24
+1 Steelform Sliver (M14) 38
+1 Sigiled Sentinel (MOM) 37
+1 Blade-Blizzard Kitsune (NEO) 331
+2 Golden-Tail Disciple (NEO) 15
+5 Auramancer (DSC) 97
+1 Twilight Drover (TDC) 136
+2 Apex Hawks (CNS) 67
+3 Shinen of Stars' Light (SOK) 28
+1 Dawn Gryff (EMN) 19
+1 Ashe, Princess of Dalmasca (FIN) 7
+2 Imperial Recovery Unit (NEO) 18
+1 Dragon Bell Monk (IMA) 17
+1 Helica Glider (IKO) 15
+6 Kabuto Moth (CHK) 20
+1 Rayblade Trooper (EOE) 30
+1 Intrepid Hero (7ED) 22
+2 Gideon's Avenger (M12) 17
+1 Soul Sculptor (USG) 53
+1 Eidolon of Countless Battles (WOC) 66
+2 Sage of the Skies (TDM) 22
+1 Mirran Crusader (MM2) 25
+2 Sunseed Nurturer (ALA) 29
+10 Seraph of New Capenna // Seraph of New Phyrexia (MOM) 36
+1 Lantern Scout (PBFZ) 37s *F*
+1 Zealous Inquisitor (SCG) 27 *F*
+2 Archetype of Courage (BNG) 4
+1 Benalish Veteran (M12) 10 *F*
+1 Sunseed Nurturer (ALA) 29 *F*
+5 Mesa Enchantress (M10) 20
+1 Paladin en-Vec (10E) 32
+1 Oriss, Samite Guardian (FUT) 28
+3 Guardian of the Guildpact (DIS) 10
+3 Scholar of Athreos (THS) 28
+2 Rhet-Crop Spearmaster (AKH) 26
+1 Kitsune Loreweaver (SOK) 17
+1 Avacynian Priest (INR) 12
+1 Sunspear Shikari (C17) 75
+1 Thraben Valiant (DDL) 6
+3 Kami of Ancient Law (MM2) 21
+1 Unruly Mob (MID) 40
+1 Samite Healer (7ED) 38
+1 Syndic of Tithes (CLU) 74
+3 Kitsune Palliator (BOK) 14
+2 Affa Protector (OGW) 14
+3 Knight of Dawn (TMP) 26
+2 Troubled Healer (PCY) 27
+1 Faithful Squire // Kaiso, Memory of Loyalty (BOK) 3
+1 Kor Hookmaster (MM3) 10
+2 Gavony Ironwright (DKA) 9
+1 Cloister Gargoyle (AFR) 302
+4 Imperial Subduer (NEO) 310
+2 Norika Yamazaki, the Poet (NEO) 311
+1 Ballot Broker (CN2) 13
+1 Seedpod Caretaker (MOM) 325
+1 Dauntless Aven (HOU) 7
+1 Wild Griffin (CN2) 99
+1 Blade Splicer (NPH) 4
+1 Fledgling Griffin (WWK) 5
+7 Ajani's Presence (JOU) 2
+7 Purify the Grave (C19) 71
+4 Festival of the Guildpact (RAV) 17
+7 Rain of Blades (M13) 28
+9 Gods Willing (CLU) 63
+5 Charge (DOM) 10
+3 Pay No Heed (DDL) 19
+3 Reaping the Rewards (EXO) 16
+3 Funeral Pyre (JUD) 10
+2 Harm's Way (DDG) 23
+3 Faith's Shield (DKA) 7
+3 Slash of Talons (XLN) 38
+11 Condemn (RVR) 14
+3 Wojek Siren (RAV) 37
+4 Excise (PCY) 8
+3 Enshrouding Mist (ORI) 13
+3 Mortal's Ardor (DDO) 19
+11 Demystify (10E) 14
+3 Demystify (M12) 13
+3 Demystify (ONS) 24
+3 Piety Charm (ONS) 49
+8 Unified Strike (ONS) 58
+5 Demystify (XLN) 8
+8 Built to Last (KLD) 7
+7 Moment of Triumph (FDN) 500
+7 Erase (KTK) 9
+8 Shielded Passage (GTC) 24
+10 Smite (GTC) 25
+2 Djeru's Resolve (AKH) 11
+3 Lithomancer's Focus (BFZ) 38
+2 Righteous Blow (GRN) 23
+4 Reward the Faithful (SCG) 22
+2 Light the Way (NEO) 24
+2 Regent's Authority (NEO) 32
+2 Alley Evasion (AER) 6
+2 Reciprocate (DDG) 24
+10 Blessed Breath (CHK) 1
+5 Righteous Blow (AVR) 34
+8 Quiet Purity (CHK) 39
+6 Holy Day (9ED) 18
+8 Mending Hands (9ED) 29
+9 Healing Salve (DVD) 14
+2 Erase (M13) 13
+2 Swift Justice (DDN) 62
+2 Righteousness (DDL) 20
+9 Ethereal Haze (CHK) 9
+2 Valor Made Real (CNS) 86
+2 Hallow (DST) 4
+4 Healing Grace (DOM) 20
+3 Stave Off (DDN) 61
+13 You're Not Alone (FIN) 44
+6 Steer Clear (OTJ) 31
+2 Shieldmate's Blessing (ZEN) 35
+8 Acrobatic Leap (LCI) 2
+6 Archon's Glory (WOE) 2
+2 Arrester's Zeal (RVR) 4
+2 Coordinated Barrage (MOR) 7
+8 Escape from Orthanc (LTR) 12
+4 Feeling of Dread (ISD) 14
+5 Glorious Charge (M13) 15
+7 Urgent Exorcism (ISD) 40
+4 Soul's Grace (ALA) 28
+5 Angelic Intervention (MOM) 5
+4 Disenchant (7ED) 13
+5 Compleat Devotion (ONE) 7
+2 Purge (DST) 12
+3 Auspicious Arrival (MKM) 5
+2 Revelation of Power (SNC) 28
+4 Leave No Trace (RAV) 23
+3 Take Up the Shield (DMU) 35
+5 Kellan's Lightblades (WOE) 18
+9 Plunge into Winter (WOE) 22
+4 Show of Valor (M14) 33
+18 Last Breath (THS) 22
+6 Hold at Bay (BNG) 18
+7 Momentary Blink (2X2) 20
+4 Aerial Boost (MOM) 2
+6 Raise the Alarm (MD1) 8
+3 Lost to Legend (LTR) 22
+3 Celestial Flare (ORI) 8
+4 Celestial Purge (MM2) 11
+4 Reprisal (6ED) 37
+5 Raise the Alarm (CMR) 41
+7 Battlewise Valor (THS) 1
+2 Unbounded Potential (CMM) 67
+6 Dawn Charm (PLC) 4
+2 Crumb and Get It (BLB) 8
+4 Boon of Safety (SNC) 4
+6 Chain of Silence (ONS) 12
+5 Test of Faith (MMA) 33
+2 Mighty Leap (CLU) 66
+4 Spare from Evil (ISD) 34
+2 Sonar Strike (BLB) 32
+6 Impeccable Timing (AKH) 18
+4 Wipe Clean (SCG) 26
+3 Honorable Passage (TSB) 9
+10 Impeccable Timing (KLD) 19
+13 Aerial Maneuver (GTC) 1
+3 Razor Barrier (DDF) 26
+2 Moment of Heroism (M20) 30
+5 Terashi's Verdict (BOK) 27
+2 Tandem Tactics (CLU) 76
+4 Abzan Advantage (FRF) 2
+6 Feat of Resistance (M21) 19
+8 Redeem (8ED) 37
+2 Liberate (INV) 21
+6 Peace and Quiet (ULG) 17
+6 Gideon's Reproach (BFZ) 30
+9 Pressure Point (KLD) 23
+4 In Oketra's Name (AKH) 19
+5 Mighty Leap (M19) 28
+4 Djeru's Renunciation (HOU) 11
+4 Last Breath (MMQ) 27
+4 Otherworldly Journey (MM2) 30
+4 Pressure Point (FRF) 21
+5 Roar of the Kha (MRD) 18
+3 Allay (EXO) 1
+2 Samite Ministration (INV) 36
+2 Zealous Strike (CN2) 101
+6 Adamant Will (DOM) 2
+10 Candles' Glow (CHK) 5
+4 Humble (USG) 18
+2 Redeem the Lost (MOR) 21
+3 Ray of Revelation (DKA) 17
+2 Lead Astray (JUD) 14
+2 Samurai of the Pale Curtain (CHK) 43
+2 Master Decoy (DDN) 50
+2 Moonlight Geist (AVR) 29
+5 Shield Dancer (PCY) 23
+5 Shadow Glider (BFZ) 47
+4 Court Street Denizen (CMR) 17
+5 Emancipation Angel (UMA) 15
+3 Voiceless Spirit (ISD) 42
+5 Niblis of the Mist (DKA) 15
+7 Basilica Guards (RVR) 7
+6 Dawning Purist (ONS) 22
+3 Zhalfirin Commander (DDG) 13
+5 Glint-Sleeve Artisan (2XM) 18
+2 Intrepid Hero (M13) 20
+3 Lantern Scout (BFZ) 37
+5 Sandsteppe Outcast (FRF) 25
+9 Protective Parents (WOE) 24
+4 Angelic Page (DVD) 3
+6 Crossbow Infantry (9ED) 12
+3 Glory Seeker (9ED) 17
+7 Poised Practitioner (TDM) 18
+4 Magus of the Tabernacle (PLC) 8
+6 Proud Pack-Rhino (MH3) 41
+6 Leonin Lightbringer (ONE) 20
+3 Holy Cow (OTJ) 16
+6 Pegasus Courser (M19) 32
+7 Legion Conquistador (RIX) 11
+11 Porcelain Legionnaire (NPH) 19
+7 Kitsune Blademaster (CHK) 25
+6 Skyhunter Prowler (10E) 42
+17 Kitsune Riftwalker (CHK) 29
+14 Pious Kitsune (CHK) 38
+6 Split-Tail Miko (BOK) 23
+7 Standing Troops (8ED) 48
+2 Venerable Monk (DVD) 5
+5 Kitsune Bonesetter (SOK) 15
+2 Moonwing Moth (SOK) 20
+7 Waxmane Baku (MM2) 38
+5 D'Avenant Healer (TSP) 11
+6 Farbog Explorer (AVR) 21
+2 Tallowisp (BOK) 25
+5 Attended Knight (MM3) 1
+8 Silent-Chant Zubera (CHK) 45
+2 Masako the Humorless (CHK) 33
+2 Guardians of Akrasa (M13) 18
+17 Observant Alseid (THS) 24
+9 Selesnya Sentry (RTR) 21
+10 Stern Judge (TOR) 16
+7 Kemba's Skyguard (SOM) 13
+3 Crusader of Odric (INR) 18
+6 Fiend Hunter (INR) 22
+4 Skyhunter Cub (MRD) 21
+5 Mystic Crusader (ODY) 33
+2 Banisher Priest (F14) 3 *F*
+4 Fabled Hero (THS) 12
+3 Seller of Songbirds (CLU) 72
+3 War Priest of Thune (EMA) 35
+14 Wingbeat Warrior (LGN) 29
+3 Assault Griffin (M12) 8
+8 Salt Road Patrol (KTK) 21
+6 Abzan Skycaptain (FRF) 4
+1 Pillarfield Ox (M14) 28
+2 Razorfoot Griffin (8ED) 36
+1 Seasoned Marshal (9ED) 42
+7 Gustcloak Skirmisher (ONS) 38
+1 Taj-Nar Swordsmith (MRD) 27
+2 Dutiful Servants (HOU) 12
+3 Sparring Mummy (AKH) 29
+6 Seraph of Dawn (AVR) 35
+2 Parhelion Patrol (GRN) 22
+1 Blessed Orator (ODY) 12
+2 Champion of Arashin (DTK) 9
+1 Ballista Squad (MMQ) 5
+1 Wall of Swords (7ED) 55
+1 Doubtless One (ONS) 27
+5 Courier Griffin (BFZ) 21
+1 Seasoned Marshal (7ED) 40
+3 Crude Rampart (ONS) 17
+3 Kinsbaile Borderguard (MOR) 14
+1 Sunscape Battlemage (DDE) 40
+1 Haunted Angel (APC) 12
+1 Zealous Inquisitor (9ED) 57
+1 Misthoof Kirin (DTK) 25
+1 Stalwart Aven (ORI) 32
+2 Nomad Decoy (ODY) 37
+1 Wispmare (LRW) 48
+3 Griffin Sentinel (M12) 21
+1 Saltfield Recluse (MMA) 27
+2 Brago's Representative (CNS) 14
+1 Devout Chaplain (AVR) 17
+2 Phyrexian Censor (MOM) 31
+1 Warlord's Elite (BRO) 32
+1 Auramancer (ORI) 5
+2 D'Avenant Trapper (DOM) 11
+2 Gustrider Exuberant (ALA) 13
+1 Emissary of Hope (DST) 3
+1 Zhalfirin Commander (TSB) 18
+1 Gore Vassal (MBS) 7
+1 Cho-Arrim Legate (MMQ) 10
+1 Soltari Lancer (TMP) 44
+1 Pegasus Charger (USG) 30
+1 Palace Guard (M11) 24
+1 Drogskol Shieldmate (EMN) 22
+1 Lawbringer (NEM) 10
+1 Guardians of Akrasa (ALA) 12
+1 Graceblade Artisan (DTK) 20
+1 Paragon of the Amesha (CON) 14
+3 Inside Source (MKM) 19
+2 Rising Populace (RVR) 25
+3 Join Forces (DMU) 21
+5 Citizen's Arrest (DMU) 11
+1 Ghostblade Eidolon (BNG) 12
+1 Monk Idealist (USG) 20
+1 Healer's Flock (MH2) 16
+2 Watcher of the Roost (KTK) 30
+3 Abzan Falconer (KTK) 2
+2 Knight of Doves (WOE) 19
+1 Icatian Crier (TSP) 23
+1 Éowyn, Lady of Rohan (LTR) 10
+3 Midnight Guard (M15) 20
+1 Rosie Cotton of South Lane (LTR) 27
+1 Mouse Trapper (BLB) 22
+3 Blessed Spirits (ORI) 7
+1 Emancipation Angel (AVR) 19
+1 Chapel Geist (DDQ) 5
+1 Noble Vestige (ZEN) 29
+3 Kor Hookmaster (ZEN) 20
+1 Transcendent Master (ROE) 51
+1 Kor Sanctifiers (ZEN) 22
+1 Crusader of Odric (M13) 10
+4 Inventive Wingsmith (OTJ) 17
+1 Haazda Officer (RNA) 10
+1 Mesa Enchantress (DMR) 14
+1 Marble Gargoyle (MH2) 21 *F*
+1 Nightwind Glider (MMQ) 31
+1 Ministrant of Obligation (RVR) 23
+1 Eastfarthing Farmer (LTR) 8 *F*
+1 Bygone Bishop (CLB) 689
+1 Bastion Enforcer (AER) 8
+1 Exosuit Savior (EOE) 16
+1 Blade-Blizzard Kitsune (NEO) 5
+2 Benalish Knight (10E) 11
+1 Dauntless Cathar (A25) 10
+1 Shieldmage Advocate (JUD) 22
+2 Disciple of Kangee (PLS) 3
+1 Pearled Unicorn (5ED) 50
+1 Zealot il-Vec (TSP) 47 *F*
+1 Wild Griffin (10E) 59
+1 Cursed Courtier (WOE) 9 *F*
+1 Celestus Sanctifier (MID) 12 *F*
+3 Cursed Courtier (WOE) 9
+11 Solstice Zealot (MH3) 43
+1 Thousand Moons Infantry (LCI) 38 *F*
+1 Trusted Pegasus (CLU) 77
+11 Thousand Moons Infantry (LCI) 38
+1 Vengeful Townsfolk (OTJ) 37 *F*
+1 Mine Bearer (PCY) 16
+2 Celestial Crusader (DDF) 14
+3 Gustcloak Sentinel (ONS) 37
+4 Tah-Crop Elite (AKH) 31
+2 Paladin of the Bloodstained (XLN) 25
+2 Sanguine Glorifier (RIX) 20
+4 Mausoleum Guard (ISD) 20
+8 Trap Runner (MMQ) 55
+5 Fiend Hunter (ISD) 15
+3 Banisher Priest (M14) 7
+5 Dragon Bell Monk (FRF) 10
+4 Makindi Patrol (BFZ) 39
+2 Skyhunter Prowler (5DN) 15
+4 Slith Ascendant (MRD) 23
+4 Wingsteed Rider (THS) 36
+3 Legion Conquistador (XLN) 20
+6 Basilica Guards (GTC) 5
+2 Benalish Veteran (M12) 10
+5 Gustcloak Harrier (ONS) 34
+5 Daru Healer (ONS) 19
+4 Zealous Inquisitor (SCG) 27
+8 Court Street Denizen (GTC) 8
+3 Chapel Geist (ISD) 7
+3 Whipgrass Entangler (LGN) 26
+5 Glint-Sleeve Artisan (KLD) 17
+2 Eagle of the Watch (JOU) 9
+3 Pegasus Courser (DOM) 29
+9 Seller of Songbirds (RTR) 22
+4 Griffin Sentinel (M14) 20
+8 Priests of Norn (MBS) 16
+3 Loxodon Line Breaker (M19) 24
+4 Aven Trailblazer (CON) 4
+2 Auramancer (M14) 6
+11 Glorifier of Suffering (LCI) 15
+2 Mischievous Pup (FDN) 144
+5 Vengeful Townsfolk (OTJ) 37
+2 Mage's Attendant (SNC) 21
+7 Marble Gargoyle (MH2) 21
+4 Gathering Throng (SNC) 13
+3 Cleaving Skyrider (DMU) 12
+2 Charismatic Vanguard (DMU) 10
+7 Stockpiling Celebrant (WOE) 32
+5 Gallant Pie-Wielder (WOE) 15
+2 Militia Bugler (2X2) 19
+3 Chieftain en-Dal (NEM) 4
+7 Savior of the Sleeping (WOE) 28
+7 Argivian Cavalier (DMU) 4
+3 Intrepid Rabbit (BLB) 17
+2 Mesa Cavalier (DMU) 26
+2 Envoy of the Ancestors (MH3) 23
+14 Gaelicat (FIN) 22
+2 Thistledown Players (BLB) 35
+2 Zhalfirin Lancer (MOM) 45
+3 Wingsteed Rider (2X2) 35
+2 Woodland Acolyte // Mend the Wilds (WOE) 241
+3 Auramancer (M12) 9
+4 Knighted Myr (MH2) 17
+3 Makindi Shieldmate (ZEN) 26
+5 Elder Cathar (ISD) 12
+2 Diving Griffin (8ED) 17
+3 Griffin Sentinel (M20) 21
+2 Cult Healer (DSK) 2
+5 Ministrant of Obligation (CMM) 43
+7 Mischievous Pup (LCI) 25
+9 Errand-Rider of Gondor (LTR) 11
+10 Eastfarthing Farmer (LTR) 8
+4 Envoy of Okinec Ahau (LCI) 11
+5 Tempest Hawk (TDM) 31
+11 Vigilant Sentry (DMR) 33
+3 Jetpack Janitor (UNF) 15
+1 Stand Firm (5DN) 17
+1 Terashi's Verdict (BOK) 27 *F*
+1 Momentary Blink (TSP) 29
+1 Tandem Tactics (BFZ) 52
+1 Zealous Strike (AVR) 41
+1 Mighty Leap (M12) 26
+1 Thraben Charm (MH3) 45
+3 Celestial Purge (M11) 9
+4 A Good Day to Pie (UNF) 12
+1 Rhystic Shield (PCY) 20
+1 Rebellious Strike (TDM) 20 *F*
+1 Shield Wall (7ED) 44
+1 Curtain of Light (SOK) 6
+1 Plow Through Reito (SOK) 22
+1 Summary Judgment (RVR) 27
+3 Shelter (CMM) 56
+1 Lightfoot Technique (TDM) 14 *F*
+1 Disenchant (CN2) 82
+3 Rest for the Weary (WWK) 18
+1 Repel the Abominable (EMN) 38
+1 Unexpectedly Absent (C13) 25
+1 Flicker of Fate (J22) 56
+1 Aura Blast (PLS) 1
+1 Disenchant (TMP) 16
+2 Divine Arrow (IKO) 9
+1 Mighty Leap (M11) 22
+1 Battle Menu (FIN) 9 *F*
+4 Hat Trick (UNF) 13
+1 Make a Stand (OGW) 26
+1 Afterlife (CMD) 2
+1 Warrior's Honor (10E) 58
+3 Orim's Thunder (APC) 15
+1 Tempest of Light (9ED) 50
+1 Borrowed Grace (EMN) 14
+1 Warrior's Honor (9ED) 53
+3 Kill Shot (SNC) 19
+1 Rootborn Defenses (MM3) 21 *F*
+1 Dominaria's Judgment (PLS) 4
+4 Abolish (PCY) 1
+1 White Sun's Zenith (MBS) 19
+1 Sandblast (HOU) 20 *F*
+1 Safe Passage (M10) 28
+2 Oblation (ONS) 46
+2 Lapse of Certainty (CON) 9
+3 Bold Defense (ZEN) 3
+2 Hold the Line (CHK) 13
+2 Chastise (8ED) 9
+1 Spectral Procession (DDK) 26
+2 Rootborn Defenses (RVR) 26
+1 Restrain (INV) 30
+1 Spontaneous Flight (IKO) 33
+1 Topple the Statue (WAR) 35
+1 Fortify (TSR) 18
+1 Kor Chant (CNS) 73
+3 Encircling Fissure (BFZ) 23
+2 Afterlife (MMQ) 1
+1 Invoke the Divine (DOM) 22
+1 Reviving Dose (CN2) 97
+1 Choking Fumes (MBS) 4
+1 Devouring Light (RAV) 13
+1 Sandblast (FRF) 24
+1 Break Ties (MH2) 8 *F*
+1 Eerie Interference (WOE) 12 *F*
+1 Crib Swap (LRW) 11
+1 Inspirit (9ED) 22
+1 Auron's Inspiration (FIN) 8 *F*
+1 Second Breakfast (LTR) 29 *F*
+1 Boros Fury-Shield (RAV) 5
+1 Skywhaler's Shot (CMR) 46
+1 Second Breakfast (LTR) 480 *F*
+1 Rebuke (BBD) 103
+1 Withstand (GPT) 21
+4 Leap of Faith (AVR) 26
+1 Dismantling Blow (INV) 14
+1 Blinding Beam (DDF) 28
+1 Steeling Stance (DIS) 18
+7 Inspired Charge (MOM) 19
+3 Smite the Monstrous (ISD) 33
+5 Aether Shockwave (SOK) 1
+2 Chastise (9ED) 9
+7 Abuna's Chant (5DN) 1
+2 Angel's Mercy (M13) 3
+10 Defensive Maneuvers (ONS) 23
+1 Spirit Flare (TOR) 15
+15 Slash of Light (FIN) 32
+2 Take Up the Shield (OTJ) 34
+3 Ephemeral Shields (M15) 11
+3 Pollen Lullaby (LRW) 36
+2 Carom (RVR) 12
+3 Raise the Alarm (MRD) 16
+3 Razor Barrier (MRD) 17
+7 Remedy (DMR) 22
+2 Moment of Heroism (ISD) 24
+3 Call to Glory (CHK) 4
+2 Otherworldly Journey (CHK) 37
+2 Show of Valor (M13) 34
+2 Duty Beyond Death (TDM) 10
+4 Riot Control (DGM) 6
+2 Aven Warcraft (JUD) 2
+7 Safe Passage (M13) 30
+6 Metal Fatigue (DST) 8
+13 Rootborn Defenses (RTR) 19
+2 Fortify (M14) 19
+5 Akroma's Blessing (ONS) 1
+5 Armed Response (5DN) 2
+3 Charge of the Mites (ONE) 6
+5 Stall for Time (DMU) 34
+2 Honor's Reward (FRF) 14
+7 Vanish into Eternity (ONE) 36
+3 Cut Short (MOM) 10
+2 Scrollshift (MOM) 34
+12 Ray of Dissolution (THS) 27
+3 Midnight Haunting (ISD) 22
+8 Acrobatic Maneuver (KLD) 1
+15 Sunfire Balm (ONS) 56
+3 Waylay (USG) 56
+5 Kill Shot (KTK) 15
+7 Inspirit (ONS) 41
+3 Wing Shards (SCG) 25
+6 Break Ties (MH2) 8
+5 Renewed Faith (ONS) 50
+2 Devouring Light (RVR) 15
+3 Eerie Interference (WOE) 12
+8 Moment of Valor (WOE) 20
+8 Rebuke (ISD) 29
+9 Second Breakfast (LTR) 29
+2 Make Your Move (MKM) 22
+2 Rally the Peasants (ISD) 28
+2 Vanquish (5DN) 20
+8 Avenging Arrow (RTR) 4
+14 Astral Steel (SCG) 2
+9 Radiant's Judgment (DMR) 21
+9 Renewed Faith (DMR) 23
+2 Renewed Faith (DMR) 23 *F*
+12 Orim's Thunder (DMR) 18
+4 Blinding Beam (MRD) 7
+3 Dauntless Onslaught (THS) 6
+3 Blinding Beam (MMA) 7
+2 Ritual of Rejuvenation (XLN) 32
+3 Pillar of Light (M15) 24
+6 Decommission (AER) 16
+3 Master's Call (MBS) 13
+3 Bar the Door (DKA) 2
+3 Invoke the Divine (M19) 16
+3 Guardians' Pledge (M12) 22
+3 Forsake the Worldly (AKH) 13
+3 Make Your Move (FDN) 143
+5 Auron's Inspiration (FIN) 8
+2 Radiant's Judgment (ULG) 22
+2 Renewed Faith (DMR) 269
+3 Divine Verdict (W17) 1
+4 Solidarity (8ED) 46
+1 Armament of Nyx (JOU) 4 *F*
+1 Glorious Anthem (7ED) 17
+1 Luminous Bonds (GRN) 21 *F*
+1 Guardian Zendikon (CNS) 71 *F*
+1 Pariah (CN2) 95
+1 Temporary Lockdown (DMU) 36
+1 Luminous Bonds (GRN) 21
+1 Luminous Bonds (M19) 25
+1 Armament of Nyx (JOU) 4
+1 Aura Fracture (PCY) 2
+1 Dreadful Apathy (THB) 11
+2 Stasis Snare (BFZ) 50
+1 The Princess Takes Flight (WOE) 23
+2 Personal Sanctuary (M12) 30
+4 Abiding Grace (H2R) 1
+1 Makeshift Binding (MKM) 23
+3 Lightform (FRF) 16
+1 Ghostly Possession (CN2) 85
+1 Tattoo Ward (ODY) 54
+1 Caught in the Brights (AER) 10
+1 Oblivion Ring (ALA) 20
+1 Animal Boneyard (ODY) 4
+2 Arrest (SOM) 2
+1 Lashknife Barrier (PLS) 9
+3 Prison Term (SHM) 18
+1 Dega Sanctuary (APC) 5
+1 Trapped in the Screen (DSK) 36
+1 Sanctuary Lockdown (IKO) 28
+1 Invasion of Belenon // Belenon War Anthem (MOM) 20
+3 Griffin Guide (DMR) 8
+3 Due Diligence (MKM) 14
+4 Intercessor's Arrest (NEO) 20
+3 Sigarda's Imprisonment (VOW) 35
+1 Unquestioned Authority (JUD) 31
+1 Arrest (MMQ) 4
+3 Heart of Light (BOK) 6
+1 Omen of the Sun (THB) 30
+4 Bat Colony (LCI) 5
+4 The Fall of Lord Konda // Fragment of Konda (NEO) 12
+3 Solitary Sanctuary (WOE) 30
+3 Grand Entryway // Elegant Rotunda (DSK) 15
+1 Grand Entryway // Elegant Rotunda (DSK) 15 *F*
+1 Surprise Party (UNF) 29
+2 Get Your Head in the Game (UNF) 10
+1 Mystical Tether (OTJ) 19
+1 Curse of the Forsaken (C13) 8
+2 Guardian's Magemark (GPT) 8
+1 Makeshift Binding (MKM) 290
+1 Heart of Light (10E) 19
+1 Mystical Tether (OTJ) 19 *F*
+1 Case of the Pilfered Proof (MKM) 9
+2 Seal of Cleansing (MH2) 264
+4 Charitable Levy (MH3) 21
+1 Charitable Levy (MH3) 21 *F*
+1 Angelic Gift (BFZ) 19
+2 Eland Umbra (ROE) 19
+2 Planar Disruption (ONE) 28
+1 Intangible Virtue (ISD) 19
+1 Nimbus Wings (ZEN) 28
+1 Weight of Conscience (MOR) 28
+1 Michiko's Reign of Truth // Portrait of Michiko (NEO) 29
+1 Serra Bestiary (HML) 15
+1 Indomitable Will (CHK) 17 *F*
+1 Circle of Protection: Red (8ED) 13
+1 Circle of Protection: Black (8ED) 10
+1 Ajani's Mantra (DDH) 22
+1 Holy Strength (M10) 15
+1 Guildscorn Ward (GTC) 15
+1 Ajani's Mantra (M11) 2
+1 Spirit Link (8ED) 47
+1 Holy Strength (8ED) 24
+1 Case of the Gateway Express (MKM) 8
+1 Convalescence (EXO) 5
+1 Absolute Law (USG) 2
+2 Mastery of the Unseen (FRF) 19
+1 Suspension Field (F15) 4 *F*
+1 Sacred Ground (8ED) 39
+1 Mark of Asylum (CON) 10
+1 Serra's Blessing (9ED) 44
+1 Forced Worship (NPH) 11
+1 Divine Favor (M12) 14
+1 Time of Heroes (ROE) 49
+1 Pacifism (DTK) 29
+1 Hallowed Ground (ICE) 29
+2 Pledge of Loyalty (INV) 24
+1 Sacred Ground (STH) 12
+1 Suppression Field (RAV) 31
+2 Grasp of the Hieromancer (ORI) 15
+1 Divine Favor (M13) 11
+1 Peace of Mind (EMN) 36
+1 Font of Vigor (JOU) 11
+1 Ordeal of Heliod (THS) 25
+1 Circle of Protection: Black (7ED) 6
+1 Inviolability (MMQ) 23
+5 Suspension Field (KTK) 25
+1 Petrify (LCI) 30
+1 Dog Umbra (MH3) 22
+1 Rune of Protection: Artifacts (USG) 35
+1 Cooped Up (WOE) 8
+1 Pacifism (DVD) 17
+1 Reverse the Sands (CHK) 41
+1 Chant of Vitu-Ghazi (RAV) 7
+1 Storm Herd (GPT) 19
+1 Heroes Remembered (PLC) 7
+4 The Crystal's Chosen (FIN) 14
+1 The Crystal's Chosen (FIN) 14 *F*
+1 Imperial Oath (NEO) 17 *F*
+3 Vanquish the Foul (THS) 35
+3 Triplicate Spirits (M15) 40
+1 Kirtar's Wrath (CMM) 35
+1 Vanquish the Foul (THS) 35 *F*
+1 Purify (ULG) 19
+1 Planar Outburst (BFZ) 42
+1 Conqueror's Pledge (ZEN) 8
+1 Fumigate (KLD) 15
+1 March of Souls (PLS) 10
+1 Iona's Judgment (WWK) 8
+1 Visions of Glory (LTC) 182
+1 Park Re-Entry (UNF) 22
+1 Visions of Glory (MIC) 70
+1 Repair and Recharge (BRO) 24
+1 Buy Your Silence (SNC) 6 *F*
+2 Main Event Horizon (UNF) 19
+5 Wanderer's Strike (CMM) 69
+2 Settle Beyond Reality (2X2) 30 *F*
+1 Increasing Devotion (LTC) 171
+6 Saltblast (PLC) 15
+11 Now for Wrath, Now for Ruin! (LTR) 24
+1 Aerith Rescue Mission (FIN) 5 *F*
+1 Dawn to Dusk (BNG) 6
+1 Windborne Charge (ZEN) 38
+1 Divine Reckoning (ISD) 10
+1 Resurrection (TSB) 12
+1 Day of Judgment (ZEN) 9
+1 Presence of the Wise (SOK) 23
+3 Late to Dinner (MH2) 329
+1 Invoke Justice (NEO) 21
+1 Path of Peace (USG) 29
+2 Refurbish (KLD) 25
+1 Allied Reinforcements (OGW) 15
+1 Unified Front (BFZ) 53
+1 Bound in Silence (FUT) 20
+1 Hoofprints of the Stag (LRW) 21
+2 Shields of Velis Vel (LRW) 39
+3 Angelic Blessing (10E) 3
+1 Timely Reinforcements (M12) 40
+1 Kayla's Reconstruction (PBRO) 10p
+2 Excommunicate (ALA) 11
+1 Solemn Offering (M15) 33
+1 Shoulder to Shoulder (OGW) 34
+1 Blinding Light (INV) 9
+1 Rousing of Souls (CNS) 19
+2 Marshaling Cry (FUT) 13
+1 Solemn Offering (M10) 33
+1 Arm the Cathars (VOW) 3
+1 Warrior's Charge (POR) 38
+1 Survival Cache (C13) 23
+3 Queen's Commission (XLN) 29
+2 Terashi's Grasp (MMA) 32
+1 Excommunicate (M11) 14 *F*
+1 Queen's Commission (XLN) 29 *F*
+1 Recommission (BRO) 22
+1 Banishing Slash (NEO) 3
+4 Revoke Existence (SOM) 18
+1 Return Triumphant (WOE) 26
+1 Clowning Around (UNF) 6
+3 Leading Performance (UNF) 18
+1 Sunset Revelry (LTC) 177
+1 Sacred Nectar (9ED) 38
+3 Swift Reckoning (ORI) 35
+1 Mine Excavation (SHM) 13
+1 Return to the Ranks (M15) 29
+1 Revoke Existence (BNG) 25
+1 Ondu Rising (BFZ) 41
+1 Gift of Estates (9ED) 15
+1 Wrath of the Skies (MH3) 49
+1 Sunlance (PLC) 31
+1 Honor (EOE) 21
+3 Launch the Fleet (JOU) 15
+1 Benediction of Moons (GPT) 3
+1 Sunlance (DDF) 21
+4 Oust (ROE) 40
+1 Banishing Stroke (AVR) 7
+1 Turn the Tables (DST) 18
+1 Fate of the Sun-Cryst (FIN) 19 *F*
+1 Coordinated Charge (IKO) 6
+3 Seized from Slumber (DSK) 28
+1 Swell of Courage (MOR) 26
+1 Second Thoughts (ODY) 45
+1 Lens Flare (MH2) 330
+1 Stir the Pride (MMA) 30
+1 Roil's Retribution (BFZ) 45
+1 Gleam of Resistance (MMA) 17 *F*
+2 Charge Across the Araba (SOK) 4
+1 Arrow Volley Trap (ZEN) 2
+1 Divine Verdict (M13) 12
+4 Scour (UDS) 18
+2 Ramosian Rally (MMQ) 38
+1 Hunted Troll (C13) 150
+1 Angel's Mercy (M10) 2 *F*
+1 Retaliate (5DN) 13
+1 Congregate (DMR) 4
+4 Angel's Mercy (AVR) 3
+1 Resounding Silence (ALA) 22
+1 Inspired Charge (M15) 272
+1 Crush Contraband (PIP) 158
+1 Crush Contraband (PIP) 158 *F*
+3 Bar Entry (UNF) 4
+1 Ray of Distortion (ODY) 42
+1 Rally the Monastery (TDM) 19
+1 Repel the Vile (NEO) 33 *F*
+1 Scale Blessing (2X2) 27
+1 Frantic Salvage (MBS) 6
+1 Eyes in the Skies (RVR) 17
+3 Inspired Charge (M20) 24
+2 Divine Sacrament (ODY) 19
+3 Dub (DOM) 15
+6 Rewards of Diversity (INV) 32
+4 Asha's Favor (CON) 2
+5 Squire's Devotion (RIX) 25
+5 Sandskin (ONS) 52
+5 Arrest (MRD) 2
+8 Arrest (RTR) 3
+4 Hold the Gates (GTC) 16
+4 Security Blockade (RTR) 20
+3 Righteous Indignation (MMQ) 46
+3 Spirit Cairn (JUD) 26
+5 Abzan Runemark (FRF) 3
+2 Oblivion Ring (M12) 27
+3 Oblivion Ring (LRW) 34
+2 Love Song of Night and Day (DMU) 25
+7 Teferi's Care (INV) 43
+8 Martyr's Cause (ULG) 13
+2 Phyrexian Awakening (MOM) 30
+9 Fog on the Barrow-Downs (LTR) 16
+5 Might of the Ancestors (LCI) 23
+5 Stormplain Detainment (TDM) 28
+10 Cage of Hands (CHK) 3
+2 Choking Restraints (EMN) 16
+7 Revoke Privileges (KLD) 26
+2 Guardian Zendikon (CNS) 71
+3 Luminous Bonds (RIX) 12
+2 Opal Acrolith (USG) 22
+2 Ghostly Possession (ISD) 18
+3 Born to Drive (NEO) 6
+3 Oblivion Ring (M13) 22
+3 Guardian Zendikon (WWK) 6
+2 Muster the Departed (MH3) 36
+3 Sidequest: Catch a Fish // Cooking Campsite (FIN) 31
+5 Hypochondria (TOR) 7
+6 Hopeful Vigil (WOE) 17
+6 Chosen by Heliod (THS) 5
+3 Crown of Awe (ONS) 16
+2 Divine Favor (M15) 10
+6 Defang (AVR) 15
+2 Mantle of Leadership (PLC) 9
+3 Divine Favor (M14) 17
+2 Realmbreaker's Grasp (MOM) 33
+7 Soul Tithe (RTR) 23
+4 Pacifism (8ED) 33
+6 Pacifism (M13) 24
+7 Indomitable Will (CHK) 17
+3 Blessing (M14) 8
+2 Pacifism (10E) 31
+5 Bonds of Faith (ISD) 5
+3 Circle of Protection: Green (8ED) 12
+6 Stasis Cocoon (5DN) 18
+2 Sanctimony (8ED) 42
+4 Circle of Protection: White (8ED) 14
+4 Circle of Protection: Blue (8ED) 11
+4 Ward of Piety (BOK) 28
+11 Pacifism (ONS) 47
+2 Righteous Aura (MMQ) 45
+2 Sacred Ground (9ED) 37
+5 Compulsory Rest (AKH) 9
+2 Knight's Pledge (M19) 19
+4 Dragon Scales (SCG) 10
+3 Strength of Isolation (TOR) 17
+5 Call to Serve (AVR) 9
+2 Pacifism (M12) 28
+4 Flowering Field (PCY) 9
+2 Entangling Trap (LRW) 13
+5 Pacifism (DMR) 19
+2 Soulscour (DST) 14
+3 Chronomantic Escape (FUT) 4
+4 Imperial Oath (NEO) 17
+4 Global Ruin (INV) 18
+2 End Hostilities (KTK) 8
+11 Angelic Edict (GTC) 2
+9 Defy Death (AVR) 16
+6 Settle Beyond Reality (2X2) 30
+2 Scour the Desert (MH2) 28
+9 Knight Watch (GTC) 19
+8 Banish from Edoras (LTR) 1
+5 Buy Your Silence (SNC) 6
+11 Aerith Rescue Mission (FIN) 5
+5 Divine Congregation (TSP) 13
+2 Breath of Life (7ED) 4
+5 Vengeance (7ED) 54
+4 Excoriate (BNG) 10
+3 Late to Dinner (MH2) 19
+6 Battle Screech (JUD) 3
+2 Cenn's Enlistment (EVE) 3
+15 Terashi's Cry (CHK) 47
+3 Captain's Call (M13) 9
+4 Vengeance (8ED) S2
+6 Rush of Battle (KTK) 19
+3 Call the Cavalry (DOM) 9
+2 Breath of Life (S00) 3
+6 Captain's Call (DMU) 9
+2 Against All Odds (ONE) 1
+3 Patch Up (SNC) 23
+5 Lingering Souls (DKA) 12
+10 Righteous Charge (GTC) 23
+4 Hive Stirrings (M14) 21
+2 Solemn Offering (M14) 36
+4 Paraselene (ISD) 26
+6 Sheer Drop (BFZ) 48
+3 Remember the Fallen (NPH) 21
+2 Sworn Companions (GRN) 27
+3 Legion's Judgment (XLN) 21
+2 Topple (NEM) 24
+2 Hive Stirrings (PM14) 21★
+9 Terashi's Grasp (BOK) 26
+2 Cleanfall (CHK) 6
+5 Cleansing Meditation (TOR) 3
+3 Eriette's Lullaby (OTJ) 10
+2 Sunder the Gateway (MOM) 39
+3 Sacred Nectar (7ED) 37
+5 Pegasus Stampede (EXO) 14
+3 Soul Summons (FRF) 26
+6 Piercing Rays (MH2) 24
+11 Expel the Unworthy (MH3) 25
+6 Gather the Townsfolk (DKA) 8
+7 Sacred Nectar (8ED) 40
+3 Take Vengeance (M19) 40
+2 Glare of Heresy (THS) 15
+2 Lyev Decree (DGM) 3
+3 Cleansing Ray (RIX) 4
+4 Ritual of Restoration (DST) 13
+4 Runic Shot (DMU) 30
+10 Jolted Awake (MH3) 33
+3 Jolted Awake (MH3) 33 *F*
+3 Lucky Offering (NEO) 27
+2 Gaze of Justice (TSP) 20
+7 Trostani's Judgment (RTR) 28
+7 Quicksand Whirlpool (LCI) 31
+11 Fate of the Sun-Cryst (FIN) 19
+2 Sanctified Charge (M15) 30
+2 Stir the Pride (DST) 16
+3 Gleam of Resistance (CON) 8
+6 Blessed Light (DOM) 7
+10 Soul Nova (MRD) 25
+6 Lens Flare (MH2) 20
+2 Plated Onslaught (ONE) 29
+3 Take Up Arms (KTK) 26
+3 Divine Verdict (M10) 8
+4 Altar's Light (MRD) 1
+5 Eyes in the Skies (RTR) 10
+2 Scour (BOK) 20
+4 Smite the Monstrous (BFZ) 49
+7 Divine Verdict (THS) 8
+3 Return to Dust (TSP) 39
+7 Inspired Charge (KLD) 20
+2 Mirror Strike (PCY) 17
+4 Seed Spark (RAV) 30
+5 On the Job (MKM) 30
+5 Repel the Vile (NEO) 33
+2 When We Were Young (NEO) 43
+2 Chastise (JUD) 8
+4 Sivvi's Ruse (NEM) 21
+4 War Report (NPH) 26
+4 Divine Verdict (RIX) 5
+2 Recuperate (SCG) 21
+5 Angel's Mercy (M12) 4
+4 Smite the Monstrous (KTK) 24
+2 Triumphant Surge (THB) 41
+4 Surprise Deployment (PLS) 18
+4 Congregate (M14) 14
+2 Inspired Charge (M19) 15
+4 Inspired Charge (BFZ) 32
+2 Eyes in the Skies (RVR) 17 *F*
+2 Collar the Culprit (GRN) 5
+2 Rabbit Response (BLB) 26
+2 Blade Banish (IKO) 4
+1 Serra Advocate (UDS) 19
+1 Seasoned Marshal (8ED) 44
+2 Loxodon Convert (NPH) 14
+1 Goldnight Commander (AVR) 22
+1 Heavy Ballista (WTH) 17
+1 Charging Griffin (M14) 13
+1 Dwarven Priest (M19) 11
+1 Glory Bearers (THB) 17
+3 Aether Inspector (AER) 3
+1 Pillarfield Ox (M13) 25
+1 Droning Bureaucrats (GPT) 4
+1 Zealots en-Dal (EXO) 26
+1 Calciderm (PLC) 23
+1 Sanctum Gargoyle (ALA) 24
+1 Serra Advocate (DVD) 7
+1 Sustainer of the Realm (DVD) 8
+1 Akroan Phalanx (BNG) 2
+1 Glimmerpoint Stag (SOM) 9
+1 Abzan Battle Priest (KTK) 1
+1 Glimmering Angel (INV) 17
+1 Daily Bugle Reporters (SPM) 6
+1 Charmed Griffin (MMQ) 7
+1 Sandsower (MMA) 29
+1 Makindi Griffin (ROE) 36
+1 Dawnfluke (LRW) 12
+1 Griffin Protector (M13) 16
+1 Hollowhenge Spirit (DKA) 10
+1 Prized Elephant (M13) 27
+1 Azorius Justiciar (RTR) 6
+1 Malach of the Dawn (PLC) 24
+1 Aven Cloudchaser (8ED) 5
+2 Visionary Augmenter (KLD) 34
+1 Prosperity Tycoon (OTJ) 25 *F*
+2 Palace Sentinels (CMM) 48
+4 Improvised Armor (ONS) 40
+1 Irregular Cohort (MH1) 15
+1 Guardian Kirin (MH2) 15 *F*
+1 Friendly Ghost (DSK) 12
+1 Dueling Coach (STX) 15 *F*
+1 Armory Guard (RVR) 3 *F*
+1 Aven Liberator (SCG) 4 *F*
+1 Rhox Veteran (MH1) 24
+1 Relief Captain (2X2) 24 *F*
+1 Serra Advocate (7ED) 41
+1 Search Party Captain (MID) 32 *F*
+1 Swiftwing Assailant (DFT) 32
+1 Stalwart Valkyrie (KHM) 31
+1 Swiftwing Assailant (DFT) 32 *F*
+1 Spirit en-Kor (STH) 19
+3 Tuinvale Guide (WOE) 36
+1 Vanguard Seraph (FDN) 28
+1 Civic Stalwart (RNA) 6
+1 Inspiring Captain (M20) 25
+1 Kami of Old Stone (CHK) 22
+1 Karlov Watchdog (MKM) 20
+1 Katerina of Myra's Marvels (UNF) 16
+1 Knight Luminary (EOE) 23
+1 Hillcomber Giant (LRW) 20
+1 Protector of Gondor (LTR) 25 *F*
+1 Besotted Knight // Betroth the Beast (WOE) 4 *F*
+1 Bridled Bighorn (OTJ) 7 *F*
+2 Daysquad Marshal (IKO) 8
+1 Duelcraft Trainer (MID) 16 *F*
+1 Dueling Coach (STX) 15
+1 Aerie Auxiliary (MH3) 18 *F*
+1 Aven Trooper (TOR) 2
+1 Apothecary Geist (INR) 10
+1 Skyhunter Skirmisher (5DN) 16
+1 Awe Strike (MRD) 6
+1 Militia Bugler (M19) 29
+1 Glittering Lion (PCY) 10
+1 Slith Ascendant (CMR) 49
+1 Elite Javelineer (8ED) 19
+1 Ignoble Soldier (MMQ) 22
+4 Unsettling Twins (DSK) 38
+2 Voice of All (DMR) 34
+3 Wingmantle Chaplain (DMU) 39
+2 Wayspeaker Bodyguard (TDM) 34
+1 Weapons Vendor (FIN) 40 *F*
+2 Complaints Clerk (UNF) 7
+1 Cloudchaser Eagle (TMP) 15
+1 Champion of Arashin (BBD) 90
+1 Commander Sofia Daguerre (PIP) 543 *F*
+1 Mirran Crusader (MBS) 14
+1 Kemba, Kha Regent (SOM) 12
+2 Pilgrim of the Ages (STX) 22
+1 Hanged Executioner (VOC) 89
+1 Inside Source (MKM) 19 *F*
+1 Inspired Inventor (MH3) 32 *F*
+1 Pests of Honor (WOE) 310
+1 Fortune, Loyal Steed (OTJ) 12
+1 Sigiled Sentinel (MOM) 37 *F*
+1 Rising Populace (WAR) 29
+1 Apex Hawks (WWK) 2
+1 Anafenza, Unyielding Lineage (TDM) 2
+1 Brightspear Zealot (EOE) 8
+1 Dawnglare Invoker (ROE) 16
+1 Shadow Glider (BFZ) 47 *F*
+1 Sheriff of Safe Passage (OTJ) 29
+1 Resistance Squad (VOW) 32
+2 Robo-Piñata (UNF) 25
+1 Rising Populace (RVR) 25 *F*
+1 Ritual Guardian (MID) 30 *F*
+1 Standing Troops (7ED) 48
+1 Kithkin Healer (LRW) 27
+1 Snow Villiers (FIN) 33 *F*
+1 Savior of the Sleeping (WOE) 28 *F*
+1 Snare Tactician (IKO) 30
+1 Splendor Mare (IKO) 32
+1 Solstice Zealot (MH3) 43 *F*
+1 Spectral Shepherd (VOC) 98
+4 Knighted Myr (CMM) 36
+3 Kinjalli's Dawnrunner (LCI) 19
+1 Kinsbaile Courier (CMR) 29
+1 Keensight Mentor (IKO) 18
+4 Living Phone (DSK) 20
+1 Brotherhood Outcast (PIP) 12
+4 Phantom General (RTR) 16
+8 Thriving Ibex (KLD) 31
+2 Gravel Slinger (ONS) 33
+3 Leonin Battlemage (DST) 5
+3 Slayer of the Wicked (ISD) 32
+5 Skyhunter Patrol (MRD) 22
+2 Liege of the Axe (LGN) 16
+2 Paragon of New Dawns (M15) 23
+2 Star-Crowned Stag (M19) 38
+7 Aven Sentry (DOM) 3
+3 Ondu Greathorn (BFZ) 40
+2 Thraben Sentry // Thraben Militia (ISD) 38
+6 Propeller Pioneer (KLD) 24
+4 Cavalry Master (TSP) 6
+2 Jasmine Seer (UDS) 10
+2 Daru Stinger (LGN) 10
+2 Akroan Mastiff (JOU) 3
+7 Alabaster Kirin (KTK) 4
+7 Armory Guard (RTR) 2
+4 Voice of All (PLS) 19
+4 Pterodon Knight (XLN) 28
+2 Enlistment Officer (APC) 9
+3 Pallid Mycoderm (PLC) 10
+3 Arbalest Elite (M12) 5
+3 Wishmonger (MMQ) 57
+2 Dive Bomber (ONS) 26
+4 Daru Sanctifier (LGN) 9
+2 Looming Altisaur (XLN) 23
+2 Ramosian Commander (MMQ) 36
+3 Guard Dogs (PLS) 5
+2 Absolver Thrull (GPT) 1
+4 Impounding Lot-Bot (UNF) 14
+4 Gavony Silversmith (CMM) 25
+2 Aurora Griffin (PLS) 2
+17 Weapons Vendor (FIN) 40
+3 Aven Redeemer (LGN) 3
+7 Aerie Auxiliary (MH3) 18
+7 Adaptive Gemguard (LCI) 3
+5 Soldier of the Grey Host (LTR) 32
+3 Master Splicer (NPH) 16
+2 Knight of Sursi (FUT) 10
+11 Oltec Cloud Guard (LCI) 28
+9 Mystic Zealot (DMR) 16
+3 Magitek Armor (FIN) 24
+2 Delivery Moogle (FIN) 15
+3 Estwald Shieldbasher (VOW) 11
+3 Aerialephant (UNF) 2
+2 Caprichrome (MH2) 9
+2 Fiend Hunter (LTC) 168
+3 Loxodon Wayfarer (SOM) 15
+11 Inspired Inventor (MH3) 32
+3 Starry-Eyed Skyrider (TDM) 25
+9 Snow Villiers (FIN) 33
+1 Words of Worship (ONS) 61
+1 Astral Slide (ONS) 4
+4 Always Watching (SOI) 1
+1 Opal Guardian (TSP) 30 *F*
+1 Planeswalker's Mirth (PLS) 12
+3 Opal Guardian (TSP) 30
+1 Banishing Light (LTC) 161
+1 Seal from Existence (MOM) 35
+1 Oblivion Ring (DDG) 34
+1 Touch the Spirit Realm (NEO) 40
+1 The Fall of Lord Konda // Fragment of Konda (NEO) 12 *F*
+1 Oblivion Ring (MM2) 29
+1 Thopter Arrest (AER) 25
+2 Sacred Mesa (MIR) 37
+1 Path of Bravery (IMA) 26
+1 Three Blind Mice (WOE) 35
+1 Aven Shrine (ODY) 9
+1 Light from Within (EVE) 10
+1 Enduring Renewal (TSB) 7
+1 Marked by Honor (M15) 17
+1 Field of Souls (DDK) 30
+1 Lassoed by the Law (OTJ) 18
+1 Faith's Fetters (CMR) 20
+1 Angelic Exaltation (RVR) 2
+1 Marshal's Anthem (LTC) 172
+1 Marshal's Anthem (WWK) 15
+1 Worship (8ED) 57
+1 Vassal's Duty (CHK) 48
+1 Rhystic Circle (PCY) 19
+1 Search the Premises (MH2) 29
+1 Security Detail (MMQ) 47
+1 Starlight Spectacular (UNF) 28
+1 Teeming Dragonstorm (TDM) 30
+1 Armored Ascension (M11) 5
+1 Angelic Benediction (DVD) 19
+1 Builder's Blessing (AVR) 8
+1 Pious Interdiction (XLN) 26
+1 Sunbond (BNG) 28
+1 Sinstriker's Will (GPT) 16
+1 Cast Out (AKH) 8
+4 Valor in Akros (ORI) 39
+1 Iona's Blessing (OGW) 21
+1 Retreat to Emeria (BFZ) 44
+1 Prayer of Binding (DMU) 28
+1 Castle (6ED) 6
+1 Entangler (PCY) 7
+1 War of the Last Alliance (LTR) 36
+1 Leyline of Hope (DSK) 18
+1 Sigil of the New Dawn (ONS) 55
+2 Séance (DKA) 20
+4 Martial Law (RTR) 14
+1 Armored Ascension (M11) 5 *F*
+1 Skybind (JOU) 25
+1 Journey to Oblivion (ZNR) 17
+1 Knightly Valor (2X2) 14 *F*
+3 Fear of Immobility (DSK) 10
+1 Form of the Approach of the Second Sun (UNF) 9
+1 Static Snare (TDM) 26 *F*
+3 Tale of Tinúviel (LTR) 34
+1 Undercellar Sweep (CLB) 47
+1 Mammoth Umbra (PCA) 10
+1 Protection of the Hekma (AKH) 23
+1 Angelic Accord (M14) 3
+2 Dispeller's Capsule (ALA) 8
+1 Krovod Haunch (MKM) 21
+4 Kor Halberd (MOM) 27
+1 Dusk Rose Reliquary (LCI) 10
+1 Wrench (MKM) 37
+1 Dispeller's Capsule (CMR) 18
+2 Pin Collection (UNF) 23
+5 Deconstruction Hammer (LCI) 9
+4 Phoenix Down (FIN) 29
+1 Mandibular Kite (MH3) 34 *F*
+1 Spring-Loaded Sawblades // Bladewheel Chariot (LCI) 36
+1 Dragoon's Lance (FIN) 17
+1 Spotcycle Scouter (DFT) 30
+5 Clay-Fired Bricks // Cosmium Kiln (LCI) 6
+1 Bride's Gown (VOW) 4
+2 Bride's Gown (VOW) 4 *F*
+5 Ancestral Blade (CMM) 12
+10 Dúnedain Blade (LTR) 6
+2 White Mage's Staff (FIN) 42 *F*
+1 Barbed Spike (MH2) 5
+1 Glass Casket (WOE) 16
+2 Veil of Assimilation (ONE) 37
+1 Norn's Wellspring (ONE) 24
+1 Dúnedain Blade (LTR) 6 *F*
+12 Paladin's Arms (FIN) 28
+2 Paladin's Arms (FIN) 28 *F*
+3 Tinker's Tote (LCI) 40
+3 Goldwarden's Helm (ONE) 13
+1 Marble Chalice (ALA) 18
+1 Dragonfly Suit (NEO) 9
+1 Air Response Unit (DFT) 1
+1 Essence Reliquary (MH3) 24 *F*
+6 Tinker's Tote (LCI) 40 *F*
+4 Essence Reliquary (MH3) 24
+1 Spear of Heliod (THS) 33
+2 Scepter of Dominance (CON) 17
+4 Hexgold Hoverwings (ONE) 14
+1 Magitek Armor (FIN) 24 *F*
+18 White Auracite (FIN) 41
+1 White Auracite (FIN) 41 *F*
+3 Mirran Bardiche (ONE) 22
+1 Auxiliary Boosters (EOE) 5
+1 Unstable Glyphbridge // Sandswirl Wanderglyph (LCI) 41
+5 Glorious Anthem (10E) 17
+4 Penance (EXO) 15
+5 Indestructibility (M14) 23
+3 Angelic Benediction (M13) 4
+6 Sphere of Purity (MRD) 26
+3 Honden of Cleansing Fire (CHK) 14
+2 Curse of Exhaustion (DKA) 5
+2 Karma (8ED) 28
+3 Improvised Armor (DMR) 10
+9 Faith's Fetters (RAV) 16
+3 Befriending the Moths // Imperial Moth (NEO) 4
+2 Day of Destiny (BOK) 1
+4 Diversionary Tactics (APC) 7
+2 Conclave's Blessing (RAV) 11
+4 Suppression Bonds (ORI) 34
+2 Angelic Benediction (ALA) 3
+5 Siegecraft (KTK) 23
+3 Holy Mantle (GTC) 17
+2 Argent Dais (MH3) 20
+2 Noble Purpose (8ED) 31
+2 Knightly Valor (WOT) 8
+7 Knightly Valor (RTR) 13
+3 Commander's Authority (AVR) 13
+4 Debtor's Pulpit (GTC) 10
+2 Static Snare (TDM) 26
+3 Ajani Fells the Godsire (MH3) 19
+3 Knightly Valor (2X2) 14
+12 Mandibular Kite (MH3) 34
+4 Ancestral Katana (NEO) 1
+11 White Mage's Staff (FIN) 42
+2 Infested Fleshcutter (ONE) 17
+3 Thunder Lasso (OTJ) 35

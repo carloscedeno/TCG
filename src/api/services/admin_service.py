@@ -103,14 +103,16 @@ class AdminService:
         results = []
         for tid, task in export_tasks.items():
             status = task["status"]
-            if status == "running":
+            if status == "running" and "process" in task:
                 poll = task["process"].poll()
                 if poll is not None:
                     status = "completed" if poll == 0 else f"failed ({poll})"
                     task["status"] = status
             results.append({
                 "id": task["id"],
-                "game_code": task["game_code"],
+                "game_code": task.get("game_code"),
+                "source": task.get("source"),
+                "type": "sync" if "game_code" in task else "scraper",
                 "status": status,
                 "start_time": task["start_time"]
             })
