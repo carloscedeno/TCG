@@ -25,13 +25,14 @@ jobs:
           pip install httpx
 
       - name: Setup Supabase CLI
-        run: npm install -g supabase
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
 
       - name: Deploy Supabase Function
+        run: supabase functions deploy tcg-api --project-ref sxuotvogwvmxuvwbsscv --no-verify-jwt
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-        run: |
-          supabase functions deploy tcg-api --project-ref sxuotvogwvmxuvwbsscv --no-verify-jwt
 
       - name: Verify Deployment (E2E)
         run: |
