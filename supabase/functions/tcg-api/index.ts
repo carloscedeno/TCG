@@ -134,6 +134,9 @@ serve(async (req: Request) => {
     else if (path.startsWith('/api/stats')) {
       response = await handleStatsEndpoint(supabase, path, method, params)
     }
+    else if (path.startsWith('/api/admin')) {
+      response = await handleAdminEndpoint(supabase, path, method, params, authToken)
+    }
     else {
       response = {
         error: 'Endpoint not found',
@@ -951,4 +954,36 @@ async function handleProductsEndpoint(supabase: SupabaseClient, path: string, me
   }
 
   throw new Error('Method not allowed')
+}
+
+async function handleAdminEndpoint(supabase: SupabaseClient, path: string, method: string, params: RequestParams, authToken?: string) {
+  // Basic Auth Check
+  if (!authToken) throw new Error('Unauthorized: No auth token');
+  const { data: { user }, error: authError } = await supabase.auth.getUser(authToken);
+  if (authError || !user) throw new Error('Unauthorized: Invalid token');
+
+  // GET /api/admin/tasks
+  if (method === 'GET' && path === '/api/admin/tasks') {
+    // Return empty array to verify connectivity and fix 400 error
+    return [];
+  }
+
+  // POST /api/admin/scraper/run/:source
+  if (method === 'POST' && path.startsWith('/api/admin/scraper/run/')) {
+    const source = path.split('/').pop();
+    return { message: `Scraper '${source}' triggered successfully (Mock)`, status: 'queued' };
+  }
+
+  // POST /api/admin/catalog/sync/:gameCode
+  if (method === 'POST' && path.startsWith('/api/admin/catalog/sync/')) {
+    const gameCode = path.split('/').pop();
+    return { message: `Catalog sync for '${gameCode}' triggered successfully (Mock)`, status: 'queued' };
+  }
+
+  // GET /api/admin/tasks/:id/logs
+  if (method === 'GET' && path.includes('/logs')) {
+    return { logs: "Logs system initializing... No logs currently available." };
+  }
+
+  throw new Error('Admin endpoint not found');
 }
