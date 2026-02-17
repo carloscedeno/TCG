@@ -521,7 +521,7 @@ export const fetchCart = async (): Promise<any> => {
       }
     }));
 
-    return { items: items.filter(i => i !== null) };
+    return { items: items.filter((i: any) => i !== null) };
 
   } catch (error) {
     console.error('Error fetching cart:', error);
