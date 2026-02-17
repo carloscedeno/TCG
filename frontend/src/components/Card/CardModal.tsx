@@ -41,6 +41,7 @@ interface Version {
 }
 
 interface CardDetails {
+    printing_id: string;
     card_id: string;
     name: string;
     mana_cost: string;
@@ -107,10 +108,21 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
             const data = await fetchCardDetails(id);
             console.log("CardModal: Data received:", data ? "yes" : "no");
             if (!data) throw new Error("No data found");
+
+            // PRESERVE VERSIONS: If new data has no versions but old state had them for same oracle_id
+            if ((!data.all_versions || data.all_versions.length <= 1) && details?.all_versions && details.all_versions.length > 1) {
+                // If it's the same base card (oracle_id), keep the versions list
+                const oldOracleId = details.card_id;
+                const newOracleId = data.card_id || data.oracle_id;
+                if (oldOracleId === newOracleId) {
+                    data.all_versions = details.all_versions;
+                }
+            }
+
             setDetails(data);
-            if (data.printing_id) setActivePrintingId(data.printing_id);
-            else if (data.all_versions && data.all_versions.length > 0) setActivePrintingId(data.all_versions[0].printing_id);
-            console.log("CardModal: Details set");
+            const pId = data.printing_id || data.card_id || id;
+            setActivePrintingId(pId);
+            console.log("CardModal: Details set with Printing ID:", pId);
         } catch (err: any) {
             console.error("CardModal: Failed to load details", err);
             setError(err.message || "Failed to load details");

@@ -240,7 +240,8 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
 
         // Basic card info
         const baseData = {
-          card_id: sbData.printing_id,
+          printing_id: sbData.printing_id,
+          card_id: sbData.card_id,
           name: sbData.cards?.name || sbData.name || 'Unknown Card',
           mana_cost: sbData.cards?.mana_cost,
           type: sbData.cards?.type_line,
