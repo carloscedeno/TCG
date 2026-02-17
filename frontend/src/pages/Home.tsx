@@ -3,7 +3,7 @@ import { rarityMap } from '../utils/translations';
 import { CardGrid } from '../components/Card/CardGrid';
 import { CardModal } from '../components/Card/CardModal';
 import type { CardProps } from '../components/Card/Card';
-import { fetchCards, fetchSets, fetchProducts } from '../utils/api';
+import { fetchCards, fetchSets, fetchProducts, fetchCart } from '../utils/api';
 import { SearchBar } from '../components/SearchBar/SearchBar';
 import { FiltersPanel } from '../components/Filters/FiltersPanel';
 import type { Filters } from '../components/Filters/FiltersPanel';
@@ -14,6 +14,7 @@ import { UserMenu } from '../components/Navigation/UserMenu';
 import { LogIn, X, ShoppingCart } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { CartDrawer } from '../components/Navigation/CartDrawer';
+import { Footer } from '../components/Navigation/Footer';
 
 const mockFilters: Filters = {
   games: ['Magic: The Gathering'],
@@ -60,8 +61,34 @@ const Home: React.FC = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [activeTab, setActiveTab] = useState<'marketplace' | 'reference'>((searchParams.get('tab') as 'marketplace' | 'reference') || 'reference');
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [cartCount, setCartCount] = useState(0); // Cart count state
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
   const LIMIT = 50;
+
+  // Cart Count Logic
+  useEffect(() => {
+    const updateCartCount = async () => {
+      try {
+        const { items } = await fetchCart();
+        const count = items.reduce((acc: number, item: any) => acc + (item.quantity || 1), 0);
+        setCartCount(count);
+      } catch (error) {
+        console.error("Failed to fetch cart count", error);
+        setCartCount(0);
+      }
+    };
+
+    updateCartCount();
+
+    const handleCartUpdate = () => {
+      updateCartCount();
+    };
+
+    window.addEventListener('cart-updated', handleCartUpdate);
+    return () => {
+      window.removeEventListener('cart-updated', handleCartUpdate);
+    };
+  }, [user]); // Re-run when user changes
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -242,23 +269,31 @@ const Home: React.FC = () => {
       <div className="relative z-10">
 
         {/* Header */}
-        <header className="h-[70px] bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-white/5 sticky top-0 z-50 shadow-2xl flex items-center">
-          <nav className="max-w-[1600px] w-full mx-auto px-6 py-3 flex items-center justify-between">
-            <div className="flex items-center gap-8">
+        <header className="min-h-[70px] bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-white/5 sticky top-0 z-50 shadow-2xl flex items-center">
+          <nav className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 py-3 flex items-center justify-between flex-wrap gap-y-2">
+            <div className="flex items-center gap-4 sm:gap-8">
               <Link to="/" className="flex items-center gap-4 group">
                 <div className="flex items-center justify-center font-black text-2xl italic text-white group-hover:scale-105 transition-transform tracking-tighter">
-                  <img src="/branding/Logo.jpg" alt="Logo" className="w-10 h-10 rounded-full mr-3 border border-white/10 shadow-lg shadow-geeko-cyan/10" />
-                  <span className="text-geeko-cyan">Geekorium</span>&nbsp;El Emporio
+                  <img src="/branding/Logo.jpg" alt="Logo" className="w-8 h-8 sm:w-10 sm:h-10 rounded-full mr-2 sm:mr-3 border border-white/10 shadow-lg shadow-geeko-cyan/10" />
+                  <span className="text-geeko-cyan">Geekorium</span>
+                  <span className="hidden md:inline">&nbsp;El Emporio</span>
                 </div>
                 <h1 className="hidden">Geekorium El Emporio</h1>
               </Link>
             </div>
-            <div className="flex-1 max-w-xl mx-8 hidden lg:block">
+            <div className="flex-1 max-w-xl mx-4 sm:mx-8 hidden lg:block">
               <SearchBar value={query} onChange={setQuery} placeholder="Buscar por nombre de carta o edición..." />
             </div>
-            <div className="flex items-center gap-3">
-              <div className="lg:hidden text-black mr-2">
-                <SearchBar value={query} onChange={setQuery} placeholder="Buscar..." />
+            <div className="flex items-center gap-2 sm:gap-3 ml-auto">
+              {/* Mobile Search - shown only on small screens */}
+              <div className="lg:hidden text-black mr-1 sm:mr-2">
+                {/* Only show icon or small bar? For now keep existing but maybe smaller? */}
+                {/* SearchBar component handles its own styles, hopefully it fits. */}
+                {/* Actually, SearchBar might be too wide. Let's hide full bar on very small? */}
+                {/* Current implementation shows it. I'll leave it but ensure container doesn't break it */}
+                <div className="w-32 sm:w-48">
+                  <SearchBar value={query} onChange={setQuery} placeholder="Buscar..." />
+                </div>
               </div>
 
               {/* Help Link */}
@@ -279,6 +314,9 @@ const Home: React.FC = () => {
                     <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.17-2.89-.6-4.13-1.47V18.77a6.738 6.738 0 01-1.45 4.15c-1.29 1.41-3.14 2.21-5.04 2.1c-1.95.05-3.89-.72-5.18-2.18-1.34-1.52-1.92-3.66-1.58-5.64.3-1.84 1.64-3.47 3.44-4.04 1.02-.34 2.13-.39 3.19-.15V17c-.89-.28-1.93-.11-2.69.49-.66.52-1 1.34-1.02 2.17.02 1.35 1.45 2.18 2.63 1.8 1.07-.32 1.83-1.4 1.81-2.5V3.81c0-1.27-.01-2.53-.01-3.79h-.02z" />
                   </svg>
                 </a>
+                <a href="https://discord.gg/wmYhWw5Q" target="_blank" rel="noopener noreferrer" title="Discord" className="p-2 text-neutral-400 hover:text-geeko-cyan transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7.5 12c-2 0-3.5 1.5-3.5 3.5v2.5h16v-2.5c0-2-1.5-3.5-3.5-3.5h-9z" /><circle cx="9" cy="9" r="2" /><circle cx="15" cy="9" r="2" /></svg>
+                </a>
               </div>
 
               {/* Cart Button - Always Visible */}
@@ -288,8 +326,10 @@ const Home: React.FC = () => {
                 className="relative p-2.5 bg-neutral-900 border border-white/5 rounded-xl hover:bg-neutral-800 transition-all text-neutral-400 hover:text-geeko-cyan group"
               >
                 <ShoppingCart size={20} />
-                {user && (
-                  <div className="absolute top-0 right-0 w-2 h-2 bg-geeko-cyan rounded-full border-2 border-[#0a0a0a] group-hover:scale-150 transition-transform" />
+                {cartCount > 0 && (
+                  <div id="cart-badge" className="absolute -top-1 -right-1 bg-geeko-cyan text-black text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border border-[#0a0a0a]">
+                    {cartCount > 99 ? '99+' : cartCount}
+                  </div>
                 )}
               </button>
 
@@ -298,7 +338,7 @@ const Home: React.FC = () => {
               ) : (
                 <button
                   onClick={() => setIsAuthModalOpen(true)}
-                  className="bg-geeko-cyan hover:bg-geeko-cyan/80 text-black font-black py-2 px-5 rounded-full shadow-lg shadow-geeko-cyan/20 transition-all transform active:scale-95 flex items-center gap-2 text-xs uppercase tracking-widest"
+                  className="bg-geeko-cyan hover:bg-geeko-cyan/80 text-black font-black py-2 px-5 rounded-full shadow-lg shadow-geeko-cyan/20 transition-all transform active:scale-95 flex items-center gap-2 text-xs uppercase tracking-widest whitespace-nowrap"
                 >
                   <LogIn size={14} /> <span className="hidden sm:inline">Conectarse</span>
                 </button>
@@ -570,47 +610,7 @@ const Home: React.FC = () => {
         </section>
 
         {/* Footer */}
-        <footer className="border-t border-neutral-800 bg-[#121212] py-20 mt-20">
-          <div className="max-w-[1600px] mx-auto px-6 grid grid-cols-1 md:grid-cols-3 items-center gap-12 text-center md:text-left">
-            <div className="flex flex-col gap-6 justify-center md:justify-start">
-              <div className="flex items-center gap-4 justify-center md:justify-start group cursor-pointer">
-                <img src="/branding/Logo.jpg" alt="Logo" className="w-12 h-12 rounded-full border border-white/10 group-hover:scale-110 transition-transform" />
-                <span className="text-2xl font-black tracking-tighter uppercase italic"><span className="text-geeko-cyan">Geekorium</span> El Emporio</span>
-              </div>
-              <div className="flex flex-col gap-3 text-sm font-medium text-neutral-400">
-                <a href="https://wa.me/584128042832" target="_blank" rel="noopener noreferrer" className="hover:text-geeko-cyan transition-colors">WhatsApp Principal: +58 412-8042832</a>
-                <a href="https://wa.me/584242507802" target="_blank" rel="noopener noreferrer" className="hover:text-geeko-cyan transition-colors">WhatsApp Singles: +58 424-2507802</a>
-              </div>
-              <div className="flex flex-wrap gap-4 justify-center md:justify-start mt-6">
-                <a href="https://instagram.com/geekorium/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-500 hover:bg-geeko-cyan hover:text-black transition-all shadow-lg hover:shadow-geeko-cyan/20">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" /></svg>
-                </a>
-                <a href="https://www.tiktok.com/@geekorium" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-500 hover:bg-geeko-cyan hover:text-black transition-all shadow-lg hover:shadow-geeko-cyan/20">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.17-2.89-.6-4.13-1.47V18.77a6.738 6.738 0 01-1.45 4.15c-1.29 1.41-3.14 2.21-5.04 2.1c-1.95.05-3.89-.72-5.18-2.18-1.34-1.52-1.92-3.66-1.58-5.64.3-1.84 1.64-3.47 3.44-4.04 1.02-.34 2.13-.39 3.19-.15V17c-.89-.28-1.93-.11-2.69.49-.66.52-1 1.34-1.02 2.17.02 1.35 1.45 2.18 2.63 1.8 1.07-.32 1.83-1.4 1.81-2.5V3.81c0-1.27-.01-2.53-.01-3.79h-.02z" />
-                  </svg>
-                </a>
-                <a href="https://www.facebook.com/profile.php?id=61573984506104" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-500 hover:bg-geeko-cyan hover:text-black transition-all shadow-lg hover:shadow-geeko-cyan/20">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /></svg>
-                </a>
-                <a href="https://www.youtube.com/@Geekorium" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-500 hover:bg-geeko-cyan hover:text-black transition-all shadow-lg hover:shadow-geeko-cyan/20">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 2-2 10 10 0 0 1 15 0 2 2 0 0 1 2 2 24.12 24.12 0 0 1 0 10 2 2 0 0 1-2 2 10 10 0 0 1-15 0 2 2 0 0 1-2-2Z" /><path d="m10 15 5-3-5-3z" /></svg>
-                </a>
-                <a href="https://www.twitch.tv/geekorium" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-500 hover:bg-geeko-cyan hover:text-black transition-all shadow-lg hover:shadow-geeko-cyan/20">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7" /></svg>
-                </a>
-              </div>
-            </div>
-            <div className="text-neutral-500 text-xs font-medium text-center">
-              © 2025 Geekorium El Emporio. Plataforma Avanzada de TCG.
-            </div>
-            <div className="flex gap-8 text-neutral-500 text-xs font-bold uppercase tracking-widest justify-center md:justify-end">
-              <a href="#" className="hover:text-geeko-cyan transition-colors">Privacidad</a>
-              <a href="#" className="hover:text-geeko-cyan transition-colors">Términos</a>
-              <Link to="/help" className="hover:text-geeko-cyan transition-colors">¿Cómo Comprar?</Link>
-            </div>
-          </div>
-        </footer>
+        <Footer />
 
         <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
         <CardModal

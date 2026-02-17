@@ -152,20 +152,20 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
       {/* Colores */}
       <section>
         <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
-          <div className="w-1.5 h-1.5 bg-cyan-500 rounded-full shadow-[0_0_10px_rgba(0,229,255,0.8)]"></div>
+          <div className="w-1.5 h-1.5 bg-geeko-cyan rounded-full shadow-[0_0_10px_rgba(0,229,255,0.8)]"></div>
           Esencia de Mana (Colores)
         </h3>
         <div className="grid grid-cols-4 gap-2">
           {filters.colors.map(color => {
             const isSelected = selected.colors?.includes(color);
             const colorClassMap: Record<string, string> = {
-              'White': 'bg-white',
-              'Blue': 'bg-blue-500',
-              'Black': 'bg-neutral-400',
-              'Red': 'bg-red-500',
-              'Green': 'bg-green-500',
-              'Colorless': 'bg-neutral-600',
-              'Multicolor': 'bg-gradient-to-br from-yellow-400 via-red-500 to-blue-500'
+              'White': 'bg-[#F8E7B9] shadow-[0_0_10px_#F8E7B9]',       // W - Sol
+              'Blue': 'bg-[#0E68AB] shadow-[0_0_10px_#0E68AB]',        // U - Agua
+              'Black': 'bg-[#150B00] shadow-[0_0_10px_#150B00] border border-white/20', // B - Calavera
+              'Red': 'bg-[#D3202A] shadow-[0_0_10px_#D3202A]',         // R - Fuego
+              'Green': 'bg-[#00733E] shadow-[0_0_10px_#00733E]',       // G - Arbol
+              'Colorless': 'bg-[#D3D3D3] shadow-[0_0_10px_#D3D3D3]',   // C - Incoloro
+              'Multicolor': 'bg-gradient-to-br from-[#F8E7B9] via-[#D3202A] to-[#0E68AB]' // M - Dorado
             };
 
             return (
@@ -174,14 +174,14 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
                 onClick={() => handleCheckbox('colors', color)}
                 title={colorMap[color] || color}
                 className={`relative group w-full aspect-square rounded-xl border flex items-center justify-center transition-all ${isSelected
-                  ? 'border-cyan-500/50 bg-cyan-500/5'
+                  ? 'border-geeko-cyan/50 bg-geeko-cyan/10'
                   : 'border-neutral-800 bg-neutral-900/50 hover:border-neutral-600'
                   }`}
               >
-                <div className={`w-3 h-3 rounded-full ${colorClassMap[color] || 'bg-neutral-500'} ${isSelected ? 'ring-2 ring-white/50 scale-110 shadow-lg' : 'opacity-60 group-hover:opacity-100'} transition-all`} />
+                <div className={`w-4 h-4 rounded-full ${colorClassMap[color] || 'bg-neutral-500'} ${isSelected ? 'scale-125' : 'opacity-80 group-hover:opacity-100'} transition-all`} />
                 {isSelected && (
                   <div className="absolute top-1 right-1">
-                    <Check size={8} className="text-cyan-400" />
+                    <Check size={8} className="text-geeko-cyan" />
                   </div>
                 )}
               </button>

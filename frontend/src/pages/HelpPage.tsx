@@ -3,6 +3,7 @@ import {
     Phone
 } from 'lucide-react';
 import { HelpSection } from '../components/Help/HelpSection';
+import { Footer } from '../components/Navigation/Footer';
 
 const HelpPage: React.FC = () => {
     return (
@@ -32,7 +33,10 @@ const HelpPage: React.FC = () => {
                     </div>
                 </div>
             </div>
-        </div>
+
+
+            <Footer />
+        </div >
     );
 };
 

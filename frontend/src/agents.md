@@ -102,6 +102,98 @@ curl https://sxuotvogwvmxuvwbsscv.supabase.co/functions/v1/tcg-api/
 curl https://sxuotvogwvmxuvwbsscv.supabase.co/functions/v1/tcg-api/api/cards?limit=5
 ```
 
+### 2026-02-16: CardModal Layout Architecture
+
+**CRITICAL**: The CardModal left column layout MUST follow a specific flex architecture to prevent the "giant image" or "hidden versions list" bug.
+
+**Problem**: Card image was taking all available space, pushing the versions list completely off-screen or making it invisible.
+
+**Root Causes**:
+
+1. **Over-aggressive Stock Filter**: `fetchCardDetails` was filtering out ALL versions without stock, causing "0 Versiones" display
+2. **Broken Layout**: Image container used `flex-1` without constraints, allowing it to grow indefinitely
+3. **No Minimum Height**: Versions container had no guaranteed minimum space
+
+**Symptoms**:
+
+- Versions list shows "0 Versiones" even when versions exist
+- Image is enormous and versions list is invisible/cut off
+- Layout "estaba bien" but broke after changes
+
+**Solution** (2026-02-16):
+
+```tsx
+// ❌ WRONG: Uncontrolled flex-1 allows image to dominate
+<div className="flex-1 min-h-[300px] ...">
+  {/* Image */}
+</div>
+<div className="md:h-[240px] ...">
+  {/* Versions - can be crushed */}
+</div>
+
+// ✅ CORRECT: Controlled flex with guaranteed minimums
+<div className="flex-[1_1_0%] min-h-[300px] md:min-h-0 relative ...">
+  {/* Image - can shrink to 0 if needed */}
+</div>
+<div className="h-auto max-h-[180px] md:h-[35%] md:min-h-[200px] shrink-0 ...">
+  {/* Versions - GUARANTEED at least 200px on desktop */}
+</div>
+```
+
+**API Fix** (`utils/api.ts`):
+
+```typescript
+// ❌ WRONG: Filter out versions without stock
+const versionsWithStock = (versionsData || [])
+  .filter((v: any) => stockMap.has(v.printing_id))  // ← REMOVES versions!
+  .map(...)
+
+// ✅ CORRECT: Show all versions, mark stock as 0 if unavailable
+const versionsWithStock = (versionsData || [])
+  .map((v: any) => {
+    const product = stockMap.get(v.printing_id);
+    return {
+      ...v,
+      stock: product?.stock || 0,  // ← Default to 0, don't hide
+      price: product?.price || v.aggregated_prices?.[0]?.avg_market_price_usd || 0
+    };
+  });
+```
+
+**Key Principles**:
+
+1. **Image Container**:
+   - Use `flex-[1_1_0%]` (can grow, can shrink, basis 0)
+   - MUST have `min-h-0` to allow shrinking below content size
+   - Use `relative` positioning for absolute children
+
+2. **Versions Container**:
+   - Use percentage height `h-[35%]` for flexibility
+   - MUST have `min-h-[200px]` to guarantee visibility
+   - MUST have `shrink-0` to prevent being crushed by image
+   - Inner content MUST be `overflow-y-auto`
+
+3. **Data Layer**:
+   - NEVER filter out versions based on stock availability
+   - Always show all versions with `stock: 0` for out-of-stock items
+   - Provide safe defaults for `set_code`, `set_name` to prevent crashes
+
+**Validation Checklist**:
+
+- [ ] Test with cards with many versions (Dark Ritual: 47 versions, Boomerang)
+- [ ] Test with cards with few versions (1-2 versions)
+- [ ] Verify versions list is scrollable
+- [ ] Verify image doesn't push content off-screen
+- [ ] Verify "X Versiones" counter shows correct number
+- [ ] Verify out-of-stock versions show "Stock: 0" but are still visible
+
+**Files Affected**:
+
+- `frontend/src/components/Card/CardModal.tsx` (lines 217, 248)
+- `frontend/src/utils/api.ts` (lines 261-277, 337-345)
+
+**Reference**: See `docs/PRD_Mejoras_Visuales_y_Funcionales_Web.md` Section 3.4 for full specification.
+
 ## 🛑 Known Issues
 
 - Frontend unit tests failing (CardGrid.test.tsx) - needs investigation

@@ -10,6 +10,8 @@ import { SearchBar } from '../components/SearchBar/SearchBar';
 import { UserMenu } from '../components/Navigation/UserMenu';
 import { CartDrawer } from '../components/Navigation/CartDrawer';
 import { AuthModal } from '../components/Auth/AuthModal';
+import { ManaText } from '../components/Mana/ManaText';
+import { Footer } from '../components/Navigation/Footer';
 
 export const CardDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -226,8 +228,8 @@ export const CardDetail: React.FC = () => {
                                                         {v.stock > 0 && (
                                                             <div className="flex items-center gap-1">
                                                                 <div className={`w-2 h-2 rounded-full ${v.stock > 10 ? 'bg-green-500' :
-                                                                        v.stock > 3 ? 'bg-yellow-500' :
-                                                                            'bg-red-500'
+                                                                    v.stock > 3 ? 'bg-yellow-500' :
+                                                                        'bg-red-500'
                                                                     }`} />
                                                                 <span className="text-[8px] font-black text-geeko-cyan uppercase">
                                                                     STOCK: {v.stock}
@@ -265,7 +267,7 @@ export const CardDetail: React.FC = () => {
                                     </h2>
                                 </a>
                                 <div className="flex flex-wrap items-center gap-4 text-xl lg:text-2xl font-medium text-neutral-400">
-                                    <span>{details.mana_cost || ''}</span>
+                                    <span><ManaText text={details.mana_cost || ''} /></span>
                                     {details.mana_cost && <span>•</span>}
                                     <span>{details.type}</span>
                                     <span className="text-neutral-700">/</span>
@@ -276,7 +278,7 @@ export const CardDetail: React.FC = () => {
                             <div className="p-10 rounded-[40px] bg-white/5 border border-white/10 space-y-8 relative overflow-hidden group">
                                 <div className="absolute -top-24 -right-24 w-64 h-64 bg-geeko-cyan/5 rounded-full blur-[100px] group-hover:bg-geeko-cyan/10 transition-colors" />
                                 <div className="text-xl lg:text-2xl leading-relaxed text-neutral-200 font-medium relative z-10">
-                                    {details.oracle_text?.split('\n').map((line: string, i: number) => <p key={i} className="mb-4">{line}</p>)}
+                                    {details.oracle_text?.split('\n').map((line: string, i: number) => <p key={i} className="mb-4"><ManaText text={line} /></p>)}
                                 </div>
                                 {details.flavor_text && (
                                     <p className="text-lg italic text-neutral-500 font-serif border-t border-white/10 pt-8 relative z-10">
@@ -350,6 +352,8 @@ export const CardDetail: React.FC = () => {
                     </div>
                 ) : null}
             </main>
+
+            <Footer />
 
             <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
             <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />

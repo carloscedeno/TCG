@@ -52,3 +52,7 @@ This plan outlines the steps to implement the requested admin features: manual s
 - **Task Runner**: Re-enabled task polling in Admin Dashboard now that backend is accessible.
 - **UI Translation (Admin)**: Full Spanish translation of Admin Dashboard, Orders, and Inventory management pages.
 - **Documentation**: Created `docs/TRANSLATION_SUMMARY.md`.
+- **Order Price Fix**:
+  - Resolved issue where orders showed $0.00.
+  - Created migration `supabase/migrations/20260216_fix_cart_price_fallback.sql` to ensure cart items always have a price (fallback to market price).
+  - Executed `scripts/fix_order_prices.py` to retroactively fix existing orders with $0.00.

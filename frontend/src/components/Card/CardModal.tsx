@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { X, ShoppingCart, ExternalLink, RotateCw, Loader2 } from 'lucide-react';
 import { fetchCardDetails, addToCart } from '../../utils/api';
+import { ManaText } from '../Mana/ManaText';
 
 
 
@@ -202,19 +203,18 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
             className="fixed inset-0 z-[200] flex items-center justify-center bg-black/95 backdrop-blur-xl p-0 md:p-6 animate-in fade-in zoom-in-95 duration-300 overflow-y-auto md:overflow-hidden"
             onClick={handleBackdropClick}
         >
+            {/* Modal Content */}
             <div
                 data-testid="card-modal"
-                className="relative w-full max-w-6xl min-h-full md:min-h-0 md:h-[95vh] md:max-h-[95vh] glass-panel md:rounded-[32px] border-x-0 md:border border-white/10 shadow-[0_0_100px_rgba(0,163,255,0.15)] flex flex-col md:flex-row md:overflow-hidden"
-            >
-
-                {/* Close Button */}
-                <button onClick={onClose} className="absolute top-6 right-6 z-50 p-2 hover:bg-white/10 rounded-full transition-colors text-neutral-400">
+                className="glass-panel w-full max-w-6xl max-h-[90vh] rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0,0,0,0.8)] flex flex-col md:flex-row overflow-hidden relative"
+                onClick={e => e.stopPropagation()}
+            >    <button onClick={onClose} className="absolute top-6 right-6 z-50 p-2 hover:bg-white/10 rounded-full transition-colors text-neutral-400">
                     <X size={24} />
                 </button>
 
                 {/* LEFT: IMAGE & VERSIONS LIST */}
                 <div className="w-full md:w-[420px] lg:w-[480px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden shrink-0 h-auto md:h-full">
-                    <div className="flex-1 min-h-[300px] sm:min-h-[400px] md:min-h-0 flex items-center justify-center p-4 sm:p-6 md:p-6 relative bg-gradient-to-b from-white/[0.04] to-transparent overflow-hidden">
+                    <div className="flex-[1_1_0%] min-h-[300px] md:min-h-0 relative flex items-center justify-center p-4 sm:p-6 md:p-6 bg-gradient-to-b from-white/[0.04] to-transparent overflow-hidden">
                         {loading ? (
                             <div className="w-64 aspect-[5/7] rounded-xl bg-white/5 animate-pulse flex items-center justify-center">
                                 <div className="w-10 h-10 border-4 border-t-geeko-cyan border-white/10 rounded-full animate-spin" />
@@ -245,7 +245,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                     </div>
 
                     {/* VERSIONS LIST */}
-                    <div className="h-auto max-h-[180px] md:h-[240px] md:max-h-none border-t border-white/5 bg-[#080808] flex flex-col shrink-0">
+                    <div className="h-auto max-h-[180px] md:h-[35%] md:min-h-[200px] md:max-h-none border-t border-white/5 bg-[#080808] flex flex-col shrink-0">
                         <div className="px-6 py-3 flex items-center justify-between border-b border-white/5 bg-[#0a0a0a]/50">
                             <h3 className="text-[10px] font-black uppercase tracking-widest text-neutral-500">Edición / Impresiones</h3>
                             <span className="text-[10px] text-neutral-600 font-bold">{details?.all_versions?.length || 0} Versiones</span>
@@ -364,7 +364,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                     </h2>
                                 </a>
                                 <div className="flex flex-wrap items-center gap-2 text-sm md:text-base font-semibold text-neutral-400">
-                                    <span className="text-white/80">{details.mana_cost || ''}</span>
+                                    <span className="text-white/80"><ManaText text={details.mana_cost || ''} /></span>
                                     {details.mana_cost && <span className="opacity-30">•</span>}
                                     <span className="italic">{details.type}</span>
                                 </div>
@@ -372,7 +372,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
 
                             <div className="p-4 md:p-5 rounded-2xl bg-white/[0.03] border border-white/5 space-y-3">
                                 <div className="text-sm md:text-base leading-relaxed text-neutral-300 whitespace-pre-wrap">
-                                    {details.oracle_text}
+                                    <ManaText text={details.oracle_text} />
                                 </div>
                                 {details.flavor_text && (
                                     <p className="text-xs italic text-neutral-500 font-serif border-t border-white/10 pt-3">

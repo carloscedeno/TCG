@@ -13,6 +13,8 @@ export interface CardApi {
   price: number;
   image_url: string;
   rarity: string;
+  finish?: string; // Added for Foil handling
+  is_foil?: boolean; // Added for Foil handling
 }
 
 export interface CardDetails extends Card {
@@ -103,6 +105,8 @@ export const fetchCards = async (filters: any): Promise<{ cards: Card[]; total_c
       colors: row.colors || [],
       release_date: row.release_date,
       total_stock: row.total_stock || 0,
+      finish: row.finish || (row.is_foil ? 'foil' : undefined), // Map if available
+      is_foil: row.is_foil || (row.finish === 'foil'), // Map if available
       valuation: {
         market_price: row.avg_market_price_usd || 0,
         store_price: row.store_price || 0,
@@ -218,10 +222,9 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
 
     if (!data) {
       console.warn('Local API failed for details, falling back to direct Supabase fetch');
-      // Fetch the printing
       const { data: sbData, error: sbError } = await supabase
         .from('card_printings')
-        .select('*, cards(*), sets(*)')
+        .select('*, cards(*), sets(*), aggregated_prices(avg_market_price_usd)')
         .eq('printing_id', printingId)
         .single();
 
@@ -254,27 +257,56 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
         stockMap.set(p.printing_id, { id: p.id, stock: p.stock, price: p.price });
       });
 
-      // Only include versions that have stock > 0
+      // Include all versions, set stock to 0 if not available
       const versionsWithStock = (versionsData || [])
-        .filter((v: any) => stockMap.has(v.printing_id))
         .map((v: any) => {
-          const product = stockMap.get(v.printing_id)!;
+          const product = stockMap.get(v.printing_id);
           return {
             printing_id: v.printing_id,
             set_name: v.sets?.set_name,
             set_code: v.sets?.set_code,
             collector_number: v.collector_number,
             rarity: v.rarity,
-            price: product.price || v.aggregated_prices?.[0]?.avg_market_price_usd || 0,
+            price: product?.price || v.aggregated_prices?.[0]?.avg_market_price_usd || 0,
             image_url: v.image_url,
-            stock: product.stock,
-            product_id: product.id
+            stock: product?.stock || 0,
+            product_id: product?.id
           };
         });
 
+      // Get stock info for current card
+      const currentStock = stockMap.get(printingId);
+      const marketPrice = sbData.aggregated_prices?.[0]?.avg_market_price_usd || 0;
+
       data = {
-        ...sbData,
-        all_versions: versionsWithStock
+        card_id: sbData.printing_id,
+        name: sbData.cards?.name || sbData.name || 'Unknown Card',
+        mana_cost: sbData.cards?.mana_cost,
+        type: sbData.cards?.type_line,
+        oracle_text: sbData.cards?.oracle_text,
+        flavor_text: sbData.flavor_text || sbData.cards?.flavor_text,
+        artist: sbData.artist,
+        rarity: sbData.rarity,
+        set: sbData.sets?.set_name || '',
+        set_code: sbData.sets?.set_code || '',
+        collector_number: sbData.collector_number,
+        image_url: sbData.image_url,
+        price: currentStock?.price || marketPrice || 0,
+        valuation: {
+          store_price: currentStock?.price || 0,
+          market_price: marketPrice,
+          valuation_avg: marketPrice
+          // market_url omitted -> Frontend will generate search URL, which is safer than constructed slug
+        },
+        legalities: sbData.cards?.legalities,
+        colors: sbData.cards?.colors,
+        total_stock: currentStock?.stock || 0,
+        card_faces: sbData.card_faces || sbData.cards?.card_faces,
+        all_versions: versionsWithStock.map(v => ({
+          ...v,
+          set_code: v.set_code || '??',
+          set_name: v.set_name || 'Unknown Set'
+        }))
       };
     }
 
@@ -330,14 +362,13 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
           stockMap.set(p.printing_id, { id: p.id, stock: p.stock, price: p.price });
         });
 
-        // Filter to only versions with stock
+        // Update stock info for all versions
         data.all_versions = data.all_versions
-          .filter((v: any) => stockMap.has(v.printing_id))
           .map((v: any) => ({
             ...v,
-            stock: stockMap.get(v.printing_id)!.stock,
-            product_id: stockMap.get(v.printing_id)!.id,
-            price: stockMap.get(v.printing_id)!.price || v.price
+            stock: stockMap.get(v.printing_id)?.stock || 0,
+            product_id: stockMap.get(v.printing_id)?.id,
+            price: stockMap.get(v.printing_id)?.price || v.price
           }));
       }
     }

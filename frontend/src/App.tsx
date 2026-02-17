@@ -15,6 +15,7 @@ import UpdatePassword from './pages/UpdatePassword';
 import { AdminRoute } from './components/Auth/AdminRoute';
 import NotFound from './pages/NotFound';
 import HelpPage from './pages/HelpPage';
+import LegalPage from './pages/LegalPage';
 import { WhatsAppWidget } from './components/Navigation/WhatsAppWidget';
 import { WelcomeModal } from './components/Navigation/WelcomeModal';
 
@@ -64,7 +65,9 @@ function App() {
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/import" element={<ImportCollection />} />
                     <Route path="/tournaments" element={<TournamentHub />} />
+
                     <Route path="/help" element={<HelpPage />} />
+                    <Route path="/legal" element={<LegalPage />} />
                     <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
                     <Route path="/admin/inventory" element={<AdminRoute><InventoryPage /></AdminRoute>} />
                     <Route path="/admin/orders" element={<AdminRoute><OrdersPage /></AdminRoute>} />
