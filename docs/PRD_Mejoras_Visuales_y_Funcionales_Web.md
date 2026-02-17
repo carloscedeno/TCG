@@ -59,9 +59,11 @@ Estandarización de colores según la nueva identidad de marca:
     * Los precios deben mapearse a `S/P` (Sin Precio) si son 0 o nulos.
     * **Nunca** usar `flex-1` sin restricciones o alturas fijas en píxeles que excedan el viewport disponible.
 
-    * El contenido interno debe ser `overflow-y-auto`.
-
-Esta configuración garantiza que, independientemente del tamaño de la imagen o de la pantalla, la lista de versiones siempre tendrá al menos 200px o el 35% del espacio vertical disponible, y la imagen se ajustará automáticamente al espacio restante.
+5. **Interactividad y Cambio de Versión**:
+    * Al cambiar de `printing_id`, el Modal DEBE preservar la lista `all_versions` del estado anterior si la nueva respuesta de la API es incompleta, detectando que se trata del mismo `card_id` (Oracle ID).
+    * Esto evita que el menú de navegación lateral desaparezca al saltar entre impresiones.
+6. **Seguridad de Despliegue (Build)**:
+    * Cualquier modificación en `CardModal.tsx` o `api.ts` requiere una validación local mediante `npm run build` para garantizar que no hay errores de TypeScript que bloqueen el pipeline de producción.
 
 **Validación**:
 

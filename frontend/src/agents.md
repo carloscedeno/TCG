@@ -120,77 +120,54 @@ curl https://sxuotvogwvmxuvwbsscv.supabase.co/functions/v1/tcg-api/api/cards?lim
 - Image is enormous and versions list is invisible/cut off
 - Layout "estaba bien" but broke after changes
 
-**Solution** (2026-02-16):
+**Solution** (2026-02-16 - Final):
 
 ```tsx
-// ❌ WRONG: Uncontrolled flex-1 allows image to dominate
-<div className="flex-1 min-h-[300px] ...">
-  {/* Image */}
-</div>
-<div className="md:h-[240px] ...">
-  {/* Versions - can be crushed */}
-</div>
+// ❌ WRONG: Not handling state change or ignoring previous versions
+const loadCardDetails = async (id: string) => {
+  const data = await fetchCardDetails(id);
+  setDetails(data); // If data has no .all_versions, the menu DISAPPEARS!
+};
 
-// ✅ CORRECT: Controlled flex with guaranteed minimums
-<div className="flex-[1_1_0%] min-h-[300px] md:min-h-0 relative ...">
-  {/* Image - can shrink to 0 if needed */}
-</div>
-<div className="h-auto max-h-[180px] md:h-[35%] md:min-h-[200px] shrink-0 ...">
-  {/* Versions - GUARANTEED at least 200px on desktop */}
-</div>
+// ✅ CORRECT: Preserve versions in state if the card is the same (oracle_id)
+const loadCardDetails = async (id: string) => {
+  const data = await fetchCardDetails(id);
+  
+  // PRESERVE VERSIONS: If new data has no versions but old state had them for same card_id
+  if ((!data.all_versions || data.all_versions.length <= 1) && details?.all_versions) {
+    if (details.card_id === data.card_id) {
+      data.all_versions = details.all_versions; // KEEP THE LIST
+    }
+  }
+  setDetails(data);
+};
 ```
 
-**API Fix** (`utils/api.ts`):
+**TypeScript Safety**:
 
-```typescript
-// ❌ WRONG: Filter out versions without stock
-const versionsWithStock = (versionsData || [])
-  .filter((v: any) => stockMap.has(v.printing_id))  // ← REMOVES versions!
-  .map(...)
-
-// ✅ CORRECT: Show all versions, mark stock as 0 if unavailable
-const versionsWithStock = (versionsData || [])
-  .map((v: any) => {
-    const product = stockMap.get(v.printing_id);
-    return {
-      ...v,
-      stock: product?.stock || 0,  // ← Default to 0, don't hide
-      price: product?.price || v.aggregated_prices?.[0]?.avg_market_price_usd || 0
-    };
-  });
-```
+- NEVER use implicit `any` in API callbacks (e.g., `.map(v => ...)`). ALWAYS use `.map((v: any) => ...)`.
+- Implicit `any` errors kill the CI/CD pipeline, even if `npm run dev` works.
 
 **Key Principles**:
 
-1. **Image Container**:
-   - Use `flex-[1_1_0%]` (can grow, can shrink, basis 0)
-   - MUST have `min-h-0` to allow shrinking below content size
-   - Use `relative` positioning for absolute children
-
-2. **Versions Container**:
-   - Use percentage height `h-[35%]` for flexibility
-   - MUST have `min-h-[200px]` to guarantee visibility
-   - MUST have `shrink-0` to prevent being crushed by image
-   - Inner content MUST be `overflow-y-auto`
-
-3. **Data Layer**:
-   - NEVER filter out versions based on stock availability
-   - Always show all versions with `stock: 0` for out-of-stock items
-   - Provide safe defaults for `set_code`, `set_name` to prevent crashes
+1. **State Persistence**: CardModal must bridge data gaps. If a version switch returns a "slim" card object, the UI must manually re-attach the previous `all_versions` list to prevent the navigation menu from vanishing.
+2. **Printing vs. Oracle Identity**:
+   - `printing_id`: Specific version (e.g., 2X2-1). Use for loading images/prices.
+   - `card_id` (Oracle ID): The base card. Use to link all printings together in the versions list.
+3. **CI/CD Build Check**: Before pushing any refactor of `api.ts` or `CardModal.tsx`, manually run `npm run build` in the `frontend` directory to catch silent TS errors.
+4. **Layout**: Controlled flex with guaranteed minimums (35% height / 200px min-h) for the versions list prevents crushing by oversized images.
 
 **Validation Checklist**:
 
-- [ ] Test with cards with many versions (Dark Ritual: 47 versions, Boomerang)
-- [ ] Test with cards with few versions (1-2 versions)
-- [ ] Verify versions list is scrollable
-- [ ] Verify image doesn't push content off-screen
-- [ ] Verify "X Versiones" counter shows correct number
-- [ ] Verify out-of-stock versions show "Stock: 0" but are still visible
+- [ ] Click through at least 3 alternative versions in the Modal.
+- [ ] Verify image, set code, and price update for each click.
+- [ ] Verify the versions list remains visible and scrollable after click.
+- [ ] Run `npm run build` locally before pushing.
 
 **Files Affected**:
 
-- `frontend/src/components/Card/CardModal.tsx` (lines 217, 248)
-- `frontend/src/utils/api.ts` (lines 261-277, 337-345)
+- `frontend/src/components/Card/CardModal.tsx`
+- `frontend/src/utils/api.ts`
 
 **Reference**: See `docs/PRD_Mejoras_Visuales_y_Funcionales_Web.md` Section 3.4 for full specification.
 
@@ -203,5 +180,5 @@ const versionsWithStock = (versionsData || [])
 
 - Use TailwindCSS utility classes.
 - Lucide React for icons.
-- Always test API changes with `python tests/verify_supabase_functions.py`
-- Always verify deduplication logic with cards that have multiple printings
+- Always run `npm run build` to verify TS safety.
+- Always verify deduplication logic with cards that have multiple printings.
