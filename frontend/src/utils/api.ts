@@ -210,10 +210,15 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
     let data;
     if (API_BASE) {
       try {
-        const response = await fetch(`${API_BASE}/api/cards/${printingId}`);
+        const apiUrl = `${API_BASE}/api/cards/${printingId}`;
+        console.log(`[API] Fetching details from: ${apiUrl}`);
+        const response = await fetch(apiUrl);
         if (response.ok) {
           const json = await response.json();
           data = json.card || json;
+          console.log('[API] Success:', data.name);
+        } else {
+          console.warn(`[API] Error ${response.status}: ${response.statusText}`);
         }
       } catch (e) {
         console.warn('API fetch failed, will try fallback', e);
@@ -258,13 +263,13 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
       });
 
       // Include all versions, set stock to 0 if not available
-      const versionsWithStock = (versionsData || [])
+      let versionsWithStock = (versionsData || [])
         .map((v: any) => {
           const product = stockMap.get(v.printing_id);
           return {
             printing_id: v.printing_id,
-            set_name: v.sets?.set_name,
-            set_code: v.sets?.set_code,
+            set_name: v.sets?.set_name || 'Unknown Set',
+            set_code: v.sets?.set_code || '??',
             collector_number: v.collector_number,
             rarity: v.rarity,
             price: product?.price || v.aggregated_prices?.[0]?.avg_market_price_usd || 0,
@@ -277,6 +282,22 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
       // Get stock info for current card
       const currentStock = stockMap.get(printingId);
       const marketPrice = sbData.aggregated_prices?.[0]?.avg_market_price_usd || 0;
+
+      // CRITICAL: If no versions were found (shouldn't happen but can with custom cards), add the current one
+      if (versionsWithStock.length === 0) {
+        console.warn('[Supabase] No versions found for card_id, using current printing only');
+        versionsWithStock = [{
+          printing_id: sbData.printing_id,
+          set_name: sbData.sets?.set_name || 'Unknown Set',
+          set_code: sbData.sets?.set_code || '??',
+          collector_number: sbData.collector_number,
+          rarity: sbData.rarity,
+          price: currentStock?.price || marketPrice || 0,
+          image_url: sbData.image_url,
+          stock: currentStock?.stock || 0,
+          product_id: currentStock?.id
+        }];
+      }
 
       data = {
         card_id: sbData.printing_id,
@@ -331,21 +352,35 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
         });
 
         data.all_versions = (versionsData || [])
-          .filter((v: any) => stockMap.has(v.printing_id))
           .map((v: any) => {
-            const product = stockMap.get(v.printing_id)!;
+            const product = stockMap.get(v.printing_id);
             return {
               printing_id: v.printing_id,
-              set_name: v.sets?.set_name,
-              set_code: v.sets?.set_code,
+              set_name: v.sets?.set_name || 'Unknown Set',
+              set_code: v.sets?.set_code || '??',
               collector_number: v.collector_number,
               rarity: v.rarity,
-              price: product.price || v.aggregated_prices?.[0]?.avg_market_price_usd || 0,
+              price: product?.price || v.aggregated_prices?.[0]?.avg_market_price_usd || 0,
               image_url: v.image_url,
-              stock: product.stock,
-              product_id: product.id
+              stock: product?.stock || 0,
+              product_id: product?.id
             };
           });
+
+        // Ensure at least one version
+        if (data.all_versions.length === 0) {
+          data.all_versions = [{
+            printing_id: data.card_id,
+            set_name: data.set || 'Unknown Set',
+            set_code: data.set_code || '??',
+            collector_number: data.collector_number,
+            rarity: data.rarity,
+            price: data.price,
+            image_url: data.image_url,
+            stock: data.total_stock,
+            product_id: data.product_id
+          }];
+        }
       }
 
       // If data has all_versions from API but no stock info, enrich it
@@ -363,13 +398,12 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
         });
 
         // Update stock info for all versions
-        data.all_versions = data.all_versions
-          .map((v: any) => ({
-            ...v,
-            stock: stockMap.get(v.printing_id)?.stock || 0,
-            product_id: stockMap.get(v.printing_id)?.id,
-            price: stockMap.get(v.printing_id)?.price || v.price
-          }));
+        data.all_versions = data.all_versions.map((v: any) => ({
+          ...v,
+          stock: stockMap.get(v.printing_id)?.stock || 0,
+          product_id: stockMap.get(v.printing_id)?.id,
+          price: stockMap.get(v.printing_id)?.price || v.price
+        }));
       }
     }
     return data;
