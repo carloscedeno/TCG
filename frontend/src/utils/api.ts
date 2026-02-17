@@ -105,10 +105,10 @@ export const fetchCards = async (filters: any): Promise<{ cards: Card[]; total_c
       colors: row.colors || [],
       release_date: row.release_date,
       total_stock: row.total_stock || 0,
-      finish: row.finish || (row.is_foil ? 'foil' : undefined), // Map if available
-      is_foil: row.is_foil || (row.finish === 'foil'), // Map if available
+      finish: row.finish || (row.is_foil ? 'foil' : 'nonfoil'),
+      is_foil: !!row.is_foil || (row.finish === 'foil'),
       valuation: {
-        market_price: row.avg_market_price_usd || 0,
+        market_price: row.avg_market_price_usd || row.store_price || 0,
         store_price: row.store_price || 0,
         market_url: `https://www.cardkingdom.com/mtg/${row.set_name?.replace(/\s+/g, '-').toLowerCase()}/${row.card_name?.replace(/\s+/g, '-').toLowerCase()}`
       }
@@ -178,9 +178,6 @@ export const fetchProducts = async (params: any = {}): Promise<any> => {
     if (error) throw error;
 
     // Estimate count (RPC doesn't return total)
-    // For pagination UIs that need total_count, we might need a separate count query or an estimate.
-    // Home.tsx uses total_count to show "Load More" button (if cards.length < total_count).
-    // If we return a large number (e.g. offset + limit + 1) when we have full page, it allows next page.
     const returnedCount = data ? data.length : 0;
     const requestedLimit = params.limit || 50;
     const currentOffset = params.offset || 0;
@@ -190,8 +187,19 @@ export const fetchProducts = async (params: any = {}): Promise<any> => {
       ? currentOffset + returnedCount
       : currentOffset + requestedLimit + 1;
 
+    const products = (data || []).map((row: any) => ({
+      ...row,
+      finish: row.finish || (row.is_foil ? 'foil' : 'nonfoil'),
+      is_foil: !!row.is_foil || (row.finish === 'foil'),
+      price: row.price || row.avg_market_price_usd || row.store_price || 0,
+      valuation: {
+        market_price: row.avg_market_price_usd || row.store_price || 0,
+        store_price: row.store_price || 0
+      }
+    }));
+
     return {
-      products: data || [],
+      products,
       total_count
     };
 
@@ -254,6 +262,8 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
           collector_number: sbData.collector_number,
           image_url: sbData.image_url,
           price: marketPrice,
+          finish: sbData.finish || (sbData.is_foil ? 'foil' : 'nonfoil'),
+          is_foil: !!sbData.is_foil || (sbData.finish === 'foil'),
           total_stock: 0,
           valuation: {
             store_price: 0,
@@ -287,7 +297,9 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                 rarity: v.rarity,
                 price: v.aggregated_prices?.[0]?.avg_market_price_usd || 0,
                 image_url: v.image_url,
-                stock: 0
+                stock: 0,
+                finish: v.finish || (v.is_foil ? 'foil' : 'nonfoil'),
+                is_foil: !!v.is_foil || (v.finish === 'foil')
               }));
             }
           }
@@ -295,10 +307,38 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
       }
     }
 
-    // 3. Post-processing: Ensure stock and final fallbacks
+    // 3. Post-processing: Ensure stock, final fallbacks and FIX FINISHES
     if (data) {
       // Ensure all_versions exists
       if (!data.all_versions) data.all_versions = [];
+
+      // DEDUPLICATE AND FIX FINISHES: 
+      // If we have two printings for the same set+number and both are 'nonfoil', 
+      // one is likely the foil version that wasn't correctly flagged during import.
+      const versionGroups = new Map<string, any[]>();
+      data.all_versions.forEach((v: any) => {
+        const key = `${v.set_code}-${v.collector_number}`;
+        if (!versionGroups.has(key)) versionGroups.set(key, []);
+        versionGroups.get(key)!.push(v);
+      });
+
+      versionGroups.forEach((group) => {
+        if (group.length > 1) {
+          const allNonFoil = group.every(v => !(v.finish === 'foil' || v.is_foil));
+
+          if (allNonFoil) {
+            // Mark the second one as foil
+            group[1].finish = 'foil';
+            group[1].is_foil = true;
+
+            // Sync with main data if that's the one currently active
+            if (data.printing_id === group[1].printing_id) {
+              data.finish = 'foil';
+              data.is_foil = true;
+            }
+          }
+        }
+      });
 
       // If still empty, add current
       if (data.all_versions.length === 0) {
@@ -310,7 +350,9 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
           rarity: data.rarity || '',
           price: data.price || 0,
           image_url: data.image_url,
-          stock: data.total_stock || 0
+          stock: data.total_stock || 0,
+          finish: data.finish || (data.is_foil ? 'foil' : 'nonfoil'),
+          is_foil: !!data.is_foil || (data.finish === 'foil')
         }];
       }
 

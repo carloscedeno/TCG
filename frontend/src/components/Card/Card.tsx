@@ -30,10 +30,11 @@ export interface CardProps {
   total_stock?: number;
   // New props for finishes if available in API, otherwise we infer or ignore for now
   finish?: string; // 'foil', 'nonfoil', 'etched'
+  is_foil?: boolean;
   onClick?: () => void;
 }
 
-export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, price, card_id, rarity, type, card_faces, viewMode = 'grid', total_stock, finish, onClick }) => {
+export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, price, card_id, rarity, type, card_faces, viewMode = 'grid', total_stock, finish, is_foil, onClick }) => {
   const [currentFaceIndex, setCurrentFaceIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [addingToCart, setAddingToCart] = useState(false);
@@ -83,7 +84,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
     }
   };
 
-  const isFoil = finish === 'foil' || name.toLowerCase().includes(' foil ') || (type?.toLowerCase().includes('foil')); // Simple heuristic if finish prop not fully populated yet
+  const isFoil = is_foil === true || finish === 'foil' || name.toLowerCase().includes(' foil ') || (type?.toLowerCase().includes('foil')); // Simple heuristic if finish prop not fully populated yet
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -140,7 +141,16 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
                 {rarity}
               </span>
             )}
-            {isFoil && <span className="text-[8px] bg-gradient-to-r from-pink-500 to-violet-500 text-white px-1.5 py-0.5 rounded uppercase font-bold tracking-wider">Foil</span>}
+            {isFoil && (
+              <span className="flex items-center gap-1 text-[8px] bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white px-1.5 py-0.5 rounded uppercase font-bold tracking-wider animate-pulse">
+                <svg width="8" height="10" viewBox="0 0 10 12" fill="none" className="drop-shadow-sm">
+                  <rect x="0.5" y="0.5" width="9" height="11" rx="1.5" stroke="currentColor" strokeWidth="1" />
+                  <path d="M2 3 L8 3 M2 5 L6 5" stroke="currentColor" strokeWidth="1" />
+                  <circle cx="7" cy="8" r="1.5" fill="currentColor" />
+                </svg>
+                Foil
+              </span>
+            )}
           </div>
         </div>
 
@@ -157,9 +167,16 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
 
         <div className="text-right flex flex-col items-end min-w-[80px]">
           <span className="text-[9px] uppercase text-neutral-500 font-bold tracking-wider">Mercado</span>
-          <span className="text-geeko-cyan font-mono font-bold text-base leading-none">
-            {typeof price === 'number' ? `$${price.toFixed(2)}` : '---'}
-          </span>
+          <div className="flex items-center gap-1.5">
+            <span className="text-geeko-cyan font-mono font-bold text-base leading-none">
+              {typeof price === 'number' ? `$${price.toFixed(2)}` : '---'}
+            </span>
+            {isFoil && (
+              <span className="text-[10px] bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white px-1.5 py-0.5 rounded uppercase font-black tracking-tighter" title="Versión Foil">
+                FOIL
+              </span>
+            )}
+          </div>
         </div>
 
         <button
@@ -202,9 +219,9 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10" />
 
       {/* Card Image */}
-      <div className="relative aspect-[2.5/3.5] w-full bg-[#1a1a1a] overflow-hidden">
+      <div className={`relative aspect-[2.5/3.5] w-full bg-[#1a1a1a] overflow-hidden ${isFoil ? 'holo-effect' : ''}`}>
         {isFoil && (
-          <div className="absolute inset-0 z-20 foil-shimmer opacity-40 mix-blend-overlay pointer-events-none" />
+          <div className="absolute inset-0 z-20 foil-shimmer opacity-30 mix-blend-overlay pointer-events-none" />
         )}
 
         {imgSrc ? (
@@ -241,7 +258,12 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         )}
 
         {isFoil && (
-          <div className="absolute top-8 right-2 px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider bg-gradient-to-r from-pink-500/80 to-purple-600/80 text-white border border-white/20 z-20 shadow-lg">
+          <div className="absolute top-8 right-2 px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider bg-gradient-to-r from-pink-500/80 via-purple-600/80 to-cyan-500/80 text-white border border-white/20 z-20 shadow-lg flex items-center gap-1 animate-pulse">
+            <svg width="8" height="10" viewBox="0 0 10 12" fill="none">
+              <rect x="0.5" y="0.5" width="9" height="11" rx="1.5" stroke="currentColor" strokeWidth="1" />
+              <path d="M2 3 L8 3 M2 5 L6 5" stroke="currentColor" strokeWidth="1" />
+              <circle cx="7" cy="8" r="1.5" fill="currentColor" />
+            </svg>
             Foil
           </div>
         )}
@@ -263,9 +285,16 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         <div className="mt-auto pt-3 flex items-center justify-between border-t border-white/5">
           <div className="flex flex-col text-right w-full pr-10 relative"> {/* Adjusted for price alignment */}
             <span className="text-[8px] uppercase text-neutral-500 font-bold tracking-wider absolute -top-2 right-10">Mercado</span>
-            <span className="text-geeko-cyan font-mono font-bold text-lg leading-none">
-              {typeof price === 'number' ? `$${price.toFixed(2)}` : '---'}
-            </span>
+            <div className="flex items-center justify-end gap-1.5">
+              <span className="text-geeko-cyan font-mono font-bold text-lg leading-none">
+                {price && price > 0 ? `$${price.toFixed(2)}` : 'S/P'}
+              </span>
+              {isFoil && (
+                <span className="text-[10px] bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white px-1.5 py-0.5 rounded uppercase font-black tracking-tighter" title="Versión Foil">
+                  FOIL
+                </span>
+              )}
+            </div>
           </div>
 
           {/* Quick Add Button showing on Hover */}

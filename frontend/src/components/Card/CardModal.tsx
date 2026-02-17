@@ -38,6 +38,8 @@ interface Version {
     price: number;
     image_url: string;
     stock?: number;
+    finish?: string;
+    is_foil?: boolean;
 }
 
 interface CardDetails {
@@ -55,6 +57,8 @@ interface CardDetails {
     collector_number: string;
     image_url: string;
     price: number;
+    finish?: string;
+    is_foil?: boolean;
     valuation?: {
         store_price: number;
         market_price: number;
@@ -97,7 +101,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
 
     const [error, setError] = useState<string | null>(null);
 
-    const loadCardDetails = async (id: string) => {
+    const loadCardDetails = async (id: string, skipAutoSwitch = false) => {
         console.log("CardModal: Start loading details for:", id);
         setLoading(true);
         setError(null);
@@ -116,6 +120,26 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                 const newOracleId = data.card_id || data.oracle_id;
                 if (oldOracleId === newOracleId) {
                     data.all_versions = details.all_versions;
+                }
+            }
+
+            // DEFAULT TO NORMAL: If we just loaded a foil version, but there is a normal version 
+            // of this same card (same set + collector_num), switch to the normal one by default.
+            // But ONLY if we haven't already skipped this (manual user clicks).
+            if (!skipAutoSwitch) {
+                const isFoil = !!(data.is_foil || data.finish === 'foil');
+                if (isFoil && data.all_versions) {
+                    const normalAlt = data.all_versions.find(v =>
+                        v.set_code === data.set_code &&
+                        v.collector_number === data.collector_number &&
+                        !(v.is_foil || v.finish === 'foil')
+                    );
+
+                    if (normalAlt) {
+                        console.log("CardModal: Auto-switching from Foil to Normal version as default");
+                        loadCardDetails(normalAlt.printing_id, true);
+                        return;
+                    }
                 }
             }
 
@@ -138,7 +162,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
         }
         if (id !== activePrintingId) {
             setActivePrintingId(id);
-            loadCardDetails(id);
+            loadCardDetails(id, true); // User explicitly clicked, don't auto-switch finishes anymore
         }
     };
 
@@ -234,16 +258,21 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                         ) : (
                             <div className="relative w-full h-full flex items-center justify-center group/card">
                                 <div className="absolute inset-0 bg-geeko-cyan/20 blur-[120px] rounded-full opacity-40 animate-pulse pointer-events-none" />
-                                <img
-                                    src={currentImage}
-                                    alt={details?.name}
-                                    className="max-w-[90%] max-h-[95%] md:max-w-full md:max-h-full object-contain drop-shadow-[0_45px_100px_rgba(0,0,0,0.95)] relative z-10 transition-transform duration-700 group-hover/card:scale-[1.03]"
-                                    style={{
-                                        imageRendering: 'auto',
-                                        height: 'auto',
-                                        width: 'auto',
-                                    }}
-                                />
+                                <div className={`relative w-full h-full flex items-center justify-center drop-shadow-[0_45px_100px_rgba(0,0,0,0.95)] ${(details?.is_foil || details?.finish === 'foil') ? 'holo-effect' : ''}`}>
+                                    {(details?.is_foil || details?.finish === 'foil') && (
+                                        <div className="absolute inset-0 z-20 foil-shimmer opacity-30 mix-blend-overlay pointer-events-none rounded-[10%] scale-[0.95]" />
+                                    )}
+                                    <img
+                                        src={currentImage}
+                                        alt={details?.name}
+                                        className="max-w-[90%] max-h-[95%] md:max-w-full md:max-h-full object-contain relative z-10 transition-transform duration-700 group-hover/card:scale-[1.03]"
+                                        style={{
+                                            imageRendering: 'auto',
+                                            height: 'auto',
+                                            width: 'auto',
+                                        }}
+                                    />
+                                </div>
                             </div>
                         )}
                         {hasMultipleFaces && !loading && (
@@ -274,53 +303,62 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                         </div>
                                     </div>
                                 ))
-                            ) : details?.all_versions?.map((v) => (
-                                <a
-                                    key={v.printing_id}
-                                    href={`card/${v.printing_id}`}
-                                    onClick={(e) => {
-                                        if (!e.ctrlKey && !e.metaKey) {
-                                            e.preventDefault();
-                                            handleVersionClick(v.printing_id);
-                                        }
-                                    }}
-                                    className={`inline-flex md:flex items-center gap-3 md:gap-4 px-4 md:px-6 py-2 md:py-3 hover:bg-white/5 transition-colors border-r md:border-r-0 md:border-b border-white/5 group rounded-lg md:rounded-none ${activePrintingId === v.printing_id ? 'bg-geeko-cyan/10 border-geeko-cyan/20' : ''}`}
-                                >
-                                    <div className="w-8 h-8 rounded bg-neutral-900 flex items-center justify-center text-[10px] font-black group-hover:text-geeko-cyan transition-colors shrink-0">
-                                        {v.set_code.toUpperCase()}
-                                    </div>
-                                    <div className="flex-1 text-left min-w-[120px] md:min-w-0">
-                                        <div className={`text-[10px] md:text-xs font-bold leading-tight truncate ${activePrintingId === v.printing_id ? 'text-geeko-cyan' : 'text-neutral-300'}`}>
-                                            {v.set_name}
-                                        </div>
-                                        <div className="text-[9px] md:text-[10px] text-neutral-600 font-bold">#{v.collector_number} • {v.rarity}</div>
-                                    </div>
-                                    <div className="text-right shrink-0">
-                                        <div className="text-[10px] md:text-xs font-mono font-bold text-neutral-400 group-hover:text-white transition-colors">
-                                            {v.price && v.price > 0 ? `$${v.price.toFixed(2)}` : 'S/P'}
-                                        </div>
-                                        <div className="text-[8px] font-black text-geeko-cyan uppercase tracking-tighter">
-                                            Stock: {v.stock || 0}
-                                        </div>
-                                    </div>
-                                    <button
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            handleVersionAddToCart(v);
-                                        }}
-                                        disabled={!v.stock || v.stock === 0}
-                                        aria-label={`Add ${v.set_name} version to cart`}
-                                        className={`p-1.5 md:p-2 rounded-lg transition-all shrink-0 ${!v.stock || v.stock === 0
-                                            ? 'bg-neutral-800 text-neutral-600 cursor-not-allowed opacity-50'
-                                            : 'bg-white/5 hover:bg-geeko-cyan text-neutral-400 hover:text-black opacity-0 group-hover:opacity-100'
-                                            }`}
-                                    >
-                                        <ShoppingCart size={14} />
-                                    </button>
-                                </a>
-                            ))}
-                            <div className="sticky bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-[#080808] to-transparent pointer-events-none hidden md:block" />
+                            ) : (
+                                <>
+                                    {details?.all_versions?.map((v) => (
+                                        <a
+                                            key={v.printing_id}
+                                            href={`card/${v.printing_id}`}
+                                            onClick={(e) => {
+                                                if (!e.ctrlKey && !e.metaKey) {
+                                                    e.preventDefault();
+                                                    handleVersionClick(v.printing_id);
+                                                }
+                                            }}
+                                            className={`inline-flex md:flex items-center gap-3 md:gap-4 px-4 md:px-6 py-2 md:py-3 hover:bg-white/5 transition-colors border-r md:border-r-0 md:border-b border-white/5 group rounded-lg md:rounded-none ${activePrintingId === v.printing_id ? 'bg-geeko-cyan/10 border-geeko-cyan/20' : ''}`}
+                                        >
+                                            <div className="w-8 h-8 rounded bg-neutral-900 flex items-center justify-center text-[10px] font-black group-hover:text-geeko-cyan transition-colors shrink-0">
+                                                {v.set_code.toUpperCase()}
+                                            </div>
+                                            <div className="flex-1 text-left min-w-[120px] md:min-w-0">
+                                                <div className={`text-[10px] md:text-xs font-bold leading-tight truncate ${activePrintingId === v.printing_id ? 'text-geeko-cyan' : 'text-neutral-300'}`}>
+                                                    {v.set_name}
+                                                </div>
+                                                <div className="text-[9px] md:text-[10px] text-neutral-600 font-bold">#{v.collector_number} • {v.rarity}</div>
+                                            </div>
+                                            <div className="text-right shrink-0">
+                                                <div className="flex items-center justify-end gap-1 text-[10px] md:text-xs font-mono font-bold text-neutral-400 group-hover:text-white transition-colors">
+                                                    {v.price && v.price > 0 ? `$${v.price.toFixed(2)}` : 'S/P'}
+                                                    {(v.is_foil || v.finish === 'foil') && (
+                                                        <span className="text-[8px] bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white px-1 py-0.5 rounded uppercase font-black" title="Foil">
+                                                            FOIL
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <div className="text-[8px] font-black text-geeko-cyan uppercase tracking-tighter">
+                                                    {v.stock || 0} en Stock
+                                                </div>
+                                            </div>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    e.stopPropagation();
+                                                    handleVersionAddToCart(v);
+                                                }}
+                                                disabled={!v.stock || v.stock === 0}
+                                                aria-label={`Add ${v.set_name} version to cart`}
+                                                className={`p-1.5 md:p-2 rounded-lg transition-all shrink-0 ${!v.stock || v.stock === 0
+                                                    ? 'bg-neutral-800 text-neutral-600 cursor-not-allowed opacity-50'
+                                                    : 'bg-white/5 hover:bg-geeko-cyan text-neutral-400 hover:text-black opacity-0 group-hover:opacity-100'
+                                                    }`}
+                                            >
+                                                <ShoppingCart size={14} />
+                                            </button>
+                                        </a>
+                                    ))}
+                                    <div className="sticky bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-[#080808] to-transparent pointer-events-none hidden md:block" />
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -435,13 +473,53 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                     </span>
                                                 )}
                                             </div>
-                                            <div className="flex items-baseline gap-3">
-                                                <div className="text-3xl md:text-4xl font-black text-white tracking-tighter leading-none">
-                                                    {(details?.price && details.price > 0) ? `$${details.price.toFixed(2)}` : (details?.valuation?.market_price && details.valuation.market_price > 0 ? `$${details.valuation.market_price.toFixed(2)}` : 'S/P')}
+                                            <div className="flex flex-col gap-2">
+                                                <div className="flex items-baseline flex-wrap gap-x-3 gap-y-1">
+                                                    {/* Current Selected Price */}
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="text-3xl md:text-4xl font-black text-white tracking-tighter leading-none">
+                                                            {(details?.price && details.price > 0) ? `$${details.price.toFixed(2)}` : (details?.valuation?.market_price && details.valuation.market_price > 0 ? `$${details.valuation.market_price.toFixed(2)}` : 'S/P')}
+                                                        </div>
+                                                        <span className={`text-[10px] px-2 py-0.5 rounded-full font-black tracking-widest shadow-sm ${(details?.is_foil || details?.finish === 'foil') ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white animate-pulse' : 'bg-white text-black'}`}>
+                                                            {(details?.is_foil || details?.finish === 'foil') ? 'FOIL' : 'NORMAL'}
+                                                        </span>
+                                                    </div>
+
+                                                    {/* Alternate Finish Price (Clickable) */}
+                                                    {(() => {
+                                                        const currentIsFoil = !!(details?.is_foil || details?.finish === 'foil');
+                                                        const otherFinish = details?.all_versions?.find(v =>
+                                                            v.set_code === details.set_code &&
+                                                            v.collector_number === details.collector_number &&
+                                                            v.printing_id !== details.printing_id &&
+                                                            (!!(v.is_foil || v.finish === 'foil') !== currentIsFoil) && // This ensures we find the OPPOSITE finish
+                                                            v.price > 0
+                                                        );
+
+                                                        if (otherFinish) {
+                                                            const isFoil = otherFinish.is_foil || otherFinish.finish === 'foil';
+                                                            return (
+                                                                <button
+                                                                    onClick={() => handleVersionClick(otherFinish.printing_id)}
+                                                                    className="flex items-center gap-2 group/slash py-1 px-2 rounded-lg hover:bg-white/5 transition-all border border-transparent hover:border-white/10"
+                                                                >
+                                                                    <span className="text-xl md:text-2xl text-neutral-500 font-medium">/</span>
+                                                                    <span className="text-xl md:text-2xl text-neutral-400 font-bold group-hover/slash:text-geeko-cyan transition-colors">
+                                                                        ${otherFinish.price.toFixed(2)}
+                                                                    </span>
+                                                                    <span className={`text-[9px] px-1.5 py-0.5 rounded font-black tracking-tighter ${isFoil ? 'bg-gradient-to-r from-pink-500/20 via-purple-500/20 to-cyan-500/20 text-neutral-400 group-hover/slash:text-white group-hover/slash:from-pink-500 group-hover/slash:via-purple-500 group-hover/slash:to-cyan-500' : 'bg-neutral-800 text-neutral-500 group-hover/slash:bg-white group-hover/slash:text-black'}`}>
+                                                                        {isFoil ? 'FOIL' : 'NORMAL'}
+                                                                    </span>
+                                                                </button>
+                                                            );
+                                                        }
+                                                        return null;
+                                                    })()}
                                                 </div>
+
                                                 {details?.valuation?.market_price && details.price && Math.abs(details.price - details.valuation.market_price) > 0.01 && (
-                                                    <div className="text-sm md:text-base font-bold text-neutral-600 line-through decoration-red-500/50">
-                                                        ${details.valuation.market_price.toFixed(2)}
+                                                    <div className="text-sm font-bold text-neutral-600 line-through decoration-red-500/50">
+                                                        MKT: ${details.valuation.market_price.toFixed(2)}
                                                     </div>
                                                 )}
                                             </div>
@@ -484,6 +562,6 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                     ) : null}
                 </div>
             </div>
-        </div>
+        </div >
     );
 };

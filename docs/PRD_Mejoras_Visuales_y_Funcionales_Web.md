@@ -111,6 +111,21 @@ Estandarización de colores según la nueva identidad de marca:
   * **YouTube**: `https://www.youtube.com/@Geekorium`
   * **Email**: `https://mailchi.mp/4e05f3c06e75/geekorium`
 
+### 4.5. Implementación de Versiones Foil (Finalizado)
+
+Se ha implementado un sistema robusto para la gestión y visualización de acabados (Normal vs. Foil):
+
+* **Identificación Visual**:
+  * Uso de badges de texto `FOIL` con gradientes cromáticos animados (`pink-500` a `cyan-500`).
+  * Eliminación de iconos de estrellas ambiguos en favor de etiquetas explícitas.
+* **Selector de Acabado (Slash Pricing)**:
+  * Interfaz integrada en el precio del modal: `$XX.XX NORMAL / $YY.YY FOIL`.
+  * Clic en el segundo precio cambia instantáneamente la versión activa (imagen, stock, precio).
+* **Lógica de Prioridad**:
+  * **Normal por Defecto**: El modal siempre prioriza la versión Normal al abrirse. Solo muestra Foil de entrada si es la única versión disponible para ese set y número.
+* **Disambiguación de Datos (API)**:
+  * Lógica en `api.ts` para detectar impresiones duplicadas sin flag de acabado y asignar automáticamente el estado Foil a una de ellas (basado en discrepancia de precios o duplicidad).
+
 ## 5. Requerimientos Móviles (Responsive)
 
 * **Header Cortado**: Corregir altura o `viewport` inicial para evitar que el contenido se vea cortado al abrir la página.
@@ -139,7 +154,7 @@ Estandarización de colores según la nueva identidad de marca:
 ## 8. Siguientes Pasos
 
 1. **Confirmar Fuentes**: Localizar archivos de fuente o aprobar uso de Google Fonts.
-2. **Configurar Estilos Globales**: Actualizar `tailwind.config.js` o archivos CSS con la nueva paleta.
+2. **Despliegue de Foil Logic**: (COMPLETADO) Lógica de prioridad Normal/Foil y visualización slash.
 3. **Implementar Cambios Visuales**: Header, Footer, Cards.
 4. **Implementar Lógica**: Búsqueda, Carrito, Importación.
 5. **Ejecutar Pruebas**: Validar según plan.
