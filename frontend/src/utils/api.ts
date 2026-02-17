@@ -323,7 +323,7 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
         colors: sbData.cards?.colors,
         total_stock: currentStock?.stock || 0,
         card_faces: sbData.card_faces || sbData.cards?.card_faces,
-        all_versions: versionsWithStock.map(v => ({
+        all_versions: versionsWithStock.map((v: any) => ({
           ...v,
           set_code: v.set_code || '??',
           set_name: v.set_name || 'Unknown Set'
