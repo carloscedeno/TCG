@@ -205,210 +205,147 @@ export const fetchProducts = async (params: any = {}): Promise<any> => {
 
 
 export const fetchCardDetails = async (printingId: string): Promise<any> => {
-  // Don't use cache - we want fresh stock data every time
   try {
-    let data;
+    let data: any = null;
+
+    // 1. Try fetching from API first
     if (API_BASE) {
       try {
         const apiUrl = `${API_BASE}/api/cards/${printingId}`;
-        console.log(`[API] Fetching details from: ${apiUrl}`);
         const response = await fetch(apiUrl);
         if (response.ok) {
           const json = await response.json();
           data = json.card || json;
-          console.log('[API] Success:', data.name);
-        } else {
-          console.warn(`[API] Error ${response.status}: ${response.statusText}`);
         }
       } catch (e) {
-        console.warn('API fetch failed, will try fallback', e);
+        console.warn('[API] Detail fetch failed:', e);
       }
     }
 
-    if (!data) {
-      console.warn('Local API failed for details, falling back to direct Supabase fetch');
+    // 2. If API fails or returns insufficient data, fallback to Supabase
+    if (!data || !data.name || (!data.all_versions || data.all_versions.length === 0)) {
+      console.log('[Supabase] Falling back for details or missing versions');
       const { data: sbData, error: sbError } = await supabase
         .from('card_printings')
         .select('*, cards(*), sets(*), aggregated_prices(avg_market_price_usd)')
         .eq('printing_id', printingId)
         .single();
 
-      if (sbError) throw sbError;
+      if (sbError) {
+        // If even Supabase fails, but we have partial data from API, keep it
+        if (!data) throw sbError;
+      } else {
+        // Build or supplement data
+        const marketPrice = sbData.aggregated_prices?.[0]?.avg_market_price_usd || 0;
 
-      // Fetch ALL versions for this card
-      const { data: versionsData } = await supabase
-        .from('card_printings')
-        .select('*, sets(*), aggregated_prices(avg_market_price_usd)')
-        .eq('card_id', sbData.card_id);
-
-      // Get printing IDs for stock lookup
-      const printingIds = (versionsData || []).map((v: any) => v.printing_id);
-
-      // Fetch stock data from products table separately
-      // Fetch stock data using RPC to avoid URL length limits
-      const { data: productsData, error: rpcError } = await supabase
-        .rpc('get_products_stock_by_printing_ids', {
-          p_printing_ids: printingIds
-        });
-
-      if (rpcError) {
-        console.error('Stock RPC Error:', rpcError);
-        // Fallback or empty if RPC fails
-      }
-
-      // Create a map for quick lookup
-      const stockMap = new Map<string, { id: string; stock: number; price: number }>();
-      (productsData || []).forEach((p: any) => {
-        stockMap.set(p.printing_id, { id: p.id, stock: p.stock, price: p.price });
-      });
-
-      // Include all versions, set stock to 0 if not available
-      let versionsWithStock = (versionsData || [])
-        .map((v: any) => {
-          const product = stockMap.get(v.printing_id);
-          return {
-            printing_id: v.printing_id,
-            set_name: v.sets?.set_name || 'Unknown Set',
-            set_code: v.sets?.set_code || '??',
-            collector_number: v.collector_number,
-            rarity: v.rarity,
-            price: product?.price || v.aggregated_prices?.[0]?.avg_market_price_usd || 0,
-            image_url: v.image_url,
-            stock: product?.stock || 0,
-            product_id: product?.id
-          };
-        });
-
-      // Get stock info for current card
-      const currentStock = stockMap.get(printingId);
-      const marketPrice = sbData.aggregated_prices?.[0]?.avg_market_price_usd || 0;
-
-      // CRITICAL: If no versions were found (shouldn't happen but can with custom cards), add the current one
-      if (versionsWithStock.length === 0) {
-        console.warn('[Supabase] No versions found for card_id, using current printing only');
-        versionsWithStock = [{
-          printing_id: sbData.printing_id,
-          set_name: sbData.sets?.set_name || 'Unknown Set',
-          set_code: sbData.sets?.set_code || '??',
-          collector_number: sbData.collector_number,
+        // Basic card info
+        const baseData = {
+          card_id: sbData.printing_id,
+          name: sbData.cards?.name || sbData.name || 'Unknown Card',
+          mana_cost: sbData.cards?.mana_cost,
+          type: sbData.cards?.type_line,
+          oracle_text: sbData.cards?.oracle_text,
+          flavor_text: sbData.flavor_text || sbData.cards?.flavor_text,
+          artist: sbData.artist,
           rarity: sbData.rarity,
-          price: currentStock?.price || marketPrice || 0,
+          set: sbData.sets?.set_name || '',
+          set_code: sbData.sets?.set_code || '',
+          collector_number: sbData.collector_number,
           image_url: sbData.image_url,
-          stock: currentStock?.stock || 0,
-          product_id: currentStock?.id
+          price: marketPrice,
+          total_stock: 0,
+          valuation: {
+            store_price: 0,
+            market_price: marketPrice,
+            valuation_avg: marketPrice
+          },
+          legalities: sbData.cards?.legalities,
+          colors: sbData.cards?.colors,
+          card_faces: sbData.card_faces || sbData.cards?.card_faces,
+          all_versions: []
+        };
+
+        // Merge API data with Supabase data if both exist
+        data = { ...baseData, ...data };
+
+        // Fetch versions if missing
+        if (!data.all_versions || data.all_versions.length === 0) {
+          const cardIdForVersions = sbData.card_id || data.oracle_id;
+          if (cardIdForVersions) {
+            const { data: versionsData } = await supabase
+              .from('card_printings')
+              .select('*, sets(*), aggregated_prices(avg_market_price_usd)')
+              .eq('card_id', cardIdForVersions);
+
+            if (versionsData) {
+              data.all_versions = versionsData.map((v: any) => ({
+                printing_id: v.printing_id,
+                set_name: v.sets?.set_name || 'Unknown Set',
+                set_code: v.sets?.set_code || '??',
+                collector_number: v.collector_number,
+                rarity: v.rarity,
+                price: v.aggregated_prices?.[0]?.avg_market_price_usd || 0,
+                image_url: v.image_url,
+                stock: 0
+              }));
+            }
+          }
+        }
+      }
+    }
+
+    // 3. Post-processing: Ensure stock and final fallbacks
+    if (data) {
+      // Ensure all_versions exists
+      if (!data.all_versions) data.all_versions = [];
+
+      // If still empty, add current
+      if (data.all_versions.length === 0) {
+        data.all_versions = [{
+          printing_id: data.printing_id || data.card_id || printingId,
+          set_name: data.set || 'Unknown Set',
+          set_code: data.set_code || '??',
+          collector_number: data.collector_number || '',
+          rarity: data.rarity || '',
+          price: data.price || 0,
+          image_url: data.image_url,
+          stock: data.total_stock || 0
         }];
       }
 
-      data = {
-        card_id: sbData.printing_id,
-        name: sbData.cards?.name || sbData.name || 'Unknown Card',
-        mana_cost: sbData.cards?.mana_cost,
-        type: sbData.cards?.type_line,
-        oracle_text: sbData.cards?.oracle_text,
-        flavor_text: sbData.flavor_text || sbData.cards?.flavor_text,
-        artist: sbData.artist,
-        rarity: sbData.rarity,
-        set: sbData.sets?.set_name || '',
-        set_code: sbData.sets?.set_code || '',
-        collector_number: sbData.collector_number,
-        image_url: sbData.image_url,
-        price: currentStock?.price || marketPrice || 0,
-        valuation: {
-          store_price: currentStock?.price || 0,
-          market_price: marketPrice,
-          valuation_avg: marketPrice
-          // market_url omitted -> Frontend will generate search URL, which is safer than constructed slug
-        },
-        legalities: sbData.cards?.legalities,
-        colors: sbData.cards?.colors,
-        total_stock: currentStock?.stock || 0,
-        card_faces: sbData.card_faces || sbData.cards?.card_faces,
-        all_versions: versionsWithStock.map((v: any) => ({
-          ...v,
-          set_code: v.set_code || '??',
-          set_name: v.set_name || 'Unknown Set'
-        }))
-      };
-    }
+      // Enrich all versions with stock from products table
+      const pIds = data.all_versions.map((v: any) => v.printing_id);
+      if (pIds.length > 0) {
+        const { data: pData } = await supabase
+          .rpc('get_products_stock_by_printing_ids', { p_printing_ids: pIds });
 
-    if (data) {
-      // Ensure data has all_versions if it's missing from API
-      if (!data.all_versions && data.cards?.card_id) {
-        const { data: versionsData } = await supabase
-          .from('card_printings')
-          .select('*, sets(*), aggregated_prices(avg_market_price_usd)')
-          .eq('card_id', data.cards.card_id);
+        if (pData) {
+          const sMap = new Map();
+          pData.forEach((p: any) => sMap.set(p.printing_id, p));
 
-        const printingIds = (versionsData || []).map((v: any) => v.printing_id);
-
-        const { data: productsData } = await supabase
-          .rpc('get_products_stock_by_printing_ids', {
-            p_printing_ids: printingIds
-          });
-
-        const stockMap = new Map<string, { id: string; stock: number; price: number }>();
-        (productsData || []).forEach((p: any) => {
-          stockMap.set(p.printing_id, { id: p.id, stock: p.stock, price: p.price });
-        });
-
-        data.all_versions = (versionsData || [])
-          .map((v: any) => {
-            const product = stockMap.get(v.printing_id);
+          data.all_versions = data.all_versions.map((v: any) => {
+            const prod = sMap.get(v.printing_id);
             return {
-              printing_id: v.printing_id,
-              set_name: v.sets?.set_name || 'Unknown Set',
-              set_code: v.sets?.set_code || '??',
-              collector_number: v.collector_number,
-              rarity: v.rarity,
-              price: product?.price || v.aggregated_prices?.[0]?.avg_market_price_usd || 0,
-              image_url: v.image_url,
-              stock: product?.stock || 0,
-              product_id: product?.id
+              ...v,
+              stock: prod?.stock || 0,
+              price: prod?.price || v.price
             };
           });
 
-        // Ensure at least one version
-        if (data.all_versions.length === 0) {
-          data.all_versions = [{
-            printing_id: data.card_id,
-            set_name: data.set || 'Unknown Set',
-            set_code: data.set_code || '??',
-            collector_number: data.collector_number,
-            rarity: data.rarity,
-            price: data.price,
-            image_url: data.image_url,
-            stock: data.total_stock,
-            product_id: data.product_id
-          }];
+          // Update main price/stock for the current printingId
+          const currentProd = sMap.get(printingId);
+          if (currentProd) {
+            data.total_stock = currentProd.stock;
+            data.price = currentProd.price;
+            if (data.valuation) data.valuation.store_price = currentProd.price;
+          }
         }
       }
-
-      // If data has all_versions from API but no stock info, enrich it
-      if (data.all_versions && data.all_versions.length > 0 && data.all_versions[0].stock === undefined) {
-        const printingIds = data.all_versions.map((v: any) => v.printing_id);
-
-        const { data: productsData } = await supabase
-          .rpc('get_products_stock_by_printing_ids', {
-            p_printing_ids: printingIds
-          });
-
-        const stockMap = new Map<string, { id: string; stock: number; price: number }>();
-        (productsData || []).forEach((p: any) => {
-          stockMap.set(p.printing_id, { id: p.id, stock: p.stock, price: p.price });
-        });
-
-        // Update stock info for all versions
-        data.all_versions = data.all_versions.map((v: any) => ({
-          ...v,
-          stock: stockMap.get(v.printing_id)?.stock || 0,
-          product_id: stockMap.get(v.printing_id)?.id,
-          price: stockMap.get(v.printing_id)?.price || v.price
-        }));
-      }
     }
+
     return data;
   } catch (error) {
-    console.error('Error fetching card details:', error);
+    console.error('Fatal error in fetchCardDetails:', error);
     throw error;
   }
 };
