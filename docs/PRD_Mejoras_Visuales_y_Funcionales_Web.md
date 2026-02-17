@@ -40,18 +40,25 @@ Estandarización de colores según la nueva identidad de marca:
 
 ### 3.4. Layout de Modal de Carta (Estándar de Implementación)
 
-**CRÍTICO**: Para evitar regresiones en la visualización del Modal de Carta (problema de "imagen gigante" o "lista de versiones oculta"), se debe respetar estrictamente la siguiente arquitectura de layout en la columna izquierda:
+**CRÍTICO**: Para evitar el "bug de imagen gigante" o "lista de versiones oculta", se debe respetar estrictamente:
 
-1. **Contenedor de Imagen**:
-    * Debe usar `flex-[1_1_0%]`.
-    * Debe tener `min-h-0` (importante para permitir que la imagen se encoja si es necesario).
-    * Posicionamiento `relative`.
+1. **Contenedor Padre Izquierdo**:
+    * `flex flex-col`, `overflow-hidden`.
+    * `md:h-[700px]` o `md:h-full` (referenciado a un contenedor con altura fija).
+2. **Sección de Imagen**:
+    * `flex-1` (toma el espacio restante).
+    * `min-h-0` (obligatorio para permitir encogimiento).
+    * Contiene `img` con `object-contain`, `max-w-full`, `max-h-full`.
+3. **Sección de Versiones**:
+    * `flex-[0_0_35%]` (ocupa exactamente el 35% del alto disponible).
+    * `min-h-[200px]` (asegura visibilidad mínima).
+    * `shrink-0` (no permite que la imagen la expulse).
+    * `overflow-y-auto` interno para el scroll.
+4. **Resiliencia de Datos (api.ts)**:
+    * `fetchCardDetails` DEBE devolver al menos una versión (self-fallback) si el backend no encuentra otras.
+    * Los precios deben mapearse a `S/P` (Sin Precio) si son 0 o nulos.
     * **Nunca** usar `flex-1` sin restricciones o alturas fijas en píxeles que excedan el viewport disponible.
 
-2. **Contenedor de Versiones (Lista)**:
-    * Debe tener una altura porcentual base: `h-[35%]`.
-    * Debe tener una altura mínima de seguridad: `min-h-[200px]`.
-    * Debe tener `shrink-0` para prevenir que la imagen lo aplaste.
     * El contenido interno debe ser `overflow-y-auto`.
 
 Esta configuración garantiza que, independientemente del tamaño de la imagen o de la pantalla, la lista de versiones siempre tendrá al menos 200px o el 35% del espacio vertical disponible, y la imagen se ajustará automáticamente al espacio restante.
