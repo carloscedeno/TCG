@@ -45,6 +45,7 @@ logs/
 # Data files
 *.csv
 # *.json  <-- Removed this to allow package.json
+data/cache/
 *.db
 *.sqlite
 

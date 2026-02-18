@@ -106,6 +106,13 @@ def run_ck_sync():
                 logger.info("Reached end of database cards.")
                 break
         
+        logger.info("--- Refreshing Catalog Data and Materialized Views ---")
+        try:
+            supabase.rpc('refresh_all_catalog_data').execute()
+            logger.info("Catalog refresh successful.")
+        except Exception as e:
+            logger.error(f"Failed to refresh catalog: {e}")
+
         logger.info("=== SYNC SUMMARY ===")
         logger.info(f"Total prices updated: {total_updated}")
         logger.info(f"Total errors: {total_errors}")
