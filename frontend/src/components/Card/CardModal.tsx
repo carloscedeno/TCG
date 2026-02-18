@@ -129,7 +129,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
             if (!skipAutoSwitch) {
                 const isFoil = !!(data.is_foil || data.finish === 'foil');
                 if (isFoil && data.all_versions) {
-                    const normalAlt = data.all_versions.find(v =>
+                    const normalAlt = (data.all_versions as Version[]).find((v: Version) =>
                         v.set_code === data.set_code &&
                         v.collector_number === data.collector_number &&
                         !(v.is_foil || v.finish === 'foil')
@@ -305,7 +305,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                 ))
                             ) : (
                                 <>
-                                    {details?.all_versions?.map((v) => (
+                                    {details?.all_versions?.map((v: Version) => (
                                         <a
                                             key={v.printing_id}
                                             href={`card/${v.printing_id}`}
