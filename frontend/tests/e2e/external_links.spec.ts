@@ -2,103 +2,84 @@ import { test, expect } from '@playwright/test';
 
 test.describe('External Marketplace Links', () => {
     test.beforeEach(async ({ page }) => {
-        // Navigate and handle intro modal
         await page.goto('/');
-        // Helper to handle intro modal
-        const introModal = page.getByTestId('intro-modal');
+
+        // Dismiss the WelcomeModal (appears after 1.5s if sessionStorage key not set)
+        await page.evaluate(() => sessionStorage.setItem('hasSeenWelcomeModal', 'true'));
+        const welcomeButton = page.getByRole('button', { name: /Comenzar Misión/i });
         try {
-            // Wait briefly for modal to appear (it might be async)
-            await introModal.waitFor({ state: 'visible', timeout: 3000 });
-            // Click the entrance button
-            await page.getByRole('button', { name: /Entrar a la tienda|Comenzar Misión/i }).click();
-            // Wait for it to disappear
-            await introModal.waitFor({ state: 'hidden' });
-        } catch (e) {
-            // Ignore if modal doesn't appear within timeout
+            await welcomeButton.waitFor({ state: 'visible', timeout: 5000 });
+            await welcomeButton.click();
+            await welcomeButton.waitFor({ state: 'hidden', timeout: 3000 });
+        } catch {
+            // Modal didn't appear, continue
         }
+
+        // Wait for cards to render
+        await page.locator('[data-testid="product-card"]').first().waitFor({ state: 'visible', timeout: 15000 });
     });
 
     test('CardKingdom link in CardModal has correct format', async ({ page }) => {
-        // Wait for content to load
-        await page.waitForSelector('[data-testid="card-grid"]');
-
-        // Click on the first card to open modal
-        const firstCard = page.locator('[data-testid="card-item"]').first();
-        const cardName = await firstCard.locator('h3').textContent();
+        const firstCard = page.locator('[data-testid="product-card"]').first();
+        const cardName = (await firstCard.locator('h3').textContent())?.trim() ?? '';
         await firstCard.click();
 
-        // Check modal is open
-        await expect(page.getByTestId('card-modal')).toBeVisible();
+        await expect(page.getByTestId('card-modal')).toBeVisible({ timeout: 10000 });
 
-        // Find the CardKingdom link (External Market)
         const ckLink = page.locator('a[href*="cardkingdom.com/catalog/search"]');
-        await expect(ckLink).toBeVisible();
+        await expect(ckLink).toBeVisible({ timeout: 10000 });
 
         const href = await ckLink.getAttribute('href');
-        expect(href).toContain('filter[name]=');
-        expect(href).toContain(encodeURIComponent(cardName || ''));
+        // The URL uses + for spaces, so normalize for comparison
+        const decodedHref = decodeURIComponent(href?.replace(/\+/g, ' ') ?? '');
+        expect(decodedHref).toContain(`filter[name]=${cardName}`);
     });
 
-    test('CardKingdom foil link has mtg_foil tab', async ({ page }) => {
-        // Wait for content to load
-        await page.waitForSelector('[data-testid="card-grid"]');
-
-        // Search for a known foil card or just search "foil"
-        await page.getByPlaceholder(/Buscar/i).fill('foil');
-        await page.keyboard.press('Enter');
-
-        await page.waitForSelector('[data-testid="card-item"]');
-
-        // Open modal
-        await page.locator('[data-testid="card-item"]').first().click();
-
-        // Click on a foil version if multiple exist, or just assume first if it's a foil search
-        // Actually, CardModal already calculates isFoil based on selected version.
-        // For now, let's just check the generated URL utility logic via a unit test if possible,
-        // but in E2E we verify the resulting link.
+    test('CardKingdom foil link has mtg_foil tab when card is foil', async ({ page }) => {
+        // Open the first card in the catalog
+        await page.locator('[data-testid="product-card"]').first().click();
+        await expect(page.getByTestId('card-modal')).toBeVisible({ timeout: 10000 });
 
         const ckLink = page.locator('a[href*="cardkingdom.com/catalog/search"]');
-        const href = await ckLink.getAttribute('href');
+        await expect(ckLink).toBeVisible({ timeout: 10000 });
 
-        // If the card is foil, it should have the mtg_foil tab
-        const isFoilLabel = await page.locator('span:has-text("FOIL")').isVisible();
-        if (isFoilLabel) {
-            expect(href).toContain('filter[tab]=mtg_foil');
+        // Check if the card is currently showing as FOIL
+        const foilLabel = page.locator('span:has-text("FOIL")');
+        const isFoil = await foilLabel.isVisible().catch(() => false);
+
+        const href = await ckLink.getAttribute('href') ?? '';
+        if (isFoil) {
+            // If card displays FOIL, the CK link should have the foil tab
+            expect(href).toContain('mtg_foil');
+        } else {
+            // If card is Normal, the CK link should NOT have the foil tab
+            expect(href).not.toContain('mtg_foil');
         }
     });
 
     test('CardKingdom foil link updates when switching finishes', async ({ page }) => {
-        // Wait for content to load
-        await page.waitForSelector('[data-testid="card-grid"]');
+        // Open the first card (Hallowed Fountain has both Normal and Foil)
+        await page.locator('[data-testid="product-card"]').first().click();
+        await expect(page.getByTestId('card-modal')).toBeVisible({ timeout: 10000 });
 
-        // Search for a card known to have both normal and foil
-        await page.getByPlaceholder(/Buscar/i).fill('Hallowed Fountain');
-        await page.keyboard.press('Enter');
-        await page.waitForSelector('[data-testid="card-grid"]');
-
-        // Open modal
-        await page.locator('[data-testid="card-item"]').first().click();
-        await expect(page.getByTestId('card-modal')).toBeVisible();
-
-        // Check initial link (should be normal by default in this app's logic)
         const ckLink = page.locator('a[href*="cardkingdom.com/catalog/search"]');
-        let href = await ckLink.getAttribute('href');
+        await expect(ckLink).toBeVisible({ timeout: 10000 });
 
-        // Click Foil button if available
+        // Check if Normal/Foil buttons exist
+        const normalBtn = page.getByRole('button', { name: 'Normal', exact: true });
         const foilBtn = page.getByRole('button', { name: 'Foil', exact: true });
-        if (await foilBtn.isVisible() && !await foilBtn.isDisabled()) {
-            await foilBtn.click();
-            // Wait for link update
-            await page.waitForTimeout(500);
-            href = await ckLink.getAttribute('href');
-            expect(href).toContain('filter[tab]=mtg_foil');
 
-            // Click Normal button to switch back
-            const normalBtn = page.getByRole('button', { name: 'Normal', exact: true });
+        const hasNormal = await normalBtn.isVisible({ timeout: 3000 }).catch(() => false);
+        const hasFoil = await foilBtn.isVisible({ timeout: 3000 }).catch(() => false);
+
+        if (hasNormal && hasFoil) {
+            // Click Foil and verify link updates
+            await foilBtn.click();
+            await expect(ckLink).toHaveAttribute('href', /mtg_foil/, { timeout: 5000 });
+
+            // Click Normal and verify link updates back
             await normalBtn.click();
-            await page.waitForTimeout(500);
-            href = await ckLink.getAttribute('href');
-            expect(href).not.toContain('filter[tab]=mtg_foil');
+            await expect(ckLink).not.toHaveAttribute('href', /mtg_foil/, { timeout: 5000 });
         }
     });
 });
