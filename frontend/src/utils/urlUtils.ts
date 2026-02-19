@@ -10,7 +10,11 @@ export const getCardKingdomUrl = (name: string, isFoil: boolean = false): string
     const baseUrl = 'https://www.cardkingdom.com/catalog/search';
     const queryParams = new URLSearchParams();
 
-    queryParams.append('filter[name]', name);
+    // CardKingdom search doesn't support the '//' separator for double-faced cards.
+    // We strip everything after the first '//' to search by the front face name.
+    const cleanName = name.split(' //')[0].split('//')[0].trim();
+
+    queryParams.append('filter[name]', cleanName);
 
     if (isFoil) {
         // Verified: 'mtg_foil' is the correct tab value for foils

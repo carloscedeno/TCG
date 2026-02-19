@@ -276,6 +276,16 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
         return getCardKingdomUrl(details.name, isFoil);
     }, [details?.name, activeVersion]);
 
+    const marketPrice = useMemo(() => {
+        if (!activeVersion || !details) return details?.valuation?.market_price || 0;
+        const isFoil = activeVersion.is_foil || activeVersion.finish === 'foil';
+        const prices = (activeVersion as any).prices;
+        if (prices) {
+            return Number(isFoil ? (prices.usd_foil || prices.usd) : prices.usd) || details?.valuation?.market_price || 0;
+        }
+        return details?.valuation?.market_price || 0;
+    }, [activeVersion, details]);
+
     if (!isOpen) return null;
 
     return (
@@ -543,9 +553,9 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                             <div className="space-y-1 relative z-10">
                                                 <div className="text-[10px] font-black uppercase text-geeko-cyan tracking-widest flex items-center justify-between">
                                                     <span>GK Price</span>
-                                                    {details?.valuation?.market_price && details.price && details.price < details.valuation.market_price && (
+                                                    {marketPrice > 0 && details.price && details.price < marketPrice && (
                                                         <span className="text-[9px] text-geeko-green bg-geeko-green/10 px-2 py-0.5 rounded-full border border-geeko-green/20">
-                                                            Ahorro: ${(details.valuation.market_price - details.price).toFixed(2)}
+                                                            Ahorro: ${(marketPrice - details.price).toFixed(2)}
                                                         </span>
                                                     )}
                                                 </div>
@@ -589,9 +599,9 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                     </div>
                                                 </div>
 
-                                                {details?.valuation?.market_price && details.price && Math.abs(Number(details.price) - Number(details.valuation.market_price)) > 0.01 && (
+                                                {marketPrice > 0 && details.price && Math.abs(Number(details.price) - Number(marketPrice)) > 0.01 && (
                                                     <div className="text-sm font-bold text-neutral-600 line-through decoration-red-500/50">
-                                                        MKT: ${Number(details.valuation.market_price).toFixed(2)}
+                                                        MKT: ${Number(marketPrice).toFixed(2)}
                                                     </div>
                                                 )}
                                             </div>
@@ -624,7 +634,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                         </div>
                                         <div className="flex items-center justify-between gap-3 w-full relative z-10 mt-auto">
                                             <span className="text-xl md:text-3xl font-mono font-black text-white group-hover:text-geeko-cyan transition-colors">
-                                                {details?.valuation?.market_price && details.valuation.market_price > 0 ? `$${Number(details.valuation.market_price).toFixed(2)}` : 'Ver en Sitio'}
+                                                {marketPrice > 0 ? `$${Number(marketPrice).toFixed(2)}` : 'Ver en Sitio'}
                                             </span>
                                             <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-geeko-cyan group-hover:text-black transition-all">
                                                 <ExternalLink size={18} />
