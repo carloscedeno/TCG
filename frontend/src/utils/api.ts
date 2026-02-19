@@ -1,4 +1,5 @@
 import { supabase } from './supabaseClient';
+import { getCardKingdomUrl } from './urlUtils';
 
 const API_BASE = import.meta.env.VITE_API_BASE || '';
 
@@ -110,7 +111,7 @@ export const fetchCards = async (filters: any): Promise<{ cards: Card[]; total_c
       valuation: {
         market_price: row.avg_market_price_usd || row.store_price || 0,
         store_price: row.store_price || 0,
-        market_url: `https://www.cardkingdom.com/mtg/${row.set_name?.replace(/\s+/g, '-').toLowerCase()}/${row.card_name?.replace(/\s+/g, '-').toLowerCase()}`
+        market_url: getCardKingdomUrl(row.card_name, !!row.is_foil || (row.finish === 'foil'))
       }
     }));
 

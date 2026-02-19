@@ -4,6 +4,7 @@ import {
     X, ShoppingCart, RotateCw, ExternalLink, Loader2,
     ArrowLeft, CheckCircle2, AlertCircle
 } from 'lucide-react';
+import { getCardKingdomUrl } from '../utils/urlUtils';
 import { fetchCardDetails, addToCart } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import { SearchBar } from '../components/SearchBar/SearchBar';
@@ -80,12 +81,6 @@ export const CardDetail: React.FC = () => {
         }
     };
 
-    const handleSearch = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (searchQuery.trim()) {
-            navigate(`/?q=${encodeURIComponent(searchQuery)}`);
-        }
-    };
 
     const getLegalityIcon = (status: string) => {
         switch (status) {
@@ -143,9 +138,9 @@ export const CardDetail: React.FC = () => {
 
     const ckUrl = useMemo(() => {
         if (!details) return '#';
-        const isFoil = !!(details.is_foil || details.finish === 'foil');
-        return `https://www.cardkingdom.com/mtg/search?filter[name]=${encodeURIComponent(details.name)}${isFoil ? '&filter[tab]=foil' : ''}`;
-    }, [details]);
+        const isFoil = activeVersion ? (activeVersion.is_foil || activeVersion.finish === 'foil') : !!(details.is_foil || details.finish === 'foil');
+        return getCardKingdomUrl(details.name, isFoil);
+    }, [details?.name, activeVersion]);
 
     const hasMultipleFaces = details?.card_faces && details.card_faces.length > 1;
 

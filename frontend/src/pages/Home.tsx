@@ -59,7 +59,7 @@ const Home: React.FC = () => {
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
   const [debouncedQuery, setDebouncedQuery] = useState(searchParams.get('q') || '');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [activeTab, setActiveTab] = useState<'marketplace' | 'reference'>((searchParams.get('tab') as 'marketplace' | 'reference') || 'reference');
+  const [activeTab, setActiveTab] = useState<'marketplace' | 'reference'>((searchParams.get('tab') as 'marketplace' | 'reference') || 'marketplace');
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0); // Cart count state
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
@@ -208,7 +208,7 @@ const Home: React.FC = () => {
     if (activeRarity !== 'All') newParams.set('rarity', activeRarity);
     else if (filters.rarities && filters.rarities.length > 0) newParams.set('rarity', filters.rarities.join(','));
     if (sortBy !== 'release_date') newParams.set('sort', sortBy);
-    if (activeTab !== 'reference') newParams.set('tab', activeTab);
+    if (activeTab !== 'marketplace') newParams.set('tab', activeTab);
 
     setSearchParams(newParams, { replace: true });
 
@@ -332,6 +332,10 @@ const Home: React.FC = () => {
                   </div>
                 )}
               </button>
+
+              {isCartOpen && (
+                <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+              )}
 
               {user ? (
                 <UserMenu />
@@ -502,7 +506,7 @@ const Home: React.FC = () => {
                       )}
 
                       {filters.games?.map(g => (
-                        <button key={g} onClick={() => handleFilterChange({ ...filters, games: filters.games?.filter(x => x !== g) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-600/10 border border-purple-500/30 rounded-full text-[10px] font-bold text-purple-400 hover:bg-purple-600/20 transition-all group">
+                        <button key={g} data-testid="game-tab" data-active="true" onClick={() => handleFilterChange({ ...filters, games: filters.games?.filter(x => x !== g) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-600/10 border border-purple-500/30 rounded-full text-[10px] font-bold text-purple-400 hover:bg-purple-600/20 transition-all group">
                           {g}
                           <X size={10} className="group-hover:rotate-90 transition-transform" />
                         </button>
@@ -535,7 +539,7 @@ const Home: React.FC = () => {
                     </div>
                   )}
 
-                  <CardGrid cards={cards} onCardClick={setSelectedCardId} viewMode={viewMode} />
+                  <CardGrid cards={cards} onCardClick={setSelectedCardId} viewMode={viewMode} isArchive={activeTab === 'reference'} />
                   {cards.length < totalCount && (
                     <div className="flex justify-center pb-20">
                       <button
@@ -613,17 +617,14 @@ const Home: React.FC = () => {
         <Footer />
 
         <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+        <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
         <CardModal
-          isOpen={!!selectedCardId}
+          isOpen={selectedCardId !== null}
           onClose={() => setSelectedCardId(null)}
           cardId={selectedCardId}
-          onAddToCartSuccess={() => {
-            setIsCartOpen(true);
-            // trigger cart refresh? CartDrawer loads on open, so yes.
-          }}
           onRequireAuth={() => setIsAuthModalOpen(true)}
+          isArchive={activeTab === 'reference'}
         />
-        <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
 
         {/* Mobile Filters Drawer */}
         {
@@ -653,8 +654,8 @@ const Home: React.FC = () => {
             </div>
           )
         }
-      </div >
-    </div >
+      </div>
+    </div>
   );
 };
 
