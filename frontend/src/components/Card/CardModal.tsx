@@ -258,6 +258,9 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
         return activeGroup.normal || activeGroup.base;
     }, [activeGroup, selectedFinish]);
 
+    // Detect DFC from card name (e.g. "Aang, at the Crossroads // Aang, Destined Savior")
+    const isDFC = details?.name?.includes(' // ');
+
     const currentImage = (() => {
         if (details?.card_faces && details.card_faces.length > 0) {
             const face = details.card_faces[currentFaceIndex];
@@ -265,10 +268,14 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                 return face.image_uris.normal || face.image_uris.large || face.image_uris.png;
             }
         }
+        // DFC fallback: construct back face URL from Scryfall pattern
+        if (isDFC && currentFaceIndex === 1 && details?.image_url) {
+            return details.image_url.replace('/front/', '/back/');
+        }
         return details?.image_url;
     })();
 
-    const hasMultipleFaces = details?.card_faces && details.card_faces.length > 1;
+    const hasMultipleFaces = (details?.card_faces && details.card_faces.length > 1) || isDFC;
 
     const ckUrl = useMemo(() => {
         if (!details) return '#';
@@ -448,7 +455,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                 </div>
 
                 {/* RIGHT: CARD TEXT & ACTIONS */}
-                <div className="flex-1 h-auto md:h-[var(--modal-height,700px)] overflow-y-visible md:overflow-y-auto custom-scrollbar bg-[#050505] p-4 sm:p-6 md:p-8 space-y-4 md:space-y-6">
+                <div className="flex-1 h-auto md:h-[var(--modal-height,700px)] overflow-y-auto custom-scrollbar bg-[#050505] p-4 sm:p-6 md:p-8 space-y-4 md:space-y-6">
                     {loading ? (
                         <div className="space-y-12 animate-pulse">
                             <div className="space-y-4">
