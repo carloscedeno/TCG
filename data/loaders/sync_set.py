@@ -158,7 +158,16 @@ def main():
     printings_to_upsert = {}
 
     for card in cards:
-        if 'oracle_id' not in card: continue
+        oracle_id = card.get('oracle_id')
+        if not oracle_id and 'card_faces' in card:
+            oracle_id = card['card_faces'][0].get('oracle_id')
+            
+        if not oracle_id:
+            print(f"⚠️ Saliendo: No se encontró oracle_id para {card.get('name')} (#{card.get('collector_number')})")
+            continue
+        
+        # Asegurar que el card object tiene el oracle_id para las funciones de mapeo
+        card['oracle_id'] = oracle_id
         
         c_mapped = map_scryfall_card(card)
         cards_to_upsert[c_mapped['card_id']] = c_mapped

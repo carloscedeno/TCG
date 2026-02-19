@@ -375,6 +375,7 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
           printing_id,
           image_url,
           collector_number,
+          is_foil,
           sets(set_name, set_code, release_date),
           cards(rarity),
           aggregated_prices(avg_market_price_usd),
@@ -417,6 +418,8 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
         collector_number: printing.collector_number || '',
         image_url: printing.image_url || '',
         price: storePrice || marketPrice,
+        is_foil: printing.is_foil || false,
+        finish: printing.is_foil ? 'foil' : 'nonfoil',
         valuation: {
           store_price: storePrice,
           market_price: marketPrice,
@@ -439,7 +442,9 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
             collector_number: v.collector_number || '',
             rarity: v.cards?.rarity || 'common',
             price: displayPrice,
-            image_url: v.image_url || ''
+            image_url: v.image_url || '',
+            is_foil: v.is_foil || false,
+            finish: v.is_foil ? 'foil' : 'nonfoil'
           };
         })
       };
@@ -541,7 +546,8 @@ async function handleImportEndpoint(supabase: SupabaseClient, path: string, meth
       collector_number: row[mapping?.collector_number || 'collector_number'] || row['collector_number'],
       quantity: row[mapping?.quantity || 'quantity'] || row['quantity'] || '1',
       price: row[mapping?.price || 'price'] || row['price'] || '0',
-      condition: row[mapping?.condition || 'condition'] || row['condition'] || 'NM'
+      condition: row[mapping?.condition || 'condition'] || row['condition'] || 'NM',
+      finish: row[mapping?.finish || 'finish'] || row['finish'] || (row['finish'] === 'foil' ? 'foil' : 'nonfoil')
     }))
 
     const { data: result, error: rpcError } = await supabase.rpc('bulk_import_inventory', {

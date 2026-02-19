@@ -28,13 +28,13 @@ export interface CardProps {
   card_faces?: CardFace[];
   viewMode?: 'grid' | 'list';
   total_stock?: number;
-  // New props for finishes if available in API, otherwise we infer or ignore for now
-  finish?: string; // 'foil', 'nonfoil', 'etched'
+  finish?: string;
   is_foil?: boolean;
+  isArchive?: boolean;
   onClick?: () => void;
 }
 
-export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, price, card_id, rarity, type, card_faces, viewMode = 'grid', total_stock, finish, is_foil, onClick }) => {
+export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, price, card_id, rarity, type, card_faces, viewMode = 'grid', total_stock, finish, is_foil, isArchive, onClick }) => {
   const [currentFaceIndex, setCurrentFaceIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [addingToCart, setAddingToCart] = useState(false);
@@ -179,13 +179,15 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
           </div>
         </div>
 
-        <button
-          onClick={handleQuickAdd}
-          className={`ml-4 w-9 h-9 rounded-full flex items-center justify-center transition-all border border-white/5 ${addingToCart ? 'bg-geeko-cyan text-black' : 'bg-white/5 text-neutral-400 hover:bg-geeko-cyan hover:text-black hover:scale-110'}`}
-          title="Agregar al Carrito Rápido"
-        >
-          {addingToCart ? <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /> : <ShoppingCart size={16} />}
-        </button>
+        {!isArchive && (
+          <button
+            onClick={handleQuickAdd}
+            className={`ml-4 w-9 h-9 rounded-full flex items-center justify-center transition-all border border-white/5 ${addingToCart ? 'bg-geeko-cyan text-black' : 'bg-white/5 text-neutral-400 hover:bg-geeko-cyan hover:text-black hover:scale-110'}`}
+            title="Agregar al Carrito Rápido"
+          >
+            {addingToCart ? <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /> : <ShoppingCart size={16} />}
+          </button>
+        )}
       </a>
     );
   }
@@ -298,14 +300,16 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
           </div>
 
           {/* Quick Add Button showing on Hover */}
-          <button
-            onClick={handleQuickAdd}
-            title="Agregar al Carrito Rápido"
-            className={`absolute right-3 bottom-3 w-8 h-8 rounded-full flex items-center justify-center transition-all shadow-lg ${isHovered || addingToCart ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
-              } ${addingToCart ? 'bg-geeko-cyan text-black' : 'bg-neutral-800 text-white hover:bg-geeko-cyan hover:text-black border border-white/10'}`}
-          >
-            {addingToCart ? <div className="w-3 h-3 border-2 border-black/30 border-t-black rounded-full animate-spin" /> : <ShoppingCart size={14} />}
-          </button>
+          {!isArchive && (
+            <button
+              onClick={handleQuickAdd}
+              title="Agregar al Carrito Rápido"
+              className={`absolute right-3 bottom-3 w-8 h-8 rounded-full flex items-center justify-center transition-all shadow-lg ${isHovered || addingToCart ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+                } ${addingToCart ? 'bg-geeko-cyan text-black' : 'bg-neutral-800 text-white hover:bg-geeko-cyan hover:text-black border border-white/10'}`}
+            >
+              {addingToCart ? <div className="w-3 h-3 border-2 border-black/30 border-t-black rounded-full animate-spin" /> : <ShoppingCart size={14} />}
+            </button>
+          )}
         </div>
       </div>
     </a>

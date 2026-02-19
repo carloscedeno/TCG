@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import React, { useEffect, useState, useMemo } from 'react';
+import { useParams, useNavigate, Link, useSearchParams } from 'react-router-dom';
 import {
     X, ShoppingCart, RotateCw, ExternalLink, Loader2,
     ArrowLeft, CheckCircle2, AlertCircle
 } from 'lucide-react';
+import { getCardKingdomUrl } from '../utils/urlUtils';
 import { fetchCardDetails, addToCart } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import { SearchBar } from '../components/SearchBar/SearchBar';
@@ -17,6 +18,8 @@ export const CardDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const { user } = useAuth();
+    const [searchParams] = useSearchParams();
+    const activeFinish = searchParams.get('finish') || 'nonfoil';
 
     const [details, setDetails] = useState<any>(null);
     const [loading, setLoading] = useState(true);
@@ -50,10 +53,13 @@ export const CardDetail: React.FC = () => {
         }
     };
 
-    const handleVersionClick = (printingId: string) => {
-        if (printingId !== activePrintingId) {
-            navigate(`/card/${printingId}`);
+    const handleVersionClick = (printingId: string, finish?: string) => {
+        const params = new URLSearchParams();
+        if (finish && finish !== 'nonfoil') {
+            params.set('finish', finish);
         }
+        const search = params.toString();
+        navigate(`/card/${printingId}${search ? `?${search}` : ''}`);
     };
 
     const handleAddToCart = async () => {
@@ -75,12 +81,6 @@ export const CardDetail: React.FC = () => {
         }
     };
 
-    const handleSearch = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (searchQuery.trim()) {
-            navigate(`/?q=${encodeURIComponent(searchQuery)}`);
-        }
-    };
 
     const getLegalityIcon = (status: string) => {
         switch (status) {
@@ -103,6 +103,44 @@ export const CardDetail: React.FC = () => {
         }
         return details?.image_url;
     })();
+
+    const versionGroups = useMemo(() => {
+        if (!details?.all_versions) return [];
+
+        const groups = details.all_versions.reduce((acc: any, v: any) => {
+            const key = `${v.set_code}-${v.collector_number}`;
+            if (!acc[key]) {
+                acc[key] = {
+                    base: v,
+                    normal: !(v.is_foil || v.finish === 'foil') ? v : null,
+                    foil: (v.is_foil || v.finish === 'foil') ? v : null,
+                };
+            } else {
+                if (!(v.is_foil || v.finish === 'foil')) acc[key].normal = v;
+                else acc[key].foil = v;
+            }
+            return acc;
+        }, {} as Record<string, any>);
+
+        return Object.values(groups).sort((a: any, b: any) => {
+            return a.base.set_name.localeCompare(b.base.set_name);
+        });
+    }, [details?.all_versions]);
+
+    const activeGroup = useMemo<any>(() => {
+        return versionGroups.find((g: any) => g.normal?.printing_id === activePrintingId || g.foil?.printing_id === activePrintingId);
+    }, [versionGroups, activePrintingId]);
+
+    const activeVersion = useMemo(() => {
+        if (!activeGroup) return null;
+        return (activeFinish === 'foil' && activeGroup.foil) ? activeGroup.foil : (activeGroup.normal || activeGroup.base);
+    }, [activeGroup, activeFinish]);
+
+    const ckUrl = useMemo(() => {
+        if (!details) return '#';
+        const isFoil = activeVersion ? (activeVersion.is_foil || activeVersion.finish === 'foil') : !!(details.is_foil || details.finish === 'foil');
+        return getCardKingdomUrl(details.name, isFoil);
+    }, [details?.name, activeVersion]);
 
     const hasMultipleFaces = details?.card_faces && details.card_faces.length > 1;
 
@@ -143,9 +181,7 @@ export const CardDetail: React.FC = () => {
                     </div>
 
                     <div className="flex-1 max-w-xl mx-8 hidden lg:block">
-                        <form onSubmit={handleSearch}>
-                            <SearchBar value={searchQuery} onChange={setSearchQuery} placeholder="Search another card..." />
-                        </form>
+                        <SearchBar value={searchQuery} onChange={setSearchQuery} placeholder="Search another card..." />
                     </div>
 
                     <div className="flex items-center gap-4">
@@ -209,40 +245,73 @@ export const CardDetail: React.FC = () => {
                                     <span className="text-[10px] text-neutral-600 font-bold">{details.all_versions?.length || 0} Versions</span>
                                 </div>
                                 <div className="flex-1 overflow-y-auto custom-scrollbar">
-                                    {details.all_versions && details.all_versions.length > 0 ? (
-                                        details.all_versions.map((v: any) => (
-                                            <button
-                                                key={v.printing_id}
-                                                onClick={() => handleVersionClick(v.printing_id)}
-                                                className={`w-full flex items-center gap-4 px-6 py-3 hover:bg-white/5 transition-colors border-b border-white/5 group ${activePrintingId === v.printing_id ? 'bg-geeko-cyan/10' : ''}`}
-                                            >
-                                                <div className="w-8 h-8 rounded bg-neutral-900 flex items-center justify-center text-[10px] font-black group-hover:text-geeko-cyan transition-colors">
-                                                    {v.set_code.toUpperCase()}
-                                                </div>
-                                                <div className="flex-1 text-left">
-                                                    <div className={`text-xs font-bold leading-tight ${activePrintingId === v.printing_id ? 'text-geeko-cyan' : 'text-neutral-300'}`}>
-                                                        {v.set_name}
-                                                    </div>
-                                                    <div className="text-[10px] text-neutral-600 font-bold flex items-center gap-2">
-                                                        <span>#{v.collector_number} • {v.rarity}</span>
-                                                        {v.stock > 0 && (
-                                                            <div className="flex items-center gap-1">
-                                                                <div className={`w-2 h-2 rounded-full ${v.stock > 10 ? 'bg-green-500' :
-                                                                    v.stock > 3 ? 'bg-yellow-500' :
-                                                                        'bg-red-500'
-                                                                    }`} />
-                                                                <span className="text-[8px] font-black text-geeko-cyan uppercase">
-                                                                    STOCK: {v.stock}
-                                                                </span>
+                                    {versionGroups.length > 0 ? (
+                                        versionGroups.map((group: any) => {
+                                            const isGroupActive = activePrintingId === group.base.printing_id;
+                                            const activeVersion = (activeFinish === 'foil' && group.foil) ? group.foil : (group.normal || group.base);
+
+                                            return (
+                                                <div
+                                                    key={`${group.base.set_code}-${group.base.collector_number}`}
+                                                    role="button"
+                                                    tabIndex={0}
+                                                    onClick={() => {
+                                                        const isCurrentlyFoil = !!(details?.is_foil || details?.finish === 'foil');
+                                                        const targetPrintingId = isCurrentlyFoil
+                                                            ? (group.foil?.printing_id || group.normal?.printing_id)
+                                                            : (group.normal?.printing_id || group.foil?.printing_id);
+                                                        if (targetPrintingId) handleVersionClick(targetPrintingId);
+                                                    }}
+                                                    onKeyDown={(e) => {
+                                                        if (e.key === 'Enter' || e.key === ' ') {
+                                                            const isCurrentlyFoil = !!(details?.is_foil || details?.finish === 'foil');
+                                                            const targetPrintingId = isCurrentlyFoil
+                                                                ? (group.foil?.printing_id || group.normal?.printing_id)
+                                                                : (group.normal?.printing_id || group.foil?.printing_id);
+                                                            if (targetPrintingId) handleVersionClick(targetPrintingId);
+                                                        }
+                                                    }}
+                                                    className={`w-full flex flex-col md:flex-row items-stretch md:items-center gap-2 md:gap-4 px-6 py-4 hover:bg-white/10 transition-colors border-b border-white/5 group text-left cursor-pointer outline-none focus-visible:bg-white/10 ${isGroupActive ? 'bg-geeko-cyan/10' : ''}`}
+                                                >
+                                                    <div className="flex items-center gap-3 md:gap-4 flex-1">
+                                                        <div className="w-8 h-8 rounded bg-neutral-900 flex items-center justify-center text-[10px] font-black group-hover:text-geeko-cyan transition-colors shrink-0">
+                                                            {group.base.set_code.toUpperCase()}
+                                                        </div>
+                                                        <div className="flex-1 text-left min-w-[120px]">
+                                                            <div className={`text-xs font-bold leading-tight truncate ${isGroupActive ? 'text-geeko-cyan' : 'text-neutral-300'}`}>
+                                                                {group.base.set_name}
                                                             </div>
-                                                        )}
+                                                            <div className="text-[10px] text-neutral-600 font-bold flex items-center gap-2">
+                                                                <span>#{group.base.collector_number} • {group.base.rarity}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="flex items-center justify-between md:justify-end gap-6 shrink-0">
+                                                        <div className="flex items-center gap-3 font-mono font-bold text-xs">
+                                                            {group.normal && (
+                                                                <span className={activePrintingId === group.normal.printing_id ? 'text-white' : 'text-neutral-500'}>
+                                                                    ${group.normal.price.toFixed(2)}
+                                                                </span>
+                                                            )}
+                                                            {group.normal && group.foil && <span className="text-neutral-700 mx-1">/</span>}
+                                                            {group.foil && (
+                                                                <span className={`flex items-center gap-1.5 ${activePrintingId === group.foil.printing_id ? 'text-purple-400' : 'text-neutral-600'}`}>
+                                                                    <span className="text-[10px]">✨</span>
+                                                                    ${Number(group.foil.price).toFixed(2)}
+                                                                </span>
+                                                            )}
+                                                        </div>
+
+                                                        <div className="flex items-center gap-4">
+                                                            <span className="text-[9px] font-black text-geeko-cyan uppercase tracking-tighter">
+                                                                {activeVersion?.stock || 0}
+                                                            </span>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div className="text-xs font-mono font-bold text-neutral-400 group-hover:text-white">
-                                                    ${v.price > 0 ? v.price.toFixed(2) : '--'}
-                                                </div>
-                                            </button>
-                                        ))
+                                            );
+                                        })
                                     ) : (
                                         <div className="px-6 py-8 text-center">
                                             <p className="text-sm text-neutral-500 font-bold">⚠️ No hay versiones disponibles en inventario</p>
@@ -299,53 +368,80 @@ export const CardDetail: React.FC = () => {
                                     <div className="p-10 rounded-[40px] bg-gradient-to-br from-geeko-cyan/10 via-transparent to-transparent border border-white/10 group relative overflow-hidden hover:border-geeko-cyan/30 transition-colors">
                                         <div className="absolute top-0 right-0 w-40 h-40 bg-geeko-cyan/5 rounded-full blur-[50px]" />
                                         <div className="text-xs font-black uppercase text-geeko-cyan tracking-widest mb-2">Internal Store Price</div>
-                                        <div className="flex items-center justify-between">
+                                        <div className="flex flex-col gap-2">
                                             <div className="text-6xl font-black text-white font-mono tracking-tighter">
-                                                ${details.price > 0 ? details.price.toFixed(2) : '---'}
+                                                ${(activeVersion?.price || details.price || 0) > 0 ? Number(activeVersion?.price || details.price).toFixed(2) : '---'}
                                             </div>
-                                            <button
-                                                onClick={handleAddToCart}
-                                                disabled={isAdding}
-                                                className="h-16 px-10 rounded-2xl bg-geeko-cyan text-black font-black text-sm uppercase tracking-widest flex items-center gap-3 shadow-[0_0_30px_rgba(0,229,255,0.4)] hover:shadow-[0_0_50px_rgba(0,229,255,0.6)] hover:scale-105 active:scale-95 transition-all disabled:opacity-50"
-                                            >
-                                                {isAdding ? <Loader2 size={24} className="animate-spin" /> : <ShoppingCart size={24} fill="currentColor" />}
-                                                {isAdding ? 'Processing...' : 'Add to Inventory'}
-                                            </button>
+                                            {/* Finish Toggle Switch */}
+                                            <div className="flex bg-neutral-900/80 p-1 rounded-xl border border-white/5 w-fit mt-1">
+                                                <button
+                                                    onClick={() => handleVersionClick(activePrintingId!, 'nonfoil')}
+                                                    disabled={!activeGroup?.normal}
+                                                    className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${!(details?.is_foil || details?.finish === 'foil')
+                                                        ? 'bg-white text-black shadow-lg scale-[1.05]'
+                                                        : activeGroup?.normal
+                                                            ? 'text-neutral-500 hover:text-white'
+                                                            : 'text-neutral-800 cursor-not-allowed'
+                                                        }`}
+                                                >
+                                                    Normal
+                                                </button>
+                                                <button
+                                                    onClick={() => handleVersionClick(activePrintingId!, 'foil')}
+                                                    disabled={!activeGroup?.foil}
+                                                    className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${activeFinish === 'foil'
+                                                        ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 border-transparent text-white shadow-[0_0_15px_rgba(236,72,153,0.3)] scale-[1.05]'
+                                                        : activeGroup?.foil
+                                                            ? 'text-neutral-500 hover:text-white'
+                                                            : 'text-neutral-800 cursor-not-allowed'
+                                                        }`}
+                                                >
+                                                    Foil
+                                                </button>
+                                            </div>
                                         </div>
+                                        <button
+                                            onClick={handleAddToCart}
+                                            disabled={isAdding}
+                                            className="h-16 px-10 rounded-2xl bg-geeko-cyan text-black font-black text-sm uppercase tracking-widest flex items-center gap-3 shadow-[0_0_30px_rgba(0,229,255,0.4)] hover:shadow-[0_0_50px_rgba(0,229,255,0.6)] hover:scale-105 active:scale-95 transition-all disabled:opacity-50"
+                                        >
+                                            {isAdding ? <Loader2 size={24} className="animate-spin" /> : <ShoppingCart size={24} fill="currentColor" />}
+                                            {isAdding ? 'Processing...' : 'Add to Inventory'}
+                                        </button>
                                     </div>
-
-                                    <a
-                                        href={details.valuation?.market_url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="w-full flex items-center justify-between p-8 rounded-[32px] bg-neutral-900/50 hover:bg-geeko-cyan/10 border border-white/5 hover:border-geeko-cyan transition-all group"
-                                    >
-                                        <div className="flex flex-col">
-                                            <span className="text-xs font-black uppercase text-neutral-500 tracking-widest group-hover:text-geeko-cyan transition-colors mb-1">External Market</span>
-                                            <span className="text-2xl font-bold">Standard Price @ CK</span>
-                                        </div>
-                                        <div className="flex items-center gap-6">
-                                            <span className="text-3xl font-mono font-black text-white">$ {details.valuation?.market_price ? details.valuation?.market_price.toFixed(2) : '---'}</span>
-                                            <div className="p-3 rounded-full bg-white/5 group-hover:bg-geeko-cyan group-hover:text-black transition-colors">
-                                                <ExternalLink size={20} />
-                                            </div>
-                                        </div>
-                                    </a>
                                 </div>
 
-                                {/* Legality */}
-                                <div className="space-y-6">
-                                    <h3 className="text-xs font-black uppercase tracking-widest text-neutral-500 pl-2">Format Legality</h3>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        {relevantFormats.map(fmt => (
-                                            <div key={fmt} className="flex items-center justify-between p-5 rounded-2xl bg-neutral-900/50 border border-white/5 hover:border-white/10 transition-colors">
-                                                <span className="text-xs font-bold text-neutral-300 uppercase tracking-widest">{fmt}</span>
-                                                <div className="scale-125">
-                                                    {getLegalityIcon(details.legalities?.[fmt] || 'not_legal')}
-                                                </div>
-                                            </div>
-                                        ))}
+                                <a
+                                    href={ckUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-full flex items-center justify-between p-8 rounded-[32px] bg-neutral-900/50 hover:bg-geeko-cyan/10 border border-white/5 hover:border-geeko-cyan transition-all group"
+                                >
+                                    <div className="flex flex-col">
+                                        <span className="text-xs font-black uppercase text-neutral-500 tracking-widest group-hover:text-geeko-cyan transition-colors mb-1">External Market</span>
+                                        <span className="text-2xl font-bold">Standard Price @ CK</span>
                                     </div>
+                                    <div className="flex items-center gap-6">
+                                        <span className="text-3xl font-mono font-black text-white">$ {details.valuation?.market_price ? Number(details.valuation?.market_price).toFixed(2) : '---'}</span>
+                                        <div className="p-3 rounded-full bg-white/5 group-hover:bg-geeko-cyan group-hover:text-black transition-colors">
+                                            <ExternalLink size={20} />
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+
+                            {/* Legality */}
+                            <div className="space-y-6">
+                                <h3 className="text-xs font-black uppercase tracking-widest text-neutral-500 pl-2">Format Legality</h3>
+                                <div className="grid grid-cols-2 gap-4">
+                                    {relevantFormats.map(fmt => (
+                                        <div key={fmt} className="flex items-center justify-between p-5 rounded-2xl bg-neutral-900/50 border border-white/5 hover:border-white/10 transition-colors">
+                                            <span className="text-xs font-bold text-neutral-300 uppercase tracking-widest">{fmt}</span>
+                                            <div className="scale-125">
+                                                {getLegalityIcon(details.legalities?.[fmt] || 'not_legal')}
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         </div>

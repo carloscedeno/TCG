@@ -6,9 +6,10 @@ export interface CardGridProps {
   cards: (CardProps & { card_id: string })[];
   onCardClick?: (id: string) => void;
   viewMode?: 'grid' | 'list';
+  isArchive?: boolean;
 }
 
-export const CardGrid: React.FC<CardGridProps> = ({ cards, onCardClick, viewMode = 'grid' }) => {
+export const CardGrid: React.FC<CardGridProps> = ({ cards, onCardClick, viewMode = 'grid', isArchive }) => {
   return (
     <section className="w-full">
       {cards.length === 0 ? (
@@ -25,6 +26,7 @@ export const CardGrid: React.FC<CardGridProps> = ({ cards, onCardClick, viewMode
               key={card.card_id}
               {...card}
               viewMode={viewMode}
+              isArchive={isArchive}
               onClick={() => onCardClick && onCardClick(card.card_id)}
             />
           ))}
