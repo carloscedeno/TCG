@@ -312,8 +312,8 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                         ) : (
                             <div className="relative w-full h-full flex items-center justify-center group/card">
                                 <div className="absolute inset-0 bg-geeko-cyan/20 blur-[120px] rounded-full opacity-40 animate-pulse pointer-events-none" />
-                                <div className={`relative w-full h-full flex items-center justify-center drop-shadow-[0_45px_100px_rgba(0,0,0,0.95)] ${(details?.is_foil || details?.finish === 'foil') ? 'holo-effect' : ''}`}>
-                                    {(details?.is_foil || details?.finish === 'foil') && (
+                                <div className={`relative w-full h-full flex items-center justify-center drop-shadow-[0_45px_100px_rgba(0,0,0,0.95)] ${selectedFinish === 'foil' ? 'holo-effect' : ''}`}>
+                                    {selectedFinish === 'foil' && (
                                         <div className="absolute inset-0 z-20 foil-shimmer opacity-30 mix-blend-overlay pointer-events-none rounded-[10%] scale-[0.95]" />
                                     )}
                                     <img
