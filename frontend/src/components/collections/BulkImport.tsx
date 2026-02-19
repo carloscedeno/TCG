@@ -18,7 +18,7 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
     const [isAutoMapped, setIsAutoMapped] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const TXT_FORMAT_REGEX = /^(\d+)\s+(.+?)\s+\((.+?)\)\s+(\d+)(?:\s+\*F\*)?$/;
+    const TXT_FORMAT_REGEX = /^(\d+)\s+(.+?)\s+\((.+?)\)\s+(\d+)(?:\s+(\*F\*))?$/;
 
     const handleDragOver = (e: React.DragEvent) => {
         e.preventDefault();
@@ -47,18 +47,25 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
                 const parsedRows = lines.map(line => {
                     const match = line.match(TXT_FORMAT_REGEX);
                     if (match) {
-                        return [match[1], match[2], match[3], match[4]];
+                        return [
+                            match[1], // quantity
+                            match[2], // name
+                            match[3], // set
+                            match[4], // collector_number
+                            match[5] ? 'foil' : 'nonfoil' // finish
+                        ];
                     }
                     return null;
                 }).filter(row => row !== null) as string[][];
 
                 if (parsedRows.length > 0) {
-                    setHeaders(['quantity', 'name', 'set', 'collector_number']);
+                    setHeaders(['quantity', 'name', 'set', 'collector_number', 'finish']);
                     setMapping({
                         quantity: 'quantity',
                         name: 'name',
                         set: 'set',
                         collector_number: 'collector_number',
+                        finish: 'finish',
                         condition: '',
                         price: '',
                         tcg: ''
@@ -126,16 +133,17 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
         let content = "";
 
         // Check if we are in special TXT mode by checking headers
-        const isSpecialTxt = headers.includes('collector_number') && headers.includes('set') && headers.length === 4;
+        const isSpecialTxt = headers.includes('collector_number') && headers.includes('set') && (headers.length === 4 || headers.length === 5);
 
         if (isSpecialTxt) {
-            // Reconstruct: "Quantity Name (Set) CollectorNumber"
+            // Reconstruct: "Quantity Name (Set) CollectorNumber [*F*]"
             content = failedRows.map(row => {
                 const qty = row[headers.indexOf('quantity')] || '1';
                 const name = row[headers.indexOf('name')] || '';
                 const set = row[headers.indexOf('set')] || '';
                 const num = row[headers.indexOf('collector_number')] || '';
-                return `${qty} ${name} (${set}) ${num}`;
+                const finish = row[headers.indexOf('finish')];
+                return `${qty} ${name} (${set}) ${num}${finish === 'foil' ? ' *F*' : ''}`;
             }).join('\n');
         } else {
             // CSV fallback
@@ -270,6 +278,7 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
         { id: 'collector_number', label: 'Num. Coleccionista' },
         { id: 'quantity', label: 'Cantidad' },
         { id: 'price', label: 'Precio/Valor' },
+        { id: 'finish', label: 'Acabado (Foil/Non)' },
         { id: 'condition', label: 'Condición' }
     ];
 
@@ -358,6 +367,7 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
                                                     <th className="p-3">Nombre</th>
                                                     <th className="p-3">Set</th>
                                                     <th className="p-3">#</th>
+                                                    <th className="p-3">Acabado</th>
                                                 </tr>
                                             </thead>
                                             <tbody className="text-slate-300 divide-y divide-white/5">
@@ -367,6 +377,7 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
                                                         <td className="p-3 font-bold text-white">{row[1]}</td>
                                                         <td className="p-3 w-24">{row[2]}</td>
                                                         <td className="p-3 w-24">{row[3]}</td>
+                                                        <td className="p-3 w-24 uppercase font-black text-geeko-cyan">{row[4]}</td>
                                                     </tr>
                                                 ))}
                                             </tbody>

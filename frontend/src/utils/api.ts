@@ -191,7 +191,7 @@ export const fetchProducts = async (params: any = {}): Promise<any> => {
       ...row,
       finish: row.finish || (row.is_foil ? 'foil' : 'nonfoil'),
       is_foil: !!row.is_foil || (row.finish === 'foil'),
-      price: row.price || row.avg_market_price_usd || row.store_price || 0,
+      price: Number(row.price || row.avg_market_price_usd || row.store_price || 0),
       valuation: {
         market_price: row.avg_market_price_usd || row.store_price || 0,
         store_price: row.store_price || 0
@@ -250,7 +250,7 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
         const baseData = {
           printing_id: sbData.printing_id,
           card_id: sbData.card_id,
-          name: sbData.cards?.name || sbData.name || 'Unknown Card',
+          name: sbData.cards?.card_name || sbData.name || 'Unknown Card',
           mana_cost: sbData.cards?.mana_cost,
           type: sbData.cards?.type_line,
           oracle_text: sbData.cards?.oracle_text,
@@ -289,18 +289,55 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
               .eq('card_id', cardIdForVersions);
 
             if (versionsData) {
-              data.all_versions = versionsData.map((v: any) => ({
-                printing_id: v.printing_id,
-                set_name: v.sets?.set_name || 'Unknown Set',
-                set_code: v.sets?.set_code || '??',
-                collector_number: v.collector_number,
-                rarity: v.rarity,
-                price: v.aggregated_prices?.[0]?.avg_market_price_usd || 0,
-                image_url: v.image_url,
-                stock: 0,
-                finish: v.finish || (v.is_foil ? 'foil' : 'nonfoil'),
-                is_foil: !!v.is_foil || (v.finish === 'foil')
-              }));
+              const expandedVersions: any[] = [];
+              versionsData.forEach((v: any) => {
+                const baseVersion = {
+                  printing_id: v.printing_id,
+                  set_name: v.sets?.set_name || 'Unknown Set',
+                  set_code: v.sets?.set_code || '??',
+                  collector_number: v.collector_number,
+                  rarity: v.rarity,
+                  image_url: v.image_url,
+                  stock: v.stock || 0,
+                  prices: v.prices,
+                  aggregated_prices: v.aggregated_prices
+                };
+
+                const finishes = v.finishes || (v.is_foil ? ['foil'] : ['nonfoil']);
+
+                // If the record has specific finish flags or both prices, expand it
+                const hasNormalPrice = v.prices?.usd || v.prices?.eur;
+                const hasFoilPrice = v.prices?.usd_foil || v.prices?.eur_foil;
+                const hasEtchedPrice = v.prices?.usd_etched;
+
+                if (finishes.includes('nonfoil') || (hasNormalPrice && !finishes.includes('foil'))) {
+                  expandedVersions.push({
+                    ...baseVersion,
+                    price: Number(v.prices?.usd || v.prices?.eur || v.aggregated_prices?.[0]?.avg_market_price_usd || 0),
+                    finish: 'nonfoil',
+                    is_foil: false
+                  });
+                }
+
+                if (finishes.includes('foil') || hasFoilPrice) {
+                  expandedVersions.push({
+                    ...baseVersion,
+                    price: Number(v.prices?.usd_foil || v.prices?.eur_foil || v.aggregated_prices?.[0]?.avg_market_price_usd || 0),
+                    finish: 'foil',
+                    is_foil: true
+                  });
+                }
+
+                if (finishes.includes('etched') || hasEtchedPrice) {
+                  expandedVersions.push({
+                    ...baseVersion,
+                    price: Number(v.prices?.usd_etched || v.aggregated_prices?.[0]?.avg_market_price_usd || 0),
+                    finish: 'etched',
+                    is_foil: true
+                  });
+                }
+              });
+              data.all_versions = expandedVersions;
             }
           }
         }
