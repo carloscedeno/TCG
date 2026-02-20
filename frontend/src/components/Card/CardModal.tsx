@@ -228,9 +228,10 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
         const groups = (details.all_versions as Version[]).reduce((acc: any, v: Version) => {
             const key = `${v.set_code}-${v.collector_number}`;
             if (!acc[key]) {
+                const isNormal = !(v.is_foil || v.finish === 'foil' || v.finish === 'etched');
                 acc[key] = {
-                    base: v,
-                    normal: !(v.is_foil || v.finish === 'foil' || v.finish === 'etched') ? v : null,
+                    base: v, // will be normalized below
+                    normal: isNormal ? v : null,
                     foil: (v.is_foil || v.finish === 'foil') ? v : null,
                     etched: v.finish === 'etched' ? v : null,
                 };
@@ -242,13 +243,24 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
             return acc;
         }, {} as Record<string, any>);
 
+        // Normalize: base should always be the normal version when available,
+        // so activeGroup lookups by base.printing_id are consistent.
+        Object.values(groups).forEach((g: any) => {
+            g.base = g.normal || g.foil || g.etched || g.base;
+        });
+
         return Object.values(groups).sort((a: any, b: any) =>
             a.base.set_name.localeCompare(b.base.set_name)
         );
     }, [details?.all_versions]);
 
     const activeGroup = useMemo<any>(() => {
-        return versionGroups.find((g: any) => g.base.printing_id === activePrintingId);
+        return versionGroups.find((g: any) =>
+            g.normal?.printing_id === activePrintingId ||
+            g.foil?.printing_id === activePrintingId ||
+            g.etched?.printing_id === activePrintingId ||
+            g.base?.printing_id === activePrintingId
+        );
     }, [versionGroups, activePrintingId]);
 
     const activeVersion = useMemo(() => {
@@ -310,7 +322,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                 </button>
 
                 {/* LEFT: IMAGE & VERSIONS LIST */}
-                <div className="w-full md:w-[420px] lg:w-[480px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden shrink-0 h-auto md:h-[var(--modal-height,700px)] min-h-[500px] md:min-h-0">
+                <div className="w-full md:w-[420px] lg:w-[480px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden shrink-0 h-auto md:h-full">
                     <div className="flex-1 min-h-[300px] md:min-h-0 relative flex items-center justify-center p-4 sm:p-6 md:p-10 bg-gradient-to-b from-white/[0.04] to-transparent overflow-hidden">
                         {loading ? (
                             <div className="w-64 aspect-[5/7] rounded-xl bg-white/5 animate-pulse flex items-center justify-center">
@@ -455,7 +467,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                 </div>
 
                 {/* RIGHT: CARD TEXT & ACTIONS */}
-                <div className="flex-1 h-auto md:h-[var(--modal-height,700px)] overflow-y-auto custom-scrollbar bg-[#050505] p-4 sm:p-6 md:p-8 space-y-4 md:space-y-6">
+                <div className="flex-1 h-auto md:h-full overflow-y-auto custom-scrollbar bg-[#050505] p-4 sm:p-6 md:p-8 space-y-4 md:space-y-6">
                     {loading ? (
                         <div className="space-y-12 animate-pulse">
                             <div className="space-y-4">
