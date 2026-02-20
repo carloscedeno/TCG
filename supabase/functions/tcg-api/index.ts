@@ -376,6 +376,7 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
           image_url,
           collector_number,
           is_foil,
+          prices,
           sets(set_name, set_code, release_date),
           cards(rarity),
           aggregated_prices(avg_market_price_usd),
@@ -429,13 +430,17 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
         legalities: cardData.legalities || {},
         colors: cardData.colors || [],
         card_faces: cardData.card_faces || null,
-        all_versions: (allVersions || []).map((v: any) => {
+        all_versions: (allVersions || []).flatMap((v: any) => {
           // aggregated_prices and products are arrays, get first element
           const marketPrice = v.aggregated_prices?.[0]?.avg_market_price_usd || 0;
           const storePrice = v.products?.[0]?.price || 0;
           const displayPrice = storePrice || marketPrice;
 
-          return {
+          // Check if a foil version exists via prices.usd_foil
+          const hasFoilPrice = v.prices?.usd_foil != null;
+          const foilPrice = parseFloat(v.prices?.usd_foil || '0') || 0;
+
+          const baseEntry = {
             printing_id: v.printing_id,
             set_name: v.sets?.set_name || '',
             set_code: v.sets?.set_code || '',
@@ -444,8 +449,33 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
             price: displayPrice,
             image_url: v.image_url || '',
             is_foil: v.is_foil || false,
-            finish: v.is_foil ? 'foil' : 'nonfoil'
+            finish: v.is_foil ? 'foil' : 'nonfoil',
+            prices: v.prices || {}
           };
+
+          // If this printing is already a foil record (is_foil=true), just return it
+          if (v.is_foil) {
+            return [baseEntry];
+          }
+
+          // For nonfoil printings: return the nonfoil entry and, if foil price exists,
+          // a virtual foil entry sharing the same collector_number/set but a synthetic ID
+          const entries: any[] = [baseEntry];
+          if (hasFoilPrice) {
+            entries.push({
+              printing_id: `${v.printing_id}-foil`,
+              set_name: v.sets?.set_name || '',
+              set_code: v.sets?.set_code || '',
+              collector_number: v.collector_number || '',
+              rarity: v.cards?.rarity || 'common',
+              price: foilPrice,
+              image_url: v.image_url || '',
+              is_foil: true,
+              finish: 'foil',
+              prices: v.prices || {}
+            });
+          }
+          return entries;
         })
       };
     }
