@@ -1,0 +1,149 @@
+{
+    "epic": "PRD v4.0 - Nuevas Modificaciones 20260223",
+    "status": "active",
+    "stories": [
+        {
+            "id": "RESP-001",
+            "description": "Usar unidades de viewport dinámico (dvh) en el Home para que el hero ocupe exactamente la pantalla visible en móvil",
+            "files_to_touch": [
+                "frontend/src/pages/Home.tsx"
+            ],
+            "acceptance_criteria": [
+                "La clase `min-h-screen` está reemplazada por `min-h-[100dvh]` en el wrapper principal de Home",
+                "En DevTools con 390px de ancho, el hero no genera scroll innecesario",
+                "Las barras de navegación del browser no cortan el contenido"
+            ],
+            "passes": true
+        },
+        {
+            "id": "RESP-002",
+            "description": "Corregir el layout de la vista de lista de cartas para prevenir solapamiento del nombre con el precio en nombres largos",
+            "files_to_touch": [
+                "frontend/src/components/Card/Card.tsx"
+            ],
+            "acceptance_criteria": [
+                "El contenedor del nombre tiene `min-w-0` para permitir shrink en flex",
+                "El nombre de la carta usa `line-clamp-2` para limitar a 2 líneas",
+                "El contenedor de precio tiene `ml-auto pl-2` para garantizar separación",
+                "Buscar 'Asmoranomardicadaistinaculdacar' en list view: nombre en máx 2 líneas sin solapamiento"
+            ],
+            "passes": true
+        },
+        {
+            "id": "MODAL-001",
+            "description": "Agregar sticky header en CardModal visible en móvil con nombre de carta y botón de cierre táctil (≥44px)",
+            "files_to_touch": [
+                "frontend/src/components/Card/CardModal.tsx"
+            ],
+            "acceptance_criteria": [
+                "Header con clase `sticky top-0 z-50` visible solo en móvil (`md:hidden`)",
+                "Botón de cierre tiene `w-11 h-11` (44px mínimo táctil)",
+                "El nombre de la carta aparece en el header mientras se hace scroll por versiones",
+                "Desktop mantiene el botón X en posición absoluta top-right"
+            ],
+            "passes": true
+        },
+        {
+            "id": "MODAL-002",
+            "description": "Mostrar etiquetas de disponibilidad ('En Stock' / 'Por Encargo') en cada versión del CardModal",
+            "files_to_touch": [
+                "frontend/src/components/Card/CardModal.tsx"
+            ],
+            "acceptance_criteria": [
+                "Versiones con `stock > 0` muestran badge verde 'En Stock'",
+                "Versiones con `stock === 0` muestran badge gris 'Por Encargo'",
+                "Los badges son visibles en pantallas de 390px sin overflow horizontal"
+            ],
+            "passes": true
+        },
+        {
+            "id": "MODAL-003",
+            "description": "Feedback táctil y visual al agregar una carta al carrito desde el CardModal",
+            "files_to_touch": [
+                "frontend/src/components/Card/CardModal.tsx"
+            ],
+            "acceptance_criteria": [
+                "`navigator.vibrate(50)` se llama al agregar correctamente (móvil físico)",
+                "El botón cambia a fondo verde con texto '¡Añadido! ✓' por 1.5 segundos",
+                "Luego regresa al estado normal de 'Agregar al Carrito' automáticamente",
+                "El botón no duplica la acción si se presiona durante el estado 'añadido'"
+            ],
+            "passes": true
+        },
+        {
+            "id": "CART-001",
+            "description": "Crear CartContext con persistencia en localStorage y detección de cambio de precios entre sesiones",
+            "files_to_touch": [
+                "frontend/src/context/CartContext.tsx",
+                "frontend/src/App.tsx"
+            ],
+            "acceptance_criteria": [
+                "CartProvider envuelve la aplicación completa en App.tsx",
+                "Al cargar la app, el carrito se compara con el snapshot en localStorage",
+                "Si algún precio cambió más de $0.01, `priceChangeAlert` es `true`",
+                "El hook `useCart()` expone `cartCount`, `cartItems`, `priceChangeAlert`, `refreshCart`",
+                "El evento `cart-updated` dispara un re-fetch del carrito"
+            ],
+            "passes": true
+        },
+        {
+            "id": "CHECKOUT-001",
+            "description": "Reemplazar el formulario de dirección USA por el flujo de cliente venezolano con Cédula de Identidad",
+            "files_to_touch": [
+                "frontend/src/pages/CheckoutPage.tsx"
+            ],
+            "acceptance_criteria": [
+                "Campo Cédula con selector de prefijo V/E y validación de 6-9 dígitos",
+                "Error de validación claro al ingresar número inválido",
+                "Selector muestra 24 estados de Venezuela (desde Amazonas hasta Zulia)",
+                "No aparece 'ZIP Code' ni lista de estados de USA",
+                "Campo email marcado como opcional en el label"
+            ],
+            "passes": true
+        },
+        {
+            "id": "CHECKOUT-002",
+            "description": "El upload de comprobante de pago activa la cámara directamente en dispositivos móviles",
+            "files_to_touch": [
+                "frontend/src/pages/CheckoutPage.tsx"
+            ],
+            "acceptance_criteria": [
+                "Input tiene `accept=\"image/*\"` y `capture=\"environment\"` para cámara trasera",
+                "En móvil, tocar el botón 'Subir captura o foto' activa la cámara del dispositivo",
+                "Al seleccionar imagen se muestra preview en la misma sección",
+                "Botón '✕' sobre el preview permite quitar la imagen seleccionada"
+            ],
+            "passes": true
+        },
+        {
+            "id": "CHECKOUT-003",
+            "description": "Al completar una orden, abrir WhatsApp automáticamente con mensaje pre-estructurado",
+            "files_to_touch": [
+                "frontend/src/pages/CheckoutPage.tsx"
+            ],
+            "acceptance_criteria": [
+                "`window.open()` se llama con URL `wa.me/` al crear la orden exitosamente",
+                "El mensaje incluye nombre completo del cliente, cédula y total de la orden",
+                "El texto del botón 'Confirmar y Contactar' tiene ícono de MessageCircle",
+                "Si la creación de orden falla, WhatsApp NO se abre"
+            ],
+            "passes": true
+        },
+        {
+            "id": "TEST-001",
+            "description": "Suite de unit tests para el parser ManaBox TXT con 12 casos, incluyendo validación de performance",
+            "files_to_touch": [
+                "frontend/src/tests/txt_parser.test.ts"
+            ],
+            "acceptance_criteria": [
+                "npx jest txt_parser --no-coverage pasa 12/12 tests",
+                "Detecta los 4 marcadores de foil: *F*, (F), Foil, ETCHED",
+                "Líneas sin cantidad al inicio van a `failed_rows`",
+                "Líneas con `//` o `#` son ignoradas como comentarios",
+                "Carta sin collector_number extrae correctamente el set_code",
+                "550 líneas parsean en menos de 2000ms"
+            ],
+            "passes": true
+        }
+    ]
+}
