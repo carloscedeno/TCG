@@ -216,11 +216,12 @@ export const fetchProducts = async (params: any = {}): Promise<any> => {
 export const fetchCardDetails = async (printingId: string): Promise<any> => {
   try {
     let data: any = null;
+    const dbPrintingId = printingId.replace('-foil', '').replace('-nonfoil', '');
 
     // 1. Try fetching from API first
     if (API_BASE) {
       try {
-        const apiUrl = `${API_BASE}/api/cards/${printingId}`;
+        const apiUrl = `${API_BASE}/api/cards/${dbPrintingId}`;
         const response = await fetch(apiUrl);
         if (response.ok) {
           const json = await response.json();
@@ -237,7 +238,7 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
       const { data: sbData, error: sbError } = await supabase
         .from('card_printings')
         .select('*, cards(*), sets(*), aggregated_prices(avg_market_price_usd)')
-        .eq('printing_id', printingId)
+        .eq('printing_id', dbPrintingId)
         .single();
 
       if (sbError) {
