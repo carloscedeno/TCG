@@ -376,6 +376,7 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
           image_url,
           collector_number,
           is_foil,
+          finishes,
           prices,
           sets(set_name, set_code, release_date),
           cards(rarity),
@@ -436,10 +437,6 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
           const storePrice = v.products?.[0]?.price || 0;
           const displayPrice = storePrice || marketPrice;
 
-          // Check if a foil version exists via prices.usd_foil
-          const hasFoilPrice = v.prices?.usd_foil != null;
-          const foilPrice = parseFloat(v.prices?.usd_foil || '0') || 0;
-
           const baseEntry = {
             printing_id: v.printing_id,
             set_name: v.sets?.set_name || '',
@@ -448,33 +445,57 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
             rarity: v.cards?.rarity || 'common',
             price: displayPrice,
             image_url: v.image_url || '',
-            is_foil: v.is_foil || false,
-            finish: v.is_foil ? 'foil' : 'nonfoil',
             prices: v.prices || {}
           };
 
-          // If this printing is already a foil record (is_foil=true), just return it
-          if (v.is_foil) {
-            return [baseEntry];
-          }
+          const finishes = v.finishes || (v.is_foil ? ['foil'] : ['nonfoil']);
 
-          // For nonfoil printings: return the nonfoil entry and, if foil price exists,
-          // a virtual foil entry sharing the same collector_number/set but a synthetic ID
-          const entries: any[] = [baseEntry];
-          if (hasFoilPrice) {
+          const hasNormalPrice = v.prices?.usd || v.prices?.eur;
+          const hasFoilPrice = v.prices?.usd_foil || v.prices?.eur_foil;
+          const foilPrice = parseFloat(v.prices?.usd_foil || '0') || 0;
+          const hasEtchedPrice = v.prices?.usd_etched != null;
+
+          const entries: any[] = [];
+
+          if (finishes.includes('nonfoil') || (hasNormalPrice && !finishes.includes('foil'))) {
             entries.push({
-              printing_id: `${v.printing_id}-foil`,
-              set_name: v.sets?.set_name || '',
-              set_code: v.sets?.set_code || '',
-              collector_number: v.collector_number || '',
-              rarity: v.cards?.rarity || 'common',
-              price: foilPrice,
-              image_url: v.image_url || '',
-              is_foil: true,
-              finish: 'foil',
-              prices: v.prices || {}
+              ...baseEntry,
+              finish: 'nonfoil',
+              is_foil: false
             });
           }
+
+          if (finishes.includes('foil') || hasFoilPrice) {
+            // Use synthetic ID if this printing record was primarily non-foil in the DB
+            // But if it was originally marked is_foil=true, it might be the "real" printing_id
+            const useSyntheticId = !v.is_foil && hasFoilPrice;
+            entries.push({
+              ...baseEntry,
+              printing_id: useSyntheticId ? `${v.printing_id}-foil` : v.printing_id,
+              price: foilPrice || displayPrice,
+              finish: 'foil',
+              is_foil: true
+            });
+          }
+
+          if (finishes.includes('etched') || hasEtchedPrice) {
+            entries.push({
+              ...baseEntry,
+              printing_id: `${v.printing_id}-etched`,
+              finish: 'etched',
+              is_foil: true
+            });
+          }
+
+          // Fallback just in case
+          if (entries.length === 0) {
+            entries.push({
+              ...baseEntry,
+              finish: v.is_foil ? 'foil' : 'nonfoil',
+              is_foil: !!v.is_foil
+            });
+          }
+
           return entries;
         })
       };
