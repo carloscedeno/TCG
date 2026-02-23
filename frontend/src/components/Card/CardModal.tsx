@@ -663,7 +663,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                     </div>
                                                 </div>
 
-                                                {marketPrice > 0 && (activeVersion?.price || details.price || 0) > 0 && Math.abs(Number(activeVersion?.price || details.price || 0) - Number(marketPrice)) > 0.01 ? (
+                                                {marketPrice > 0 && (activeVersion?.price || details.price || 0) > 0 && (activeVersion?.price || details.price || 0) < marketPrice ? (
                                                     <div className="text-sm font-bold text-neutral-600 line-through decoration-red-500/50 mt-1">
                                                         MKT: ${Number(marketPrice).toFixed(2)}
                                                     </div>
