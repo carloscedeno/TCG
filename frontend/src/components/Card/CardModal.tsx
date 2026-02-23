@@ -617,11 +617,11 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                             <div className="space-y-1 relative z-10">
                                                 <div className="text-[10px] font-black uppercase text-geeko-cyan tracking-widest flex items-center justify-between">
                                                     <span>GK Price</span>
-                                                    {marketPrice > 0 && details.price && details.price < marketPrice && (
+                                                    {marketPrice > 0 && (activeVersion?.price || details.price || 0) > 0 && (activeVersion?.price || details.price || 0) < marketPrice ? (
                                                         <span className="text-[9px] text-geeko-green bg-geeko-green/10 px-2 py-0.5 rounded-full border border-geeko-green/20">
-                                                            Ahorro: ${(marketPrice - details.price).toFixed(2)}
+                                                            Ahorro: ${(marketPrice - (activeVersion?.price || details.price || 0)).toFixed(2)}
                                                         </span>
-                                                    )}
+                                                    ) : null}
                                                 </div>
                                                 <div className="flex flex-col gap-2">
                                                     {/* Current Selected Price */}
@@ -663,11 +663,11 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                     </div>
                                                 </div>
 
-                                                {marketPrice > 0 && details.price && Math.abs(Number(details.price) - Number(marketPrice)) > 0.01 && (
-                                                    <div className="text-sm font-bold text-neutral-600 line-through decoration-red-500/50">
+                                                {marketPrice > 0 && (activeVersion?.price || details.price || 0) > 0 && Math.abs(Number(activeVersion?.price || details.price || 0) - Number(marketPrice)) > 0.01 ? (
+                                                    <div className="text-sm font-bold text-neutral-600 line-through decoration-red-500/50 mt-1">
                                                         MKT: ${Number(marketPrice).toFixed(2)}
                                                     </div>
-                                                )}
+                                                ) : null}
                                             </div>
                                         </div>
 
