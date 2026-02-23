@@ -256,7 +256,7 @@ const Home: React.FC = () => {
 
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white font-sans relative selection:bg-cyan-500/30">
+    <div className="min-h-[100dvh] bg-[#050505] text-white font-sans relative selection:bg-cyan-500/30">
 
       {/* Ambient Background Mesh */}
       <div className="fixed inset-0 z-0 pointer-events-none">

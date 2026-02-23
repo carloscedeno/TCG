@@ -8,6 +8,7 @@ import InventoryPage from './pages/Admin/InventoryPage';
 import OrdersPage from './pages/Admin/OrdersPage';
 import { CardDetail } from './pages/CardDetail';
 import { AuthProvider } from './context/AuthContext';
+import { CartProvider } from './context/CartContext';
 import { AlertCircle } from 'lucide-react';
 import { CheckoutPage } from './pages/CheckoutPage';
 import { CheckoutSuccessPage } from './pages/CheckoutSuccessPage';
@@ -57,30 +58,32 @@ function App() {
     }
 
     return (
-        <AuthProvider>
-            <Router basename="/">
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/card/:id" element={<CardDetail />} />
-                    <Route path="/profile" element={<Profile />} />
-                    <Route path="/import" element={<ImportCollection />} />
-                    <Route path="/tournaments" element={<TournamentHub />} />
+        <CartProvider>
+            <AuthProvider>
+                <Router basename="/">
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/card/:id" element={<CardDetail />} />
+                        <Route path="/profile" element={<Profile />} />
+                        <Route path="/import" element={<ImportCollection />} />
+                        <Route path="/tournaments" element={<TournamentHub />} />
 
-                    <Route path="/help" element={<HelpPage />} />
-                    <Route path="/legal" element={<LegalPage />} />
-                    <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
-                    <Route path="/admin/inventory" element={<AdminRoute><InventoryPage /></AdminRoute>} />
-                    <Route path="/admin/orders" element={<AdminRoute><OrdersPage /></AdminRoute>} />
-                    <Route path="/checkout" element={<CheckoutPage />} />
-                    <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
+                        <Route path="/help" element={<HelpPage />} />
+                        <Route path="/legal" element={<LegalPage />} />
+                        <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+                        <Route path="/admin/inventory" element={<AdminRoute><InventoryPage /></AdminRoute>} />
+                        <Route path="/admin/orders" element={<AdminRoute><OrdersPage /></AdminRoute>} />
+                        <Route path="/checkout" element={<CheckoutPage />} />
+                        <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
 
-                    <Route path="/update-password" element={<UpdatePassword />} />
-                    <Route path="*" element={<NotFound />} />
-                </Routes>
-                <WelcomeModal />
-                <WhatsAppWidget />
-            </Router>
-        </AuthProvider>
+                        <Route path="/update-password" element={<UpdatePassword />} />
+                        <Route path="*" element={<NotFound />} />
+                    </Routes>
+                    <WelcomeModal />
+                    <WhatsAppWidget />
+                </Router>
+            </AuthProvider>
+        </CartProvider>
     );
 }
 

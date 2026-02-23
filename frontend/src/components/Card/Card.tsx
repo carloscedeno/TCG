@@ -131,7 +131,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         </div>
 
         <div className="flex-1 min-w-0">
-          <h3 className="text-white font-bold text-sm group-hover:text-geeko-cyan transition-colors">{currentName}</h3>
+          <h3 className="text-white font-bold text-sm group-hover:text-geeko-cyan transition-colors line-clamp-2 leading-snug">{currentName}</h3>
           <div className="flex items-center gap-2 mt-0.5">
             <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider px-1.5 py-0.5 bg-white/5 rounded">{set}</span>
             {rarity && (
@@ -165,7 +165,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
           )}
         </div>
 
-        <div className="text-right flex flex-col items-end min-w-[80px]">
+        <div className="text-right flex flex-col items-end min-w-[80px] ml-auto pl-2">
           <span className="text-[9px] uppercase text-neutral-500 font-bold tracking-wider">Mercado</span>
           <div className="flex items-center gap-1.5">
             <span className="text-geeko-cyan font-mono font-bold text-base leading-none">

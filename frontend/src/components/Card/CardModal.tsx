@@ -78,6 +78,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
     const [details, setDetails] = useState<CardDetails | null>(null);
     const [loading, setLoading] = useState(false);
     const [isAdding, setIsAdding] = useState(false);
+    const [addedSuccess, setAddedSuccess] = useState(false);
     const [currentFaceIndex, setCurrentFaceIndex] = useState(0);
     const [activePrintingId, setActivePrintingId] = useState<string | null>(null);
     const [selectedFinish, setSelectedFinish] = useState<'nonfoil' | 'foil' | 'etched'>('nonfoil');
@@ -173,11 +174,14 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
         try {
             const result = await addToCart(activePrintingId, 1);
             if (result && !result.success) {
-                // Show error message to user
                 alert(result.message || result.error || 'No se pudo agregar al carrito');
                 setIsAdding(false);
                 return;
             }
+            // Haptic feedback for mobile devices
+            if (navigator.vibrate) navigator.vibrate(50);
+            setAddedSuccess(true);
+            setTimeout(() => setAddedSuccess(false), 1500);
             if (onAddToCartSuccess) {
                 setTimeout(() => {
                     onClose();
@@ -317,9 +321,21 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                 data-testid="card-modal"
                 className="glass-panel w-full max-w-6xl max-h-[90vh] rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0,0,0,0.8)] flex flex-col md:flex-row overflow-hidden relative"
                 onClick={e => e.stopPropagation()}
-            >    <button onClick={onClose} className="absolute top-6 right-6 z-50 p-2 hover:bg-white/10 rounded-full transition-colors text-neutral-400">
-                    <X size={24} />
-                </button>
+            >
+                {/* Sticky Header: Card name + close button always visible on mobile */}
+                <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#0a0a0a]/95 backdrop-blur-md sticky top-0 z-50 md:hidden">
+                    <h2 className="text-sm font-black text-white truncate pr-4">{details?.name || 'Cargando...'}</h2>
+                    <button
+                        onClick={onClose}
+                        className="flex-shrink-0 w-11 h-11 flex items-center justify-center bg-white/10 hover:bg-white/20 rounded-full transition-colors text-neutral-400 hover:text-white"
+                        aria-label="Cerrar"
+                    >
+                        <X size={20} />
+                    </button>
+                </div>
+
+                {/* Desktop close button */}
+                <button onClick={onClose} className="absolute top-6 right-6 z-50 p-2 hover:bg-white/10 rounded-full transition-colors text-neutral-400 hidden md:flex"><X size={24} /></button>
 
                 {/* LEFT: IMAGE & VERSIONS LIST */}
                 <div className="w-full md:w-[420px] lg:w-[480px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden shrink-0 h-auto md:h-[var(--modal-height,700px)] min-h-[500px] md:min-h-0">
@@ -435,9 +451,16 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                     </div>
 
                                                     <div className="flex items-center gap-3">
-                                                        <div className="text-[9px] font-black text-geeko-cyan uppercase tracking-tighter">
-                                                            {rowActiveVersion?.stock || 0}
-                                                        </div>
+                                                        {/* Stock Label */}
+                                                        {(rowActiveVersion?.stock ?? 0) > 0 ? (
+                                                            <span className="text-[9px] font-black text-geeko-green bg-geeko-green/10 px-2 py-0.5 rounded-full border border-geeko-green/20 uppercase tracking-tight whitespace-nowrap">
+                                                                En Stock
+                                                            </span>
+                                                        ) : (
+                                                            <span className="text-[9px] font-bold text-neutral-600 bg-neutral-900 px-2 py-0.5 rounded-full border border-white/5 uppercase tracking-tight whitespace-nowrap">
+                                                                Por Encargo
+                                                            </span>
+                                                        )}
                                                         {!isArchive && (
                                                             <div
                                                                 onClick={(e) => {
@@ -631,10 +654,13 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                 onClick={handleAddToCart}
                                                 disabled={isAdding}
                                                 data-testid="add-to-cart-button"
-                                                className="w-full h-12 rounded-xl bg-geeko-cyan text-black font-black text-xs uppercase tracking-widest flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_40px_rgba(0,229,255,0.6)] hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 shrink-0 relative z-10"
+                                                className={`w-full h-12 rounded-xl font-black text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 shrink-0 relative z-10 ${addedSuccess
+                                                        ? 'bg-geeko-green text-black shadow-[0_0_20px_rgba(0,255,133,0.4)]'
+                                                        : 'bg-geeko-cyan text-black shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_40px_rgba(0,229,255,0.6)]'
+                                                    }`}
                                             >
-                                                {isAdding ? <Loader2 size={16} className="animate-spin" /> : <ShoppingCart size={16} fill="currentColor" />}
-                                                {isAdding ? 'Agregando...' : 'Agregar al Carrito'}
+                                                {isAdding ? <Loader2 size={16} className="animate-spin" /> : addedSuccess ? '¡Añadido! ✓' : <ShoppingCart size={16} fill="currentColor" />}
+                                                {!isAdding && !addedSuccess && 'Agregar al Carrito'}
                                             </button>
                                         )}
                                     </div>

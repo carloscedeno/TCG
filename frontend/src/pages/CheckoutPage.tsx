@@ -1,115 +1,135 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchCart, createOrder, fetchUserAddresses, saveUserAddress } from '../utils/api';
-import { ShieldCheck, Truck, CreditCard, CheckCircle, MapPin, Plus, Loader2, AlertCircle } from 'lucide-react';
+import { fetchCart, createOrder } from '../utils/api';
+import { ShieldCheck, Truck, CreditCard, CheckCircle, Upload, Loader2, AlertCircle, MessageCircle } from 'lucide-react';
 import { supabase } from '../utils/supabaseClient';
+
+// 24 estados de Venezuela
+const VENEZUELA_STATES = [
+    'Amazonas', 'Anzoátegui', 'Apure', 'Aragua', 'Barinas', 'Bolívar',
+    'Carabobo', 'Cojedes', 'Delta Amacuro', 'Distrito Capital', 'Falcón',
+    'Guárico', 'Lara', 'Mérida', 'Miranda', 'Monagas', 'Nueva Esparta',
+    'Portuguesa', 'Sucre', 'Táchira', 'Trujillo', 'Vargas', 'Yaracuy', 'Zulia',
+];
+
+const CEDULA_PREFIXES = ['V', 'E'] as const;
 
 export const CheckoutPage = () => {
     const navigate = useNavigate();
     const [cartItems, setCartItems] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-    const [step, setStep] = useState(1); // 1: Shipping, 2: Payment, 3: Review
-    const [addresses, setAddresses] = useState<any[]>([]);
-    const [selectedAddress, setSelectedAddress] = useState<any>(null);
-    const [isNewAddress, setIsNewAddress] = useState(false);
-    const [newAddress, setNewAddress] = useState({
-        full_name: '',
-        address_line1: '',
-        city: '',
-        state: '',
-        zip_code: '',
-        country: 'USA',
-        email: '',
-        phone: ''
-    });
+    const [step, setStep] = useState(1);
     const [validationError, setValidationError] = useState<string | null>(null);
     const [isProcessing, setIsProcessing] = useState(false);
+    const [paymentPreview, setPaymentPreview] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    // Customer form
+    const [form, setForm] = useState({
+        full_name: '',
+        cedula_prefix: 'V' as 'V' | 'E',
+        cedula_number: '',
+        whatsapp: '',
+        state: '',
+        address: '',
+        email: '',
+    });
 
     useEffect(() => {
-        loadData();
-    }, []);
-
-    const loadData = async () => {
-        setLoading(true);
-        try {
-            const cartData = await fetchCart();
-            if (!cartData.items || cartData.items.length === 0) {
-                navigate('/');
-                return;
+        const loadCart = async () => {
+            setLoading(true);
+            try {
+                const cartData = await fetchCart();
+                if (!cartData.items || cartData.items.length === 0) {
+                    navigate('/');
+                    return;
+                }
+                setCartItems(cartData.items);
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setLoading(false);
             }
-            setCartItems(cartData.items);
+        };
+        loadCart();
+    }, [navigate]);
 
-            const userAddresses = await fetchUserAddresses();
-            setAddresses(userAddresses);
-            if (userAddresses.length > 0) {
-                setSelectedAddress(userAddresses.find((a: any) => a.is_default) || userAddresses[0]);
-            } else {
-                setIsNewAddress(true);
-            }
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setLoading(false);
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (ev) => setPaymentPreview(ev.target?.result as string);
+            reader.readAsDataURL(file);
         }
     };
 
-    const handleSaveAddress = async () => {
-        setValidationError(null);
-        if (!newAddress.full_name || !newAddress.phone || !newAddress.address_line1 || !newAddress.city || !newAddress.state || !newAddress.zip_code) {
-            setValidationError('Todos los campos son requeridos (All fields required)');
+    const validateStep1 = () => {
+        if (!form.full_name.trim()) return 'El nombre completo es requerido.';
+        if (!form.cedula_number.trim() || !/^\d{6,9}$/.test(form.cedula_number)) return 'La cédula debe tener entre 6 y 9 dígitos.';
+        if (!form.whatsapp.trim() || !/^\d{10,12}$/.test(form.whatsapp.replace(/\D/g, ''))) return 'Número de WhatsApp inválido (ej: 04145551234).';
+        if (!form.state) return 'Selecciona un estado.';
+        if (!form.address.trim()) return 'La dirección es requerida.';
+        return null;
+    };
+
+    const handleContinue = () => {
+        const err = validateStep1();
+        if (err) {
+            setValidationError(err);
             return;
         }
-
-        try {
-            const { data: { user } } = await supabase.auth.getUser();
-
-            if (user) {
-                const saved = await saveUserAddress({ ...newAddress, is_default: addresses.length === 0 });
-                setAddresses([...addresses, saved[0]]);
-                setSelectedAddress(saved[0]);
-            } else {
-                // Guest mode: save locally only
-                const guestAddress = { ...newAddress, id: 'guest-' + Date.now() };
-                setAddresses([...addresses, guestAddress]);
-                setSelectedAddress(guestAddress);
-            }
-            setIsNewAddress(false);
-        } catch (err) {
-            console.error(err);
-            alert('Error saving address');
-        }
+        setValidationError(null);
+        setStep(2);
     };
 
     const handlePlaceOrder = async () => {
         setIsProcessing(true);
         try {
             const { data: { user } } = await supabase.auth.getUser();
-            // if (!user) throw new Error("User required");
 
             const total = cartItems.reduce((acc, item) => acc + (item.products?.price || 0) * item.quantity, 0);
 
             const simplifiedItems = cartItems.map(item => ({
                 product_id: item.product_id,
                 quantity: item.quantity,
-                price: item.products?.price || 0
+                name: item.products?.name,
+                set: item.products?.set_code,
+                price: item.products?.price || 0,
+                foil: item.products?.is_foil || false,
             }));
 
+            const cedula = `${form.cedula_prefix}-${form.cedula_number}`;
+
             await createOrder({
-                userId: user?.id || null, // Allow null for guest
+                userId: user?.id || null,
                 items: simplifiedItems,
-                shippingAddress: selectedAddress || newAddress, // Use newAddress if guest
+                shippingAddress: {
+                    full_name: form.full_name,
+                    address_line1: form.address,
+                    city: form.state,
+                    state: form.state,
+                    zip_code: cedula, // reuse field for storage
+                    country: 'VE',
+                    email: form.email,
+                    phone: form.whatsapp,
+                },
                 totalAmount: total,
-                guestInfo: !user ? {
-                    email: newAddress.email, // Assume email added to address form or separate
-                    phone: newAddress.phone
-                } : undefined
+                guestInfo: !user ? { email: form.email, phone: form.whatsapp } : undefined,
             });
 
-            // Navigate to success
+            // Build WhatsApp message
+            const whatsappMsg = encodeURIComponent(
+                `Hola Geekorium, mi nombre es ${form.full_name} (${cedula}). Acabo de generar una orden por $${total.toFixed(2)}. Espero confirmación de stock.`
+            );
+            const whatsappUrl = `https://wa.me/584141234567?text=${whatsappMsg}`;
+
+            // Open WhatsApp in new tab
+            window.open(whatsappUrl, '_blank');
+
             navigate('/checkout/success');
         } catch (error) {
             console.error(error);
-            alert('Error placing order. Please check stock availability.');
+            alert('Error al procesar la orden. Por favor verifica el inventario.');
         } finally {
             setIsProcessing(false);
         }
@@ -117,215 +137,285 @@ export const CheckoutPage = () => {
 
     const subtotal = cartItems.reduce((acc, item) => acc + (item.products?.price || 0) * item.quantity, 0);
 
-    if (loading) return <div className="min-h-screen bg-neutral-950 flex items-center justify-center text-white">Loading...</div>;
+    if (loading) return (
+        <div className="min-h-[100dvh] bg-[#1F182D] flex items-center justify-center text-white">
+            <div className="w-10 h-10 border-4 border-t-[#00AEB4] border-white/10 rounded-full animate-spin" />
+        </div>
+    );
 
     return (
-        <div className="min-h-screen bg-[#080808] text-white pt-24 pb-12 px-6">
-            <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div className="min-h-[100dvh] bg-[#1F182D] text-white pt-24 pb-12 px-4 sm:px-6">
+            <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
 
                 {/* LEFT COLUMN - STEPS */}
-                <div className="lg:col-span-8 space-y-8">
+                <div className="lg:col-span-8 space-y-6">
                     {/* Progress */}
-                    <div className="flex items-center gap-4 mb-8">
+                    <div className="flex items-center gap-3 mb-6">
                         {[
-                            { id: 1, label: 'Shipping', icon: Truck },
-                            { id: 2, label: 'Payment', icon: CreditCard },
-                            { id: 3, label: 'Confirm', icon: ShieldCheck }
+                            { id: 1, label: 'Datos', icon: Truck },
+                            { id: 2, label: 'Pago', icon: CreditCard },
                         ].map((s) => (
                             <div key={s.id}
-                                className={`flex items-center gap-2 px-4 py-2 rounded-full border ${step === s.id ? 'border-geeko-cyan text-geeko-cyan bg-geeko-cyan/10' : 'border-neutral-800 text-neutral-500'}`}>
-                                <s.icon size={16} />
-                                <span className="text-sm font-bold uppercase tracking-wider">{s.label}</span>
+                                className={`flex items-center gap-2 px-4 py-2 rounded-full border text-xs font-black uppercase tracking-widest transition-all ${step === s.id
+                                    ? 'border-[#00AEB4] text-[#00AEB4] bg-[#00AEB4]/10'
+                                    : step > s.id
+                                        ? 'border-green-500 text-green-500 bg-green-500/10'
+                                        : 'border-white/10 text-neutral-500'
+                                    }`}>
+                                {step > s.id ? <CheckCircle size={14} /> : <s.icon size={14} />}
+                                {s.label}
                             </div>
                         ))}
                     </div>
 
-                    {/* Content Step 1: Shipping */}
+                    {/* Step 1: Datos del Cliente */}
                     {step === 1 && (
-                        <div className="bg-neutral-900/50 border border-white/5 rounded-2xl p-8 animate-in fade-in transition-all">
-                            <h2 className="text-2xl font-black uppercase tracking-tight mb-6">Detalles de Envío</h2>
+                        <div className="bg-[#281F3E]/60 border border-white/5 rounded-2xl p-6 sm:p-8">
+                            <h2 className="text-2xl font-black uppercase tracking-tight mb-6">Datos del Cliente</h2>
 
-                            {!isNewAddress && addresses.length > 0 ? (
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {addresses.map((addr) => (
-                                        <div
-                                            key={addr.id}
-                                            onClick={() => setSelectedAddress(addr)}
-                                            className={`cursor-pointer p-6 rounded-xl border transition-all ${selectedAddress?.id === addr.id ? 'border-geeko-cyan bg-geeko-cyan/5' : 'border-white/10 hover:border-white/20'}`}
-                                        >
-                                            <div className="flex justify-between items-start mb-2">
-                                                <MapPin size={20} className={selectedAddress?.id === addr.id ? 'text-geeko-cyan' : 'text-neutral-500'} />
-                                                {selectedAddress?.id === addr.id && <CheckCircle size={20} className="text-geeko-cyan" />}
-                                            </div>
-                                            <p className="font-bold text-white">{addr.full_name}</p>
-                                            <p className="text-sm text-neutral-400">{addr.address_line1}</p>
-                                            <p className="text-sm text-neutral-400">{addr.city}, {addr.state} {addr.zip_code}</p>
-                                        </div>
-                                    ))}
-                                    <button
-                                        onClick={() => setIsNewAddress(true)}
-                                        className="flex flex-col items-center justify-center gap-3 p-6 rounded-xl border border-dashed border-white/20 hover:border-geeko-cyan/50 hover:bg-white/5 transition-all group"
-                                    >
-                                        <Plus size={24} className="text-neutral-500 group-hover:text-geeko-cyan" />
-                                        <span className="text-sm font-bold text-neutral-400 group-hover:text-white">Agregar Nueva Dirección</span>
-                                    </button>
-                                </div>
-                            ) : (
-                                <div className="space-y-4 max-w-lg">
-                                    {validationError && (
-                                        <div className="bg-red-500/10 border border-red-500/50 text-red-500 p-3 rounded-lg flex items-center gap-2 text-sm error-message">
-                                            <AlertCircle size={16} />
-                                            {validationError}
-                                        </div>
-                                    )}
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <input data-testid="full-name-input" placeholder="Full Name" className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 focus:border-geeko-cyan outline-none transition-colors"
-                                            value={newAddress.full_name} onChange={(e) => setNewAddress({ ...newAddress, full_name: e.target.value })} />
-                                    </div>
-                                    <input data-testid="address-line1-input" placeholder="Address Line 1" className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 focus:border-geeko-cyan outline-none transition-colors"
-                                        value={newAddress.address_line1} onChange={(e) => setNewAddress({ ...newAddress, address_line1: e.target.value })} />
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <input data-testid="city-input" placeholder="City" className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 focus:border-geeko-cyan outline-none transition-colors"
-                                            value={newAddress.city} onChange={(e) => setNewAddress({ ...newAddress, city: e.target.value })} />
-                                        <input data-testid="state-input" placeholder="State" className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 focus:border-geeko-cyan outline-none transition-colors"
-                                            value={newAddress.state} onChange={(e) => setNewAddress({ ...newAddress, state: e.target.value })} />
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <input data-testid="zip-code-input" placeholder="ZIP Code" className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 focus:border-geeko-cyan outline-none transition-colors"
-                                            value={newAddress.zip_code} onChange={(e) => setNewAddress({ ...newAddress, zip_code: e.target.value })} />
-                                        <input placeholder="Country" disabled value="USA" className="w-full bg-black/20 border border-white/5 rounded-lg px-4 py-3 text-neutral-500 cursor-not-allowed" />
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <input type="email" placeholder="Email (para confirmación)" className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 focus:border-geeko-cyan outline-none transition-colors"
-                                            value={newAddress.email} onChange={(e) => setNewAddress({ ...newAddress, email: e.target.value })} />
-                                        <input type="tel" placeholder="Teléfono" className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 focus:border-geeko-cyan outline-none transition-colors"
-                                            value={newAddress.phone} onChange={(e) => setNewAddress({ ...newAddress, phone: e.target.value })} />
-                                    </div>
-                                    <div className="flex justify-end gap-3 pt-4">
-                                        {addresses.length > 0 && <button onClick={() => setIsNewAddress(false)} className="px-6 py-2 rounded-lg text-sm font-bold text-neutral-400 hover:text-white">Cancelar</button>}
-                                        <button data-testid="save-address-button" onClick={handleSaveAddress} className="px-6 py-2 bg-white text-black rounded-lg text-sm font-bold hover:bg-neutral-200">Guardar Dirección</button>
-                                    </div>
+                            {validationError && (
+                                <div className="bg-red-500/10 border border-red-500/30 text-red-400 p-3 rounded-xl flex items-center gap-2 text-sm mb-4">
+                                    <AlertCircle size={16} />
+                                    {validationError}
                                 </div>
                             )}
 
+                            <div className="space-y-4">
+                                {/* Full Name */}
+                                <div>
+                                    <label className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-1.5">Nombre Completo</label>
+                                    <input
+                                        placeholder="Carlos Ej. Rodríguez"
+                                        className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-[#00AEB4] outline-none transition-colors text-white placeholder:text-neutral-600"
+                                        value={form.full_name}
+                                        onChange={(e) => setForm({ ...form, full_name: e.target.value })}
+                                    />
+                                </div>
+
+                                {/* Cédula de Identidad */}
+                                <div>
+                                    <label className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-1.5">Cédula de Identidad</label>
+                                    <div className="flex gap-2">
+                                        <select
+                                            value={form.cedula_prefix}
+                                            onChange={(e) => setForm({ ...form, cedula_prefix: e.target.value as 'V' | 'E' })}
+                                            className="bg-black/40 border border-white/10 rounded-xl px-3 py-3 focus:border-[#00AEB4] outline-none transition-colors text-white font-black w-16"
+                                        >
+                                            {CEDULA_PREFIXES.map(p => <option key={p} value={p}>{p}</option>)}
+                                        </select>
+                                        <input
+                                            placeholder="12345678"
+                                            type="tel"
+                                            maxLength={9}
+                                            className="flex-1 bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-[#00AEB4] outline-none transition-colors text-white placeholder:text-neutral-600 font-mono"
+                                            value={form.cedula_number}
+                                            onChange={(e) => setForm({ ...form, cedula_number: e.target.value.replace(/\D/g, '') })}
+                                        />
+                                    </div>
+                                    <p className="text-[10px] text-neutral-600 mt-1">Ej: V-12345678 o E-87654321</p>
+                                </div>
+
+                                {/* WhatsApp */}
+                                <div>
+                                    <label className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-1.5">Número de WhatsApp</label>
+                                    <input
+                                        placeholder="04145551234"
+                                        type="tel"
+                                        className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-[#00AEB4] outline-none transition-colors text-white placeholder:text-neutral-600 font-mono"
+                                        value={form.whatsapp}
+                                        onChange={(e) => setForm({ ...form, whatsapp: e.target.value })}
+                                    />
+                                </div>
+
+                                {/* Estado Venezuela */}
+                                <div>
+                                    <label className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-1.5">Estado</label>
+                                    <select
+                                        value={form.state}
+                                        onChange={(e) => setForm({ ...form, state: e.target.value })}
+                                        className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-[#00AEB4] outline-none transition-colors text-white"
+                                    >
+                                        <option value="" disabled>Selecciona tu estado...</option>
+                                        {VENEZUELA_STATES.map(s => (
+                                            <option key={s} value={s}>{s}</option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                {/* Dirección */}
+                                <div>
+                                    <label className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-1.5">Dirección de Entrega</label>
+                                    <input
+                                        placeholder="Av. Principal, Edificio X, Piso 2"
+                                        className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-[#00AEB4] outline-none transition-colors text-white placeholder:text-neutral-600"
+                                        value={form.address}
+                                        onChange={(e) => setForm({ ...form, address: e.target.value })}
+                                    />
+                                </div>
+
+                                {/* Email (optional) */}
+                                <div>
+                                    <label className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-1.5">
+                                        Email <span className="text-neutral-600 normal-case font-normal">(opcional, para confirmación)</span>
+                                    </label>
+                                    <input
+                                        type="email"
+                                        placeholder="correo@ejemplo.com"
+                                        className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-[#00AEB4] outline-none transition-colors text-white placeholder:text-neutral-600"
+                                        value={form.email}
+                                        onChange={(e) => setForm({ ...form, email: e.target.value })}
+                                    />
+                                </div>
+                            </div>
+
                             <div className="mt-8 flex justify-end">
                                 <button
-                                    onClick={() => selectedAddress && setStep(2)}
-                                    disabled={!selectedAddress}
-                                    data-testid="continue-to-payment"
-                                    className="px-8 py-4 bg-geeko-cyan text-black font-black uppercase rounded-xl hover:bg-cyan-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                                    onClick={handleContinue}
+                                    className="px-8 py-4 bg-[#00AEB4] text-black font-black uppercase rounded-xl hover:bg-[#00c5cc] transition-all shadow-[0_0_20px_rgba(0,174,180,0.3)] text-sm tracking-widest"
                                 >
-                                    Continuar al Pago
+                                    Continuar al Pago →
                                 </button>
                             </div>
                         </div>
                     )}
 
-                    {/* Step 2: Payment */}
+                    {/* Step 2: Método de Pago */}
                     {step === 2 && (
-                        <div className="bg-neutral-900/50 border border-white/5 rounded-2xl p-8 animate-in fade-in transition-all">
+                        <div className="bg-[#281F3E]/60 border border-white/5 rounded-2xl p-6 sm:p-8">
                             <h2 className="text-2xl font-black uppercase tracking-tight mb-6">Método de Pago</h2>
 
-                            <div className="p-6 border border-geeko-cyan/20 bg-geeko-cyan/5 rounded-xl mb-6">
-                                <div className="flex items-center gap-4">
-                                    <ShieldCheck className="text-geeko-cyan" size={32} />
-                                    <div>
-                                        <p className="font-bold text-white mb-1">Pagos Seguros (Simulado)</p>
-                                        <p className="text-xs text-neutral-400">Este es un entorno de demostración. No se realizará ningún cargo real.</p>
-                                    </div>
+                            {/* Info Banner */}
+                            <div className="p-4 border border-[#00AEB4]/20 bg-[#00AEB4]/5 rounded-xl mb-6 flex items-start gap-4">
+                                <ShieldCheck className="text-[#00AEB4] shrink-0 mt-0.5" size={24} />
+                                <div>
+                                    <p className="font-bold text-white text-sm mb-0.5">Orden Asistida por Geeko-Asesor</p>
+                                    <p className="text-xs text-neutral-400">Realiza tu pago y envía el comprobante. Un asesor confirmará el stock y coordinará el despacho por WhatsApp.</p>
                                 </div>
                             </div>
 
-                            <div className="flex gap-4 mb-8">
-                                <button className="flex-1 py-4 border border-geeko-cyan bg-geeko-cyan/10 text-white rounded-xl font-bold flex items-center justify-center gap-2">
-                                    <CreditCard size={20} /> Transferencia / Pago Móvil
-                                </button>
-                                {/* <button className="flex-1 py-4 border border-white/10 bg-black/20 text-neutral-500 rounded-xl font-bold flex items-center justify-center gap-2 cursor-not-allowed">
-                                    PayPal (Pronto)
-                                </button> */}
-                            </div>
-
-                            {/* Manual Payment Instructions */}
-                            <div className="space-y-6">
-                                <div className="p-4 bg-neutral-900 border border-white/10 rounded-xl space-y-4">
-                                    <div className="flex items-center gap-3 border-b border-white/5 pb-3">
-                                        <div className="w-10 h-10 rounded-lg bg-geeko-cyan/10 flex items-center justify-center text-geeko-cyan">
+                            {/* Pago Móvil */}
+                            <div className="space-y-4 mb-6">
+                                <div className="p-4 bg-black/30 border border-white/10 rounded-xl">
+                                    <div className="flex items-center gap-3 border-b border-white/5 pb-3 mb-3">
+                                        <div className="w-10 h-10 rounded-lg bg-[#00AEB4]/10 flex items-center justify-center text-[#00AEB4]">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2" /><path d="M12 18h.01" /></svg>
                                         </div>
                                         <div>
-                                            <h4 className="font-bold text-white">Pago Móvil</h4>
+                                            <h4 className="font-bold text-white text-sm">Pago Móvil</h4>
                                             <p className="text-xs text-neutral-400">Banco Mercantil (0105)</p>
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-2 gap-4 text-sm">
                                         <div>
-                                            <span className="text-neutral-500 block text-xs uppercase tracking-wider">Teléfono</span>
+                                            <span className="text-neutral-500 block text-[10px] uppercase tracking-wider mb-1">Teléfono</span>
                                             <span className="font-mono text-white font-bold">0414-1234567</span>
                                         </div>
                                         <div>
-                                            <span className="text-neutral-500 block text-xs uppercase tracking-wider">Cédula / RIF</span>
+                                            <span className="text-neutral-500 block text-[10px] uppercase tracking-wider mb-1">Cédula / RIF</span>
                                             <span className="font-mono text-white font-bold">V-12345678</span>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="p-4 bg-neutral-900 border border-white/10 rounded-xl space-y-4">
-                                    <div className="flex items-center gap-3 border-b border-white/5 pb-3">
+                                <div className="p-4 bg-black/30 border border-white/10 rounded-xl">
+                                    <div className="flex items-center gap-3 border-b border-white/5 pb-3 mb-3">
                                         <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400">
                                             <span className="font-black text-xs">Z</span>
                                         </div>
                                         <div>
-                                            <h4 className="font-bold text-white">Zelle</h4>
-                                            <p className="text-xs text-neutral-400">pagos@elemporio.com</p>
+                                            <h4 className="font-bold text-white text-sm">Zelle</h4>
+                                            <p className="text-xs text-neutral-400">pagos@geekorium.com</p>
                                         </div>
                                     </div>
                                     <div className="text-sm">
-                                        <span className="text-neutral-500 block text-xs uppercase tracking-wider">Titular</span>
-                                        <span className="font-mono text-white font-bold">El Emporio TCG LLC</span>
-                                    </div>
-                                </div>
-
-                                <div className="pt-4 border-t border-white/5">
-                                    <label className="block text-sm font-bold text-neutral-400 mb-2">Comprobante de Pago (Opcional)</label>
-                                    <div className="border-2 border-dashed border-white/10 rounded-xl p-8 flex flex-col items-center justify-center gap-2 hover:border-geeko-cyan/50 hover:bg-white/5 transition-all cursor-pointer">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-neutral-500"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" x2="12" y1="3" y2="15" /></svg>
-                                        <span className="text-xs font-bold text-neutral-500">Click para subir captura</span>
+                                        <span className="text-neutral-500 block text-[10px] uppercase tracking-wider mb-1">Titular</span>
+                                        <span className="font-mono text-white font-bold">Geekorium El Emporio LLC</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="mt-8 flex justify-between">
-                                <button onClick={() => setStep(1)} className="text-neutral-500 hover:text-white font-bold">Atrás</button>
+                            {/* Comprobante de Pago - Camera-enabled on mobile */}
+                            <div className="pt-4 border-t border-white/5">
+                                <label className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-3">
+                                    Comprobante de Pago <span className="text-[10px] text-neutral-600 normal-case font-normal">(Recomendado)</span>
+                                </label>
+
+                                <input
+                                    ref={fileInputRef}
+                                    type="file"
+                                    accept="image/*"
+                                    capture="environment"
+                                    onChange={handleFileChange}
+                                    className="hidden"
+                                />
+
+                                {paymentPreview ? (
+                                    <div className="relative rounded-xl overflow-hidden border border-[#00AEB4]/30 bg-black/20">
+                                        <img src={paymentPreview} alt="Comprobante" className="w-full max-h-48 object-contain" />
+                                        <button
+                                            onClick={() => { setPaymentPreview(null); }}
+                                            className="absolute top-2 right-2 bg-black/80 text-white rounded-full w-7 h-7 flex items-center justify-center text-xs hover:bg-red-500/80 transition-colors"
+                                        >
+                                            ✕
+                                        </button>
+                                        <div className="absolute bottom-2 left-2 bg-green-500/90 text-black text-[10px] font-black px-2 py-1 rounded-full">
+                                            ✓ Comprobante Cargado
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <button
+                                        onClick={() => fileInputRef.current?.click()}
+                                        className="w-full border-2 border-dashed border-white/10 rounded-xl p-8 flex flex-col items-center justify-center gap-3 hover:border-[#00AEB4]/50 hover:bg-white/5 transition-all group"
+                                    >
+                                        <Upload size={24} className="text-neutral-500 group-hover:text-[#00AEB4] transition-colors" />
+                                        <div className="text-center">
+                                            <span className="text-xs font-bold text-neutral-400 group-hover:text-white transition-colors block">Subir captura o foto</span>
+                                            <span className="text-[10px] text-neutral-600">Toca para abrir la cámara o galería</span>
+                                        </div>
+                                    </button>
+                                )}
+                            </div>
+
+                            <div className="mt-8 flex justify-between items-center">
+                                <button onClick={() => setStep(1)} className="text-neutral-500 hover:text-white font-bold text-sm transition-colors">
+                                    ← Atrás
+                                </button>
                                 <button
-                                    onClick={() => handlePlaceOrder()}
+                                    onClick={handlePlaceOrder}
                                     disabled={isProcessing}
                                     data-testid="place-order-button"
-                                    className="px-8 py-4 bg-geeko-cyan text-black font-black uppercase rounded-xl hover:bg-cyan-400 shadow-[0_0_20px_rgba(0,229,255,0.3)] transition-all flex items-center gap-2"
+                                    className="px-8 py-4 bg-[#00AEB4] text-black font-black uppercase rounded-xl hover:bg-[#00c5cc] shadow-[0_0_20px_rgba(0,174,180,0.3)] transition-all flex items-center gap-3 text-sm tracking-widest disabled:opacity-50"
                                 >
-                                    {isProcessing ? <Loader2 className="animate-spin" /> : 'Confirmar y Pagar'}
+                                    {isProcessing ? (
+                                        <><Loader2 className="animate-spin" size={16} /> Procesando...</>
+                                    ) : (
+                                        <><MessageCircle size={16} /> Confirmar y Contactar</>
+                                    )}
                                 </button>
                             </div>
                         </div>
                     )}
                 </div>
 
-                {/* RIGHT COLUMN - SUMMARY */}
+                {/* RIGHT COLUMN - ORDER SUMMARY */}
                 <div className="lg:col-span-4">
-                    <div className="sticky top-24 bg-neutral-900 border border-white/10 rounded-2xl p-6 shadow-2xl">
-                        <h3 className="text-lg font-black uppercase tracking-tight mb-4 border-b border-white/5 pb-4">Resumen de Orden</h3>
+                    <div className="sticky top-24 bg-[#281F3E]/80 border border-white/10 rounded-2xl p-6 shadow-2xl">
+                        <h3 className="text-base font-black uppercase tracking-tight mb-4 border-b border-white/5 pb-4">Resumen de Orden</h3>
 
-                        <div className="space-y-4 max-h-[400px] overflow-y-auto custom-scrollbar mb-6">
+                        <div className="space-y-3 max-h-[300px] overflow-y-auto custom-scrollbar mb-6">
                             {cartItems.map((item) => (
-                                <div key={item.id} className="flex gap-3">
-                                    <div className="w-12 h-16 bg-black rounded border border-white/10 overflow-hidden flex-shrink-0">
-                                        <img src={item.products?.image_url} className="w-full h-full object-cover" />
+                                <div key={item.id} className="flex gap-3 items-center">
+                                    <div className="w-10 h-14 bg-black/50 rounded border border-white/10 overflow-hidden flex-shrink-0">
+                                        <img src={item.products?.image_url} className="w-full h-full object-cover" alt={item.products?.name} />
                                     </div>
-                                    <div className="flex-1">
-                                        <p className="text-sm font-bold text-white line-clamp-1">{item.products?.name}</p>
-                                        <p className="text-[10px] text-neutral-500 uppercase">{item.products?.set_code}</p>
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-xs font-bold text-white line-clamp-2 leading-snug">{item.products?.name}</p>
+                                        <p className="text-[9px] text-neutral-500 uppercase font-bold">{item.products?.set_code}</p>
                                         <div className="flex justify-between items-center mt-1">
-                                            <span className="text-xs text-neutral-400">x{item.quantity}</span>
-                                            <span className="text-xs font-mono text-geeko-cyan">${(item.products?.price * item.quantity).toFixed(2)}</span>
+                                            <span className="text-[10px] text-neutral-400">x{item.quantity}</span>
+                                            <span className="text-[11px] font-mono text-[#00AEB4] font-bold">
+                                                ${((item.products?.price || 0) * item.quantity).toFixed(2)}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -333,24 +423,30 @@ export const CheckoutPage = () => {
                         </div>
 
                         <div className="space-y-2 border-t border-white/5 pt-4">
-                            <div className="flex justify-between text-sm text-neutral-400">
+                            <div className="flex justify-between text-xs text-neutral-400">
                                 <span>Subtotal</span>
                                 <span>${subtotal.toFixed(2)}</span>
                             </div>
-                            <div className="flex justify-between text-sm text-neutral-400">
-                                <span>Shipping</span>
-                                <span className="text-geeko-green">FREE</span>
-                            </div>
-                            <div className="flex justify-between text-sm text-neutral-400">
-                                <span>Tax (Est.)</span>
-                                <span>$0.00</span>
+                            <div className="flex justify-between text-xs text-neutral-400">
+                                <span>Envío</span>
+                                <span className="text-[#00AEB4] font-bold">A coordinar</span>
                             </div>
                         </div>
 
                         <div className="border-t border-white/10 pt-4 mt-4 flex justify-between items-end">
-                            <span className="text-sm font-black uppercase">Total</span>
-                            <span className="text-2xl font-black font-mono text-white">${subtotal.toFixed(2)}</span>
+                            <span className="text-xs font-black uppercase tracking-tight">Total</span>
+                            <span className="text-2xl font-black font-mono">${subtotal.toFixed(2)}</span>
                         </div>
+
+                        {/* Customer summary in step 2 */}
+                        {step === 2 && form.full_name && (
+                            <div className="mt-4 p-3 bg-black/20 rounded-xl border border-white/5 space-y-1">
+                                <p className="text-[10px] font-black uppercase tracking-widest text-neutral-500 mb-2">Datos del Cliente</p>
+                                <p className="text-xs text-white font-bold">{form.full_name}</p>
+                                <p className="text-[10px] text-neutral-400">{form.cedula_prefix}-{form.cedula_number}</p>
+                                <p className="text-[10px] text-neutral-400">{form.state} · {form.whatsapp}</p>
+                            </div>
+                        )}
                     </div>
                 </div>
 
