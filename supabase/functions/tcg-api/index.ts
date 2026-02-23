@@ -444,6 +444,7 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
             collector_number: v.collector_number || '',
             rarity: v.cards?.rarity || 'common',
             price: displayPrice,
+            market_price: marketPrice,
             image_url: v.image_url || '',
             prices: v.prices || {}
           };

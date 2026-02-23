@@ -322,12 +322,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
 
     const marketPrice = useMemo(() => {
         if (!activeVersion || !details) return details?.valuation?.market_price || 0;
-        const isFoil = activeVersion.is_foil || activeVersion.finish === 'foil';
-        const prices = (activeVersion as any).prices;
-        if (prices) {
-            return Number(isFoil ? (prices.usd_foil || prices.usd) : prices.usd) || details?.valuation?.market_price || 0;
-        }
-        return details?.valuation?.market_price || 0;
+        return activeVersion.market_price || details?.valuation?.market_price || 0;
     }, [activeVersion, details]);
 
     if (!isOpen) return null;

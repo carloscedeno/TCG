@@ -316,6 +316,7 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                   expandedVersions.push({
                     ...baseVersion,
                     price: Number(v.prices?.usd || v.prices?.eur || v.aggregated_prices?.[0]?.avg_market_price_usd || 0),
+                    market_price: Number(v.aggregated_prices?.[0]?.avg_market_price_usd || 0),
                     finish: 'nonfoil',
                     is_foil: false
                   });
@@ -325,6 +326,7 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                   expandedVersions.push({
                     ...baseVersion,
                     price: Number(v.prices?.usd_foil || v.prices?.eur_foil || v.aggregated_prices?.[0]?.avg_market_price_usd || 0),
+                    market_price: Number(v.aggregated_prices?.[0]?.avg_market_price_usd || 0),
                     finish: 'foil',
                     is_foil: true
                   });
@@ -334,6 +336,7 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                   expandedVersions.push({
                     ...baseVersion,
                     price: Number(v.prices?.usd_etched || v.aggregated_prices?.[0]?.avg_market_price_usd || 0),
+                    market_price: Number(v.aggregated_prices?.[0]?.avg_market_price_usd || 0),
                     finish: 'etched',
                     is_foil: true
                   });
