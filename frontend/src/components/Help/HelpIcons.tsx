@@ -3,8 +3,8 @@ export const DiscoveryIcon = ({ className }: { className?: string }) => (
     <svg viewBox="0 0 100 100" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
             <radialGradient id="grad1" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-                <stop offset="0%" stopColor="#00E5FF" stopOpacity="0.3" />
-                <stop offset="100%" stopColor="#00E5FF" stopOpacity="0" />
+                <stop offset="0%" stopColor="#00AEB4" stopOpacity="0.3" />
+                <stop offset="100%" stopColor="#00AEB4" stopOpacity="0" />
             </radialGradient>
             <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
                 <feGaussianBlur stdDeviation="2" result="coloredBlur" />
@@ -20,8 +20,8 @@ export const DiscoveryIcon = ({ className }: { className?: string }) => (
 
         {/* Telescope Body */}
         <path d="M30 70 L45 55 L75 25" stroke="currentColor" strokeWidth="4" strokeLinecap="round" filter="url(#glow)" />
-        <circle cx="75" cy="25" r="8" stroke="#00E5FF" strokeWidth="2" fill="rgba(0,0,0,0.5)" />
-        <circle cx="75" cy="25" r="3" fill="#00E5FF" className="animate-ping" />
+        <circle cx="75" cy="25" r="8" stroke="#00AEB4" strokeWidth="2" fill="rgba(0,0,0,0.5)" />
+        <circle cx="75" cy="25" r="3" fill="#00AEB4" className="animate-ping" />
 
         {/* Base */}
         <path d="M25 75 L35 65" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
@@ -54,7 +54,7 @@ export const SelectionIcon = ({ className }: { className?: string }) => (
         <path d="M68 85 C68 85 75 75 65 65 C60 60 50 70 50 70 L45 80 L55 90 L68 85" stroke="#6D28D9" strokeWidth="3" strokeLinejoin="round" fill="rgba(109, 40, 217, 0.1)" />
 
         {/* Magic Particles */}
-        <circle cx="50" cy="50" r="28" stroke="#00E5FF" strokeWidth="1" className="animate-ping opacity-30" />
+        <circle cx="50" cy="50" r="28" stroke="#00AEB4" strokeWidth="1" className="animate-ping opacity-30" />
         <circle cx="35" cy="30" r="1.5" fill="#FFC107" className="animate-pulse" />
         <circle cx="65" cy="30" r="1.5" fill="#FFC107" className="animate-pulse delay-75" />
     </svg>
@@ -104,8 +104,8 @@ export const PactIcon = ({ className }: { className?: string }) => (
         <path d="M45 45 L48 48 L55 42" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
 
         {/* Magic Sparkles */}
-        <circle cx="70" cy="30" r="2" fill="#00E5FF" className="animate-ping" />
-        <circle cx="30" cy="70" r="2" fill="#00E5FF" className="animate-ping delay-100" />
+        <circle cx="70" cy="30" r="2" fill="#00AEB4" className="animate-ping" />
+        <circle cx="30" cy="70" r="2" fill="#00AEB4" className="animate-ping delay-100" />
     </svg>
 );
 
@@ -114,7 +114,7 @@ export const VideoPlaceholder = () => (
     <div className="w-full h-full bg-[#050505] relative overflow-hidden flex flex-col shadow-[inset_0_0_50px_rgba(0,0,0,0.8)]">
         {/* Ancient Frame Effect */}
         <div className="absolute inset-0 border-[1px] border-[#FFC107]/20 pointer-events-none z-20 m-2 rounded-[2rem]" />
-        <div className="absolute inset-0 border-[1px] border-[#00E5FF]/10 pointer-events-none z-20 m-4 rounded-[1.8rem]" />
+        <div className="absolute inset-0 border-[1px] border-[#00AEB4]/10 pointer-events-none z-20 m-4 rounded-[1.8rem]" />
 
         {/* Animated Background Mesh */}
         <div className="absolute inset-0 z-0">

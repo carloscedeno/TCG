@@ -159,13 +159,28 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
             return; // Allow native browser behavior for ctrl+click if it's a link
         }
 
-        if (finish) setSelectedFinish(finish as any);
+        let targetId = id;
 
-        if (id !== activePrintingId) {
-            setActivePrintingId(id);
-            loadCardDetails(id, true); // User explicitly clicked, don't auto-switch finishes anymore
+        // If finish is explicitly provided (toggle buttons), try to find that specific version in the current group
+        if (finish) {
+            setSelectedFinish(finish as any);
+            if (activeGroup) {
+                const targetVersion = finish === 'foil' ? activeGroup.foil : (finish === 'etched' ? activeGroup.etched : activeGroup.normal);
+                if (targetVersion) {
+                    targetId = targetVersion.printing_id;
+                }
+            }
+        } else if (finish === undefined) {
+            // If clicking from the versions list, we might want to preserve the finish or use the one from the clicked version
+            // In this case, id is provided, so we just use it.
+        }
+
+        if (targetId !== activePrintingId) {
+            setActivePrintingId(targetId);
+            loadCardDetails(targetId, true); // User explicitly clicked, don't auto-switch finishes anymore
         }
     };
+
 
     const handleAddToCart = async () => {
         if (!activePrintingId) return;
@@ -490,7 +505,8 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                 </div>
 
                 {/* RIGHT: CARD TEXT & ACTIONS */}
-                <div className="flex-1 h-auto md:h-[var(--modal-height,700px)] overflow-y-auto custom-scrollbar bg-[#050505] p-4 sm:p-6 md:p-8 space-y-4 md:space-y-6">
+                <div className="flex-1 h-auto md:h-[var(--modal-height,700px)] overflow-y-auto custom-scrollbar bg-[#050505] p-4 sm:p-6 md:p-8 pb-32 md:pb-40 space-y-4 md:space-y-6">
+
                     {loading ? (
                         <div className="space-y-12 animate-pulse">
                             <div className="space-y-4">
@@ -655,8 +671,8 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                 disabled={isAdding}
                                                 data-testid="add-to-cart-button"
                                                 className={`w-full h-12 rounded-xl font-black text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 shrink-0 relative z-10 ${addedSuccess
-                                                        ? 'bg-geeko-green text-black shadow-[0_0_20px_rgba(0,255,133,0.4)]'
-                                                        : 'bg-geeko-cyan text-black shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_40px_rgba(0,229,255,0.6)]'
+                                                    ? 'bg-geeko-green text-black shadow-[0_0_20px_rgba(0,255,133,0.4)]'
+                                                    : 'bg-geeko-cyan text-black shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_40px_rgba(0,229,255,0.6)]'
                                                     }`}
                                             >
                                                 {isAdding ? <Loader2 size={16} className="animate-spin" /> : addedSuccess ? '¡Añadido! ✓' : <ShoppingCart size={16} fill="currentColor" />}

@@ -95,16 +95,17 @@ export const HelpSection: React.FC = () => {
     ];
 
     return (
-        <section className="py-20 bg-[#f4e4bc] relative overflow-hidden">
+        <section className="py-20 bg-geeko-violet-dark relative overflow-hidden">
+
             {/* Background Texture Overlay */}
             <div className="absolute inset-0 opacity-5 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/paper.png')]" />
 
             <div className="max-w-[1400px] mx-auto px-6 relative z-10">
                 <div className="text-center mb-16">
-                    <h2 className="text-5xl font-black text-black italic tracking-tighter uppercase mb-4 drop-shadow-sm">
+                    <h2 className="text-5xl font-black text-white italic tracking-tighter uppercase mb-4 drop-shadow-sm">
                         El Códice del Emporio
                     </h2>
-                    <p className="text-black/70 font-medium max-w-2xl mx-auto text-lg">
+                    <p className="text-text-low font-medium max-w-2xl mx-auto text-lg">
                         Domina el arte de la búsqueda y la adquisición de tesoros en nuestro portal.
                     </p>
                 </div>
@@ -115,12 +116,12 @@ export const HelpSection: React.FC = () => {
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                         {steps.map((step, idx) => (
                             <div key={idx} className="relative group text-center z-10">
-                                <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-[#f4e4bc] border-4 border-white/50 flex items-center justify-center group-hover:scale-110 transition-all shadow-[0_10px_30px_rgba(0,0,0,0.1)] p-6 relative">
-                                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/40 to-transparent opacity-50" />
+                                <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-geeko-violet-medium border-4 border-white/5 flex items-center justify-center group-hover:scale-110 transition-all shadow-[0_10px_30px_rgba(0,0,0,0.3)] p-6 relative">
+                                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/10 to-transparent opacity-50" />
                                     <step.icon className={`w-full h-full ${step.color} drop-shadow-md`} />
                                 </div>
-                                <h3 className="text-xl font-black text-black italic uppercase mb-2">{step.title}</h3>
-                                <p className="text-sm text-black/60 font-medium px-4">{step.desc}</p>
+                                <h3 className="text-xl font-black text-white italic uppercase mb-2">{step.title}</h3>
+                                <p className="text-sm text-text-low font-medium px-4">{step.desc}</p>
                             </div>
                         ))}
                     </div>
@@ -130,7 +131,7 @@ export const HelpSection: React.FC = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
                     {/* Video Player Mockup with FAKE CONTENT AND INTERACTIVITY */}
                     <div className="relative group perspective-1000">
-                        <div className="absolute -inset-4 bg-gradient-to-br from-geeko-cyan/20 to-geeko-purple/20 blur-2xl opacity-50 rounded-[4rem] group-hover:opacity-75 transition-opacity duration-500" />
+                        <div className="absolute -inset-4 bg-gradient-to-br from-geeko-cyan/20 to-geeko-violet-accent/20 blur-2xl opacity-50 rounded-[4rem] group-hover:opacity-75 transition-opacity duration-500" />
                         <div
                             onClick={() => setIsVideoOpen(true)}
                             className="relative aspect-video bg-neutral-900 rounded-[2.5rem] border-[12px] border-[#2a2a2a] shadow-2xl overflow-hidden flex items-center justify-center cursor-pointer transform transition-transform duration-500 group-hover:rotate-x-2 group-hover:scale-[1.02]"
@@ -140,7 +141,7 @@ export const HelpSection: React.FC = () => {
 
                             {/* Overlay Play Button */}
                             <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-all flex items-center justify-center">
-                                <button className="w-24 h-24 rounded-full bg-geeko-cyan/90 backdrop-blur text-black flex items-center justify-center shadow-[0_0_40px_rgba(0,229,255,0.6)] group-hover:scale-110 transition-transform duration-300 border-4 border-white/20">
+                                <button className="w-24 h-24 rounded-full bg-geeko-cyan/90 backdrop-blur text-black flex items-center justify-center shadow-[0_0_40px_rgba(0,174,180,0.6)] group-hover:scale-110 transition-transform duration-300 border-4 border-white/20">
                                     <Play size={40} fill="currentColor" className="ml-2" />
                                 </button>
                             </div>
@@ -153,26 +154,26 @@ export const HelpSection: React.FC = () => {
                     {/* FAQ Accordion */}
                     <div className="space-y-6">
                         {faqs.map((group) => (
-                            <div key={group.id} className="bg-white/60 backdrop-blur-sm border border-black/5 rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-                                <div className="p-6 bg-gradient-to-r from-white/50 to-transparent border-b border-black/5 flex items-center gap-4">
-                                    <div className="p-3 rounded-xl bg-geeko-purple/10 text-geeko-purple">
+                            <div key={group.id} className="bg-geeko-violet-medium/60 backdrop-blur-sm border border-white/5 rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+                                <div className="p-6 bg-gradient-to-r from-white/5 to-transparent border-b border-white/5 flex items-center gap-4">
+                                    <div className="p-3 rounded-xl bg-geeko-cyan/10 text-geeko-cyan">
                                         <group.icon size={24} />
                                     </div>
-                                    <h3 className="text-lg font-black text-black italic uppercase tracking-tight">{group.category}</h3>
+                                    <h3 className="text-lg font-black text-white italic uppercase tracking-tight">{group.category}</h3>
                                 </div>
                                 <div className="p-2 space-y-1">
                                     {group.questions.map((q, i) => (
-                                        <div key={i} className="rounded-2xl hover:bg-black/5 transition-all">
+                                        <div key={i} className="rounded-2xl hover:bg-white/5 transition-all">
                                             <button
                                                 onClick={() => setActiveFaq(activeFaq === q.q ? null : q.q)}
                                                 className="w-full p-4 flex items-center justify-between text-left group"
                                             >
-                                                <span className="text-sm font-bold text-black/80 group-hover:text-geeko-purple transition-colors">{q.q}</span>
-                                                <ChevronDown size={18} className={`text-black/40 transition-transform duration-300 ${activeFaq === q.q ? 'rotate-180 text-geeko-purple' : ''}`} />
+                                                <span className="text-sm font-bold text-white/80 group-hover:text-geeko-cyan transition-colors">{q.q}</span>
+                                                <ChevronDown size={18} className={`text-white/40 transition-transform duration-300 ${activeFaq === q.q ? 'rotate-180 text-geeko-cyan' : ''}`} />
                                             </button>
                                             <div className={`grid transition-[grid-template-rows] duration-300 ease-out ${activeFaq === q.q ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
                                                 <div className="overflow-hidden">
-                                                    <p className="text-sm text-black/60 font-medium leading-relaxed px-4 pb-4 pl-8 border-l-2 border-geeko-purple/20 ml-4 mb-2">
+                                                    <p className="text-sm text-text-low font-medium leading-relaxed px-4 pb-4 pl-8 border-l-2 border-geeko-cyan/20 ml-4 mb-2">
                                                         {q.a}
                                                     </p>
                                                 </div>
@@ -185,6 +186,7 @@ export const HelpSection: React.FC = () => {
                     </div>
                 </div>
             </div>
+
 
             {/* Video Modal */}
             {isVideoOpen && (

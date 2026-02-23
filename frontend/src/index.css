@@ -2,15 +2,18 @@
 @import "tailwindcss";
 
 @theme {
-  /* Core Palette Mapped to Geekorium Identity (PRD v2.0) */
+  /* Core Palette Mapped to Geekorium Identity (PRD v4.0) */
   --color-geeko-violet-dark: #1F182D;
-  /* Fondo Web */
+  /* Fondo Web (bg-primary) */
   --color-geeko-turquoise: #00AEB4;
-  /* Botones, Activos, Precios, Subtítulos */
-  --color-geeko-violet-medium: #373266;
-  /* Bienvenida Fondo */
+  /* Action Cyan */
+  --color-geeko-violet-medium: #281F3E;
+  /* Surface (bg-secondary) */
+  --color-geeko-violet-accent: #373266;
+  /* Highlight (bg-accent) */
   --color-geeko-yellow-legal: #F9AE00;
-  /* Formatos/Legalidad */
+  /* Formatos/Legalidad (format-gold) */
+
 
   --color-geeko-red: #E1306C;
   /* Magic: The Gathering */
@@ -38,11 +41,13 @@
   --color-neutral-black: #121212;
 
   /* Geekorium UI Tokens */
-  --color-geeko-gold: #FFC107;
-  --color-geeko-cyan: #00E5FF;
+  --color-geeko-gold: #F9AE00;
+  --color-geeko-cyan: #00AEB4;
   --color-geeko-black: #0A0A0A;
   --color-geeko-glass: rgba(31, 24, 45, 0.7);
-  /* Updated to match violet dark base */
+  --color-text-high: #FFFFFF;
+  --color-text-low: #B7B7B7;
+
 
   --color-neutral-gray-50: #FAFAFA;
   --color-neutral-gray-100: #F5F5F5;
@@ -131,11 +136,12 @@ body {
   }
 
   .glass-panel {
-    background: rgba(30, 41, 59, 0.4);
+    background: rgba(31, 24, 45, 0.4);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.05);
   }
+
 
   .neon-border-cyan {
     box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
@@ -154,10 +160,11 @@ body {
   }
 
   .text-gradient-cyan {
-    background: linear-gradient(135deg, #00E5FF 0%, #00B0FF 100%);
+    background: linear-gradient(135deg, #00AEB4 0%, #008E94 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
+
 
   .shimmer {
     background: linear-gradient(90deg,
