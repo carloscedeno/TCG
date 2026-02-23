@@ -1,7 +1,18 @@
+import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { CardGrid } from '../components/Card/CardGrid';
 import type { CardProps } from '../components/Card/Card';
+
+// Mock ESM modules that CardGrid depends on (networking + cart context)
+jest.mock('../utils/api', () => ({
+  fetchCardDetails: jest.fn(),
+  addToCart: jest.fn(),
+}));
+jest.mock('../context/CartContext', () => ({
+  useCart: () => ({ refreshCart: jest.fn(), cartCount: 0 }),
+}));
+
 
 describe('CardGrid', () => {
   const mockCards: CardProps[] = [

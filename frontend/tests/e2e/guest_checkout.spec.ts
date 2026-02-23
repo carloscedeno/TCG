@@ -120,24 +120,24 @@ test.describe('Guest Checkout Flow', () => {
             console.log('Verifying checkout URL...');
             await expect(page).toHaveURL(/.*checkout/);
 
-            // Fill Shipping Info
-            console.log('Filling shipping info...');
-            await page.getByPlaceholder('Full Name').fill('Guest User');
-            await page.getByPlaceholder('Address Line 1').fill('123 Guest St');
-            await page.getByPlaceholder('City').fill('Guest City');
-            await page.getByPlaceholder('State').fill('GS');
-            await page.getByPlaceholder('ZIP Code').fill('12345');
-            // Check for new guest fields
-            await page.getByPlaceholder('Email (para confirmación)').fill('guest@example.com');
-            await page.getByPlaceholder('Teléfono').fill('555-0123');
+            // Fill Shipping Info (Venezuela flow)
+            console.log('Filling customer data...');
+            await page.getByPlaceholder('Carlos Ej. Rodríguez').fill('Guest User');
+            // Cédula prefix already defaults to V, fill the number
+            await page.getByPlaceholder('12345678').fill('12345678');
+            // WhatsApp
+            await page.getByPlaceholder('04145551234').fill('04141234567');
+            // Estado Venezuela (select)
+            await page.locator('select').filter({ hasText: 'Selecciona tu estado' }).selectOption('Miranda');
+            // Dirección
+            await page.getByPlaceholder('Av. Principal, Edificio X, Piso 2').fill('Av. Principal 123');
+            // Email (opcional)
+            await page.getByPlaceholder('correo@ejemplo.com').fill('guest@example.com');
 
-            // Save Address
-            console.log('Saving address...');
-            await page.getByTestId('save-address-button').click();
 
-            // Continue to Payment
+            // Continue to Payment — CheckoutPage uses a single button per step
             console.log('Continuing to payment...');
-            const continueBtn = page.getByTestId('continue-to-payment');
+            const continueBtn = page.getByText('Continuar al Pago →');
             await expect(continueBtn).toBeEnabled({ timeout: 5000 });
             await continueBtn.click();
 
@@ -147,11 +147,10 @@ test.describe('Guest Checkout Flow', () => {
             await expect(placeOrderBtn).toBeVisible();
             await placeOrderBtn.click();
 
-            // 5. Success Page
-            console.log('Waiting for success page...');
-            await expect(page).toHaveURL(/.*checkout\/success/, { timeout: 15000 });
-            await expect(page.getByText('¡Orden Confirmada!')).toBeVisible();
-            await expect(page.getByText('Gracias por tu compra')).toBeVisible();
+            // 5. Success / WhatsApp
+            console.log('Waiting for order confirmation...');
+            // CheckoutPage opens WhatsApp on success, check for success state
+            await expect(page.getByText(/orden creada|pedido confirmado|whatsapp/i)).toBeVisible({ timeout: 15000 });
             console.log('Test Complete');
         } catch (error) {
             console.error('TEST FAILED:', error);
