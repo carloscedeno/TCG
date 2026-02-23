@@ -564,37 +564,43 @@ const Home: React.FC = () => {
         </main>
 
         {/* How to Buy Section */}
-        <section id="how-to-buy" className="max-w-[1600px] mx-auto px-6 mb-20">
-          <div className="relative overflow-hidden rounded-3xl bg-[#f4e4bc] p-12 shadow-2xl">
-            {/* Decorative Parchment Elements */}
-            <div className="absolute top-0 left-0 w-full h-4 bg-black/5" />
-            <div className="absolute bottom-0 left-0 w-full h-4 bg-black/5" />
+        <section id="how-to-buy" className="max-w-[1600px] mx-auto px-6 mb-24">
+          <div className="relative overflow-hidden rounded-[2.5rem] bg-geeko-violet-accent p-12 shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/5">
+            {/* Background Texture Overlay */}
+            <div className="absolute inset-0 opacity-10 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/paper.png')]" />
 
-            <div className="relative z-10 flex flex-col md:flex-row gap-12 items-center">
+            <div className="relative z-10 flex flex-col md:flex-row gap-16 items-center">
               <div className="flex-1 text-center md:text-left">
-                <h2 className="text-4xl font-black text-black italic tracking-tighter mb-6 uppercase flex items-center gap-4 justify-center md:justify-start">
-                  <img src="/branding/Misiones.jpg" alt="Scroll" className="w-12 h-12 rounded-full border-2 border-black/10 shadow-lg" />
+                <div className="flex flex-col items-center md:items-start mb-6">
+                  <span className="text-geeko-cyan font-bold tracking-[0.2em] uppercase text-[10px] mb-3 animate-pulse">
+                    Bienvenido a
+                  </span>
+                  <div className="w-16 h-1 bg-geeko-cyan rounded-full mb-6 shadow-[0_0_10px_rgba(0,174,180,0.5)]" />
+                </div>
+
+                <h2 className="text-4xl md:text-5xl font-web-titles font-black text-white italic tracking-tighter mb-8 uppercase flex flex-col md:flex-row items-center gap-4 justify-center md:justify-start">
+                  <img src="/branding/Misiones.jpg" alt="Scroll" className="w-14 h-14 rounded-full border-2 border-white/10 shadow-xl" />
                   ¿Cómo comprar en Geekorium El Emporio?
                 </h2>
-                <p className="text-black/70 font-medium text-lg leading-relaxed max-w-2xl mb-8">
-                  Nuestra plataforma es un <strong>Portafolio Online</strong> diseñado para ofrecerte la mejor experiencia de búsqueda y selección de singles. Sigue estos pasos para completar tu pedido:
+                <p className="text-white/90 font-medium text-lg leading-relaxed max-w-2xl mb-12">
+                  Nuestra plataforma es un <strong className="text-geeko-cyan">Portafolio Online</strong> diseñado para ofrecerte la mejor experiencia de búsqueda y selección de singles. Sigue estos pasos para completar tu pedido:
                 </p>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
-                  <div className="flex flex-col gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-black/5 flex items-center justify-center text-2xl font-black text-black italic">1</div>
-                    <div className="font-bold text-black uppercase tracking-wider text-sm">Explora el Stock</div>
-                    <p className="text-black/60 text-xs font-medium leading-relaxed">Filtra por TCG, rareza o edición. Encuentra exactamente lo que buscas en nuestro inventario real.</p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-10">
+                  <div className="flex flex-col gap-5 group/step">
+                    <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-2xl font-black text-geeko-cyan italic group-hover/step:scale-110 group-hover/step:bg-geeko-cyan/10 transition-all shadow-lg">1</div>
+                    <div className="font-web-titles font-black text-white uppercase tracking-wider text-sm">Explora el Stock</div>
+                    <p className="text-white/70 text-xs font-medium leading-relaxed">Filtra por TCG, rareza o edición. Encuentra exactamente lo que buscas en nuestro inventario real.</p>
                   </div>
-                  <div className="flex flex-col gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-black/5 flex items-center justify-center text-2xl font-black text-black italic">2</div>
-                    <div className="font-bold text-black uppercase tracking-wider text-sm">Prepara tu Orden</div>
-                    <p className="text-black/60 text-xs font-medium leading-relaxed">Añade al carrito. Verás el <strong>Market Price</strong> y nuestro <strong>GK Price</strong> especial.</p>
+                  <div className="flex flex-col gap-5 group/step">
+                    <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-2xl font-black text-geeko-cyan italic group-hover/step:scale-110 group-hover/step:bg-geeko-cyan/10 transition-all shadow-lg">2</div>
+                    <div className="font-web-titles font-black text-white uppercase tracking-wider text-sm">Prepara tu Orden</div>
+                    <p className="text-white/70 text-xs font-medium leading-relaxed">Añade al carrito. Verás el <strong className="text-white">Market Price</strong> y nuestro <strong className="text-geeko-gold">GK Price</strong> especial.</p>
                   </div>
-                  <div className="flex flex-col gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-black/5 flex items-center justify-center text-2xl font-black text-black italic">3</div>
-                    <div className="font-bold text-black uppercase tracking-wider text-sm">Finaliza con un Asesor</div>
-                    <p className="text-black/60 text-xs font-medium leading-relaxed">Tu pedido llegará a WhatsApp, donde un Geeko-Asesor validará disponibilidad y coordinará el pago.</p>
+                  <div className="flex flex-col gap-5 group/step">
+                    <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-2xl font-black text-geeko-cyan italic group-hover/step:scale-110 group-hover/step:bg-geeko-cyan/10 transition-all shadow-lg">3</div>
+                    <div className="font-web-titles font-black text-white uppercase tracking-wider text-sm">Finaliza con un Asesor</div>
+                    <p className="text-white/70 text-xs font-medium leading-relaxed">Tu pedido llegará a WhatsApp, donde un Geeko-Asesor validará disponibilidad y coordinará el pago.</p>
                   </div>
                 </div>
               </div>
