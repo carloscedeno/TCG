@@ -323,8 +323,10 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                 }
 
                 if (finishes.includes('foil') || hasFoilPrice) {
+                  const useSyntheticId = !v.is_foil && hasFoilPrice;
                   expandedVersions.push({
                     ...baseVersion,
+                    printing_id: useSyntheticId ? `${v.printing_id}-foil` : v.printing_id,
                     price: Number(v.prices?.usd_foil || v.prices?.eur_foil || v.aggregated_prices?.[0]?.avg_market_price_usd || 0),
                     market_price: Number(v.aggregated_prices?.[0]?.avg_market_price_usd || 0),
                     finish: 'foil',
@@ -333,8 +335,10 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                 }
 
                 if (finishes.includes('etched') || hasEtchedPrice) {
+                  const useSyntheticId = v.finish !== 'etched';
                   expandedVersions.push({
                     ...baseVersion,
+                    printing_id: useSyntheticId ? `${v.printing_id}-etched` : v.printing_id,
                     price: Number(v.prices?.usd_etched || v.aggregated_prices?.[0]?.avg_market_price_usd || 0),
                     market_price: Number(v.aggregated_prices?.[0]?.avg_market_price_usd || 0),
                     finish: 'etched',

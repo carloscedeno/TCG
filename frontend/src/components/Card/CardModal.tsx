@@ -148,7 +148,14 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
             }
 
             setDetails(data);
-            const pId = data.printing_id || data.card_id || id;
+
+            // PRESERVE SELECTED ID: If the requested `id` (e.g. uuid-foil) exists in the versions list, keep it!
+            // Otherwise, fallback to the base printing_id from the database.
+            let pId = id;
+            if (!data.all_versions?.some((v: any) => v.printing_id === id)) {
+                pId = data.printing_id || data.card_id || id;
+            }
+
             setActivePrintingId(pId);
             console.log("CardModal: Details set with Printing ID:", pId);
         } catch (err: any) {
