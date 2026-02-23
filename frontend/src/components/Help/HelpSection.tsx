@@ -95,17 +95,24 @@ export const HelpSection: React.FC = () => {
     ];
 
     return (
-        <section className="py-20 bg-geeko-violet-dark relative overflow-hidden">
+        <section className="py-24 bg-geeko-violet-accent relative overflow-hidden">
 
             {/* Background Texture Overlay */}
-            <div className="absolute inset-0 opacity-5 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/paper.png')]" />
+            <div className="absolute inset-0 opacity-10 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/paper.png')]" />
 
             <div className="max-w-[1400px] mx-auto px-6 relative z-10">
-                <div className="text-center mb-16">
-                    <h2 className="text-5xl font-black text-white italic tracking-tighter uppercase mb-4 drop-shadow-sm">
-                        El Códice del Emporio
+                <div className="text-center mb-20">
+                    <div className="flex flex-col items-center mb-6">
+                        <span className="text-geeko-cyan font-bold tracking-[0.2em] uppercase text-sm mb-4 animate-pulse">
+                            Bienvenido a
+                        </span>
+                        <div className="w-24 h-1 bg-geeko-cyan rounded-full mb-8 shadow-[0_0_10px_rgba(0,174,180,0.5)]" />
+                    </div>
+
+                    <h2 className="text-5xl md:text-6xl font-web-titles font-black text-white italic tracking-tighter uppercase mb-6 drop-shadow-md">
+                        Geekorium El Emporio
                     </h2>
-                    <p className="text-text-low font-medium max-w-2xl mx-auto text-lg">
+                    <p className="text-white font-medium max-w-2xl mx-auto text-lg leading-relaxed opacity-90">
                         Domina el arte de la búsqueda y la adquisición de tesoros en nuestro portal.
                     </p>
                 </div>
@@ -120,8 +127,8 @@ export const HelpSection: React.FC = () => {
                                     <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/10 to-transparent opacity-50" />
                                     <step.icon className={`w-full h-full ${step.color} drop-shadow-md`} />
                                 </div>
-                                <h3 className="text-xl font-black text-white italic uppercase mb-2">{step.title}</h3>
-                                <p className="text-sm text-text-low font-medium px-4">{step.desc}</p>
+                                <h3 className="text-xl font-web-titles font-black text-white italic uppercase mb-2">{step.title}</h3>
+                                <p className="text-sm text-white font-medium px-4 opacity-90">{step.desc}</p>
                             </div>
                         ))}
                     </div>
@@ -173,7 +180,7 @@ export const HelpSection: React.FC = () => {
                                             </button>
                                             <div className={`grid transition-[grid-template-rows] duration-300 ease-out ${activeFaq === q.q ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
                                                 <div className="overflow-hidden">
-                                                    <p className="text-sm text-text-low font-medium leading-relaxed px-4 pb-4 pl-8 border-l-2 border-geeko-cyan/20 ml-4 mb-2">
+                                                    <p className="text-sm text-white font-medium leading-relaxed px-4 pb-4 pl-8 border-l-2 border-geeko-cyan/20 ml-4 mb-2 opacity-90">
                                                         {q.a}
                                                     </p>
                                                 </div>
