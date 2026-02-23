@@ -129,13 +129,19 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
 
             // DEFAULT TO NORMAL: If we just loaded a foil version, but there is a normal version 
             // of this same card (same set + collector_num), switch to the normal one by default.
-            // But ONLY if we haven't already skipped this (manual user clicks).
             if (!skipAutoSwitch) {
-                const isFoil = !!(data.is_foil || data.finish === 'foil');
-                if (isFoil) {
-                    setSelectedFinish('foil');
+                const hasNonFoil = data.all_versions?.some(v =>
+                    v.set_code === data.set_code &&
+                    v.collector_number === data.collector_number &&
+                    !v.is_foil
+                );
+
+                if (hasNonFoil) {
+                    setSelectedFinish('nonfoil');
                 } else if (data.finish === 'etched') {
                     setSelectedFinish('etched');
+                } else if (data.is_foil || data.finish === 'foil') {
+                    setSelectedFinish('foil');
                 } else {
                     setSelectedFinish('nonfoil');
                 }
