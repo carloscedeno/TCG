@@ -113,3 +113,18 @@
 
 **Regla derivada:**
 > Todo input vital para el pago/contacto f�sico debe ser sanitizado en onChange y validado estrictamente en formato local antes de invocar la API.
+
+---
+
+## 2026-02-27 — Exactitud SQL (Search/Cart) y Fidelidad UI (Tipografías)
+
+**Qué pasó:** Se rediseñó la función de agregar al carrito (RPC dd_to_cart) en Supabase para proteger el stock disponible y se mejoraron los resultados de get_products_filtered para consultas exactas. En Frontend, se logró paridad total con los mockups de diseño de interfaz (Fuentes Bogue, Daito, Rubik) en el Modal y navegación.
+
+**Lo que cambió:**
+- supabase/migrations/20260227120000_fix_search_and_cart_stock.sql → Validación sólida de Stock y Orden de Resultados.
+- rontend/src/components/Card/CardModal.tsx → Mapeo directo de clases tipográficas.
+- rontend/src/App.tsx y Home.tsx → Reemplazo de logo de texto por imagen.
+- .agent/lessons_learned.md → Lección #23 (Stock y Búsquedas), Lección #24 (Tipografías y Componentes UI).
+
+**Artefacto creado:** Migración SQL 20260227120000....
+**Regla derivada:** Validaciones de stock atómicas en DB. Fuentes personalizadas aplicadas a nivel hoja, no contenedor.

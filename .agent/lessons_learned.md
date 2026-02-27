@@ -178,3 +178,16 @@ Este documento registra los desafíos técnicos encontrados durante el desarroll
 - **Problema**: Formularios sin validaci�n previa enviaban datos inconsistentes (ej. formato de tel�fono err�neo) al equipo de soporte.
 - **Soluci�n / Lecci�n**: Validar clide-side formatos espec�ficos (ej. venezolanos 04), rechazar letras en c�dula (eplace(/\D/g, '')), y forzar longitud en campos de texto antes de habilitar el pago.
 - **Regla Derivada**: Todo input vital para el pago/contacto f�sico debe ser sanitizado en onChange y validado estrictamente en formato local antes de invocar la API.
+
+### 23. Búsqueda y Validación de Stock en SQL (Feb 2026)
+- **Problema**: El carrito permitía agregar más cartas de las que había en stock si se hacían múltiples clicks o llamadas al RPC dd_to_cart. Además, la búsqueda global a veces no priorizaba coincidencias exactas.
+- **Causa Raíz**: El control de stock no totalizaba las cantidades previas del mismo item en el carrito antes de comparar con el stock máximo.
+- **Solución**: Refactorizar dd_to_cart sumando quantity + v_current_qty > v_stock y lanzando un error. Ajustar get_products_filtered con un ORDER BY que priorice strings idénticos (p.name ILIKE ).
+- **Regla Derivada**: Todo control de inventario en el backend debe ser calculable (suma del estado actual + intento) y rechazar transacciones a nivel SQL, y las funciones de búsqueda deben devolver coincidencias exactas primero.
+
+### 24. Resolviendo Tipografías en UI Específica (Feb 2026)
+- **Problema**: El diseño UI requería mapeos hiperespecíficos de tipografías (Daito para títulos, Bogue para precios, Rubik para cuerpo) en base a mockups donde no bastaba heredar la tipografía general.
+- **Causa Raíz**: Las clases CSS como ont-sans no sobreescribían correctamente la jerarquía necesaria si el componente padre tenía otra.
+- **Solución**: Aplicar clases nominales directas en Tailwind (ont-web-titles, ont-titles, ont-sans) a los subnodos del texto en los componentes y remover tags italic que forzaban el fallback del font.
+- **Regla Derivada**: La fidelidad 1:1 de PRD UI requiere aplicar clases tipográficas explícitas en el nivel más bajo (hojas) del nodo del DOM y evitar modificadores de estilo globales (como italic o bold general) que rompan el font-face de UI.
+
