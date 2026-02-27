@@ -1,0 +1,24 @@
+flowchart TD
+    A([Inicio: Checkout]) --> B[Ingresa Datos Personales y de Envio]
+    B --> C[Confirmar Orden]
+    C --> D[Sistema crea Orden en BD]
+    D --> E[Estado cambiar a: PENDING PAYMENT]
+    E --> F[Sistema descuenta stock temporalmente]
+    F --> G[El cliente es redirigido a Success Page]
+    G --> H[El cliente obtiene URL unica de Tracking]
+    H --> I{Sigue el URL para subir pago?}
+    
+    I -- Si --> J[Adjunta comprobante Zelle/Pago Movil]
+    J --> K[Estado cambia a: PAYMENT UPLOADED]
+    K --> L[Admin revisa en el Panel de Control]
+    
+    L -- Pago Valido --> M[Admin cambia estado a: PAID o PROCESSING]
+    M --> N([Orden Lista para Empaque/Pick-up])
+    
+    L -- Pago Invalido --> O[Admin cambia estado a: CANCELLED]
+    
+    I -- No, Expiran 24 Horas --> P[Job Automatico de Expiracion]
+    P --> O
+    
+    O --> Q[Sistema devuelve stock reservado a disponibilidad]
+    Q --> R([Fin de Orden Cancelada])

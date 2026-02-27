@@ -18,6 +18,7 @@ interface OrderItem {
 
 const ORDER_STATUSES: Record<string, { label: string; color: string; border?: string }> = {
     pending_payment: { label: 'Pendiente de Pago', color: 'bg-yellow-500/20 text-yellow-400' },
+    payment_uploaded: { label: 'Pago en Revisión', color: 'bg-lime-500/20 text-lime-400' },
     paid: { label: 'Pagado', color: 'bg-blue-500/20 text-blue-400' },
     processing: { label: 'Procesando', color: 'bg-indigo-500/20 text-indigo-400' },
     ready_for_pickup: { label: 'Listo para Recoger', color: 'bg-purple-500/20 text-purple-400' },
@@ -37,6 +38,7 @@ interface Order {
     created_at: string;
     user_email?: string;
     order_items: OrderItem[];
+    payment_proof_url?: string | null;
     deleted_at?: string | null;
 }
 
@@ -279,9 +281,21 @@ const OrdersPage = () => {
                                 {/* Order Items Details */}
                                 {expandedOrderId === order.id && (
                                     <div className="border-t border-white/5 bg-black/40 p-6 animate-in slide-in-from-top-2 duration-200">
-                                        <h4 className="text-sm font-black uppercase tracking-widest text-neutral-400 mb-4 flex items-center gap-2">
-                                            <Package size={14} /> Contenido de la Orden
-                                        </h4>
+                                        <div className="flex justify-between items-center mb-4">
+                                            <h4 className="text-sm font-black uppercase tracking-widest text-neutral-400 flex items-center gap-2">
+                                                <Package size={14} /> Contenido de la Orden
+                                            </h4>
+                                            {order.payment_proof_url && (
+                                                <a
+                                                    href={order.payment_proof_url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-xs font-bold text-lime-400 hover:text-white transition-colors flex items-center gap-1 bg-lime-400/10 px-3 py-1.5 rounded-lg border border-lime-400/20"
+                                                >
+                                                    Ver Comprobante de Pago
+                                                </a>
+                                            )}
+                                        </div>
                                         {order.order_items && order.order_items.length > 0 ? (
                                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                                 {order.order_items.map((item) => (

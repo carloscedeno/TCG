@@ -1,0 +1,13 @@
+flowchart TD
+    A([Inicio: Cliente en la Tienda]) --> B{Tiene un producto en mente?}
+    B -- Si --> C[Usa barra de busqueda o filtros]
+    B -- No --> D[Navega por el catalogo o sets]
+    C --> E[Encuentra carta/producto]
+    D --> E
+    E --> F[Abre Modal del Producto]
+    F --> G{Elige Variante?}
+    G -- Normal --> H[Selecciona cantidad e ingresa al Carrito]
+    G -- Foil --> H
+    H --> I{Finalizar Compra?}
+    I -- No --> B
+    I -- Si --> J([Ir al Checkout])

@@ -1,0 +1,12 @@
+flowchart TD
+    A([Inicio: Administracion]) --> B[Descarga archivo CSV exportado de TCGPlayer]
+    B --> C[Sube el archivo CSV en el Admin Panel]
+    C --> D[El sistema lee y procesa filas]
+    D --> E{Producto Existe?}
+    E -- Si --> F[Actualiza Cantidades y Precios Base]
+    E -- No --> G[Crea Nuevo Producto]
+    F --> H[Inventario Sincronizado]
+    G --> H
+    H --> I{Ventas Locales / Offline?}
+    I -- Ocurren durante el dia --> J[Actualizacion reflejada en el proximo CSV subido]
+    I -- Sin ventas locales --> H

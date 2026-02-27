@@ -162,7 +162,7 @@ export const CheckoutPage = () => {
             // Open WhatsApp in new tab
             window.open(whatsappUrl, '_blank');
 
-            navigate('/checkout/success');
+            navigate('/checkout/success', { state: { orderId: orderIdForMsg } });
         } catch (error) {
             console.error(error);
             alert('Error al procesar la orden. Por favor verifica el inventario.');

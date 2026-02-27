@@ -12,6 +12,7 @@ import { CartProvider } from './context/CartContext';
 import { AlertCircle } from 'lucide-react';
 import { CheckoutPage } from './pages/CheckoutPage';
 import { CheckoutSuccessPage } from './pages/CheckoutSuccessPage';
+import { OrderTrackingPage } from './pages/OrderTrackingPage';
 import UpdatePassword from './pages/UpdatePassword';
 import { AdminRoute } from './components/Auth/AdminRoute';
 import NotFound from './pages/NotFound';
@@ -75,6 +76,7 @@ function App() {
                         <Route path="/admin/orders" element={<AdminRoute><OrdersPage /></AdminRoute>} />
                         <Route path="/checkout" element={<CheckoutPage />} />
                         <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
+                        <Route path="/order/:orderId" element={<OrderTrackingPage />} />
 
                         <Route path="/update-password" element={<UpdatePassword />} />
                         <Route path="*" element={<NotFound />} />
