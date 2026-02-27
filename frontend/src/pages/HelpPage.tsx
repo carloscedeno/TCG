@@ -25,7 +25,7 @@ const HelpPage: React.FC = () => {
             {/* Contact Footer */}
             <div className="bg-[#f4e4bc] py-12 border-t border-[#e2d1a6]">
                 <div className="max-w-4xl mx-auto px-6 text-center">
-                    <h3 className="text-2xl font-black text-black uppercase mb-6">¿Aún tienes dudas?</h3>
+                    <h3 className="text-3xl font-web-titles font-black text-black uppercase tracking-tighter mb-6">¿Aún tienes dudas?</h3>
                     <div className="flex justify-center gap-4">
                         <a href="https://wa.me/584128042832" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-6 py-3 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold rounded-full transition-colors shadow-lg">
                             <Phone size={18} /> Contactar Soporte
