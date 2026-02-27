@@ -22,6 +22,7 @@ export const CheckoutPage = () => {
     const [validationError, setValidationError] = useState<string | null>(null);
     const [isProcessing, setIsProcessing] = useState(false);
     const [paymentPreview, setPaymentPreview] = useState<string | null>(null);
+    const [paymentFile, setPaymentFile] = useState<File | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     // Customer form
@@ -57,6 +58,7 @@ export const CheckoutPage = () => {
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            setPaymentFile(file);
             const reader = new FileReader();
             reader.onload = (ev) => setPaymentPreview(ev.target?.result as string);
             reader.readAsDataURL(file);
@@ -100,7 +102,27 @@ export const CheckoutPage = () => {
 
             const cedula = `${form.cedula_prefix}-${form.cedula_number}`;
 
-            await createOrder({
+            let paymentProofUrl = null;
+            if (paymentFile) {
+                const fileExt = paymentFile.name.split('.').pop();
+                const tempOrderId = crypto.randomUUID();
+                const fileName = `${tempOrderId}/${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+
+                const { data: uploadData, error: uploadError } = await supabase.storage
+                    .from('payment-proofs')
+                    .upload(fileName, paymentFile);
+
+                if (uploadError) {
+                    console.error('Error uploading payment proof:', uploadError);
+                } else if (uploadData) {
+                    const { data: publicUrlData } = supabase.storage
+                        .from('payment-proofs')
+                        .getPublicUrl(uploadData.path);
+                    paymentProofUrl = publicUrlData.publicUrl;
+                }
+            }
+
+            const orderResponse = await createOrder({
                 userId: user?.id || null,
                 items: simplifiedItems,
                 shippingAddress: {
@@ -112,14 +134,17 @@ export const CheckoutPage = () => {
                     country: 'VE',
                     email: form.email,
                     phone: form.whatsapp,
+                    payment_proof_url: paymentProofUrl // Inject the URL here
                 },
                 totalAmount: total,
                 guestInfo: !user ? { email: form.email, phone: form.whatsapp } : undefined,
             });
 
+            const orderIdForMsg = orderResponse?.order_id || orderResponse?.id || 'PENDIENTE';
+
             // Build WhatsApp message
             const whatsappMsg = encodeURIComponent(
-                `Hola Geekorium, mi nombre es ${form.full_name} (${cedula}). Acabo de generar una orden por $${total.toFixed(2)}. Espero confirmación de stock.`
+                `Hola Geekorium, mi nombre es ${form.full_name}. Acabo de generar la orden #${orderIdForMsg}. Adjunto mi comprobante de pago por $${total.toFixed(2)}. Espero confirmación de stock.`
             );
             const whatsappUrl = `https://wa.me/584141234567?text=${whatsappMsg}`;
 
@@ -183,8 +208,9 @@ export const CheckoutPage = () => {
                             <div className="space-y-4">
                                 {/* Full Name */}
                                 <div>
-                                    <label className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-1.5">Nombre Completo</label>
+                                    <label htmlFor="full_name" className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-1.5">Nombre Completo</label>
                                     <input
+                                        id="full_name"
                                         placeholder="Carlos Ej. Rodríguez"
                                         className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-[#00AEB4] outline-none transition-colors text-white placeholder:text-neutral-600"
                                         value={form.full_name}
@@ -194,7 +220,7 @@ export const CheckoutPage = () => {
 
                                 {/* Cédula de Identidad */}
                                 <div>
-                                    <label className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-1.5">Cédula de Identidad</label>
+                                    <label htmlFor="cedula_number" className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-1.5">Cédula de Identidad</label>
                                     <div className="flex gap-2">
                                         <select
                                             value={form.cedula_prefix}
@@ -204,6 +230,7 @@ export const CheckoutPage = () => {
                                             {CEDULA_PREFIXES.map(p => <option key={p} value={p}>{p}</option>)}
                                         </select>
                                         <input
+                                            id="cedula_number"
                                             placeholder="12345678"
                                             type="tel"
                                             maxLength={9}
@@ -217,8 +244,9 @@ export const CheckoutPage = () => {
 
                                 {/* WhatsApp */}
                                 <div>
-                                    <label className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-1.5">Número de WhatsApp</label>
+                                    <label htmlFor="whatsapp" className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-1.5">Número de WhatsApp</label>
                                     <input
+                                        id="whatsapp"
                                         placeholder="04145551234"
                                         type="tel"
                                         className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-[#00AEB4] outline-none transition-colors text-white placeholder:text-neutral-600 font-mono"
@@ -229,8 +257,9 @@ export const CheckoutPage = () => {
 
                                 {/* Estado Venezuela */}
                                 <div>
-                                    <label className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-1.5">Estado</label>
+                                    <label htmlFor="state" className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-1.5">Estado</label>
                                     <select
+                                        id="state"
                                         value={form.state}
                                         onChange={(e) => setForm({ ...form, state: e.target.value })}
                                         className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-[#00AEB4] outline-none transition-colors text-white"
@@ -244,8 +273,9 @@ export const CheckoutPage = () => {
 
                                 {/* Dirección */}
                                 <div>
-                                    <label className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-1.5">Dirección de Entrega</label>
+                                    <label htmlFor="address" className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-1.5">Dirección de Entrega</label>
                                     <input
+                                        id="address"
                                         placeholder="Av. Principal, Edificio X, Piso 2"
                                         className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-[#00AEB4] outline-none transition-colors text-white placeholder:text-neutral-600"
                                         value={form.address}
@@ -255,10 +285,11 @@ export const CheckoutPage = () => {
 
                                 {/* Email (optional) */}
                                 <div>
-                                    <label className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-1.5">
+                                    <label htmlFor="email" className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-1.5">
                                         Email <span className="text-neutral-600 normal-case font-normal">(opcional, para confirmación)</span>
                                     </label>
                                     <input
+                                        id="email"
                                         type="email"
                                         placeholder="correo@ejemplo.com"
                                         className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-[#00AEB4] outline-none transition-colors text-white placeholder:text-neutral-600"
@@ -353,7 +384,10 @@ export const CheckoutPage = () => {
                                     <div className="relative rounded-xl overflow-hidden border border-[#00AEB4]/30 bg-black/20">
                                         <img src={paymentPreview} alt="Comprobante" className="w-full max-h-48 object-contain" />
                                         <button
-                                            onClick={() => { setPaymentPreview(null); }}
+                                            onClick={() => {
+                                                setPaymentPreview(null);
+                                                setPaymentFile(null);
+                                            }}
                                             className="absolute top-2 right-2 bg-black/80 text-white rounded-full w-7 h-7 flex items-center justify-center text-xs hover:bg-red-500/80 transition-colors"
                                         >
                                             ✕

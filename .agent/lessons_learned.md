@@ -64,3 +64,53 @@ Este documento registra los desafíos técnicos encontrados durante el desarroll
 - **Lección**:
   - **Secretos Mirror**: Cada variable local en `.env` debe tener un mirror en los GitHub Repository Secrets y estar mapeada en `deploy.yml`.
   - **Resiliencia de Fallback**: Todo endpoint crítico (`fetchSets`, `fetchCards`, etc.) DEBE tener un bloque `try/catch` que recurra directamente a Supabase si el API base falla o no está definido.
+
+---
+
+## 🧠 Frontend y UX
+
+### 8. UX de Autocompletado vs. Búsqueda Activa (Feb 2026)
+
+- **Problema**: Al implementar el autocompletado, el `debounce` automático disparaba la búsqueda principal cada vez que el usuario escribía, recargando resultados innecesariamente.
+- **Lección**: **Desacoplar siempre el input de búsqueda del trigger de búsqueda.**
+  - El input solo actualiza el estado local para sugerencias.
+  - La búsqueda principal (`activeSearchQuery`) solo se actualiza mediante acción explícita (`Enter` o click en sugerencia).
+- **Solución**: Se refactorizó el frontend para separar `query` (input) de `activeSearchQuery` (fetch).
+
+### 9. Timeout en Queries con DISTINCT ON (Feb 2026)
+
+- **Problema**: `DISTINCT ON (card_name)` + `ORDER BY` con JOIN (`s.release_date`) causaba timeout (Error 500) sin índices específicos para esa combinación.
+- **Lección**: **Índices obligatorios para Sort/Filter.**
+  - Si usas `DISTINCT ON (columna)`, DEBE haber un índice en `(columna)`.
+  - Si filtras con `ILIKE`, DEBE haber índice `GIN` con `pg_trgm`.
+  - Verificar siempre con `EXPLAIN ANALYZE` en datos con volumetría real.
+
+### 10. NO Usar Queries Dinámicas para Vistas Principales de Tablas Grandes (Feb 2026)
+
+- **Problema**: A pesar de índices correctos, `DISTINCT ON` sobre 80,000+ filas con Joins y RLS activo sigue siendo demasiado pesado.
+- **Lección Definitiva: USAR VISTA MATERIALIZADA.**
+  - Si deduplicar o agregar de tabla principal grande (>10k filas): pre-calcular en `MATERIALIZED VIEW`.
+  - Usar `SECURITY DEFINER` en la función RPC para saltar overhead de RLS si la vista ya contiene datos públicos filtrados.
+
+### 11. CardModal — Nunca Filtrar all_versions al Cambiar Printing (Feb 2026)
+
+- **Problema**: Al cambiar el printing seleccionado, la lista de versiones desaparecía si la respuesta de la API para ese printing no incluía todas las versiones.
+- **Lección**: Preservar siempre el array `all_versions` en el estado del frontend al navegar entre printings. Nunca re-derivarlo de la respuesta parcial de un printing individual.
+
+### 12. Soporte Foil Virtual — Entidades Virtuales No En DB (Feb 2026)
+
+- **Problema**: Intentar buscar registros de cartas foil como entidades separadas en la DB fallaba.
+- **Lección**: Las cartas foil son **entradas virtuales** generadas por la Edge Function `tcg-api` cuando `prices.usd_foil IS NOT NULL`. No existen como filas separadas en `card_printings`. Nunca hacer migrations que asuman lo contrario.
+
+### 13. DFC (Double-Faced Cards) — Links y Flip de Imagen (Feb 2026)
+
+- **Problema**: Los links de CardKingdom para DFCs fallaban porque incluían el nombre de ambas caras (`//`). Las imágenes DFC no flippeaban.
+- **Lección**:
+  - **Links**: Usar solo `card_faces[0].name` (cara frontal) para búsquedas en CardKingdom.
+  - **Flip**: Detectar DFC por `card_faces?.length > 1`. Implementar toggle de imagen client-side.
+  - **Fallback Frontend**: Si `image_uris` es null, usar `card_faces[0].image_uris` como fallback.
+
+### 14. Precios: Siempre Parsear como Number (Feb 2026)
+
+- **Problema**: `toFixed()` crasheaba cuando el precio venía como string o null de la API.
+- **Lección**: Siempre convertir: `const price = Number(rawPrice)`. Verificar `isNaN(price)` antes de formatear. Mostrar `S/P` si null/undefined.

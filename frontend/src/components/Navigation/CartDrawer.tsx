@@ -13,6 +13,7 @@ interface CartItem {
         price: number;
         image_url: string;
         set_code: string;
+        stock?: number;
     }
 }
 
@@ -174,10 +175,12 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                                                 <button
                                                     onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}
                                                     data-testid="increase-quantity-button"
-                                                    className="w-7 h-7 bg-black/40 hover:bg-geeko-cyan/20 border border-white/5 
-                                                               hover:border-geeko-cyan/50 rounded-lg flex items-center justify-center 
-                                                               transition-all group/btn disabled:opacity-50 disabled:cursor-not-allowed"
-                                                    disabled={updating === item.id}
+                                                    title={item.quantity >= (item.products?.stock ?? 99) ? "Stock máximo alcanzado" : undefined}
+                                                    className={`w-7 h-7 bg-black/40 border border-white/5 rounded-lg flex items-center justify-center transition-all group/btn ${item.quantity >= (item.products?.stock ?? 99)
+                                                        ? 'opacity-50 cursor-not-allowed'
+                                                        : 'hover:bg-geeko-cyan/20 hover:border-geeko-cyan/50'
+                                                        }`}
+                                                    disabled={updating === item.id || item.quantity >= (item.products?.stock ?? 99)}
                                                 >
                                                     {updating === item.id ? (
                                                         <Loader2 size={14} className="text-neutral-400 animate-spin" />

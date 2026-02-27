@@ -1,0 +1,125 @@
+
+Running 5 tests using 4 workers
+
+[1A[2K[1/5] [setup] › tests\e2e\auth.setup.ts:7:1 › authenticate
+[1A[2K[2/5] [chromium] › tests\e2e\v4_features.spec.ts:44:5 › V4 Pending Features validation › should prevent adding more quantity than available stock in CartDrawer
+[1A[2K[3/5] [chromium] › tests\e2e\checkout.spec.ts:44:5 › Checkout Flow with Foil Cards › should search for Boomerang, add foil to cart and verify cart contents
+[1A[2K[4/5] [chromium] › tests\e2e\v4_features.spec.ts:100:5 › V4 Pending Features validation › should format WhatsApp message correctly on Checkout
+[1A[2K[5/5] [chromium] › tests\e2e\v4_features.spec.ts:197:5 › V4 Pending Features validation › should apply constraint classes to CardModal version list
+[1A[2K  1) [chromium] › tests\e2e\checkout.spec.ts:44:5 › Checkout Flow with Foil Cards › should search for Boomerang, add foil to cart and verify cart contents 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('[role="dialog"]')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for locator('[role="dialog"]')[22m
+
+
+      84 |         // Wait for modal to load
+      85 |         const modal = page.locator('[role="dialog"]');
+    > 86 |         await expect(modal).toBeVisible();
+         |                             ^
+      87 |
+      88 |         // 3. Select Foil (if it's not already foil, click the Foil button)
+      89 |         const foilButton = modal.getByRole('button', { name: 'FOIL', exact: true });
+        at C:\Users\carlo\OneDrive\Documents\Antigravity\TCG\frontend\tests\e2e\checkout.spec.ts:86:29
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\checkout-Checkout-Flow-wit-1d5d4-rt-and-verify-cart-contents-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\checkout-Checkout-Flow-wit-1d5d4-rt-and-verify-cart-contents-chromium\error-context.md
+
+
+[1A[2K  2) [chromium] › tests\e2e\v4_features.spec.ts:100:5 › V4 Pending Features validation › should format WhatsApp message correctly on Checkout 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('heading', { name: /Datos del Cliente/i })
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for getByRole('heading', { name: /Datos del Cliente/i })[22m
+
+
+      143 |         });
+      144 |
+    > 145 |         await expect(page.getByRole('heading', { name: /Datos del Cliente/i })).toBeVisible({ timeout: 10000 });
+          |                                                                                 ^
+      146 |
+      147 |         // Fill out checkout form
+      148 |         await page.getByLabel(/Nombre Completo/i).fill('Test User');
+        at C:\Users\carlo\OneDrive\Documents\Antigravity\TCG\frontend\tests\e2e\v4_features.spec.ts:145:81
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\v4_features-V4-Pending-Fea-74f15-ssage-correctly-on-Checkout-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\v4_features-V4-Pending-Fea-74f15-ssage-correctly-on-Checkout-chromium\error-context.md
+
+
+[1A[2K  3) [chromium] › tests\e2e\v4_features.spec.ts:44:5 › V4 Pending Features validation › should prevent adding more quantity than available stock in CartDrawer 
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('button').filter({ has: locator('svg.lucide-shopping-cart') }).first()[22m
+    [2m    - locator resolved to <button data-testid="cart-button" class="relative p-2.5 bg-neutral-900 border border-white/5 rounded-xl hover:bg-neutral-800 transition-all text-neutral-400 hover:text-geeko-cyan group">…</button>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="flex-1 h-auto md:h-[var(--modal-height,700px)] overflow-y-auto custom-scrollbar bg-[#050505] p-4 sm:p-6 md:p-8 pb-32 md:pb-40 space-y-4 md:space-y-6">…</div> from <div class="fixed inset-0 z-[200] flex items-end md:items-center justify-center bg-black/95 backdrop-blur-xl p-0 md:p-6 animate-in fade-in duration-300 overflow-hidden">…</div> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="flex-1 h-auto md:h-[var(--modal-height,700px)] overflow-y-auto custom-scrollbar bg-[#050505] p-4 sm:p-6 md:p-8 pb-32 md:pb-40 space-y-4 md:space-y-6">…</div> from <div class="fixed inset-0 z-[200] flex items-end md:items-center justify-center bg-black/95 backdrop-blur-xl p-0 md:p-6 animate-in fade-in duration-300 overflow-hidden">…</div> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 100ms[22m
+    [2m    53 × waiting for element to be visible, enabled and stable[22m
+    [2m       - element is visible, enabled and stable[22m
+    [2m       - scrolling into view if needed[22m
+    [2m       - done scrolling[22m
+    [2m       - <div class="flex-1 h-auto md:h-[var(--modal-height,700px)] overflow-y-auto custom-scrollbar bg-[#050505] p-4 sm:p-6 md:p-8 pb-32 md:pb-40 space-y-4 md:space-y-6">…</div> from <div class="fixed inset-0 z-[200] flex items-end md:items-center justify-center bg-black/95 backdrop-blur-xl p-0 md:p-6 animate-in fade-in duration-300 overflow-hidden">…</div> subtree intercepts pointer events[22m
+    [2m     - retrying click action[22m
+    [2m       - waiting 500ms[22m
+    [2m    - waiting for element to be visible, enabled and stable[22m
+
+
+      87 |         // Open cart drawer
+      88 |         const cartButton = page.locator('button').filter({ has: page.locator('svg.lucide-shopping-cart') }).first();
+    > 89 |         await cartButton.click();
+         |                          ^
+      90 |
+      91 |         // Wait for Cart Drawer
+      92 |         const cartDrawer = page.locator('[data-testid="cart-drawer"]').first();
+        at C:\Users\carlo\OneDrive\Documents\Antigravity\TCG\frontend\tests\e2e\v4_features.spec.ts:89:26
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\v4_features-V4-Pending-Fea-ecadf-ailable-stock-in-CartDrawer-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\v4_features-V4-Pending-Fea-ecadf-ailable-stock-in-CartDrawer-chromium\error-context.md
+
+
+[1A[2K  3 failed
+    [chromium] › tests\e2e\checkout.spec.ts:44:5 › Checkout Flow with Foil Cards › should search for Boomerang, add foil to cart and verify cart contents 
+    [chromium] › tests\e2e\v4_features.spec.ts:44:5 › V4 Pending Features validation › should prevent adding more quantity than available stock in CartDrawer 
+    [chromium] › tests\e2e\v4_features.spec.ts:100:5 › V4 Pending Features validation › should format WhatsApp message correctly on Checkout 
+  2 passed (1.1m)
+
+[36m  Serving HTML report at http://localhost:63871. Press Ctrl+C to quit.[39m
+^C

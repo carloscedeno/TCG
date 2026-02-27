@@ -458,23 +458,40 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
 
           const entries: any[] = [];
 
-          if (finishes.includes('nonfoil') || (hasNormalPrice && !finishes.includes('foil'))) {
+          const pushesNonFoil = finishes.includes('nonfoil') || (hasNormalPrice && !finishes.includes('foil'));
+          const pushesFoil = finishes.includes('foil') || hasFoilPrice;
+          const pushesEtched = finishes.includes('etched') || hasEtchedPrice;
+
+          const baseIsFoil = !!v.is_foil || v.finish === 'foil';
+
+          if (pushesNonFoil) {
+            const isSynthetic = baseIsFoil && (pushesFoil || pushesEtched);
             entries.push({
               ...baseEntry,
+              printing_id: isSynthetic ? `${v.printing_id}-nonfoil` : v.printing_id,
               finish: 'nonfoil',
               is_foil: false
             });
           }
 
-          if (finishes.includes('foil') || hasFoilPrice) {
-            // Use synthetic ID if this printing record was primarily non-foil in the DB
-            // But if it was originally marked is_foil=true, it might be the "real" printing_id
-            const useSyntheticId = !v.is_foil && hasFoilPrice;
+          if (pushesFoil) {
+            const isSynthetic = !baseIsFoil && (pushesNonFoil || pushesEtched);
             entries.push({
               ...baseEntry,
-              printing_id: useSyntheticId ? `${v.printing_id}-foil` : v.printing_id,
+              printing_id: isSynthetic ? `${v.printing_id}-foil` : v.printing_id,
               price: foilPrice || displayPrice,
               finish: 'foil',
+              is_foil: true
+            });
+          }
+
+          if (pushesEtched) {
+            const isSynthetic = v.finish !== 'etched' && (pushesNonFoil || pushesFoil);
+            entries.push({
+              ...baseEntry,
+              printing_id: isSynthetic ? `${v.printing_id}-etched` : v.printing_id,
+              price: parseFloat(v.prices?.usd_etched || '0') || marketPrice,
+              finish: 'etched',
               is_foil: true
             });
           }

@@ -1,88 +1,70 @@
-# AGENTS - Project Context & Rules
+# AGENTS — Geekorium Project Context & Rules
 
-This folder contains the modular rules architecture for the project. These rules ensure consistency and high-quality output when working on different parts of the system.
+Este directorio contiene las reglas de arquitectura modular del proyecto. Garantizan consistencia y alta calidad en el output de todos los agentes que trabajan en el sistema.
 
-## 🎯 Primary Objective
+## 🎯 Objetivo Principal
 
-Deliver a premium TCG Price Aggregator with a world-class user experience, robust backend data, and ethical scraping practices.
+Geekorium es un **marketplace TCG de venta asistida** para coleccionistas. El objetivo técnico es reducir la fricción entre la selección del producto y la comunicación con el Geeko-Asesor, manteniendo integridad de datos y una UX premium mobile-first.
 
-## 📂 Reference Rules
+## 🏗️ Stack Actual (Feb 2026)
 
-Load these rules as needed for specific tasks:
+| Capa | Tecnología |
+|---|---|
+| Frontend | React 18 + TypeScript + Tailwind CSS |
+| Backend | Supabase Edge Functions (Deno/TypeScript) |
+| Base de Datos | Supabase PostgreSQL |
+| Auth | Supabase Auth |
+| Storage | Supabase Storage (payment-proofs) |
+| Deploy | GitHub Pages (frontend) + Supabase (backend) |
+| Scripts Admin | Python 3.12 + scripts/ |
 
-1. **[Core Methodology](reference/methodology.md)**: PRD-first, modular rules, and context resets.
-2. **[Frontend Standards](reference/frontend.md)**: React, Tailwind, UI/UX premium aesthetics.
-3. **[Backend & API](reference/api.md)**: FastAPI, Pydantic models, and business logic.
-4. **[Scraper & Data](reference/scrapers.md)**: Anti-bot, data quality, and variant detection.
-5. **[Documentation](reference/documentation.md)**: Managing the PRD, PLAN, and docs folders.
-6. **[Lessons Learned](lessons_learned.md)**: Technical debt, bug fixes, and optimization history.
+## 📂 Documentación de Referencia
 
-## 🛠️ Workflows
+Cargar según la tarea específica:
 
-Use the following commands to automate tasks:
+1. **[PRD Master](../docs/PRD_MASTER.md)** — Fuente de verdad. Estado actual + features pendientes.
+2. **[Core Methodology](reference/methodology.md)** — PRD-first, reglas modulares, context resets.
+3. **[Frontend Standards](reference/frontend.md)** — React, Tailwind, aesthetics premium.
+4. **[Backend & API](reference/api.md)** — Supabase Edge Functions, modelos, business logic.
+5. **[Scraper & Data](reference/scrapers.md)** — Calidad de datos, detección de variantes.
+6. **[Documentation](reference/documentation.md)** — Gestión del PRD y docs/.
+7. **[Lessons Learned](lessons_learned.md)** — Bugs críticos, soluciones, anti-patrones.
 
-- `/review`: Analyze current code quality.
-- `/test`: Run full test suite.
-- `/plan`: Update the `PLAN.md` file.
-- `/nightly-sync`: Execute autonomous optimization sessions
-- `/import`: Implement and verify bulk import features
+## 🛠️ Workflows Disponibles
 
-## 📊 Latest Session Summary (2026-02-05)
+- `/import` — Implementar y verificar el Bulk Import feature
+- `/nightly-sync` — Ejecución autónoma del framework Strata
 
-### Performance Optimization - Phases 1 & 2 Completed
+## ✅ Features Implementadas (Feb 2026)
 
-**Objective**: Execute PRD_PERFORMANCE.md to achieve 50%+ performance improvement
+- Catálogo completo con filtros (juego, rareza, color, tipo, set)
+- CardModal: versiones, precios dinámicos, foil toggle, DFC flip
+- CarKingdom links (DFC: solo nombre de cara frontal)
+- Carrito con persistencia localStorage
+- Checkout: datos + comprobante + WhatsApp handshake
+- Admin panel: órdenes, gestión de inventario, QuickStock panel
+- Bulk import ManaBox TXT/CSV con reporte de errores
+- Símbolos de maná (mana-font)
+- Auth completo (login/logout/session)
+- Precios de mercado via Scryfall sync
+- Soporte foil virtual (detectado por `prices.usd_foil`)
 
-**Phase 1: Quick Wins ✅ COMPLETED**
+## 🚧 Features Pendientes
 
-- Database: 9 strategic indexes deployed to production
-  - pg_trgm extension for fuzzy search
-  - Card name GIN index (ILIKE optimization)
-  - Game, rarity, composite indexes
-  - Join optimization indexes
-  - **Impact**: 40-60% query improvement
-  
-- Frontend: React.memo + async image decoding
-  - Card component memoization with custom comparison
-  - Async image decoding for better loading
-  - Search debounce reduced 500ms → 300ms
-  - **Impact**: 40-50% re-render reduction
+- Swipe-down cierre modal en móvil
+- Stale-While-Revalidate para Scryfall
+- Virtualización del grid (performance)
+- Dashboard "cartas más buscadas sin stock" (admin)
+- Tests unitarios parser ManaBox
 
-**Phase 2: Backend Optimization ✅ COMPLETED**
+## ⚠️ Reglas Críticas del Sistema
 
-- Created `get_unique_cards_optimized()` SQL function
-- Eliminated 3x data fetch (was fetching 150 rows to return 50)
-- Server-side deduplication using DISTINCT ON
-- Proper UUID type handling and TEXT casting
-- **Impact**: 60-70% additional query improvement
-- **Status**: Database function deployed ✅, Edge Function pending
-
-**Current Performance Gains**:
-
-- Database queries: ~60% faster (1-2s → ~0.6s)
-- Card re-renders: ~50% reduction
-- Search responsiveness: 40% faster (500ms → 300ms)
-- **Overall**: ~50% system-wide improvement
-
-**Next Steps**:
-
-- Phase 3: Frontend Advanced (grid virtualization, responsive images)
-- Deploy Edge Function (currently timeout issue)
-- Monitor production performance metrics
-
-**Files Modified**:
-
-- `supabase/migrations/20260205_performance_indexes.sql`
-- `supabase/migrations/20260205_optimized_card_query.sql`
-- `supabase/functions/tcg-api/index.ts`
-- `frontend/src/components/Card/Card.tsx`
-- `frontend/src/pages/Home.tsx`
-
-**Documentation**:
-
-- `SESION_AUTONOMA_PERFORMANCE_2026_02_05.md`
-- `SESION_COMPLETADA.md`
-- `DEPLOYMENT_SUMMARY.md`
+1. **CardModal**: Nunca filtrar `all_versions` al cambiar printing — preservar en estado.
+2. **Precios**: Centralizados en Edge Function `tcg-api`. Nunca calcular en cliente.
+3. **Build check**: `npm run build` antes de cualquier push a `frontend/src/`.
+4. **Sin `any` implícito** en `map`/`filter`/`forEach` — rompe el pipeline de CI/CD.
+5. **Foil virtual**: No son registros separados en DB. Se detectan por `prices.usd_foil IS NOT NULL`.
+6. **Consultar `lessons_learned.md`** antes de tocar lógica de DB, filtros, o CardModal.
 
 ---
-*Source: TOP 1% AGENTIC ENGINEER Methodology*
+*Geekorium — Geeko-Engineering Division | Limpieza: 2026-02-26*

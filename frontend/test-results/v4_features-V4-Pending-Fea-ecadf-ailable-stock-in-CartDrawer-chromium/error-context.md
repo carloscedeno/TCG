@@ -1,0 +1,1133 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e4]:
+    - banner [ref=e5]:
+      - navigation [ref=e6]:
+        - link "Logo Geekorium El Emporio" [ref=e8] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e9]:
+            - img "Logo" [ref=e10]
+            - generic [ref=e11]: Geekorium
+            - generic [ref=e12]: El Emporio
+        - search [ref=e14]:
+          - generic:
+            - img
+          - textbox "Buscar por nombre de carta o edición..." [ref=e15]
+        - generic [ref=e16]:
+          - link "Ayuda" [ref=e17] [cursor=pointer]:
+            - /url: /help
+            - generic [ref=e18]: Ayuda
+            - img [ref=e20]
+          - generic [ref=e23]:
+            - link "Instagram" [ref=e24] [cursor=pointer]:
+              - /url: https://instagram.com/geekorium/
+              - img [ref=e25]
+            - link "TikTok" [ref=e28] [cursor=pointer]:
+              - /url: https://www.tiktok.com/@geekorium
+              - img [ref=e29]
+            - link "Discord" [ref=e31] [cursor=pointer]:
+              - /url: https://discord.gg/wmYhWw5Q
+              - img [ref=e32]
+          - button "1" [ref=e36]:
+            - img [ref=e37]
+            - generic [ref=e41]: "1"
+          - button "Avatar test Admin" [ref=e43]:
+            - img "Avatar" [ref=e44]
+            - generic [ref=e45]:
+              - generic [ref=e46]: test
+              - generic [ref=e47]: Admin
+            - img [ref=e48]
+    - generic [ref=e51]:
+      - generic [ref=e52]:
+        - generic [ref=e53]:
+          - button "Icon Stock Geekorium" [ref=e54]:
+            - img "Icon" [ref=e55]
+            - text: Stock Geekorium
+          - button "Icon Archivo" [ref=e56]:
+            - img "Icon" [ref=e57]
+            - text: Archivo
+        - generic [ref=e58]:
+          - button "Todas" [ref=e59]
+          - button "Mítica" [ref=e60]
+          - button "Rara" [ref=e61]
+          - button "Infrecuente" [ref=e62]
+          - button "Común" [ref=e63]
+      - generic [ref=e64]:
+        - generic [ref=e65]:
+          - generic [ref=e66]: "Ordenar:"
+          - generic [ref=e67]:
+            - button "Nombre ⇅" [ref=e68]
+            - button "Precio ⇅" [ref=e69]
+            - button "Fecha ↓" [ref=e70]
+        - generic [ref=e71]:
+          - button "Grid View" [ref=e72]:
+            - img [ref=e73]
+          - button "List View" [ref=e78]:
+            - img [ref=e79]
+    - main [ref=e80]:
+      - generic [ref=e81]:
+        - complementary [ref=e82]:
+          - complementary [ref=e84]:
+            - generic [ref=e85]:
+              - heading "FILTROS" [level=2] [ref=e86]:
+                - img [ref=e87]
+                - text: FILTROS
+              - button "Reiniciar" [ref=e88]:
+                - img [ref=e89]
+                - text: Reiniciar
+            - generic [ref=e92]:
+              - heading "Universo de Juegos" [level=3] [ref=e93]: Universo de Juegos
+              - 'button "Magic: The Gathering" [ref=e96]'
+            - generic [ref=e97]:
+              - heading "Expansión / Set" [level=3] [ref=e98]: Expansión / Set
+              - generic [ref=e100]:
+                - img [ref=e101]
+                - textbox "Buscar sets..." [ref=e104]
+              - generic [ref=e105]:
+                - button "Marvel Super Heroes" [ref=e106]:
+                  - generic [ref=e107]: Marvel Super Heroes
+                - button "Marvel Super Heroes Commander" [ref=e108]:
+                  - generic [ref=e109]: Marvel Super Heroes Commander
+                - button "Through the Omenpaths 2" [ref=e110]:
+                  - generic [ref=e111]: Through the Omenpaths 2
+                - button "Secrets of Strixhaven" [ref=e112]:
+                  - generic [ref=e113]: Secrets of Strixhaven
+                - button "Secrets of Strixhaven Commander" [ref=e114]:
+                  - generic [ref=e115]: Secrets of Strixhaven Commander
+                - button "Secrets of Strixhaven Mystical Archive" [ref=e116]:
+                  - generic [ref=e117]: Secrets of Strixhaven Mystical Archive
+                - button "Teenage Mutant Ninja Turtles" [ref=e118]:
+                  - generic [ref=e119]: Teenage Mutant Ninja Turtles
+                - button "Teenage Mutant Ninja Turtles Source Material" [ref=e120]:
+                  - generic [ref=e121]: Teenage Mutant Ninja Turtles Source Material
+                - button "Teenage Mutant Ninja Turtles Eternal" [ref=e122]:
+                  - generic [ref=e123]: Teenage Mutant Ninja Turtles Eternal
+                - button "Year of the Horse 2026" [ref=e124]:
+                  - generic [ref=e125]: Year of the Horse 2026
+                - 'button "Alchemy: Lorwyn Eclipsed" [ref=e126]':
+                  - generic [ref=e127]: "Alchemy: Lorwyn Eclipsed"
+                - button "Lorwyn Eclipsed" [ref=e128]:
+                  - generic [ref=e129]: Lorwyn Eclipsed
+                - button "Lorwyn Eclipsed Promos" [ref=e130]:
+                  - generic [ref=e131]: Lorwyn Eclipsed Promos
+                - button "Lorwyn Eclipsed Commander" [ref=e132]:
+                  - generic [ref=e133]: Lorwyn Eclipsed Commander
+                - button "Wizards Play Network 2026" [ref=e134]:
+                  - generic [ref=e135]: Wizards Play Network 2026
+                - button "MagicFest 2026" [ref=e136]:
+                  - generic [ref=e137]: MagicFest 2026
+                - 'button "Avatar: The Last Airbender" [ref=e138]':
+                  - generic [ref=e139]: "Avatar: The Last Airbender"
+                - 'button "Avatar: The Last Airbender Promos" [ref=e140]':
+                  - generic [ref=e141]: "Avatar: The Last Airbender Promos"
+                - 'button "Avatar: The Last Airbender Eternal" [ref=e142]':
+                  - generic [ref=e143]: "Avatar: The Last Airbender Eternal"
+                - button "Marvel Legends Series Inserts" [ref=e144]:
+                  - generic [ref=e145]: Marvel Legends Series Inserts
+                - button "Marvel's Spider-Man" [ref=e146]:
+                  - generic [ref=e147]: Marvel's Spider-Man
+                - button "Marvel Universe" [ref=e148]:
+                  - generic [ref=e149]: Marvel Universe
+                - button "Marvel's Spider-Man Eternal" [ref=e150]:
+                  - generic [ref=e151]: Marvel's Spider-Man Eternal
+                - button "Marvel's Spider-Man Art Series" [ref=e152]:
+                  - generic [ref=e153]: Marvel's Spider-Man Art Series
+                - button "Marvel's Spider-Man Promos" [ref=e154]:
+                  - generic [ref=e155]: Marvel's Spider-Man Promos
+                - button "Arena Anthology 4" [ref=e156]:
+                  - generic [ref=e157]: Arena Anthology 4
+                - button "Arena Anthology 3" [ref=e158]:
+                  - generic [ref=e159]: Arena Anthology 3
+                - button "Through the Omenpaths Bonus Sheet" [ref=e160]:
+                  - generic [ref=e161]: Through the Omenpaths Bonus Sheet
+                - button "Through the Omenpaths" [ref=e162]:
+                  - generic [ref=e163]: Through the Omenpaths
+                - button "2023 Heroes of the Realm" [ref=e164]:
+                  - generic [ref=e165]: 2023 Heroes of the Realm
+                - button "Arena Anthology 2" [ref=e166]:
+                  - generic [ref=e167]: Arena Anthology 2
+                - button "Arena Anthology 1" [ref=e168]:
+                  - generic [ref=e169]: Arena Anthology 1
+                - 'button "Alchemy: Edge of Eternities" [ref=e170]':
+                  - generic [ref=e171]: "Alchemy: Edge of Eternities"
+                - button "Edge of Eternities" [ref=e172]:
+                  - generic [ref=e173]: Edge of Eternities
+                - button "Edge of Eternities Promos" [ref=e174]:
+                  - generic [ref=e175]: Edge of Eternities Promos
+                - button "Edge of Eternities Commander" [ref=e176]:
+                  - generic [ref=e177]: Edge of Eternities Commander
+                - 'button "Edge of Eternities: Stellar Sights" [ref=e178]':
+                  - generic [ref=e179]: "Edge of Eternities: Stellar Sights"
+                - button "The Big Score Promos" [ref=e180]:
+                  - generic [ref=e181]: The Big Score Promos
+                - button "Final Fantasy" [ref=e182]:
+                  - generic [ref=e183]: Final Fantasy
+                - button "Final Fantasy Regional Promos" [ref=e184]:
+                  - generic [ref=e185]: Final Fantasy Regional Promos
+                - 'button "Final Fantasy: Through the Ages" [ref=e186]':
+                  - generic [ref=e187]: "Final Fantasy: Through the Ages"
+                - button "Final Fantasy Commander" [ref=e188]:
+                  - generic [ref=e189]: Final Fantasy Commander
+                - button "Final Fantasy Promos" [ref=e190]:
+                  - generic [ref=e191]: Final Fantasy Promos
+                - button "FIN Standard Showdown" [ref=e192]:
+                  - generic [ref=e193]: FIN Standard Showdown
+                - button "Pioneer Anthology 1" [ref=e194]:
+                  - generic [ref=e195]: Pioneer Anthology 1
+                - 'button "Alchemy: Tarkir" [ref=e196]':
+                  - generic [ref=e197]: "Alchemy: Tarkir"
+                - 'button "Tarkir: Dragonstorm" [ref=e198]':
+                  - generic [ref=e199]: "Tarkir: Dragonstorm"
+                - 'button "Tarkir: Dragonstorm Promos" [ref=e200]':
+                  - generic [ref=e201]: "Tarkir: Dragonstorm Promos"
+                - 'button "Tarkir: Dragonstorm Commander" [ref=e202]':
+                  - generic [ref=e203]: "Tarkir: Dragonstorm Commander"
+                - button "Love Your LGS 2025" [ref=e204]:
+                  - generic [ref=e205]: Love Your LGS 2025
+            - generic [ref=e206]:
+              - heading "Rareza" [level=3] [ref=e207]: Rareza
+              - generic [ref=e209]:
+                - button "Común" [ref=e210]:
+                  - generic [ref=e212]: Común
+                - button "Infrecuente" [ref=e213]:
+                  - generic [ref=e215]: Infrecuente
+                - button "Rara" [ref=e216]:
+                  - generic [ref=e218]: Rara
+                - button "Mítica" [ref=e219]:
+                  - generic [ref=e221]: Mítica
+            - generic [ref=e222]:
+              - heading "Esencia de Mana (Colores)" [level=3] [ref=e223]: Esencia de Mana (Colores)
+              - generic [ref=e225]:
+                - button "Blanco" [ref=e226]
+                - button "Azul" [ref=e228]
+                - button "Negro" [ref=e230]
+                - button "Rojo" [ref=e232]
+                - button "Verde" [ref=e234]
+                - button "Incoloro" [ref=e236]
+                - button "Multicolor" [ref=e238]
+            - generic [ref=e240]:
+              - heading "Órbita Temporal (Año)" [level=3] [ref=e241]: Órbita Temporal (Año)
+              - generic [ref=e243]:
+                - spinbutton [ref=e244]
+                - generic [ref=e245]: →
+                - spinbutton [ref=e246]
+              - generic [ref=e247]:
+                - generic [ref=e248]: Orígenes (1993)
+                - generic [ref=e249]: Presente (2026)
+            - generic [ref=e250]:
+              - heading "Esencia de Carta (Tipo)" [level=3] [ref=e251]: Esencia de Carta (Tipo)
+              - generic [ref=e253]:
+                - button "Criatura" [ref=e254]
+                - button "Instantáneo" [ref=e255]
+                - button "Conjuro" [ref=e256]
+                - button "Encantamiento" [ref=e257]
+                - button "Artefacto" [ref=e258]
+                - button "Planeswalker" [ref=e259]
+                - button "Tierra" [ref=e260]
+            - generic [ref=e262]:
+              - paragraph [ref=e264]: Sincronización en tiempo real activa vía Neural Link con mercados globales.
+              - generic [ref=e265]:
+                - img [ref=e266]
+                - text: "Sincro Cuántica: ON"
+        - generic [ref=e269]:
+          - generic [ref=e270]:
+            - generic [ref=e271]: "Activo:"
+            - 'button "Magic: The Gathering" [ref=e272]':
+              - text: "Magic: The Gathering"
+              - img [ref=e273]
+            - button "Limpiar Todo" [ref=e276]
+          - generic [ref=e278]:
+            - 'link "Imagen No Disponible DISP: 5 Hallowed Fountain rna Mercado $88.00" [ref=e279] [cursor=pointer]':
+              - /url: card/f97a6d34-03ab-49f1-b02e-405b733f8843
+              - generic [ref=e280]:
+                - generic [ref=e281]:
+                  - img [ref=e282]
+                  - generic [ref=e284]: Imagen No Disponible
+                - generic [ref=e285]: "DISP: 5"
+              - generic [ref=e286]:
+                - heading "Hallowed Fountain" [level=3] [ref=e287]
+                - generic "rna" [ref=e289]
+                - generic [ref=e290]:
+                  - generic [ref=e291]:
+                    - generic [ref=e292]: Mercado
+                    - generic [ref=e294]: $88.00
+                  - button "Agregar al Carrito Rápido" [ref=e295]:
+                    - img [ref=e296]
+            - 'link "Hydrosurge DISP: 2 common Hydrosurge m15 Mercado $0.35" [ref=e300] [cursor=pointer]':
+              - /url: card/1fd4dacb-912e-4e54-ab60-16a5262d0fbb
+              - generic [ref=e301]:
+                - img "Hydrosurge" [ref=e302]
+                - generic [ref=e303]: "DISP: 2"
+                - generic [ref=e304]: common
+              - generic [ref=e305]:
+                - heading "Hydrosurge" [level=3] [ref=e306]
+                - generic "m15" [ref=e308]
+                - generic [ref=e309]:
+                  - generic [ref=e310]:
+                    - generic [ref=e311]: Mercado
+                    - generic [ref=e313]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e314]:
+                    - img [ref=e315]
+            - 'link "Clockspinning DISP: 1 common Clockspinning tsp Mercado $0.99" [ref=e319] [cursor=pointer]':
+              - /url: card/1323d548-e2fe-47c5-8df3-f181aed537c5
+              - generic [ref=e320]:
+                - img "Clockspinning" [ref=e321]
+                - generic [ref=e322]: "DISP: 1"
+                - generic [ref=e323]: common
+              - generic [ref=e324]:
+                - heading "Clockspinning" [level=3] [ref=e325]
+                - generic "tsp" [ref=e327]
+                - generic [ref=e328]:
+                  - generic [ref=e329]:
+                    - generic [ref=e330]: Mercado
+                    - generic [ref=e332]: $0.99
+                  - button "Agregar al Carrito Rápido" [ref=e333]:
+                    - img [ref=e334]
+            - 'link "Retraction Helix DISP: 1 common Retraction Helix bng Mercado $0.35" [ref=e338] [cursor=pointer]':
+              - /url: card/4fe8c0b9-fdf4-4fc0-aa7c-774546cdd792
+              - generic [ref=e339]:
+                - img "Retraction Helix" [ref=e340]
+                - generic [ref=e341]: "DISP: 1"
+                - generic [ref=e342]: common
+              - generic [ref=e343]:
+                - heading "Retraction Helix" [level=3] [ref=e344]
+                - generic "bng" [ref=e346]
+                - generic [ref=e347]:
+                  - generic [ref=e348]:
+                    - generic [ref=e349]: Mercado
+                    - generic [ref=e351]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e352]:
+                    - img [ref=e353]
+            - 'link "Broken Ambitions DISP: 2 common Broken Ambitions lrw Mercado $0.35" [ref=e357] [cursor=pointer]':
+              - /url: card/8052d90b-bc49-4a9e-9211-159a54aa2bcd
+              - generic [ref=e358]:
+                - img "Broken Ambitions" [ref=e359]
+                - generic [ref=e360]: "DISP: 2"
+                - generic [ref=e361]: common
+              - generic [ref=e362]:
+                - heading "Broken Ambitions" [level=3] [ref=e363]
+                - generic "lrw" [ref=e365]
+                - generic [ref=e366]:
+                  - generic [ref=e367]:
+                    - generic [ref=e368]: Mercado
+                    - generic [ref=e370]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e371]:
+                    - img [ref=e372]
+            - 'link "Ray of Erasure DISP: 1 common Ray of Erasure ice Mercado $0.35" [ref=e376] [cursor=pointer]':
+              - /url: card/5a09fc0b-7b9c-4283-8336-f2607f5ffaf5
+              - generic [ref=e377]:
+                - img "Ray of Erasure" [ref=e378]
+                - generic [ref=e379]: "DISP: 1"
+                - generic [ref=e380]: common
+              - generic [ref=e381]:
+                - heading "Ray of Erasure" [level=3] [ref=e382]
+                - generic "ice" [ref=e384]
+                - generic [ref=e385]:
+                  - generic [ref=e386]:
+                    - generic [ref=e387]: Mercado
+                    - generic [ref=e389]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e390]:
+                    - img [ref=e391]
+            - 'link "Reach Through Mists DISP: 1 common Reach Through Mists dds Mercado $0.35" [ref=e395] [cursor=pointer]':
+              - /url: card/0b6d5d29-4f38-4229-ac50-c4fa97fcc536
+              - generic [ref=e396]:
+                - img "Reach Through Mists" [ref=e397]
+                - generic [ref=e398]: "DISP: 1"
+                - generic [ref=e399]: common
+              - generic [ref=e400]:
+                - heading "Reach Through Mists" [level=3] [ref=e401]
+                - generic "dds" [ref=e403]
+                - generic [ref=e404]:
+                  - generic [ref=e405]:
+                    - generic [ref=e406]: Mercado
+                    - generic [ref=e408]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e409]:
+                    - img [ref=e410]
+            - 'link "Gift of Tusks DISP: 1 uncommon Gift of Tusks ogw Mercado $0.35" [ref=e414] [cursor=pointer]':
+              - /url: card/3821122c-c495-42b0-b8f6-3f469967f16d
+              - generic [ref=e415]:
+                - img "Gift of Tusks" [ref=e416]
+                - generic [ref=e417]: "DISP: 1"
+                - generic [ref=e418]: uncommon
+              - generic [ref=e419]:
+                - heading "Gift of Tusks" [level=3] [ref=e420]
+                - generic "ogw" [ref=e422]
+                - generic [ref=e423]:
+                  - generic [ref=e424]:
+                    - generic [ref=e425]: Mercado
+                    - generic [ref=e427]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e428]:
+                    - img [ref=e429]
+            - 'link "Take into Custody DISP: 2 common Take into Custody aer Mercado $0.35" [ref=e433] [cursor=pointer]':
+              - /url: card/b412718a-7bc7-4b16-af60-1b955c820b0f
+              - generic [ref=e434]:
+                - img "Take into Custody" [ref=e435]
+                - generic [ref=e436]: "DISP: 2"
+                - generic [ref=e437]: common
+              - generic [ref=e438]:
+                - heading "Take into Custody" [level=3] [ref=e439]
+                - generic "aer" [ref=e441]
+                - generic [ref=e442]:
+                  - generic [ref=e443]:
+                    - generic [ref=e444]: Mercado
+                    - generic [ref=e446]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e447]:
+                    - img [ref=e448]
+            - 'link "Spell Blast DISP: 1 uncommon Spell Blast m14 Mercado $0.35" [ref=e452] [cursor=pointer]':
+              - /url: card/42d7af6a-bfd1-4e89-965a-68336507a9ee
+              - generic [ref=e453]:
+                - img "Spell Blast" [ref=e454]
+                - generic [ref=e455]: "DISP: 1"
+                - generic [ref=e456]: uncommon
+              - generic [ref=e457]:
+                - heading "Spell Blast" [level=3] [ref=e458]
+                - generic "m14" [ref=e460]
+                - generic [ref=e461]:
+                  - generic [ref=e462]:
+                    - generic [ref=e463]: Mercado
+                    - generic [ref=e465]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e466]:
+                    - img [ref=e467]
+            - 'link "Flight DISP: 1 common Flight m12 Mercado $0.35" [ref=e471] [cursor=pointer]':
+              - /url: card/15316953-dcb2-4428-b90a-c90d3d4c45f3
+              - generic [ref=e472]:
+                - img "Flight" [ref=e473]
+                - generic [ref=e474]: "DISP: 1"
+                - generic [ref=e475]: common
+              - generic [ref=e476]:
+                - heading "Flight" [level=3] [ref=e477]
+                - generic "m12" [ref=e479]
+                - generic [ref=e480]:
+                  - generic [ref=e481]:
+                    - generic [ref=e482]: Mercado
+                    - generic [ref=e484]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e485]:
+                    - img [ref=e486]
+            - 'link "Opt DISP: 1 common Opt inv Mercado $1.79" [ref=e490] [cursor=pointer]':
+              - /url: card/958262ec-8e52-40cf-a9fd-a60e42643e15
+              - generic [ref=e491]:
+                - img "Opt" [ref=e492]
+                - generic [ref=e493]: "DISP: 1"
+                - generic [ref=e494]: common
+              - generic [ref=e495]:
+                - heading "Opt" [level=3] [ref=e496]
+                - generic "inv" [ref=e498]
+                - generic [ref=e499]:
+                  - generic [ref=e500]:
+                    - generic [ref=e501]: Mercado
+                    - generic [ref=e503]: $1.79
+                  - button "Agregar al Carrito Rápido" [ref=e504]:
+                    - img [ref=e505]
+            - 'link "Sisay''s Ingenuity DISP: 1 common Sisay''s Ingenuity pls Mercado $0.35" [ref=e509] [cursor=pointer]':
+              - /url: card/bbe20cc1-621a-4813-9bbb-ace006e173ff
+              - generic [ref=e510]:
+                - img "Sisay's Ingenuity" [ref=e511]
+                - generic [ref=e512]: "DISP: 1"
+                - generic [ref=e513]: common
+              - generic [ref=e514]:
+                - heading "Sisay's Ingenuity" [level=3] [ref=e515]
+                - generic "pls" [ref=e517]
+                - generic [ref=e518]:
+                  - generic [ref=e519]:
+                    - generic [ref=e520]: Mercado
+                    - generic [ref=e522]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e523]:
+                    - img [ref=e524]
+            - 'link "Tune the Narrative DISP: 6 common Tune the Narrative mh3 Mercado $0.35" [ref=e528] [cursor=pointer]':
+              - /url: card/40b13321-98f1-4e8c-802d-65498e43ec24
+              - generic [ref=e529]:
+                - img "Tune the Narrative" [ref=e530]
+                - generic [ref=e531]: "DISP: 6"
+                - generic [ref=e532]: common
+              - generic [ref=e533]:
+                - heading "Tune the Narrative" [level=3] [ref=e534]
+                - generic "mh3" [ref=e536]
+                - generic [ref=e537]:
+                  - generic [ref=e538]:
+                    - generic [ref=e539]: Mercado
+                    - generic [ref=e541]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e542]:
+                    - img [ref=e543]
+            - 'link "Wingspan Stride DISP: 5 common Wingspan Stride tdm Mercado $0.35" [ref=e547] [cursor=pointer]':
+              - /url: card/339a0e24-c332-4558-bb60-f5504ddde88c
+              - generic [ref=e548]:
+                - img "Wingspan Stride" [ref=e549]
+                - generic [ref=e550]: "DISP: 5"
+                - generic [ref=e551]: common
+              - generic [ref=e552]:
+                - heading "Wingspan Stride" [level=3] [ref=e553]
+                - generic "tdm" [ref=e555]
+                - generic [ref=e556]:
+                  - generic [ref=e557]:
+                    - generic [ref=e558]: Mercado
+                    - generic [ref=e560]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e561]:
+                    - img [ref=e562]
+            - 'link "Repeal DISP: 1 common Repeal rvr Mercado $0.35" [ref=e566] [cursor=pointer]':
+              - /url: card/80bfcba4-316a-44e5-8ed0-2cf94cbbfe49
+              - generic [ref=e567]:
+                - img "Repeal" [ref=e568]
+                - generic [ref=e569]: "DISP: 1"
+                - generic [ref=e570]: common
+              - generic [ref=e571]:
+                - heading "Repeal" [level=3] [ref=e572]
+                - generic "rvr" [ref=e574]
+                - generic [ref=e575]:
+                  - generic [ref=e576]:
+                    - generic [ref=e577]: Mercado
+                    - generic [ref=e579]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e580]:
+                    - img [ref=e581]
+            - 'link "So Tiny DISP: 1 common So Tiny eld Mercado $0.35" [ref=e585] [cursor=pointer]':
+              - /url: card/421650f2-1b34-4a36-9675-9424997c9d0b
+              - generic [ref=e586]:
+                - img "So Tiny" [ref=e587]
+                - generic [ref=e588]: "DISP: 1"
+                - generic [ref=e589]: common
+              - generic [ref=e590]:
+                - heading "So Tiny" [level=3] [ref=e591]
+                - generic "eld" [ref=e593]
+                - generic [ref=e594]:
+                  - generic [ref=e595]:
+                    - generic [ref=e596]: Mercado
+                    - generic [ref=e598]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e599]:
+                    - img [ref=e600]
+            - 'link "Unexplained Disappearance DISP: 1 common Unexplained Disappearance grn Mercado $0.35" [ref=e604] [cursor=pointer]':
+              - /url: card/9c99b239-50d2-4393-80ec-94dbfaa6ae70
+              - generic [ref=e605]:
+                - img "Unexplained Disappearance" [ref=e606]
+                - generic [ref=e607]: "DISP: 1"
+                - generic [ref=e608]: common
+              - generic [ref=e609]:
+                - heading "Unexplained Disappearance" [level=3] [ref=e610]
+                - generic "grn" [ref=e612]
+                - generic [ref=e613]:
+                  - generic [ref=e614]:
+                    - generic [ref=e615]: Mercado
+                    - generic [ref=e617]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e618]:
+                    - img [ref=e619]
+            - 'link "Mind Harness DISP: 1 uncommon Mind Harness mir Mercado $0.35" [ref=e623] [cursor=pointer]':
+              - /url: card/5bf17780-801d-4ab8-91f4-a803ede51395
+              - generic [ref=e624]:
+                - img "Mind Harness" [ref=e625]
+                - generic [ref=e626]: "DISP: 1"
+                - generic [ref=e627]: uncommon
+              - generic [ref=e628]:
+                - heading "Mind Harness" [level=3] [ref=e629]
+                - generic "mir" [ref=e631]
+                - generic [ref=e632]:
+                  - generic [ref=e633]:
+                    - generic [ref=e634]: Mercado
+                    - generic [ref=e636]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e637]:
+                    - img [ref=e638]
+            - 'link "Spell Rupture DISP: 1 common Spell Rupture gtc Mercado $0.35" [ref=e642] [cursor=pointer]':
+              - /url: card/7267fcec-0879-4743-a45f-35057ccb2596
+              - generic [ref=e643]:
+                - img "Spell Rupture" [ref=e644]
+                - generic [ref=e645]: "DISP: 1"
+                - generic [ref=e646]: common
+              - generic [ref=e647]:
+                - heading "Spell Rupture" [level=3] [ref=e648]
+                - generic "gtc" [ref=e650]
+                - generic [ref=e651]:
+                  - generic [ref=e652]:
+                    - generic [ref=e653]: Mercado
+                    - generic [ref=e655]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e656]:
+                    - img [ref=e657]
+            - 'link "Stay Hidden, Stay Silent DISP: 1 uncommon Stay Hidden, Stay Silent dsk Mercado $0.35" [ref=e661] [cursor=pointer]':
+              - /url: card/b661ffe7-4f58-43fe-a1f1-dd7a6d4d28a7
+              - generic [ref=e662]:
+                - img "Stay Hidden, Stay Silent" [ref=e663]
+                - generic [ref=e664]: "DISP: 1"
+                - generic [ref=e665]: uncommon
+              - generic [ref=e666]:
+                - heading "Stay Hidden, Stay Silent" [level=3] [ref=e667]
+                - generic "dsk" [ref=e669]
+                - generic [ref=e670]:
+                  - generic [ref=e671]:
+                    - generic [ref=e672]: Mercado
+                    - generic [ref=e674]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e675]:
+                    - img [ref=e676]
+            - 'link "Call to Heel DISP: 1 common Call to Heel bbd Mercado $0.35" [ref=e680] [cursor=pointer]':
+              - /url: card/bdedbb84-7abe-420d-8429-c2d77ee0ae36
+              - generic [ref=e681]:
+                - img "Call to Heel" [ref=e682]
+                - generic [ref=e683]: "DISP: 1"
+                - generic [ref=e684]: common
+              - generic [ref=e685]:
+                - heading "Call to Heel" [level=3] [ref=e686]
+                - generic "bbd" [ref=e688]
+                - generic [ref=e689]:
+                  - generic [ref=e690]:
+                    - generic [ref=e691]: Mercado
+                    - generic [ref=e693]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e694]:
+                    - img [ref=e695]
+            - 'link "Extraordinary Journey DISP: 1 rare Extraordinary Journey woe Mercado $0.49" [ref=e699] [cursor=pointer]':
+              - /url: card/a69fb480-a9fc-4f09-ac4e-3ce52c485ea9
+              - generic [ref=e700]:
+                - img "Extraordinary Journey" [ref=e701]
+                - generic [ref=e702]: "DISP: 1"
+                - generic [ref=e703]: rare
+              - generic [ref=e704]:
+                - heading "Extraordinary Journey" [level=3] [ref=e705]
+                - generic "woe" [ref=e707]
+                - generic [ref=e708]:
+                  - generic [ref=e709]:
+                    - generic [ref=e710]: Mercado
+                    - generic [ref=e712]: $0.49
+                  - button "Agregar al Carrito Rápido" [ref=e713]:
+                    - img [ref=e714]
+            - 'link "Eaten by Piranhas DISP: 1 uncommon Eaten by Piranhas lci Mercado $0.59" [ref=e718] [cursor=pointer]':
+              - /url: card/b0c504ef-2382-4174-9b1d-5f38e12a28fc
+              - generic [ref=e719]:
+                - img "Eaten by Piranhas" [ref=e720]
+                - generic [ref=e721]: "DISP: 1"
+                - generic [ref=e722]: uncommon
+              - generic [ref=e723]:
+                - heading "Eaten by Piranhas" [level=3] [ref=e724]
+                - generic "lci" [ref=e726]
+                - generic [ref=e727]:
+                  - generic [ref=e728]:
+                    - generic [ref=e729]: Mercado
+                    - generic [ref=e731]: $0.59
+                  - button "Agregar al Carrito Rápido" [ref=e732]:
+                    - img [ref=e733]
+            - 'link "Disperse DISP: 1 common Disperse m19 Mercado $0.35" [ref=e737] [cursor=pointer]':
+              - /url: card/2ff7c89c-41dc-4ac3-bbce-38ab86f435ea
+              - generic [ref=e738]:
+                - img "Disperse" [ref=e739]
+                - generic [ref=e740]: "DISP: 1"
+                - generic [ref=e741]: common
+              - generic [ref=e742]:
+                - heading "Disperse" [level=3] [ref=e743]
+                - generic "m19" [ref=e745]
+                - generic [ref=e746]:
+                  - generic [ref=e747]:
+                    - generic [ref=e748]: Mercado
+                    - generic [ref=e750]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e751]:
+                    - img [ref=e752]
+            - 'link "Psychic Surgery DISP: 1 rare Psychic Surgery nph Mercado $0.59" [ref=e756] [cursor=pointer]':
+              - /url: card/51ea9a6d-d6ca-48cb-adac-958ad0e7440c
+              - generic [ref=e757]:
+                - img "Psychic Surgery" [ref=e758]
+                - generic [ref=e759]: "DISP: 1"
+                - generic [ref=e760]: rare
+              - generic [ref=e761]:
+                - heading "Psychic Surgery" [level=3] [ref=e762]
+                - generic "nph" [ref=e764]
+                - generic [ref=e765]:
+                  - generic [ref=e766]:
+                    - generic [ref=e767]: Mercado
+                    - generic [ref=e769]: $0.59
+                  - button "Agregar al Carrito Rápido" [ref=e770]:
+                    - img [ref=e771]
+            - 'link "Whoosh! DISP: 1 common Whoosh! spm Mercado $0.35" [ref=e775] [cursor=pointer]':
+              - /url: card/ccc05deb-ad8d-4fae-a7a4-2b2a118fc696
+              - generic [ref=e776]:
+                - img "Whoosh!" [ref=e777]
+                - generic [ref=e778]: "DISP: 1"
+                - generic [ref=e779]: common
+              - generic [ref=e780]:
+                - heading "Whoosh!" [level=3] [ref=e781]
+                - generic "spm" [ref=e783]
+                - generic [ref=e784]:
+                  - generic [ref=e785]:
+                    - generic [ref=e786]: Mercado
+                    - generic [ref=e788]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e789]:
+                    - img [ref=e790]
+            - 'link "Turn to Frog DISP: 1 uncommon Turn to Frog m12 Mercado $0.35" [ref=e794] [cursor=pointer]':
+              - /url: card/b43d9a1e-0767-4a9b-81b4-4ff2f3dde1d5
+              - generic [ref=e795]:
+                - img "Turn to Frog" [ref=e796]
+                - generic [ref=e797]: "DISP: 1"
+                - generic [ref=e798]: uncommon
+              - generic [ref=e799]:
+                - heading "Turn to Frog" [level=3] [ref=e800]
+                - generic "m12" [ref=e802]
+                - generic [ref=e803]:
+                  - generic [ref=e804]:
+                    - generic [ref=e805]: Mercado
+                    - generic [ref=e807]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e808]:
+                    - img [ref=e809]
+            - 'link "Aether Meltdown DISP: 5 uncommon Aether Meltdown kld Mercado $0.35" [ref=e813] [cursor=pointer]':
+              - /url: card/91f99614-45e2-4688-8403-f3a6b9162b08
+              - generic [ref=e814]:
+                - img "Aether Meltdown" [ref=e815]
+                - generic [ref=e816]: "DISP: 5"
+                - generic [ref=e817]: uncommon
+              - generic [ref=e818]:
+                - heading "Aether Meltdown" [level=3] [ref=e819]
+                - generic "kld" [ref=e821]
+                - generic [ref=e822]:
+                  - generic [ref=e823]:
+                    - generic [ref=e824]: Mercado
+                    - generic [ref=e826]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e827]:
+                    - img [ref=e828]
+            - 'link "Meddle DISP: 1 uncommon Meddle ons Mercado $0.35" [ref=e832] [cursor=pointer]':
+              - /url: card/685edfe8-9770-47c6-95fb-0816f3126f04
+              - generic [ref=e833]:
+                - img "Meddle" [ref=e834]
+                - generic [ref=e835]: "DISP: 1"
+                - generic [ref=e836]: uncommon
+              - generic [ref=e837]:
+                - heading "Meddle" [level=3] [ref=e838]
+                - generic "ons" [ref=e840]
+                - generic [ref=e841]:
+                  - generic [ref=e842]:
+                    - generic [ref=e843]: Mercado
+                    - generic [ref=e845]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e846]:
+                    - img [ref=e847]
+            - 'link "Era of Innovation DISP: 4 uncommon Era of Innovation drc Mercado $0.35" [ref=e851] [cursor=pointer]':
+              - /url: card/edf49825-c432-4eb3-97da-b92ae6b9fab8
+              - generic [ref=e852]:
+                - img "Era of Innovation" [ref=e853]
+                - generic [ref=e854]: "DISP: 4"
+                - generic [ref=e855]: uncommon
+              - generic [ref=e856]:
+                - heading "Era of Innovation" [level=3] [ref=e857]
+                - generic "drc" [ref=e859]
+                - generic [ref=e860]:
+                  - generic [ref=e861]:
+                    - generic [ref=e862]: Mercado
+                    - generic [ref=e864]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e865]:
+                    - img [ref=e866]
+            - 'link "Negate DISP: 1 common Negate dtk Mercado $0.39" [ref=e870] [cursor=pointer]':
+              - /url: card/60380ed0-fed1-4d68-9763-56a9ff8ac5e6
+              - generic [ref=e871]:
+                - img "Negate" [ref=e872]
+                - generic [ref=e873]: "DISP: 1"
+                - generic [ref=e874]: common
+              - generic [ref=e875]:
+                - heading "Negate" [level=3] [ref=e876]
+                - generic "dtk" [ref=e878]
+                - generic [ref=e879]:
+                  - generic [ref=e880]:
+                    - generic [ref=e881]: Mercado
+                    - generic [ref=e883]: $0.39
+                  - button "Agregar al Carrito Rápido" [ref=e884]:
+                    - img [ref=e885]
+            - 'link "Logic Knot DISP: 1 common Logic Knot mma Mercado $0.35" [ref=e889] [cursor=pointer]':
+              - /url: card/01e39726-6229-4956-b3f9-7eb1d91227ef
+              - generic [ref=e890]:
+                - img "Logic Knot" [ref=e891]
+                - generic [ref=e892]: "DISP: 1"
+                - generic [ref=e893]: common
+              - generic [ref=e894]:
+                - heading "Logic Knot" [level=3] [ref=e895]
+                - generic "mma" [ref=e897]
+                - generic [ref=e898]:
+                  - generic [ref=e899]:
+                    - generic [ref=e900]: Mercado
+                    - generic [ref=e902]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e903]:
+                    - img [ref=e904]
+            - 'link "Negate DISP: 1 common Negate ogw Mercado $0.49" [ref=e908] [cursor=pointer]':
+              - /url: card/026c499d-3d5b-4f65-a824-f78f146b82ef
+              - generic [ref=e909]:
+                - img "Negate" [ref=e910]
+                - generic [ref=e911]: "DISP: 1"
+                - generic [ref=e912]: common
+              - generic [ref=e913]:
+                - heading "Negate" [level=3] [ref=e914]
+                - generic "ogw" [ref=e916]
+                - generic [ref=e917]:
+                  - generic [ref=e918]:
+                    - generic [ref=e919]: Mercado
+                    - generic [ref=e921]: $0.49
+                  - button "Agregar al Carrito Rápido" [ref=e922]:
+                    - img [ref=e923]
+            - 'link "Tightening Coils DISP: 1 common Tightening Coils bfz Mercado $0.35" [ref=e927] [cursor=pointer]':
+              - /url: card/a014dd06-626d-4917-8981-e0064718b571
+              - generic [ref=e928]:
+                - img "Tightening Coils" [ref=e929]
+                - generic [ref=e930]: "DISP: 1"
+                - generic [ref=e931]: common
+              - generic [ref=e932]:
+                - heading "Tightening Coils" [level=3] [ref=e933]
+                - generic "bfz" [ref=e935]
+                - generic [ref=e936]:
+                  - generic [ref=e937]:
+                    - generic [ref=e938]: Mercado
+                    - generic [ref=e940]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e941]:
+                    - img [ref=e942]
+            - 'link "Glint DISP: 1 common Glint dtk Mercado $0.35" [ref=e946] [cursor=pointer]':
+              - /url: card/35fa105f-c76b-4fd0-9b83-34b46648e0d6
+              - generic [ref=e947]:
+                - img "Glint" [ref=e948]
+                - generic [ref=e949]: "DISP: 1"
+                - generic [ref=e950]: common
+              - generic [ref=e951]:
+                - heading "Glint" [level=3] [ref=e952]
+                - generic "dtk" [ref=e954]
+                - generic [ref=e955]:
+                  - generic [ref=e956]:
+                    - generic [ref=e957]: Mercado
+                    - generic [ref=e959]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e960]:
+                    - img [ref=e961]
+            - 'link "Ior Ruin Expedition DISP: 1 common Ior Ruin Expedition zen Mercado $0.35" [ref=e965] [cursor=pointer]':
+              - /url: card/2acdba29-3a09-42d4-bce2-ce615c36bb3c
+              - generic [ref=e966]:
+                - img "Ior Ruin Expedition" [ref=e967]
+                - generic [ref=e968]: "DISP: 1"
+                - generic [ref=e969]: common
+              - generic [ref=e970]:
+                - heading "Ior Ruin Expedition" [level=3] [ref=e971]
+                - generic "zen" [ref=e973]
+                - generic [ref=e974]:
+                  - generic [ref=e975]:
+                    - generic [ref=e976]: Mercado
+                    - generic [ref=e978]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e979]:
+                    - img [ref=e980]
+            - 'link "Planar Incision DISP: 1 common Planar Incision neo Mercado $0.79" [ref=e984] [cursor=pointer]':
+              - /url: card/9163cb04-ee28-4127-b53a-89c546996d7d
+              - generic [ref=e985]:
+                - img "Planar Incision" [ref=e986]
+                - generic [ref=e987]: "DISP: 1"
+                - generic [ref=e988]: common
+              - generic [ref=e989]:
+                - heading "Planar Incision" [level=3] [ref=e990]
+                - generic "neo" [ref=e992]
+                - generic [ref=e993]:
+                  - generic [ref=e994]:
+                    - generic [ref=e995]: Mercado
+                    - generic [ref=e997]: $0.79
+                  - button "Agregar al Carrito Rápido" [ref=e998]:
+                    - img [ref=e999]
+            - 'link "Aura of Dominion DISP: 5 uncommon Aura of Dominion chk Mercado $3.49" [ref=e1003] [cursor=pointer]':
+              - /url: card/26913c27-5794-42c7-a2a2-af565ce84fd1
+              - generic [ref=e1004]:
+                - img "Aura of Dominion" [ref=e1005]
+                - generic [ref=e1006]: "DISP: 5"
+                - generic [ref=e1007]: uncommon
+              - generic [ref=e1008]:
+                - heading "Aura of Dominion" [level=3] [ref=e1009]
+                - generic "chk" [ref=e1011]
+                - generic [ref=e1012]:
+                  - generic [ref=e1013]:
+                    - generic [ref=e1014]: Mercado
+                    - generic [ref=e1016]: $3.49
+                  - button "Agregar al Carrito Rápido" [ref=e1017]:
+                    - img [ref=e1018]
+            - 'link "Hatching Plans DISP: 1 uncommon Hatching Plans wot Mercado $0.35" [ref=e1022] [cursor=pointer]':
+              - /url: card/e8ebcbfb-1522-4ff5-b23a-f3ea9e08ad9b
+              - generic [ref=e1023]:
+                - img "Hatching Plans" [ref=e1024]
+                - generic [ref=e1025]: "DISP: 1"
+                - generic [ref=e1026]: uncommon
+              - generic [ref=e1027]:
+                - heading "Hatching Plans" [level=3] [ref=e1028]
+                - generic "wot" [ref=e1030]
+                - generic [ref=e1031]:
+                  - generic [ref=e1032]:
+                    - generic [ref=e1033]: Mercado
+                    - generic [ref=e1035]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e1036]:
+                    - img [ref=e1037]
+            - 'link "Censor DISP: 1 uncommon Censor akh Mercado $0.35" [ref=e1041] [cursor=pointer]':
+              - /url: card/4cb4e315-1a77-479a-9f15-fb23575de805
+              - generic [ref=e1042]:
+                - img "Censor" [ref=e1043]
+                - generic [ref=e1044]: "DISP: 1"
+                - generic [ref=e1045]: uncommon
+              - generic [ref=e1046]:
+                - heading "Censor" [level=3] [ref=e1047]
+                - generic "akh" [ref=e1049]
+                - generic [ref=e1050]:
+                  - generic [ref=e1051]:
+                    - generic [ref=e1052]: Mercado
+                    - generic [ref=e1054]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e1055]:
+                    - img [ref=e1056]
+            - 'link "Boomerang DISP: 4 common Boomerang 8ed Mercado $0.35" [ref=e1060] [cursor=pointer]':
+              - /url: card/2275b0a5-7777-49cb-9056-aef0a82424db
+              - generic [ref=e1061]:
+                - img "Boomerang" [ref=e1062]
+                - generic [ref=e1063]: "DISP: 4"
+                - generic [ref=e1064]: common
+              - generic [ref=e1065]:
+                - heading "Boomerang" [level=3] [ref=e1066]
+                - generic "8ed" [ref=e1068]
+                - generic [ref=e1069]:
+                  - generic [ref=e1070]:
+                    - generic [ref=e1071]: Mercado
+                    - generic [ref=e1073]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e1074]:
+                    - img [ref=e1075]
+            - 'link "Recalibrate DISP: 2 common Recalibrate mh2 Mercado $0.35" [ref=e1079] [cursor=pointer]':
+              - /url: card/b95cc841-4e4f-4896-a073-f2e246ca62e4
+              - generic [ref=e1080]:
+                - img "Recalibrate" [ref=e1081]
+                - generic [ref=e1082]: "DISP: 2"
+                - generic [ref=e1083]: common
+              - generic [ref=e1084]:
+                - heading "Recalibrate" [level=3] [ref=e1085]
+                - generic "mh2" [ref=e1087]
+                - generic [ref=e1088]:
+                  - generic [ref=e1089]:
+                    - generic [ref=e1090]: Mercado
+                    - generic [ref=e1092]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e1093]:
+                    - img [ref=e1094]
+            - 'link "Sunken Field DISP: 1 uncommon Sunken Field pcy Mercado $0.39" [ref=e1098] [cursor=pointer]':
+              - /url: card/9211ee02-e854-4414-92b1-65a7af29f0b9
+              - generic [ref=e1099]:
+                - img "Sunken Field" [ref=e1100]
+                - generic [ref=e1101]: "DISP: 1"
+                - generic [ref=e1102]: uncommon
+              - generic [ref=e1103]:
+                - heading "Sunken Field" [level=3] [ref=e1104]
+                - generic "pcy" [ref=e1106]
+                - generic [ref=e1107]:
+                  - generic [ref=e1108]:
+                    - generic [ref=e1109]: Mercado
+                    - generic [ref=e1111]: $0.39
+                  - button "Agregar al Carrito Rápido" [ref=e1112]:
+                    - img [ref=e1113]
+            - 'link "Failed Fording DISP: 1 common Failed Fording otj Mercado $0.35" [ref=e1117] [cursor=pointer]':
+              - /url: card/62bbe11b-e959-4080-98ac-09bd57519c00
+              - generic [ref=e1118]:
+                - img "Failed Fording" [ref=e1119]
+                - generic [ref=e1120]: "DISP: 1"
+                - generic [ref=e1121]: common
+              - generic [ref=e1122]:
+                - heading "Failed Fording" [level=3] [ref=e1123]
+                - generic "otj" [ref=e1125]
+                - generic [ref=e1126]:
+                  - generic [ref=e1127]:
+                    - generic [ref=e1128]: Mercado
+                    - generic [ref=e1130]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e1131]:
+                    - img [ref=e1132]
+            - 'link "Unsubstantiate DISP: 1 uncommon Unsubstantiate emn Mercado $0.35" [ref=e1136] [cursor=pointer]':
+              - /url: card/ba5dac3d-4b49-44c4-a7b2-0a99485252c9
+              - generic [ref=e1137]:
+                - img "Unsubstantiate" [ref=e1138]
+                - generic [ref=e1139]: "DISP: 1"
+                - generic [ref=e1140]: uncommon
+              - generic [ref=e1141]:
+                - heading "Unsubstantiate" [level=3] [ref=e1142]
+                - generic "emn" [ref=e1144]
+                - generic [ref=e1145]:
+                  - generic [ref=e1146]:
+                    - generic [ref=e1147]: Mercado
+                    - generic [ref=e1149]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e1150]:
+                    - img [ref=e1151]
+            - 'link "Phantom Wings DISP: 4 common Phantom Wings bok Mercado $0.35" [ref=e1155] [cursor=pointer]':
+              - /url: card/a96e5a18-5958-426e-892f-5c68f44c1b41
+              - generic [ref=e1156]:
+                - img "Phantom Wings" [ref=e1157]
+                - generic [ref=e1158]: "DISP: 4"
+                - generic [ref=e1159]: common
+              - generic [ref=e1160]:
+                - heading "Phantom Wings" [level=3] [ref=e1161]
+                - generic "bok" [ref=e1163]
+                - generic [ref=e1164]:
+                  - generic [ref=e1165]:
+                    - generic [ref=e1166]: Mercado
+                    - generic [ref=e1168]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e1169]:
+                    - img [ref=e1170]
+            - 'link "Flash of Insight DISP: 2 uncommon Flash of Insight jud Mercado $2.49" [ref=e1174] [cursor=pointer]':
+              - /url: card/ffaab905-0b97-42c2-a1a3-1e72275caa82
+              - generic [ref=e1175]:
+                - img "Flash of Insight" [ref=e1176]
+                - generic [ref=e1177]: "DISP: 2"
+                - generic [ref=e1178]: uncommon
+              - generic [ref=e1179]:
+                - heading "Flash of Insight" [level=3] [ref=e1180]
+                - generic "jud" [ref=e1182]
+                - generic [ref=e1183]:
+                  - generic [ref=e1184]:
+                    - generic [ref=e1185]: Mercado
+                    - generic [ref=e1187]: $2.49
+                  - button "Agregar al Carrito Rápido" [ref=e1188]:
+                    - img [ref=e1189]
+            - 'link "Stupefying Touch DISP: 1 uncommon Stupefying Touch tor Mercado $0.35" [ref=e1193] [cursor=pointer]':
+              - /url: card/7f817379-9c0b-4e43-a345-492516ccb6e1
+              - generic [ref=e1194]:
+                - img "Stupefying Touch" [ref=e1195]
+                - generic [ref=e1196]: "DISP: 1"
+                - generic [ref=e1197]: uncommon
+              - generic [ref=e1198]:
+                - heading "Stupefying Touch" [level=3] [ref=e1199]
+                - generic "tor" [ref=e1201]
+                - generic [ref=e1202]:
+                  - generic [ref=e1203]:
+                    - generic [ref=e1204]: Mercado
+                    - generic [ref=e1206]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e1207]:
+                    - img [ref=e1208]
+            - 'link "Everdream DISP: 1 uncommon Everdream mh1 Mercado $0.35" [ref=e1212] [cursor=pointer]':
+              - /url: card/e744c42c-6bcc-42c0-9346-102b8368c377
+              - generic [ref=e1213]:
+                - img "Everdream" [ref=e1214]
+                - generic [ref=e1215]: "DISP: 1"
+                - generic [ref=e1216]: uncommon
+              - generic [ref=e1217]:
+                - heading "Everdream" [level=3] [ref=e1218]
+                - generic "mh1" [ref=e1220]
+                - generic [ref=e1221]:
+                  - generic [ref=e1222]:
+                    - generic [ref=e1223]: Mercado
+                    - generic [ref=e1225]: $0.35
+                  - button "Agregar al Carrito Rápido" [ref=e1226]:
+                    - img [ref=e1227]
+          - button "Cargar Más Cartas [1]" [ref=e1232]:
+            - text: Cargar Más Cartas
+            - generic [ref=e1234]: "[1]"
+    - generic [ref=e1237]:
+      - generic [ref=e1238]:
+        - generic [ref=e1240]: Bienvenido a
+        - heading "Scroll ¿Cómo comprar en Geekorium El Emporio?" [level=2] [ref=e1242]:
+          - img "Scroll" [ref=e1243]
+          - text: ¿Cómo comprar en Geekorium El Emporio?
+        - paragraph [ref=e1244]:
+          - text: Nuestra plataforma es un
+          - strong [ref=e1245]: Portafolio Online
+          - text: "diseñado para ofrecerte la mejor experiencia de búsqueda y selección de singles. Sigue estos pasos para completar tu pedido:"
+        - generic [ref=e1246]:
+          - generic [ref=e1247]:
+            - generic [ref=e1248]: "1"
+            - generic [ref=e1249]: Explora el Stock
+            - paragraph [ref=e1250]: Filtra por TCG, rareza o edición. Encuentra exactamente lo que buscas en nuestro inventario real.
+          - generic [ref=e1251]:
+            - generic [ref=e1252]: "2"
+            - generic [ref=e1253]: Prepara tu Orden
+            - paragraph [ref=e1254]:
+              - text: Añade al carrito. Verás el
+              - strong [ref=e1255]: Market Price
+              - text: y nuestro
+              - strong [ref=e1256]: GK Price
+              - text: especial.
+          - generic [ref=e1257]:
+            - generic [ref=e1258]: "3"
+            - generic [ref=e1259]: Finaliza con un Asesor
+            - paragraph [ref=e1260]: Tu pedido llegará a WhatsApp, donde un Geeko-Asesor validará disponibilidad y coordinará el pago.
+      - img "Emporio Seal" [ref=e1264]
+    - contentinfo [ref=e1265]:
+      - generic [ref=e1266]:
+        - generic [ref=e1267]:
+          - link "Logo Geekorium El Emporio" [ref=e1268] [cursor=pointer]:
+            - /url: /
+            - img "Logo" [ref=e1269]
+            - generic [ref=e1270]: Geekorium El Emporio
+          - generic [ref=e1271]:
+            - 'link "WhatsApp Principal: +58 412-8042832" [ref=e1272] [cursor=pointer]':
+              - /url: https://wa.me/584128042832
+            - 'link "WhatsApp Singles: +58 424-2507802" [ref=e1273] [cursor=pointer]':
+              - /url: https://wa.me/584242507802
+          - generic [ref=e1274]:
+            - link [ref=e1275] [cursor=pointer]:
+              - /url: https://instagram.com/geekorium/
+              - img [ref=e1276]
+            - link [ref=e1279] [cursor=pointer]:
+              - /url: https://www.tiktok.com/@geekorium
+              - img [ref=e1280]
+            - link [ref=e1282] [cursor=pointer]:
+              - /url: https://www.facebook.com/profile.php?id=61573984506104
+              - img [ref=e1283]
+            - link [ref=e1285] [cursor=pointer]:
+              - /url: https://discord.gg/wmYhWw5Q
+              - img [ref=e1286]
+            - link [ref=e1290] [cursor=pointer]:
+              - /url: https://www.youtube.com/@Geekorium
+              - img [ref=e1291]
+            - link [ref=e1294] [cursor=pointer]:
+              - /url: https://www.twitch.tv/geekorium
+              - img [ref=e1295]
+            - link [ref=e1297] [cursor=pointer]:
+              - /url: mailto:geekorium@gmail.com
+              - img [ref=e1298]
+        - generic [ref=e1301]: © 2025 Geekorium El Emporio. Plataforma Avanzada de TCG.
+        - generic [ref=e1302]:
+          - link "Aviso Legal" [ref=e1303] [cursor=pointer]:
+            - /url: /legal
+          - link "¿Cómo Comprar?" [ref=e1304] [cursor=pointer]:
+            - /url: /help
+    - dialog [ref=e1306]:
+      - button [ref=e1307]:
+        - img [ref=e1308]
+      - generic [ref=e1311]:
+        - img "Test Setup Card" [ref=e1315]
+        - generic [ref=e1316]:
+          - generic [ref=e1317]:
+            - heading "Edición / Impresiones" [level=3] [ref=e1318]
+            - generic [ref=e1319]: 2 Versiones
+          - generic [ref=e1320]:
+            - 'button "SET # • $10.00 En Stock" [ref=e1321] [cursor=pointer]':
+              - generic [ref=e1322]:
+                - generic [ref=e1323]: SET
+                - generic [ref=e1325]: "# •"
+              - generic [ref=e1326]:
+                - generic [ref=e1328]: $10.00
+                - generic [ref=e1329]:
+                  - generic [ref=e1330]: En Stock
+                  - img [ref=e1332]
+            - 'button "SET # • ✨ $15.00 Por Encargo" [ref=e1336] [cursor=pointer]':
+              - generic [ref=e1337]:
+                - generic [ref=e1338]: SET
+                - generic [ref=e1340]: "# •"
+              - generic [ref=e1341]:
+                - generic [ref=e1343]:
+                  - generic [ref=e1344]: ✨
+                  - text: $15.00
+                - generic [ref=e1345]:
+                  - generic [ref=e1346]: Por Encargo
+                  - img [ref=e1348]
+      - generic [ref=e1352]:
+        - link "Test Setup Card" [ref=e1354] [cursor=pointer]:
+          - /url: /card/undefined
+          - heading "Test Setup Card" [level=2] [ref=e1355]
+        - generic [ref=e1357]:
+          - generic [ref=e1358]:
+            - heading "Legalidad de Formato" [level=3] [ref=e1359]
+            - generic [ref=e1360]:
+              - generic [ref=e1362]: standard
+              - generic [ref=e1364]: pioneer
+              - generic [ref=e1366]: modern
+              - generic [ref=e1368]: legacy
+              - generic [ref=e1370]: commander
+              - generic [ref=e1372]: pauper
+          - generic [ref=e1373]:
+            - generic [ref=e1374]:
+              - generic [ref=e1377]:
+                - generic [ref=e1379]: GK Price
+                - generic [ref=e1380]:
+                  - generic [ref=e1381]:
+                    - generic [ref=e1382]: $---
+                    - generic [ref=e1383]: NONFOIL
+                  - generic [ref=e1384]:
+                    - button "Normal" [disabled] [ref=e1385]
+                    - button "Foil" [disabled] [ref=e1386]
+              - button "Agregar al Carrito" [ref=e1387]:
+                - img [ref=e1388]
+                - text: Agregar al Carrito
+            - link "Mercado Externo Comprar @ CardKingdom Ver en Sitio" [ref=e1392] [cursor=pointer]:
+              - /url: https://www.cardkingdom.com/catalog/search?filter%5Bname%5D=Test+Setup+Card
+              - generic [ref=e1394]:
+                - text: Mercado Externo
+                - generic [ref=e1395]: Comprar @ CardKingdom
+              - generic [ref=e1396]:
+                - generic [ref=e1397]: Ver en Sitio
+                - img [ref=e1399]
+  - button "Contactar por WhatsApp" [ref=e1404]:
+    - img [ref=e1405]
+```

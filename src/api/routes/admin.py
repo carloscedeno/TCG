@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, Header, HTTPException, Query
 from typing import Optional
+from pydantic import BaseModel
 from ..services.admin_service import AdminService
 import os
 
@@ -28,3 +29,14 @@ async def get_task_logs(task_id: str, admin_id: str = Depends(get_current_admin)
 @router.post("/scraper/run/{source}")
 async def run_scraper(source: str, admin_id: str = Depends(get_current_admin)):
     return await AdminService.run_scraper(source)
+
+class ManaBoxParseRequest(BaseModel):
+    text: str
+
+@router.post("/catalog/manabox-parse")
+async def parse_manabox_inventory(
+    request: ManaBoxParseRequest,
+    admin_id: str = Depends(get_current_admin)
+):
+    from ..services.manabox_parser import ManaBoxParser
+    return ManaBoxParser.parse_text(request.text)

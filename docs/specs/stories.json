@@ -1,47 +1,65 @@
 {
-    "epic": "El Emporio MVP - Phase 1",
+    "epic": "Geekorium v4.0 Pending Features",
     "status": "active",
     "stories": [
         {
-            "id": "INIT-001",
-            "description": "Verify React/Vite/Tailwind Environment and Project Structure",
-            "files_to_touch": [
-                "frontend/src/App.jsx",
-                "frontend/package.json"
-            ],
-            "acceptance_criteria": [
-                "Frontend server starts with `npm run dev`",
-                "Tailwind classes render correctly",
-                "Folder structure matches `frontend/src/{components,pages,context,hooks}`"
-            ],
-            "passes": false
-        },
-        {
-            "id": "UX-001",
-            "description": "Implement 'Geekorium' Design System and Global Styles",
-            "files_to_touch": [
-                "frontend/src/index.css",
-                "frontend/tailwind.config.js"
-            ],
-            "acceptance_criteria": [
-                "Dark mode enabled by default",
-                "Primary color defines 'Geekorium Neon'",
-                "Font family set to modern sans-serif (Inter/Rubik)",
-                "Glassmorphism utility classes available"
-            ],
-            "passes": false
-        },
-        {
             "id": "FEAT-001",
-            "description": "Create Supabase Connection and Product Context",
+            "description": "Backend: Parser de Inventario (ManaBox)",
             "files_to_touch": [
-                "frontend/src/context/SupabaseContext.jsx",
-                "frontend/src/hooks/useProducts.js"
+                "src/api/services/manabox_parser.py"
             ],
             "acceptance_criteria": [
-                "Supabase client initializes with env vars",
-                "useProducts hook fetches data from 'products' table",
-                "Error state handled gracefully"
+                "Implementar ManaBoxParser en Python",
+                "Extraer Cantidad, Nombre, SetCode, Número y Foil status",
+                "Manejo de fallos en temporal array"
+            ],
+            "passes": false
+        },
+        {
+            "id": "FEAT-002",
+            "description": "Checkout: Subida de Comprobante de Pago a Supabase",
+            "files_to_touch": [
+                "frontend/src/pages/CheckoutPage.tsx"
+            ],
+            "acceptance_criteria": [
+                "Subir imagen al bucket payment-proofs de Supabase",
+                "Guardar el URL devuelto en detalles de la orden"
+            ],
+            "passes": false
+        },
+        {
+            "id": "UI-001",
+            "description": "UI/UX: Gestos Móviles (Swipe Down) y Ajustes en CardModal",
+            "files_to_touch": [
+                "frontend/src/components/catalog/CardModal.tsx"
+            ],
+            "acceptance_criteria": [
+                "Instalar framer-motion",
+                "Implementar drag='y' con onDragEnd para cerrar modal con swipe",
+                "Añadir max-h-[35vh] a lista de versiones"
+            ],
+            "passes": false
+        },
+        {
+            "id": "UI-002",
+            "description": "UI/UX: Lógica de Stock en el Carrito (CartDrawer)",
+            "files_to_touch": [
+                "frontend/src/components/cart/CartDrawer.tsx"
+            ],
+            "acceptance_criteria": [
+                "Deshabilitar botón '+' si cantidad >= stock disponible",
+                "Opcionalmente mostrar tooltip"
+            ],
+            "passes": false
+        },
+        {
+            "id": "FEAT-003",
+            "description": "Integración: Mensajería de WhatsApp Dinámica",
+            "files_to_touch": [
+                "frontend/src/pages/CheckoutPage.tsx"
+            ],
+            "acceptance_criteria": [
+                "Incluir el Order ID en el string enviado a WhatsApp"
             ],
             "passes": false
         }

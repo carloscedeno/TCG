@@ -2,10 +2,66 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Checkout Flow with Foil Cards', () => {
     test.beforeEach(async ({ page }) => {
+        // Mock initial card list
+        await page.route('**/rpc/get_unique_cards_optimized*', async route => {
+            await route.fulfill({
+                status: 200,
+                contentType: 'application/json',
+                json: [
+                    {
+                        printing_id: 'fake-printing',
+                        card_name: 'Test Setup Card',
+                        set_name: 'Test Set',
+                        set_code: 'SET',
+                        image_url: 'https://example.com/image.jpg',
+                        price: 10,
+                        stock: 5,
+                        rarity: 'Rare'
+                    }
+                ]
+            });
+        });
+
+        // Mock search suggestions
+        await page.route('**/rpc/search_card_names*', async route => {
+            const query = route.request().postDataJSON()?.query_text || '';
+            await route.fulfill({
+                status: 200,
+                contentType: 'application/json',
+                json: [
+                    { card_name: 'Boomerang' },
+                    { card_name: 'Test Setup Card' }
+                ]
+            });
+        });
+
         await page.goto('/');
+        await page.evaluate(() => {
+            window.sessionStorage.setItem('hasSeenWelcomeModal', 'true');
+        });
     });
 
     test('should search for Boomerang, add foil to cart and verify cart contents', async ({ page }) => {
+        await page.route('**/api/cards/*', async route => {
+            if (route.request().method() === 'OPTIONS') {
+                return route.continue();
+            }
+            await route.fulfill({
+                status: 200,
+                contentType: 'application/json',
+                json: {
+                    name: 'Boomerang',
+                    finishes: ['nonfoil', 'foil'],
+                    all_versions: [
+                        { id: 'fake-boomerang', set_code: 'SET', is_foil: false, price: 5, stock: 10 },
+                        { id: 'fake-boomerang-foil', set_code: 'SET', is_foil: true, price: 20, stock: 5 }
+                    ],
+                    printing_id: 'fake-boomerang',
+                    image_url: 'https://example.com/boomerang.jpg'
+                }
+            });
+        });
+
         // 1. Search for Boomerang
         const searchInput = page.getByPlaceholder(/Buscar|Search/i).first();
         await searchInput.click();
@@ -26,8 +82,8 @@ test.describe('Checkout Flow with Foil Cards', () => {
         await boomerangSuggestion.click();
 
         // Wait for modal to load
-        const modal = page.locator('[role="dialog"]');
-        await expect(modal).toBeVisible();
+        const modal = page.getByTestId('card-modal');
+        await expect(modal).toBeVisible({ timeout: 10000 });
 
         // 3. Select Foil (if it's not already foil, click the Foil button)
         const foilButton = modal.getByRole('button', { name: 'FOIL', exact: true });
@@ -54,7 +110,7 @@ test.describe('Checkout Flow with Foil Cards', () => {
         await cartButton.click();
 
         // Wait for Cart Drawer
-        const cartDrawer = page.locator('.fixed.inset-y-0.right-0');
+        const cartDrawer = page.getByTestId('cart-drawer');
         await expect(cartDrawer).toBeVisible();
 
         // 6. Verify item in cart

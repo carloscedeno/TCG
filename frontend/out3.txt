@@ -1,0 +1,73 @@
+
+Running 3 tests using 2 workers
+
+[1A[2K[1/3] [setup] › tests\e2e\auth.setup.ts:7:1 › authenticate
+[1A[2K[2/3] [chromium] › tests\e2e\v4_features.spec.ts:5:5 › V4 Pending Features validation › should prevent adding more quantity than available stock in CartDrawer
+[1A[2K[3/3] [chromium] › tests\e2e\v4_features.spec.ts:52:5 › V4 Pending Features validation › should format WhatsApp message correctly on Checkout
+[1A[2K  1) [chromium] › tests\e2e\v4_features.spec.ts:52:5 › V4 Pending Features validation › should format WhatsApp message correctly on Checkout 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('heading', { name: /Datos del Cliente/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for getByRole('heading', { name: /Datos del Cliente/i })[22m
+
+
+      77 |         await page.goto('/checkout');
+      78 |
+    > 79 |         await expect(page.getByRole('heading', { name: /Datos del Cliente/i })).toBeVisible();
+         |                                                                                 ^
+      80 |
+      81 |         // Fill out checkout form
+      82 |         await page.getByLabel(/Nombre Completo/i).fill('Test User');
+        at C:\Users\carlo\OneDrive\Documents\Antigravity\TCG\frontend\tests\e2e\v4_features.spec.ts:79:81
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\v4_features-V4-Pending-Fea-74f15-ssage-correctly-on-Checkout-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\v4_features-V4-Pending-Fea-74f15-ssage-correctly-on-Checkout-chromium\error-context.md
+
+
+[1A[2K  2) [chromium] › tests\e2e\v4_features.spec.ts:5:5 › V4 Pending Features validation › should prevent adding more quantity than available stock in CartDrawer 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeDisabled[2m([22m[2m)[22m failed
+
+    Locator: locator('[data-testid="cart-drawer"]').first().getByTestId('increase-quantity-button').first()
+    Expected: disabled
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeDisabled" with timeout 5000ms[22m
+    [2m  - waiting for locator('[data-testid="cart-drawer"]').first().getByTestId('increase-quantity-button').first()[22m
+
+
+      47 |
+      48 |         // Button should be disabled because stock limit reached
+    > 49 |         await expect(increaseBtn).toBeDisabled();
+         |                                   ^
+      50 |     });
+      51 |
+      52 |     test('should format WhatsApp message correctly on Checkout', async ({ page }) => {
+        at C:\Users\carlo\OneDrive\Documents\Antigravity\TCG\frontend\tests\e2e\v4_features.spec.ts:49:35
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\v4_features-V4-Pending-Fea-ecadf-ailable-stock-in-CartDrawer-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\v4_features-V4-Pending-Fea-ecadf-ailable-stock-in-CartDrawer-chromium\error-context.md
+
+
+[1A[2K  2 failed
+    [chromium] › tests\e2e\v4_features.spec.ts:5:5 › V4 Pending Features validation › should prevent adding more quantity than available stock in CartDrawer 
+    [chromium] › tests\e2e\v4_features.spec.ts:52:5 › V4 Pending Features validation › should format WhatsApp message correctly on Checkout 
+  1 passed (11.2s)
+
+[36m  Serving HTML report at http://localhost:50156. Press Ctrl+C to quit.[39m
+Terminate batch job (Y/N)? 

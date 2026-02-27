@@ -1,0 +1,59 @@
+
+Running 2 tests using 1 worker
+
+[1A[2K[1/2] [setup] › tests\e2e\auth.setup.ts:7:1 › authenticate
+[1A[2K[2/2] [chromium] › tests\e2e\checkout.spec.ts:8:5 › Checkout Flow with Foil Cards › should search for Boomerang, add foil to cart and verify cart contents
+[1A[2K  1) [chromium] › tests\e2e\checkout.spec.ts:8:5 › Checkout Flow with Foil Cards › should search for Boomerang, add foil to cart and verify cart contents 
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 60000ms exceeded.
+    Call log:
+    [2m  - waiting for getByTestId('suggestions-list').first().locator('button').filter({ hasText: /Boomerang/i }).first()[22m
+    [2m    - locator resolved to <button type="button" class="w-full text-left px-4 py-2 text-sm text-neutral-300 hover:bg-neutral-800 hover:text-white transition-colors cursor-pointer">Boomerang</button>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="absolute inset-0 bg-gradient-to-br from-[#00AEB4]/20 to-[#373266]/30 opacity-50"></div> from <div class="fixed inset-0 z-[200] flex items-center justify-center p-4">…</div> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="absolute inset-0 bg-gradient-to-br from-[#00AEB4]/20 to-[#373266]/30 opacity-50"></div> from <div class="fixed inset-0 z-[200] flex items-center justify-center p-4">…</div> subtree intercepts pointer events[22m
+    [2m    - retrying click action[22m
+    [2m      - waiting 100ms[22m
+    [2m    94 × waiting for element to be visible, enabled and stable[22m
+    [2m       - element is visible, enabled and stable[22m
+    [2m       - scrolling into view if needed[22m
+    [2m       - done scrolling[22m
+    [2m       - <div class="absolute inset-0 bg-gradient-to-br from-[#00AEB4]/20 to-[#373266]/30 opacity-50"></div> from <div class="fixed inset-0 z-[200] flex items-center justify-center p-4">…</div> subtree intercepts pointer events[22m
+    [2m     - retrying click action[22m
+    [2m       - waiting 500ms[22m
+
+
+      24 |         // 2. Click the Boomerang card from suggestions
+      25 |         const boomerangSuggestion = suggestions.locator('button').filter({ hasText: /Boomerang/i }).first();
+    > 26 |         await boomerangSuggestion.click();
+         |                                   ^
+      27 |
+      28 |         // Wait for modal to load
+      29 |         const modal = page.locator('[role="dialog"]');
+        at C:\Users\carlo\OneDrive\Documents\Antigravity\TCG\frontend\tests\e2e\checkout.spec.ts:26:35
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\checkout-Checkout-Flow-wit-1d5d4-rt-and-verify-cart-contents-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\checkout-Checkout-Flow-wit-1d5d4-rt-and-verify-cart-contents-chromium\error-context.md
+
+
+[1A[2K  1 failed
+    [chromium] › tests\e2e\checkout.spec.ts:8:5 › Checkout Flow with Foil Cards › should search for Boomerang, add foil to cart and verify cart contents 
+  1 passed (1.1m)
+
+[36m  Serving HTML report at http://localhost:54237. Press Ctrl+C to quit.[39m
+^C^C

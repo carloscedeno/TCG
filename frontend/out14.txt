@@ -1,0 +1,137 @@
+
+Running 5 tests using 4 workers
+
+[1A[2K[1/5] [setup] › tests\e2e\auth.setup.ts:7:1 › authenticate
+[1A[2K[2/5] [chromium] › tests\e2e\checkout.spec.ts:11:5 › Checkout Flow with Foil Cards › should search for Boomerang, add foil to cart and verify cart contents
+[1A[2K[3/5] [chromium] › tests\e2e\v4_features.spec.ts:67:5 › V4 Pending Features validation › should format WhatsApp message correctly on Checkout
+[1A[2K[4/5] [chromium] › tests\e2e\v4_features.spec.ts:12:5 › V4 Pending Features validation › should prevent adding more quantity than available stock in CartDrawer
+[1A[2K[5/5] [chromium] › tests\e2e\v4_features.spec.ts:163:5 › V4 Pending Features validation › should apply constraint classes to CardModal version list
+[1A[2K  1) [chromium] › tests\e2e\checkout.spec.ts:11:5 › Checkout Flow with Foil Cards › should search for Boomerang, add foil to cart and verify cart contents 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('[role="dialog"]')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for locator('[role="dialog"]')[22m
+
+
+      31 |         // Wait for modal to load
+      32 |         const modal = page.locator('[role="dialog"]');
+    > 33 |         await expect(modal).toBeVisible();
+         |                             ^
+      34 |
+      35 |         // 3. Select Foil (if it's not already foil, click the Foil button)
+      36 |         const foilButton = modal.getByRole('button', { name: 'FOIL', exact: true });
+        at C:\Users\carlo\OneDrive\Documents\Antigravity\TCG\frontend\tests\e2e\checkout.spec.ts:33:29
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\checkout-Checkout-Flow-wit-1d5d4-rt-and-verify-cart-contents-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\checkout-Checkout-Flow-wit-1d5d4-rt-and-verify-cart-contents-chromium\error-context.md
+
+
+[1A[2K  2) [chromium] › tests\e2e\v4_features.spec.ts:12:5 › V4 Pending Features validation › should prevent adding more quantity than available stock in CartDrawer 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('[role="dialog"]')
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for locator('[role="dialog"]')[22m
+
+
+      43 |         // Wait for modal
+      44 |         const modal = page.locator('[role="dialog"]');
+    > 45 |         await expect(modal).toBeVisible({ timeout: 10000 });
+         |                             ^
+      46 |
+      47 |         // Add to cart.
+      48 |         const addToCartBtn = modal.getByRole('button', { name: /Agregar al carrito/i });
+        at C:\Users\carlo\OneDrive\Documents\Antigravity\TCG\frontend\tests\e2e\v4_features.spec.ts:45:29
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\v4_features-V4-Pending-Fea-ecadf-ailable-stock-in-CartDrawer-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\v4_features-V4-Pending-Fea-ecadf-ailable-stock-in-CartDrawer-chromium\error-context.md
+
+
+[1A[2K  3) [chromium] › tests\e2e\v4_features.spec.ts:67:5 › V4 Pending Features validation › should format WhatsApp message correctly on Checkout 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('[role="dialog"]')
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for locator('[role="dialog"]')[22m
+
+
+       95 |
+       96 |         const modal = page.locator('[role="dialog"]');
+    >  97 |         await expect(modal).toBeVisible({ timeout: 10000 });
+          |                             ^
+       98 |
+       99 |         const addToCartBtn = modal.getByRole('button', { name: /Agregar al carrito/i });
+      100 |         await expect(addToCartBtn).toBeVisible();
+        at C:\Users\carlo\OneDrive\Documents\Antigravity\TCG\frontend\tests\e2e\v4_features.spec.ts:97:29
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\v4_features-V4-Pending-Fea-74f15-ssage-correctly-on-Checkout-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\v4_features-V4-Pending-Fea-74f15-ssage-correctly-on-Checkout-chromium\error-context.md
+
+
+[1A[2K  4) [chromium] › tests\e2e\v4_features.spec.ts:163:5 › V4 Pending Features validation › should apply constraint classes to CardModal version list 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('[role="dialog"]')
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for locator('[role="dialog"]')[22m
+
+
+      191 |         // Check modal
+      192 |         const modal = page.locator('[role="dialog"]');
+    > 193 |         await expect(modal).toBeVisible({ timeout: 10000 });
+          |                             ^
+      194 |
+      195 |         // Verify constraint class is on the versions container
+      196 |         const versionsHeader = modal.getByText('Edición / Impresiones');
+        at C:\Users\carlo\OneDrive\Documents\Antigravity\TCG\frontend\tests\e2e\v4_features.spec.ts:193:29
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\v4_features-V4-Pending-Fea-9867c-s-to-CardModal-version-list-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\v4_features-V4-Pending-Fea-9867c-s-to-CardModal-version-list-chromium\error-context.md
+
+
+[1A[2K  4 failed
+    [chromium] › tests\e2e\checkout.spec.ts:11:5 › Checkout Flow with Foil Cards › should search for Boomerang, add foil to cart and verify cart contents 
+    [chromium] › tests\e2e\v4_features.spec.ts:12:5 › V4 Pending Features validation › should prevent adding more quantity than available stock in CartDrawer 
+    [chromium] › tests\e2e\v4_features.spec.ts:67:5 › V4 Pending Features validation › should format WhatsApp message correctly on Checkout 
+    [chromium] › tests\e2e\v4_features.spec.ts:163:5 › V4 Pending Features validation › should apply constraint classes to CardModal version list 
+  1 passed (22.4s)
+
+[36m  Serving HTML report at http://localhost:50281. Press Ctrl+C to quit.[39m
+^C

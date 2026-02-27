@@ -1,129 +1,98 @@
-# MTG TCG Web App
+# Geekorium — TCG Marketplace
 
-Advanced Trading Card Game price aggregation and analysis platform supporting multiple TCGs including Magic: The Gathering, Pokemon, Yu-Gi-Oh!, Lorcana, Flesh and Blood, Wixoss, and One Piece.
+Plataforma de venta asistida de cartas coleccionables (TCG). Especializada en Magic: The Gathering con soporte catalog para múltiples juegos (Pokémon, Yu-Gi-Oh!, Lorcana, Flesh and Blood, Wixoss, One Piece).
 
 ## Features
 
-- **Multi-TCG Support**: Comprehensive support for 7 major TCGs
-- **Price Aggregation**: Real-time price data from multiple marketplaces
-- **Advanced Analytics**: Price trends, market analysis, and portfolio tracking
-- **Collection Management**: Import, track, and analyze your card collections
-- **Modern Architecture**: Built with FastAPI, Supabase, and React
-- **Scalable Infrastructure**: Docker, Kubernetes, and cloud-ready
+- **Catálogo Premium**: Cartas con imágenes, versiones, foil, precios de mercado (Scryfall)
+- **Card Modal Avanzado**: Selector de versiones, flip DFC, toggle Normal/Foil, precios dinámicos
+- **Carrito Asistido**: Persistencia localStorage, validación de stock en tiempo real
+- **Checkout Venezolano**: Cédula, estado, comprobante de pago + WhatsApp handshake
+- **Bulk Import**: Parser ManaBox TXT/CSV con reporte de errores
+- **Panel Admin**: Gestión de órdenes, inventario y QuickStock
 
-## Architecture
+## Arquitectura
 
-```text
-src/
-├── api/          # FastAPI application
-├── core/         # Core business logic
-├── features/     # Feature modules
-└── shared/       # Shared utilities
+```
+frontend/               # React 18 + TypeScript (GitHub Pages)
+  src/
+    components/         # UI components (Card, CardModal, Navigation, etc.)
+    pages/              # Páginas (Home, Admin, Checkout)
+    utils/              # API client, helpers
+  tests/e2e/            # Playwright E2E tests
 
-frontend/         # React application
-infrastructure/   # Deployment and infrastructure
-data/            # Data processing and scraping
-docs/            # Documentation
-tests/           # Test suite
+supabase/
+  functions/tcg-api/    # Edge Function principal (Deno/TypeScript)
+  migrations/           # Migraciones SQL versionadas
+
+src/                    # Scripts Python (sync, admin tools)
+scripts/                # Deploy, sync, operaciones
+  debug/                # Scripts de debugging (no producción)
+docs/                   # Documentación activa
+  archive/              # Documentación histórica
 ```
 
 ## Tech Stack
 
-### Backend
+| Capa | Tecnología |
+|------|------------|
+| Frontend | React 18 + TypeScript + Tailwind CSS |
+| Backend | Supabase Edge Functions (Deno) |
+| Base de Datos | Supabase PostgreSQL |
+| Auth | Supabase Auth |
+| Storage | Supabase Storage |
+| Deploy | GitHub Pages + Supabase Cloud |
+| Scripts | Python 3.12 |
 
-- **FastAPI**: Modern, fast web framework
-- **SQLAlchemy**: ORM and database management
-- **Supabase**: Backend-as-a-Service
-- **Alembic**: Database migrations
-- **Pydantic**: Data validation
+## Desarrollo Local
 
-### Frontend
+### Requisitos
 
-- **React**: UI framework
-- **TypeScript**: Type safety
-- **Tailwind CSS**: Styling
-- **React Query**: Data fetching
-
-### Infrastructure
-
-- **Docker**: Containerization
-- **Kubernetes**: Orchestration
-- **Nginx**: Reverse proxy
-- **Redis**: Caching
-
-## Installation
-
-### Prerequisites
-
-- Python 3.8+
 - Node.js 18+
-- Docker and Docker Compose
-- PostgreSQL 15+
+- Python 3.12+
+- Cuenta de Supabase (o variables en `.env`)
 
-### Quick Start
+### Setup
 
-1. **Clone the repository**
+```bash
+# 1. Copiar variables de entorno
+cp .env.example .env
+# Completar VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY, etc.
 
-   ```bash
-   git clone https://github.com/yourusername/mtg-tcg-web-app.git
-   cd mtg-tcg-web-app
-   ```
+# 2. Frontend
+cd frontend
+npm install
+npm run dev
+# → http://localhost:5173
 
-2. **Set up environment**
+# 3. Scripts Python (opcional)
+pip install -e .
+```
 
-   ```bash
-   cp .env.example .env
-   # Edit .env with your configuration
-   ```
+### Build para Producción
 
-3. **Start with Docker**
-
-   ```bash
-   docker-compose up -d
-   ```
-
-4. **Or run locally**
-
-   ```bash
-   # Backend
-   pip install -e .
-   uvicorn src.api.main:app --reload
-
-   # Frontend
-   cd frontend
-   npm install
-   npm run dev
-   ```
+```bash
+cd frontend
+npm run build   # SIEMPRE verificar antes de push
+```
 
 ## Testing
 
 ```bash
-# Run all tests
-pytest
+# E2E tests (Playwright)
+cd frontend
+npx playwright test
 
-# Run with coverage
-pytest --cov=src
-
-# Run specific test types
-pytest tests/unit/
-pytest tests/integration/
-pytest tests/e2e/
+# Python scripts
+pytest tests/
 ```
 
-## Documentation
+## Documentación
 
-- [API Documentation](docs/api/)
-- [Architecture Guide](docs/architecture/)
-- [Development Guide](docs/development/)
-- [Deployment Guide](docs/deployment/)
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests
-5. Submit a pull request
+- [PRD Master](docs/PRD_MASTER.md) — Requerimientos y estado del producto
+- [TechDocs](docs/TechDocs/) — Arquitectura, DB schema, APIs
+- [Lessons Learned](.agent/lessons_learned.md) — Bugs críticos y anti-patrones
+- [Archive](docs/archive/) — Documentación histórica
 
 ## License
 

@@ -312,9 +312,17 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                 const hasFoilPrice = v.prices?.usd_foil || v.prices?.eur_foil;
                 const hasEtchedPrice = v.prices?.usd_etched;
 
-                if (finishes.includes('nonfoil') || (hasNormalPrice && !finishes.includes('foil'))) {
+                const pushesNonFoil = finishes.includes('nonfoil') || (hasNormalPrice && !finishes.includes('foil'));
+                const pushesFoil = finishes.includes('foil') || hasFoilPrice;
+                const pushesEtched = finishes.includes('etched') || hasEtchedPrice;
+
+                const baseIsFoil = !!v.is_foil || v.finish === 'foil';
+
+                if (pushesNonFoil) {
+                  const isSynthetic = baseIsFoil && (pushesFoil || pushesEtched);
                   expandedVersions.push({
                     ...baseVersion,
+                    printing_id: isSynthetic ? `${v.printing_id}-nonfoil` : v.printing_id,
                     price: Number(v.prices?.usd || v.prices?.eur || v.aggregated_prices?.[0]?.avg_market_price_usd || 0),
                     market_price: Number(v.aggregated_prices?.[0]?.avg_market_price_usd || 0),
                     finish: 'nonfoil',
@@ -322,11 +330,11 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                   });
                 }
 
-                if (finishes.includes('foil') || hasFoilPrice) {
-                  const useSyntheticId = !v.is_foil && hasFoilPrice;
+                if (pushesFoil) {
+                  const isSynthetic = !baseIsFoil && (pushesNonFoil || pushesEtched);
                   expandedVersions.push({
                     ...baseVersion,
-                    printing_id: useSyntheticId ? `${v.printing_id}-foil` : v.printing_id,
+                    printing_id: isSynthetic ? `${v.printing_id}-foil` : v.printing_id,
                     price: Number(v.prices?.usd_foil || v.prices?.eur_foil || v.aggregated_prices?.[0]?.avg_market_price_usd || 0),
                     market_price: Number(v.aggregated_prices?.[0]?.avg_market_price_usd || 0),
                     finish: 'foil',
@@ -334,11 +342,11 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                   });
                 }
 
-                if (finishes.includes('etched') || hasEtchedPrice) {
-                  const useSyntheticId = v.finish !== 'etched';
+                if (pushesEtched) {
+                  const isSynthetic = v.finish !== 'etched' && (pushesNonFoil || pushesFoil);
                   expandedVersions.push({
                     ...baseVersion,
-                    printing_id: useSyntheticId ? `${v.printing_id}-etched` : v.printing_id,
+                    printing_id: isSynthetic ? `${v.printing_id}-etched` : v.printing_id,
                     price: Number(v.prices?.usd_etched || v.aggregated_prices?.[0]?.avg_market_price_usd || 0),
                     market_price: Number(v.aggregated_prices?.[0]?.avg_market_price_usd || 0),
                     finish: 'etched',
@@ -520,7 +528,8 @@ export const fetchCart = async (): Promise<any> => {
           name: row.product_name,
           price: row.price,
           image_url: row.image_url,
-          set_code: row.set_code
+          set_code: row.set_code,
+          stock: row.stock || 0
         }
       }));
       return { items };
@@ -543,7 +552,8 @@ export const fetchCart = async (): Promise<any> => {
             name: details.name,
             price: details.price || details.valuation?.market_price || 0,
             image_url: details.image_url,
-            set_code: details.set_code
+            set_code: details.set_code,
+            stock: details.total_stock || 0
           }
         };
       } catch (e) {

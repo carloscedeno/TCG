@@ -30,7 +30,7 @@ setup('authenticate', async ({ page }) => {
         throw new Error(`Authentication failed: ${JSON.stringify(authData)}`);
     }
 
-    await page.goto('/TCG/');
+    await page.goto('/');
     await page.evaluate(({ data, projectRef }) => {
         const key = `sb-${projectRef}-auth-token`;
         window.localStorage.setItem(key, JSON.stringify(data));

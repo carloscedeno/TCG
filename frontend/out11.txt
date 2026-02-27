@@ -1,0 +1,103 @@
+
+Running 4 tests using 3 workers
+
+[1A[2K[1/4] [setup] › tests\e2e\auth.setup.ts:7:1 › authenticate
+[1A[2K[2/4] [chromium] › tests\e2e\v4_features.spec.ts:62:5 › V4 Pending Features validation › should format WhatsApp message correctly on Checkout
+[1A[2K[3/4] [chromium] › tests\e2e\v4_features.spec.ts:5:5 › V4 Pending Features validation › should prevent adding more quantity than available stock in CartDrawer
+[1A[2K[4/4] [chromium] › tests\e2e\v4_features.spec.ts:138:5 › V4 Pending Features validation › should apply constraint classes to CardModal version list
+[1A[2K  1) [chromium] › tests\e2e\v4_features.spec.ts:62:5 › V4 Pending Features validation › should format WhatsApp message correctly on Checkout 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('[role="dialog"]')
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for locator('[role="dialog"]')[22m
+
+
+      73 |
+      74 |         const modal = page.locator('[role="dialog"]');
+    > 75 |         await expect(modal).toBeVisible({ timeout: 10000 });
+         |                             ^
+      76 |
+      77 |         const addToCartBtn = modal.getByRole('button', { name: /Agregar al carrito/i });
+      78 |         await expect(addToCartBtn).toBeVisible();
+        at C:\Users\carlo\OneDrive\Documents\Antigravity\TCG\frontend\tests\e2e\v4_features.spec.ts:75:29
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\v4_features-V4-Pending-Fea-74f15-ssage-correctly-on-Checkout-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\v4_features-V4-Pending-Fea-74f15-ssage-correctly-on-Checkout-chromium\error-context.md
+
+
+[1A[2K  2) [chromium] › tests\e2e\v4_features.spec.ts:5:5 › V4 Pending Features validation › should prevent adding more quantity than available stock in CartDrawer 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('[role="dialog"]')
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for locator('[role="dialog"]')[22m
+
+
+      38 |         // Wait for modal
+      39 |         const modal = page.locator('[role="dialog"]');
+    > 40 |         await expect(modal).toBeVisible({ timeout: 10000 });
+         |                             ^
+      41 |
+      42 |         // Add to cart.
+      43 |         const addToCartBtn = modal.getByRole('button', { name: /Agregar al carrito/i });
+        at C:\Users\carlo\OneDrive\Documents\Antigravity\TCG\frontend\tests\e2e\v4_features.spec.ts:40:29
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\v4_features-V4-Pending-Fea-ecadf-ailable-stock-in-CartDrawer-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\v4_features-V4-Pending-Fea-ecadf-ailable-stock-in-CartDrawer-chromium\error-context.md
+
+
+[1A[2K  3) [chromium] › tests\e2e\v4_features.spec.ts:138:5 › V4 Pending Features validation › should apply constraint classes to CardModal version list 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('[role="dialog"]')
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for locator('[role="dialog"]')[22m
+
+
+      149 |         // Check modal
+      150 |         const modal = page.locator('[role="dialog"]');
+    > 151 |         await expect(modal).toBeVisible({ timeout: 10000 });
+          |                             ^
+      152 |
+      153 |         // Verify constraint class is on the versions container
+      154 |         const versionsHeader = modal.getByText('Edición / Impresiones');
+        at C:\Users\carlo\OneDrive\Documents\Antigravity\TCG\frontend\tests\e2e\v4_features.spec.ts:151:29
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\v4_features-V4-Pending-Fea-9867c-s-to-CardModal-version-list-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[1A[2K  3 failed
+    [chromium] › tests\e2e\v4_features.spec.ts:5:5 › V4 Pending Features validation › should prevent adding more quantity than available stock in CartDrawer 
+    [chromium] › tests\e2e\v4_features.spec.ts:62:5 › V4 Pending Features validation › should format WhatsApp message correctly on Checkout 
+    [chromium] › tests\e2e\v4_features.spec.ts:138:5 › V4 Pending Features validation › should apply constraint classes to CardModal version list 
+  1 passed (26.9s)
+
+[36m  Serving HTML report at http://localhost:57922. Press Ctrl+C to quit.[39m
+^C

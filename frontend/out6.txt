@@ -1,0 +1,103 @@
+
+Running 4 tests using 3 workers
+
+[1A[2K[1/4] [setup] › tests\e2e\auth.setup.ts:7:1 › authenticate
+[1A[2K[2/4] [chromium] › tests\e2e\v4_features.spec.ts:5:5 › V4 Pending Features validation › should prevent adding more quantity than available stock in CartDrawer
+[1A[2K[3/4] [chromium] › tests\e2e\v4_features.spec.ts:45:5 › V4 Pending Features validation › should format WhatsApp message correctly on Checkout
+[1A[2K[4/4] [chromium] › tests\e2e\v4_features.spec.ts:116:5 › V4 Pending Features validation › should apply constraint classes to CardModal version list
+[1A[2K  1) [chromium] › tests\e2e\v4_features.spec.ts:5:5 › V4 Pending Features validation › should prevent adding more quantity than available stock in CartDrawer 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeDisabled[2m([22m[2m)[22m failed
+
+    Locator: locator('[data-testid="cart-drawer"]').first().getByTestId('increase-quantity-button').first()
+    Expected: disabled
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeDisabled" with timeout 5000ms[22m
+    [2m  - waiting for locator('[data-testid="cart-drawer"]').first().getByTestId('increase-quantity-button').first()[22m
+
+
+      40 |         // Find the increase button and verify it is disabled
+      41 |         const increaseBtn = cartDrawer.getByTestId('increase-quantity-button').first();
+    > 42 |         await expect(increaseBtn).toBeDisabled();
+         |                                   ^
+      43 |     });
+      44 |
+      45 |     test('should format WhatsApp message correctly on Checkout', async ({ page }) => {
+        at C:\Users\carlo\OneDrive\Documents\Antigravity\TCG\frontend\tests\e2e\v4_features.spec.ts:42:35
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\v4_features-V4-Pending-Fea-ecadf-ailable-stock-in-CartDrawer-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[1A[2K  2) [chromium] › tests\e2e\v4_features.spec.ts:45:5 › V4 Pending Features validation › should format WhatsApp message correctly on Checkout 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByRole('heading', { name: /Datos del Cliente/i })
+    Expected: visible
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 10000ms[22m
+    [2m  - waiting for getByRole('heading', { name: /Datos del Cliente/i })[22m
+
+
+      70 |         await page.goto('/checkout');
+      71 |
+    > 72 |         await expect(page.getByRole('heading', { name: /Datos del Cliente/i })).toBeVisible({ timeout: 10000 });
+         |                                                                                 ^
+      73 |
+      74 |         // Fill out checkout form
+      75 |         await page.getByLabel(/Nombre Completo/i).fill('Test User');
+        at C:\Users\carlo\OneDrive\Documents\Antigravity\TCG\frontend\tests\e2e\v4_features.spec.ts:72:81
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\v4_features-V4-Pending-Fea-74f15-ssage-correctly-on-Checkout-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\v4_features-V4-Pending-Fea-74f15-ssage-correctly-on-Checkout-chromium\error-context.md
+
+
+[1A[2K  3) [chromium] › tests\e2e\v4_features.spec.ts:116:5 › V4 Pending Features validation › should apply constraint classes to CardModal version list 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('[role="dialog"]')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for locator('[role="dialog"]')[22m
+
+
+      133 |         // Check modal
+      134 |         const modal = page.locator('[role="dialog"]');
+    > 135 |         await expect(modal).toBeVisible();
+          |                             ^
+      136 |
+      137 |         // Verify constraint class is on the versions container
+      138 |         const versionsHeader = modal.getByText('Edición / Impresiones');
+        at C:\Users\carlo\OneDrive\Documents\Antigravity\TCG\frontend\tests\e2e\v4_features.spec.ts:135:29
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\v4_features-V4-Pending-Fea-9867c-s-to-CardModal-version-list-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\v4_features-V4-Pending-Fea-9867c-s-to-CardModal-version-list-chromium\error-context.md
+
+
+[1A[2K  3 failed
+    [chromium] › tests\e2e\v4_features.spec.ts:5:5 › V4 Pending Features validation › should prevent adding more quantity than available stock in CartDrawer 
+    [chromium] › tests\e2e\v4_features.spec.ts:45:5 › V4 Pending Features validation › should format WhatsApp message correctly on Checkout 
+    [chromium] › tests\e2e\v4_features.spec.ts:116:5 › V4 Pending Features validation › should apply constraint classes to CardModal version list 
+  1 passed (17.9s)
+
+[36m  Serving HTML report at http://localhost:64190. Press Ctrl+C to quit.[39m
+Terminate batch job (Y/N)? 

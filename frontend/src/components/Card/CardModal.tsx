@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { X, ShoppingCart, ExternalLink, RotateCw, Loader2 } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { fetchCardDetails, addToCart } from '../../utils/api';
 import { getCardKingdomUrl } from '../../utils/urlUtils';
 import { ManaText } from '../Mana/ManaText';
@@ -258,7 +259,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
         if (!details?.all_versions) return [];
 
         const groups = (details.all_versions as Version[]).reduce((acc: any, v: Version) => {
-            const key = `${v.set_code}-${v.collector_number}`;
+            const key = `${v.set_code || 'unk'}-${v.collector_number || Math.random()}`;
             if (!acc[key]) {
                 const isNormal = !(v.is_foil || v.finish === 'foil' || v.finish === 'etched');
                 acc[key] = {
@@ -281,9 +282,11 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
             g.base = g.normal || g.foil || g.etched || g.base;
         });
 
-        return Object.values(groups).sort((a: any, b: any) =>
-            a.base.set_name.localeCompare(b.base.set_name)
-        );
+        return Object.values(groups).sort((a: any, b: any) => {
+            const nameA = a.base?.set_name || '';
+            const nameB = b.base?.set_name || '';
+            return nameA.localeCompare(nameB);
+        });
     }, [details?.all_versions]);
 
     const activeGroup = useMemo<any>(() => {
@@ -336,17 +339,32 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
 
     return (
         <div
-            className="fixed inset-0 z-[200] flex items-center justify-center bg-black/95 backdrop-blur-xl p-0 md:p-6 animate-in fade-in zoom-in-95 duration-300 overflow-y-auto md:overflow-hidden"
+            className="fixed inset-0 z-[200] flex items-end md:items-center justify-center bg-black/95 backdrop-blur-xl p-0 md:p-6 animate-in fade-in duration-300 overflow-hidden"
             onClick={handleBackdropClick}
         >
             {/* Modal Content */}
-            <div
+            <motion.div
                 data-testid="card-modal"
-                className="glass-panel w-full max-w-6xl max-h-[90vh] rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0,0,0,0.8)] flex flex-col md:flex-row overflow-hidden relative"
+                role="dialog"
+                aria-modal="true"
+                drag="y"
+                dragConstraints={{ top: 0, bottom: 0 }}
+                dragElastic={0.2}
+                onDragEnd={(_, info) => {
+                    if (info.offset.y > 100) {
+                        onClose();
+                    }
+                }}
+                className="glass-panel w-full max-w-6xl max-h-[95vh] md:max-h-[90vh] rounded-t-[32px] md:rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0,0,0,0.8)] flex flex-col md:flex-row overflow-hidden relative bg-[#0a0a0a]"
                 onClick={e => e.stopPropagation()}
             >
+                {/* Swipe indicator handle for mobile */}
+                <div className="w-full h-8 flex items-center justify-center md:hidden shrink-0 cursor-grab active:cursor-grabbing relative z-50">
+                    <div className="w-12 h-1.5 bg-white/20 rounded-full" />
+                </div>
+
                 {/* Sticky Header: Card name + close button always visible on mobile */}
-                <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#0a0a0a]/95 backdrop-blur-md sticky top-0 z-50 md:hidden">
+                <div className="flex items-center justify-between px-6 py-3 border-b border-white/5 bg-[#0a0a0a]/95 backdrop-blur-md sticky top-0 z-50 md:hidden">
                     <h2 className="text-sm font-black text-white truncate pr-4">{details?.name || 'Cargando...'}</h2>
                     <button
                         onClick={onClose}
@@ -403,7 +421,10 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                             <h3 className="text-[10px] font-black uppercase tracking-widest text-neutral-500">Edición / Impresiones</h3>
                             <span className="text-[10px] text-neutral-600 font-bold">{details?.all_versions?.length || 0} Versiones</span>
                         </div>
-                        <div className="flex-1 overflow-x-auto md:overflow-y-auto md:overflow-x-hidden custom-scrollbar relative flex md:block whitespace-nowrap md:whitespace-normal p-2 md:p-0">
+                        <div
+                            data-testid="versions-list-container"
+                            className="flex-1 overflow-x-auto md:overflow-y-auto md:overflow-x-hidden custom-scrollbar relative flex md:block whitespace-nowrap md:whitespace-normal p-2 md:p-0 max-h-[35vh] md:max-h-none"
+                        >
                             {loading ? (
                                 // Versions Skeleton
                                 [...Array(5)].map((_, i) => (
@@ -715,7 +736,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                         </>
                     ) : null}
                 </div>
-            </div>
+            </motion.div>
         </div>
     );
 };
