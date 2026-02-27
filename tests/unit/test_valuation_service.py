@@ -1,46 +1,79 @@
 import pytest
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, patch, call
 from src.api.services.valuation_service import ValuationService
+
+
+def _make_supabase_mock(sources_data, prices_data, agg_data=None):
+    """
+    Build a MagicMock that returns the right data for each table() call.
+    ValuationService.get_two_factor_valuation calls:
+      1. supabase.table('sources').select(...).execute()        → sources_data
+      2. supabase.table('price_history').select(...).eq().order().limit().execute() → prices_data
+      3. (only if prices missing) supabase.table('aggregated_prices').select(...).eq().execute() → agg_data
+      4. (only if no ck_url) supabase.table('card_printings').select(...).eq().single().execute()
+    """
+    mock = MagicMock()
+
+    def table_side_effect(name):
+        tbl = MagicMock()
+        if name == 'sources':
+            tbl.select.return_value.execute.return_value.data = sources_data
+        elif name == 'price_history':
+            chain = tbl.select.return_value.eq.return_value.order.return_value.limit.return_value
+            chain.execute.return_value.data = prices_data
+        elif name == 'aggregated_prices':
+            tbl.select.return_value.eq.return_value.execute.return_value.data = agg_data or []
+        elif name == 'card_printings':
+            # Return empty so the fallback URL block exits cleanly
+            tbl.select.return_value.eq.return_value.single.return_value.execute.return_value.data = None
+        return tbl
+
+    mock.table.side_effect = table_side_effect
+    return mock
+
 
 @pytest.mark.asyncio
 async def test_valuation_calculation_logic():
-    """Test that the Two-Factor calculation prioritizes specific sources and averages correctly."""
-    
-    # Mock data resembling Supabase response from price_history
-    mock_prices = [
-        {'source': 'geekorium', 'price_usd': 100.0, 'scraped_at': '2026-01-10T00:00:00Z'},
-        {'source': 'cardkingdom', 'price_usd': 120.0, 'scraped_at': '2026-01-10T00:00:00Z'}
+    """Verifica que la valuación de dos factores prioriza fuentes correctas."""
+
+    # Sources: id 1 = geekorium, id 2 = cardkingdom
+    sources_data = [
+        {'source_id': 1, 'source_code': 'geekorium'},
+        {'source_id': 2, 'source_code': 'cardkingdom'},
     ]
-    
-    mock_supabase = MagicMock()
-    mock_supabase.table().select().eq().order().limit().execute.return_value.data = mock_prices
-    
+
+    # Price history uses source_id (not 'source' string)
+    prices_data = [
+        {'source_id': 1, 'price_usd': 100.0, 'url': None},
+        {'source_id': 2, 'price_usd': 120.0, 'url': 'https://www.cardkingdom.com/mtg/set/card'},
+    ]
+
+    mock_supabase = _make_supabase_mock(sources_data, prices_data)
+
     with patch('src.api.services.valuation_service.supabase', mock_supabase):
         result = await ValuationService.get_two_factor_valuation("test-id")
-        
+
         assert result['store_price'] == 100.0
         assert result['market_price'] == 120.0
         assert result['valuation_avg'] == 110.0
 
+
 @pytest.mark.asyncio
 async def test_valuation_fallback_to_aggregated():
-    """Test that it falls back to aggregated prices if specific sources are missing."""
-    
-    # Empty price history for specific sources
-    mock_prices = []
-    # Aggregated price available
-    mock_agg = [{'avg_market_price_usd': 50.0}]
-    
-    mock_supabase = MagicMock()
-    # First call for price_history
-    mock_supabase.table().select().eq().order().limit().execute.return_value.data = mock_prices
-    # Second call for aggregated_prices
-    mock_supabase.table().select().eq().execute.return_value.data = mock_agg
-    
+    """Verifica que hace fallback a aggregated_prices si no hay fuentes específicas."""
+
+    sources_data = [
+        {'source_id': 1, 'source_code': 'geekorium'},
+        {'source_id': 2, 'source_code': 'cardkingdom'},
+    ]
+    prices_data = []  # No specific source prices
+    agg_data = [{'avg_market_price_usd': 50.0}]
+
+    mock_supabase = _make_supabase_mock(sources_data, prices_data, agg_data)
+
     with patch('src.api.services.valuation_service.supabase', mock_supabase):
         result = await ValuationService.get_two_factor_valuation("test-id")
-        
-        # Both should take the fallback
+
         assert result['store_price'] == 50.0
         assert result['market_price'] == 50.0
         assert result['valuation_avg'] == 50.0
