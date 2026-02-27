@@ -83,3 +83,18 @@
 
 **Regla derivada:**
 > Siempre que se modifique un componente heredado para ajustarlo a nuevas reglas de brand, se debe auditar TODO el componente buscando y reemplazando colores *hardcoded* obsoletos.
+
+---
+
+## 2026-02-27 — Hotfix: Fallback Image URLs en vistas combinadas de DB
+
+**Qué pasó:** Los cards del inventario en el "Stock Geekorium" se mostraban sin imagen porque la consulta `get_products_filtered` estaba obteniendo `image_url` directamente de la tabla local `products` que puede estar nulo. El fallback a la metadata universal (`card_printings`) estaba ignorado a pesar del `LEFT JOIN`.
+
+**Lo que cambió:**
+
+- Modificado en Supabase (vía MCP) el RPC `get_products_filtered` (para ambas firmas).
+- Se reemplazó `p.image_url` por `COALESCE(p.image_url, cp.image_url) as image_url`.
+- `.agent/lessons_learned.md` → Lección #21 (Fallbacks Visuales en Vistas Combinadas de DB).
+
+**Regla derivada:**
+> Cuando se construyan RPCs o Vistas SQL que unan datos de inventario local (`products`) con metadata universal (`card_printings`, `cards`), los campos visuales (`image_url`) y descriptivos deben usar `COALESCE` para priorizar la fuente local y recurrir como fallback a la metadata universal.

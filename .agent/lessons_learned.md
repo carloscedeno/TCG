@@ -164,3 +164,10 @@ Este documento registra los desafíos técnicos encontrados durante el desarroll
 - **Causa Raíz**: Refactorización local "quirúrgica" (solo tocar `italic`) en componentes sin auditar si su paleta general sigue el nuevo "Diseño Fix".
 - **Solución**: Reemplazo masivo de colores heredados en el componente modificado. Beige (`#f4e4bc`) a Primario (`#373266`), Negro (`text-black`) a Blanco (`#FFFFFF`), y Verde (`#25D366`) a Cyan (`geeko-cyan` / `#00AEB4`). Además se debió re-añadir `font-web-titles` porque el `<h3/>` carecía de familia tipográfica tras quitar la itálica.
 - **Regla Derivada**: Siempre que se modifique un componente heredado ("legacy") para ajustarlo a nuevas reglas de brand, auditar TODO el componente. Eliminar colores *hardcoded* obsoletos y aplicar los nuevos tokens de marca. Validar que no perder clases como `italic` descubra la falta de clases estructurales como familias de fuentes (`font-web-titles`).
+
+### 21. Fallbacks Visuales en Vistas Combinadas de DB (Feb 2026)
+
+- **Problema**: Las imágenes de las cartas no se mostraban en el Grid ("Imagen No Disponible"), a pesar de existir imágenes en la base de datos de Scryfall.
+- **Causa Raíz**: El endpoint RPC `get_products_filtered` retornaba directamente la columna `image_url` de la tabla `products`, la cual puede ser nula dependiendo del formato de importación, en lugar de considerar el fallback a la tabla unida `card_printings`.
+- **Solución**: Refactorizar la proyección SQL para incluir `COALESCE(p.image_url, cp.image_url) as image_url`.
+- **Regla Derivada**: Cuando se construyan RPCs o Vistas SQL que unan datos de inventario local (`products`) con metadata universal (`card_printings`, `cards`), los campos visuales (`image_url`) y descriptivos deben usar `COALESCE` para priorizar la fuente local y recurrir como fallback a la metadata universal.
