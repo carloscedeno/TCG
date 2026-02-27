@@ -1,4 +1,8 @@
-# Methodology: TOP 1% AGENTIC ENGINEER
+# Methodology: Compounding Engineer Framework
+
+> Basado en el framework **Compounding Engineer** (Dan Shipper / Every.to).
+> Ciclo base: **Plan → Work → Review → Compound**
+> Strata equivalente: Plan → Prepare → Run → Evaluate+**Compound**
 
 Follow these rules for every interaction:
 

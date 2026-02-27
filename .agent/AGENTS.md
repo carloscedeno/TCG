@@ -30,8 +30,31 @@ Cargar según la tarea específica:
 6. **[Documentation](reference/documentation.md)** — Gestión del PRD y docs/.
 7. **[Lessons Learned](lessons_learned.md)** — Bugs críticos, soluciones, anti-patrones.
 
+## ⚙️ Ciclo de Trabajo — Compounding Engineer
+
+Este proyecto sigue el framework **Compounding Engineer** (Dan Shipper / Every.to).
+Cada sesión de trabajo debe completar los 4 pasos:
+
+| Paso | Qué hace el agente |
+|------|--------------------|
+| **1. Plan** | Crear `implementation_plan.md`, revisar PRD, pedir aprobación |
+| **2. Work** | Ejecutar cambios en código, DB y scripts |
+| **3. Review** | Correr tests (`pytest`, Playwright), crear `walkthrough.md` |
+| **4. Compound** | Ejecutar `/compound` — codificar lo aprendido en archivos permanentes |
+
+> **Regla de Oro:** Si el conocimiento solo está en el historial de conversación, **no existe**.
+> Solo cuenta lo que está escrito en los archivos del repo.
+
+Artefactos del Compound step:
+
+- `.agent/COMPOUND.md` — Log cronológico de lo que se aprendió por sesión
+- `.agent/lessons_learned.md` — Base de conocimiento técnico acumulado
+
+---
+
 ## 🛠️ Workflows Disponibles
 
+- `/compound` — **Post-sesión**: codificar lo aprendido (Compound step)
 - `/import` — Implementar y verificar el Bulk Import feature
 - `/nightly-sync` — Ejecución autónoma del framework Strata
 
