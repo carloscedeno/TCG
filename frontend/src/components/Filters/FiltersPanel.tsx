@@ -75,7 +75,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
                 onClick={() => handleCheckbox('games', game)}
                 data-active={isSelected}
                 className={`px-4 py-2 rounded-xl text-[11px] font-bold transition-all border ${isSelected
-                  ? 'bg-blue-600/10 border-blue-500/50 text-blue-400 shadow-lg shadow-blue-500/10'
+                  ? 'bg-geeko-violet-accent/20 border-geeko-cyan/40 text-geeko-cyan shadow-lg shadow-geeko-cyan/10'
                   : 'bg-neutral-900/50 border-neutral-800 text-neutral-500 hover:border-neutral-700 hover:text-neutral-300'
                   }`}
               >
@@ -89,7 +89,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
       {/* Sets / Ediciones Dinámicas */}
       <section>
         <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
-          <div className="w-1.5 h-1.5 bg-purple-500 rounded-full shadow-[0_0_10px_rgba(168,85,247,0.8)]"></div>
+          <div className="w-1.5 h-1.5 bg-geeko-violet-accent rounded-full shadow-[0_0_10px_rgba(55,50,102,0.9)]"></div>
           Expansión / Set
         </h3>
         <div className="relative mb-3">
@@ -109,7 +109,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
                 key={setName}
                 onClick={() => handleCheckbox('sets', setName)}
                 className={`flex items-center justify-between w-full px-3 py-2 rounded-lg text-left text-[11px] font-medium transition-all ${selected.sets?.includes(setName)
-                  ? 'bg-purple-600/10 text-purple-400'
+                  ? 'bg-geeko-cyan/10 text-geeko-cyan'
                   : 'text-neutral-500 hover:bg-white/5 hover:text-neutral-300'
                   }`}
               >

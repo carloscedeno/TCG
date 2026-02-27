@@ -66,7 +66,7 @@ export const WhatsAppWidget: React.FC = () => {
                     {/* Footer Text */}
                     <div className="px-6 py-3 bg-black/40 text-center">
                         <p className="text-[10px] text-neutral-500 font-bold uppercase tracking-widest">
-                            Online 24/7 (Respuesta rápida)
+                            Atención por WhatsApp
                         </p>
                     </div>
                 </div>
@@ -76,8 +76,8 @@ export const WhatsAppWidget: React.FC = () => {
             <button
                 onClick={() => setIsOpen(!isOpen)}
                 className={`w-16 h-16 rounded-full flex items-center justify-center shadow-2xl transition-all transform active:scale-90 group relative ${isOpen
-                        ? 'bg-neutral-800 text-white rotate-90'
-                        : 'bg-geeko-cyan text-black hover:scale-110'
+                    ? 'bg-neutral-800 text-white rotate-90'
+                    : 'bg-geeko-cyan text-black hover:scale-110'
                     }`}
                 title="Contactar por WhatsApp"
             >

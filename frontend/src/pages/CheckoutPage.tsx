@@ -34,6 +34,7 @@ export const CheckoutPage = () => {
         state: '',
         address: '',
         email: '',
+        shipping_method: '' as '' | 'pickup' | 'delivery' | 'nacional',
     });
 
     useEffect(() => {
@@ -71,6 +72,8 @@ export const CheckoutPage = () => {
         if (!form.whatsapp.trim() || !/^\d{10,12}$/.test(form.whatsapp.replace(/\D/g, ''))) return 'Número de WhatsApp inválido (ej: 04145551234).';
         if (!form.state) return 'Selecciona un estado.';
         if (!form.address.trim()) return 'La dirección es requerida.';
+        if (!form.shipping_method) return 'Selecciona un método de despacho.';
+        if (form.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) return 'El formato del correo electrónico es inválido.';
         return null;
     };
 
@@ -296,6 +299,34 @@ export const CheckoutPage = () => {
                                         value={form.email}
                                         onChange={(e) => setForm({ ...form, email: e.target.value })}
                                     />
+                                </div>
+
+                                {/* Método de Despacho */}
+                                <div>
+                                    <label className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-2">
+                                        Método de Despacho <span className="text-red-400">*</span>
+                                    </label>
+                                    <div className="grid grid-cols-3 gap-2">
+                                        {[
+                                            { value: 'pickup', label: 'Pick Up', desc: 'Retiro en tienda', icon: '🏪' },
+                                            { value: 'delivery', label: 'Delivery', desc: 'Entrega a domicilio', icon: '🏍️' },
+                                            { value: 'nacional', label: 'Envío Nacional', desc: 'Encomienda / MRW', icon: '📦' },
+                                        ].map((opt) => (
+                                            <button
+                                                key={opt.value}
+                                                type="button"
+                                                onClick={() => setForm({ ...form, shipping_method: opt.value as typeof form.shipping_method })}
+                                                className={`flex flex-col items-center gap-1 p-3 rounded-xl border transition-all text-center ${form.shipping_method === opt.value
+                                                        ? 'border-[#00AEB4]/60 bg-[#00AEB4]/10 text-white'
+                                                        : 'border-white/10 bg-black/30 text-neutral-500 hover:border-white/20 hover:text-neutral-300'
+                                                    }`}
+                                            >
+                                                <span className="text-lg">{opt.icon}</span>
+                                                <span className="text-[10px] font-black uppercase tracking-wider">{opt.label}</span>
+                                                <span className="text-[9px] text-neutral-500 leading-tight">{opt.desc}</span>
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
 
