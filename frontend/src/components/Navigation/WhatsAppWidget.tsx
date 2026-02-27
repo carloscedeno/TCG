@@ -31,8 +31,8 @@ export const WhatsAppWidget: React.FC = () => {
                 <div className="w-72 bg-[#121212]/95 backdrop-blur-xl border border-white/10 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
                     {/* Header */}
                     <div className="bg-gradient-to-r from-geeko-cyan/20 to-geeko-purple/20 p-6 border-b border-white/10">
-                        <h3 className="text-xl font-black italic tracking-tighter text-white uppercase">
-                            Geeko-Asesoría
+                        <h3 className="text-xl font-black tracking-tighter text-white uppercase">
+                            Atención por WhatsApp
                         </h3>
                         <p className="text-xs text-neutral-400 font-medium">¿En qué podemos ayudarte hoy?</p>
                     </div>

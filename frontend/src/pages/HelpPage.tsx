@@ -13,7 +13,7 @@ const HelpPage: React.FC = () => {
                 <div className="max-w-[1600px] mx-auto flex items-center justify-between">
                     <a href="/" className="flex items-center gap-3 group">
                         <img src="/branding/Logo.jpg" alt="Logo" className="w-10 h-10 rounded-full border border-white/10" />
-                        <span className="text-xl font-black italic tracking-tighter text-white uppercase group-hover:text-geeko-cyan transition-colors">
+                        <span className="text-xl font-black tracking-tighter text-white uppercase group-hover:text-geeko-cyan transition-colors">
                             Volver al Emporio
                         </span>
                     </a>

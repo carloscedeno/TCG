@@ -32,6 +32,7 @@ export const CheckoutPage = () => {
         cedula_number: '',
         whatsapp: '',
         state: '',
+        country: 'Venezuela',
         address: '',
         email: '',
         shipping_method: '' as '' | 'pickup' | 'delivery' | 'nacional',
@@ -75,11 +76,12 @@ export const CheckoutPage = () => {
         if (!phoneDigits) return 'El número de WhatsApp es requerido.';
         if (!/^0(414|424|412|416|426|2\d{2})\d{7}$/.test(phoneDigits)) return 'Número de WhatsApp inválido. Debe ser un número venezolano (ej: 04141234567).';
 
-        if (!form.state) return 'Selecciona un estado.';
+        if (!form.country) return 'Selecciona un país.';
+        if (!form.state.trim()) return 'Ingresa o selecciona un estado/provincia.';
         if (!form.address.trim() || form.address.trim().length < 5) return 'La dirección de entrega es muy corta.';
         if (!form.shipping_method) return 'Selecciona un método de despacho.';
 
-        if (form.email.trim() && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,10}$/i.test(form.email.trim())) return 'El formato del correo electrónico es inválido.';
+        if (form.email.trim() && !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(form.email.trim())) return 'El formato del correo electrónico es inválido.';
         return null;
     };
 
@@ -140,7 +142,7 @@ export const CheckoutPage = () => {
                     city: form.state,
                     state: form.state,
                     zip_code: cedula, // reuse field for storage
-                    country: 'VE',
+                    country: form.country === 'Venezuela' ? 'VE' : form.country,
                     email: form.email,
                     phone: form.whatsapp,
                     payment_proof_url: paymentProofUrl // Inject the URL here
@@ -266,20 +268,46 @@ export const CheckoutPage = () => {
                                     />
                                 </div>
 
-                                {/* Estado Venezuela */}
+                                {/* País */}
                                 <div>
-                                    <label htmlFor="state" className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-1.5">Estado</label>
+                                    <label htmlFor="country" className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-1.5">País</label>
                                     <select
-                                        id="state"
-                                        value={form.state}
-                                        onChange={(e) => setForm({ ...form, state: e.target.value })}
+                                        id="country"
+                                        value={form.country}
+                                        onChange={(e) => setForm({ ...form, country: e.target.value, state: '' })}
                                         className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-[#00AEB4] outline-none transition-colors text-white"
                                     >
-                                        <option value="" disabled>Selecciona tu estado...</option>
-                                        {VENEZUELA_STATES.map(s => (
-                                            <option key={s} value={s}>{s}</option>
-                                        ))}
+                                        <option value="Venezuela">Venezuela</option>
+                                        <option value="Estados Unidos">Estados Unidos</option>
+                                        <option value="Colombia">Colombia</option>
+                                        <option value="Otro">Otro/Multinacional</option>
                                     </select>
+                                </div>
+
+                                {/* Estado / Provincia */}
+                                <div>
+                                    <label htmlFor="state" className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-1.5">Estado / Provincia</label>
+                                    {form.country === 'Venezuela' ? (
+                                        <select
+                                            id="state"
+                                            value={form.state}
+                                            onChange={(e) => setForm({ ...form, state: e.target.value })}
+                                            className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-[#00AEB4] outline-none transition-colors text-white"
+                                        >
+                                            <option value="" disabled>Selecciona tu estado...</option>
+                                            {VENEZUELA_STATES.map(s => (
+                                                <option key={s} value={s}>{s}</option>
+                                            ))}
+                                        </select>
+                                    ) : (
+                                        <input
+                                            id="state"
+                                            placeholder="Ingresa tu estado/provincia"
+                                            value={form.state}
+                                            onChange={(e) => setForm({ ...form, state: e.target.value })}
+                                            className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-[#00AEB4] outline-none transition-colors text-white placeholder:text-neutral-600"
+                                        />
+                                    )}
                                 </div>
 
                                 {/* Dirección */}
@@ -415,7 +443,6 @@ export const CheckoutPage = () => {
                                     ref={fileInputRef}
                                     type="file"
                                     accept="image/*"
-                                    capture="environment"
                                     onChange={handleFileChange}
                                     className="hidden"
                                 />

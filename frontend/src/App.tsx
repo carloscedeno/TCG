@@ -30,9 +30,9 @@ function App() {
                     <div className="w-16 h-16 bg-red-500/10 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-red-500/20">
                         <AlertCircle className="text-red-500" size={32} />
                     </div>
-                    <h1 className="text-2xl font-black text-white uppercase tracking-tighter italic mb-4">
-                        Geekorium El Emporio
-                    </h1>
+                    <div className="flex justify-center mb-4">
+                        <img src="/logo-emporio.png" alt="Geekorium El Emporio" className="h-8 object-contain" />
+                    </div>
                     <p className="text-neutral-400 text-sm font-medium mb-8 leading-relaxed">
                         Supabase environment variables are missing. Please configure <code className="text-geeko-cyan bg-geeko-cyan/10 px-1.5 py-0.5 rounded">VITE_SUPABASE_URL</code> and <code className="text-geeko-cyan bg-geeko-cyan/10 px-1.5 py-0.5 rounded">VITE_SUPABASE_ANON_KEY</code> in your deployment environment.
                     </p>

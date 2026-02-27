@@ -8,7 +8,7 @@ export const Footer: React.FC = () => {
                 <div className="flex flex-col gap-6 justify-center md:justify-start">
                     <Link to="/" className="flex items-center gap-4 justify-center md:justify-start group cursor-pointer text-white no-underline">
                         <img src="/branding/Logo.jpg" alt="Logo" className="w-12 h-12 rounded-full border border-white/10 group-hover:scale-110 transition-transform" />
-                        <span className="text-2xl font-black tracking-tighter uppercase italic text-white"><span className="text-geeko-cyan">Geekorium</span> El Emporio</span>
+                        <span className="text-2xl font-black tracking-tighter uppercase text-white"><span className="text-geeko-cyan">Geekorium</span> El Emporio</span>
                     </Link>
                     <div className="flex flex-col gap-3 text-sm font-medium text-neutral-400">
                         <a href="https://wa.me/584128042832" target="_blank" rel="noopener noreferrer" className="hover:text-geeko-cyan transition-colors">WhatsApp Principal: +58 412-8042832</a>
@@ -35,7 +35,7 @@ export const Footer: React.FC = () => {
                         <a href="https://www.twitch.tv/geekorium" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-500 hover:bg-geeko-cyan hover:text-black transition-all shadow-lg hover:shadow-geeko-cyan/20">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7" /></svg>
                         </a>
-                        <a href="mailto:geekorium@gmail.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-500 hover:bg-geeko-cyan hover:text-black transition-all shadow-lg hover:shadow-geeko-cyan/20">
+                        <a href="https://mailchimp.com/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-500 hover:bg-geeko-cyan hover:text-black transition-all shadow-lg hover:shadow-geeko-cyan/20">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
                         </a>
                     </div>

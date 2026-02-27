@@ -131,7 +131,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         </div>
 
         <div className="flex-1 min-w-0">
-          <h3 className="text-white font-bold text-sm group-hover:text-geeko-cyan transition-colors line-clamp-2 leading-snug">{currentName}</h3>
+          <h3 className="text-white font-bold text-sm group-hover:text-geeko-cyan transition-colors break-words whitespace-normal leading-snug">{currentName}</h3>
           <div className="flex items-center gap-2 mt-0.5">
             <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider px-1.5 py-0.5 bg-white/5 rounded">{set}</span>
             {rarity && (
@@ -244,7 +244,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
 
         {/* Stock display - Repositioned & Darker as requested */}
         {total_stock !== undefined && total_stock > 0 && (
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-20 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest backdrop-blur-md border border-black/20 bg-black/80 text-white shadow-lg">
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-20 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest backdrop-blur-md border border-white/10 bg-black/95 text-white shadow-lg">
             DISP: {total_stock}
           </div>
         )}

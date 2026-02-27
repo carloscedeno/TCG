@@ -273,12 +273,10 @@ const Home: React.FC = () => {
           <nav className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 py-3 flex items-center justify-between flex-wrap gap-y-2">
             <div className="flex items-center gap-4 sm:gap-8">
               <Link to="/" className="flex items-center gap-4 group">
-                <div className="flex items-center justify-center font-black text-2xl italic text-white group-hover:scale-105 transition-transform tracking-tighter">
+                <div className="flex items-center justify-center group-hover:scale-105 transition-transform">
                   <img src="/branding/Logo.jpg" alt="Logo" className="w-8 h-8 sm:w-10 sm:h-10 rounded-full mr-2 sm:mr-3 border border-white/10 shadow-lg shadow-geeko-cyan/10" />
-                  <span className="text-geeko-cyan">Geekorium</span>
-                  <span className="hidden md:inline">&nbsp;El Emporio</span>
+                  <img src="/logo-emporio.png" alt="Geekorium El Emporio" className="h-6 sm:h-8 object-contain" />
                 </div>
-                <h1 className="hidden">Geekorium El Emporio</h1>
               </Link>
             </div>
             <div className="flex-1 max-w-xl mx-4 sm:mx-8 hidden lg:block">
@@ -639,7 +637,7 @@ const Home: React.FC = () => {
               <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setIsMobileFiltersOpen(false)} />
               <div className="absolute inset-y-0 right-0 w-full max-w-xs bg-[#0a0a0a] border-l border-white/5 p-6 shadow-2xl overflow-y-auto animate-in slide-in-from-right duration-300">
                 <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-xl font-black italic tracking-tighter">FILTROS</h2>
+                  <h2 className="text-xl font-black tracking-tighter">FILTROS</h2>
                   <button onClick={() => setIsMobileFiltersOpen(false)} className="p-2 bg-white/5 rounded-lg text-neutral-400">
                     <X size={20} />
                   </button>
