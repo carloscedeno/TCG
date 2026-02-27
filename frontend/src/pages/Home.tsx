@@ -578,7 +578,7 @@ const Home: React.FC = () => {
                   <div className="w-16 h-1 bg-geeko-cyan rounded-full mb-6 shadow-[0_0_10px_rgba(0,174,180,0.5)]" />
                 </div>
 
-                <h2 className="text-4xl md:text-5xl font-web-titles font-black text-white italic tracking-tighter mb-8 uppercase flex flex-col md:flex-row items-center gap-4 justify-center md:justify-start">
+                <h2 className="text-4xl md:text-5xl font-web-titles font-black text-white tracking-tighter mb-8 uppercase flex flex-col md:flex-row items-center gap-4 justify-center md:justify-start">
                   <img src="/branding/Misiones.jpg" alt="Scroll" className="w-14 h-14 rounded-full border-2 border-white/10 shadow-xl" />
                   ¿Cómo comprar en Geekorium El Emporio?
                 </h2>
