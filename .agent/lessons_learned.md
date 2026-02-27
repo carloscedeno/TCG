@@ -114,3 +114,46 @@ Este documento registra los desafíos técnicos encontrados durante el desarroll
 
 - **Problema**: `toFixed()` crasheaba cuando el precio venía como string o null de la API.
 - **Lección**: Siempre convertir: `const price = Number(rawPrice)`. Verificar `isNaN(price)` antes de formatear. Mostrar `S/P` si null/undefined.
+
+---
+
+## 🎨 Diseño y Branding
+
+### 15. Restricciones de Itálicas por Sección — Spec Geekorium (Feb 2026)
+
+- **Problema**: Clase `italic` aparecía en headings de secciones donde la spec lo prohíbe explícitamente.
+- **Causa Raíz**: El diseñador estableció que `font-web-titles` (Daito/Roboto Slab) no debe usarse en itálica en secciones de contenido informativo (¿Cómo comprar?, Ayuda). Solo se permite italic en títulos de marca/admin.
+- **Solución**: Remover `italic` de `Home.tsx` L581 (¿Cómo comprar?) y `HelpPage.tsx` L28 (¿Aún tienes dudas?).
+- **Regla Derivada**: Al implementar headings con `font-web-titles`, verificar si la sección está en la lista de restricciones de la spec. La lista actual: sección `¿Cómo comprar?` y sección de Ayuda.
+
+### 16. Tokens de Color de Marca: Incluir Todas las Variantes del Spec (Feb 2026)
+
+- **Problema**: El token `#523176` (variante técnica morada) estaba en la spec pero no definido en `index.css` como CSS variable.
+- **Causa Raíz**: Al implementar la paleta inicial se omitió esta variante por considerarla secundaria.
+- **Solución**: Agregar `--color-geeko-violet-deep: #523176` al bloque `@theme` de `index.css`.
+- **Regla Derivada**: Al adoptar un nuevo spec de diseño, mapear **todas** las variantes de color del documento al sistema de tokens, incluso si no se usan inmediatamente. Pendiente usarlo en: bordes de cartas Lorcana, sellos de cera, accents de sets específicos.
+
+---
+
+## 🧪 Testing
+
+### 17. Patch Target Correcto para Servicios con `supabase_admin` (Feb 2026)
+
+- **Problema**: `test_collection_import.py` fallaba con `AttributeError: module does not have the attribute 'supabase'`.
+- **Causa Raíz**: El service `collection_service.py` fue refactorizado para usar `supabase_admin = get_supabase_admin()` en lugar de `supabase`. Los tests seguían mockeando el atributo viejo.
+- **Solución**: Cambiar el patch target en los fixtures de `'api.services.collection_service.supabase'` → `'api.services.collection_service.supabase_admin'`.
+- **Regla Derivada**: Cuando un servicio renombra su variable de cliente de Supabase, buscar y actualizar TODOS los tests que la mockean. Usar `grep_search` con `patch(` + el módulo para detectarlos.
+
+### 18. Lazy Imports en Servicios — Cómo Parchearlos (Feb 2026)
+
+- **Problema**: `patch('src.api.services.collection_service.MatcherService')` fallaba porque `MatcherService` se importa dentro del cuerpo de la función (`from .matcher_service import MatcherService`), no al nivel del módulo.
+- **Causa Raíz**: Los lazy imports (dentro de la función) no crean atributos en el namespace del módulo que los contiene, por lo que no son patcheables desde ahí.
+- **Solución**: Parchear en el módulo **fuente**, no en el módulo importador: `patch('src.api.services.matcher_service.MatcherService.match_cards', new_callable=AsyncMock)`.
+- **Regla Derivada**: Si una clase/función se importa con `from .modulo import Clase` dentro de una función, siempre parchear en `modulo.Clase`, no en `servicio_importador.Clase`.
+
+### 19. Mock Chain para `ValuationService` — Two-Step Query (Feb 2026)
+
+- **Problema**: `test_valuation_calculation_logic` afirmaba `store_price == 100.0` pero obtenía `1.0`.
+- **Causa Raíz**: El test pasaba `{'source': 'geekorium', 'price_usd': 100.0}` pero el servicio NO usa el campo `source` — hace primero un query a la tabla `sources` para obtener un mapa `{source_id → source_code}`, luego itera `price_history` buscando `source_id` (entero).
+- **Solución**: Reescribir el mock como un `table_side_effect` que retorna datos distintos por tabla: `sources` → mapa de IDs, `price_history` → filas con `source_id` (int), no `source` (str).
+- **Regla Derivada**: Antes de escribir mocks para servicios, leer su implementación para identificar el flujo exacto de queries. Los servicios con lookups de tablas de referencia (como `sources`, `conditions`) requieren mocks de múltiples tablas.

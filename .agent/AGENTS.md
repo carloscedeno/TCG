@@ -90,6 +90,8 @@ Artefactos del Compound step:
 4. **Sin `any` implícito** en `map`/`filter`/`forEach` — rompe el pipeline de CI/CD.
 5. **Foil virtual**: No son registros separados en DB. Se detectan por `prices.usd_foil IS NOT NULL`.
 6. **Consultar `lessons_learned.md`** antes de tocar lógica de DB, filtros, o CardModal.
+7. **Testing de Servicios**: Al renombrar variables de cliente Supabase (`supabase` → `supabase_admin`), actualizar TODOS los patch targets.
+8. **Testing Lazy Imports**: Parchear siempre la clase importada desde el módulo de origen (`modulo.Clase`), no desde el importador.
 
 ---
 *Geekorium — Geeko-Engineering Division | Limpieza: 2026-02-26*
