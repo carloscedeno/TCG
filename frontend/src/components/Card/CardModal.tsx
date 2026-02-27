@@ -619,7 +619,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                 <div
                                                     key={fmt}
                                                     className={`flex items-center justify-center p-2.5 rounded-lg border transition-all duration-300 ${isLegal
-                                                        ? 'bg-geeko-green/10 border-geeko-green/40 text-geeko-green shadow-[0_0_20px_rgba(0,255,133,0.1)]'
+                                                        ? 'bg-geeko-gold/10 border-geeko-gold/40 text-geeko-gold shadow-[0_0_20px_rgba(249,174,0,0.1)]'
                                                         : 'bg-neutral-900/40 border-white/5 text-neutral-600 opacity-60'
                                                         }`}
                                                 >
