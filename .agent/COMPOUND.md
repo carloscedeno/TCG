@@ -69,3 +69,17 @@
 
 **Regla derivada:**
 > Al refactorizar el cliente de Supabase en un servicio (ej: `supabase` → `supabase_admin`), actualizar el patch target en TODOS los tests correspondientes. Usar `grep_search` con `patch(` + nombre del módulo.
+
+---
+
+## 2026-02-27 — Hotfix: Reemplazo Exhaustivo de Colores Heredados
+
+**Qué pasó:** Tras aplicar restricciones tipográficas (eliminar `italic`), se descubrió que la sección de Ayuda dependía de estilos utilitarios implícitos y usaba la paleta de colores vieja del proyecto (beige, negro, verde). Se limpió el componente completo.
+
+**Lo que cambió:**
+
+- `frontend/src/pages/HelpPage.tsx` → `font-web-titles` restaurado, colores actualizados (fondo `#373266`, texto `#FFFFFF`, botón `#00AEB4`).
+- `.agent/lessons_learned.md` → Lección #20 (Reemplazo Exhaustivo de Colores Heredados).
+
+**Regla derivada:**
+> Siempre que se modifique un componente heredado para ajustarlo a nuevas reglas de brand, se debe auditar TODO el componente buscando y reemplazando colores *hardcoded* obsoletos.

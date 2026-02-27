@@ -157,3 +157,10 @@ Este documento registra los desafíos técnicos encontrados durante el desarroll
 - **Causa Raíz**: El test pasaba `{'source': 'geekorium', 'price_usd': 100.0}` pero el servicio NO usa el campo `source` — hace primero un query a la tabla `sources` para obtener un mapa `{source_id → source_code}`, luego itera `price_history` buscando `source_id` (entero).
 - **Solución**: Reescribir el mock como un `table_side_effect` que retorna datos distintos por tabla: `sources` → mapa de IDs, `price_history` → filas con `source_id` (int), no `source` (str).
 - **Regla Derivada**: Antes de escribir mocks para servicios, leer su implementación para identificar el flujo exacto de queries. Los servicios con lookups de tablas de referencia (como `sources`, `conditions`) requieren mocks de múltiples tablas.
+
+### 20. Reemplazo Exhaustivo de Colores Heredados al Refactorizar UI (Feb 2026)
+
+- **Problema**: Tras remover la clase `italic` en `HelpPage.tsx` para ajustarse a una regla tipográfica nueva, se revelaron clases utilitarias de color heredadas (`bg-[#f4e4bc]`, `text-black`, `bg-[#25D366]`) que desentonaban con el nuevo spec.
+- **Causa Raíz**: Refactorización local "quirúrgica" (solo tocar `italic`) en componentes sin auditar si su paleta general sigue el nuevo "Diseño Fix".
+- **Solución**: Reemplazo masivo de colores heredados en el componente modificado. Beige (`#f4e4bc`) a Primario (`#373266`), Negro (`text-black`) a Blanco (`#FFFFFF`), y Verde (`#25D366`) a Cyan (`geeko-cyan` / `#00AEB4`). Además se debió re-añadir `font-web-titles` porque el `<h3/>` carecía de familia tipográfica tras quitar la itálica.
+- **Regla Derivada**: Siempre que se modifique un componente heredado ("legacy") para ajustarlo a nuevas reglas de brand, auditar TODO el componente. Eliminar colores *hardcoded* obsoletos y aplicar los nuevos tokens de marca. Validar que no perder clases como `italic` descubra la falta de clases estructurales como familias de fuentes (`font-web-titles`).
