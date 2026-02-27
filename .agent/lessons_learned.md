@@ -191,3 +191,9 @@ Este documento registra los desafíos técnicos encontrados durante el desarroll
 - **Solución**: Aplicar clases nominales directas en Tailwind (ont-web-titles, ont-titles, ont-sans) a los subnodos del texto en los componentes y remover tags italic que forzaban el fallback del font.
 - **Regla Derivada**: La fidelidad 1:1 de PRD UI requiere aplicar clases tipográficas explícitas en el nivel más bajo (hojas) del nodo del DOM y evitar modificadores de estilo globales (como italic o bold general) que rompan el font-face de UI.
 
+
+### [Guest Checkout & Inventory Pattern] — 2026-02-27
+- **Problema:** Riesgo de doble venta en un e-commerce de productos únicos (trading cards) cuando los pagos son asíncronos (Zelle/Pago Móvil) y los usuarios no tienen cuenta.
+- **Causa Raíz:** Falta de un estado intermedio que bloquee el inventario temporalmente mientras el pago ocurre off-platform.
+- **Solución:** Implementar un estado de orden `pending_payment` que reduce el `reserved_stock` inmediatamente mediante un RPC atómico de Supabase, acompañado de un Job/RPC que cancela las órdenes expiradas (superan 24 hrs sin validación) y devuelve el stock. Uso de URLs únicas (`/order/:id`) para que invitados suban su comprobante.
+- **Regla Derivada:** Todo cambio de estado de `orders` debe evaluarse en el RPC `update_order_status` para gestionar `reserved_stock` vs `stock` dinámicamente y de forma atómica.

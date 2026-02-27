@@ -128,3 +128,13 @@
 
 **Artefacto creado:** Migración SQL 20260227120000....
 **Regla derivada:** Validaciones de stock atómicas en DB. Fuentes personalizadas aplicadas a nivel hoja, no contenedor.
+
+## 2026-02-27 — [Checkout Flow & Inventory Reservation]
+
+**Qué pasó:** Se implementó y verificó el flujo completo de checkout para usuarios guest con modelo de reserva temporal de inventario.
+**Lo que cambió:**
+- `lessons_learned.md` → Guest Checkout & Inventory Pattern
+- `frontend/src/pages/CheckoutPage.tsx` y `OrderTrackingPage.tsx`.
+- `supabase/migrations/` → Actualizaciones de RPC para `update_order_status` atómico y creación de `cancel_expired_orders`.
+- Artefactos visuales: Creados diagramas MMD y generados gráficos PNG sobre el flujo de negocio.
+**Regla derivada:** Las validaciones de inventario siempre se delegan a un RPC con SECURITY DEFINER para evitar inconsistencias cliente/servidor.
