@@ -67,13 +67,19 @@ export const CheckoutPage = () => {
     };
 
     const validateStep1 = () => {
-        if (!form.full_name.trim()) return 'El nombre completo es requerido.';
+        if (!form.full_name.trim() || form.full_name.trim().length < 3) return 'El nombre completo debe tener al menos 3 caracteres.';
+        if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(form.full_name.trim())) return 'El nombre solo puede contener letras y espacios.';
         if (!form.cedula_number.trim() || !/^\d{6,9}$/.test(form.cedula_number)) return 'La cédula debe tener entre 6 y 9 dígitos.';
-        if (!form.whatsapp.trim() || !/^\d{10,12}$/.test(form.whatsapp.replace(/\D/g, ''))) return 'Número de WhatsApp inválido (ej: 04145551234).';
+
+        const phoneDigits = form.whatsapp.replace(/\D/g, '');
+        if (!phoneDigits) return 'El número de WhatsApp es requerido.';
+        if (!/^0(414|424|412|416|426|2\d{2})\d{7}$/.test(phoneDigits)) return 'Número de WhatsApp inválido. Debe ser un número venezolano (ej: 04141234567).';
+
         if (!form.state) return 'Selecciona un estado.';
-        if (!form.address.trim()) return 'La dirección es requerida.';
+        if (!form.address.trim() || form.address.trim().length < 5) return 'La dirección de entrega es muy corta.';
         if (!form.shipping_method) return 'Selecciona un método de despacho.';
-        if (form.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) return 'El formato del correo electrónico es inválido.';
+
+        if (form.email.trim() && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,10}$/i.test(form.email.trim())) return 'El formato del correo electrónico es inválido.';
         return null;
     };
 
@@ -217,7 +223,8 @@ export const CheckoutPage = () => {
                                         placeholder="Carlos Ej. Rodríguez"
                                         className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-[#00AEB4] outline-none transition-colors text-white placeholder:text-neutral-600"
                                         value={form.full_name}
-                                        onChange={(e) => setForm({ ...form, full_name: e.target.value })}
+                                        onChange={(e) => setForm({ ...form, full_name: e.target.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '') })}
+                                        maxLength={50}
                                     />
                                 </div>
 
@@ -254,7 +261,8 @@ export const CheckoutPage = () => {
                                         type="tel"
                                         className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-[#00AEB4] outline-none transition-colors text-white placeholder:text-neutral-600 font-mono"
                                         value={form.whatsapp}
-                                        onChange={(e) => setForm({ ...form, whatsapp: e.target.value })}
+                                        onChange={(e) => setForm({ ...form, whatsapp: e.target.value.replace(/\D/g, '') })}
+                                        maxLength={11}
                                     />
                                 </div>
 
@@ -283,6 +291,7 @@ export const CheckoutPage = () => {
                                         className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-[#00AEB4] outline-none transition-colors text-white placeholder:text-neutral-600"
                                         value={form.address}
                                         onChange={(e) => setForm({ ...form, address: e.target.value })}
+                                        maxLength={150}
                                     />
                                 </div>
 
@@ -317,8 +326,8 @@ export const CheckoutPage = () => {
                                                 type="button"
                                                 onClick={() => setForm({ ...form, shipping_method: opt.value as typeof form.shipping_method })}
                                                 className={`flex flex-col items-center gap-1 p-3 rounded-xl border transition-all text-center ${form.shipping_method === opt.value
-                                                        ? 'border-[#00AEB4]/60 bg-[#00AEB4]/10 text-white'
-                                                        : 'border-white/10 bg-black/30 text-neutral-500 hover:border-white/20 hover:text-neutral-300'
+                                                    ? 'border-[#00AEB4]/60 bg-[#00AEB4]/10 text-white'
+                                                    : 'border-white/10 bg-black/30 text-neutral-500 hover:border-white/20 hover:text-neutral-300'
                                                     }`}
                                             >
                                                 <span className="text-lg">{opt.icon}</span>

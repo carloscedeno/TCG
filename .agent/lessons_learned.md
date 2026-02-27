@@ -171,3 +171,10 @@ Este documento registra los desafÃ­os tÃ©cnicos encontrados durante el desarroll
 - **Causa RaÃ­z**: El endpoint RPC `get_products_filtered` retornaba directamente la columna `image_url` de la tabla `products`, la cual puede ser nula dependiendo del formato de importaciÃ³n, en lugar de considerar el fallback a la tabla unida `card_printings`.
 - **SoluciÃ³n**: Refactorizar la proyecciÃ³n SQL para incluir `COALESCE(p.image_url, cp.image_url) as image_url`.
 - **Regla Derivada**: Cuando se construyan RPCs o Vistas SQL que unan datos de inventario local (`products`) con metadata universal (`card_printings`, `cards`), los campos visuales (`image_url`) y descriptivos deben usar `COALESCE` para priorizar la fuente local y recurrir como fallback a la metadata universal.
+
+
+### 22. Validaciones Locales Estrictas (Feb 2026)
+
+- **Problema**: Formularios sin validación previa enviaban datos inconsistentes (ej. formato de teléfono erróneo) al equipo de soporte.
+- **Solución / Lección**: Validar clide-side formatos específicos (ej. venezolanos 04), rechazar letras en cédula (eplace(/\D/g, '')), y forzar longitud en campos de texto antes de habilitar el pago.
+- **Regla Derivada**: Todo input vital para el pago/contacto físico debe ser sanitizado en onChange y validado estrictamente en formato local antes de invocar la API.
