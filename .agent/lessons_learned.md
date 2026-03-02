@@ -203,3 +203,9 @@ Este documento registra los desaf铆os t茅cnicos encontrados durante el desarroll
 - **Causa Ra韟:** El proceso asum韆 que el stock del e-commerce siempre era 100% exacto respecto a la tienda f韘ica.
 - **Soluci髇:** Romper el pago y la verificaci髇 en 2 pasos. Reservar el stock primero (pending_verification), y pagar despu閟 (awaiting_payment).
 - **Regla Derivada:** Cualquier estado que cambie a cancelled/returned desde active debe liberar el stock inmediatamente para evitar desajustes remanentes.
+
+### 3. Evitar Bloqueos de UI por Fugas de Interacci贸n - 2026-03-01
+- **Problema:** Un modal (CardModal) que se cierra al agregar al carrito funcionaba bien en testing local pero dejaba la UI colgada (timeout por capa transparente superpuesta) en pruebas E2E en Producci贸n.
+- **Causa Ra铆z:** El modal ten铆a l贸gica condicional que solo lo cerraba si se pasaba un prop onAddToCartSuccess. En flujos donde este prop faltaba, la promesa colgaba visualmente porque esperaba al callback para cerrarse.
+- **Soluci贸n:** Consolidar el cierre del modal (onClose()) para que siempre ocurra de manera incondicional, independiente de callbacks extra.
+- **Regla Derivada:** Las acciones de cierre y cleanup visuales deben ser incondicionales a nivel del componente que las renderiza, no deben depender de hooks inyectados opcionales.
