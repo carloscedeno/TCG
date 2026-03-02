@@ -7,21 +7,26 @@ interface PortfolioStatsProps {
     collection: CollectionItem[];
 }
 
-export const PortfolioStats: React.FC<PortfolioStatsProps> = ({ collection }) => {
+export const PortfolioStats: React.FC<PortfolioStatsProps> = ({ collection = [] }) => {
+    // Defensive check
+    const items = Array.isArray(collection) ? collection : [];
+
     // Calculations
-    const totalItems = collection.reduce((acc, item) => acc + item.quantity, 0);
-    const storeValue = collection.reduce((acc, item) => acc + (item.quantity * (item.valuation.store_price || 0)), 0);
-    const marketValue = collection.reduce((acc, item) => acc + (item.quantity * (item.valuation.market_price || 0)), 0);
-    const globalValue = collection.reduce((acc, item) => acc + (item.quantity * (item.valuation.valuation_avg || 0)), 0);
+    const totalItems = items.reduce((acc, item) => acc + (item?.quantity || 0), 0);
+    const storeValue = items.reduce((acc, item) => acc + ((item?.quantity || 0) * (item?.valuation?.store_price || 0)), 0);
+    const marketValue = items.reduce((acc, item) => acc + ((item?.quantity || 0) * (item?.valuation?.market_price || 0)), 0);
+    const globalValue = items.reduce((acc, item) => acc + ((item?.quantity || 0) * (item?.valuation?.valuation_avg || 0)), 0);
 
     // Top Gainers (Using Price - Purchase Price)
     // Filter items with purchase_price > 0 for meaningful stats
-    const gainers = [...collection]
-        .filter(item => item.purchase_price > 0 && item.valuation.valuation_avg > 0)
+    const gainers = [...items]
+        .filter(item => item && item.purchase_price > 0 && item.valuation?.valuation_avg > 0)
         .map(item => ({
             ...item,
-            gain: (item.valuation.valuation_avg - item.purchase_price) * item.quantity,
-            gainPercent: ((item.valuation.valuation_avg - item.purchase_price) / item.purchase_price) * 100
+            gain: ((item.valuation?.valuation_avg || 0) - (item.purchase_price || 0)) * (item.quantity || 0),
+            gainPercent: (item.purchase_price || 0) > 0
+                ? (((item.valuation?.valuation_avg || 0) - (item.purchase_price || 0)) / item.purchase_price) * 100
+                : 0
         }))
         .sort((a, b) => b.gain - a.gain)
         .slice(0, 5);

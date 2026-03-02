@@ -44,6 +44,21 @@ jobs:
         with:
           path: frontend/dist
 
+      - name: Bundle Size Report
+        working-directory: frontend
+        run: |
+          echo "=== Bundle Size Report ==="
+          du -sh dist/assets/*.js 2>/dev/null | sort -rh | head -20 || true
+          du -sh dist/assets/*.css 2>/dev/null | sort -rh | head -5 || true
+          TOTAL_JS=$(du -sk dist/assets/*.js 2>/dev/null | awk '{sum+=$1} END {print sum}')
+          echo "Total JS: ${TOTAL_JS} KB"
+          if [ "$TOTAL_JS" -gt 2048 ]; then
+            echo "⚠️  WARNING: JS bundle exceeds 2MB (${TOTAL_JS} KB). Consider code splitting."
+          else
+            echo "✅ Bundle size OK (${TOTAL_JS} KB)"
+          fi
+
+
 #  test-e2e:
 #    runs-on: ubuntu-latest
 #    needs: build

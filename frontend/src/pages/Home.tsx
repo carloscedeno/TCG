@@ -70,7 +70,9 @@ const Home: React.FC = () => {
     const updateCartCount = async () => {
       try {
         const { items } = await fetchCart();
-        const count = items.reduce((acc: number, item: any) => acc + (item.quantity || 1), 0);
+        const count = Array.isArray(items)
+          ? items.reduce((acc: number, item: any) => acc + (item.quantity || 1), 0)
+          : 0;
         setCartCount(count);
       } catch (error) {
         console.error("Failed to fetch cart count", error);

@@ -8,7 +8,7 @@ export const CheckoutSuccessPage = () => {
     const trackingUrl = orderId ? `${window.location.origin}/order/${orderId}` : null;
 
     return (
-        <div className="min-h-screen bg-[#080808] flex items-center justify-center p-6">
+        <div className="min-h-[100dvh] bg-[#080808] flex items-center justify-center p-6">
             <div className="max-w-md w-full bg-neutral-900 border border-white/10 rounded-2xl p-12 text-center animate-in zoom-in duration-500">
                 <div className="w-24 h-24 bg-geeko-green/10 rounded-full flex items-center justify-center mx-auto mb-8 animate-bounce">
                     <CheckCircle className="text-geeko-green" size={48} />

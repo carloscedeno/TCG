@@ -107,7 +107,7 @@ export const CardDetail: React.FC = () => {
     const versionGroups = useMemo(() => {
         if (!details?.all_versions) return [];
 
-        const groups = details.all_versions.reduce((acc: any, v: any) => {
+        const groups = (Array.isArray(details.all_versions) ? details.all_versions : []).reduce((acc: any, v: any) => {
             const key = `${v.set_code}-${v.collector_number}`;
             if (!acc[key]) {
                 acc[key] = {

@@ -101,13 +101,13 @@ export const OrderTrackingPage = () => {
     };
 
     if (loading) return (
-        <div className="min-h-screen bg-[#1F182D] flex items-center justify-center text-white">
+        <div className="min-h-[100dvh] bg-[#1F182D] flex items-center justify-center text-white">
             <Loader2 className="animate-spin text-[#00AEB4]" size={40} />
         </div>
     );
 
     if (error || !order) return (
-        <div className="min-h-screen bg-[#1F182D] flex items-center justify-center text-white p-6">
+        <div className="min-h-[100dvh] bg-[#1F182D] flex items-center justify-center text-white p-6">
             <div className="text-center max-w-md w-full bg-[#281F3E] p-8 rounded-2xl border border-white/10">
                 <AlertCircle className="mx-auto text-red-500 mb-4" size={48} />
                 <h1 className="text-2xl font-black mb-2">Orden no encontrada</h1>
@@ -138,7 +138,7 @@ export const OrderTrackingPage = () => {
     const isPaymentRequired = order.status === 'pending_payment';
 
     return (
-        <div className="min-h-screen bg-[#1F182D] text-white pt-24 pb-12 px-4 sm:px-6">
+        <div className="min-h-[100dvh] bg-[#1F182D] text-white pt-24 pb-12 px-4 sm:px-6">
             <div className="max-w-4xl mx-auto">
                 <Link to="/" className="inline-flex items-center gap-2 text-neutral-400 hover:text-white transition-colors mb-6 font-bold text-sm">
                     <ArrowLeft size={16} /> Volver a la Tienda

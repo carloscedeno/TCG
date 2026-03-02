@@ -87,7 +87,9 @@ export const CheckoutPage = () => {
         try {
             const { data: { user } } = await supabase.auth.getUser();
 
-            const total = cartItems.reduce((acc, item) => acc + (item.products?.price || 0) * item.quantity, 0);
+            const total = Array.isArray(cartItems)
+                ? cartItems.reduce((acc, item) => acc + (item.products?.price || 0) * item.quantity, 0)
+                : 0;
 
             const simplifiedItems = cartItems.map(item => ({
                 product_id: item.product_id,
@@ -137,7 +139,9 @@ export const CheckoutPage = () => {
         }
     };
 
-    const subtotal = cartItems.reduce((acc, item) => acc + (item.products?.price || 0) * item.quantity, 0);
+    const subtotal = Array.isArray(cartItems)
+        ? cartItems.reduce((acc, item) => acc + (item.products?.price || 0) * item.quantity, 0)
+        : 0;
 
     if (loading) return (
         <div className="min-h-[100dvh] bg-[#1F182D] flex items-center justify-center text-white">

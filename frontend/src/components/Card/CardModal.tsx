@@ -258,7 +258,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
     const versionGroups = useMemo(() => {
         if (!details?.all_versions) return [];
 
-        const groups = (details.all_versions as Version[]).reduce((acc: any, v: Version) => {
+        const groups = (Array.isArray(details.all_versions) ? details.all_versions : []).reduce((acc: any, v: any) => {
             const key = `${v.set_code || 'unk'}-${v.collector_number || Math.random()}`;
             if (!acc[key]) {
                 const isNormal = !(v.is_foil || v.finish === 'foil' || v.finish === 'etched');

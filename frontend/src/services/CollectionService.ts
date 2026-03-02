@@ -32,16 +32,20 @@ export interface CollectionItem {
 
 export const CollectionService = {
     async getUserCollection(token: string): Promise<CollectionItem[]> {
-        const response = await fetch(`${API_BASE}/api/collections/`, {
+        // Use normalized path without trailing slash
+        const response = await fetch(`${API_BASE}/api/collections`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
 
         if (!response.ok) {
-            throw new Error('Failed to fetch collection');
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.error || 'Failed to fetch collection');
         }
 
-        return await response.json();
+        const data = await response.json();
+        // Backend returns { collection: [...] } based on index.ts
+        return Array.isArray(data) ? data : (data.collection || []);
     }
 };

@@ -71,7 +71,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
             // Save snapshot
             localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
-            setCartItems(items);
+            setCartItems(Array.isArray(items) ? items : []);
         } catch (err) {
             console.error('CartContext: failed to load cart', err);
         } finally {
@@ -87,7 +87,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return () => window.removeEventListener('cart-updated', handler);
     }, [refreshCart]);
 
-    const cartCount = cartItems.reduce((acc, item) => acc + (item.quantity || 1), 0);
+    const cartCount = Array.isArray(cartItems)
+        ? cartItems.reduce((acc, item) => acc + (item.quantity || 1), 0)
+        : 0;
 
     const dismissPriceAlert = () => setPriceChangeAlert(false);
 
