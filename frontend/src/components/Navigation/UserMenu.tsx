@@ -7,7 +7,8 @@ import {
     Shield,
     Upload,
     Home,
-    ChevronDown
+    ChevronDown,
+    Package
 } from 'lucide-react';
 import { QuickStockPanel } from './QuickStockPanel';
 

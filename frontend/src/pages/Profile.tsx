@@ -6,7 +6,7 @@ import { CollectionService } from '../services/CollectionService';
 import type { CollectionItem } from '../services/CollectionService';
 import { UserMenu } from '../components/Navigation/UserMenu';
 import { Link } from 'react-router-dom';
-import { Loader2, Package, ShoppingBag, ExternalLink } from 'lucide-react';
+import { Loader2, Package } from 'lucide-react';
 
 const ProfilePage: React.FC = () => {
     const { session, user } = useAuth();
