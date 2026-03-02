@@ -38,6 +38,12 @@ export const UserMenu: React.FC = () => {
     const menuItems = [
         { icon: Home, label: 'Inicio', path: '/', show: true },
         { icon: User, label: 'Mi Perfil', path: '/profile', show: !!user },
+        {
+            icon: Package,
+            label: isAdmin ? 'Gestión de Pedidos' : 'Mis Pedidos',
+            path: isAdmin ? '/admin/orders' : '/profile',
+            show: !!user
+        },
         { icon: Upload, label: 'Importar Colección', path: '/import', show: !!user },
         { icon: Shield, label: 'Admin Dashboard', path: '/admin', show: isAdmin },
     ];

@@ -56,9 +56,34 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     const checkAdmin = async (currentUser: User) => {
-        const role = currentUser.app_metadata?.role;
-        setIsAdmin(role === 'admin');
-        setLoading(false);
+        try {
+            // First check app_metadata (fastest)
+            const metadataRole = currentUser.app_metadata?.role;
+            if (metadataRole === 'admin') {
+                setIsAdmin(true);
+                setLoading(false);
+                return;
+            }
+
+            // Fallback: Check public.profiles table
+            const { data, error } = await supabase
+                .from('profiles')
+                .select('role')
+                .eq('id', currentUser.id)
+                .single();
+
+            if (error) {
+                console.warn('Error checking admin role in profiles:', error);
+                setIsAdmin(false);
+            } else {
+                setIsAdmin(data?.role === 'admin');
+            }
+        } catch (err) {
+            console.error('Fatal error in checkAdmin:', err);
+            setIsAdmin(false);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const signOut = async () => {

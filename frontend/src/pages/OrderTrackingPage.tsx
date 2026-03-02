@@ -140,9 +140,14 @@ export const OrderTrackingPage = () => {
     return (
         <div className="min-h-[100dvh] bg-[#1F182D] text-white pt-24 pb-12 px-4 sm:px-6">
             <div className="max-w-4xl mx-auto">
-                <Link to="/" className="inline-flex items-center gap-2 text-neutral-400 hover:text-white transition-colors mb-6 font-bold text-sm">
-                    <ArrowLeft size={16} /> Volver a la Tienda
-                </Link>
+                <div className="flex justify-between items-center mb-6">
+                    <Link to="/" className="inline-flex items-center gap-2 text-neutral-400 hover:text-white transition-colors font-bold text-sm">
+                        <ArrowLeft size={16} /> Volver a la Tienda
+                    </Link>
+                    <Link to="/profile" className="inline-flex items-center gap-2 text-neutral-400 hover:text-white transition-colors font-bold text-sm">
+                        <Package size={16} /> Mis Pedidos
+                    </Link>
+                </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {/* Left Column: Status info & Payment */}
