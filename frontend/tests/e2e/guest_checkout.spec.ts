@@ -137,6 +137,8 @@ test.describe('Guest Checkout Flow', () => {
             // Email (opcional)
             await page.getByPlaceholder('correo@ejemplo.com').fill('guest@example.com');
 
+            // Shipping Method
+            await page.getByRole('button', { name: /Pick Up/i }).click();
 
             // Continue to Payment — CheckoutPage uses a single button per step
             console.log('Continuing to payment...');
