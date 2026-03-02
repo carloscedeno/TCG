@@ -211,12 +211,12 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
             if (navigator.vibrate) navigator.vibrate(50);
             setAddedSuccess(true);
             setTimeout(() => setAddedSuccess(false), 1500);
-            if (onAddToCartSuccess) {
-                setTimeout(() => {
-                    onClose();
+            setTimeout(() => {
+                onClose();
+                if (onAddToCartSuccess) {
                     onAddToCartSuccess();
-                }, 500);
-            }
+                }
+            }, 500);
         } catch (err: any) {
             console.error("Cart error", err);
             alert(err.message || 'Error al agregar al carrito');

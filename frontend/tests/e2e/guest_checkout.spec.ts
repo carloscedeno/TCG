@@ -7,8 +7,11 @@ test.describe('Guest Checkout Flow', () => {
     test.beforeEach(async ({ page }) => {
         // Ensure we are logged out
         await page.goto('/TCG/');
-        // Clear local storage to reset guest cart
-        await page.evaluate(() => localStorage.clear());
+        // Clear local storage to reset guest cart and bypass WelcomeModal
+        await page.evaluate(() => {
+            localStorage.clear();
+            sessionStorage.setItem('hasSeenWelcomeModal', 'true');
+        });
     });
 
     test('should allow guest to add items and checkout', async ({ page }) => {
