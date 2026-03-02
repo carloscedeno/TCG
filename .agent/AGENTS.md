@@ -66,7 +66,7 @@ Artefactos del Compound step:
 - CardModal: versiones, precios dinámicos, foil toggle, DFC flip
 - CarKingdom links (DFC: solo nombre de cara frontal)
 - Carrito con persistencia localStorage
-- Checkout: datos + comprobante + WhatsApp handshake
+- Checkout: datos + reserva de inventario temporal + validación WhatsApp
 - Admin panel: órdenes, gestión de inventario, QuickStock panel
 - Bulk import ManaBox TXT/CSV con reporte de errores
 - Símbolos de maná (mana-font)

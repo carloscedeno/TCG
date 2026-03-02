@@ -197,3 +197,9 @@ Este documento registra los desafíos técnicos encontrados durante el desarroll
 - **Causa Raíz:** Falta de un estado intermedio que bloquee el inventario temporalmente mientras el pago ocurre off-platform.
 - **Solución:** Implementar un estado de orden `pending_payment` que reduce el `reserved_stock` inmediatamente mediante un RPC atómico de Supabase, acompañado de un Job/RPC que cancela las órdenes expiradas (superan 24 hrs sin validación) y devuelve el stock. Uso de URLs únicas (`/order/:id`) para que invitados suban su comprobante.
 - **Regla Derivada:** Todo cambio de estado de `orders` debe evaluarse en el RPC `update_order_status` para gestionar `reserved_stock` vs `stock` dinámicamente y de forma atómica.
+
+### 2. Validaci�n y Reserva Diferida - 2026-03-01
+- **Problema:** Exigir comprobantes upfront choca con la realidad del stock f�sico desfasado.
+- **Causa Ra�z:** El proceso asum�a que el stock del e-commerce siempre era 100% exacto respecto a la tienda f�sica.
+- **Soluci�n:** Romper el pago y la verificaci�n en 2 pasos. Reservar el stock primero (pending_verification), y pagar despu�s (awaiting_payment).
+- **Regla Derivada:** Cualquier estado que cambie a cancelled/returned desde active debe liberar el stock inmediatamente para evitar desajustes remanentes.
