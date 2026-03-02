@@ -150,7 +150,7 @@ test.describe('Guest Checkout Flow', () => {
             // 5. Success / WhatsApp
             console.log('Waiting for order confirmation...');
             // CheckoutPage opens WhatsApp on success, check for success state
-            await expect(page.getByText(/orden creada|pedido confirmado|whatsapp/i)).toBeVisible({ timeout: 15000 });
+            await expect(page.getByText(/orden recibida/i)).toBeVisible({ timeout: 15000 });
             console.log('Test Complete');
         } catch (error) {
             console.error('TEST FAILED:', error);

@@ -14,15 +14,16 @@ export const CheckoutSuccessPage = () => {
                     <CheckCircle className="text-geeko-green" size={48} />
                 </div>
 
-                <h1 className="text-3xl font-black text-white mb-4">¡Orden Confirmada!</h1>
+                <h1 className="text-3xl font-black text-white mb-4">¡Orden Recibida!</h1>
                 <p className="text-neutral-400 mb-6">
-                    Gracias por tu compra. Hemos recibido tu pedido y estamos procesándolo. Recibirás un correo de confirmación pronto.
+                    Tu orden ha sido generada y el stock ha sido reservado temporalmente.
+                    Un Geeko-Asesor confirmará la disponibilidad física de las cartas antes de pedirte el pago final.
                 </p>
 
                 {trackingUrl && (
                     <div className="bg-black/50 border border-[#00AEB4]/30 rounded-xl p-4 mb-8">
                         <p className="text-xs font-black uppercase tracking-widest text-[#00AEB4] mb-2">URL de Seguimiento</p>
-                        <p className="text-xs text-neutral-300 mb-3">Guarda este enlace único para ver el estado de tu pedido y subir tu comprobante de pago:</p>
+                        <p className="text-xs text-neutral-300 mb-3">Guarda este enlace único para ver el estado de tu pedido:</p>
                         <div className="flex items-center gap-2 bg-black/60 border border-white/10 rounded-lg p-3">
                             <input
                                 readOnly

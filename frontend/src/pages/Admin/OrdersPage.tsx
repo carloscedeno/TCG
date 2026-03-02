@@ -17,7 +17,9 @@ interface OrderItem {
 }
 
 const ORDER_STATUSES: Record<string, { label: string; color: string; border?: string }> = {
-    pending_payment: { label: 'Pendiente de Pago', color: 'bg-yellow-500/20 text-yellow-400' },
+    pending_verification: { label: 'Validando Inventario', color: 'bg-orange-500/20 text-orange-400' },
+    awaiting_payment: { label: 'Esperando Pago', color: 'bg-yellow-500/20 text-yellow-400' },
+    pending_payment: { label: 'Pendiente Antiguo', color: 'bg-yellow-700/20 text-yellow-600' },
     payment_uploaded: { label: 'Pago en Revisión', color: 'bg-lime-500/20 text-lime-400' },
     paid: { label: 'Pagado', color: 'bg-blue-500/20 text-blue-400' },
     processing: { label: 'Procesando', color: 'bg-indigo-500/20 text-indigo-400' },
@@ -241,6 +243,26 @@ const OrdersPage = () => {
                                         </div>
 
                                         <div className="flex items-center gap-2 md:gap-4">
+                                            {/* Verification Action Buttons */}
+                                            {order.status === 'pending_verification' && (
+                                                <div className="hidden lg:flex items-center gap-2 mr-2">
+                                                    <button
+                                                        onClick={(e) => { e.stopPropagation(); handleStatusChange(order.id, 'awaiting_payment'); }}
+                                                        disabled={updatingId === order.id}
+                                                        className="px-3 py-1.5 bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 rounded-lg text-[10px] font-black uppercase tracking-widest transition-colors"
+                                                    >
+                                                        ✅ OK Stock
+                                                    </button>
+                                                    <button
+                                                        onClick={(e) => { e.stopPropagation(); handleStatusChange(order.id, 'cancelled'); }}
+                                                        disabled={updatingId === order.id}
+                                                        className="px-3 py-1.5 bg-red-500/20 text-red-400 hover:bg-red-500/30 rounded-lg text-[10px] font-black uppercase tracking-widest transition-colors"
+                                                    >
+                                                        ❌ Sin Stock
+                                                    </button>
+                                                </div>
+                                            )}
+
                                             {/* Status Actions Replaced by Dropdown */}
                                             {updatingId === order.id && (
                                                 <span className="text-[10px] uppercase text-neutral-500 animate-pulse hidden md:block">Actualizando...</span>

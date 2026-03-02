@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchCart, createOrder } from '../utils/api';
-import { ShieldCheck, Truck, CreditCard, CheckCircle, Upload, Loader2, AlertCircle, MessageCircle } from 'lucide-react';
+import { ShieldCheck, Truck, CreditCard, CheckCircle, Loader2, AlertCircle, MessageCircle } from 'lucide-react';
 import { supabase } from '../utils/supabaseClient';
 
 // 24 estados de Venezuela
@@ -21,9 +21,6 @@ export const CheckoutPage = () => {
     const [step, setStep] = useState(1);
     const [validationError, setValidationError] = useState<string | null>(null);
     const [isProcessing, setIsProcessing] = useState(false);
-    const [paymentPreview, setPaymentPreview] = useState<string | null>(null);
-    const [paymentFile, setPaymentFile] = useState<File | null>(null);
-    const fileInputRef = useRef<HTMLInputElement>(null);
 
     // Customer form
     const [form, setForm] = useState({
@@ -56,16 +53,6 @@ export const CheckoutPage = () => {
         };
         loadCart();
     }, [navigate]);
-
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            setPaymentFile(file);
-            const reader = new FileReader();
-            reader.onload = (ev) => setPaymentPreview(ev.target?.result as string);
-            reader.readAsDataURL(file);
-        }
-    };
 
     const validateStep1 = () => {
         if (!form.full_name.trim() || form.full_name.trim().length < 3) return 'El nombre completo debe tener al menos 3 caracteres.';
@@ -113,26 +100,6 @@ export const CheckoutPage = () => {
 
             const cedula = `${form.cedula_prefix}-${form.cedula_number}`;
 
-            let paymentProofUrl = null;
-            if (paymentFile) {
-                const fileExt = paymentFile.name.split('.').pop();
-                const tempOrderId = crypto.randomUUID();
-                const fileName = `${tempOrderId}/${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
-
-                const { data: uploadData, error: uploadError } = await supabase.storage
-                    .from('payment-proofs')
-                    .upload(fileName, paymentFile);
-
-                if (uploadError) {
-                    console.error('Error uploading payment proof:', uploadError);
-                } else if (uploadData) {
-                    const { data: publicUrlData } = supabase.storage
-                        .from('payment-proofs')
-                        .getPublicUrl(uploadData.path);
-                    paymentProofUrl = publicUrlData.publicUrl;
-                }
-            }
-
             const orderResponse = await createOrder({
                 userId: user?.id || null,
                 items: simplifiedItems,
@@ -144,8 +111,7 @@ export const CheckoutPage = () => {
                     zip_code: cedula, // reuse field for storage
                     country: form.country === 'Venezuela' ? 'VE' : form.country,
                     email: form.email,
-                    phone: form.whatsapp,
-                    payment_proof_url: paymentProofUrl // Inject the URL here
+                    phone: form.whatsapp
                 },
                 totalAmount: total,
                 guestInfo: !user ? { email: form.email, phone: form.whatsapp } : undefined,
@@ -155,7 +121,7 @@ export const CheckoutPage = () => {
 
             // Build WhatsApp message
             const whatsappMsg = encodeURIComponent(
-                `Hola Geekorium, mi nombre es ${form.full_name}. Acabo de generar la orden #${orderIdForMsg}. Adjunto mi comprobante de pago por $${total.toFixed(2)}. Espero confirmación de stock.`
+                `Hola Geekorium, mi nombre es ${form.full_name}. Acabo de generar la orden #${orderIdForMsg}. Espero la confirmación de inventario físico para proceder con el pago de $${total.toFixed(2)}.`
             );
             const whatsappUrl = `https://wa.me/584141234567?text=${whatsappMsg}`;
 
@@ -433,48 +399,13 @@ export const CheckoutPage = () => {
                                 </div>
                             </div>
 
-                            {/* Comprobante de Pago - Camera-enabled on mobile */}
+                            {/* Pago Pospuesto Notice */}
                             <div className="pt-4 border-t border-white/5">
-                                <label className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-3">
-                                    Comprobante de Pago <span className="text-[10px] text-neutral-600 normal-case font-normal">(Recomendado)</span>
-                                </label>
-
-                                <input
-                                    ref={fileInputRef}
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleFileChange}
-                                    className="hidden"
-                                />
-
-                                {paymentPreview ? (
-                                    <div className="relative rounded-xl overflow-hidden border border-[#00AEB4]/30 bg-black/20">
-                                        <img src={paymentPreview} alt="Comprobante" className="w-full max-h-48 object-contain" />
-                                        <button
-                                            onClick={() => {
-                                                setPaymentPreview(null);
-                                                setPaymentFile(null);
-                                            }}
-                                            className="absolute top-2 right-2 bg-black/80 text-white rounded-full w-7 h-7 flex items-center justify-center text-xs hover:bg-red-500/80 transition-colors"
-                                        >
-                                            ✕
-                                        </button>
-                                        <div className="absolute bottom-2 left-2 bg-green-500/90 text-black text-[10px] font-black px-2 py-1 rounded-full">
-                                            ✓ Comprobante Cargado
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <button
-                                        onClick={() => fileInputRef.current?.click()}
-                                        className="w-full border-2 border-dashed border-white/10 rounded-xl p-8 flex flex-col items-center justify-center gap-3 hover:border-[#00AEB4]/50 hover:bg-white/5 transition-all group"
-                                    >
-                                        <Upload size={24} className="text-neutral-500 group-hover:text-[#00AEB4] transition-colors" />
-                                        <div className="text-center">
-                                            <span className="text-xs font-bold text-neutral-400 group-hover:text-white transition-colors block">Subir captura o foto</span>
-                                            <span className="text-[10px] text-neutral-600">Toca para abrir la cámara o galería</span>
-                                        </div>
-                                    </button>
-                                )}
+                                <p className="text-sm font-bold text-[#00AEB4] mb-2">Paso Siguiente:</p>
+                                <p className="text-xs text-neutral-400">
+                                    Al presionar "Confirmar y Contactar", tu orden será generada y el inventario reservado temporalmente.
+                                    Te redirigiremos a WhatsApp para que nos avises y verifiquemos el stock físico de tus cartas. ¡No realices el pago hasta que te confirmemos!
+                                </p>
                             </div>
 
                             <div className="mt-8 flex justify-between items-center">
