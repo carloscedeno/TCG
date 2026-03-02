@@ -127,6 +127,7 @@ status TEXT ('pending_verification' | 'confirmed' | 'cancelled')
 
 ### ✅ Implementado
 
+- **Estabilidad de Aplicación (Defensive Coding)**: Protecciones `Array.isArray()` aplicadas sistemáticamente en todos los componentes que utilizan `.reduce()` (Carrito, Colección, Versiones de Cartas).
 - Catálogo de cartas con filtros (juego, rareza, color, tipo, set)
 - CardModal con selector de versiones, precios dinámicos, foil toggle
 - DFC: flip de imagen + links CardKingdom con solo nombre frontal
@@ -154,8 +155,9 @@ status TEXT ('pending_verification' | 'confirmed' | 'cancelled')
 1. **PRD-First**: Todo cambio de funcionalidad documenta su intención aquí antes o durante la implementación.
 2. **Build Check**: Antes de push a `frontend/src/`, ejecutar `npm run build` para validar TypeScript.
 3. **Sin `any` implícito**: Especialmente en `map`, `filter`, `forEach`.
-4. **Precios centralizados**: El cálculo de precios ocurre en el backend (Edge Function `tcg-api`), nunca en el cliente.
-5. **Consultar `.agent/lessons_learned.md`** antes de tocar lógica de DB, filtros, o el CardModal.
+4. **Defensive Coding Patterns**: Siempre validar que los datos son arreglos usando `Array.isArray()` antes de llamar a métodos como `.reduce()`, `.map()`, o `.filter()` sobre respuestas de la API.
+5. **Precios centralizados**: El cálculo de precios ocurre en el backend (Edge Function `tcg-api`), nunca en el cliente.
+6. **Consultar `.agent/lessons_learned.md`** antes de tocar lógica de DB, filtros, o el CardModal.
 
 ---
 

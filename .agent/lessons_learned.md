@@ -209,3 +209,10 @@ Este documento registra los desafíos técnicos encontrados durante el desarroll
 - **Causa Raíz:** El modal tenía lógica condicional que solo lo cerraba si se pasaba un prop onAddToCartSuccess. En flujos donde este prop faltaba, la promesa colgaba visualmente porque esperaba al callback para cerrarse.
 - **Solución:** Consolidar el cierre del modal (onClose()) para que siempre ocurra de manera incondicional, independiente de callbacks extra.
 - **Regla Derivada:** Las acciones de cierre y cleanup visuales deben ser incondicionales a nivel del componente que las renderiza, no deben depender de hooks inyectados opcionales.
+
+### 10. TypeError: reduce is not a function en Producción — 2026-03-02
+- **Problema:** La aplicación fallaba en producción al navegar a /profile con un error Uncaught TypeError: s.reduce is not a function.
+- **Causa Raíz:** Respuestas de la API que devuelven objetos vacíos o 
+ull en lugares donde se espera un arreglo (ej. cartItems, collection). React Context o servicios no estaban garantizando un valor fallback de arreglo estable.
+- **Solución:** Implementación masiva de protecciones Array.isArray(data) ? data : [] antes de cualquier llamada a .reduce(), .map() o .filter().
+- **Regla Derivada:** **Defensive Data Handling**. Prohibido usar métodos de arreglo sobre datos de API sin validación previa con Array.isArray(). Codificado en AGENTS.md y PRD_MASTER.md.

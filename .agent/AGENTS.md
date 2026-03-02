@@ -9,7 +9,7 @@ Geekorium es un **marketplace TCG de venta asistida** para coleccionistas. El ob
 ## 🏗️ Stack Actual (Feb 2026)
 
 | Capa | Tecnología |
-|---|---|
+| :--- | :--- |
 | Frontend | React 18 + TypeScript + Tailwind CSS |
 | Backend | Supabase Edge Functions (Deno/TypeScript) |
 | Base de Datos | Supabase PostgreSQL |
@@ -36,7 +36,7 @@ Este proyecto sigue el framework **Compounding Engineer** (Dan Shipper / Every.t
 Cada sesión de trabajo debe completar los 4 pasos:
 
 | Paso | Qué hace el agente |
-|------|--------------------|
+| :--- | :--- |
 | **1. Plan** | Crear `implementation_plan.md`, revisar PRD, pedir aprobación |
 | **2. Work** | Ejecutar cambios en código, DB y scripts |
 | **3. Review** | Correr tests (`pytest`, Playwright), crear `walkthrough.md` |
@@ -73,6 +73,8 @@ Artefactos del Compound step:
 - Auth completo (login/logout/session)
 - Precios de mercado via Scryfall sync
 - Soporte foil virtual (detectado por `prices.usd_foil`)
+- **Estabilidad de Aplicación (🛡️ Guardas)**: Implementación masiva de `Array.isArray()` en componentes `.reduce()`. Evita crashes en producción por datos malformados.
+- **Flujo de Pago Diferido**: Eliminación de obligatoriedad de comprobante al checkout.
 
 ## 🚧 Features Pendientes
 
@@ -84,14 +86,7 @@ Artefactos del Compound step:
 
 ## ⚠️ Reglas Críticas del Sistema
 
-1. **CardModal**: Nunca filtrar `all_versions` al cambiar printing — preservar en estado.
-2. **Precios**: Centralizados en Edge Function `tcg-api`. Nunca calcular en cliente.
-3. **Build check**: `npm run build` antes de cualquier push a `frontend/src/`.
-4. **Sin `any` implícito** en `map`/`filter`/`forEach` — rompe el pipeline de CI/CD.
-5. **Foil virtual**: No son registros separados en DB. Se detectan por `prices.usd_foil IS NOT NULL`.
-6. **Consultar `lessons_learned.md`** antes de tocar lógica de DB, filtros, o CardModal.
-7. **Testing de Servicios**: Al renombrar variables de cliente Supabase (`supabase` → `supabase_admin`), actualizar TODOS los patch targets.
-8. **Testing Lazy Imports**: Parchear siempre la clase importada desde el módulo de origen (`modulo.Clase`), no desde el importador.
+1. **Testing Lazy Imports**: Parchear siempre la clase importada desde el módulo de origen (`modulo.Clase`), no desde el importador.
 
 ---
 *Geekorium — Geeko-Engineering Division | Limpieza: 2026-02-26*
