@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
     const [session, setSession] = useState<Session | null>(null);
     const [loading, setLoading] = useState(true);
-    const [isAdmin, setIsAdmin] = useState(true);
+    const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
         // Get initial session
@@ -31,8 +31,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             setSession(session);
             setUser(session?.user ?? null);
             if (session?.user) {
-                checkAdmin();
+                checkAdmin(session.user);
             } else {
+                setIsAdmin(false);
                 setLoading(false);
             }
         });
@@ -40,12 +41,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         // Listen for auth changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: AuthChangeEvent, session: Session | null) => {
             setSession(session);
-            // Mock user if null
-            const mockUser = { id: 'mock-admin-id', email: 'admin@geeko.com', app_metadata: {}, user_metadata: {}, aud: 'authenticated', created_at: '' };
-            setUser(session?.user ?? mockUser as any);
-            // FORCE ADMIN ALWAYS
-            setIsAdmin(true);
-            setLoading(false);
+            setUser(session?.user ?? null);
+            if (session?.user) {
+                checkAdmin(session.user);
+            } else {
+                setIsAdmin(false);
+                setLoading(false);
+            }
         });
 
         return () => {
@@ -53,8 +55,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         };
     }, []);
 
-    const checkAdmin = async () => {
-        setIsAdmin(true);
+    const checkAdmin = async (currentUser: User) => {
+        const role = currentUser.app_metadata?.role;
+        setIsAdmin(role === 'admin');
         setLoading(false);
     };
 

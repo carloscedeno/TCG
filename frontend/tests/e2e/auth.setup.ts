@@ -1,6 +1,10 @@
-import { test as setup, expect } from '@playwright/test';
+import { test as setup } from '@playwright/test';
 import * as path from 'path';
 import * as fs from 'fs';
+import * as dotenv from 'dotenv';
+
+// Load .env so variables are available during the setup step
+dotenv.config();
 
 const authFile = 'playwright/.auth/user.json';
 
@@ -11,8 +15,20 @@ setup('authenticate', async ({ page }) => {
         fs.mkdirSync(dir, { recursive: true });
     }
 
-    const supabaseUrl = 'https://sxuotvogwvmxuvwbsscv.supabase.co';
-    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN4dW90dm9nd3ZteHV2d2Jzc2N2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcxMjUyNzUsImV4cCI6MjA4MjcwMTI3NX0.0qL7dIEnwg22RyORGX06G97VjdH4C8_l4Qgm2oPEYTY';
+    const supabaseUrl = process.env.VITE_SUPABASE_URL;
+    const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY;
+    const adminEmail = process.env.TEST_ADMIN_EMAIL;
+    const adminPassword = process.env.TEST_ADMIN_PASSWORD;
+
+    if (!supabaseUrl || !supabaseAnonKey) {
+        throw new Error('Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY in .env');
+    }
+    if (!adminEmail || !adminPassword) {
+        throw new Error('Missing TEST_ADMIN_EMAIL or TEST_ADMIN_PASSWORD in .env');
+    }
+
+    // Extract project ref from URL (e.g. https://XXXX.supabase.co → XXXX)
+    const projectRef = new URL(supabaseUrl).hostname.split('.')[0];
 
     const response = await page.request.post(`${supabaseUrl}/auth/v1/token?grant_type=password`, {
         headers: {
@@ -20,8 +36,8 @@ setup('authenticate', async ({ page }) => {
             'Content-Type': 'application/json'
         },
         data: {
-            email: 'test@example.com',
-            password: 'testpassword123'
+            email: adminEmail,
+            password: adminPassword,
         }
     });
 
@@ -31,10 +47,10 @@ setup('authenticate', async ({ page }) => {
     }
 
     await page.goto('/');
-    await page.evaluate(({ data, projectRef }) => {
-        const key = `sb-${projectRef}-auth-token`;
+    await page.evaluate(({ data, ref }) => {
+        const key = `sb-${ref}-auth-token`;
         window.localStorage.setItem(key, JSON.stringify(data));
-    }, { data: authData, projectRef: 'sxuotvogwvmxuvwbsscv' });
+    }, { data: authData, ref: projectRef });
 
     await page.context().storageState({ path: authFile });
 });
