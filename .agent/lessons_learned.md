@@ -245,3 +245,10 @@ ear_mint, lightly_played) deben normalizarse en el backend a códigos internos (
   - **Edge Function**: Implementar un diccionario de agregación en el `tcg-api` que sume cantidades de filas idénticas (mismo printing+condition+finish) antes del `upsert`.
   - **Vistas**: Actualizar `products_with_prices` para incluir la columna `finish` y asegurar que el frontend reciba este metadato.
 - **Regla Derivada**: [LEYES_DEL_SISTEMA.md](file:///c:/Users/carlo/OneDrive/Documents/Antigravity/TCG/LEYES_DEL_SISTEMA.md) -> Regla de Negocio 3 (Agregación en Lotes).
+
+### 67. Fuentes Locales Sin Archivo = 404 Silencioso en Build � 2026-03-03
+
+- **Problema**: La app en produccion generaba `GET /fonts/Daito.woff2 404` en la consola del navegador.
+- **Causa Raiz**: Declaraciones `@font-face` en `index.css` referenciaban archivos con `url('/fonts/...')` que nunca existieron en `frontend/public/fonts/`. El build de Vite compila sin errores aunque los archivos no existan.
+- **Solucion**: Eliminar `@font-face` locales e importar `Cinzel` y `Cinzel Decorative` de Google Fonts como fallbacks premium.
+- **Regla Derivada**: Toda fuente en `@font-face` con `url('/fonts/...')` DEBE tener su archivo fisico. Si no esta disponible, usar Google Fonts. Documentar el original como comentario en el CSS.

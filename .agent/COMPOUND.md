@@ -200,3 +200,21 @@ eplace) para número de teléfono venezolano, cédula de identidad y nombre en l
 
 **Regla derivada:**
 > Siempre consolidar duplicados (mismo printing+condition+finish) dentro de un lote de importación en el backend antes de enviarlo a la base de datos para evitar fallos de `ON CONFLICT`.
+
+---
+
+## 2026-03-03 — Fix: Fuentes Faltantes → Google Fonts Fallbacks
+
+**Qué pasó:** La aplicación en produción generaba errores 404 en consola al intentar cargar `/fonts/Daito.woff2` y `/fonts/Bogue-Medium.woff2`. Los archivos de fuente nunca fueron añadidos al repositorio, solo las referencias CSS.
+
+**Problema encontrado:** `@font-face` declaraciones en `index.css` apuntaban a archivos locales inexistentes en `/public/fonts/`.
+
+**Causa raíz:** Los archivos de fuente premium (Daito y Bogue) son de pago/demo y nunca se incluyeron en el repo.
+
+**Lo que cambió:**
+
+- `frontend/src/index.css` → Eliminados `@font-face` locales; Google Fonts importa `Cinzel` y `Cinzel Decorative` como sustitutos de alta calidad.
+- CSS vars `--font-logo`, `--font-web-titles`, `--font-titles` actualizadas para priorizar los Google Fonts.
+
+**Regla derivada:**
+> Si una fuente se referencia en `@font-face` con `url('/fonts/...')`, el archivo DEBE existir en `frontend/public/fonts/`. De lo contrario, el build es silencioso pero el runtime genera 404s. Siempre usar Google Fonts como fallback cuando no se disponga del archivo local.
