@@ -91,12 +91,41 @@ def run_ck_sync():
             
             if price_entries:
                 try:
-                    # Supabase supports bulk insert
-                    supabase.table('price_history').insert(price_entries).execute()
-                    total_updated += len(price_entries)
-                    logger.info(f"Inserted {len(price_entries)} prices.")
+                    # IMPLEMENTACIÓN DE ALMACENAMIENTO DIFERENCIAL
+                    # Buscamos el último precio registrado para estas cartas para evitar duplicados
+                    printing_ids = [e['printing_id'] for e in price_entries]
+                    
+                    # RPC personalizado o consulta filtrada para obtener los últimos precios
+                    # Para simplificar y asegurar compatibilidad, consultamos los últimos registros
+                    last_prices_query = supabase.table('price_history') \
+                        .select('printing_id, price_usd') \
+                        .in_('printing_id', printing_ids) \
+                        .eq('source_id', ck_source_id) \
+                        .order('timestamp', desc=True) \
+                        .execute()
+                    
+                    # Mapear últimos precios por printing_id
+                    last_prices = {}
+                    for row in last_prices_query.data:
+                        if row['printing_id'] not in last_prices:
+                            last_prices[row['printing_id']] = float(row['price_usd'])
+                    
+                    # Filtrar solo los registros que han cambiado o son nuevos
+                    differential_entries = [
+                        e for e in price_entries 
+                        if e['printing_id'] not in last_prices or abs(float(e['price_usd']) - last_prices[e['printing_id']]) > 0.001
+                    ]
+                    
+                    if differential_entries:
+                        # Supabase supports bulk insert
+                        supabase.table('price_history').insert(differential_entries).execute()
+                        total_updated += len(differential_entries)
+                        logger.info(f"Inserted {len(differential_entries)} differential prices (Skipped {len(price_entries) - len(differential_entries)} duplicates).")
+                    else:
+                        logger.info(f"All {len(price_entries)} prices in this batch were identical to the last recorded. Skipping.")
+                        
                 except Exception as e:
-                    logger.error(f"Failed to insert batch: {e}")
+                    logger.error(f"Failed to process differential batch: {e}")
             
             # Simple offset increment
             offset += batch_size
