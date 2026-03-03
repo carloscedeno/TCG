@@ -1,21 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800;900&family=Cinzel:wght@400;500;600;700;800;900&family=Cinzel+Decorative:wght@400;700;900&display=swap');
 @import "tailwindcss";
 
-@font-face {
-  font-family: 'Bogue';
-  src: url('/fonts/Bogue-Medium.woff2') format('woff2'),
-    url('/fonts/Bogue-Medium.woff') format('woff');
-  font-weight: 500;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Daito';
-  src: url('/fonts/Daito.woff2') format('woff2'),
-    url('/fonts/Daito.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-}
+/* 
+  Note: Local fonts 'Bogue' and 'Daito' are currently missing.
+  Using 'Cinzel' and 'Cinzel Decorative' as premium fallbacks from Google Fonts.
+*/
 
 @import "tailwindcss";
 
@@ -81,12 +70,12 @@
   --color-neutral-gray-900: #1C1C1C;
 
   /* Fonts */
-  --font-logo: 'Daito', serif;
+  --font-logo: 'Cinzel Decorative', 'Daito', serif;
   /* Para logotipos y títulos web */
-  --font-web-titles: 'Daito', serif;
+  --font-web-titles: 'Cinzel Decorative', 'Daito', serif;
   /* Para logotipos y títulos web */
 
-  --font-titles: 'Bogue', 'Rubik', sans-serif;
+  --font-titles: 'Cinzel', 'Bogue', 'Rubik', sans-serif;
   /* Títulos de producto y modales */
   --font-body: 'Rubik', sans-serif;
   /* Textos largos */
