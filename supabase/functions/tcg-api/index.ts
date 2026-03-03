@@ -609,19 +609,34 @@ async function handleImportEndpoint(supabase: SupabaseClient, path: string, meth
 
   if (importType === 'inventory') {
     // Optimized bulk import for inventory using RPC
-    const mappedData = importData.map((row) => ({
-      name: row[mapping?.name || 'name'] || row['name'],
-      set: row[mapping?.set || 'set'] || row['set'],
-      collector_number: row[mapping?.collector_number || 'collector_number'] || row['collector_number'],
-      quantity: row[mapping?.quantity || 'quantity'] || row['quantity'] || '1',
-      price: row[mapping?.price || 'price'] || row['price'] || '0',
-      condition: row[mapping?.condition || 'condition'] || row['condition'] || 'NM',
-      finish: row[mapping?.finish || 'finish'] || row['finish'] || (row['finish'] === 'foil' ? 'foil' : 'nonfoil'),
-      scryfall_id: row[mapping?.scryfall_id || 'scryfall_id'] || row['scryfall_id']
-    }))
+    const mappedData = importData.map((row) => {
+      const quantityVal = row[mapping?.quantity || 'quantity'] || row['Quantity'] || row['quantity'] || '1';
+      const priceVal = row[mapping?.price || 'price'] || row['Purchase price'] || row['price'] || '0';
+
+      // Diagnostic check for the 'rare' issue
+      if (quantityVal === 'rare') {
+        console.error('IMPORT_DEBUG: Invalid quantity detected:', {
+          quantity: quantityVal,
+          row_preview: JSON.stringify(row).substring(0, 100),
+          mapping
+        });
+      }
+
+      return {
+        name: row[mapping?.name || 'name'] || row['Name'] || row['name'],
+        set_code: row[mapping?.set || 'set'] || row['Set code'] || row['set'] || row['set_code'],
+        collector_number: row[mapping?.collector_number || 'collector_number'] || row['Collector number'] || row['collector_number'],
+        quantity: quantityVal,
+        price: priceVal,
+        condition: row[mapping?.condition || 'condition'] || row['Condition'] || row['condition'] || 'NM',
+        finish: row[mapping?.finish || 'finish'] || row['Foil'] || row['finish'] || (row['finish'] === 'foil' ? 'foil' : 'nonfoil'),
+        scryfall_id: row[mapping?.scryfall_id || 'scryfall_id'] || row['Scryfall ID'] || row['scryfall_id']
+      }
+    })
 
     const { data: result, error: rpcError } = await supabase.rpc('bulk_import_inventory', {
-      p_items: mappedData
+      p_items: mappedData,
+      p_user_id: user.id
     })
 
     if (rpcError) throw rpcError
