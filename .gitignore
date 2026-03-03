@@ -77,3 +77,11 @@ test_results_*.json
 # Vite/Node
 node_modules/
 .vite/
+
+# Playwright artifacts
+frontend/playwright-report/
+test-results/
+frontend/playwright/.auth/
+
+# Debug scripts
+scripts/debug/
