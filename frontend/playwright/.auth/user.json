@@ -2,10 +2,10 @@
   "cookies": [
     {
       "name": "__cf_bm",
-      "value": "6zl2az37uVSJgVVaoYmBw1JIsoyuhUOM9xcm_WrPyz0-1772424201-1.0.1.1-PxgDYDChVeX82g5uZnwbv60VpXJn5CMA5U1_Sn5Hm1eZqvKuS_efCSMpKGvtPBlwP8PKbYNchA4jf0hd1kKUnJusYmp2B1vl7ez.VsQAReE",
+      "value": "SIgrdyWwQaI5rqcO5eRVYWM6flQaRlen7vr7vTNANXY-1772485232-1.0.1.1-UeZURVlYQsO9OY0K_qau2dkjyNRzh4KnBuQdF1mbtUYcvJoMnmBuKbtjMjsIwd3hH_UgCJNZHtG5LDDaJi5PAwPiLIz54e8e9EPK9vVvZNo",
       "domain": "supabase.co",
       "path": "/",
-      "expires": 1772426001,
+      "expires": 1772487032,
       "httpOnly": true,
       "secure": true,
       "sameSite": "None"
@@ -13,11 +13,11 @@
   ],
   "origins": [
     {
-      "origin": "https://carloscedeno.github.io",
+      "origin": "http://localhost:5174",
       "localStorage": [
         {
           "name": "sb-sxuotvogwvmxuvwbsscv-auth-token",
-          "value": "{\"access_token\":\"eyJhbGciOiJFUzI1NiIsImtpZCI6IjQ4MmI5OTU5LTk3MjMtNGU5NS1iODVjLTc3ZWU4NjUzMTgyNiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3N4dW90dm9nd3ZteHV2d2Jzc2N2LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI0ZTJkNWFmYS03NzNjLTRiYjUtOGY0Mi1mYTBlZWViYzU1YTMiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzcyNDI3ODAwLCJpYXQiOjE3NzI0MjQyMDAsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnt9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzcyNDI0MjAwfV0sInNlc3Npb25faWQiOiI4MmVkMDViNC1jMjAzLTRiNWYtYTFmZC1lYzNhNjRjNjI0YTYiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.ttjqQDCHc3qxK19L3zis5LcIRayNTrhWay6FaAt8Q9hWUg8Yh06jj1aj9UzRKZb5diLuQd341Kb7M6nxG2yffA\",\"token_type\":\"bearer\",\"expires_in\":3600,\"expires_at\":1772427800,\"refresh_token\":\"2wfghfk4ns3a\",\"user\":{\"id\":\"4e2d5afa-773c-4bb5-8f42-fa0eeebc55a3\",\"aud\":\"authenticated\",\"role\":\"authenticated\",\"email\":\"test@example.com\",\"email_confirmed_at\":\"2026-02-07T15:51:11.557913Z\",\"phone\":\"\",\"confirmed_at\":\"2026-02-07T15:51:11.557913Z\",\"recovery_sent_at\":\"2026-02-07T15:51:11.557913Z\",\"last_sign_in_at\":\"2026-03-02T04:03:20.904217717Z\",\"app_metadata\":{\"provider\":\"email\",\"providers\":[\"email\"]},\"user_metadata\":{},\"identities\":[],\"created_at\":\"2026-02-07T15:51:11.557913Z\",\"updated_at\":\"2026-03-02T04:03:20.917775Z\",\"is_anonymous\":false},\"weak_password\":null}"
+          "value": "{\"access_token\":\"eyJhbGciOiJFUzI1NiIsImtpZCI6IjQ4MmI5OTU5LTk3MjMtNGU5NS1iODVjLTc3ZWU4NjUzMTgyNiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3N4dW90dm9nd3ZteHV2d2Jzc2N2LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJkNTUwODQyZC1jZGQ1LTQzN2ItYjZmNC1jNGVkZjkxNTZjYTciLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzcyNDg4ODMyLCJpYXQiOjE3NzI0ODUyMzIsImVtYWlsIjoiYWRtaW5AZ2Vla28uY29tIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6e30sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3NzI0ODUyMzJ9XSwic2Vzc2lvbl9pZCI6IjFkNDE4NDBhLWI5YjUtNGQ2Yy05Y2Q0LTQ3ZjhiNmQ0OGU5NyIsImlzX2Fub255bW91cyI6ZmFsc2V9.iR3-7bSPBdzriSlVLbKKnVmvsphXwhqjvi6lFoXosap5YYrQ2fnIw0UaoCazXS5ou5yoRLth3jc4Bz0Y5iEQfw\",\"token_type\":\"bearer\",\"expires_in\":3600,\"expires_at\":1772488832,\"refresh_token\":\"fpkvlvbavdre\",\"user\":{\"id\":\"d550842d-cdd5-437b-b6f4-c4edf9156ca7\",\"aud\":\"authenticated\",\"role\":\"authenticated\",\"email\":\"admin@geeko.com\",\"email_confirmed_at\":\"2026-02-06T19:29:39.373175Z\",\"phone\":\"\",\"confirmed_at\":\"2026-02-06T19:29:39.373175Z\",\"last_sign_in_at\":\"2026-03-02T21:00:32.808126517Z\",\"app_metadata\":{\"provider\":\"email\",\"providers\":[\"email\"]},\"user_metadata\":{},\"identities\":[],\"created_at\":\"2026-02-06T19:29:39.373175Z\",\"updated_at\":\"2026-03-02T21:00:32.847251Z\",\"is_anonymous\":false},\"weak_password\":null}"
         }
       ]
     }

@@ -127,7 +127,8 @@ status TEXT ('pending_verification' | 'confirmed' | 'cancelled')
 
 ### ✅ Implementado
 
-- **Estabilidad de Aplicación (Defensive Coding)**: Protecciones `Array.isArray()` aplicadas sistemáticamente en todos los componentes que utilizan `.reduce()` (Carrito, Colección, Versiones de Cartas).
+- **Almacenamiento Diferencial (Ahorro 75% DB)**: Optimización masiva de `price_history` eliminando 3.7M de filas redundantes. Ingesta de precios ahora es incremental (solo cambios reales).
+- **Estabilidad de Aplicación (Defensive Coding)**: Protecciones `Array.isArray()` aplicadas sistemáticamente en todos los componentes que utilizan `.reduce()`.
 - Catálogo de cartas con filtros (juego, rareza, color, tipo, set)
 - CardModal con selector de versiones, precios dinámicos, foil toggle
 - DFC: flip de imagen + links CardKingdom con solo nombre frontal

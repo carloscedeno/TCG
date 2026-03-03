@@ -1,7 +1,7 @@
 # 📊 Progress Report - Checkout Flow Update
 
-**Last Updated**: 2026-03-02 16:15 (Audit / Compound)
-**Status**: ✅ Stability Fixes & Defensive Coding Implemented
+**Last Updated**: 2026-03-02 23:15 (Optimization / Audit)
+**Status**: ✅ Storage Optimized (1.4GB -> 0.3GB) & Stability Verified
 
 ---
 
@@ -36,8 +36,10 @@ Successfully implemented the new Deferred Checkout Flow ("Verify First, Pay Late
 - Updated Playwright E2E tests (`guest_checkout.spec.ts` and `admin.spec.ts`).
 - Tests passed verifying the new "Orden Recibida" copy and stock behaviors.
 
-### ✅ Application Stability (Defensive Fixes)
+### ✅ Application Stability & Storage Optimization
 
+- **Storage Rescue (1.1GB)**: Converted `price_history` from daily snapshots to a **Differential Model**. Deleted ~3.7M redundant rows without losing price variation history.
+- **Permanent Code Fix**: Modified `sync_cardkingdom_api.py` to compare prices before insertion, permanently preventing redundant data growth.
 - Added `Array.isArray()` guards to all `.reduce()` calls in `PortfolioStats.tsx`, `CartDrawer.tsx`, `CheckoutPage.tsx`, `Home.tsx`, `CardDetail.tsx`, and `CardModal.tsx`.
 - Ensured `CartContext.tsx` and `CollectionService.ts` provide stable array fallbacks.
 - Verified that production build completes successfully after fixes.

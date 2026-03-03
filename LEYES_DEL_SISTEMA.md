@@ -82,6 +82,7 @@
 - **Vistas Materializadas**: OBLIGATORIAS para consultas que involucren `DISTINCT ON` + `JOIN` + `ORDER BY` en tablas principales (>10k registros). No confiar en queries dinámicas complejas para la vista principal.
 - **Indices**: OBLIGATORIO crear índices B-Tree o GIN para CADA columna usada en filtros o sorts ANTES de desplegar código que los use.
 - **Timeouts**: Si una query da timeout (500), la solución NO es aumentar el timeout, es optimizar la query (generalmente pasando a Materialized View).
+- **Almacenamiento Diferencial**: PROHIBIDO guardar snapshots diarios de datos que no cambian (ej. precios). Siempre implementar lógica de comparación en la ingesta para guardar solo el diferencial cronológico.
 
 **Excepciones**: Consultas analíticas offline o scripts de migración manual.
 
