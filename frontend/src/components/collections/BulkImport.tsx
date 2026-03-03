@@ -68,8 +68,7 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
                         collector_number: 'collector_number',
                         finish: 'finish',
                         condition: '',
-                        price: '',
-                        tcg: ''
+                        price: ''
                     });
                     setRows(parsedRows);
                     setFile(selectedFile);
@@ -119,8 +118,7 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
                             price: csvHeaders.includes('Purchase price') ? 'Purchase price' : '',
                             condition: csvHeaders.includes('Condition') ? 'Condition' : '',
                             finish: csvHeaders.includes('Foil') ? 'Foil' : '',
-                            scryfall_id: csvHeaders.includes('Scryfall ID') ? 'Scryfall ID' : '',
-                            tcg: ''
+                            scryfall_id: csvHeaders.includes('Scryfall ID') ? 'Scryfall ID' : ''
                         });
                         setIsAutoMapped(true);
                     } else {
@@ -216,8 +214,7 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
         price: '',
         condition: '',
         finish: '',
-        scryfall_id: '',
-        tcg: ''
+        scryfall_id: ''
     });
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState<any>(null);
@@ -320,7 +317,6 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
 
     const systemFields = [
         { id: 'name', label: 'Nombre de Carta' },
-        { id: 'tcg', label: 'Juego (TCG)' },
         { id: 'set', label: 'Set/Código' },
         { id: 'collector_number', label: 'Num. Coleccionista' },
         { id: 'quantity', label: 'Cantidad' },
