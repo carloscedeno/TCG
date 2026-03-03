@@ -608,29 +608,33 @@ async function handleImportEndpoint(supabase: SupabaseClient, path: string, meth
   }
 
   if (importType === 'inventory') {
-    // Optimized bulk import for inventory using RPC
+    // Optimized bulk import for inventory using RPC v3 (Robust Restoration)
     const mappedData = importData.map((row) => {
-      const quantityVal = row[mapping?.quantity || 'quantity'] || row['Quantity'] || row['quantity'] || '1';
-      const priceVal = row[mapping?.price || 'price'] || row['Purchase price'] || row['price'] || '0';
+      const name = row[mapping?.name] || row['Name'] || row['name'] || row['Card Name'] || row['card_name'];
+      const setCode = row[mapping?.set] || row['Set code'] || row['set'] || row['set_code'] || row['Expansion'] || row['Set'];
+      const collectorNumber = row[mapping?.collector_number] || row['Collector number'] || row['collector_number'] || row['Number'] || row['collectorNum'];
+      const scryfallId = row[mapping?.scryfall_id] || row['Scryfall ID'] || row['scryfall_id'];
 
-      // Diagnostic check for the 'rare' issue
-      if (quantityVal === 'rare') {
-        console.error('IMPORT_DEBUG: Invalid quantity detected:', {
-          quantity: quantityVal,
-          row_preview: JSON.stringify(row).substring(0, 100),
-          mapping
-        });
-      }
+      const quantityRaw = row[mapping?.quantity] || row['Quantity'] || row['quantity'] || row['Amount'] || row['qty'] || '1';
+      const quantity = parseInt(String(quantityRaw)) || 1;
+
+      const priceRaw = row[mapping?.price] || row['Purchase price'] || row['price'] || row['Value'] || row['USD'] || '0';
+      const price = parseFloat(String(priceRaw)) || 0;
+
+      const condition = normalizeCondition(row[mapping?.condition] || row['Condition'] || row['condition']);
+
+      let finish = row[mapping?.finish] || row['Foil'] || row['finish'] || row['Finish'] || 'nonfoil';
+      finish = String(finish).toLowerCase().includes('foil') ? 'foil' : 'nonfoil';
 
       return {
-        name: row[mapping?.name || 'name'] || row['Name'] || row['name'],
-        set_code: row[mapping?.set || 'set'] || row['Set code'] || row['set'] || row['set_code'],
-        collector_number: row[mapping?.collector_number || 'collector_number'] || row['Collector number'] || row['collector_number'],
-        quantity: quantityVal,
-        price: priceVal,
-        condition: row[mapping?.condition || 'condition'] || row['Condition'] || row['condition'] || 'NM',
-        finish: row[mapping?.finish || 'finish'] || row['Foil'] || row['finish'] || (row['finish'] === 'foil' ? 'foil' : 'nonfoil'),
-        scryfall_id: row[mapping?.scryfall_id || 'scryfall_id'] || row['Scryfall ID'] || row['scryfall_id']
+        name: name || '',
+        set_code: setCode || '',
+        collector_number: collectorNumber || '',
+        quantity,
+        price,
+        condition,
+        finish,
+        scryfall_id: scryfallId || ''
       }
     })
 
@@ -643,30 +647,28 @@ async function handleImportEndpoint(supabase: SupabaseClient, path: string, meth
     return result
   }
 
+  // Collection import
   const errors: string[] = []
   const failedIndices: number[] = []
   let importedCount = 0
 
-  // Fallback for collection import - keep current row-by-row logic for now
   for (let i = 0; i < importData.length; i++) {
     const row = importData[i]
     try {
-      const cardName = row[mapping?.name || 'name'] || row['name']
-      const setCode = row[mapping?.set || 'set'] || row['set']
-      const collectorNum = row[mapping?.collector_number || 'collector_number'] || row['collector_number']
-      const scryfallId = row[mapping?.scryfall_id || 'scryfall_id'] || row['scryfall_id']
-      const quantity = parseInt(row[mapping?.quantity || 'quantity'] || row['quantity'] || '1')
-      const price = parseFloat(row[mapping?.price || 'price'] || row['price'] || '0')
-      let condition = row[mapping?.condition || 'condition'] || row['condition'] || 'NM'
+      const name = row[mapping?.name] || row['Name'] || row['name'] || row['Card Name'] || row['card_name'];
+      const setCode = row[mapping?.set] || row['Set code'] || row['set'] || row['set_code'] || row['Expansion'] || row['Set'];
+      const collectorNum = row[mapping?.collector_number] || row['Collector number'] || row['collector_number'] || row['Number'] || row['collectorNum'];
+      const scryfallId = row[mapping?.scryfall_id] || row['Scryfall ID'] || row['scryfall_id'];
 
-      // Normalize ManaBox condition if necessary
-      if (condition === 'near_mint') condition = 'NM';
-      if (condition === 'lightly_played') condition = 'LP';
-      if (condition === 'moderately_played') condition = 'MP';
-      if (condition === 'heavily_played') condition = 'HP';
-      if (condition === 'damaged') condition = 'D';
+      const qtyRaw = row[mapping?.quantity] || row['Quantity'] || row['quantity'] || row['Amount'] || row['qty'] || '1';
+      const quantity = parseInt(String(qtyRaw)) || 1;
 
-      if (!cardName && !scryfallId) {
+      const priceRaw = row[mapping?.price] || row['Purchase price'] || row['price'] || row['Value'] || row['USD'] || '0';
+      const price = parseFloat(String(priceRaw)) || 0;
+
+      const condition = normalizeCondition(row[mapping?.condition] || row['Condition'] || row['condition']);
+
+      if (!name && !scryfallId) {
         errors.push(`Row ${i + 1}: Missing card name or Scryfall ID`)
         failedIndices.push(i)
         continue
@@ -677,33 +679,30 @@ async function handleImportEndpoint(supabase: SupabaseClient, path: string, meth
         .from('card_printings')
         .select('printing_id, cards(card_name), sets(set_code)')
 
-      if (scryfallId) {
-        // High precision lookup by scryfall_id
-        query = query.eq('scryfall_id', scryfallId.trim())
+      if (scryfallId && String(scryfallId).trim().length > 0) {
+        query = query.eq('scryfall_id', String(scryfallId).trim())
       } else {
-        // Fallback to name/set/number
-        query = query.ilike('cards.card_name', cardName.trim())
-        if (setCode) query = query.ilike('sets.set_code', setCode.trim())
-        if (collectorNum) query = query.eq('collector_number', collectorNum.trim())
+        query = query.ilike('cards.card_name', String(name).trim())
+        if (setCode) query = query.ilike('sets.set_code', String(setCode).trim())
+        if (collectorNum) query = query.eq('collector_number', String(collectorNum).trim())
       }
 
       const { data: printings, error: lookupError } = await query.limit(1)
 
       if (lookupError) {
-        errors.push(`Row ${i + 1} (${cardName}): Lookup error - ${lookupError.message}`)
+        errors.push(`Row ${i + 1} (${name}): Lookup error - ${lookupError.message}`)
         failedIndices.push(i)
         continue
       }
 
       if (!printings || printings.length === 0) {
-        errors.push(`Row ${i + 1} (${cardName} [${setCode || '?'}] #${collectorNum || '?'}): Card not found in database`)
+        errors.push(`Row ${i + 1} (${name} [${setCode || '?'}] #${collectorNum || '?'}): Card not found`)
         failedIndices.push(i)
         continue
       }
 
       const printingId = printings[0].printing_id
 
-      // Collection import - add to user_collections
       const { error: insertError } = await supabase
         .from('user_collections')
         .upsert({
@@ -715,7 +714,7 @@ async function handleImportEndpoint(supabase: SupabaseClient, path: string, meth
         }, { onConflict: 'user_id,printing_id' })
 
       if (insertError) {
-        errors.push(`Row ${i + 1} (${cardName}): Insert error - ${insertError.message}`)
+        errors.push(`Row ${i + 1} (${name}): Insert error - ${insertError.message}`)
         failedIndices.push(i)
         continue
       }
@@ -1086,4 +1085,19 @@ async function handleAdminEndpoint(supabase: SupabaseClient, path: string, metho
   }
 
   throw new Error('Admin endpoint not found');
+}
+
+/**
+ * Normalizes card condition strings from various sources (ManaBox, Cardmarket, etc.)
+ * into the internal database format (NM, LP, MP, HP, D)
+ */
+function normalizeCondition(cond: string): string {
+  if (!cond) return 'NM';
+  const c = String(cond).toLowerCase().trim();
+  if (c === 'near_mint' || c === 'mint' || c === 'nm' || c === 'm') return 'NM';
+  if (c === 'lightly_played' || c === 'lp' || c === 'excellent' || c === 'ex') return 'LP';
+  if (c === 'moderately_played' || c === 'mp' || c === 'good' || c === 'gd' || c === 'fine') return 'MP';
+  if (c === 'heavily_played' || c === 'hp' || c === 'played') return 'HP';
+  if (c === 'damaged' || c === 'd' || c === 'poor') return 'D';
+  return 'NM'; // Default to Near Mint
 }

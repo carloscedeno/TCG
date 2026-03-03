@@ -5,7 +5,7 @@
 
 ---
 
-Successfully implemented enhanced bulk import functionality supporting the **ManaBox CSV** format. Integration now prioritizes **Scryfall ID** for 100% accurate card identification and handles automatic condition normalization (e.g., `near_mint` to `NM`). This update also includes a robust CSV parser for quoted fields and a fixed pre-visualization table.
+Successfully implemented enhanced bulk import functionality supporting the **ManaBox CSV** format. Integration now prioritizes **Scryfall ID** for 100% accurate card identification, handles automatic condition normalization, and **fully supports card finishes (Foil/Non-Foil)**. This update resolves the `ON CONFLICT` errors by aggregating duplicate rows within an import batch and updates the `products` schema to distinguish items by finish.
 
 ---
 

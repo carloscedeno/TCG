@@ -68,7 +68,7 @@ Artefactos del Compound step:
 - Carrito con persistencia localStorage
 - Checkout: datos + reserva de inventario temporal + validación WhatsApp
 - Admin panel: órdenes, gestión de inventario, QuickStock panel
-- Bulk import ManaBox TXT/CSV con reporte de errores
+- Bulk import ManaBox TXT/CSV con reporte de errores y **soporte para acabados Foil/Non-Foil**. Agregación automática de duplicados en lote para garantizar integridad de datos.
 - Símbolos de maná (mana-font)
 - Auth completo (login/logout/session)
 - Precios de mercado via Scryfall sync

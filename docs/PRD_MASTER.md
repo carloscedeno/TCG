@@ -137,7 +137,7 @@ status TEXT ('pending_verification' | 'confirmed' | 'cancelled')
 - Carrito con persistencia localStorage
 - Checkout completo (datos + comprobante + WhatsApp)
 - Admin panel: órdenes, inventory management, QuickStock
-- **Bulk import (ManaBox TXT/CSV)**: Soporte nativo para exports de ManaBox. Detección automática de encabezados, mapeo inteligente y priorización de `Scryfall ID`. Corregida visualización de pre-importación.
+- **Bulk import (ManaBox TXT/CSV)**: Soporte nativo para exports de ManaBox. Detección automática de encabezados, mapeo inteligente y priorización de `Scryfall ID`. Corregida visualización de pre-importación. **Soporte completo para acabados Foil/Non-Foil** con agregación automática de duplicados en lote para evitar errores de restricción única.
 - Símbolos de maná renderizados (mana-font)
 - Auth (login/logout)
 - Precios de mercado via Scryfall sync

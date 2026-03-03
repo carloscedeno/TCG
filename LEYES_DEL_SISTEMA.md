@@ -282,9 +282,17 @@ Antes de merge a `main`:
 
 Al importar cartas sin edición (Set) específica, el sistema **siempre** debe priorizar la impresión con el **valor de mercado más alto**.
 
+### Regla 3: Agregación en Lotes (Bulk Import)
+
+**Siempre** agregar o consolidar filas duplicadas (mismo `printing_id`, `condition` y `finish`) dentro de un mismo lote de importación antes de enviarlo a la base de datos. El sistema debe sumar las cantidades (`stock`) de las filas duplicadas para evitar errores de restricción de unicidad (`ON CONFLICT`) durante el procesamiento por lotes.
+
 ---
 
 ## 📝 CHANGELOG DE LEYES
+
+### v2.4 (2026-03-03)
+
+- ✅ Agregada Regla de Negocio 3: Agregación obligatoria de duplicados en lotes de importación para soporte de Foliación (Finish).
 
 ### v2.3 (2026-02-12)
 
