@@ -216,3 +216,9 @@ Este documento registra los desafÃ­os tÃ©cnicos encontrados durante el desarroll
 ull en lugares donde se espera un arreglo (ej. cartItems, collection). React Context o servicios no estaban garantizando un valor fallback de arreglo estable.
 - **SoluciÃ³n:** ImplementaciÃ³n masiva de protecciones Array.isArray(data) ? data : [] antes de cualquier llamada a .reduce(), .map() o .filter().
 - **Regla Derivada:** **Defensive Data Handling**. Prohibido usar mÃ©todos de arreglo sobre datos de API sin validaciÃ³n previa con Array.isArray(). Codificado en AGENTS.md y PRD_MASTER.md.
+
+### 64. Redundancia Crítica en Historial de Precios — 2026-03-02
+- **Problema:** La base de datos alcanzó 1.42 GB (límite plan 1.1 GB) debido a la tabla 'price_history'.
+- **Causa Raíz:** Scrapers guardaban el precio diario de 30,000+ cartas incluso si el precio no variaba, generando un 95% de redundancia.
+- **Solución:** Deduplicación técnica e implementación de lógica diferencial en 'sync_cardkingdom_api.py'.
+
