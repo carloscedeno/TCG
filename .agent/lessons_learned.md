@@ -222,3 +222,11 @@ ull en lugares donde se espera un arreglo (ej. cartItems, collection). React Con
 - **Causa Raíz:** Scrapers guardaban el precio diario de 30,000+ cartas incluso si el precio no variaba, generando un 95% de redundancia.
 - **Solución:** Deduplicación técnica e implementación de lógica diferencial en 'sync_cardkingdom_api.py'.
 
+
+### 65. Integración de ManaBox y Priorización de Scryfall ID (Marzo 2026)
+
+- **Problema**: La importación por nombre/set puede fallar en cartas con nombres similares o múltiples versiones (promos, showcase).
+- **Solución**: Implementar una detección automática de encabezados en el frontend (ManaBox ID, Scryfall ID) y priorizar la búsqueda por scryfall_id en el backend. Esto garantiza una precisión del 100% y evita el mapeo manual.
+- **Normalización**: Las condiciones de ManaBox (e.g. 
+ear_mint, lightly_played) deben normalizarse en el backend a códigos internos (NM, LP) para mantener la integridad de la base de datos.
+- **UX**: Una pre-visualización que use los mismos índices de mapeo que la lógica de parseo evita confusiones visuales en el proceso de importación.

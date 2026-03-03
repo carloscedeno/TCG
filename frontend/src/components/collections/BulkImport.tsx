@@ -12,6 +12,7 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
     const { session } = useAuth();
     const [isDragging, setIsDragging] = useState(false);
     const [file, setFile] = useState<File | null>(null);
+    const [formatName, setFormatName] = useState<string>('');
     const [step, setStep] = useState<1 | 2 | 3>(1); // 1: Upload, 2: Mapping, 3: Success
     const [rows, setRows] = useState<string[][]>([]);
     const [headers, setHeaders] = useState<string[]>([]);
@@ -76,12 +77,56 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
                     setStep(2);
                 }
             } else {
-                const parsedRows = lines.map(line => line.split(',').map(cell => cell.trim().replace(/^"|"$/g, '')));
+                const parsedRows = lines.map(line => {
+                    const rowText = line.trim();
+
+                    // Simple split for now, but handle commas inside quotes
+                    const cells = [];
+                    let currentCell = '';
+                    let inQuotes = false;
+
+                    for (let i = 0; i < rowText.length; i++) {
+                        const char = rowText[i];
+                        if (char === '"') inQuotes = !inQuotes;
+                        else if (char === ',' && !inQuotes) {
+                            cells.push(currentCell.trim().replace(/^"|"$/g, ''));
+                            currentCell = '';
+                        } else {
+                            currentCell += char;
+                        }
+                    }
+                    cells.push(currentCell.trim().replace(/^"|"$/g, ''));
+                    return cells;
+                });
+
                 if (parsedRows.length > 0) {
-                    setHeaders(parsedRows[0]);
-                    setRows(parsedRows.slice(1));
+                    const csvHeaders = parsedRows[0];
+                    const csvContent = parsedRows.slice(1);
+                    setHeaders(csvHeaders);
+                    setRows(csvContent);
                     setFile(selectedFile);
-                    setIsAutoMapped(false);
+
+                    // Auto-detect known formats (e.g. ManaBox)
+                    const isManaBox = csvHeaders.includes('ManaBox ID') || csvHeaders.includes('Scryfall ID');
+
+                    if (isManaBox) {
+                        setFormatName('ManaBox');
+                        setMapping({
+                            name: csvHeaders.includes('Name') ? 'Name' : '',
+                            set: csvHeaders.includes('Set code') ? 'Set code' : '',
+                            collector_number: csvHeaders.includes('Collector number') ? 'Collector number' : '',
+                            quantity: csvHeaders.includes('Quantity') ? 'Quantity' : '',
+                            price: csvHeaders.includes('Purchase price') ? 'Purchase price' : '',
+                            condition: csvHeaders.includes('Condition') ? 'Condition' : '',
+                            finish: csvHeaders.includes('Foil') ? 'Foil' : '',
+                            scryfall_id: csvHeaders.includes('Scryfall ID') ? 'Scryfall ID' : '',
+                            tcg: ''
+                        });
+                        setIsAutoMapped(true);
+                    } else {
+                        setFormatName('');
+                        setIsAutoMapped(false);
+                    }
                     setStep(2);
                 }
             }
@@ -170,6 +215,8 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
         quantity: '',
         price: '',
         condition: '',
+        finish: '',
+        scryfall_id: '',
         tcg: ''
     });
     const [loading, setLoading] = useState(false);
@@ -279,7 +326,8 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
         { id: 'quantity', label: 'Cantidad' },
         { id: 'price', label: 'Precio/Valor' },
         { id: 'finish', label: 'Acabado (Foil/Non)' },
-        { id: 'condition', label: 'Condición' }
+        { id: 'condition', label: 'Condición' },
+        { id: 'scryfall_id', label: 'Scryfall ID' }
     ];
 
     return (
@@ -340,7 +388,9 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
                             <FileText className="text-geeko-cyan w-8 h-8" />
                             <div>
                                 <h3 className="text-xl font-black italic uppercase">{file?.name}</h3>
-                                <p className="text-slate-500 text-xs font-bold">{rows.length} filas detectadas</p>
+                                <p className="text-slate-500 text-xs font-bold">
+                                    {rows.length} filas detectadas {formatName && <span className="text-geeko-cyan ml-1">[{formatName}]</span>}
+                                </p>
                             </div>
                         </div>
                         <button
@@ -371,15 +421,23 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
                                                 </tr>
                                             </thead>
                                             <tbody className="text-slate-300 divide-y divide-white/5">
-                                                {rows.map((row, i) => (
-                                                    <tr key={i} className="hover:bg-white/5 transition-colors">
-                                                        <td className="p-3 w-20">{row[0]}</td>
-                                                        <td className="p-3 font-bold text-white">{row[1]}</td>
-                                                        <td className="p-3 w-24">{row[2]}</td>
-                                                        <td className="p-3 w-24">{row[3]}</td>
-                                                        <td className="p-3 w-24 uppercase font-black text-geeko-cyan">{row[4]}</td>
-                                                    </tr>
-                                                ))}
+                                                {rows.map((row, i) => {
+                                                    const nameCol = headers.indexOf(mapping.name);
+                                                    const setCol = headers.indexOf(mapping.set);
+                                                    const numCol = headers.indexOf(mapping.collector_number);
+                                                    const qtyCol = headers.indexOf(mapping.quantity);
+                                                    const finishCol = headers.indexOf(mapping.finish);
+
+                                                    return (
+                                                        <tr key={i} className="hover:bg-white/5 transition-colors">
+                                                            <td className="p-3 w-20">{row[qtyCol] || '1'}</td>
+                                                            <td className="p-3 font-bold text-white">{row[nameCol]}</td>
+                                                            <td className="p-3 w-24">{row[setCol]}</td>
+                                                            <td className="p-3 w-24">#{row[numCol]}</td>
+                                                            <td className="p-3 w-24 uppercase font-black text-geeko-cyan">{row[finishCol]}</td>
+                                                        </tr>
+                                                    );
+                                                })}
                                             </tbody>
                                         </table>
                                     </div>

@@ -616,7 +616,8 @@ async function handleImportEndpoint(supabase: SupabaseClient, path: string, meth
       quantity: row[mapping?.quantity || 'quantity'] || row['quantity'] || '1',
       price: row[mapping?.price || 'price'] || row['price'] || '0',
       condition: row[mapping?.condition || 'condition'] || row['condition'] || 'NM',
-      finish: row[mapping?.finish || 'finish'] || row['finish'] || (row['finish'] === 'foil' ? 'foil' : 'nonfoil')
+      finish: row[mapping?.finish || 'finish'] || row['finish'] || (row['finish'] === 'foil' ? 'foil' : 'nonfoil'),
+      scryfall_id: row[mapping?.scryfall_id || 'scryfall_id'] || row['scryfall_id']
     }))
 
     const { data: result, error: rpcError } = await supabase.rpc('bulk_import_inventory', {
@@ -638,28 +639,37 @@ async function handleImportEndpoint(supabase: SupabaseClient, path: string, meth
       const cardName = row[mapping?.name || 'name'] || row['name']
       const setCode = row[mapping?.set || 'set'] || row['set']
       const collectorNum = row[mapping?.collector_number || 'collector_number'] || row['collector_number']
+      const scryfallId = row[mapping?.scryfall_id || 'scryfall_id'] || row['scryfall_id']
       const quantity = parseInt(row[mapping?.quantity || 'quantity'] || row['quantity'] || '1')
       const price = parseFloat(row[mapping?.price || 'price'] || row['price'] || '0')
-      const condition = row[mapping?.condition || 'condition'] || row['condition'] || 'NM'
+      let condition = row[mapping?.condition || 'condition'] || row['condition'] || 'NM'
 
-      if (!cardName) {
-        errors.push(`Row ${i + 1}: Missing card name`)
+      // Normalize ManaBox condition if necessary
+      if (condition === 'near_mint') condition = 'NM';
+      if (condition === 'lightly_played') condition = 'LP';
+      if (condition === 'moderately_played') condition = 'MP';
+      if (condition === 'heavily_played') condition = 'HP';
+      if (condition === 'damaged') condition = 'D';
+
+      if (!cardName && !scryfallId) {
+        errors.push(`Row ${i + 1}: Missing card name or Scryfall ID`)
         failedIndices.push(i)
         continue
       }
 
-      // Look up card_printing by card name + set_code + collector_number
+      // Look up card_printing
       let query = supabase
         .from('card_printings')
-        .select('printing_id, cards!inner(card_name), sets!inner(set_code)')
-        .ilike('cards.card_name', cardName.trim())
+        .select('printing_id, cards(card_name), sets(set_code)')
 
-      if (setCode) {
-        query = query.ilike('sets.set_code', setCode.trim())
-      }
-
-      if (collectorNum) {
-        query = query.eq('collector_number', collectorNum.trim())
+      if (scryfallId) {
+        // High precision lookup by scryfall_id
+        query = query.eq('scryfall_id', scryfallId.trim())
+      } else {
+        // Fallback to name/set/number
+        query = query.ilike('cards.card_name', cardName.trim())
+        if (setCode) query = query.ilike('sets.set_code', setCode.trim())
+        if (collectorNum) query = query.eq('collector_number', collectorNum.trim())
       }
 
       const { data: printings, error: lookupError } = await query.limit(1)

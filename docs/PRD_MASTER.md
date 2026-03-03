@@ -113,11 +113,13 @@ status TEXT ('pending_verification' | 'confirmed' | 'cancelled')
 
 | Campo | Regla |
 |---|---|
-| Cantidad | Primer entero antes de `x` |
-| Nombre | String entre `x` y primer `(` |
-| Set Code | String dentro de `()` |
-| Collector # | Entero después de `)` |
-| Foil | Contiene `*F*`, `(F)` o `Foil` |
+| Cantidad | Primer entero antes de `x` o columna `Quantity` en CSV |
+| Nombre | String entre `x` y primer `(` o columna `Name` en CSV |
+| Set Code | String dentro de `()` o columna `Set code` en CSV |
+| Collector # | Entero después de `)` o columna `Collector number` en CSV |
+| Foil | Contiene `*F*`, `(F)`, `Foil` o columna `Foil` (normal/foil) |
+| Scryfall ID | Columna `Scryfall ID` (Priorizado para precisión 100%) |
+| Condición | Normalización automática de ManaBox (e.g. `near_mint` -> `NM`) |
 
 **Error handling:** Líneas no parseables → array `failed_imports` → mostrar resumen al usuario.
 
@@ -135,7 +137,7 @@ status TEXT ('pending_verification' | 'confirmed' | 'cancelled')
 - Carrito con persistencia localStorage
 - Checkout completo (datos + comprobante + WhatsApp)
 - Admin panel: órdenes, inventory management, QuickStock
-- Bulk import (ManaBox TXT/CSV)
+- **Bulk import (ManaBox TXT/CSV)**: Soporte nativo para exports de ManaBox. Detección automática de encabezados, mapeo inteligente y priorización de `Scryfall ID`. Corregida visualización de pre-importación.
 - Símbolos de maná renderizados (mana-font)
 - Auth (login/logout)
 - Precios de mercado via Scryfall sync
