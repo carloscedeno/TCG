@@ -369,20 +369,14 @@ export const CardDetail: React.FC = () => {
                                         <div className="absolute top-0 right-0 w-40 h-40 bg-geeko-cyan/5 rounded-full blur-[50px]" />
                                         <div className="text-xs font-black uppercase text-geeko-cyan tracking-widest mb-2">Internal Store Price</div>
                                         <div className="flex flex-col gap-2">
-                                            {/* Price + Variant Badge (flex-col to prevent overflow) */}
-                                            <div className="flex flex-col gap-1.5">
-                                                <div className="text-6xl font-black text-white font-mono tracking-tighter">
+                                            {/* Price + Variant Badge (horizontal layout matching CardModal) */}
+                                            <div className="flex items-center gap-3">
+                                                <div className="text-6xl font-black text-white font-mono tracking-tighter leading-none">
                                                     ${(activeVersion?.price || details.price || 0) > 0 ? Number(activeVersion?.price || details.price).toFixed(2) : '---'}
                                                 </div>
-                                                {activeFinish === 'foil' ? (
-                                                    <span className="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest bg-gradient-to-r from-pink-500/20 via-purple-500/20 to-cyan-500/20 border border-purple-500/40 text-purple-300 w-fit">
-                                                        ✨ FOIL
-                                                    </span>
-                                                ) : (
-                                                    <span className="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest bg-white/10 border border-white/20 text-neutral-300 w-fit">
-                                                        NORMAL
-                                                    </span>
-                                                )}
+                                                <span className={`text-[10px] px-2 py-0.5 rounded-full font-black tracking-widest shadow-sm ${activeFinish === 'foil' ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white animate-pulse' : 'bg-white text-black'}`}>
+                                                    {activeFinish === 'foil' ? 'FOIL' : 'NONFOIL'}
+                                                </span>
                                             </div>
                                             {/* Finish Toggle — only render for available variants */}
                                             <div className="flex bg-neutral-900/80 p-1 rounded-xl border border-white/5 w-fit">
@@ -390,11 +384,14 @@ export const CardDetail: React.FC = () => {
                                                     <button
                                                         onClick={() => {
                                                             const targetId = activeGroup?.normal?.printing_id;
-                                                            if (targetId) handleVersionClick(targetId, 'nonfoil');
+                                                            if (targetId && (activeGroup.normal?.stock || 0) > 0) handleVersionClick(targetId, 'nonfoil');
                                                         }}
+                                                        disabled={(activeGroup.normal?.stock || 0) === 0}
                                                         className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${activeFinish !== 'foil'
                                                                 ? 'bg-white text-black shadow-lg scale-[1.05]'
-                                                                : 'text-neutral-500 hover:text-white'
+                                                                : (activeGroup.normal?.stock || 0) === 0
+                                                                    ? 'text-neutral-700 cursor-not-allowed opacity-50'
+                                                                    : 'text-neutral-500 hover:text-white'
                                                             }`}
                                                     >
                                                         Normal
@@ -404,11 +401,14 @@ export const CardDetail: React.FC = () => {
                                                     <button
                                                         onClick={() => {
                                                             const targetId = activeGroup?.foil?.printing_id;
-                                                            if (targetId) handleVersionClick(targetId, 'foil');
+                                                            if (targetId && (activeGroup.foil?.stock || 0) > 0) handleVersionClick(targetId, 'foil');
                                                         }}
+                                                        disabled={(activeGroup.foil?.stock || 0) === 0}
                                                         className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${activeFinish === 'foil'
-                                                            ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 border-transparent text-white shadow-[0_0_15px_rgba(236,72,153,0.3)] scale-[1.05]'
-                                                            : 'text-neutral-500 hover:text-white'
+                                                                ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 border-transparent text-white shadow-[0_0_15px_rgba(236,72,153,0.3)] scale-[1.05]'
+                                                                : (activeGroup.foil?.stock || 0) === 0
+                                                                    ? 'text-neutral-700 cursor-not-allowed opacity-50'
+                                                                    : 'text-neutral-500 hover:text-white'
                                                             }`}
                                                     >
                                                         Foil

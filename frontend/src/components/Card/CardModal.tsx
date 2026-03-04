@@ -663,11 +663,14 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                             <button
                                                                 onClick={() => {
                                                                     const targetId = activeGroup?.normal?.printing_id;
-                                                                    if (targetId) handleVersionClick(targetId, 'nonfoil');
+                                                                    if (targetId && (activeGroup.normal?.stock || 0) > 0) handleVersionClick(targetId, 'nonfoil');
                                                                 }}
+                                                                disabled={(activeGroup.normal?.stock || 0) === 0}
                                                                 className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${selectedFinish === 'nonfoil'
-                                                                    ? 'bg-white text-black shadow-lg scale-[1.05]'
-                                                                    : 'text-neutral-500 hover:text-white'
+                                                                        ? 'bg-white text-black shadow-lg scale-[1.05]'
+                                                                        : (activeGroup.normal?.stock || 0) === 0
+                                                                            ? 'text-neutral-700 cursor-not-allowed opacity-50'
+                                                                            : 'text-neutral-500 hover:text-white'
                                                                     }`}
                                                             >
                                                                 Normal
@@ -677,11 +680,14 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                             <button
                                                                 onClick={() => {
                                                                     const targetId = activeGroup?.foil?.printing_id;
-                                                                    if (targetId) handleVersionClick(targetId, 'foil');
+                                                                    if (targetId && (activeGroup.foil?.stock || 0) > 0) handleVersionClick(targetId, 'foil');
                                                                 }}
+                                                                disabled={(activeGroup.foil?.stock || 0) === 0}
                                                                 className={`px-3 py-1 rounded text-[8px] font-black uppercase tracking-widest transition-all ${selectedFinish === 'foil'
-                                                                    ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 border-transparent text-white shadow-lg'
-                                                                    : 'text-neutral-500 hover:text-white'
+                                                                        ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 border-transparent text-white shadow-lg'
+                                                                        : (activeGroup.foil?.stock || 0) === 0
+                                                                            ? 'text-neutral-700 cursor-not-allowed opacity-50'
+                                                                            : 'text-neutral-500 hover:text-white'
                                                                     }`}
                                                             >
                                                                 Foil

@@ -320,11 +320,12 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
 
                 if (pushesNonFoil) {
                   const isSynthetic = baseIsFoil && (pushesFoil || pushesEtched);
+                  const priceToUse = Number(v.prices?.usd || v.prices?.eur || v.aggregated_prices?.[0]?.avg_market_price_usd || 0);
                   expandedVersions.push({
                     ...baseVersion,
                     printing_id: isSynthetic ? `${v.printing_id}-nonfoil` : v.printing_id,
-                    price: Number(v.prices?.usd || v.prices?.eur || v.aggregated_prices?.[0]?.avg_market_price_usd || 0),
-                    market_price: Number(v.aggregated_prices?.[0]?.avg_market_price_usd || 0),
+                    price: priceToUse,
+                    market_price: priceToUse,
                     finish: 'nonfoil',
                     is_foil: false
                   });
@@ -332,11 +333,12 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
 
                 if (pushesFoil) {
                   const isSynthetic = !baseIsFoil && (pushesNonFoil || pushesEtched);
+                  const priceToUseFoil = Number(v.prices?.usd_foil || v.prices?.eur_foil || v.aggregated_prices?.[0]?.avg_market_price_usd || 0);
                   expandedVersions.push({
                     ...baseVersion,
                     printing_id: isSynthetic ? `${v.printing_id}-foil` : v.printing_id,
-                    price: Number(v.prices?.usd_foil || v.prices?.eur_foil || v.aggregated_prices?.[0]?.avg_market_price_usd || 0),
-                    market_price: Number(v.aggregated_prices?.[0]?.avg_market_price_usd || 0),
+                    price: priceToUseFoil,
+                    market_price: priceToUseFoil,
                     finish: 'foil',
                     is_foil: true
                   });
@@ -344,11 +346,12 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
 
                 if (pushesEtched) {
                   const isSynthetic = v.finish !== 'etched' && (pushesNonFoil || pushesFoil);
+                  const priceToUseEtched = Number(v.prices?.usd_etched || v.aggregated_prices?.[0]?.avg_market_price_usd || 0);
                   expandedVersions.push({
                     ...baseVersion,
                     printing_id: isSynthetic ? `${v.printing_id}-etched` : v.printing_id,
-                    price: Number(v.prices?.usd_etched || v.aggregated_prices?.[0]?.avg_market_price_usd || 0),
-                    market_price: Number(v.aggregated_prices?.[0]?.avg_market_price_usd || 0),
+                    price: priceToUseEtched,
+                    market_price: priceToUseEtched,
                     finish: 'etched',
                     is_foil: true
                   });
