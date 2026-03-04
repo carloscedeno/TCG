@@ -235,3 +235,24 @@ eplace) para número de teléfono venezolano, cédula de identidad y nombre en l
 
 **Regla derivada:**
 > Los archivos de fuente premium deben vivir en `frontend/public/fonts/` y referenciarse desde `@font-face` en `index.css`. El nombre exacto del archivo (incluyendo espacios y números) debe usarse tal cual en la declaración `src: url(...)`. No renombrar los archivos para evitar desincronización.
+
+---
+
+## 2026-03-04 — Correcciones PRD: Fix Precios Foil + Checkout WhatsApp
+
+**Qué pasó:** Se implementaron las dos épicas del PRD de correcciones Geekorium. Épica 1: fix del bug crítico del toggle Normal/Foil en `CardDetail.tsx`. Épica 2: refactorización completa del Step 2 del checkout eliminando datos bancarios y redirigiendo 100% a WhatsApp asistido.
+
+**Problema encontrado (Épica 1):** El toggle Normal/Foil pasaba `activePrintingId` (el ID actual) como argumento a `handleVersionClick`, en lugar del `printing_id` de la *variante destino*. Esto resultaba en que al presionar "Foil" se volvía a cargar la misma carta sin cambiar de variante.
+
+**Causa raíz:** `handleVersionClick(activePrintingId!, 'foil')` → debía ser `handleVersionClick(activeGroup?.foil?.printing_id, 'foil')`.
+
+**Lo que cambió:**
+
+- `frontend/src/pages/CardDetail.tsx` → Toggle navega al `printing_id` correcto de la variante destino. Badge visual "NORMAL" / "✨ FOIL" añadido junto al precio. Condición del estado activo del botón Normal basada en `activeFinish` (no en `details?.is_foil`).
+- `frontend/src/pages/CheckoutPage.tsx` → Eliminados bloques Pago Móvil y Zelle. Número WA corregido a `584242507802`. Mensaje estructurado PRD-spec con `cardLines` (qty, nombre, set_code, finish, precio). Truncamiento a 40 ítems. Botón verde WhatsApp (#25D366) con texto "Confirmar y Pagar por WhatsApp". Resumen de datos del cliente visible en Step 2.
+- `.agent/AGENTS.md` → Features nuevas marcadas como ✅.
+
+**Regla derivada:**
+> En el toggle de variantes (Normal/Foil), siempre usar `activeGroup?.{variante}?.printing_id` como argumento de navegación, nunca el `activePrintingId` actual. El ID activo es el *punto de partida*, no el *destino*.
+
+> En `CheckoutPage`, los datos bancarios estáticos son un riesgo operacional. El canal WhatsApp asistido es el único CTA de cierre de venta.

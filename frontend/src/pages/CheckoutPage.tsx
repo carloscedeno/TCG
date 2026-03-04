@@ -97,7 +97,8 @@ export const CheckoutPage = () => {
                 name: item.products?.name,
                 set: item.products?.set_code,
                 price: item.products?.price || 0,
-                foil: item.products?.is_foil || false,
+                foil: item.products?.is_foil || item.products?.finish === 'foil' || false,
+                finish: item.products?.finish || (item.products?.is_foil ? 'foil' : 'normal'),
             }));
 
             const cedula = `${form.cedula_prefix}-${form.cedula_number}`;
@@ -110,7 +111,7 @@ export const CheckoutPage = () => {
                     address_line1: form.address,
                     city: form.state,
                     state: form.state,
-                    zip_code: cedula, // reuse field for storage
+                    zip_code: cedula,
                     country: form.country === 'Venezuela' ? 'VE' : form.country,
                     email: form.email,
                     phone: form.whatsapp
@@ -121,13 +122,41 @@ export const CheckoutPage = () => {
 
             const orderIdForMsg = orderResponse?.order_id || orderResponse?.id || 'PENDIENTE';
 
-            // Build WhatsApp message
-            const whatsappMsg = encodeURIComponent(
-                `Hola Geekorium, mi nombre es ${form.full_name}. Acabo de generar la orden #${orderIdForMsg}. Espero la confirmación de inventario físico para proceder con el pago de $${total.toFixed(2)}.`
-            );
-            const whatsappUrl = `https://wa.me/584141234567?text=${whatsappMsg}`;
+            // Build structured WhatsApp message per PRD spec
+            const WA_NUMBER = '584242507802';
+            const MAX_ITEMS_IN_MSG = 40;
+            const items = Array.isArray(cartItems) ? cartItems : [];
+            const displayItems = items.slice(0, MAX_ITEMS_IN_MSG);
+            const extraCount = items.length - displayItems.length;
 
-            // Open WhatsApp in new tab
+            const cardLines = displayItems.map(item => {
+                const name = item.products?.name || 'Carta';
+                const setCode = item.products?.set_code ? ` (${item.products.set_code.toUpperCase()})` : '';
+                const finish = (item.products?.finish === 'foil' || item.products?.is_foil) ? 'Foil' : 'Normal';
+                const price = Number(item.products?.price || 0).toFixed(2);
+                const qty = item.quantity || 1;
+                return `- ${qty}x ${name}${setCode} [${finish}] - $${price}`;
+            }).join('\n');
+
+            const truncationNote = extraCount > 0
+                ? `\nY ${extraCount} carta(s) adicionales. Por favor revisa mi orden en el sistema bajo mi nombre.`
+                : '';
+
+            const waMessage = [
+                `¡Hola Geeko-Asesor! Quiero concretar esta orden:`,
+                `*Cliente:* ${form.full_name}`,
+                `*CI/RIF:* ${cedula}`,
+                `*Total a Pagar:* $${total.toFixed(2)}`,
+                ``,
+                `*Detalle de Cartas:*`,
+                cardLines + truncationNote,
+                ``,
+                `*Orden ID:* ${orderIdForMsg}`,
+            ].join('\n');
+
+            const whatsappUrl = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(waMessage)}`;
+
+            // Open WhatsApp — native app on mobile, WhatsApp Web on desktop
             window.open(whatsappUrl, '_blank');
 
             navigate('/checkout/success', { state: { orderId: orderIdForMsg } });
@@ -348,67 +377,48 @@ export const CheckoutPage = () => {
                         </div>
                     )}
 
-                    {/* Step 2: Método de Pago */}
+                    {/* Step 2: Confirmación y WhatsApp */}
                     {step === 2 && (
                         <div className="bg-[#281F3E]/60 border border-white/5 rounded-2xl p-6 sm:p-8">
-                            <h2 className="text-2xl font-black uppercase tracking-tight mb-6">Método de Pago</h2>
+                            <h2 className="text-2xl font-black uppercase tracking-tight mb-6">Confirmar Orden</h2>
 
                             {/* Info Banner */}
                             <div className="p-4 border border-[#00AEB4]/20 bg-[#00AEB4]/5 rounded-xl mb-6 flex items-start gap-4">
                                 <ShieldCheck className="text-[#00AEB4] shrink-0 mt-0.5" size={24} />
                                 <div>
                                     <p className="font-bold text-white text-sm mb-0.5">Orden Asistida por Geeko-Asesor</p>
-                                    <p className="text-xs text-neutral-400">Realiza tu pago y envía el comprobante. Un asesor confirmará el stock y coordinará el despacho por WhatsApp.</p>
+                                    <p className="text-xs text-neutral-400">Al confirmar, serás redirigido a WhatsApp donde un asesor verificará el stock físico y coordinará el pago y despacho contigo.</p>
                                 </div>
                             </div>
 
-                            {/* Pago Móvil */}
-                            <div className="space-y-4 mb-6">
-                                <div className="p-4 bg-black/30 border border-white/10 rounded-xl">
-                                    <div className="flex items-center gap-3 border-b border-white/5 pb-3 mb-3">
-                                        <div className="w-10 h-10 rounded-lg bg-[#00AEB4]/10 flex items-center justify-center text-[#00AEB4]">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2" /><path d="M12 18h.01" /></svg>
-                                        </div>
-                                        <div>
-                                            <h4 className="font-bold text-white text-sm">Pago Móvil</h4>
-                                            <p className="text-xs text-neutral-400">Banco Mercantil (0105)</p>
-                                        </div>
+                            {/* Datos del Cliente — resumen */}
+                            <div className="p-4 bg-black/30 border border-white/10 rounded-xl mb-4">
+                                <p className="text-[10px] font-black uppercase tracking-widest text-neutral-500 mb-3">Datos del Cliente</p>
+                                <div className="grid grid-cols-2 gap-3 text-sm">
+                                    <div>
+                                        <span className="text-neutral-500 block text-[10px] uppercase tracking-wider mb-1">Nombre</span>
+                                        <span className="text-white font-bold">{form.full_name}</span>
                                     </div>
-                                    <div className="grid grid-cols-2 gap-4 text-sm">
-                                        <div>
-                                            <span className="text-neutral-500 block text-[10px] uppercase tracking-wider mb-1">Teléfono</span>
-                                            <span className="font-mono text-white font-bold">0414-1234567</span>
-                                        </div>
-                                        <div>
-                                            <span className="text-neutral-500 block text-[10px] uppercase tracking-wider mb-1">Cédula / RIF</span>
-                                            <span className="font-mono text-white font-bold">V-12345678</span>
-                                        </div>
+                                    <div>
+                                        <span className="text-neutral-500 block text-[10px] uppercase tracking-wider mb-1">CI/RIF</span>
+                                        <span className="font-mono text-white font-bold">{form.cedula_prefix}-{form.cedula_number}</span>
                                     </div>
-                                </div>
-
-                                <div className="p-4 bg-black/30 border border-white/10 rounded-xl">
-                                    <div className="flex items-center gap-3 border-b border-white/5 pb-3 mb-3">
-                                        <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400">
-                                            <span className="font-black text-xs">Z</span>
-                                        </div>
-                                        <div>
-                                            <h4 className="font-bold text-white text-sm">Zelle</h4>
-                                            <p className="text-xs text-neutral-400">pagos@geekorium.com</p>
-                                        </div>
+                                    <div>
+                                        <span className="text-neutral-500 block text-[10px] uppercase tracking-wider mb-1">WhatsApp</span>
+                                        <span className="font-mono text-white">{form.whatsapp}</span>
                                     </div>
-                                    <div className="text-sm">
-                                        <span className="text-neutral-500 block text-[10px] uppercase tracking-wider mb-1">Titular</span>
-                                        <span className="font-mono text-white font-bold">Geekorium El Emporio LLC</span>
+                                    <div>
+                                        <span className="text-neutral-500 block text-[10px] uppercase tracking-wider mb-1">Despacho</span>
+                                        <span className="text-white capitalize">{form.shipping_method}</span>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Pago Pospuesto Notice */}
+                            {/* Instrucción WA */}
                             <div className="pt-4 border-t border-white/5">
-                                <p className="text-sm font-bold text-[#00AEB4] mb-2">Paso Siguiente:</p>
                                 <p className="text-xs text-neutral-400">
-                                    Al presionar "Confirmar y Contactar", tu orden será generada y el inventario reservado temporalmente.
-                                    Te redirigiremos a WhatsApp para que nos avises y verifiquemos el stock físico de tus cartas. ¡No realices el pago hasta que te confirmemos!
+                                    Al presionar el botón se generará tu orden y te redirigiremos a WhatsApp con el detalle completo pre-cargado.
+                                    <span className="text-amber-400 font-bold"> No realices ningún pago hasta que el asesor confirme el stock disponible.</span>
                                 </p>
                             </div>
 
@@ -420,12 +430,12 @@ export const CheckoutPage = () => {
                                     onClick={handlePlaceOrder}
                                     disabled={isProcessing}
                                     data-testid="place-order-button"
-                                    className="px-8 py-4 bg-[#00AEB4] text-black font-black uppercase rounded-xl hover:bg-[#00c5cc] shadow-[0_0_20px_rgba(0,174,180,0.3)] transition-all flex items-center gap-3 text-sm tracking-widest disabled:opacity-50"
+                                    className="px-8 py-4 bg-[#25D366] text-black font-black uppercase rounded-xl hover:bg-[#1fba58] shadow-[0_0_20px_rgba(37,211,102,0.35)] transition-all flex items-center gap-3 text-sm tracking-widest disabled:opacity-50"
                                 >
                                     {isProcessing ? (
                                         <><Loader2 className="animate-spin" size={16} /> Procesando...</>
                                     ) : (
-                                        <><MessageCircle size={16} /> Confirmar y Contactar</>
+                                        <><MessageCircle size={16} fill="currentColor" /> Confirmar y Pagar por WhatsApp</>
                                     )}
                                 </button>
                             </div>
