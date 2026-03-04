@@ -1,10 +1,43 @@
-@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800;900&family=Cinzel:wght@400;500;600;700;800;900&family=Cinzel+Decorative:wght@400;700;900&display=swap');
-@import "tailwindcss";
+/* Local Fonts — Definitivas */
+@font-face {
+  font-family: 'Daito';
+  src: url('/fonts/Daito-NormalMedium (1).otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
 
-/* 
-  Note: Local fonts 'Bogue' and 'Daito' are currently missing.
-  Using 'Cinzel' and 'Cinzel Decorative' as premium fallbacks from Google Fonts.
-*/
+@font-face {
+  font-family: 'Bogue';
+  src: url('/fonts/Bogue Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Rubik';
+  src: url('/fonts/Rubik-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Rubik';
+  src: url('/fonts/Rubik-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Rubik';
+  src: url('/fonts/Rubik-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
 
 @import "tailwindcss";
 
@@ -70,12 +103,12 @@
   --color-neutral-gray-900: #1C1C1C;
 
   /* Fonts */
-  --font-logo: 'Cinzel Decorative', 'Daito', serif;
-  /* Para logotipos y títulos web */
-  --font-web-titles: 'Cinzel Decorative', 'Daito', serif;
-  /* Para logotipos y títulos web */
+  --font-logo: 'Daito', serif;
+  /* Logotipos y títulos web */
+  --font-web-titles: 'Daito', serif;
+  /* Logotipos y títulos web */
 
-  --font-titles: 'Cinzel', 'Bogue', 'Rubik', sans-serif;
+  --font-titles: 'Bogue', 'Rubik', sans-serif;
   /* Títulos de producto y modales */
   --font-body: 'Rubik', sans-serif;
   /* Textos largos */
@@ -86,6 +119,7 @@
 
 :root {
   font-family: 'Rubik', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* Rubik cargado localmente */
   line-height: 1.5;
   font-weight: 400;
   color-scheme: dark;

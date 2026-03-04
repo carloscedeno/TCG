@@ -61,9 +61,13 @@ export const WelcomeModal: React.FC = () => {
                                     className="relative w-32 h-32 rounded-full border-4 border-[#00AEB4]/30 shadow-2xl mb-4 group-hover:scale-105 transition-transform duration-500"
                                 />
                             </div>
+                            {/* Est. 2025 → Rubik SemiBold */}
                             <div className="flex items-center justify-center gap-1 text-[#00AEB4]">
                                 <Sparkles size={14} className="animate-pulse" />
-                                <span className="text-[10px] font-black uppercase tracking-[0.3em] italic text-[#00AEB4]">Est. 2025</span>
+                                <span
+                                    className="text-[10px] uppercase tracking-[0.3em] italic text-[#00AEB4]"
+                                    style={{ fontFamily: 'var(--font-body)', fontWeight: 600 }}
+                                >Est. 2025</span>
                             </div>
                         </div>
                     </div>
@@ -73,42 +77,76 @@ export const WelcomeModal: React.FC = () => {
                         {/* Decorative line top */}
                         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#00AEB4]/20 to-transparent"></div>
 
-                        <h2 className="text-3xl md:text-4xl font-black text-white italic tracking-tighter uppercase mb-2 leading-none">
-                            <span className="text-[#00AEB4] block text-base md:text-lg not-italic font-medium tracking-normal mb-1">Bienvenido a</span>
-                            Geekorium<br />Emporio Mágico
+                        <h2 className="text-3xl md:text-4xl text-white italic tracking-tighter uppercase mb-2 leading-none">
+                            {/* "Bienvenido a" → Rubik SemiBold */}
+                            <span
+                                className="block text-base md:text-lg not-italic tracking-normal mb-1 text-[#00AEB4]"
+                                style={{ fontFamily: 'var(--font-body)', fontWeight: 600 }}
+                            >Bienvenido al</span>
+                            {/* "GEEKORIUM EL EMPORIO" → DAITO (font-logo) */}
+                            <span
+                                className="font-black"
+                                style={{ fontFamily: 'var(--font-logo)' }}
+                            >
+                                Geekorium<br />El Emporio
+                            </span>
                         </h2>
 
                         <div className="h-1 w-20 bg-[#00AEB4] mb-6 rounded-full shadow-[0_0_10px_#00AEB4]" />
 
-                        <p className="text-white/90 font-medium text-sm md:text-base leading-relaxed mb-8">
-                            Has entrado al <strong>Portafolio Online</strong> definitivo para coleccionistas. Explora nuestro inventario real, añade tus tesoros al carrito y finaliza tu misión con un Geeko-Asesor.
+                        {/* Body text → Rubik Regular */}
+                        <p
+                            className="text-white/90 text-sm md:text-base leading-relaxed mb-8"
+                            style={{ fontFamily: 'var(--font-body)', fontWeight: 400 }}
+                        >
+                            Has entrado al <strong style={{ fontWeight: 600 }}>Portafolio Online</strong> definitivo para coleccionistas. Explora nuestro inventario real, añade tus tesoros al carrito y finaliza tu misión con un Geeko-Asesor.
                         </p>
 
                         <div className="space-y-4">
+                            {/* Card 1 */}
                             <div className="flex items-start gap-4 p-3 rounded-2xl bg-black/20 border border-white/5 hover:bg-black/30 transition-colors">
                                 <div className="w-10 h-10 rounded-xl bg-[#00AEB4]/10 flex items-center justify-center text-[#00AEB4] shadow-sm shrink-0 border border-[#00AEB4]/20">
                                     <ShoppingBag size={20} />
                                 </div>
                                 <div>
-                                    <h4 className="text-sm font-black uppercase italic tracking-tighter text-white">Explora el Stock</h4>
-                                    <p className="text-[11px] text-white/60 font-medium">Cartas reales listas para tu colección.</p>
+                                    {/* Título acción → DAITO */}
+                                    <h4
+                                        className="text-sm uppercase italic tracking-tighter text-white font-black"
+                                        style={{ fontFamily: 'var(--font-logo)' }}
+                                    >Explora el Stock</h4>
+                                    {/* Subtítulo → Rubik Reg */}
+                                    <p
+                                        className="text-[11px] text-white/60"
+                                        style={{ fontFamily: 'var(--font-body)', fontWeight: 400 }}
+                                    >Cartas reales listas para tu colección.</p>
                                 </div>
                             </div>
 
+                            {/* Card 2 */}
                             <div className="flex items-start gap-4 p-3 rounded-2xl bg-black/20 border border-white/5 hover:bg-black/30 transition-colors">
                                 <div className="w-10 h-10 rounded-xl bg-[#00AEB4]/10 flex items-center justify-center text-[#00AEB4] shadow-sm shrink-0 border border-[#00AEB4]/20">
                                     <MessageSquare size={20} />
                                 </div>
                                 <div>
-                                    <h4 className="text-sm font-black uppercase italic tracking-tighter text-white">Finaliza por WhatsApp</h4>
-                                    <p className="text-[11px] text-white/60 font-medium">Atención personalizada con expertos.</p>
+                                    {/* Título acción → DAITO */}
+                                    <h4
+                                        className="text-sm uppercase italic tracking-tighter text-white font-black"
+                                        style={{ fontFamily: 'var(--font-logo)' }}
+                                    >Finaliza por WhatsApp</h4>
+                                    {/* Subtítulo → Rubik Reg */}
+                                    <p
+                                        className="text-[11px] text-white/60"
+                                        style={{ fontFamily: 'var(--font-body)', fontWeight: 400 }}
+                                    >Atención personalizada con expertos.</p>
                                 </div>
                             </div>
                         </div>
 
+                        {/* CTA → DAITO */}
                         <button
                             onClick={closeMirror}
                             className="mt-8 w-full py-4 bg-[#00AEB4] text-[#1F182D] font-black text-xs uppercase tracking-[0.2em] rounded-2xl hover:bg-[#00AEB4]/90 hover:scale-[1.02] transition-all flex items-center justify-center gap-2 group shadow-[0_0_20px_rgba(0,174,180,0.3)]"
+                            style={{ fontFamily: 'var(--font-logo)' }}
                         >
                             Comenzar Misión <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
                         </button>
