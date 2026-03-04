@@ -65,5 +65,7 @@ typing_extensions==4.15.0
 tzdata==2025.3
 urllib3==2.6.2
 uvicorn==0.40.0
+pytest>=8.0.0
+pytest-asyncio>=0.24.0
 websockets==15.0.1
 yarl==1.22.0

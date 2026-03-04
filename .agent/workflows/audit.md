@@ -31,6 +31,8 @@ Plan → Work → Review → [AUDIT ← estás aquí] → Compound
   python -m pytest tests/unit/ -q
   ```
 
+  > Si falla por módulo no instalado: `pip install pytest pytest-asyncio` (ya está en `requirements.txt`)
+
 - [ ] **Edge functions no rotas**: Si se modificó `supabase/functions/`, verificar que el deploy fue exitoso
 
 ---
@@ -85,5 +87,5 @@ Para ejecutar el bloque crítico completo en una sola pasada:
 // turbo
 
 ```powershell
-cd frontend && npm run build 2>&1; cd ..; git status; python -m pytest tests/unit/ -q 2>&1
+cd frontend; npm run build 2>&1; cd ..; git status; python -m pytest tests/unit/ -q 2>&1; python check_api_health.py 2>&1
 ```
