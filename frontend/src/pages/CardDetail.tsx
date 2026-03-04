@@ -369,53 +369,51 @@ export const CardDetail: React.FC = () => {
                                         <div className="absolute top-0 right-0 w-40 h-40 bg-geeko-cyan/5 rounded-full blur-[50px]" />
                                         <div className="text-xs font-black uppercase text-geeko-cyan tracking-widest mb-2">Internal Store Price</div>
                                         <div className="flex flex-col gap-2">
-                                            <div className="flex items-baseline gap-3">
+                                            {/* Price + Variant Badge (flex-col to prevent overflow) */}
+                                            <div className="flex flex-col gap-1.5">
                                                 <div className="text-6xl font-black text-white font-mono tracking-tighter">
                                                     ${(activeVersion?.price || details.price || 0) > 0 ? Number(activeVersion?.price || details.price).toFixed(2) : '---'}
                                                 </div>
-                                                {/* Variant Badge */}
                                                 {activeFinish === 'foil' ? (
-                                                    <span className="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest bg-gradient-to-r from-pink-500/20 via-purple-500/20 to-cyan-500/20 border border-purple-500/40 text-purple-300">
+                                                    <span className="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest bg-gradient-to-r from-pink-500/20 via-purple-500/20 to-cyan-500/20 border border-purple-500/40 text-purple-300 w-fit">
                                                         ✨ FOIL
                                                     </span>
                                                 ) : (
-                                                    <span className="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest bg-white/10 border border-white/20 text-neutral-300">
+                                                    <span className="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest bg-white/10 border border-white/20 text-neutral-300 w-fit">
                                                         NORMAL
                                                     </span>
                                                 )}
                                             </div>
-                                            {/* Finish Toggle Switch */}
-                                            <div className="flex bg-neutral-900/80 p-1 rounded-xl border border-white/5 w-fit mt-1">
-                                                <button
-                                                    onClick={() => {
-                                                        const targetId = activeGroup?.normal?.printing_id;
-                                                        if (targetId) handleVersionClick(targetId, 'nonfoil');
-                                                    }}
-                                                    disabled={!activeGroup?.normal}
-                                                    className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${activeFinish !== 'foil'
-                                                            ? 'bg-white text-black shadow-lg scale-[1.05]'
-                                                            : activeGroup?.normal
-                                                                ? 'text-neutral-500 hover:text-white'
-                                                                : 'text-neutral-800 cursor-not-allowed'
-                                                        }`}
-                                                >
-                                                    Normal
-                                                </button>
-                                                <button
-                                                    onClick={() => {
-                                                        const targetId = activeGroup?.foil?.printing_id;
-                                                        if (targetId) handleVersionClick(targetId, 'foil');
-                                                    }}
-                                                    disabled={!activeGroup?.foil}
-                                                    className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${activeFinish === 'foil'
-                                                        ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 border-transparent text-white shadow-[0_0_15px_rgba(236,72,153,0.3)] scale-[1.05]'
-                                                        : activeGroup?.foil
-                                                            ? 'text-neutral-500 hover:text-white'
-                                                            : 'text-neutral-800 cursor-not-allowed'
-                                                        }`}
-                                                >
-                                                    Foil
-                                                </button>
+                                            {/* Finish Toggle — only render for available variants */}
+                                            <div className="flex bg-neutral-900/80 p-1 rounded-xl border border-white/5 w-fit">
+                                                {activeGroup?.normal && (
+                                                    <button
+                                                        onClick={() => {
+                                                            const targetId = activeGroup?.normal?.printing_id;
+                                                            if (targetId) handleVersionClick(targetId, 'nonfoil');
+                                                        }}
+                                                        className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${activeFinish !== 'foil'
+                                                                ? 'bg-white text-black shadow-lg scale-[1.05]'
+                                                                : 'text-neutral-500 hover:text-white'
+                                                            }`}
+                                                    >
+                                                        Normal
+                                                    </button>
+                                                )}
+                                                {activeGroup?.foil && (
+                                                    <button
+                                                        onClick={() => {
+                                                            const targetId = activeGroup?.foil?.printing_id;
+                                                            if (targetId) handleVersionClick(targetId, 'foil');
+                                                        }}
+                                                        className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${activeFinish === 'foil'
+                                                            ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 border-transparent text-white shadow-[0_0_15px_rgba(236,72,153,0.3)] scale-[1.05]'
+                                                            : 'text-neutral-500 hover:text-white'
+                                                            }`}
+                                                    >
+                                                        Foil
+                                                    </button>
+                                                )}
                                             </div>
                                         </div>
                                         <button

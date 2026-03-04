@@ -124,23 +124,22 @@ export const CheckoutPage = () => {
 
             // Build structured WhatsApp message per PRD spec
             const WA_NUMBER = '584242507802';
-            const MAX_ITEMS_IN_MSG = 40;
             const items = Array.isArray(cartItems) ? cartItems : [];
-            const displayItems = items.slice(0, MAX_ITEMS_IN_MSG);
-            const extraCount = items.length - displayItems.length;
 
-            const cardLines = displayItems.map(item => {
-                const name = item.products?.name || 'Carta';
-                const setCode = item.products?.set_code ? ` (${item.products.set_code.toUpperCase()})` : '';
-                const finish = (item.products?.finish === 'foil' || item.products?.is_foil) ? 'Foil' : 'Normal';
-                const price = Number(item.products?.price || 0).toFixed(2);
-                const qty = item.quantity || 1;
-                return `- ${qty}x ${name}${setCode} [${finish}] - $${price}`;
-            }).join('\n');
+            // Count by type only (no individual card data)
+            const normalCount = items.reduce((acc, item) => {
+                const isFoil = item.products?.finish === 'foil' || item.products?.is_foil;
+                return acc + (isFoil ? 0 : (item.quantity || 1));
+            }, 0);
+            const foilCount = items.reduce((acc, item) => {
+                const isFoil = item.products?.finish === 'foil' || item.products?.is_foil;
+                return acc + (isFoil ? (item.quantity || 1) : 0);
+            }, 0);
 
-            const truncationNote = extraCount > 0
-                ? `\nY ${extraCount} carta(s) adicionales. Por favor revisa mi orden en el sistema bajo mi nombre.`
-                : '';
+            const typeLines = [
+                normalCount > 0 ? `- Normal: ${normalCount} unidad(es)` : '',
+                foilCount > 0 ? `- Foil: ${foilCount} unidad(es)` : '',
+            ].filter(Boolean).join('\n');
 
             const waMessage = [
                 `¡Hola Geeko-Asesor! Quiero concretar esta orden:`,
@@ -148,8 +147,8 @@ export const CheckoutPage = () => {
                 `*CI/RIF:* ${cedula}`,
                 `*Total a Pagar:* $${total.toFixed(2)}`,
                 ``,
-                `*Detalle de Cartas:*`,
-                cardLines + truncationNote,
+                `*Tipos de cartas:*`,
+                typeLines,
                 ``,
                 `*Orden ID:* ${orderIdForMsg}`,
             ].join('\n');

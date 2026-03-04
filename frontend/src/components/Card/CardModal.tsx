@@ -659,30 +659,34 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
 
                                                     {/* Finish Toggle Switch */}
                                                     <div className="flex bg-neutral-900/80 p-1 rounded-xl border border-white/5 w-fit mt-1">
-                                                        <button
-                                                            onClick={() => handleVersionClick(activePrintingId!, 'nonfoil')}
-                                                            disabled={!activeGroup?.normal}
-                                                            className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${selectedFinish === 'nonfoil'
-                                                                ? 'bg-white text-black shadow-lg scale-[1.05]'
-                                                                : activeGroup?.normal
-                                                                    ? 'text-neutral-500 hover:text-white'
-                                                                    : 'text-neutral-800 cursor-not-allowed'
-                                                                }`}
-                                                        >
-                                                            Normal
-                                                        </button>
-                                                        <button
-                                                            onClick={() => handleVersionClick(activePrintingId!, 'foil')}
-                                                            disabled={!activeGroup?.foil}
-                                                            className={`px-3 py-1 rounded text-[8px] font-black uppercase tracking-widest transition-all ${selectedFinish === 'foil'
-                                                                ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 border-transparent text-white shadow-lg'
-                                                                : activeGroup?.foil
-                                                                    ? 'text-neutral-500 hover:text-white'
-                                                                    : 'text-neutral-800 cursor-not-allowed'
-                                                                }`}
-                                                        >
-                                                            Foil
-                                                        </button>
+                                                        {activeGroup?.normal && (
+                                                            <button
+                                                                onClick={() => {
+                                                                    const targetId = activeGroup?.normal?.printing_id;
+                                                                    if (targetId) handleVersionClick(targetId, 'nonfoil');
+                                                                }}
+                                                                className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${selectedFinish === 'nonfoil'
+                                                                    ? 'bg-white text-black shadow-lg scale-[1.05]'
+                                                                    : 'text-neutral-500 hover:text-white'
+                                                                    }`}
+                                                            >
+                                                                Normal
+                                                            </button>
+                                                        )}
+                                                        {activeGroup?.foil && (
+                                                            <button
+                                                                onClick={() => {
+                                                                    const targetId = activeGroup?.foil?.printing_id;
+                                                                    if (targetId) handleVersionClick(targetId, 'foil');
+                                                                }}
+                                                                className={`px-3 py-1 rounded text-[8px] font-black uppercase tracking-widest transition-all ${selectedFinish === 'foil'
+                                                                    ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 border-transparent text-white shadow-lg'
+                                                                    : 'text-neutral-500 hover:text-white'
+                                                                    }`}
+                                                            >
+                                                                Foil
+                                                            </button>
+                                                        )}
                                                     </div>
                                                 </div>
 
