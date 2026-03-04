@@ -218,3 +218,20 @@ eplace) para número de teléfono venezolano, cédula de identidad y nombre en l
 
 **Regla derivada:**
 > Si una fuente se referencia en `@font-face` con `url('/fonts/...')`, el archivo DEBE existir en `frontend/public/fonts/`. De lo contrario, el build es silencioso pero el runtime genera 404s. Siempre usar Google Fonts como fallback cuando no se disponga del archivo local.
+
+---
+
+## 2026-03-04 — Tipografía Definitiva: Fuentes Locales Reales
+
+**Qué pasó:** El usuario proporcionó los archivos de fuente definitivos (Daito, Bogue, Rubik). Se reemplazaron completamente los fallbacks de Google Fonts (Cinzel/Cinzel Decorative) por las fuentes locales reales. Se actualizó el WelcomeModal para cumplir el spec tipográfico de diseño.
+
+**Lo que cambió:**
+
+- `frontend/public/fonts/` → 5 archivos agregados: `Daito-NormalMedium (1).otf`, `Bogue Medium.ttf`, `Rubik-Regular.ttf`, `Rubik-SemiBold.ttf`, `Rubik-Italic.ttf`
+- `frontend/src/index.css` → Eliminado `@import` de Google Fonts; 5 declaraciones `@font-face` locales con `font-display: swap`. Tokens `--font-logo`/`--font-web-titles` → Daito; `--font-titles` → Bogue.
+- `frontend/src/components/Navigation/WelcomeModal.tsx` → Fuentes asignadas por spec: Daito en logo/títulos/CTAs, Rubik SemiBold en labels secundarios, Rubik Regular en body text.
+
+**Artefacto reutilizable:** Spec tipográfico validado en dos capturas (Home y CardModal). Los roles de fuente están ahora documentados en los tokens CSS.
+
+**Regla derivada:**
+> Los archivos de fuente premium deben vivir en `frontend/public/fonts/` y referenciarse desde `@font-face` en `index.css`. El nombre exacto del archivo (incluyendo espacios y números) debe usarse tal cual en la declaración `src: url(...)`. No renombrar los archivos para evitar desincronización.
