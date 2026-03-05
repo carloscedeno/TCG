@@ -284,3 +284,11 @@ ear_mint, lightly_played) deben normalizarse en el backend a cÃ³digos internos (
 - **Causa RaÃ­z:** DocumentaciÃ³n de diseÃ±o obsoleta que no fue actualizada tras cambios en la estrategia de marketing del cliente.
 - **SoluciÃ³n:** Priorizar la comunicaciÃ³n directa del usuario sobre lo escrito en `docs/`. Implementar `mailto:info@geekorium.shop` directamente.
 - **Regla Derivada:** En caso de contradicciÃ³n entre un documento `docs/*.md` y una instrucciÃ³n directa del usuario en el chat, el chat siempre tiene la razÃ³n. Marcar la discrepancia en el log para futura actualizaciÃ³n de docs.
+
+### 24. Jerarquía de Configuración SMTP (Mar 2026)
+- **Problema**: Los correos no se enviaban porque las credenciales estaban en frontend/.env pero el backend las buscaba en la raíz.
+- **Lección**: Los operativos backend (FastAPI/Python) suelen buscar el archivo .env en la raíz del proyecto. Las configuraciones compartidas o críticas de backend deben centralizarse allí para ser accesibles.
+
+### 25. Seguridad de Secretos en Producción (Mar 2026)
+- **Problema**: Hardcodear secretos en .env es un riesgo de seguridad en producción.
+- **Lección**: Implementar validación en pydantic.BaseSettings (usando model_post_init) para asegurar que variables como SMTP_PASSWORD se provean via entorno del sistema y no vía archivo físico en modo production.

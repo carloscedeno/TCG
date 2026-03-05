@@ -88,6 +88,18 @@
 
 ---
 
+### Ley 7: Gestión Segura de Secretos
+
+**Nunca** hardcodear secretos reales (passwords, API keys, tokens) en archivos `.env` o archivos de configuración persistentes para entornos de producción.
+
+- **Validación Estricta**: Las aplicaciones deben validar la existencia de secretos en variables de entorno del sistema al iniciar.
+- **Placeholders**: Usar solo placeholders (ej. `SET_ME_VIA_ENV_VAR`) en archivos `.env` locales.
+- **Acceso Directo**: En producción, leer siempre desde variables de entorno del host o gestores de secretos.
+
+**Excepciones**: Ninguna.
+
+---
+
 ## 🟡 REGLAS DE OPERACIÓN AUTÓNOMA
 
 ### Regla 1: Auto-Aprobación de Comandos Seguros
@@ -289,6 +301,10 @@ Al importar cartas sin edición (Set) específica, el sistema **siempre** debe p
 ---
 
 ## 📝 CHANGELOG DE LEYES
+
+### v2.5 (2026-03-05)
+
+- ✅ Agregada Ley 7: Gestión Segura de Secretos (Prohibición de secretos hardcodeados en producción).
 
 ### v2.4 (2026-03-03)
 

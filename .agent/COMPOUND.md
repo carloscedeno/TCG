@@ -299,3 +299,15 @@ eplace) para nÃºmero de telÃ©fono venezolano, cÃ©dula de identidad y nombre en l
 - `src/components/Navigation/Footer.tsx`, `WelcomeModal.tsx` y `src/pages/Home.tsx` â†’ UnificaciÃ³n de logo circular.
 **Artefacto creado:** Walkthrough de branding.
 **Regla derivada:** Los requerimientos dinÃ¡micos en chat prevalecen sobre el PRD estÃ¡tico.
+
+## 2026-03-05 — Reparación de Notificaciones y Seguridad de Secretos
+
+**Qué pasó**: Se corrigió el fallo en el envío de correos de confirmación tras compra y se robusteció la seguridad de los secretos para producción.
+**Lo que cambió**:
+- lessons_learned.md -> Lecciones #24 y #25
+- src/core/config.py -> Validación proactiva de secretos en modo production.
+- .env -> Sanitización de credenciales.
+- docs/production.md -> Nueva guía de despliegue.
+- LEYES_DEL_SISTEMA.md -> Agregada Ley 7 (Gestión Segura de Secretos).
+**Artefacto creado**: docs/production.md.
+**Regla derivada**: Ley 7 de LEYES_DEL_SISTEMA.md.

@@ -45,5 +45,13 @@ class Settings(BaseSettings):
     # Environment
     DEBUG: bool = True
     ENVIRONMENT: str = "development"
+
+    def model_post_init(self, __context) -> None:
+        """Validate settings after initialization."""
+        if self.ENVIRONMENT == "production":
+            if not self.SMTP_PASSWORD or self.SMTP_PASSWORD == "SET_ME_VIA_ENV_VAR":
+                raise ValueError("SMTP_PASSWORD must be set in production environment")
+            if not self.SMTP_USERNAME:
+                raise ValueError("SMTP_USERNAME must be set in production environment")
     
 settings = Settings()
