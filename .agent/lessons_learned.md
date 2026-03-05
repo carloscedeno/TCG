@@ -272,3 +272,15 @@ ear_mint, lightly_played) deben normalizarse en el backend a códigos internos (
 - **Causa Raíz**: La operación de red con SMTP bloquea el hilo principal si no se delega a una tarea de fondo.
 - **Solución**: Delegar el envío a tareas asíncronas no bloqueantes. En este caso se empleó syncio.create_task() (también se puede usar BackgroundTasks de FastAPI) para despachar correos (al cliente y admin) inmediatamente antes de devolver la respuesta 200 OK.
 - **Regla Derivada**: Cualquier integración con servicios externos de notificaciones en rutas sensibles debe ser wait de una tarea en fondo o despachado asíncronamente para mantener latencias < 500ms.
+
+### 23. Prioridad de Intención del Usuario sobre Documentación Estática — 2026-03-05
+- **Problema:** El PRD y otros documentos de diseño especificaban vincular el botón de correo a una landing de Mailchimp, pero el usuario reportó esto como un error.
+- **Causa Raíz:** Documentación de diseño obsoleta que no fue actualizada tras cambios en la estrategia de marketing del cliente.
+- **Solución:** Priorizar la comunicación directa del usuario sobre lo escrito en docs/. Implementar `mailto:info@geekorium.shop` directamente.
+- **Regla Derivada:** En caso de contradicción entre un documento `docs/*.md` y una instrucción directa del usuario en el chat, el chat siempre tiene la razón. Marcar la discrepancia en el log para futura actualización de docs.
+
+### 23. Prioridad de Intención del Usuario sobre Documentación Estática — 2026-03-05
+- **Problema:** El PRD y otros documentos de diseño especificaban vincular el botón de correo a una landing de Mailchimp, pero el usuario reportó esto como un error.
+- **Causa Raíz:** Documentación de diseño obsoleta que no fue actualizada tras cambios en la estrategia de marketing del cliente.
+- **Solución:** Priorizar la comunicación directa del usuario sobre lo escrito en `docs/`. Implementar `mailto:info@geekorium.shop` directamente.
+- **Regla Derivada:** En caso de contradicción entre un documento `docs/*.md` y una instrucción directa del usuario en el chat, el chat siempre tiene la razón. Marcar la discrepancia en el log para futura actualización de docs.

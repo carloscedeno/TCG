@@ -104,9 +104,9 @@ export const WelcomeModal: React.FC = () => {
 
                         {/* Logo imagen — reemplaza el texto */}
                         <img
-                            src="/logo-emporio.png"
-                            alt="Geekorium El Emporio"
-                            className="h-14 object-contain object-left mb-4"
+                            src="/branding/Logo.jpg"
+                            alt="Geekorium"
+                            className="h-14 w-14 rounded-full object-contain object-left mb-4 border-2 border-[#00AEB4]/30"
                         />
 
                         <div className="h-1 w-20 bg-[#00AEB4] mb-5 rounded-full shadow-[0_0_10px_#00AEB4]" />

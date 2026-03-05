@@ -279,3 +279,23 @@ eplace) para número de teléfono venezolano, cédula de identidad y nombre en l
 **Regla derivada:**
 > Al usar Pydantic v2 (pydantic-settings), se debe utilizar model_config = SettingsConfigDict() en lugar de la clase interna Config.
 > Las notificaciones por correo en la API deben enviarse de forma no bloqueante (e.g. syncio.create_task o BackgroundTasks).
+
+## 2026-03-05 — Branding Fix y Corrección de Correo
+
+**Qué pasó:** El usuario solicitó reemplazar el nombre de la tienda en texto por el logo circular y corregir el enlace de correo que redirigía a Mailchimp.
+**Lo que cambió:**
+- `lessons_learned.md` → Lección #23 (Prioridad de intención sobre docs).
+- `AGENTS.md` → Registrada feature de Branding y Correo.
+- `src/components/Navigation/Footer.tsx`, `WelcomeModal.tsx` y `src/pages/Home.tsx` → Unificación de logo circular.
+**Artefacto creado:** Walkthrough de branding.
+**Regla derivada:** Los requerimientos dinámicos en chat prevalecen sobre el PRD estático.
+
+## 2026-03-05 — Branding Fix y Corrección de Correo
+
+**Qué pasó:** El usuario solicitó reemplazar el nombre de la tienda en texto por el logo circular y corregir el enlace de correo que redirigía a Mailchimp.
+**Lo que cambió:**
+- `lessons_learned.md` → Lección #23 (Prioridad de intención sobre docs).
+- `AGENTS.md` → Registrada feature de Branding y Correo.
+- `src/components/Navigation/Footer.tsx`, `WelcomeModal.tsx` y `src/pages/Home.tsx` → Unificación de logo circular.
+**Artefacto creado:** Walkthrough de branding.
+**Regla derivada:** Los requerimientos dinámicos en chat prevalecen sobre el PRD estático.

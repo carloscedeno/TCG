@@ -78,6 +78,7 @@ Artefactos del Compound step:
 - **✅ Fix Precio Normal/Foil (CardDetail)**: Toggle navega al `printing_id` correcto de la variante destino. Badge visual NORMAL/FOIL junto al precio.
 - **✅ Checkout WhatsApp Routing (PRD 2026-03-04)**: Eliminados datos bancarios (Pago Móvil/Zelle). Número WA actualizado a `584242507802`. Mensaje estructurado con detalle de cartas, finish y truncamiento a 40 ítems. Botón renombrado "Confirmar y Pagar por WhatsApp".
 - **✅ Notificaciones por Correo Electrónico**: Implementación de `fastapi-mail` usando SMTP de Hostinger para confirmación a compradores al momento de la orden y notificaciones de nueva venta a la tienda, utilizando `asyncio.create_task` para evitar el bloqueo del API.
+- **✅ Corrección de Branding y Contacto**: Sustitución del nombre en texto por el logo circular oficial en Header, Footer y WelcomeModal. Restauración del enlace `mailto` directo a `info@geekorium.shop` eliminando redirecciones obsoletas a Mailchimp.
 
 ## 🚧 Features Pendientes
 
