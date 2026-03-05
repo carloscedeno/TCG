@@ -256,3 +256,26 @@ eplace) para número de teléfono venezolano, cédula de identidad y nombre en l
 > En el toggle de variantes (Normal/Foil), siempre usar `activeGroup?.{variante}?.printing_id` como argumento de navegación, nunca el `activePrintingId` actual. El ID activo es el *punto de partida*, no el *destino*.
 
 > En `CheckoutPage`, los datos bancarios estáticos son un riesgo operacional. El canal WhatsApp asistido es el único CTA de cierre de venta.
+
+## 2026-03-04 — Fix Precios Normal/Foil y WA Checkout
+
+**Qué pasó:** Los precios de CardKingdom se mostraban igual para variantes Normal y Foil en CardModal por falta de separación explícita de usd_foil. Además, el UI permitía hacer toggle a cartas sin stock o ocultas, y el checkout en WhatsApp enviaba demasiada data de cartas individuales.
+**Lo que cambió:**
+- lessons_learned.md → Lección #18 (Lógica condicional/stock para toggles).
+- pi.ts → Fetch extrae prices.usd_foil y prices.usd explícitamente.
+- CardDetail.tsx/CardModal.tsx → Modificado el renderizado del toggle basado en stock (> 0).
+- CheckoutPage.tsx → Se usan .reduce() en cartItems para sumar la cantidad según el inish (foil/normal) en vez de enviar 40 líneas de string.
+
+## 2026-03-04 — Email Notifications & Pydantic Configuration
+
+**Qué pasó:** Se implementó el envío asíncrono de correos electrónicos de confirmación de pedidos, integrando astapi-mail con el servidor SMTP de Hostinger. Se corrigieron los problemas de validación de configuración al usar Pydantic v2.
+
+**Lo que cambió:**
+- src/api/services/email_service.py → Se creó el servicio para correos.
+- src/api/services/cart_service.py → Integración de correos en el flujo de checkout mediante syncio.create_task.
+- src/core/config.py → Se actualizó a la API de Pydantic v2 usando model_config = SettingsConfigDict(...).
+- lessons_learned.md → Lección #67 (Configuración de Pydantic v2) y #68 (Envío de correos asíncrono en FastAPI).
+
+**Regla derivada:**
+> Al usar Pydantic v2 (pydantic-settings), se debe utilizar model_config = SettingsConfigDict() en lugar de la clase interna Config.
+> Las notificaciones por correo en la API deben enviarse de forma no bloqueante (e.g. syncio.create_task o BackgroundTasks).

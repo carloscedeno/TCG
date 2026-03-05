@@ -1,6 +1,9 @@
+import asyncio
 from typing import List, Dict, Any, Optional
 from fastapi import HTTPException
-from ..utils.supabase_client import supabase
+from ..utils.supabase_client import supabase, get_supabase_admin
+from .email_service import EmailService
+from ...core.config import settings
 
 class CartService:
     @staticmethod
@@ -96,6 +99,39 @@ class CartService:
             # Re-fetch cart_id since we need to ensure we have it
             cart_id = items[0]['cart_id']
             supabase.table('cart_items').delete().eq('cart_id', cart_id).execute()
+            
+            # 5. Send Notification Emails
+            try:
+                # Use admin client to safely fetch auth records
+                admin_client = get_supabase_admin()
+                user_resp = admin_client.auth.admin.get_user_by_id(user_id)
+                user_email = user_resp.user.email
+                
+                if user_email:
+                    # Async task so the user doesn't wait for SMPT
+                    asyncio.create_task(
+                        EmailService.send_order_confirmation(
+                            user_email=user_email,
+                            order_id=order_id,
+                            order_total=total,
+                            items=items
+                        )
+                    )
+                
+                admin_notifier_email = settings.EMAILS_FROM_EMAIL
+                if admin_notifier_email:
+                    asyncio.create_task(
+                        EmailService.send_new_order_notification(
+                            admin_email=admin_notifier_email,
+                            order_id=order_id,
+                            current_user_id=user_id,
+                            order_total=total,
+                            items=items
+                        )
+                    )
+            except Exception as e:
+                print(f"Error dispatching emails during checkout: {e}")
+                # We don't raise here, so checkout succeeds even if mail fails.
             
             return {"success": True, "order_id": order_id, "total": total}
         except Exception as e:

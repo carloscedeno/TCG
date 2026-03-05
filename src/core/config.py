@@ -1,10 +1,12 @@
 """Configuration settings."""
 
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import List
 
 class Settings(BaseSettings):
     """Application settings."""
+    
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
     
     # Database
     DATABASE_URL: str = "postgresql://user:password@localhost:5432/mtg_tcg_db"
@@ -24,6 +26,15 @@ class Settings(BaseSettings):
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     
+    # Email / SMTP Configurations
+    SMTP_TLS: bool = True
+    SMTP_PORT: int = 587
+    SMTP_SERVER: str = "smtp.hostinger.com"
+    SMTP_USERNAME: str = ""
+    SMTP_PASSWORD: str = ""
+    EMAILS_FROM_EMAIL: str = "info@geekorium.shop"
+    EMAILS_FROM_NAME: str = "Geekorium Shop"
+    
     # CORS
     ALLOWED_HOSTS: List[str] = ["*"]
     
@@ -35,7 +46,4 @@ class Settings(BaseSettings):
     DEBUG: bool = True
     ENVIRONMENT: str = "development"
     
-    class Config:
-        env_file = ".env"
-
 settings = Settings()

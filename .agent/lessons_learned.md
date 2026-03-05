@@ -252,3 +252,23 @@ ear_mint, lightly_played) deben normalizarse en el backend a códigos internos (
 - **Causa Raiz**: Declaraciones `@font-face` en `index.css` referenciaban archivos con `url('/fonts/...')` que nunca existieron en `frontend/public/fonts/`. El build de Vite compila sin errores aunque los archivos no existan.
 - **Solucion**: Eliminar `@font-face` locales e importar `Cinzel` y `Cinzel Decorative` de Google Fonts como fallbacks premium.
 - **Regla Derivada**: Toda fuente en `@font-face` con `url('/fonts/...')` DEBE tener su archivo fisico. Si no esta disponible, usar Google Fonts. Documentar el original como comentario en el CSS.
+
+### 18. Toggle Variant UI y CardKingdom Pricing
+- **Problema:** Los botones de variante Foil/Normal quedaban habilitados sin stock disponible (o no funcionales), y el precio 'Mercado Externo' (MKT) fusionaba foil y normal mostrando el mismo valor para ambas versiones.
+- **Causa Raíz:** La UI dependía del atributo disabled basado en la *ausencia* de datos, pero no comprobaba stock === 0. Además, pi.ts usaba genericamente vg_market_price_usd para variantes sintéticas sin bifurcar adecuadamente entre prices.usd y prices.usd_foil.
+- **Solución:** Implementar renderizado condicional ({condition && <button>}) u ocultamiento via JS para variantes inexistentes, añadir validación disabled={(stock || 0) === 0} para variantes existentes pero agotadas. En pi.ts, asignar prices.usd a nonfoil y prices.usd_foil a foil explícitamente al expandir el objeto ll_versions.
+- **Regla Derivada:** UI de variantes en E-commerce físico: Si no existe variante, oculta el UI. Si existe pero no hay stock, deshabilita la UI (opacity-50). Los precios externos siempre deben extraer las propiedades separadas (usd vs usd_foil) del provider base.
+
+### 67. Configuración de Pydantic v2 (SettingsConfigDict)
+
+- **Problema**: pydantic-settings generaba errores (como Config error o validación fallida) al intentar heredar de BaseSettings y usar una clase interna Config.
+- **Causa Raíz**: Con la introducción de Pydantic v2, la declaración de configuración mediante subclases Config quedó obsoleta a favor de model_config.
+- **Solución**: Usar model_config = SettingsConfigDict(env_file='.env', env_file_encoding='utf-8') dentro de la clase Settings.
+- **Regla Derivada**: Siempre actualizar los esquemas de configuración a las convenciones de Pydantic v2 para garantizar soporte continuo y evitar problemas con pytest y builds.
+
+### 68. Envío Asíncrono de Correos en FastAPI
+
+- **Problema**: Realizar el envío de correos (ej: servidor SMTP) de manera síncrona dentro del path operator del carrito de compras introducía latencias inaceptables en la respuesta (checkout), degradando la experiencia de usuario.
+- **Causa Raíz**: La operación de red con SMTP bloquea el hilo principal si no se delega a una tarea de fondo.
+- **Solución**: Delegar el envío a tareas asíncronas no bloqueantes. En este caso se empleó syncio.create_task() (también se puede usar BackgroundTasks de FastAPI) para despachar correos (al cliente y admin) inmediatamente antes de devolver la respuesta 200 OK.
+- **Regla Derivada**: Cualquier integración con servicios externos de notificaciones en rutas sensibles debe ser wait de una tarea en fondo o despachado asíncronamente para mantener latencias < 500ms.
