@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient, SupabaseClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import nodemailer from "npm:nodemailer";
 
 // Force redeploy - 2026-02-12 19:05
 interface RequestParams {
@@ -133,6 +134,9 @@ serve(async (req: Request) => {
     }
     else if (path.startsWith('/api/stats')) {
       response = await handleStatsEndpoint(supabase, path, method, params)
+    }
+    else if (path.startsWith('/api/notifications/checkout')) {
+      response = await handleNotificationsEndpoint(supabase, path, method, params)
     }
     else if (path.startsWith('/api/admin')) {
       response = await handleAdminEndpoint(supabase, path, method, params, authToken)
@@ -1101,3 +1105,94 @@ function normalizeCondition(cond: string): string {
   if (c === 'damaged' || c === 'd' || c === 'poor') return 'D';
   return 'NM'; // Default to Near Mint
 }
+
+async function handleNotificationsEndpoint(supabase: SupabaseClient, path: string, method: string, params: RequestParams) {
+  if (method !== 'POST') {
+    return { error: 'Method not allowed' };
+  }
+
+  const { order_id, user_email, admin_email, order_total, items, current_user_id } = params;
+
+  if (!order_id || !order_total || !items) {
+    return { error: 'Missing required parameters (order_id, order_total, items)' };
+  }
+
+  const SmtpUser = Deno.env.get('SMTP_USERNAME');
+  const SmtpPass = Deno.env.get('SMTP_PASSWORD');
+  const SmtpServer = Deno.env.get('SMTP_SERVER') || 'smtp.hostinger.com';
+
+  if (!SmtpUser || !SmtpPass) {
+    console.warn("Email Service: SMTP credentials not configured, skipping email.");
+    return { success: true, message: "Emails skipped (not configured)" };
+  }
+
+  // Create transporter
+  const transporter = nodemailer.createTransport({
+    host: SmtpServer,
+    port: 465,
+    secure: true, // Use TLS
+    auth: {
+      user: SmtpUser,
+      pass: SmtpPass,
+    },
+  });
+
+  try {
+    const itemsArray = Array.isArray(items) ? items : [];
+    const items_html = itemsArray.map((item: any) =>
+      `<li>${item?.quantity || 1}x ${item?.products?.name || 'Unknown Item'} - $${item?.products?.price || 0}</li>`
+    ).join('');
+
+    const customerEmailPromise = user_email ? transporter.sendMail({
+      from: `"Geekorium Shop" <${SmtpUser}>`,
+      to: user_email,
+      subject: `Confirmación de Pedido ${order_id} - Geekorium Shop`,
+      html: `
+        <html>
+            <body>
+                <h2>¡Gracias por tu compra en Geekorium Shop!</h2>
+                <p>Tu pedido <strong>${order_id}</strong> ha sido confirmado.</p>
+                <h3>Resumen de la compra:</h3>
+                <ul>
+                    ${items_html}
+                </ul>
+                <h3>Total: $${order_total}</h3>
+                <p>Nos pondremos en contacto pronto para el envío.</p>
+            </body>
+        </html>
+      `,
+    }) : Promise.resolve();
+
+    const adminEmailOverride = admin_email || "geekorium.tcg@gmail.com";
+    const adminEmailPromise = transporter.sendMail({
+      from: `"System Notifications" <${SmtpUser}>`,
+      to: adminEmailOverride,
+      subject: `¡Nueva Venta! Pedido ${order_id}`,
+      html: `
+        <html>
+            <body>
+                <h2>¡Nueva Venta en Geekorium Shop!</h2>
+                <p>Se ha registrado un nuevo pedido con el ID: <strong>${order_id}</strong>.</p>
+                <p>ID del Usuario: ${current_user_id || 'Guest'}</p>
+                <h3>Artículos comprados:</h3>
+                <ul>
+                    ${items_html}
+                </ul>
+                <h3>Total: $${order_total}</h3>
+                <p>Por favor revisa el panel de administración para más detalles.</p>
+            </body>
+        </html>
+      `,
+    });
+
+    await Promise.all([customerEmailPromise, adminEmailPromise]);
+    console.log(`Emails sent successfully for order ${order_id}`);
+
+    return { success: true, message: "Emails sent successfully" };
+  } catch (error: any) {
+    console.error("Failed to send emails:", error);
+    // Return success: false but do not throw 500 error, so checkout completes gracefully
+    return { success: false, error: `Failed to send emails: ${error.message}` };
+  }
+}
+

@@ -16,17 +16,15 @@ En producción, las siguientes variables **DEBEN** ser configuradas como variabl
 - `SMTP_SERVER`: (Opcional, puede ir en `.env`).
 - `SMTP_PORT`: (Opcional, puede ir en `.env`).
 
-## 2. Archivo `.env` en Producción
-
-El archivo `.env` en producción solo debe contener configuraciones no sensibles. Use placeholders para los secretos:
+El archivo `.env` en producción solo debe contener configuraciones no sensibles. Use comentarios en lugar de valores para indicar dónde deben ir los secretos.
 
 ```bash
 # .env (PROD)
 ENVIRONMENT=production
-SMTP_SERVER=smtp.hostinger.com
+SMTP_SERVER=tu-servidor-smtp
 SMTP_PORT=465
-SMTP_USER=notificaciones@tusitiotcg.com
-SMTP_PASSWORD=SET_ME_VIA_ENV_VAR
+# (Configurar cuenta de usuario vía variables de entorno del sistema)
+# (Configurar contraseña de la cuenta vía variables de entorno del sistema)
 ```
 
 ## 3. Validación de Seguridad
