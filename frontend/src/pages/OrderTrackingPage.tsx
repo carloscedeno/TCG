@@ -15,6 +15,10 @@ export const OrderTrackingPage = () => {
 
     const fetchOrder = async () => {
         try {
+            if (!orderId || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(orderId)) {
+                throw new Error("El ID de la orden no es válido");
+            }
+
             const { data, error } = await supabase
                 .from('orders')
                 .select('*, order_items(*)')

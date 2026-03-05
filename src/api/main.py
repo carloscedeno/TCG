@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
-from .routes import cards, admin, collections, webhooks, products, cart, analytics
+from .routes import cards, admin, collections, webhooks, products, cart, analytics, notifications
 
 load_dotenv()
 
@@ -36,6 +36,7 @@ app.include_router(webhooks.router)
 app.include_router(products.router)
 app.include_router(cart.router)
 app.include_router(analytics.router)
+app.include_router(notifications.router)
 
 @app.get("/health")
 async def health_check():

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchCart, createOrder } from '../utils/api';
+import { fetchCart, createOrder, sendCheckoutEmailNotification } from '../utils/api';
 import { ShieldCheck, Truck, CreditCard, CheckCircle, Loader2, AlertCircle, MessageCircle } from 'lucide-react';
 import { supabase } from '../utils/supabaseClient';
 
@@ -120,7 +120,36 @@ export const CheckoutPage = () => {
                 guestInfo: !user ? { email: form.email, phone: form.whatsapp } : undefined,
             });
 
-            const orderIdForMsg = orderResponse?.order_id || orderResponse?.id || 'PENDIENTE';
+            console.log("Order response:", orderResponse);
+
+            let orderIdForMsg = 'PENDIENTE';
+            if (typeof orderResponse === 'string') {
+                orderIdForMsg = orderResponse;
+            } else if (orderResponse) {
+                // Sometimes it's an array if RPC returns a table type
+                const resObj = Array.isArray(orderResponse) ? orderResponse[0] : orderResponse;
+                orderIdForMsg = resObj?.order_id || resObj?.id || 'PENDIENTE';
+            }
+
+            // Trigger email notifications asynchronously
+            try {
+                // Map frontend items format to expected notification format
+                const mappedItems = simplifiedItems.map(item => ({
+                    quantity: item.quantity,
+                    products: { name: item.name, price: item.price }
+                }));
+
+                // Fire and forget, don't await blocking UI
+                sendCheckoutEmailNotification({
+                    order_id: orderIdForMsg,
+                    user_email: form.email,
+                    order_total: total,
+                    items: mappedItems,
+                    current_user_id: user?.id || "guest"
+                }).catch(err => console.error("Email notification failed to send:", err));
+            } catch (e) {
+                console.error("Error formatting email notification payload:", e);
+            }
 
             // Build structured WhatsApp message per PRD spec
             const WA_NUMBER = '584242507802';

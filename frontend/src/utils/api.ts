@@ -696,6 +696,29 @@ export const saveUserAddress = async (address: any) => {
 
 // Cart Management Functions
 
+export const sendCheckoutEmailNotification = async (notificationData: {
+  order_id: string;
+  user_email?: string;
+  admin_email?: string;
+  order_total: number;
+  items: any[];
+  current_user_id?: string;
+}): Promise<any> => {
+  try {
+    const response = await fetch(`${API_BASE}/api/notifications/checkout`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(notificationData)
+    });
+    return await response.json();
+  } catch (error) {
+    console.error('Failed to send checkout email notification:', error);
+    return { success: false, error };
+  }
+};
+
 export const updateCartItemQuantity = async (cartItemId: string, quantity: number): Promise<any> => {
   try {
     const session = await supabase.auth.getSession();
