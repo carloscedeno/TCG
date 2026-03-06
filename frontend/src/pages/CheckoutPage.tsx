@@ -129,6 +129,9 @@ export const CheckoutPage = () => {
                 // Ensure we handle both direct object or array response from RPC
                 const resObj = Array.isArray(orderResponse) ? orderResponse[0] : orderResponse;
 
+                // CRITICAL: Log extracted resObj for debugging
+                console.log("Extracted response object:", resObj);
+
                 // Check for explicit failure from RPC
                 if (resObj?.success === false) {
                     console.error("RPC Error:", resObj.error);
@@ -138,6 +141,17 @@ export const CheckoutPage = () => {
                 }
 
                 orderIdForMsg = resObj?.order_id || resObj?.id || (typeof orderResponse === 'string' ? orderResponse : 'PENDIENTE');
+
+                // Robust extraction if order_id is nested or different key
+                if (orderIdForMsg === 'PENDIENTE' && typeof resObj === 'object') {
+                    // Try to find any UUID-like string in the object values
+                    const values = Object.values(resObj);
+                    const uuidMatch = values.find(v => typeof v === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(v));
+                    if (uuidMatch) {
+                        orderIdForMsg = uuidMatch as string;
+                        console.log("Recovered Order ID from object values:", orderIdForMsg);
+                    }
+                }
             }
 
             if (orderIdForMsg === 'PENDIENTE') {

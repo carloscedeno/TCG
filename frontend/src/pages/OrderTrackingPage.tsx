@@ -15,21 +15,48 @@ export const OrderTrackingPage = () => {
 
     const fetchOrder = async () => {
         try {
+            console.log("Fetching order with ID:", orderId);
             if (!orderId || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(orderId)) {
                 throw new Error("El ID de la orden no es válido");
             }
 
+            // Attempt 1: Full fetch with items mapping
             const { data, error } = await supabase
                 .from('orders')
                 .select('*, order_items(*)')
                 .eq('id', orderId)
                 .single();
 
-            if (error) throw error;
+            if (error) {
+                console.warn("Initial fetch with items failed:", error);
+
+                // Attempt 2: Fallback fetch - just the order, no join
+                // (Useful if the join fails due to RLS or schema mismatch on order_items)
+                console.log("Attempting fallback fetch without order_items join...");
+                const { data: fallbackData, error: fallbackError } = await supabase
+                    .from('orders')
+                    .select('*')
+                    .eq('id', orderId)
+                    .single();
+
+                if (fallbackError) {
+                    console.error("Fallback fetch also failed:", fallbackError);
+                    throw fallbackError;
+                }
+
+                if (fallbackData) {
+                    console.log("Fallback fetch succeeded! The issue is likely the order_items join.");
+                    setOrder({ ...fallbackData, order_items: [] });
+                    return;
+                }
+            }
+
             if (!data) throw new Error("Orden no encontrada");
 
+            console.log("Order fetched successfully:", data);
             setOrder(data);
         } catch (err: any) {
+            console.error("OrderTracking Error:", err);
             setError(err.message || 'Error al cargar la orden');
         } finally {
             setLoading(false);
