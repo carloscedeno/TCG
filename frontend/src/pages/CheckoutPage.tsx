@@ -126,10 +126,12 @@ export const CheckoutPage = () => {
             if (typeof orderResponse === 'string') {
                 orderIdForMsg = orderResponse;
             } else if (orderResponse) {
-                // Sometimes it's an array if RPC returns a table type
+                // Ensure we handle both direct object or array response from RPC
                 const resObj = Array.isArray(orderResponse) ? orderResponse[0] : orderResponse;
                 orderIdForMsg = resObj?.order_id || resObj?.id || 'PENDIENTE';
             }
+
+            console.log("Order created with ID:", orderIdForMsg);
 
             // Trigger email notifications asynchronously
             try {
@@ -187,7 +189,13 @@ export const CheckoutPage = () => {
             // Open WhatsApp — native app on mobile, WhatsApp Web on desktop
             window.open(whatsappUrl, '_blank');
 
-            navigate('/checkout/success', { state: { orderId: orderIdForMsg } });
+            navigate('/checkout/success', {
+                state: {
+                    orderId: orderIdForMsg,
+                    total: total,
+                    items: simplifiedItems
+                }
+            });
         } catch (error) {
             console.error(error);
             alert('Error al procesar la orden. Por favor verifica el inventario.');
