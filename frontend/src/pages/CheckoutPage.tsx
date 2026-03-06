@@ -97,7 +97,6 @@ export const CheckoutPage = () => {
                 name: item.products?.name,
                 set: item.products?.set_code,
                 price: item.products?.price || 0,
-                image_url: item.products?.image_url,
                 foil: item.products?.is_foil || item.products?.finish === 'foil' || false,
                 finish: item.products?.finish || (item.products?.is_foil ? 'foil' : 'normal'),
             }));
@@ -137,11 +136,7 @@ export const CheckoutPage = () => {
                 // Map frontend items format to expected notification format
                 const mappedItems = simplifiedItems.map(item => ({
                     quantity: item.quantity,
-                    products: {
-                        name: item.name,
-                        price: item.price,
-                        image_url: item.image_url
-                    }
+                    products: { name: item.name, price: item.price }
                 }));
 
                 // Fire and forget, don't await blocking UI
