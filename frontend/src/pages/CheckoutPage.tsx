@@ -103,6 +103,7 @@ export const CheckoutPage = () => {
 
             const cedula = `${form.cedula_prefix}-${form.cedula_number}`;
 
+            console.log("Order creation attempt with items:", simplifiedItems);
             const orderResponse = await createOrder({
                 userId: user?.id || null,
                 items: simplifiedItems,
@@ -120,18 +121,30 @@ export const CheckoutPage = () => {
                 guestInfo: !user ? { email: form.email, phone: form.whatsapp } : undefined,
             });
 
-            console.log("Order response:", orderResponse);
+            console.log("Order response received:", orderResponse);
 
             let orderIdForMsg = 'PENDIENTE';
-            if (typeof orderResponse === 'string') {
-                orderIdForMsg = orderResponse;
-            } else if (orderResponse) {
+
+            if (orderResponse) {
                 // Ensure we handle both direct object or array response from RPC
                 const resObj = Array.isArray(orderResponse) ? orderResponse[0] : orderResponse;
-                orderIdForMsg = resObj?.order_id || resObj?.id || 'PENDIENTE';
+
+                // Check for explicit failure from RPC
+                if (resObj?.success === false) {
+                    console.error("RPC Error:", resObj.error);
+                    alert(`Error al crear la orden: ${resObj.error || 'Por favor contacta a soporte.'}`);
+                    setIsProcessing(false);
+                    return; // Stop here
+                }
+
+                orderIdForMsg = resObj?.order_id || resObj?.id || (typeof orderResponse === 'string' ? orderResponse : 'PENDIENTE');
             }
 
-            console.log("Order created with ID:", orderIdForMsg);
+            if (orderIdForMsg === 'PENDIENTE') {
+                console.warn("Order ID still PENDIENTE after processing response");
+            }
+
+            console.log("Final Order ID for flow:", orderIdForMsg);
 
             // Trigger email notifications asynchronously
             try {
