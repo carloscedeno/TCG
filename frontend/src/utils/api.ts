@@ -440,6 +440,7 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
           // Update main price/stock for the current printingId
           const currentProd = sMap.get(printingId);
           if (currentProd) {
+            data.product_id = currentProd.id;
             data.total_stock = currentProd.stock;
             data.price = currentProd.price;
             if (data.valuation) data.valuation.store_price = currentProd.price;
@@ -524,10 +525,11 @@ export const fetchCart = async (): Promise<any> => {
       // Map RPC result to Frontend Cart Item format
       const items = (data || []).map((row: any) => ({
         id: row.cart_item_id,
-        product_id: row.printing_id, // Use printing_id instead of products.id for consistency!
+        product_id: row.product_id, // Use actual products.id
+        printing_id: row.printing_id,
         quantity: row.quantity,
         products: {
-          id: row.printing_id, // Frontend uses nested structure
+          id: row.product_id,
           name: row.product_name,
           price: row.price,
           image_url: row.image_url,
@@ -548,10 +550,10 @@ export const fetchCart = async (): Promise<any> => {
         const details = await fetchCardDetails(item.printing_id);
         return {
           id: `guest-${item.printing_id}`, // temporary ID
-          product_id: item.printing_id, // use printing_id consistently
+          product_id: details.product_id || item.printing_id, // use actual product_id if found
           quantity: item.quantity,
           products: {
-            id: details.card_id,
+            id: details.product_id || details.card_id,
             name: details.name,
             price: details.price || details.valuation?.market_price || 0,
             image_url: details.image_url,
