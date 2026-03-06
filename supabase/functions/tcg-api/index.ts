@@ -1137,13 +1137,48 @@ async function handleNotificationsEndpoint(supabase: SupabaseClient, path: strin
     },
   });
 
+  // Helper to send email and log to database
+  const sendAndLog = async (options: any, logData: { recipient: string, type: string }) => {
+    try {
+      const info = await transporter.sendMail(options);
+      await supabase.from('notification_logs').insert({
+        order_id,
+        recipient: logData.recipient,
+        type: logData.type,
+        status: 'success',
+        metadata: { messageId: info.messageId, response: info.response }
+      });
+      return info;
+    } catch (error: any) {
+      console.error(`Error sending ${logData.type} email:`, error);
+      await supabase.from('notification_logs').insert({
+        order_id,
+        recipient: logData.recipient,
+        type: logData.type,
+        status: 'error',
+        error_message: error.message,
+        metadata: { stack: error.stack }
+      });
+      throw error;
+    }
+  };
+
   try {
     const itemsArray = Array.isArray(items) ? items : [];
-    const items_html = itemsArray.map((item: any) =>
-      `<li>${item?.quantity || 1}x ${item?.products?.name || 'Unknown Item'} - $${item?.products?.price || 0}</li>`
-    ).join('');
+    const items_html = itemsArray.map((item: any) => {
+      const imageUrl = item?.products?.image_url;
+      const imgTag = imageUrl ? `<img src="${imageUrl}" width="60" style="vertical-align: middle; margin-right: 15px; border-radius: 4px; border: 1px solid #eee;" alt="${item?.products?.name || 'product'}" />` : '';
+      return `
+        <li style="margin-bottom: 15px; list-style: none; display: flex; align-items: center;">
+          <div style="display: inline-block; vertical-align: middle;">${imgTag}</div>
+          <div style="display: inline-block; vertical-align: middle;">
+            <span style="font-size: 16px;">${item?.quantity || 1}x <strong>${item?.products?.name || 'Unknown Item'}</strong></span><br/>
+            <span style="color: #666;">$${item?.products?.price || 0}</span>
+          </div>
+        </li>`;
+    }).join('');
 
-    const customerEmailPromise = user_email ? transporter.sendMail({
+    const customerEmailPromise = user_email ? sendAndLog({
       from: `"Geekorium Shop" <${SmtpUser}>`,
       to: user_email,
       subject: `Confirmación de Pedido ${order_id} - Geekorium Shop`,
@@ -1161,10 +1196,10 @@ async function handleNotificationsEndpoint(supabase: SupabaseClient, path: strin
             </body>
         </html>
       `,
-    }) : Promise.resolve();
+    }, { recipient: user_email, type: 'customer' }) : Promise.resolve();
 
     const adminEmailOverride = admin_email || "geekorium.tcg@gmail.com";
-    const adminEmailPromise = transporter.sendMail({
+    const adminEmailPromise = sendAndLog({
       from: `"System Notifications" <${SmtpUser}>`,
       to: adminEmailOverride,
       subject: `¡Nueva Venta! Pedido ${order_id}`,
@@ -1183,10 +1218,10 @@ async function handleNotificationsEndpoint(supabase: SupabaseClient, path: strin
             </body>
         </html>
       `,
-    });
+    }, { recipient: adminEmailOverride, type: 'admin' });
 
     await Promise.all([customerEmailPromise, adminEmailPromise]);
-    console.log(`Emails sent successfully for order ${order_id}`);
+    console.log(`Emails process completed for order ${order_id}`);
 
     return { success: true, message: "Emails sent successfully" };
   } catch (error: any) {
