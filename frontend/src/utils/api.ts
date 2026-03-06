@@ -429,16 +429,22 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
           pData.forEach((p: any) => sMap.set(p.printing_id, p));
 
           data.all_versions = data.all_versions.map((v: any) => {
-            const prod = sMap.get(v.printing_id);
+            // Find the best match: by printing_id AND name (for finishes)
+            const matches = pData.filter((p: any) => p.printing_id === v.printing_id);
+            const prod = matches.find((p: any) => p.name === v.card_name || p.name === v.name) || matches[0];
+
             return {
               ...v,
+              product_id: prod?.id,
               stock: prod?.stock || 0,
               price: prod?.price || v.price
             };
           });
 
           // Update main price/stock for the current printingId
-          const currentProd = sMap.get(printingId);
+          const baseId = printingId.replace('-foil', '').replace('-nonfoil', '').replace('-etched', '');
+          const matches = pData.filter((p: any) => p.printing_id === baseId);
+          const currentProd = matches.find((p: any) => p.name === data.name) || matches[0];
           if (currentProd) {
             data.product_id = currentProd.id;
             data.total_stock = currentProd.stock;
