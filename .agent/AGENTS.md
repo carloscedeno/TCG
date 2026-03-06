@@ -14,7 +14,7 @@ Geekorium es un **marketplace TCG de venta asistida** para coleccionistas. El ob
 | Backend | Supabase Edge Functions (Deno/TypeScript) |
 | Base de Datos | Supabase PostgreSQL |
 | Auth | Supabase Auth |
-| Storage | Supabase Storage (payment-proofs) |
+| Storage | Supabase Storage (Oculto - Confirmación vía WA) |
 | Deploy | GitHub Pages (frontend) + Supabase (backend) |
 | Scripts Admin | Python 3.12 + scripts/ |
 
@@ -79,6 +79,8 @@ Artefactos del Compound step:
 - **✅ Checkout WhatsApp Routing (PRD 2026-03-04)**: Eliminados datos bancarios (Pago Móvil/Zelle). Número WA actualizado a `584242507802`. Mensaje estructurado con detalle de cartas, finish y truncamiento a 40 ítems. Botón renombrado "Confirmar y Pagar por WhatsApp".
 - **✅ Notificaciones por Correo Electrónico**: Implementación de `fastapi-mail` usando SMTP de Hostinger para confirmación a compradores al momento de la orden y notificaciones de nueva venta a la tienda, utilizando `asyncio.create_task` para evitar el bloqueo del API.
 - **✅ Corrección de Branding y Contacto**: Sustitución del nombre en texto por el logo circular oficial en Header, Footer y WelcomeModal. Restauración del enlace `mailto` directo a `info@geekorium.shop` eliminando redirecciones obsoletas a Mailchimp.
+- **✅ Estabilización de Checkout y Persistencia de Schema**: Resolución del error "Orden no encontrada". Adición de snapshotting de `product_name` en `order_items`. Configuración de RLS pública para rastreo de pedidos.
+- **✅ Optimización de Storage**: Depreciación del flujo de carga de comprobantes automatizado para preservar cuota de base de datos; transición a flujo manual asistido (WhatsApp).
 
 ## 🚧 Features Pendientes
 
@@ -93,4 +95,7 @@ Artefactos del Compound step:
 1. **Testing Lazy Imports**: Parchear siempre la clase importada desde el módulo de origen (`modulo.Clase`), no desde el importador.
 
 ---
-*Geekorium — Geeko-Engineering Division | Limpieza: 2026-02-26*
+
+## 🛡️ Footer
+
+*Geekorium — Geeko-Engineering Division | Limpieza: 2026-03-06*

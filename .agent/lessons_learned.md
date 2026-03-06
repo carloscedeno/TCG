@@ -298,14 +298,14 @@ ear_mint, lightly_played) deben normalizarse en el backend a cÃ³digos internos
 - **Problema**: Hardcodear secretos en .env es un riesgo de seguridad en producción.
 - **Lección**: Implementar validación en pydantic.BaseSettings (usando model_post_init) para asegurar que variables como SMTP_PASSWORD se provean via entorno del sistema y no vía archivo físico en modo production.
 
-### 26. ReversiÃ³n de Notificaciones Enriquecidas â€” 2026-03-06
+### 27. Optimización de Storage y Decisión de Ocultar Features (Mar 2026)
 
-- **Problema:** Al intentar incluir miniaturas e informaciÃ³n detallada (condiciÃ³n/foil) en los correos, las notificaciones dejaron de llegar.
-- **Causa RaÃ­z:** Inconsistencias entre el payload del frontend y lo esperado por la Edge Function, junto con la ausencia de secretos SMTP crÃ­ticos en Supabase.
-- **SoluciÃ³n:** ReversiÃ³n total al estado estable anterior (commit 2f0617e revertido) y restauraciÃ³n de la lÃ³gica simplificada.
-- **Regla Derivada:** Verificar disponibilidad de secretos y consistencia de payloads antes de cualquier mejora en notificaciones.
+- **Problema**: El flujo de carga de comprobantes de pago disparaba el uso de cuota de Supabase Storage de forma acelerada.
+- **Causa Raíz**: Carga de archivos binarios (imágenes) en cada transacción, lo que podría agotar la cuota gratuita/pagada sin un valor de negocio crítico inmediato (ya existe flujo WhatsApp).
+- **Lección**: En proyectos con restricciones de cuota, es mejor ocultar features de alto consumo de storage ("payment-proofs") y delegar la validación al canal asistido (WhatsApp) que ya se utiliza para el cierre de venta.
+- **Acción**: Se comentó el componente de carga en `OrderTrackingPage.tsx` y se eliminó la migración de creación del bucket.
 
-### 7. Checkout Atómico y Desacoplamiento de Schema — 2026-03-06
+### 28. Checkout Atómico y Desacoplamiento de Schema (Mar 2026)
 
 - **Problema**: El flujo de checkout fallaba silenciosamente ("Orden no encontrada") a pesar de que el carrito se vaciaba.
 - **Causa Raíz**: El RPC `create_order_atomic` intentaba insertar un valor en la columna `product_name` de `order_items`, la cual no existía en el schema de producción. El admin funcionaba porque usaba un JOIN dinámico, ocultando la inconsistencia.

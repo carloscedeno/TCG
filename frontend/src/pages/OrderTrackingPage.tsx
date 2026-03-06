@@ -1,17 +1,13 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../utils/supabaseClient';
-import { CheckCircle, Truck, Package, Clock, Upload, Loader2, ArrowLeft, ShieldCheck, AlertCircle } from 'lucide-react';
+import { CheckCircle, Truck, Package, Clock, Loader2, ArrowLeft, ShieldCheck, AlertCircle } from 'lucide-react';
 
 export const OrderTrackingPage = () => {
     const { orderId } = useParams();
     const [order, setOrder] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [isUploading, setIsUploading] = useState(false);
-    const [paymentPreview, setPaymentPreview] = useState<string | null>(null);
-    const [paymentFile, setPaymentFile] = useState<File | null>(null);
-    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const fetchOrder = async () => {
         try {
@@ -69,67 +65,6 @@ export const OrderTrackingPage = () => {
         }
     }, [orderId]);
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            setPaymentFile(file);
-            const reader = new FileReader();
-            reader.onload = (ev) => setPaymentPreview(ev.target?.result as string);
-            reader.readAsDataURL(file);
-        }
-    };
-
-    const handleUploadPayment = async () => {
-        if (!paymentFile) return;
-        setIsUploading(true);
-        try {
-            const fileExt = paymentFile.name.split('.').pop();
-            const fileName = `${orderId}/${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
-
-            // Upload file
-            const { data: uploadData, error: uploadError } = await supabase.storage
-                .from('payment-proofs')
-                .upload(fileName, paymentFile);
-
-            if (uploadError) throw uploadError;
-
-            // Get public URL
-            const { data: publicUrlData } = supabase.storage
-                .from('payment-proofs')
-                .getPublicUrl(uploadData.path);
-
-            const paymentProofUrl = publicUrlData.publicUrl;
-
-            // Update order with the proof url and change status to payment_uploaded
-            const { error: rpcError } = await supabase.rpc('update_order_status', {
-                p_order_id: orderId,
-                p_new_status: 'payment_uploaded'
-            });
-
-            if (rpcError) throw rpcError;
-
-            // Update record directly with the URL
-            const { error: updateError } = await supabase
-                .from('orders')
-                .update({ payment_proof_url: paymentProofUrl })
-                .eq('id', orderId);
-
-            if (updateError) throw updateError;
-
-            alert('¡Comprobante subido con éxito! El equipo lo verificará en breve.');
-
-            // Refetch
-            await fetchOrder();
-            setPaymentFile(null);
-            setPaymentPreview(null);
-
-        } catch (err: any) {
-            console.error('Upload Error:', err);
-            alert('Hubo un error al subir tu pago. Asegúrate de intentar nuevamente.');
-        } finally {
-            setIsUploading(false);
-        }
-    };
 
     if (loading) return (
         <div className="min-h-[100dvh] bg-[#1F182D] flex items-center justify-center text-white">
@@ -197,56 +132,15 @@ export const OrderTrackingPage = () => {
                                 </div>
                             </div>
 
-                            {/* Payment Upload Section */}
+                            {/* Payment Upload Section - Hidden per user request to save quota */}
+                            {/* 
                             {isPaymentRequired && (
                                 <div className="mt-8 pt-8 border-t border-white/10">
                                     <h3 className="font-black uppercase tracking-widest text-sm mb-4 text-[#00AEB4]">Adjuntar Comprobante</h3>
-                                    <p className="text-xs text-neutral-400 mb-4">Sube la captura de tu pago a Zelle o Pago Móvil para que confirmemos tu orden.</p>
-
-                                    <input
-                                        ref={fileInputRef}
-                                        type="file"
-                                        accept="image/*,.pdf"
-                                        onChange={handleFileChange}
-                                        className="hidden"
-                                    />
-
-                                    {paymentPreview ? (
-                                        <div className="space-y-4">
-                                            <div className="relative rounded-xl overflow-hidden border border-[#00AEB4]/30 bg-black/20">
-                                                <img src={paymentPreview} alt="Comprobante" className="w-full max-h-48 object-contain" />
-                                                <button
-                                                    onClick={() => {
-                                                        setPaymentPreview(null);
-                                                        setPaymentFile(null);
-                                                    }}
-                                                    className="absolute top-2 right-2 bg-black/80 text-white rounded-full w-7 h-7 flex items-center justify-center text-xs hover:bg-red-500/80 transition-colors"
-                                                >
-                                                    ✕
-                                                </button>
-                                            </div>
-                                            <button
-                                                onClick={handleUploadPayment}
-                                                disabled={isUploading}
-                                                className="w-full py-4 bg-[#00AEB4] text-black font-black uppercase rounded-xl hover:bg-[#00c5cc] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-                                            >
-                                                {isUploading ? <><Loader2 className="animate-spin" size={20} /> Subiendo...</> : <><Upload size={20} /> Enviar Comprobante</>}
-                                            </button>
-                                        </div>
-                                    ) : (
-                                        <button
-                                            onClick={() => fileInputRef.current?.click()}
-                                            className="w-full border-2 border-dashed border-white/20 rounded-xl p-8 flex flex-col items-center justify-center gap-3 hover:border-[#00AEB4]/50 hover:bg-[#00AEB4]/5 transition-all group"
-                                        >
-                                            <Upload size={24} className="text-neutral-500 group-hover:text-[#00AEB4] transition-colors" />
-                                            <div className="text-center">
-                                                <span className="text-sm font-bold text-neutral-400 group-hover:text-white transition-colors block">Subir captura o foto</span>
-                                                <span className="text-[10px] text-neutral-600 uppercase tracking-widest">Formatos permitidos: JPG, PNG, PDF</span>
-                                            </div>
-                                        </button>
-                                    )}
+                                    ...
                                 </div>
-                            )}
+                            )} 
+                            */}
 
                             {order.payment_proof_url && !isPaymentRequired && (
                                 <div className="mt-6 pt-6 border-t border-white/10">

@@ -328,14 +328,21 @@ eplace) para nÃºmero de telÃ©fono venezolano, cÃ©dula de identidad y nombr
 **Artefacto creado:** N/A (Reversión)
 **Regla de Oro:** Lo simple funciona cuando lo complejo falla bajo presión.
 
-## 2026-03-06 — Resolución Checkout y Schema Persistence
+## 2026-03-06 — Resolución Checkout y Optimización de Storage
 
-**Qué pasó:** Se resolvió el error de "Orden no encontrada" en el checkout de producción. Se identificó que el RPC atómico fallaba por una columna inexistente en `order_items`.
+**Qué pasó:** Se resolvió el error de "Orden no encontrada" en producción y se tomó la decisión estratégica de ocultar el flujo de carga de comprobantes de pago para optimizar la cuota de almacenamiento de la base de datos.
+
+**Problema encontrado:** El RPC atómico fallaba por una columna inexistente (`product_name`) en `order_items`. Además, el sistema de almacenamiento estaba alcanzando límites de cuota prematuramente.
+
+**Causa raíz:** Inconsistencia entre el schema esperado por el RPC y el schema real de la DB. Falta de snapshotting de datos críticos.
+
 **Lo que cambió:**
 
-- `lessons_learned.md` → Lección #7 sobre flujos atómicos y schema consistency.
-- `supabase/migrations/20260306_resolve_rls_and_schema.sql` → Añadida columna `product_name` y permisos públicos.
-- `CheckoutPage.tsx` → Añadida instrumentación de logs detallada.
-- `OrderTrackingPage.tsx` → Añadido fallback de búsqueda sin JOIN.
-**Artefacto creado:** Migración de persistencia de nombres en órdenes.
-**Regla derivada:** Snapshoting de datos críticos (como nombres de productos) debe ser parte del schema de órdenes, no solo dinámico vía JOIN, para garantizar integridad histórica.
+- `lessons_learned.md` → Lección #27 (Optimización de Storage) y Lección #28 (Schema Persistence).
+- `AGENTS.md` → Actualizada sección de Stack y Features (Storage oculto).
+- `OrderTrackingPage.tsx` → UI de carga de comprobante ocultada; cleanup de código muerto.
+- `supabase/migrations/20260306_resolve_rls_and_schema.sql` → Añadida columna `product_name` y permisos `anon`/`authenticated`.
+
+**Regla derivada:**
+> El snapshotting de datos (nombres, precios) en el momento de la transacción es obligatorio para garantizar la integridad histórica y evitar fallos por cambios en el catálogo.
+> Priorizar el flujo de trabajo asistido (WhatsApp) sobre la automatización de almacenamiento cuando existan restricciones de infraestructura (cuotas).
