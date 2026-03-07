@@ -1,7 +1,7 @@
 # ⚖️ LEYES DEL SISTEMA - TCG Application
 
-**Versión**: 2.1
-**Última Actualización**: 2026-02-06
+**Versión**: 2.6
+**Última Actualización**: 2026-03-07
 **Propósito**: Definir reglas inmutables para operación autónoma del agente
 
 ---
@@ -95,6 +95,15 @@
 - **Validación Estricta**: Las aplicaciones deben validar la existencia de secretos en variables de entorno del sistema al iniciar.
 - **Placeholders**: Usar solo placeholders (ej. `SET_ME_VIA_ENV_VAR`) en archivos `.env` locales.
 - **Acceso Directo**: En producción, leer siempre desde variables de entorno del host o gestores de secretos.
+
+**Excepciones**: Ninguna.
+
+### Ley 8: SEO y Entornos No-Productivos
+
+**Siempre** desactivar el indexado por motores de búsqueda en entornos de desarrollo, preview o staging.
+
+- **Configuración**: El tag `<meta name="robots" />` debe estar en `noindex, nofollow` para cualquier rama que no sea `main`.
+- **Implementación**: Usar variables de entorno de Vite (`VITE_ROBOTS`) para controlar este comportamiento dinámicamente según el branch de despliegue en Cloudflare.
 
 **Excepciones**: Ninguna.
 
@@ -205,7 +214,7 @@ Cuando un comando falla:
 
 Formato de commits:
 
-```
+```text
 <type>: <description>
 
 <body (opcional)>
@@ -301,6 +310,10 @@ Al importar cartas sin edición (Set) específica, el sistema **siempre** debe p
 ---
 
 ## 📝 CHANGELOG DE LEYES
+
+### v2.6 (2026-03-07)
+
+- ✅ Agregada Ley 8: SEO y Entornos No-Productivos (Prohibición de indexado en ramas que no sean main).
 
 ### v2.5 (2026-03-05)
 

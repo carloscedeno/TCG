@@ -293,17 +293,6 @@ eplace) para nÃºmero de telÃ©fono venezolano, cÃ©dula de identidad y nombr
 **Artefacto creado:** Walkthrough de branding.
 **Regla derivada:** Los requerimientos dinÃ¡micos en chat prevalecen sobre el PRD estÃ¡tico.
 
-## 2026-03-05 â€” Branding Fix y CorrecciÃ³n de Correo
-
-**QuÃ© pasÃ³:** El usuario solicitÃ³ reemplazar el nombre de la tienda en texto por el logo circular y corregir el enlace de correo que redirigÃ­a a Mailchimp.
-**Lo que cambiÃ³:**
-
-- `lessons_learned.md` â†’ LecciÃ³n #23 (Prioridad de intenciÃ³n sobre docs).
-- `AGENTS.md` â†’ Registrada feature de Branding y Correo.
-- `src/components/Navigation/Footer.tsx`, `WelcomeModal.tsx` y `src/pages/Home.tsx` â†’ UnificaciÃ³n de logo circular.
-**Artefacto creado:** Walkthrough de branding.
-**Regla derivada:** Los requerimientos dinÃ¡micos en chat prevalecen sobre el PRD estÃ¡tico.
-
 ## 2026-03-05 — Reparación de Notificaciones y Seguridad de Secretos
 
 **Qué pasó**: Se corrigió el fallo en el envío de correos de confirmación tras compra y se robusteció la seguridad de los secretos para producción.
@@ -345,4 +334,27 @@ eplace) para nÃºmero de telÃ©fono venezolano, cÃ©dula de identidad y nombr
 
 **Regla derivada:**
 > El snapshotting de datos (nombres, precios) en el momento de la transacción es obligatorio para garantizar la integridad histórica y evitar fallos por cambios en el catálogo.
-> Priorizar el flujo de trabajo asistido (WhatsApp) sobre la automatización de almacenamiento cuando existan restricciones de infraestructura (cuotas).
+---
+
+## 2026-03-07 — Cloudflare Pages Deployment & SEO Optimization
+
+**Qué pasó:** Se migró el hosting de GitHub Pages a **Cloudflare Pages** para soporte comercial de la marca Geekorium. Se implementó una estrategia de SEO condicional (indexación solo en `main`) y se resolvieron conflictos críticos de auto-detección de frameworks.
+
+**Problemas resueltos:**
+
+- **404 VitePress:** Cloudflare auto-detectaba VitePress erróneamente. Solución: Forzar Framework Preset a "None".
+- **SPA Routing:** El router de React fallaba al recargar. Solución: Implementada estrategia `404.html` fallback.
+- **Redirect Loop:** Removido archivo `_redirects` por advertencias de bucles infinitos en Cloudflare.
+- **Favicon 404:** Añadido `favicon.ico` para soporte universal de navegadores.
+
+**Lo que cambió:**
+
+- `lessons_learned.md` → Lecciones #29 a #35 (Cloudflare, CI/CD, SEO, VitePress, SPA Routing).
+- `index.html` → Implementación de SEO dinámico vía variables de entorno de Vite (%VITE_SEO_...%).
+- `AGENTS.md` → Actualizado el stack (Deploy: Cloudflare Pages) y agregada regla crítica de branching (dev/main).
+- `LEYES_DEL_SISTEMA.md` → Agregada Ley 8 (SEO y Entornos No-Productivos).
+- `package.json` → Build script actualizado para generar `404.html` automáticamente.
+- `frontend/.env.example` → Añadidas variables de SEO para guiar nuevos despliegues.
+
+**Regla de Oro:**
+> El SEO debe ser un ciudadano de primera clase en el build, pero solo debe ser visible (indexable) para los motores de búsqueda en el entorno de producción real.

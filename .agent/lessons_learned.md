@@ -281,13 +281,6 @@ ear_mint, lightly_played) deben normalizarse en el backend a cÃ³digos internos
 - **SoluciÃ³n:** Priorizar la comunicaciÃ³n directa del usuario sobre lo escrito en docs/. Implementar `mailto:info@geekorium.shop` directamente.
 - **Regla Derivada:** En caso de contradicciÃ³n entre un documento `docs/*.md` y una instrucciÃ³n directa del usuario en el chat, el chat siempre tiene la razÃ³n. Marcar la discrepancia en el log para futura actualizaciÃ³n de docs.
 
-### 23. Prioridad de IntenciÃ³n del Usuario sobre DocumentaciÃ³n EstÃ¡tica â€” 2026-03-05
-
-- **Problema:** El PRD y otros documentos de diseÃ±o especificaban vincular el botÃ³n de correo a una landing de Mailchimp, pero el usuario reportÃ³ esto como un error.
-- **Causa RaÃ­z:** DocumentaciÃ³n de diseÃ±o obsoleta que no fue actualizada tras cambios en la estrategia de marketing del cliente.
-- **SoluciÃ³n:** Priorizar la comunicaciÃ³n directa del usuario sobre lo escrito en `docs/`. Implementar `mailto:info@geekorium.shop` directamente.
-- **Regla Derivada:** En caso de contradicciÃ³n entre un documento `docs/*.md` y una instrucciÃ³n directa del usuario en el chat, el chat siempre tiene la razÃ³n. Marcar la discrepancia en el log para futura actualizaciÃ³n de docs.
-
 ### 24. Jerarquía de Configuración SMTP (Mar 2026)
 
 - **Problema**: Los correos no se enviaban porque las credenciales estaban en frontend/.env pero el backend las buscaba en la raíz.
@@ -311,3 +304,45 @@ ear_mint, lightly_played) deben normalizarse en el backend a cÃ³digos internos
 - **Causa Raíz**: El RPC `create_order_atomic` intentaba insertar un valor en la columna `product_name` de `order_items`, la cual no existía en el schema de producción. El admin funcionaba porque usaba un JOIN dinámico, ocultando la inconsistencia.
 - **Solución**: Se añadió la columna `product_name` a `order_items` para persistir el nombre del producto en el momento de la compra (snapshotting) y se habilitaron permisos públicos (anon/authenticated) para el rastreo.
 - **Regla Derivada**: En flujos atómicos (RPC), cualquier error de schema en una sub-tabla cancela toda la transacción. Siempre verificar que las columnas usadas en el RPC existan en todas las tablas afectadas.
+
+### 29. Hosting para E-commerce: Cloudflare Pages vs. GitHub Pages (Mar 2026)
+
+- **Problema**: GitHub Pages prohíbe explícitamente el uso comercial en su capa gratuita, lo que pone en riesgo sitios de venta directa como Geekorium.
+- **Solución**: Migrar a **Cloudflare Pages**.
+- **Lección**: Cloudflare Pages permite oficialmente uso comercial en su plan gratuito y ofrece ancho de banda ilimitado, eliminando riesgos de costos por tráfico de imágenes pesadas (cartas TCG).
+- **SPA Routing**: Cloudflare usa un archivo `_redirects` en `public/` con la regla `/* /index.html 200` para manejar rutas de React de forma nativa.
+
+### 30. Estrategia de Branching y CI/CD (Mar 2026)
+
+- **Problema**: Desplegar directamente desde `main` sin un entorno de previsualización aumenta el riesgo de errores en producción.
+- **Lección**: Adoptar un modelo de `dev` (Preview) y `main` (Production).
+- **Flujo**: Cloudflare Pages genera despliegues automáticos para cada rama. Los cambios se validan en la URL de preview de `dev` antes de ser incorporados a `main` vía Pull Request para el despliegue final.
+
+### 31. Cloudflare Pages vs. Workers para Frontend — 2026-03-07
+
+- **Problema:** Confusión en el dashboard de Cloudflare al intentar desplegar un frontend de React usando la sección de "Workers".
+- **Lección:** Los **Workers** son para lógica serverless (scripts), mientras que **Pages** es la herramienta diseñada para hosting de sitios estáticos (Vite, React). Siempre usar la pestaña "Pages" para el despliegue del frontend.
+
+### 32. SEO Condicional vía Variables de Entorno de Vite — 2026-03-07
+
+- **Problema:** Necesidad de activar SEO (meta tags y robots) solo en la rama de producción (`main`) y ocultar el sitio en desarrollo/preview (`dev`).
+- **Solución:** Usar placeholders `%VITE_SEO_...%` y `%VITE_ROBOTS%` en `index.html`.
+- **Configuración:**
+  - **Prod:** `VITE_ROBOTS=index, follow`
+  - **Dev/Preview:** `VITE_ROBOTS=noindex, nofollow`
+- **Ventaja:** Permite inyectar SEO real solo en el dominio productivo sin añadir dependencias pesadas de React.
+
+### 33. Root Directory en Estructuras Monorepo/Subcarpetas — 2026-03-07
+
+- **Problema:** El build fallaba en Cloudflare porque intentaba buscar `package.json` en la raíz del repo.
+- **Lección:** En proyectos donde el frontend reside en una subcarpeta (ej: `/frontend`), es OBLIGATORIO configurar el **Root Directory** en el dashboard de Cloudflare para que el proceso de build se ejecute en el contexto correcto.
+
+### 34. Conflicto de Auto-detección (Vite vs. VitePress) en Cloudflare — 2026-03-07
+
+- **Problema:** Cloudflare Pages intentaba usar un preset de "VitePress" en lugar de "Vite" debido a la presencia de archivos de documentación o nombres similares, lo que resultaba en errores 404 por rutas de assets incorrectas.
+- **Solución:** Configurar explícitamente el **Framework Preset** como **"None"** en el dashboard de Cloudflare. Esto obliga al sistema a usar solo el comando de build (`npm run build`) y el directorio de salida (`dist`) especificado, sin suposiciones de frameworks adicionales.
+
+### 35. SPA Routing: `404.html` vs `_redirects` en Cloudflare Pages — 2026-03-07
+
+- **Problema:** El uso de un archivo `_redirects` con la regla `/* /index.html 200` puede generar advertencias de "Redirect Loop" en el dashboard de Cloudflare si se combina con redirecciones de dominio (ej. HTTP -> HTTPS).
+- **Solución:** El método más robusto para SPAs en Cloudflare Pages es la estrategia de **`404.html` fallback**. Al copiar el `index.html` generado al archivo `404.html` durante el build, Cloudflare servirá la aplicación para cualquier ruta no encontrada, permitiendo que el router de React tome el control sin generar avisos de bucle.

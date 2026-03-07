@@ -15,7 +15,7 @@ Geekorium es un **marketplace TCG de venta asistida** para coleccionistas. El ob
 | Base de Datos | Supabase PostgreSQL |
 | Auth | Supabase Auth |
 | Storage | Supabase Storage (Oculto - Confirmación vía WA) |
-| Deploy | GitHub Pages (frontend) + Supabase (backend) |
+| Deploy | Cloudflare Pages (frontend) + Supabase (backend) |
 | Scripts Admin | Python 3.12 + scripts/ |
 
 ## 📂 Documentación de Referencia
@@ -93,6 +93,7 @@ Artefactos del Compound step:
 ## ⚠️ Reglas Críticas del Sistema
 
 1. **Testing Lazy Imports**: Parchear siempre la clase importada desde el módulo de origen (`modulo.Clase`), no desde el importador.
+2. **Estrategia de Branching Obligatoria**: Todo cambio debe integrarse en `dev` para validación en el entorno de "Preview" de Cloudflare antes de ser mergeado a `main` para producción.
 
 ---
 
