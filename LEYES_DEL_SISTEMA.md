@@ -109,13 +109,20 @@
 
 ---
 
-### Ley 9: Segregación de Bases de Datos
+### Ley 9: Segregación de Ambientes y Hosting
 
-**Siempre** usar instancias de base de datos independientes para producción (`main`) y desarrollo/preview (`dev`).
+**Siempre** usar instancias de base de datos y entornos de hosting independientes para producción y desarrollo.
 
-- **Aislamiento**: Los datos de prueba o desarrollo nunca deben tocar la base de datos productiva.
-- **Configuración**: La conexión debe gestionarse mediante Cloudflare Environment Overrides, asegurando que cada rama inyecte las credenciales del proyecto de Supabase correspondiente.
-- **Edge Functions**: Las funciones deben desplegarse y configurarse (secretos) en ambos proyectos de Supabase.
+- **Ambiente de Producción**:
+  - Branch: `main`
+  - Hosting: Cloudflare Pages (`geekorium.shop`)
+  - DB: Proyecto Supabase principal.
+- **Ambiente de Desarrollo (DEV)**:
+  - Branch: `dev`
+  - Hosting: GitHub Pages (`dev.geekorium.shop`)
+  - DB: Branch de Supabase vinculada a la rama `dev`.
+- **Flujo de Trabajo**: Todo cambio DEBE validarse primero en el ambiente `dev` antes de ser integrado a `main`.
+- **Configuración**: La inyección de variables de entorno debe ser específica por cada plataforma de hosting.
 
 **Excepciones**: Ninguna.
 
@@ -325,7 +332,7 @@ Al importar cartas sin edición (Set) específica, el sistema **siempre** debe p
 
 ### v2.7 (2026-03-07)
 
-- ✅ Agregada Ley 9: Segregación de Bases de Datos (Uso obligatorio de proyectos Supabase independientes).
+- ✅ Actualizada Ley 9: Especificada segregación de ambientes (Main/Cloudflare vs Dev/GitHub Pages) y vinculación de ramas de Supabase.
 
 ### v2.6 (2026-03-07)
 
