@@ -1,6 +1,20 @@
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.join(__dirname, '../.env') });
+
 async function test() {
-    const API_BASE = 'https://sxuotvogwvmxuvwbsscv.supabase.co/functions/v1/tcg-api';
-    const anonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN4dW90dm9nd3ZteHV2d2Jzc2N2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcxMjUyNzUsImV4cCI6MjA4MjcwMTI3NX0.0qL7dIEnwg22RyORGX06G97VjdH4C8_l4Qgm2oPEYTY';
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const anonKey = process.env.SUPABASE_ANON_KEY;
+
+    if (!supabaseUrl || !anonKey) {
+        console.error('Missing SUPABASE_URL or SUPABASE_ANON_KEY');
+        process.exit(1);
+    }
+
+    const API_BASE = `${supabaseUrl}/functions/v1/tcg-api`;
     const cardId = '1013ca9c-1d29-42f6-8665-92f98d076ff8'; // Benalish Cavalry TSP #4
 
     console.log('Fetching directly from API...');

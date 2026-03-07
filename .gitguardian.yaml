@@ -1,0 +1,19 @@
+# GitGuardian configuration file
+# For more information, see: https://docs.gitguardian.com/ggshield-docs/configuration/gitguardian-yaml
+
+version: 2
+
+secret:
+  # Path matches to ignore
+  ignored_paths:
+    - "**/venv/**"
+    - "**/.venv/**"
+    - "**/node_modules/**"
+    - "frontend/playwright/.auth/**"
+    - "scripts/debug/**"
+    - "test_data/**"
+    - "test-results/**"
+    - "docs/production.md"
+    - "frontend/test_benalish.mjs"
+    - ".git/**"
+    - ".env"

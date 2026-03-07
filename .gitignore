@@ -85,3 +85,6 @@ frontend/playwright/.auth/
 
 # Debug scripts
 scripts/debug/
+
+# Added by ggshield
+.cache_ggshield
