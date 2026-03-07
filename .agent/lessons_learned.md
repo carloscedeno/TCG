@@ -353,3 +353,16 @@ ear_mint, lightly_played) deben normalizarse en el backend a cÃ³digos internos
 - **Solución**: Segregar bases de datos usando proyectos independientes de Supabase vinculados a las ramas de Cloudflare.
 - **Lección**: La mejor forma de manejar múltiples bases de datos en un SPA desplegado en Cloudflare Pages es mediante **Environment Overrides**. Al configurar variables como `VITE_SUPABASE_URL` de forma distinta para los entornos de "Production" y "Preview", la aplicación se conecta automáticamente al proyecto de Supabase correcto basado en el branch desde el que se desplegó.
 - **Edge Functions**: Es crítico recordar que las Edge Functions y sus secretos deben sincronizarse manualmente (o vía CLI link) en ambos proyectos, ya que son entornos aislados.
+
+### 37. Restricciones de Despliegue en GitHub Environments — 2026-03-07
+
+- **Problema**: El despliegue de la rama `dev` fallaba con "Branch is not allowed to deploy due to environment protection rules".
+- **Causa Raíz**: Los repositorios de GitHub con "Environments" (ej: `github-pages`) suelen restringir los despliegues solo a `main` por defecto en la sección "Deployment branches and tags".
+- **Solución**: Ajustar la configuración del Environment en GitHub Settings para permitir todas las ramas ("No restriction") o añadir explícitamente la rama `dev`.
+- **Lección**: Al habilitar un nuevo entorno de hosting (como GitHub Pages para `dev`), el primer despliegue fallará si no se actualizan los permisos de rama en el Dashboard de GitHub.
+
+### 38. Refactorización de IDs de Proyecto Supabase — 2026-03-07
+
+- **Problema**: El uso de IDs de Supabase hardcodeados en URLs de Edge Functions impedía que la rama `dev` conectara con su propia instancia de base de datos.
+- **Solución**: Reemplazar todos los IDs estáticos por la variable de entorno `VITE_SUPABASE_PROJECT_ID`.
+- **Lección**: Para sistemas multi-entorno, el ID del proyecto debe tratarse como un secreto dinámico inyectado por el hoster, igual que la URL y la Anon Key. Esto garantiza que el frontend siempre hable con el backend correcto según su origen.

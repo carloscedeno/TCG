@@ -187,19 +187,19 @@ eplace) para nÃºmero de telÃ©fono venezolano, cÃ©dula de identidad y nombr
 
 ## 2026-03-03 â€” Soporte de FoliaciÃ³n (Foil) en Bulk Import
 
-**QuÃ© pasÃ³:** Se implementÃ³ el soporte para distinguir entre cartas Foil y Non-Foil durante la importaciÃ³n masiva. Se resolviÃ³ el error de duplicados en base de datos y se actualizÃ³ la vista de productos.
+**QuÃƒÂ© pasÃƒÂ³:** Se implementÃ³ el soporte para distinguir entre cartas Foil y Non-Foil durante la importaciÃƒÂ³n masiva. Se resolviÃ³ el error de duplicados en base de datos y se actualizÃ³ la vista de productos.
 
-**Lo que cambiÃ³:**
+**Lo que cambiÃƒÂ³:**
 
 - `lessons_learned.md` â†’ LecciÃ³n #66 (Soporte de FoliaciÃ³n y AgregaciÃ³n en Lotes).
 - `LEYES_DEL_SISTEMA.md` â†’ Regla de Negocio 3 (AgregaciÃ³n obligatoria en lotes).
-- `PROGRESS.md` y `docs/PRD_MASTER.md` â†’ Actualizados con el Ã©xito de la integraciÃ³n de ManaBox CSV/TXT.
-- `supabase/functions/tcg-api/index.ts` â†’ LÃ³gica de agregaciÃ³n por `finish` antes de upsert.
+- `PROGRESS.md` y `docs/PRD_MASTER.md` â†’ Actualizados con el Ã©xito de la integraciÃƒÂ³n de ManaBox CSV/TXT.
+- `supabase/functions/tcg-api/index.ts` â†’ LÃ³gica de agregaciÃƒÂ³n por `finish` antes de upsert.
 - RPC `bulk_import_inventory` â†’ Soporte para columna `finish` y manejo de conflictos.
 - Vista `products_with_prices` â†’ InclusiÃ³n de la columna `finish`.
 
 **Regla derivada:**
-> Siempre consolidar duplicados (mismo printing+condition+finish) dentro de un lote de importaciÃ³n en el backend antes de enviarlo a la base de datos para evitar fallos de `ON CONFLICT`.
+> Siempre consolidar duplicados (mismo printing+condition+finish) dentro de un lote de importaciÃƒÂ³n en el backend antes de enviarlo a la base de datos para evitar fallos de `ON CONFLICT`.
 
 ---
 
@@ -374,3 +374,25 @@ eplace) para nÃºmero de telÃ©fono venezolano, cÃ©dula de identidad y nombr
 
 **Regla derivada:**
 > Los datos de desarrollo nunca deben tocar la base de datos de producción; la segregación se garantiza a nivel de infraestructura mediante proyectos independientes de Supabase vinculados a las ramas de despliegue.
+
+---
+
+## 2026-03-07 — CI/CD Refactor & Dev Environment Implementation
+
+**Qué pasó:** Se habilitó exitosamente el despliegue automático de la rama `dev` en GitHub Pages (`dev.geekorium.shop`). Se eliminaron todas las dependencias de IDs de Supabase hardcodeados en el frontend para permitir la segregación total de entornos.
+
+**Problemas resueltos:**
+
+- Branch `dev` rechazada por "Environment protection rules" en GitHub Pages.
+- Inconsistencias al llamar a Edge Functions desde `dev` que apuntaban a la DB de `prod`.
+
+**Lo que cambió:**
+
+- `lessons_learned.md` → Lecciones #37 (Permissions) y #38 (Dynamic Project IDs).
+- `AGENTS.md` → Feature "Multi-Environment & Dynamic IDs" marcada como completada.
+- `.github/workflows/deploy.yml` → Inyectada `VITE_SUPABASE_PROJECT_ID` en el build.
+- `.env.example` → Actualizado con la nueva variable.
+- `CollectionService.ts`, `BulkImport.tsx`, `AdminDashboard.tsx` → Refactorizados para usar variables de entorno.
+
+**Regla derivada:**
+> El ID del proyecto de Supabase debe tratarse como una variable de configuración dinámica (`VITE_SUPABASE_PROJECT_ID`) para garantizar que el frontend se conecte al backend correspondiente según su entorno de despliegue.
