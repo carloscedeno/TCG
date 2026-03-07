@@ -346,3 +346,10 @@ ear_mint, lightly_played) deben normalizarse en el backend a cÃ³digos internos
 
 - **Problema:** El uso de un archivo `_redirects` con la regla `/* /index.html 200` puede generar advertencias de "Redirect Loop" en el dashboard de Cloudflare si se combina con redirecciones de dominio (ej. HTTP -> HTTPS).
 - **Solución:** El método más robusto para SPAs en Cloudflare Pages es la estrategia de **`404.html` fallback**. Al copiar el `index.html` generado al archivo `404.html` durante el build, Cloudflare servirá la aplicación para cualquier ruta no encontrada, permitiendo que el router de React tome el control sin generar avisos de bucle.
+
+### 36. Gestión de Multi-entorno de Base de Datos (Supabase) — 2026-03-07
+
+- **Problema**: Riesgo de contaminar datos de producción o romper el schema productivo durante el desarrollo de nuevas features.
+- **Solución**: Segregar bases de datos usando proyectos independientes de Supabase vinculados a las ramas de Cloudflare.
+- **Lección**: La mejor forma de manejar múltiples bases de datos en un SPA desplegado en Cloudflare Pages es mediante **Environment Overrides**. Al configurar variables como `VITE_SUPABASE_URL` de forma distinta para los entornos de "Production" y "Preview", la aplicación se conecta automáticamente al proyecto de Supabase correcto basado en el branch desde el que se desplegó.
+- **Edge Functions**: Es crítico recordar que las Edge Functions y sus secretos deben sincronizarse manualmente (o vía CLI link) en ambos proyectos, ya que son entornos aislados.

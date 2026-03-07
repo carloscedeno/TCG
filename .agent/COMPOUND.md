@@ -358,3 +358,19 @@ eplace) para nÃºmero de telÃ©fono venezolano, cÃ©dula de identidad y nombr
 
 **Regla de Oro:**
 > El SEO debe ser un ciudadano de primera clase en el build, pero solo debe ser visible (indexable) para los motores de búsqueda en el entorno de producción real.
+
+---
+
+## 2026-03-07 — Estrategia de Segregación de Base de Datos (Multi-DB)
+
+**Qué pasó:** Se formalizó la estrategia para manejar dos bases de datos independientes (Prod y Dev) para garantizar la integridad de los datos de producción.
+
+**Lo que cambió:**
+
+- `LEYES_DEL_SISTEMA.md` → Agregada **Ley 9** (Segregación de Bases de Datos).
+- `AGENTS.md` → Actualizada regla crítica #3 y stack tecnológico.
+- `lessons_learned.md` → Lección #36 sobre el uso de Cloudflare Environment Overrides para segregación de DB.
+- `implementation_plan.md` → Documentado el flujo de despliegue para Edge Functions y migraciones multi-proyecto.
+
+**Regla derivada:**
+> Los datos de desarrollo nunca deben tocar la base de datos de producción; la segregación se garantiza a nivel de infraestructura mediante proyectos independientes de Supabase vinculados a las ramas de despliegue.

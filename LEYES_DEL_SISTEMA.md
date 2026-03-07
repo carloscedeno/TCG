@@ -109,6 +109,18 @@
 
 ---
 
+### Ley 9: Segregación de Bases de Datos
+
+**Siempre** usar instancias de base de datos independientes para producción (`main`) y desarrollo/preview (`dev`).
+
+- **Aislamiento**: Los datos de prueba o desarrollo nunca deben tocar la base de datos productiva.
+- **Configuración**: La conexión debe gestionarse mediante Cloudflare Environment Overrides, asegurando que cada rama inyecte las credenciales del proyecto de Supabase correspondiente.
+- **Edge Functions**: Las funciones deben desplegarse y configurarse (secretos) en ambos proyectos de Supabase.
+
+**Excepciones**: Ninguna.
+
+---
+
 ## 🟡 REGLAS DE OPERACIÓN AUTÓNOMA
 
 ### Regla 1: Auto-Aprobación de Comandos Seguros
@@ -310,6 +322,10 @@ Al importar cartas sin edición (Set) específica, el sistema **siempre** debe p
 ---
 
 ## 📝 CHANGELOG DE LEYES
+
+### v2.7 (2026-03-07)
+
+- ✅ Agregada Ley 9: Segregación de Bases de Datos (Uso obligatorio de proyectos Supabase independientes).
 
 ### v2.6 (2026-03-07)
 
