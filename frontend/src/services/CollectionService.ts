@@ -1,4 +1,4 @@
-const SUPABASE_PROJECT_ID = 'sxuotvogwvmxuvwbsscv';
+const SUPABASE_PROJECT_ID = import.meta.env.VITE_SUPABASE_PROJECT_ID || 'sxuotvogwvmxuvwbsscv';
 const API_BASE = import.meta.env.VITE_API_BASE || `https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/tcg-api`;
 
 export interface Valuation {

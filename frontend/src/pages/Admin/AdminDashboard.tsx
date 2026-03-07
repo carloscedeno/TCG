@@ -5,7 +5,7 @@ import { Play, Settings, Users, Database, Shield, AlertCircle, Package } from 'l
 
 import { supabase } from '../../utils/supabaseClient';
 
-const SUPABASE_PROJECT_ID = 'sxuotvogwvmxuvwbsscv';
+const SUPABASE_PROJECT_ID = import.meta.env.VITE_SUPABASE_PROJECT_ID || 'sxuotvogwvmxuvwbsscv';
 // Legacy API Base for external scrapers (currently offline/unused for stats)
 const API_BASE = import.meta.env.VITE_API_BASE || `https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/tcg-api`;
 

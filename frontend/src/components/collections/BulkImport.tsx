@@ -227,7 +227,7 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
         }
         setLoading(true);
         try {
-            const SUPABASE_PROJECT_ID = 'sxuotvogwvmxuvwbsscv';
+            const SUPABASE_PROJECT_ID = import.meta.env.VITE_SUPABASE_PROJECT_ID || 'sxuotvogwvmxuvwbsscv';
             const API_BASE = import.meta.env.VITE_API_BASE || `https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/tcg-api`;
 
             const importData = rows.map(row => {
