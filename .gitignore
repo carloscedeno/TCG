@@ -66,6 +66,7 @@ frontend/dist/
 *.backup
 *.backup.gz
 *.sql
+!supabase/*.sql
 
 # Temp/Debug scripts (only in root)
 /test_*.py
