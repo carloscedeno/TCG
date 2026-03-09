@@ -330,25 +330,33 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
       if (error) throw error;
 
       // Map to frontend format
-      const mappedCards = (data || []).map((row: any) => ({
-        card_id: row.printing_id,
-        name: row.card_name,
-        set: row.set_name,
-        set_code: row.set_code,
-        image_url: row.image_url,
-        price: row.avg_market_price_usd || row.store_price || 0,
-        rarity: row.rarity,
-        type: row.type_line,
-        cmc: row.cmc,
-        game_id: row.game_id,
-        colors: row.colors,
-        release_date: row.release_date,
-        valuation: {
-          market_price: row.avg_market_price_usd || 0,
-          store_price: row.store_price || 0,
-          market_url: `https://www.cardkingdom.com/mtg/${sanitizeSlug(row.set_name)}/${sanitizeSlug(row.card_name)}`
-        }
-      }));
+      const mappedCards = (data || []).map((row: any) => {
+        const mPrice = row.avg_market_price_usd || 0;
+        const sPrice = row.store_price || 0;
+        const finalPrice = sPrice > 0 ? sPrice : mPrice;
+        const vAvg = (sPrice > 0 && mPrice > 0) ? (sPrice + mPrice) / 2 : (sPrice || mPrice || 0);
+
+        return {
+          card_id: row.printing_id,
+          name: row.card_name,
+          set: row.set_name,
+          set_code: row.set_code,
+          image_url: row.image_url,
+          price: finalPrice,
+          rarity: row.rarity,
+          type: row.type_line,
+          cmc: row.cmc,
+          game_id: row.game_id,
+          colors: row.colors,
+          release_date: row.release_date,
+          valuation: {
+            market_price: mPrice,
+            store_price: sPrice,
+            valuation_avg: vAvg,
+            market_url: `https://www.cardkingdom.com/mtg/${sanitizeSlug(row.set_name)}/${sanitizeSlug(row.card_name)}`
+          }
+        };
+      });
 
       // Get total count (estimate for performance)
       // TODO: Implement proper count in SQL function if exact count is needed
@@ -393,11 +401,17 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
           finishes,
           prices,
           sets(set_name, set_code, release_date),
-          cards(rarity, card_name),
-          products(price, stock)
+          cards(rarity, card_name)
         `)
         .eq('card_id', cardData.card_id)
         .order('sets(release_date)', { ascending: false });
+
+      // Fetch all products for all versions to get store prices/stock
+      const versionPids = allVersions?.map((v: any) => v.printing_id) || [];
+      const { data: allVersionProducts } = await supabase
+        .from('products')
+        .select('printing_id, price, stock, id')
+        .in('printing_id', versionPids);
 
       // Fetch latest price from price_history (Card Kingdom or Store)
       const { data: priceData } = await supabase
@@ -411,13 +425,21 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
       // Fetch store price from products table
       const { data: productData } = await supabase
         .from('products')
-        .select('price')
+        .select('price, stock, id')
         .eq('printing_id', printingId)
         .limit(1)
         .single();
 
       const marketPrice = priceData?.price_usd || 0;
       const storePrice = productData?.price || 0;
+
+      // Use store_price if available, fallback to market_price
+      const finalPrice = storePrice > 0 ? storePrice : marketPrice;
+
+      // Average of both if both > 0, otherwise the one that exists
+      const valuationAvg = (storePrice > 0 && marketPrice > 0)
+        ? (storePrice + marketPrice) / 2
+        : (storePrice || marketPrice || 0);
 
       return {
         card_id: printing.printing_id,
@@ -432,23 +454,29 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
         set_code: setData.set_code || '',
         collector_number: printing.collector_number || '',
         image_url: printing.image_url || '',
-        price: storePrice || marketPrice,
+        price: finalPrice,
         is_foil: printing.is_foil || false,
         finish: printing.is_foil ? 'foil' : 'nonfoil',
+        stock: productData?.stock || 0,
+        product_id: productData?.id,
         valuation: {
           store_price: storePrice,
           market_price: marketPrice,
           market_url: `https://www.cardkingdom.com/mtg/${sanitizeSlug(setData.set_name)}/${sanitizeSlug(cardData.card_name)}`,
-          valuation_avg: (storePrice + marketPrice) / 2
+          valuation_avg: valuationAvg
         },
         legalities: cardData.legalities || {},
         colors: cardData.colors || [],
         card_faces: cardData.card_faces || null,
         all_versions: (allVersions || []).flatMap((v: any) => {
-          // Using products for store price, price_history should be queried separately if needed per-version
-          // for now we trust the prices field in card_printings or use products
-          const storePrice = v.products?.[0]?.price || 0;
-          const displayPrice = storePrice || Number(v.prices?.usd || 0);
+          const vProd = allVersionProducts?.find((p: any) => p.printing_id === v.printing_id);
+          const vStorePrice = vProd?.price || 0;
+          const vMarketPrice = v.cards?.avg_market_price_usd || 0;
+
+          const vFinalPrice = vStorePrice > 0 ? vStorePrice : vMarketPrice;
+          const vValAvg = (vStorePrice > 0 && vMarketPrice > 0)
+            ? (vStorePrice + vMarketPrice) / 2
+            : (vStorePrice || vMarketPrice || 0);
 
           const baseEntry = {
             printing_id: v.printing_id,
@@ -456,10 +484,13 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
             set_code: v.sets?.set_code || '',
             collector_number: v.collector_number || '',
             rarity: v.cards?.rarity || 'common',
-            price: displayPrice,
-            market_price: marketPrice,
+            price: vFinalPrice,
+            market_price: vMarketPrice,
+            store_price: vStorePrice,
+            valuation_avg: vValAvg,
             image_url: v.image_url || '',
-            prices: v.prices || {}
+            prices: v.prices || {},
+            stock: vProd?.stock || 0
           };
 
           const finishes = v.finishes || (v.is_foil ? ['foil'] : ['nonfoil']);
@@ -492,7 +523,7 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
             entries.push({
               ...baseEntry,
               printing_id: isSynthetic ? `${v.printing_id}-foil` : v.printing_id,
-              price: foilPrice || displayPrice,
+              price: foilPrice || vFinalPrice,
               finish: 'foil',
               is_foil: true
             });
