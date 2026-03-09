@@ -3,6 +3,30 @@ import { getCardKingdomUrl } from './urlUtils';
 
 const API_BASE = import.meta.env.VITE_API_BASE || '';
 
+/**
+ * Helper to construct API URLs from API_BASE correctly handling paths and trailing slashes.
+ * Ensures consistent use of the '/api' segment if not already in base.
+ */
+const getApiUrl = (path: string): string => {
+  if (!API_BASE) return '';
+
+  let base = API_BASE.endsWith('/') ? API_BASE.slice(0, -1) : API_BASE;
+
+  // We want to ensure it ends with /api if it doesn't already.
+  // We check for /api and /tcg-api (for backward compatibility during migration)
+  const hasApiPrefix = base.endsWith('/api') || base.endsWith('/tcg-api');
+
+  if (hasApiPrefix) {
+    // If it already has the prefix, just append the path (ensuring one slash)
+    const cleanPath = path.startsWith('/') ? path : `/${path}`;
+    return `${base}${cleanPath}`;
+  } else {
+    // Inject /api prefix
+    const cleanPath = path.startsWith('/') ? path : `/${path}`;
+    return `${base}/api${cleanPath}`;
+  }
+};
+
 // Compatibilidad con nombres antiguos
 export type Card = CardApi;
 
@@ -134,7 +158,10 @@ export const fetchUserCollections = async (): Promise<any[]> => {
   if (!user) return [];
 
   try {
-    const response = await fetch(`${API_BASE}/api/collections`, {
+    const apiUrl = getApiUrl('/collections');
+    if (!apiUrl) throw new Error('API_BASE not configured');
+
+    const response = await fetch(apiUrl, {
       headers: {
         'Authorization': `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`
       }
@@ -219,19 +246,9 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
     const dbPrintingId = printingId.replace('-foil', '').replace('-nonfoil', '');
 
     // 1. Try fetching from API first
-    if (API_BASE) {
+    const apiUrl = getApiUrl(`/cards/${dbPrintingId}`);
+    if (apiUrl) {
       try {
-        // Ensure we don't double up on /api
-        let base = API_BASE.endsWith('/') ? API_BASE.slice(0, -1) : API_BASE;
-
-        // If it's a Supabase function and we are missing the function name, it might be the issue.
-        // But we trust API_BASE configuration. 
-        // We'll try to be smart about the /api prefix.
-        const hasApiPrefix = base.endsWith('/api') || base.endsWith('/tcg-api');
-        const apiUrl = hasApiPrefix
-          ? `${base}/cards/${dbPrintingId}`
-          : `${base}/api/cards/${dbPrintingId}`;
-
         const response = await fetch(apiUrl);
         if (response.ok) {
           const json = await response.json();
@@ -473,8 +490,11 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
 
 export const fetchSets = async (gameCode?: string): Promise<any[]> => {
   try {
-    const url = gameCode ? `${API_BASE}/api/sets?game_code=${gameCode}` : `${API_BASE}/api/sets`;
-    const response = await fetch(url);
+    const path = gameCode ? `/sets?game_code=${gameCode}` : `/sets`;
+    const apiUrl = getApiUrl(path);
+    if (!apiUrl) throw new Error('API_BASE not configured');
+
+    const response = await fetch(apiUrl);
     if (!response.ok) throw new Error('Failed to fetch sets');
     const data = await response.json();
     return data.sets || [];
@@ -722,7 +742,10 @@ export const sendCheckoutEmailNotification = async (notificationData: {
   current_user_id?: string;
 }): Promise<any> => {
   try {
-    const response = await fetch(`${API_BASE}/api/notifications/checkout`, {
+    const apiUrl = getApiUrl('/notifications/checkout');
+    if (!apiUrl) throw new Error('API_BASE not configured');
+
+    const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

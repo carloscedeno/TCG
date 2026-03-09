@@ -30,7 +30,7 @@ jobs:
           version: latest
 
       - name: Deploy Supabase Function
-        run: supabase functions deploy tcg-api --project-ref sxuotvogwvmxuvwbsscv --no-verify-jwt
+        run: supabase functions deploy api --project-ref sxuotvogwvmxuvwbsscv --no-verify-jwt
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
