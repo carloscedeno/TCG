@@ -53,7 +53,7 @@ serve(async (req: Request) => {
     const method = req.method
 
     // Remove only the old function name prefix if present
-    const functionPrefixes = ['/tcg-api'];
+    const functionPrefixes = ['/tcg-api', '/api'];
     for (const prefix of functionPrefixes) {
       if (path.startsWith(prefix)) {
         // Only remove if it's followed by another slash or end of string
@@ -414,13 +414,11 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
         .in('printing_id', versionPids);
 
       // Fetch latest price from price_history (Card Kingdom or Store)
-      // Must filter by printing's finish to avoid getting foil price on non-foil card
+      // Relying on printing_id for accuracy; removed restrictive flags
       const { data: priceData } = await supabase
         .from('price_history')
         .select('price_usd')
         .eq('printing_id', printingId)
-        .eq('is_foil', printing.is_foil || false)
-        .eq('is_etched', printing.is_etched || false)
         .order('timestamp', { ascending: false })
         .limit(1)
         .maybeSingle();
