@@ -33,7 +33,6 @@ class ValuationService:
             agg_map = {}
 
             for pid, prices in grouped_prices.items():
-                geek_price = 0.0
                 ck_price = 0.0
                 ck_url = None
                 
@@ -41,27 +40,20 @@ class ValuationService:
                     sid = p.get('source_id')
                     source_code = source_map.get(sid, "").lower()
                     
-                    if not geek_price and source_code == 'geekorium':
-                        geek_price = float(p.get('price_usd') or 0)
-                    
                     if not ck_price and source_code == 'cardkingdom':
                         ck_price = float(p.get('price_usd') or 0)
                         ck_url = p.get('url')
-                    
-                    if geek_price and ck_price:
                         break
                 
-                # Simplified valuation rules as per user instructions
+                # Business rule: CK NM is the single source of truth
                 market_price = ck_price
-                
-                # Business rule: If store_price is missing (0), use Card Kingdom price as the store price
-                final_store_price = geek_price if geek_price > 0 else market_price
+                final_price = ck_price
 
                 valuations[pid] = {
-                    "store_price": final_store_price,
+                    "store_price": final_price,
                     "market_price": market_price,
                     "market_url": ck_url,
-                    "valuation_avg": (final_store_price + market_price) / 2 if (final_store_price > 0 and market_price > 0) else (final_store_price or market_price or 0.0)
+                    "valuation_avg": market_price
                 }
                 
             return valuations
@@ -84,7 +76,6 @@ class ValuationService:
             
             prices = response.data
             
-            geek_price = 0.0
             ck_price = 0.0
             ck_url = None
             
@@ -92,23 +83,16 @@ class ValuationService:
                 sid = p.get('source_id')
                 source_code = source_map.get(sid, "").lower() if sid else ""
                 
-                if not geek_price and source_code == 'geekorium':
-                    geek_price = float(p.get('price_usd') or 0)
-                
                 if not ck_price and source_code == 'cardkingdom':
                     ck_price = float(p.get('price_usd') or 0)
                     url = p.get('url')
                     if url and 'cardkingdom.com' in url:
                         ck_url = url
-                
-                if geek_price and ck_price and ck_url:
-                    break
+                        break
             
-            # Simplified valuation rules as per user instructions
+            # Business rule: CK NM is the single source of truth
             market_price = ck_price
-            
-            # Business rule: If store_price is missing (0), use Card Kingdom price as the store price
-            final_store_price = geek_price if geek_price > 0 else market_price
+            final_price = ck_price
 
             if not ck_url:
                 try:
@@ -133,10 +117,10 @@ class ValuationService:
                     print(f"Error generating fallback URL: {e}")
 
             return {
-                "store_price": final_store_price,
+                "store_price": final_price,
                 "market_price": market_price,
                 "market_url": ck_url,
-                "valuation_avg": (final_store_price + market_price) / 2 if (final_store_price > 0 and market_price > 0) else (final_store_price or market_price or 0.0)
+                "valuation_avg": market_price
             }
         except Exception:
             return {"store_price": 0.0, "market_price": 0.0, "valuation_avg": 0.0}

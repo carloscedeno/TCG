@@ -414,3 +414,15 @@ eplace) para nÃºmero de telÃ©fono venezolano, cÃ©dula de identidad y nombr
 
 **Regla derivada:**
 > El único mercado externo válido para valoración es Card Kingdom. Si no hay precio de tienda, se usa Card Kingdom. Si no hay Card Kingdom, el precio es 0. Nunca recurrir a tablas agregadas obsoletas.
+--
+
+## 2026-03-10 â€” SimplificaciÃ³n de Precios (CK NM) y Reversa de Branding
+
+**QuÃ© pasÃ³:** Se simplificÃ³ la estrategia de precios para usar Card Kingdom NM como Ãºnica fuente de verdad. Se revirtieron todos los cambios de branding para conservar la identidad de "Geekorium".
+**Lo que cambiÃ³:**
+
+- `lessons_learned.md` â†’ LecciÃ³n #41
+- `LEYES_DEL_SISTEMA.md` â†’ Actualizada Regla 1 (Precios de Geekorium)
+- `AGENTS.md` â†’ Feature de Precios Simplificados marcada como completada
+- `frontend/src/` y `email_service.py` â†’ Branding restaurado a "Geekorium"
+**Regla derivada:** Los precios de Geekorium son estrictamente Card Kingdom NM. El branding original es sagrado.

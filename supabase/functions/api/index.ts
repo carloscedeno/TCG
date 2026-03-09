@@ -331,10 +331,10 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
 
       // Map to frontend format
       const mappedCards = (data || []).map((row: any) => {
+        // Business rule: CK NM is the single source of truth for pricing
         const mPrice = row.avg_market_price_usd || 0;
-        const sPrice = row.store_price || 0;
-        const finalPrice = sPrice > 0 ? sPrice : mPrice;
-        const vAvg = (sPrice > 0 && mPrice > 0) ? (sPrice + mPrice) / 2 : (sPrice || mPrice || 0);
+        const finalPrice = mPrice;
+        const vAvg = mPrice;
 
         return {
           card_id: row.printing_id,
@@ -351,7 +351,7 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
           release_date: row.release_date,
           valuation: {
             market_price: mPrice,
-            store_price: sPrice,
+            store_price: row.store_price || 0,
             valuation_avg: vAvg,
             market_url: `https://www.cardkingdom.com/mtg/${sanitizeSlug(row.set_name)}/${sanitizeSlug(row.card_name)}`
           }
@@ -432,15 +432,10 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
         .single();
 
       const marketPrice = priceData?.price_usd || 0;
-      const storePrice = productData?.price || 0;
 
-      // Use store_price if available, fallback to market_price
-      const finalPrice = storePrice > 0 ? storePrice : marketPrice;
-
-      // Average of both if both > 0, otherwise the one that exists
-      const valuationAvg = (storePrice > 0 && marketPrice > 0)
-        ? (storePrice + marketPrice) / 2
-        : (storePrice || marketPrice || 0);
+      // Business rule: CK NM is the single source of truth
+      const finalPrice = marketPrice;
+      const valuationAvg = marketPrice;
 
       return {
         card_id: printing.printing_id,
@@ -461,7 +456,7 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
         stock: productData?.stock || 0,
         product_id: productData?.id,
         valuation: {
-          store_price: storePrice,
+          store_price: productData?.price || 0,
           market_price: marketPrice,
           market_url: `https://www.cardkingdom.com/mtg/${sanitizeSlug(setData.set_name)}/${sanitizeSlug(cardData.card_name)}`,
           valuation_avg: valuationAvg

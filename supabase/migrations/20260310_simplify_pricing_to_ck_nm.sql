@@ -1,19 +1,19 @@
--- Migration to fix market price logic in mv_unique_cards and get_latest_ck_price
--- Optimized version to prevent timeouts by using CTEs
--- Rely solely on printing_id for price lookup to handle inconsistent is_foil flags in price_history
+-- Migration to strictly enforce Card Kingdom (CK) Near Mint (NM) prices as the single source of truth
+-- This migration updates the helper function and the specialized view to ignore all other price sources.
 
 BEGIN;
 
--- Set search path to ensure public tables are found
+-- Set search path
 SET search_path = public, extensions;
 
--- 1. Update the helper function - Remove is_foil/is_etched filters as printing_id is already finish-specific
+-- 1. Update the helper function to strictly filter for CK and NM
 CREATE OR REPLACE FUNCTION public.get_latest_ck_price(p_printing_id UUID) 
 RETURNS NUMERIC AS $$
   SELECT price_usd 
   FROM public.price_history 
   WHERE printing_id = p_printing_id 
   AND source_id = (SELECT source_id FROM public.sources WHERE source_code = 'cardkingdom' LIMIT 1)
+  AND condition_id = (SELECT condition_id FROM public.conditions WHERE condition_code = 'NM' LIMIT 1)
   ORDER BY timestamp DESC 
   LIMIT 1;
 $$ LANGUAGE sql STABLE;
@@ -21,15 +21,16 @@ $$ LANGUAGE sql STABLE;
 -- 2. Drop and recreate the Materialized View 
 DROP MATERIALIZED VIEW IF EXISTS public.mv_unique_cards CASCADE;
 
--- Optimized Materialized View Creation
+-- Recreate View with strict CK NM filtering
 CREATE MATERIALIZED VIEW public.mv_unique_cards AS
-WITH latest_ck_prices AS (
-    -- Efficiently get only the latest price for each printing_id
+WITH latest_ck_nm_prices AS (
+    -- Get latest CK NM price for each printing
     SELECT DISTINCT ON (ph.printing_id)
         ph.printing_id,
         ph.price_usd
     FROM public.price_history ph
     WHERE ph.source_id = (SELECT s.source_id FROM public.sources s WHERE s.source_code = 'cardkingdom' LIMIT 1)
+    AND ph.condition_id = (SELECT c.condition_id FROM public.conditions c WHERE c.condition_code = 'NM' LIMIT 1)
     ORDER BY ph.printing_id, ph.timestamp DESC
 )
 SELECT DISTINCT ON (c.card_name)
@@ -43,7 +44,7 @@ SELECT DISTINCT ON (c.card_name)
     c.type_line::TEXT,
     c.colors,
     s.release_date,
-    -- Join with latest_ck_prices by printing_id only
+    -- Single source of truth: CK NM price
     lp.price_usd as avg_market_price_usd,
     p.price as store_price,
     c.game_id,
@@ -53,7 +54,7 @@ FROM public.card_printings cp
 INNER JOIN public.cards c ON cp.card_id = c.card_id
 INNER JOIN public.sets s ON cp.set_id = s.set_id
 LEFT JOIN public.products p ON cp.printing_id = p.printing_id
-LEFT JOIN latest_ck_prices lp ON lp.printing_id = cp.printing_id
+LEFT JOIN latest_ck_nm_prices lp ON lp.printing_id = cp.printing_id
 WHERE (cp.lang = 'en' OR cp.lang IS NULL)
 ORDER BY 
     c.card_name,
@@ -61,7 +62,7 @@ ORDER BY
     cp.is_foil ASC,    -- Prefer non-foil printings as representative
     cp.is_etched ASC;  -- Prefer non-etched printings as representative
 
--- 3. Re-create indices
+-- 3. Restore indices
 CREATE INDEX idx_mv_unique_cards_name ON public.mv_unique_cards(card_name);
 CREATE INDEX idx_mv_unique_cards_release_date ON public.mv_unique_cards(release_date DESC);
 CREATE INDEX idx_mv_unique_cards_game_id ON public.mv_unique_cards(game_id);

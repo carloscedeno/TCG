@@ -379,3 +379,13 @@ ear_mint, lightly_played) deben normalizarse en el backend a cÃ³digos internos
 - **Problema**: Al realizar cambios en la lógica de negocio (como remover una tabla), es fácil olvidar limpiar los strings de `select()` en el frontend (`api.ts`) o backend.
 - **Lección**: Los errores de "Property X does not exist" en el frontend suelen deberse a proyecciones incompletas en la llamada de Supabase. Siempre verificar que todos los campos necesarios (incluyendo `stock`, `is_foil`, etc.) estén presentes en el string de `select` tras una refactorización.
 - **Acción**: Se restauró la columna `stock` en `fetchCardDetails` que se había omitido accidentalmente durante la limpieza de Goldfish.
+
+### 41. SimplificaciÃ³n de Precios y Reversa de Branding (Marzo 2026)
+
+- **Problema**: Estrategia de precios confusa que mezclaba mÃºltiples fuentes y condiciones. Intento errÃ³neo de "limpiar" el branding de Geekorium.
+- **Causa RaÃ­z**: El usuario aclarÃ³ que la prioridad era usar **Card Kingdom NM** como fuente Ãºnica de verdad para los precios de Geekorium, y que el branding original debe conservarse intacto.
+- **SoluciÃ³n**:
+  - Refactorizar lÃ³gica de precios en `ValuationService`, Edge Functions y DB para filtrar estrictamente por 'NM' de Card Kingdom.
+  - Revertir cualquier cambio en el nombre de la marca ("Geekorium", "Geekorium El Emporio") en el frontend y servicios de email.
+- **LecciÃ³n**: La simplicidad en los precios agiliza la operaciÃ³n. Nunca asumir que el branding debe "profesionalizarse" si el usuario no lo pide; respetar la identidad establecida es crÃ­tico.
+- **Regla Derivada**: `LEYES_DEL_SISTEMA.md` -> Regla 1 (Precios de Geekorium): Solo precios NM de Card Kingdom.

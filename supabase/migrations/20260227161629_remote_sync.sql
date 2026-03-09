@@ -1,0 +1,1 @@
+-- Empty migration to sync local state with remote db

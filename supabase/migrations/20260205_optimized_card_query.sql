@@ -1,37 +1,9 @@
--- Migration to fix market price logic in mv_unique_cards and get_latest_ck_price
--- Optimized version to prevent timeouts by using CTEs
--- Rely solely on printing_id for price lookup to handle inconsistent is_foil flags in price_history
+-- Performance Optimization Phase 5: Materialized View Strategy
+-- The ultimate solution for read performance. Pre-calculates the unique card list.
 
-BEGIN;
+DROP MATERIALIZED VIEW IF EXISTS mv_unique_cards CASCADE;
 
--- Set search path to ensure public tables are found
-SET search_path = public, extensions;
-
--- 1. Update the helper function - Remove is_foil/is_etched filters as printing_id is already finish-specific
-CREATE OR REPLACE FUNCTION public.get_latest_ck_price(p_printing_id UUID) 
-RETURNS NUMERIC AS $$
-  SELECT price_usd 
-  FROM public.price_history 
-  WHERE printing_id = p_printing_id 
-  AND source_id = (SELECT source_id FROM public.sources WHERE source_code = 'cardkingdom' LIMIT 1)
-  ORDER BY timestamp DESC 
-  LIMIT 1;
-$$ LANGUAGE sql STABLE;
-
--- 2. Drop and recreate the Materialized View 
-DROP MATERIALIZED VIEW IF EXISTS public.mv_unique_cards CASCADE;
-
--- Optimized Materialized View Creation
-CREATE MATERIALIZED VIEW public.mv_unique_cards AS
-WITH latest_ck_prices AS (
-    -- Efficiently get only the latest price for each printing_id
-    SELECT DISTINCT ON (ph.printing_id)
-        ph.printing_id,
-        ph.price_usd
-    FROM public.price_history ph
-    WHERE ph.source_id = (SELECT s.source_id FROM public.sources s WHERE s.source_code = 'cardkingdom' LIMIT 1)
-    ORDER BY ph.printing_id, ph.timestamp DESC
-)
+CREATE MATERIALIZED VIEW mv_unique_cards AS
 SELECT DISTINCT ON (c.card_name)
     cp.printing_id,
     c.card_id,
@@ -43,34 +15,29 @@ SELECT DISTINCT ON (c.card_name)
     c.type_line::TEXT,
     c.colors,
     s.release_date,
-    -- Join with latest_ck_prices by printing_id only
-    lp.price_usd as avg_market_price_usd,
+    ap.avg_market_price_usd,
     p.price as store_price,
     c.game_id,
     c.cmc,
     cp.lang
-FROM public.card_printings cp
-INNER JOIN public.cards c ON cp.card_id = c.card_id
-INNER JOIN public.sets s ON cp.set_id = s.set_id
-LEFT JOIN public.products p ON cp.printing_id = p.printing_id
-LEFT JOIN latest_ck_prices lp ON lp.printing_id = cp.printing_id
+FROM card_printings cp
+INNER JOIN cards c ON cp.card_id = c.card_id
+INNER JOIN sets s ON cp.set_id = s.set_id
+LEFT JOIN aggregated_prices ap ON cp.printing_id = ap.printing_id
+LEFT JOIN products p ON cp.printing_id = p.printing_id
 WHERE (cp.lang = 'en' OR cp.lang IS NULL)
 ORDER BY 
     c.card_name,
-    s.release_date DESC NULLS LAST,
-    cp.is_foil ASC,    -- Prefer non-foil printings as representative
-    cp.is_etched ASC;  -- Prefer non-etched printings as representative
+    s.release_date DESC NULLS LAST;
 
--- 3. Re-create indices
-CREATE INDEX idx_mv_unique_cards_name ON public.mv_unique_cards(card_name);
-CREATE INDEX idx_mv_unique_cards_release_date ON public.mv_unique_cards(release_date DESC);
-CREATE INDEX idx_mv_unique_cards_game_id ON public.mv_unique_cards(game_id);
-CREATE INDEX idx_mv_unique_cards_trgm ON public.mv_unique_cards USING gin (card_name gin_trgm_ops);
+-- Indices for the Materialized View are CRITICAL for fast filtering
+CREATE INDEX idx_mv_unique_cards_name ON mv_unique_cards(card_name);
+CREATE INDEX idx_mv_unique_cards_release_date ON mv_unique_cards(release_date DESC);
+CREATE INDEX idx_mv_unique_cards_game_id ON mv_unique_cards(game_id);
+CREATE INDEX idx_mv_unique_cards_trgm ON mv_unique_cards USING gin (card_name gin_trgm_ops);
 
--- 4. Re-create the RPC function
-DROP FUNCTION IF EXISTS public.get_unique_cards_optimized(text,integer[],text[],text[],text[],text[],integer,integer,integer,integer,text);
-
-CREATE OR REPLACE FUNCTION public.get_unique_cards_optimized(
+-- Re-implement the RPC function to query the View instead of complex joins
+CREATE OR REPLACE FUNCTION get_unique_cards_optimized(
   search_query TEXT DEFAULT NULL,
   game_ids INTEGER[] DEFAULT NULL,
   rarity_filter TEXT[] DEFAULT NULL,
@@ -121,7 +88,7 @@ BEGIN
     mv.store_price,
     mv.game_id,
     mv.cmc
-  FROM public.mv_unique_cards mv
+  FROM mv_unique_cards mv
   WHERE 
     (search_query IS NULL OR mv.card_name ILIKE '%' || search_query || '%')
     AND (game_ids IS NULL OR mv.game_id = ANY(game_ids))
@@ -162,5 +129,3 @@ BEGIN
   OFFSET offset_count;
 END;
 $$;
-
-COMMIT;
