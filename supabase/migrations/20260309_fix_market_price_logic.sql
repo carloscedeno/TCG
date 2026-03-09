@@ -4,23 +4,26 @@
 
 BEGIN;
 
--- 1. Update the helper function
-CREATE OR REPLACE FUNCTION get_latest_ck_price(p_printing_id UUID, p_is_foil BOOLEAN DEFAULT false, p_is_etched BOOLEAN DEFAULT false) 
+-- Set search path to ensure public tables are found
+SET search_path = public, extensions;
+
+-- 1. Update the helper function with explicit schema references
+CREATE OR REPLACE FUNCTION public.get_latest_ck_price(p_printing_id UUID, p_is_foil BOOLEAN DEFAULT false, p_is_etched BOOLEAN DEFAULT false) 
 RETURNS NUMERIC AS $$
   SELECT price_usd 
-  FROM price_history 
+  FROM public.price_history 
   WHERE printing_id = p_printing_id 
   AND is_foil = p_is_foil
   AND is_etched = p_is_etched
-  AND source_id = (SELECT source_id FROM sources WHERE source_code = 'cardkingdom' LIMIT 1)
+  AND source_id = (SELECT source_id FROM public.sources WHERE source_code = 'cardkingdom' LIMIT 1)
   ORDER BY timestamp DESC 
   LIMIT 1;
 $$ LANGUAGE sql STABLE;
 
 -- 2. Drop and recreate the Materialized View with better ordering
-DROP MATERIALIZED VIEW IF EXISTS mv_unique_cards CASCADE;
+DROP MATERIALIZED VIEW IF EXISTS public.mv_unique_cards CASCADE;
 
-CREATE MATERIALIZED VIEW mv_unique_cards AS
+CREATE MATERIALIZED VIEW public.mv_unique_cards AS
 SELECT DISTINCT ON (c.card_name)
     cp.printing_id,
     c.card_id,
@@ -33,15 +36,15 @@ SELECT DISTINCT ON (c.card_name)
     c.colors,
     s.release_date,
     -- Match the price to the printing's finish
-    get_latest_ck_price(cp.printing_id, cp.is_foil, cp.is_etched) as avg_market_price_usd,
+    public.get_latest_ck_price(cp.printing_id, cp.is_foil, cp.is_etched) as avg_market_price_usd,
     p.price as store_price,
     c.game_id,
     c.cmc,
     cp.lang
-FROM card_printings cp
-INNER JOIN cards c ON cp.card_id = c.card_id
-INNER JOIN sets s ON cp.set_id = s.set_id
-LEFT JOIN products p ON cp.printing_id = p.printing_id
+FROM public.card_printings cp
+INNER JOIN public.cards c ON cp.card_id = c.card_id
+INNER JOIN public.sets s ON cp.set_id = s.set_id
+LEFT JOIN public.products p ON cp.printing_id = p.printing_id
 WHERE (cp.lang = 'en' OR cp.lang IS NULL)
 ORDER BY 
     c.card_name,
@@ -50,13 +53,13 @@ ORDER BY
     cp.is_etched ASC;  -- Prefer non-etched printings as representative
 
 -- 3. Re-create indices
-CREATE INDEX idx_mv_unique_cards_name ON mv_unique_cards(card_name);
-CREATE INDEX idx_mv_unique_cards_release_date ON mv_unique_cards(release_date DESC);
-CREATE INDEX idx_mv_unique_cards_game_id ON mv_unique_cards(game_id);
-CREATE INDEX idx_mv_unique_cards_trgm ON mv_unique_cards USING gin (card_name gin_trgm_ops);
+CREATE INDEX idx_mv_unique_cards_name ON public.mv_unique_cards(card_name);
+CREATE INDEX idx_mv_unique_cards_release_date ON public.mv_unique_cards(release_date DESC);
+CREATE INDEX idx_mv_unique_cards_game_id ON public.mv_unique_cards(game_id);
+CREATE INDEX idx_mv_unique_cards_trgm ON public.mv_unique_cards USING gin (card_name gin_trgm_ops);
 
 -- 4. Re-create the RPC function
-CREATE OR REPLACE FUNCTION get_unique_cards_optimized(
+CREATE OR REPLACE FUNCTION public.get_unique_cards_optimized(
   search_query TEXT DEFAULT NULL,
   game_ids INTEGER[] DEFAULT NULL,
   rarity_filter TEXT[] DEFAULT NULL,
@@ -107,7 +110,7 @@ BEGIN
     mv.store_price,
     mv.game_id,
     mv.cmc
-  FROM mv_unique_cards mv
+  FROM public.mv_unique_cards mv
   WHERE 
     (search_query IS NULL OR mv.card_name ILIKE '%' || search_query || '%')
     AND (game_ids IS NULL OR mv.game_id = ANY(game_ids))
