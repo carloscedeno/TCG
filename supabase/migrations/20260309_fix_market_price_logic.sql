@@ -1,13 +1,12 @@
 -- Migration to fix market price logic in mv_unique_cards and get_latest_ck_price
--- 1. Update the helper function to filter by is_foil and is_etched
--- 2. Update the Materialized View to prefer non-foil printings and use the improved helper
+-- Optimized version to prevent timeouts by using CTEs instead of scalar function calls in the view
 
 BEGIN;
 
 -- Set search path to ensure public tables are found
 SET search_path = public, extensions;
 
--- 1. Update the helper function with explicit schema references
+-- 1. Still update the helper function for other uses (it's STABLE so safe)
 CREATE OR REPLACE FUNCTION public.get_latest_ck_price(p_printing_id UUID, p_is_foil BOOLEAN DEFAULT false, p_is_etched BOOLEAN DEFAULT false) 
 RETURNS NUMERIC AS $$
   SELECT price_usd 
@@ -20,10 +19,22 @@ RETURNS NUMERIC AS $$
   LIMIT 1;
 $$ LANGUAGE sql STABLE;
 
--- 2. Drop and recreate the Materialized View with better ordering
+-- 2. Drop and recreate the Materialized View with performance optimizations
 DROP MATERIALIZED VIEW IF EXISTS public.mv_unique_cards CASCADE;
 
+-- Optimized Materialized View Creation
 CREATE MATERIALIZED VIEW public.mv_unique_cards AS
+WITH latest_ck_prices AS (
+    -- Efficiently get only the latest price for each printing/finish combination
+    SELECT DISTINCT ON (ph.printing_id, ph.is_foil, ph.is_etched)
+        ph.printing_id,
+        ph.is_foil,
+        ph.is_etched,
+        ph.price_usd
+    FROM public.price_history ph
+    WHERE ph.source_id = (SELECT s.source_id FROM public.sources s WHERE s.source_code = 'cardkingdom' LIMIT 1)
+    ORDER BY ph.printing_id, ph.is_foil, ph.is_etched, ph.timestamp DESC
+)
 SELECT DISTINCT ON (c.card_name)
     cp.printing_id,
     c.card_id,
@@ -35,8 +46,8 @@ SELECT DISTINCT ON (c.card_name)
     c.type_line::TEXT,
     c.colors,
     s.release_date,
-    -- Match the price to the printing's finish
-    public.get_latest_ck_price(cp.printing_id, cp.is_foil, cp.is_etched) as avg_market_price_usd,
+    -- Match the price to the printing's finish directly from the CTE join
+    lp.price_usd as avg_market_price_usd,
     p.price as store_price,
     c.game_id,
     c.cmc,
@@ -45,6 +56,11 @@ FROM public.card_printings cp
 INNER JOIN public.cards c ON cp.card_id = c.card_id
 INNER JOIN public.sets s ON cp.set_id = s.set_id
 LEFT JOIN public.products p ON cp.printing_id = p.printing_id
+LEFT JOIN latest_ck_prices lp ON (
+    lp.printing_id = cp.printing_id 
+    AND lp.is_foil = cp.is_foil 
+    AND lp.is_etched = cp.is_etched
+)
 WHERE (cp.lang = 'en' OR cp.lang IS NULL)
 ORDER BY 
     c.card_name,
@@ -52,13 +68,13 @@ ORDER BY
     cp.is_foil ASC,    -- Prefer non-foil printings as representative
     cp.is_etched ASC;  -- Prefer non-etched printings as representative
 
--- 3. Re-create indices
+-- 3. Re-create indices (Crucial for search performance)
 CREATE INDEX idx_mv_unique_cards_name ON public.mv_unique_cards(card_name);
 CREATE INDEX idx_mv_unique_cards_release_date ON public.mv_unique_cards(release_date DESC);
 CREATE INDEX idx_mv_unique_cards_game_id ON public.mv_unique_cards(game_id);
 CREATE INDEX idx_mv_unique_cards_trgm ON public.mv_unique_cards USING gin (card_name gin_trgm_ops);
 
--- 4. Re-create the RPC function
+-- 4. Re-create the RPC function (no changes to logic, just re-binding to new MV)
 CREATE OR REPLACE FUNCTION public.get_unique_cards_optimized(
   search_query TEXT DEFAULT NULL,
   game_ids INTEGER[] DEFAULT NULL,
