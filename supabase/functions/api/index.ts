@@ -52,8 +52,8 @@ serve(async (req: Request) => {
     let path = url.pathname
     const method = req.method
 
-    // Remove the function name prefix if present (flexible detection)
-    const functionPrefixes = ['/tcg-api', '/api'];
+    // Remove only the old function name prefix if present
+    const functionPrefixes = ['/tcg-api'];
     for (const prefix of functionPrefixes) {
       if (path.startsWith(prefix)) {
         // Only remove if it's followed by another slash or end of string
@@ -400,8 +400,8 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
           is_foil,
           finishes,
           prices,
-          sets(set_name, set_code, release_date),
-          cards(rarity, card_name)
+          cards(rarity, card_name, avg_market_price_usd),
+          sets(set_name, set_code, release_date)
         `)
         .eq('card_id', cardData.card_id)
         .order('sets(release_date)', { ascending: false });
@@ -530,26 +530,17 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
           }
 
           if (pushesEtched) {
-            const isSynthetic = v.finish !== 'etched' && (pushesNonFoil || pushesFoil);
+            const isSynthetic = (v.finish !== 'etched') && (pushesNonFoil || pushesFoil);
             entries.push({
               ...baseEntry,
               printing_id: isSynthetic ? `${v.printing_id}-etched` : v.printing_id,
-              price: parseFloat(v.prices?.usd_etched || '0') || marketPrice,
+              price: parseFloat(v.prices?.usd_etched || '0') || vMarketPrice,
               finish: 'etched',
               is_foil: true
             });
           }
 
-          if (finishes.includes('etched') || hasEtchedPrice) {
-            entries.push({
-              ...baseEntry,
-              printing_id: `${v.printing_id}-etched`,
-              finish: 'etched',
-              is_foil: true
-            });
-          }
-
-          // Fallback just in case
+          // Fallback just in case nothing was pushed
           if (entries.length === 0) {
             entries.push({
               ...baseEntry,
