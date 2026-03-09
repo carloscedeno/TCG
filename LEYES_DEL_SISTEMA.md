@@ -316,7 +316,7 @@ Antes de merge a `main`:
 
 ### Regla 1: Precios de Geekorium
 
-**Siempre** usar el precio de **Card Kingdom** para los ítems de **Geekorium**, a menos que un administrador especifique lo contrario explícitamente. Si el precio en inventario es 0, el sistema debe mostrar el precio de mercado automáticamente.
+**Siempre** usar el precio de **Card Kingdom (NM)** para los ítems de **Geekorium**, a menos que un administrador especifique lo contrario explícitamente. Esta es la fuente única de verdad para la valoración de la tienda.
 
 ### Regla 2: Importación Ambigua
 
