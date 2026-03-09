@@ -396,3 +396,21 @@ eplace) para nÃºmero de telÃ©fono venezolano, cÃ©dula de identidad y nombr
 
 **Regla derivada:**
 > El ID del proyecto de Supabase debe tratarse como una variable de configuración dinámica (`VITE_SUPABASE_PROJECT_ID`) para garantizar que el frontend se conecte al backend correspondiente según su entorno de despliegue.
+
+---
+
+## 2026-03-09 — Refactorización de Valoración: "No Goldfish" Rule
+
+**Qué pasó:** Se eliminó por completo la dependencia de la tabla legacy `aggregated_prices` (Goldfish) y se estableció Card Kingdom como la única fuente de mercado externo.
+
+**Problema encontrado:** La lógica de valoración tenía fallbacks redundantes a una tabla obsoleta que causaba inconsistencias de precios entre el frontend y el backend.
+
+**Lo que cambió:**
+
+- `valuation_service.py` & `card_service.py` → Removidos todos los fallbacks a `aggregated_prices`.
+- `frontend/src/utils/api.ts` → Limpieza total de referencias a Goldfish; uso estricto de Card Kingdom.
+- `tests/unit/test_valuation_service.py` → Tests actualizados para validar la nueva regla de negocio.
+- `lessons_learned.md` → Lección #39 (Priorización de Card Kingdom) y #40 (Remoción de Legado).
+
+**Regla derivada:**
+> El único mercado externo válido para valoración es Card Kingdom. Si no hay precio de tienda, se usa Card Kingdom. Si no hay Card Kingdom, el precio es 0. Nunca recurrir a tablas agregadas obsoletas.

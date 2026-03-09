@@ -101,8 +101,7 @@ class CardService:
                 )
                 
                 latest = printings[0]
-                price_data = latest.get('aggregated_prices') or []
-                price = price_data[0].get('avg_market_price_usd', 0) if price_data else 0
+                price = 0 # Valuation service not used in this search context yet, or use alternative
                 
                 cards.append({
                     "card_id": latest.get('printing_id'), # We still pass printing_id for the modal
@@ -130,8 +129,7 @@ class CardService:
             query = supabase.table('card_printings').select(
                 'printing_id, card_id, image_url, artist, flavor_text, collector_number, rarity, card_faces, '
                 'cards(card_name, type_line, oracle_text, mana_cost, power, toughness, legalities, colors), '
-                'sets(set_name, set_code), '
-                'aggregated_prices(avg_market_price_usd)'
+                'sets(set_name, set_code)'
             ).eq('printing_id', printing_id).single()
             
             response = query.execute()
@@ -149,8 +147,7 @@ class CardService:
                 try:
                     p_query = supabase.table('card_printings').select(
                         'printing_id, rarity, collector_number, image_url, '
-                        'sets!inner(set_name, set_code, release_date), '
-                        'aggregated_prices(avg_market_price_usd)'
+                        'sets!inner(set_name, set_code, release_date)'
                     ).eq('card_id', oracle_id).limit(50).execute()
                     
                     p_data = p_query.data or []
@@ -158,8 +155,7 @@ class CardService:
                     
                     for p in p_data:
                         ps = p.get('sets') or {}
-                        pd = p.get('aggregated_prices') or []
-                        price = pd[0].get('avg_market_price_usd', 0) if pd else 0
+                        price = 0 # Will be updated by ValuationService below
                         
                         all_versions.append({
                             "printing_id": p['printing_id'],
@@ -170,6 +166,14 @@ class CardService:
                             "price": price,
                             "image_url": p.get('image_url')
                         })
+                    
+                    # Fetch valuations for all versions
+                    version_ids = [v['printing_id'] for v in all_versions]
+                    batch_valuations = await ValuationService.get_batch_valuations(version_ids)
+                    
+                    for v in all_versions:
+                        v_val = batch_valuations.get(v['printing_id'], {})
+                        v['price'] = v_val.get('valuation_avg', v['price'])
                 except Exception as inner_e:
                     print(f"⚠️ Versions fetch error: {inner_e}")
 

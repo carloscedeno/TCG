@@ -59,21 +59,47 @@ async def test_valuation_calculation_logic():
 
 
 @pytest.mark.asyncio
-async def test_valuation_fallback_to_aggregated():
-    """Verifica que hace fallback a aggregated_prices si no hay fuentes específicas."""
+async def test_valuation_fallback_to_ck():
+    """Verifica que si no hay precio de tienda, usa el de Card Kingdom como fallback."""
 
     sources_data = [
         {'source_id': 1, 'source_code': 'geekorium'},
         {'source_id': 2, 'source_code': 'cardkingdom'},
     ]
-    prices_data = []  # No specific source prices
-    agg_data = [{'avg_market_price_usd': 50.0}]
+    # Solo precio de Card Kingdom
+    prices_data = [
+        {'source_id': 2, 'price_usd': 50.0, 'url': 'https://www.cardkingdom.com/card'}
+    ]
+
+    mock_supabase = _make_supabase_mock(sources_data, prices_data)
+
+    with patch('src.api.services.valuation_service.supabase', mock_supabase):
+        result = await ValuationService.get_two_factor_valuation("test-id")
+
+        # Regla de negocio: store_price hereda market_price si es 0
+        assert result['store_price'] == 50.0
+        assert result['market_price'] == 50.0
+        assert result['valuation_avg'] == 50.0
+
+
+@pytest.mark.asyncio
+async def test_valuation_no_aggregated_fallback():
+    """Verifica que YA NO se usa aggregated_prices (Goldfish)."""
+
+    sources_data = [
+        {'source_id': 1, 'source_code': 'geekorium'},
+        {'source_id': 2, 'source_code': 'cardkingdom'},
+    ]
+    prices_data = []  # No source prices
+    agg_data = [{'avg_market_price_usd': 50.0}] # Legacy data present but should be ignored
 
     mock_supabase = _make_supabase_mock(sources_data, prices_data, agg_data)
 
     with patch('src.api.services.valuation_service.supabase', mock_supabase):
         result = await ValuationService.get_two_factor_valuation("test-id")
 
-        assert result['store_price'] == 50.0
-        assert result['market_price'] == 50.0
-        assert result['valuation_avg'] == 50.0
+        # Debería ser 0 porque quitamos el fallback a aggregated_prices
+        assert result['store_price'] == 0
+        assert result['market_price'] == 0
+        assert result['valuation_avg'] == 0
+

@@ -82,6 +82,7 @@ Artefactos del Compound step:
 - **✅ Estabilización de Checkout y Persistencia de Schema**: Resolución del error "Orden no encontrada". Adición de snapshotting de `product_name` en `order_items`. Configuración de RLS pública para rastreo de pedidos.
 - **✅ Optimización de Storage**: Depreciación del flujo de carga de comprobantes automatizado para preservar cuota de base de datos; transición a flujo manual asistido (WhatsApp).
 - **✅ Multi-Environment & Dynamic IDs**: Refactorización total para usar `VITE_SUPABASE_PROJECT_ID`. Despliegue de entorno DEV en GitHub Pages (`dev.geekorium.shop`) con segregación total de base de datos.
+- **✅ Regla "No Goldfish"**: Priorización absoluta de Card Kingdom sobre la tabla legacy `aggregated_prices` para valoraciones externas.
 
 ## 🚧 Features Pendientes
 

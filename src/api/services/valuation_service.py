@@ -15,6 +15,7 @@ class ValuationService:
             response = supabase.table('price_history').select(
                 'printing_id, price_usd, url, source_id'
             ).in_('printing_id', printing_ids)\
+             .eq('condition', 'Near Mint')\
              .order('price_entry_id', desc=True)\
              .limit(len(printing_ids) * 10)\
              .execute()
@@ -39,33 +40,21 @@ class ValuationService:
                 
                 for p in prices:
                     sid = p.get('source_id')
-                    try:
-                        source_code = source_map.get(sid, "").lower()
-                    except AttributeError:
-                        source_code = ""
+                    source_code = source_map.get(sid, "").lower()
                     
                     if not geek_price and source_code == 'geekorium':
                         geek_price = float(p.get('price_usd') or 0)
                     
-                    if not ck_price and (source_code == 'cardkingdom' or sid == 1):
+                    if not ck_price and source_code == 'cardkingdom':
                         ck_price = float(p.get('price_usd') or 0)
                         ck_url = p.get('url')
                     
                     if geek_price and ck_price:
                         break
                 
-                # Fallback to aggregated_prices
-                if not geek_price and not ck_price:
-                    fallback = agg_map.get(pid, 0.0)
-                    if fallback > 0:
-                        geek_price = fallback
-                        ck_price = fallback
+                # Removed fallback to aggregated_prices (Goldfish) as per user requirements
                 
-                val_avg = 0.0
-                if geek_price and ck_price:
-                    val_avg = (geek_price + ck_price) / 2
-                else:
-                    val_avg = geek_price or ck_price
+                val_avg = geek_price if geek_price > 0 else (ck_price or 0.0)
 
                 valuations[pid] = {
                     "store_price": geek_price,
@@ -81,13 +70,14 @@ class ValuationService:
             return {pid: {"store_price": 0.0, "market_price": 0.0, "valuation_avg": 0.0} for pid in printing_ids}
 
     @staticmethod
-    async def get_two_factor_valuation(printing_id: str) -> Dict[str, float]:
+    async def get_two_factor_valuation(printing_id: str) -> Dict[str, Any]:
         try:
             sources_resp = supabase.table('sources').select('source_id, source_code').execute()
             source_map = {s['source_id']: s['source_code'] for s in sources_resp.data} if sources_resp.data else {}
 
             response = supabase.table('price_history').select('price_usd, url, source_id')\
                 .eq('printing_id', printing_id)\
+                .eq('condition', 'Near Mint')\
                 .order('price_entry_id', desc=True)\
                 .limit(20)\
                 .execute()
@@ -100,7 +90,7 @@ class ValuationService:
             
             for p in prices:
                 sid = p.get('source_id')
-                source_code = source_map.get(sid)
+                source_code = source_map.get(sid, "").lower() if sid else ""
                 
                 if not geek_price and source_code == 'geekorium':
                     geek_price = float(p['price_usd'] or 0)
@@ -114,13 +104,7 @@ class ValuationService:
                 if geek_price and ck_price and ck_url:
                     break
             
-            if not geek_price or not ck_price:
-                agg = supabase.table('aggregated_prices').select('avg_market_price_usd')\
-                    .eq('printing_id', printing_id).execute()
-                if agg.data:
-                    fallback = float(agg.data[0]['avg_market_price_usd'] or 0)
-                    geek_price = geek_price or fallback
-                    ck_price = ck_price or fallback
+            # Removed fallback to aggregated_prices (Goldfish) to ensure purity of Card Kingdom data
 
             if not ck_url:
                 try:
@@ -148,7 +132,7 @@ class ValuationService:
                 "store_price": geek_price,
                 "market_price": ck_price,
                 "market_url": ck_url,
-                "valuation_avg": (geek_price + ck_price) / 2 if (geek_price and ck_price) else (geek_price or ck_price)
+                "valuation_avg": geek_price if geek_price > 0 else (ck_price or 0.0)
             }
         except Exception:
             return {"store_price": 0.0, "market_price": 0.0, "valuation_avg": 0.0}

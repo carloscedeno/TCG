@@ -237,7 +237,7 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
       console.log('[Supabase] Falling back for details or missing versions');
       const { data: sbData, error: sbError } = await supabase
         .from('card_printings')
-        .select('*, cards(*), sets(*), aggregated_prices(avg_market_price_usd)')
+        .select('*, cards(*), sets(*)')
         .eq('printing_id', dbPrintingId)
         .single();
 
@@ -246,7 +246,7 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
         if (!data) throw sbError;
       } else {
         // Build or supplement data
-        const marketPrice = sbData.aggregated_prices?.[0]?.avg_market_price_usd || 0;
+        const marketPrice = 0; // Fallback to 0, backend should provide this
 
         // Basic card info
         const baseData = {
@@ -287,7 +287,7 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
           if (cardIdForVersions) {
             const { data: versionsData } = await supabase
               .from('card_printings')
-              .select('*, sets(*), aggregated_prices(avg_market_price_usd)')
+              .select('*, sets(*)')
               .eq('card_id', cardIdForVersions);
 
             if (versionsData) {
@@ -301,8 +301,7 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                   rarity: v.rarity,
                   image_url: v.image_url,
                   stock: v.stock || 0,
-                  prices: v.prices,
-                  aggregated_prices: v.aggregated_prices
+                  prices: v.prices
                 };
 
                 const finishes = v.finishes || (v.is_foil ? ['foil'] : ['nonfoil']);
@@ -320,7 +319,7 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
 
                 if (pushesNonFoil) {
                   const isSynthetic = baseIsFoil && (pushesFoil || pushesEtched);
-                  const priceToUse = Number(v.prices?.usd || v.prices?.eur || v.aggregated_prices?.[0]?.avg_market_price_usd || 0);
+                  const priceToUse = Number(v.prices?.usd || v.prices?.eur || 0);
                   expandedVersions.push({
                     ...baseVersion,
                     printing_id: isSynthetic ? `${v.printing_id}-nonfoil` : v.printing_id,
@@ -333,7 +332,7 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
 
                 if (pushesFoil) {
                   const isSynthetic = !baseIsFoil && (pushesNonFoil || pushesEtched);
-                  const priceToUseFoil = Number(v.prices?.usd_foil || v.prices?.eur_foil || v.aggregated_prices?.[0]?.avg_market_price_usd || 0);
+                  const priceToUseFoil = Number(v.prices?.usd_foil || v.prices?.eur_foil || 0);
                   expandedVersions.push({
                     ...baseVersion,
                     printing_id: isSynthetic ? `${v.printing_id}-foil` : v.printing_id,
@@ -346,7 +345,7 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
 
                 if (pushesEtched) {
                   const isSynthetic = v.finish !== 'etched' && (pushesNonFoil || pushesFoil);
-                  const priceToUseEtched = Number(v.prices?.usd_etched || v.aggregated_prices?.[0]?.avg_market_price_usd || 0);
+                  const priceToUseEtched = Number(v.prices?.usd_etched || 0);
                   expandedVersions.push({
                     ...baseVersion,
                     printing_id: isSynthetic ? `${v.printing_id}-etched` : v.printing_id,

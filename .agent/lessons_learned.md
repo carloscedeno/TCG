@@ -366,3 +366,16 @@ ear_mint, lightly_played) deben normalizarse en el backend a cÃ³digos internos
 - **Problema**: El uso de IDs de Supabase hardcodeados en URLs de Edge Functions impedía que la rama `dev` conectara con su propia instancia de base de datos.
 - **Solución**: Reemplazar todos los IDs estáticos por la variable de entorno `VITE_SUPABASE_PROJECT_ID`.
 - **Lección**: Para sistemas multi-entorno, el ID del proyecto debe tratarse como un secreto dinámico inyectado por el hoster, igual que la URL y la Anon Key. Esto garantiza que el frontend siempre hable con el backend correcto según su origen.
+
+### 39. Priorización de Card Kingdom sobre Goldfish (Marzo 2026)
+
+- **Problema**: Inconsistencias de precios por uso de múltiples fuentes de mercado externo sin una jerarquía clara.
+- **Decisión**: Card Kingdom es ahora la fuente de verdad única para precios de mercado externo. Se eliminó el uso de la tabla `aggregated_prices` (Goldfish).
+- **Lección**: Mantener sistemas de fallback complejos a fuentes de datos obsoletas introduce "ruido" en la valoración y dificulta el debugging. La simplicidad de una sola fuente (CK) mejora la fiabilidad.
+- **Implementación**: Si el precio de la tienda (`Geekorium`) es nulo, el sistema siempre debe recurrir al precio actual de Card Kingdom (`price_history`).
+
+### 40. Limpieza de Selects en Supabase (Frontend & Backend) — Marzo 2026
+
+- **Problema**: Al realizar cambios en la lógica de negocio (como remover una tabla), es fácil olvidar limpiar los strings de `select()` en el frontend (`api.ts`) o backend.
+- **Lección**: Los errores de "Property X does not exist" en el frontend suelen deberse a proyecciones incompletas en la llamada de Supabase. Siempre verificar que todos los campos necesarios (incluyendo `stock`, `is_foil`, etc.) estén presentes en el string de `select` tras una refactorización.
+- **Acción**: Se restauró la columna `stock` en `fetchCardDetails` que se había omitido accidentalmente durante la limpieza de Goldfish.
