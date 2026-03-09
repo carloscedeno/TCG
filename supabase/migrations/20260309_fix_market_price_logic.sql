@@ -1,5 +1,6 @@
 -- Migration to fix market price logic in mv_unique_cards and get_latest_ck_price
 -- Optimized version to prevent timeouts by using CTEs instead of scalar function calls in the view
+-- Includes DROP FUNCTION to handle return type changes
 
 BEGIN;
 
@@ -74,7 +75,10 @@ CREATE INDEX idx_mv_unique_cards_release_date ON public.mv_unique_cards(release_
 CREATE INDEX idx_mv_unique_cards_game_id ON public.mv_unique_cards(game_id);
 CREATE INDEX idx_mv_unique_cards_trgm ON public.mv_unique_cards USING gin (card_name gin_trgm_ops);
 
--- 4. Re-create the RPC function (no changes to logic, just re-binding to new MV)
+-- 4. Re-create the RPC function
+-- IMPORTANT: Must drop first because return types (derived from MV) might have changed
+DROP FUNCTION IF EXISTS public.get_unique_cards_optimized(text,integer[],text[],text[],text[],text[],integer,integer,integer,integer,text);
+
 CREATE OR REPLACE FUNCTION public.get_unique_cards_optimized(
   search_query TEXT DEFAULT NULL,
   game_ids INTEGER[] DEFAULT NULL,
