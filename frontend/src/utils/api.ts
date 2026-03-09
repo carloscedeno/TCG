@@ -221,7 +221,17 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
     // 1. Try fetching from API first
     if (API_BASE) {
       try {
-        const apiUrl = `${API_BASE}/api/cards/${dbPrintingId}`;
+        // Ensure we don't double up on /api
+        let base = API_BASE.endsWith('/') ? API_BASE.slice(0, -1) : API_BASE;
+
+        // If it's a Supabase function and we are missing the function name, it might be the issue.
+        // But we trust API_BASE configuration. 
+        // We'll try to be smart about the /api prefix.
+        const hasApiPrefix = base.endsWith('/api') || base.endsWith('/tcg-api');
+        const apiUrl = hasApiPrefix
+          ? `${base}/cards/${dbPrintingId}`
+          : `${base}/api/cards/${dbPrintingId}`;
+
         const response = await fetch(apiUrl);
         if (response.ok) {
           const json = await response.json();

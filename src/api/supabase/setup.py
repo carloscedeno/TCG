@@ -525,6 +525,7 @@ class SupabaseSetup:
                 NOW() as last_updated
             FROM price_history ph
             WHERE ph.timestamp > NOW() - INTERVAL '7 days'
+              AND ph.source_code = 'CARDKINGDOM'
             GROUP BY ph.printing_id, ph.condition_id
             ON CONFLICT (printing_id, condition_id) 
             DO UPDATE SET

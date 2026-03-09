@@ -1,0 +1,65 @@
+﻿C:\Users\carlo\.antigravity\extensions\gitguardian-secret-secur
+ity.gitguardian-0.20.0-universal\ggshield-internal\ggshield-1.4
+8.0-x86_64-pc-windows-msvc\ggshield.exe : 608 files will be 
+scanned. Do you want to continue? [y/N]:Skipped 
+frontend/output.log: can't detect encoding
+At line:1 char:1
++ C:\Users\carlo\.antigravity\extensions\gitguardian-secret-sec
+urity.gi ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~
+    + CategoryInfo          : NotSpecified: (608 files will .. 
+   .detect encoding:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Skipped frontend/out26.txt: can't detect encoding
+Skipped frontend/dist/fonts/Bogue%20Medium.ttf: can't detect 
+encoding
+Skipped .git/index: can't detect encoding
+Skipped frontend/public/fonts/Rubik-Italic.ttf: can't detect 
+encoding
+Skipped frontend/result_err.txt: can't detect encoding
+Skipped frontend/debug.log: can't detect encoding
+Skipped frontend/admin_test.txt: can't detect encoding
+Skipped frontend/public/fonts/Rubik-Regular.ttf: can't detect 
+encoding
+Skipped frontend/dist/fonts/Rubik-Regular.ttf: can't detect 
+encoding
+Skipped frontend/dist/fonts/Daito-NormalMedium%20%281%29.otf: 
+can't detect encoding
+Skipped data/cache/ck_pricelist.json: content is over 
+1,048,576 bytes
+Skipped frontend/test_results.txt: can't detect encoding
+Skipped frontend/public/fonts/Bogue%20Medium.ttf: can't detect 
+encoding
+Skipped frontend/test_final_check.txt: can't detect encoding
+Skipped frontend/out29.txt: can't detect encoding
+Skipped frontend/test_output.txt: can't detect encoding
+Skipped frontend/test_output3.txt: can't detect encoding
+Skipped frontend/test_full_output.txt: can't detect encoding
+Skipped frontend/log3.txt: can't detect encoding
+Skipped frontend/out25.txt: can't detect encoding
+Skipped 
+frontend/public/fonts/Daito-NormalMedium%20%281%29.otf: can't 
+detect encoding
+Skipped frontend/log2.txt: can't detect encoding
+Skipped frontend/admin_test.log: can't detect encoding
+Skipped frontend/public/fonts/Rubik-SemiBold.ttf: can't detect 
+encoding
+Skipped frontend/dist/fonts/Rubik-SemiBold.ttf: can't detect 
+encoding
+Skipped frontend/test_output2.txt: can't detect encoding
+Skipped frontend/out28.txt: can't detect encoding
+Skipped frontend/guest_test.log: can't detect encoding
+Skipped frontend/prod_test.log: can't detect encoding
+Skipped frontend/test_error.log: can't detect encoding
+Skipped frontend/dist/fonts/Rubik-Italic.ttf: can't detect 
+encoding
+Warning: Rate-limit hit, retrying in 3 seconds
+Warning: Rate-limit hit, retrying in 2 seconds
+Error: Scanning failed: 
+HTTPSConnectionPool(host='api.gitguardian.com', port=443): Max 
+retries exceeded with url: /v1/multiscan?all_secrets=True 
+(Caused by SSLError(SSLEOFError(8, 'EOF occurred in violation 
+of protocol (_ssl.c:2426)')))
+ 

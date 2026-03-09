@@ -29,9 +29,8 @@ class ValuationService:
                 if pid in grouped_prices:
                     grouped_prices[pid].append(p)
             
-            # Fetch aggregated_prices for fallback
-            agg_resp = supabase.table('aggregated_prices').select('printing_id, avg_market_price_usd').in_('printing_id', printing_ids).execute()
-            agg_map = {a['printing_id']: float(a.get('avg_market_price_usd') or 0) for a in agg_resp.data} if agg_resp.data else {}
+            # Removed aggregated_prices for fallback
+            agg_map = {}
 
             for pid, prices in grouped_prices.items():
                 geek_price = 0.0
@@ -52,15 +51,17 @@ class ValuationService:
                     if geek_price and ck_price:
                         break
                 
-                # Removed fallback to aggregated_prices (Goldfish) as per user requirements
+                # Simplified valuation rules as per user instructions
+                market_price = ck_price
                 
-                val_avg = geek_price if geek_price > 0 else (ck_price or 0.0)
+                # Business rule: If store_price is missing (0), use Card Kingdom price as the store price
+                final_store_price = geek_price if geek_price > 0 else market_price
 
                 valuations[pid] = {
-                    "store_price": geek_price,
-                    "market_price": ck_price,
+                    "store_price": final_store_price,
+                    "market_price": market_price,
                     "market_url": ck_url,
-                    "valuation_avg": val_avg
+                    "valuation_avg": (final_store_price + market_price) / 2 if (final_store_price > 0 and market_price > 0) else (final_store_price or market_price or 0.0)
                 }
                 
             return valuations
@@ -77,7 +78,6 @@ class ValuationService:
 
             response = supabase.table('price_history').select('price_usd, url, source_id')\
                 .eq('printing_id', printing_id)\
-                .eq('condition', 'Near Mint')\
                 .order('price_entry_id', desc=True)\
                 .limit(20)\
                 .execute()
@@ -93,7 +93,7 @@ class ValuationService:
                 source_code = source_map.get(sid, "").lower() if sid else ""
                 
                 if not geek_price and source_code == 'geekorium':
-                    geek_price = float(p['price_usd'] or 0)
+                    geek_price = float(p.get('price_usd') or 0)
                 
                 if not ck_price and source_code == 'cardkingdom':
                     ck_price = float(p.get('price_usd') or 0)
@@ -104,7 +104,11 @@ class ValuationService:
                 if geek_price and ck_price and ck_url:
                     break
             
-            # Removed fallback to aggregated_prices (Goldfish) to ensure purity of Card Kingdom data
+            # Simplified valuation rules as per user instructions
+            market_price = ck_price
+            
+            # Business rule: If store_price is missing (0), use Card Kingdom price as the store price
+            final_store_price = geek_price if geek_price > 0 else market_price
 
             if not ck_url:
                 try:
@@ -129,10 +133,10 @@ class ValuationService:
                     print(f"Error generating fallback URL: {e}")
 
             return {
-                "store_price": geek_price,
-                "market_price": ck_price,
+                "store_price": final_store_price,
+                "market_price": market_price,
                 "market_url": ck_url,
-                "valuation_avg": geek_price if geek_price > 0 else (ck_price or 0.0)
+                "valuation_avg": (final_store_price + market_price) / 2 if (final_store_price > 0 and market_price > 0) else (final_store_price or market_price or 0.0)
             }
         except Exception:
             return {"store_price": 0.0, "market_price": 0.0, "valuation_avg": 0.0}

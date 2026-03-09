@@ -2,9 +2,14 @@ import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const environment = import.meta.env.VITE_ENVIRONMENT || 'production';
+const branch = import.meta.env.VITE_SUPABASE_BRANCH || 'main';
 
 if (!supabaseUrl || !supabaseAnonKey) {
-    console.warn('Supabase environment variables are missing. Some features may not work in production if not configured in your deployment platform.');
+    console.warn(`[Supabase] Environment variables are missing for ${environment} (${branch}).`);
+} else {
+    console.log(`[Supabase] Initializing client for ${environment} mode on branch '${branch}'...`);
+    console.log(`[Supabase] URL: ${supabaseUrl}`);
 }
 
 // Helper to create a recursive proxy that throws a descriptive error when any property is accessed or called

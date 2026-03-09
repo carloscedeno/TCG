@@ -52,9 +52,19 @@ serve(async (req: Request) => {
     let path = url.pathname
     const method = req.method
 
-    // Remove the function name prefix (e.g., '/tcg-api') if present
-    if (path.startsWith('/tcg-api')) {
-      path = path.replace('/tcg-api', '')
+    // Remove the function name prefix if present (flexible detection)
+    const functionPrefixes = ['/tcg-api', '/api'];
+    for (const prefix of functionPrefixes) {
+      if (path.startsWith(prefix)) {
+        // Only remove if it's followed by another slash or end of string
+        // to avoid removing the beginning of a legitimate route like /api/cards
+        const nextChar = path[prefix.length];
+        if (!nextChar || nextChar === '/') {
+          path = path.slice(prefix.length);
+          if (path === '') path = '/';
+          break;
+        }
+      }
     }
 
     // Extract auth token from request
@@ -383,19 +393,18 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
           finishes,
           prices,
           sets(set_name, set_code, release_date),
-          cards(rarity),
-          aggregated_prices(avg_market_price_usd),
-          products(price)
+          cards(rarity, card_name),
+          products(price, stock)
         `)
         .eq('card_id', cardData.card_id)
         .order('sets(release_date)', { ascending: false });
 
-      // Fetch latest price for this specific printing
+      // Fetch latest price from price_history (Card Kingdom or Store)
       const { data: priceData } = await supabase
-        .from('aggregated_prices')
-        .select('avg_market_price_usd')
+        .from('price_history')
+        .select('price_usd')
         .eq('printing_id', printingId)
-        .order('last_updated', { ascending: false })
+        .order('timestamp', { ascending: false })
         .limit(1)
         .single();
 
@@ -407,7 +416,7 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
         .limit(1)
         .single();
 
-      const marketPrice = priceData?.avg_market_price_usd || 0;
+      const marketPrice = priceData?.price_usd || 0;
       const storePrice = productData?.price || 0;
 
       return {
@@ -436,10 +445,10 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
         colors: cardData.colors || [],
         card_faces: cardData.card_faces || null,
         all_versions: (allVersions || []).flatMap((v: any) => {
-          // aggregated_prices and products are arrays, get first element
-          const marketPrice = v.aggregated_prices?.[0]?.avg_market_price_usd || 0;
+          // Using products for store price, price_history should be queried separately if needed per-version
+          // for now we trust the prices field in card_printings or use products
           const storePrice = v.products?.[0]?.price || 0;
-          const displayPrice = storePrice || marketPrice;
+          const displayPrice = storePrice || Number(v.prices?.usd || 0);
 
           const baseEntry = {
             printing_id: v.printing_id,
@@ -521,6 +530,13 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
           return entries;
         })
       };
+    }
+    // Handle the case where someone calls /cards/:id without /api prefix
+    else if (path.startsWith('/cards/')) {
+      const printingId = path.split('/').pop();
+      // Redirect or handle same as above - for simplicity, let's just make the main handler smarter
+      // But since we are already inside handleCardsEndpoint, it means path started with /api/cards
+      // unless we changed the caller logic.
     }
   }
 

@@ -23,12 +23,12 @@ class CardService:
             # We filter for 'en' printings by default to keep it clean.
             select_parts = [
                 'card_id, card_name, type_line, rarity, game_id, colors',
-                'card_printings(printing_id, image_url, sets(set_name, set_code, release_date), aggregated_prices(avg_market_price_usd))'
+                'card_printings(printing_id, image_url, sets(set_name, set_code, release_date))'
             ]
             
             # If set_name or date filters are applied, we need an inner join on printings
             if set_name or year_from or year_to:
-                select_parts[1] = 'card_printings!inner(printing_id, image_url, sets!inner(set_name, set_code, release_date), aggregated_prices(avg_market_price_usd))'
+                select_parts[1] = 'card_printings!inner(printing_id, image_url, sets!inner(set_name, set_code, release_date))'
 
             query = supabase.table('cards').select(
                 ', '.join(select_parts),
