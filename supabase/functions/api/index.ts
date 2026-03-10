@@ -52,19 +52,24 @@ serve(async (req: Request) => {
     let path = url.pathname
     const method = req.method
 
-    // Remove only the old function name prefix if present
-    const functionPrefixes = ['/tcg-api', '/api'];
+    // Remove only the function name prefix if present
+    const functionPrefixes = ['/functions/v1/api', '/tcg-api', '/api'];
     for (const prefix of functionPrefixes) {
       if (path.startsWith(prefix)) {
-        // Only remove if it's followed by another slash or end of string
-        // to avoid removing the beginning of a legitimate route like /api/cards
         const nextChar = path[prefix.length];
         if (!nextChar || nextChar === '/') {
           path = path.slice(prefix.length);
-          if (path === '') path = '/';
           break;
         }
       }
+    }
+
+    // Standardize path: remove trailing slash and ensure it starts with /api/
+    path = path.replace(/\/$/, '');
+    if (!path) path = '/';
+
+    if (path !== '/' && !path.startsWith('/api/')) {
+      path = '/api' + (path.startsWith('/') ? '' : '/') + path;
     }
 
     // Extract auth token from request
@@ -89,7 +94,7 @@ serve(async (req: Request) => {
 
     let response
 
-    if (path === '/' || path === '/tcg-api' || path === '/tcg-api/') {
+    if (path === '/' || path === '/api' || path === '/api/') {
       response = {
         message: 'TCG API - Trading Card Game Price Aggregation System',
         version: '1.0.0',
@@ -332,9 +337,12 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
       // Map to frontend format
       const mappedCards = (data || []).map((row: any) => {
         // Business rule: CK NM is the single source of truth for pricing
-        const mPrice = row.avg_market_price_usd || 0;
-        const finalPrice = mPrice;
-        const vAvg = mPrice;
+        // Fallback logic: Use foil price if non-foil is missing
+        const mPriceNormal = row.avg_market_price_usd || 0;
+        const mPriceFoil = row.avg_market_price_foil_usd || 0;
+
+        const finalPrice = mPriceNormal > 0 ? mPriceNormal : mPriceFoil;
+        const vAvg = finalPrice;
 
         return {
           card_id: row.printing_id,
@@ -350,7 +358,8 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
           colors: row.colors,
           release_date: row.release_date,
           valuation: {
-            market_price: mPrice,
+            market_price: mPriceNormal,
+            market_price_foil: mPriceFoil,
             store_price: row.store_price || 0,
             valuation_avg: vAvg,
             market_url: `https://www.cardkingdom.com/mtg/${sanitizeSlug(row.set_name)}/${sanitizeSlug(row.card_name)}`
@@ -400,7 +409,9 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
           is_foil,
           finishes,
           prices,
-          cards(rarity, card_name, avg_market_price_usd),
+          avg_market_price_usd,
+          avg_market_price_foil_usd,
+          cards(rarity, card_name),
           sets(set_name, set_code, release_date)
         `)
         .eq('card_id', cardData.card_id)
@@ -413,29 +424,26 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
         .select('printing_id, price, stock, id')
         .in('printing_id', versionPids);
 
-      // Fetch latest price from price_history (Card Kingdom or Store)
-      // Relying on printing_id for accuracy; removed restrictive flags
-      const { data: priceData } = await supabase
-        .from('price_history')
-        .select('price_usd')
-        .eq('printing_id', printingId)
-        .order('timestamp', { ascending: false })
-        .limit(1)
-        .maybeSingle();
+      // Fetch latest price from price_history (Card Kingdom NM) - both foil and non-foil
+      const { data: marketPriceData } = await supabase
+        .rpc('get_latest_ck_price', { p_printing_id: printingId, p_is_foil: false });
+
+      const { data: marketPriceFoilData } = await supabase
+        .rpc('get_latest_ck_price', { p_printing_id: printingId, p_is_foil: true });
 
       // Fetch store price from products table
       const { data: productData } = await supabase
         .from('products')
         .select('price, stock, id')
         .eq('printing_id', printingId)
-        .limit(1)
-        .single();
+        .maybeSingle();
 
-      const marketPrice = priceData?.price_usd || 0;
+      const marketPrice = marketPriceData || 0;
+      const marketPriceFoil = marketPriceFoilData || 0;
 
-      // Business rule: CK NM is the single source of truth
-      const finalPrice = marketPrice;
-      const valuationAvg = marketPrice;
+      // Business rule: CK NM is the single source of truth. Fallback to foil if non-foil missing.
+      const finalPrice = marketPrice > 0 ? marketPrice : marketPriceFoil;
+      const valuationAvg = finalPrice;
 
       return {
         card_id: printing.printing_id,
@@ -458,6 +466,7 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
         valuation: {
           store_price: productData?.price || 0,
           market_price: marketPrice,
+          market_price_foil: marketPriceFoil,
           market_url: `https://www.cardkingdom.com/mtg/${sanitizeSlug(setData.set_name)}/${sanitizeSlug(cardData.card_name)}`,
           valuation_avg: valuationAvg
         },
@@ -467,12 +476,14 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
         all_versions: (allVersions || []).flatMap((v: any) => {
           const vProd = allVersionProducts?.find((p: any) => p.printing_id === v.printing_id);
           const vStorePrice = vProd?.price || 0;
-          const vMarketPrice = v.cards?.avg_market_price_usd || 0;
+          const vMarketPrice = v.avg_market_price_usd || 0;
+          const vMarketPriceFoil = v.avg_market_price_foil_usd || 0;
 
-          const vFinalPrice = vStorePrice > 0 ? vStorePrice : vMarketPrice;
-          const vValAvg = (vStorePrice > 0 && vMarketPrice > 0)
-            ? (vStorePrice + vMarketPrice) / 2
-            : (vStorePrice || vMarketPrice || 0);
+          const vFinalMarket = vMarketPrice > 0 ? vMarketPrice : vMarketPriceFoil;
+          const vFinalPrice = vStorePrice > 0 ? vStorePrice : vFinalMarket;
+          const vValAvg = (vStorePrice > 0 && vFinalMarket > 0)
+            ? (vStorePrice + vFinalMarket) / 2
+            : (vStorePrice || vFinalMarket || 0);
 
           const baseEntry = {
             printing_id: v.printing_id,
@@ -482,6 +493,7 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
             rarity: v.cards?.rarity || 'common',
             price: vFinalPrice,
             market_price: vMarketPrice,
+            market_price_foil: vMarketPriceFoil,
             store_price: vStorePrice,
             valuation_avg: vValAvg,
             image_url: v.image_url || '',
@@ -491,16 +503,11 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
 
           const finishes = v.finishes || (v.is_foil ? ['foil'] : ['nonfoil']);
 
-          const hasNormalPrice = v.prices?.usd || v.prices?.eur;
-          const hasFoilPrice = v.prices?.usd_foil || v.prices?.eur_foil;
-          const foilPrice = parseFloat(v.prices?.usd_foil || '0') || 0;
-          const hasEtchedPrice = v.prices?.usd_etched != null;
-
           const entries: any[] = [];
 
-          const pushesNonFoil = finishes.includes('nonfoil') || (hasNormalPrice && !finishes.includes('foil'));
-          const pushesFoil = finishes.includes('foil') || hasFoilPrice;
-          const pushesEtched = finishes.includes('etched') || hasEtchedPrice;
+          const pushesNonFoil = finishes.includes('nonfoil') || (!finishes.includes('foil'));
+          const pushesFoil = finishes.includes('foil');
+          const pushesEtched = finishes.includes('etched');
 
           const baseIsFoil = !!v.is_foil || v.finish === 'foil';
 
@@ -519,7 +526,6 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
             entries.push({
               ...baseEntry,
               printing_id: isSynthetic ? `${v.printing_id}-foil` : v.printing_id,
-              price: foilPrice || vFinalPrice,
               finish: 'foil',
               is_foil: true
             });
@@ -530,7 +536,6 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
             entries.push({
               ...baseEntry,
               printing_id: isSynthetic ? `${v.printing_id}-etched` : v.printing_id,
-              price: parseFloat(v.prices?.usd_etched || '0') || vMarketPrice,
               finish: 'etched',
               is_foil: true
             });

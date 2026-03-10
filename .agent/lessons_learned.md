@@ -389,3 +389,34 @@ ear_mint, lightly_played) deben normalizarse en el backend a cÃ³digos internos
   - Revertir cualquier cambio en el nombre de la marca ("Geekorium", "Geekorium El Emporio") en el frontend y servicios de email.
 - **LecciÃ³n**: La simplicidad en los precios agiliza la operaciÃ³n. Nunca asumir que el branding debe "profesionalizarse" si el usuario no lo pide; respetar la identidad establecida es crÃ­tico.
 - **Regla Derivada**: `LEYES_DEL_SISTEMA.md` -> Regla 1 (Precios de Geekorium): Solo precios NM de Card Kingdom.
+392:
+393: ### 42. High-Performance SQL Bulk Updates (Marzo 2026)
+394:
+395: - **Problema**: Large `UPDATE` statements using correlated subqueries cause statement timeouts and database lock contention on tables with 100k+ rows.
+
+### 42. High-Performance SQL Bulk Updates (Marzo 2026)
+
+- **Problema**: Large `UPDATE` statements using correlated subqueries cause statement timeouts and database lock contention on tables with 100k+ rows.
+- **Causa RaÃ­z**: Nested loops over the target table and the subquery for every row.
+- **SoluciÃ³n**: Use `UPDATE FROM` with a Common Table Expression (CTE). Pre-calculate all prices in memory and join them to the target table in a single pass.
+- **Regla Derivada**: Bulk metadata updates in Supabase must use the `CTE + UPDATE FROM` pattern.
+
+### 43. Defensive API Path Normalization (Marzo 2026)
+
+- **Problema**: Edge Functions returning 400 or 500 errors intermittently due to unexpected URL prefixes (e.g., `/functions/v1/api/`) or trailing slashes added by some clients/proxies.
+- **SoluciÃ³n**: Implement a robust "strip and normalized" loop at the start of the Edge Function to remove multiple prefixes and standardize endpoints to a base path (e.g., `/api/sets`).
+- **Regla Derivada**: Edge Functions must be agnostic to deployment-specific URL prefixes.
+
+### 44. ConexiÃ³n Segura a Supabase Pooler (Marzo 2026)
+
+- **Problema**: "Connection timed out" o "Host not found" al intentar conectar scripts de Python externos a la DB de producciÃ³n.
+- **Causa**: Intentar usar el host del dashboard o la IP directa que puede estar bloqueada o rotada.
+- **SoluciÃ³n**: Usar el **Transaction Pooler** (Puerto 5432 o 6543). El host debe ser `[region].pooler.supabase.com` y el usuario DEBE incluir el Project Ref (`postgres.[project-ref]`).
+- **LecciÃ³n**: Siempre configurar el `DATABASE_URL` con el pooler para scripts de mantenimiento masivo de larga duraciÃ³n.
+
+### 45. Estrategia de Batched Updates para DenormalizaciÃ³n (Marzo 2026)
+
+- **Problema**: Actualizar columnas denormalizadas (`avg_market_price_usd`) en una tabla de 200k+ registros fallaba consistentemente por `statement timeout`.
+- **Causa**: El planificador de Postgres intentaba un Sequential Scan masivo con subconsultas correlacionadas.
+- **SoluciÃ³n**: Implementar un script de Python que procese la tabla por IDs primarios en lotes (ej. 1,000 registros). Esto libera el bloqueo de tabla entre lotes y evita que el proceso supere el lÃ­mite de tiempo de una transacciÃ³n individual.
+- **LecciÃ³n**: Si una migraciÃ³n SQL tarda mÃ¡s de 30s en Postgres de Supabase, no forzar el timeout; mover la lÃ³gica a un batch script externo.

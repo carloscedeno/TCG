@@ -426,3 +426,48 @@ eplace) para nÃºmero de telÃ©fono venezolano, cÃ©dula de identidad y nombr
 - `AGENTS.md` â†’ Feature de Precios Simplificados marcada como completada
 - `frontend/src/` y `email_service.py` â†’ Branding restaurado a "Geekorium"
 **Regla derivada:** Los precios de Geekorium son estrictamente Card Kingdom NM. El branding original es sagrado.
+
+## 2026-03-10 — Optimización de Migración de Precios (High Performance)
+
+**QuÃ© pasÃ³:** Se optimizÃ³ la migracÃ³n de precios para evitar bloqueos en la base de datos y se reparÃ³ la lÃ³gica de ruteo de la API.
+**Problema encontrado:** MigraciÃ³n fallaba por tiempos de espera (`statement timeout`) y la API devolvÃ­a 400 por prefijos en la URL.
+**Causa raÃ­z:** Consultas SQL "loquillas" (sub-queries correlacionadas) y ruteo rÃ­gido en la funciÃ³n Edge.
+**Lo que cambiÃ³:**
+
+- `lessons_learned.md` â†’ Lecciones #42 (SQL Performance) y #43 (API Routing).
+- `supabase/migrations/20260310_...sql` â†’ Uso de CTEs y `UPDATE FROM`.
+- `supabase/functions/api/index.ts` â†’ Ruteo defensivo y restauraciÃ³n de performance.
+**Regla derivada:** Las migraciones masivas en Supabase DEBEN usar `UPDATE FROM` con CTEs.
+
+## 2026-03-11 â€” SincronizaciÃ³n de Precios y OptimizaciÃ³n de DB (Card Kingdom)
+
+**QuÃ© pasÃ³:** Se implementÃ³ la sincronizaciÃ³n completa de precios de Card Kingdom (Foil y Non-Foil) en el entorno de producciÃ³n. Se resolvieron problemas de conexiÃ³n con el Pooler de Supabase y se evitÃ³ el timeout mediante una estrategia de actualizaciÃ³n por lotes (Batched Updates).
+
+**Problema encontrado:**
+
+1. Error de resoluciÃ³n de host al usar la IP directa de la DB.
+2. `statement timeout` al intentar actualizar 100k+ registros con una subconsulta correlacionada en un solo bloque.
+3. El RPC `exec_sql` no estaba disponible en producciÃ³n.
+
+**Causa raÃ­z:**
+
+1. El Pooler de Supabase requiere el host `aws-0-us-west-2.pooler.supabase.com` y el usuario con formato `postgres.project_ref`.
+2. Las subconsultas correlacionadas son O(N^2) en Postgres; saturaban el CPU.
+3. Restricciones de seguridad del proyecto en producciÃ³n.
+
+**Lo que cambiÃ³:**
+
+- `lessons_learned.md` â†’ Lecciones #44 (Supabase Pooler Connection) y #45 (Batched Update Strategy).
+- `.env` â†’ `DATABASE_URL` para producciÃ³n unificada.
+- `scripts/sync_cardkingdom_api.py` â†’ LÃ³gica de actualizaciÃ³n directa vÃ­a `psycopg2`.
+- `scripts/update_prices_batched.py` â†’ Creado para backfill masivo de precios denormalizados.
+- `scripts/apply_final_pricing_fix.py` â†’ ConsolidaciÃ³n de cambios en MV y RPCs.
+- `AGENTS.md` â†’ MÃ³dulos de pricing marcados como completados.
+
+**Artefacto reutilizable:**
+
+- Script de actualizaciÃ³n por lotes `update_prices_batched.py`.
+- PatrÃ³n de conexiÃ³n a Pooler en `.env`.
+
+**Regla derivada:**
+> Para actualizaciones de metadatos en tablas masivas (>100k filas), usar siempre actualizaciones por lotes (Batch Size ~1000) o CTEs con `UPDATE FROM` para evitar bloqueos y timeouts.
