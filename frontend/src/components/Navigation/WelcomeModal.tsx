@@ -77,7 +77,7 @@ export const WelcomeModal: React.FC = () => {
                                 <img
                                     src="/branding/Logo.png"
                                     alt="El Emporio"
-                                    className="relative w-32 h-32 rounded-full border-4 border-[#00AEB4]/30 shadow-2xl mb-4 group-hover:scale-105 transition-transform duration-500"
+                                    className="relative w-32 h-32 object-contain shadow-2xl mb-4 group-hover:scale-105 transition-transform duration-500"
                                 />
                             </div>
                             {/* Est. 2025 — Rubik SemiBold */}
@@ -106,7 +106,7 @@ export const WelcomeModal: React.FC = () => {
                         <img
                             src="/branding/Logo.png"
                             alt="Geekorium"
-                            className="h-14 w-14 rounded-full object-contain object-left mb-4 border-2 border-[#00AEB4]/30"
+                            className="h-14 w-14 object-contain object-left mb-4"
                         />
 
                         <div className="h-1 w-20 bg-[#00AEB4] mb-5 rounded-full shadow-[0_0_10px_#00AEB4]" />
