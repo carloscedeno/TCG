@@ -419,4 +419,11 @@ ear_mint, lightly_played) deben normalizarse en el backend a cÃ³digos internos
 - **Problema**: Actualizar columnas denormalizadas (`avg_market_price_usd`) en una tabla de 200k+ registros fallaba consistentemente por `statement timeout`.
 - **Causa**: El planificador de Postgres intentaba un Sequential Scan masivo con subconsultas correlacionadas.
 - **SoluciÃ³n**: Implementar un script de Python que procese la tabla por IDs primarios en lotes (ej. 1,000 registros). Esto libera el bloqueo de tabla entre lotes y evita que el proceso supere el lÃ­mite de tiempo de una transacciÃ³n individual.
-- **LecciÃ³n**: Si una migraciÃ³n SQL tarda mÃ¡s de 30s en Postgres de Supabase, no forzar el timeout; mover la lÃ³gica a un batch script externo.
+- **Lección**: Si una migración SQL tarda más de 30s en Postgres de Supabase, no forzar el timeout; mover la lógica a un batch script externo.
+
+### 46. Correct Denormalization Level (Per-Printing vs. Per-Card) — 2026-03-10
+
+- **Problema**: Al denormalizar precios (`avg_market_price_usd`) en la tabla `cards`, todas las versiones de una carta (ej. Pandemonium de *Exodus* vs. *The List*) mostraban el mismo precio, perdiendo la precisión por versión.
+- **Causa Raíz**: Una carta (`card_id`) puede tener múltiples impresiones (`printing_id`) con precios drásticamente diferentes. Denormalizar a nivel de carta colapsa esta distinción.
+- **Solución**: Mover la columna denormalizada a `card_printings`. Actualizar Materialized Views y RPCs para unir por `printing_id` en lugar de `card_id` cuando se trate de precios.
+- **Regla Derivada**: Nunca denormalizar datos que varían por edición/acabado en la tabla maestra de cartas; usar siempre la tabla de impresiones.

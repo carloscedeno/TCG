@@ -434,10 +434,10 @@ eplace) para nÃºmero de telÃ©fono venezolano, cÃ©dula de identidad y nombr
 **Causa raÃ­z:** Consultas SQL "loquillas" (sub-queries correlacionadas) y ruteo rÃ­gido en la funciÃ³n Edge.
 **Lo que cambiÃ³:**
 
-- `lessons_learned.md` â†’ Lecciones #42 (SQL Performance) y #43 (API Routing).
-- `supabase/migrations/20260310_...sql` â†’ Uso de CTEs y `UPDATE FROM`.
-- `supabase/functions/api/index.ts` â†’ Ruteo defensivo y restauraciÃ³n de performance.
-**Regla derivada:** Las migraciones masivas en Supabase DEBEN usar `UPDATE FROM` con CTEs.
+- `lessons_learned.md` → Lecciones #42 (SQL Performance), #43 (API Routing) y #46 (Per-Printing Denormalization).
+- `supabase/migrations/20260310_...sql` → Uso de CTEs, `UPDATE FROM` y cambio de target a `card_printings`.
+- `supabase/functions/api/index.ts` → Ruteo defensivo y lógica de precios por `printing_id`.
+**Regla derivada:** Las migraciones masivas en Supabase DEBEN usar `UPDATE FROM` con CTEs. Los precios DEBEN denormalizarse en `card_printings`, no en `cards`.
 
 ## 2026-03-11 â€” SincronizaciÃ³n de Precios y OptimizaciÃ³n de DB (Card Kingdom)
 
