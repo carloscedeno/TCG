@@ -471,3 +471,17 @@ eplace) para nÃºmero de telÃ©fono venezolano, cÃ©dula de identidad y nombr
 
 **Regla derivada:**
 > Para actualizaciones de metadatos en tablas masivas (>100k filas), usar siempre actualizaciones por lotes (Batch Size ~1000) o CTEs con `UPDATE FROM` para evitar bloqueos y timeouts.
+
+---
+
+## 2026-03-11 — Sincronización de Branding y Limpieza de Entorno
+
+**Qué pasó:** Se sincronizó el logo oficial de la marca y se eliminaron indicadores de entorno ("DEV") hardcodeados en el frontend. Se actualizaron las variables de SEO para reflejar un entorno limpio.
+**Lo que cambió:**
+
+- `lessons_learned.md` → Lección #47: Sincronización de Branding y Eliminación de Badges Hardcoded.
+- `AGENTS.md` → Refinada feature de branding y contacto.
+- `frontend/src/pages/Home.tsx` → Eliminado badge "DEV".
+- `frontend/src/components/Navigation/Footer.tsx` → Corregida ruta del logo.
+- `frontend/.env` → Actualizadas variables SEO.
+**Regla derivada:** Los assets de marca deben residir en `public/branding/`. Prohibido hardcodear indicadores de entorno; usar variables `VITE_`.

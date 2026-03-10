@@ -277,7 +277,6 @@ const Home: React.FC = () => {
               <Link to="/" className="flex items-center gap-4 group">
                 <div className="flex items-center justify-center group-hover:scale-105 transition-transform relative">
                   <img src="/branding/Logo.jpg" alt="Logo" className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-white/10 shadow-lg shadow-geeko-cyan/10" />
-                  <span className="absolute -top-1 -right-1 bg-indigo-600 text-white text-[8px] font-black px-1 rounded border border-black animate-pulse">DEV</span>
                 </div>
               </Link>
             </div>

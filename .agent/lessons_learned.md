@@ -427,3 +427,13 @@ ear_mint, lightly_played) deben normalizarse en el backend a cÃ³digos internos
 - **Causa Raíz**: Una carta (`card_id`) puede tener múltiples impresiones (`printing_id`) con precios drásticamente diferentes. Denormalizar a nivel de carta colapsa esta distinción.
 - **Solución**: Mover la columna denormalizada a `card_printings`. Actualizar Materialized Views y RPCs para unir por `printing_id` en lugar de `card_id` cuando se trate de precios.
 - **Regla Derivada**: Nunca denormalizar datos que varían por edición/acabado en la tabla maestra de cartas; usar siempre la tabla de impresiones.
+
+### 47. Sincronización de Branding y Eliminación de Badges Hardcoded — 2026-03-11
+
+- **Problema**: Logo desactualizado en el footer y presencia de un badge "DEV" hardcodeado en el header, junto con títulos SEO que incluían "(Dev)".
+- **Causa Raíz**: Falta de centralización de assets de marca y uso de texto estático para indicadores de entorno en lugar de variables de entorno de Vite.
+- **Solución**:
+  - Sincronizar el logo oficial desde `docs/logos/` a `frontend/public/branding/`.
+  - Eliminar el `<span>DEV</span>` hardcodeado en `Home.tsx`.
+  - Configurar `VITE_SEO_TITLE` y similares en `.env` para manejar los títulos de forma dinámica por entorno.
+- **Regla Derivada**: Los assets de marca deben residir en `public/branding/` y ser espejos de `docs/logos/`. Prohibido hardcodear indicadores de entorno ("DEV", "PROD") en componentes UI; usar variables de entorno `VITE_` e inyectarlas condicionalmente si es necesario.
