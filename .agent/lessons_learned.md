@@ -428,12 +428,30 @@ ear_mint, lightly_played) deben normalizarse en el backend a cÃ³digos internos
 - **Solución**: Mover la columna denormalizada a `card_printings`. Actualizar Materialized Views y RPCs para unir por `printing_id` en lugar de `card_id` cuando se trate de precios.
 - **Regla Derivada**: Nunca denormalizar datos que varían por edición/acabado en la tabla maestra de cartas; usar siempre la tabla de impresiones.
 
-### 47. Sincronización de Branding y Eliminación de Badges Hardcoded — 2026-03-11
+### 48. Zero-Error Supabase Security Advisor (Mar 2026)
 
-- **Problema**: Logo desactualizado en el footer y presencia de un badge "DEV" hardcodeado en el header, junto con títulos SEO que incluían "(Dev)".
-- **Causa Raíz**: Falta de centralización de assets de marca y uso de texto estático para indicadores de entorno en lugar de variables de entorno de Vite.
+- **Problema**: Supabase Security Advisor reportaba múltiples vulnerabilidades de RLS y riesgos en vistas con `SECURITY DEFINER`.
+- **Causa**: Tablas de metadatos (sets, cards) y de usuario (orders, carts) carecían de políticas de seguridad explícitas, exponiendo datos de negocio o de clientes. Vistas recreadas sin `security_invoker = true` bypassaban el RLS.
 - **Solución**:
-  - Sincronizar el logo oficial desde `docs/logos/` a `frontend/public/branding/`.
-  - Eliminar el `<span>DEV</span>` hardcodeado en `Home.tsx`.
-  - Configurar `VITE_SEO_TITLE` y similares en `.env` para manejar los títulos de forma dinámica por entorno.
-- **Regla Derivada**: Los assets de marca deben residir en `public/branding/` y ser espejos de `docs/logos/`. Prohibido hardcodear indicadores de entorno ("DEV", "PROD") en componentes UI; usar variables de entorno `VITE_` e inyectarlas condicionalmente si es necesario.
+  - Habilitar RLS en **todas** las tablas públicas (`ALTER TABLE ... ENABLE ROW LEVEL SECURITY`).
+  - Definir políticas granulares: `SELECT` público para metadatos (cards, sets) y `Owner-Only` para datos sensibles (user_watchlist, user_addresses) usando `auth.uid()`.
+  - Configurar vistas con `security_invoker = true` para asegurar que respeten los permisos del usuario que consulta.
+- **Lección**: Un estado de "Zero Errors" en el Security Advisor no solo es una métrica de cumplimiento, sino una garantía de que el acceso a datos está controlado por políticas y no por la configuración por defecto del motor.
+
+441: ### 49. RLS Policies for Guest Checkout (Mar 2026)
+442:
+443: - **Problema**: Habilitar RLS en tablas de carrito (`carts`, `cart_items`) y pedidos (`orders`) rompe el flujo de "Guest Checkout" si se restringe el acceso solo a usuarios autenticados.
+444: - **Causa**: Los usuarios anónimos (`anon`) necesitan interactuar temporalmente con sus propios datos sin una sesión de Supabase Auth persistente.
+445: - **Solución**: Implementar políticas permitiendo `INSERT` a `anon` y `SELECT` basado en el `id` del carrito o pedido si el usuario posee la referencia (ej: ID en localStorage). Para `orders`, permitir `SELECT` público pero restringido por ID para seguimiento.
+446: - **Regla Derivada**: Siempre validar que las políticas de RLS no bloqueen flujos de usuarios no autenticados vitales para la conversión de venta.
+447:
+448: ### 50. Branding Asset Synchronization & Consistency (Mar 2026)
+449:
+450: - **Problema**: Discrepancia entre los archivos de diseño en `docs/logos/` y los assets servidos en `frontend/public/branding/`, resultando en logotipos desactualizados o inconsistentes.
+451: - **Causa**: Falta de un flujo de sincronización definido; los componentes de React referenciaban archivos antiguos (ej: `Logo.jpg` en lugar de `Logo.png`).
+452: - **Solución**:
+453:   - Establecer `docs/logos/` como la fuente de verdad.
+454:   - Sincronizar manualmente (o vía script) a `frontend/public/branding/`.
+455:   - Refactorizar todos los componentes frontend (`Footer`, `Home`, `WelcomeModal`, `HelpPage`, `LegalPage`) para usar el nuevo path y extensión.
+456:   - Actualizar `index.html` para el favicon y apple-touch-icon.
+457: - **Lección**: La identidad visual debe tratarse como código; cualquier cambio en el "Source of Truth" de diseño requiere una auditoría de referencias en todo el frontend para garantizar la integridad visual de la marca.

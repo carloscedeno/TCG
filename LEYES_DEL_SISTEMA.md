@@ -128,6 +128,31 @@
 
 ---
 
+### Ley 10: Prioridad de Seguridad RLS
+
+**Siempre** habilitar Row Level Security (RLS) en todas las tablas y configurar `security_invoker = true` en todas las vistas de Supabase.
+
+- **Políticas Explícitas**: Ninguna tabla debe quedar sin políticas de seguridad.
+- **Security Advisor**: El dashboard de Supabase Security Advisor debe mantenerse en **0 errores**.
+- **Auditoría**: Cualquier cambio en el esquema debe ser verificado contra el linter de seguridad de Supabase.
+
+**Excepciones**: Ninguna.
+
+---
+
+### Ley 11: Integridad de Branding
+
+**Siempre** mantener sincronizados los activos de marca entre el repositorio de diseño y el código fuente.
+
+- **Fuente de Verdad**: Los archivos en `docs/logos/` son la fuente de verdad para la identidad visual.
+- **Sincronización**: Cualquier cambio en `docs/logos/` debe replicarse inmediatamente en `frontend/public/branding/`.
+- **Consistencia**: No se permiten referencias a archivos de marca obsoletos o con extensiones incorrectas en los componentes de React.
+- **Favicon**: El favicon debe estar sincronizado con la versión oficial de `docs/logos/Fav.jpg` (destino: `frontend/public/favicon.jpg`).
+
+**Excepciones**: Ninguna.
+
+---
+
 ## 🟡 REGLAS DE OPERACIÓN AUTÓNOMA
 
 ### Regla 1: Auto-Aprobación de Comandos Seguros
@@ -330,9 +355,19 @@ Al importar cartas sin edición (Set) específica, el sistema **siempre** debe p
 
 ## 📝 CHANGELOG DE LEYES
 
+### v2.8 (2026-03-11)
+
+- ✅ Agregada **Ley 10**: Prioridad de Seguridad RLS (Mandato de 0 errores en Security Advisor).
+
 ### v2.7 (2026-03-07)
 
 - ✅ Actualizada Ley 9: Especificada segregación de ambientes (Main/Cloudflare vs Dev/GitHub Pages) y vinculación de ramas de Supabase.
+
+### v2.7 (2026-03-10)
+
+- ✅ Agregada Ley 11: Integridad de Branding.
+- ✅ Actualización de Logo (`Logo.png`) y Favicon (`favicon.jpg`).
+- ✅ Sincronización de assets oficiales y eliminación de logos obsoletos.
 
 ### v2.6 (2026-03-07)
 

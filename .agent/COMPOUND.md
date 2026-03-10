@@ -485,3 +485,37 @@ eplace) para nÃºmero de telÃ©fono venezolano, cÃ©dula de identidad y nombr
 - `frontend/src/components/Navigation/Footer.tsx` → Corregida ruta del logo.
 - `frontend/.env` → Actualizadas variables SEO.
 **Regla derivada:** Los assets de marca deben residir en `public/branding/`. Prohibido hardcodear indicadores de entorno; usar variables `VITE_`.
+
+---
+
+## 2026-03-11 — Auditoría de Seguridad Supabase (Zero Error State)
+
+**Qué pasó:** Se realizó una auditoría exhaustiva de seguridad sobre la base de datos de Supabase, resolviendo todos los errores reportados por el *Security Advisor*. Se habilitó RLS en todas las tablas y se aseguraron las vistas.
+
+**Lo que cambió:**
+
+- `lessons_learned.md` → Lecciones #48 (Security Advisor) y #49 (RLS Guest Checkout).
+- `LEYES_DEL_SISTEMA.md` → Agregada **Ley 10** (Prioridad de Seguridad RLS).
+- `supabase/migrations/` → Creadas 2 migraciones: `20260310220000_enable_rls_and_view_security.sql` y `20260310224000_supplemental_security_fixes.sql`.
+
+**Artefacto reutilizable:**
+
+- Patrón de políticas RLS para *Guest Checkout* (público pero restringido por ID).
+
+**Regla derivada:**
+
+## 2026-03-10 — Branding & Asset Sync
+
+**Qué pasó:**
+Se actualizó la identidad visual en toda la aplicación, migrando de `Logo.jpg` a `Logo.png` para mejor calidad y transparencia, y se estableció un nuevo favicon (`Fav.jpg`). Se sincronizaron los assets desde `docs/logos` a `frontend/public`.
+
+**Lo que cambió:**
+
+- `lessons_learned.md` → Lección #50 (Branding Sync)
+- `.agent/AGENTS.md` → Actualizada feature "Corrección de Branding"
+- `LEYES_DEL_SISTEMA.md` → Ley 11: Integridad de Branding
+- Múltiples componentes frontend corregidos.
+
+**Artefacto creado:** Ninguno (refactorización de assets).
+**Regla derivada:**
+> Los activos de branding en `docs/logos/` son la fuente de verdad y deben estar siempre sincronizados con `frontend/public/branding/`.
