@@ -75,7 +75,7 @@ export const WelcomeModal: React.FC = () => {
                             <div className="relative">
                                 <div className="absolute inset-0 bg-[#00AEB4] rounded-full blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-1000" />
                                 <img
-                                    src="/branding/Logo.jpg"
+                                    src="/branding/Logo.png"
                                     alt="El Emporio"
                                     className="relative w-32 h-32 rounded-full border-4 border-[#00AEB4]/30 shadow-2xl mb-4 group-hover:scale-105 transition-transform duration-500"
                                 />
@@ -104,7 +104,7 @@ export const WelcomeModal: React.FC = () => {
 
                         {/* Logo imagen — reemplaza el texto */}
                         <img
-                            src="/branding/Logo.jpg"
+                            src="/branding/Logo.png"
                             alt="Geekorium"
                             className="h-14 w-14 rounded-full object-contain object-left mb-4 border-2 border-[#00AEB4]/30"
                         />

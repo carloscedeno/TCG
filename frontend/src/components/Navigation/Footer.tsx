@@ -7,7 +7,7 @@ export const Footer: React.FC = () => {
             <div className="max-w-[1600px] mx-auto px-6 grid grid-cols-1 md:grid-cols-3 items-center gap-12 text-center md:text-left">
                 <div className="flex flex-col gap-6 justify-center md:justify-start">
                     <Link to="/" className="flex items-center justify-center md:justify-start group cursor-pointer text-white no-underline">
-                        <img src="/branding/Logo.jpg" alt="Logo Geekorium" className="h-14 w-14 rounded-full object-contain group-hover:scale-105 transition-transform border border-white/10 shadow-lg" />
+                        <img src="/branding/Logo.png" alt="Logo Geekorium" className="h-14 w-14 rounded-full object-contain group-hover:scale-105 transition-transform border border-white/10 shadow-lg" />
                     </Link>
                     <div className="flex flex-col gap-3 text-sm font-medium text-neutral-400">
                         <a href="https://wa.me/584128042832" target="_blank" rel="noopener noreferrer" className="hover:text-geeko-cyan transition-colors">WhatsApp Principal: +58 412-8042832</a>
