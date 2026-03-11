@@ -40,6 +40,7 @@ jobs:
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
           VITE_SUPABASE_PROJECT_ID: ${{ secrets.VITE_SUPABASE_PROJECT_ID }}
           VITE_API_BASE: ${{ secrets.VITE_API_BASE }}
+          VITE_SEO_TITLE: "Geekorium Emporio Mágico"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
