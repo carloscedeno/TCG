@@ -310,6 +310,12 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
         // Merge API data with Supabase data if both exist
         data = { ...baseData, ...data };
 
+        // If the API provided incomplete version data (missing foil prices/finishes), discard it 
+        // to force the subsequent Supabase fetch to retrieve the complete data.
+        if (apiVersionsLackFinishData) {
+          data.all_versions = [];
+        }
+
         // Fetch versions if missing
         if (!data.all_versions || data.all_versions.length === 0) {
           const cardIdForVersions = sbData.card_id || data.oracle_id;
@@ -364,6 +370,9 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                   const isSynthetic = !baseIsFoil && (pushesNonFoil || pushesEtched);
                   // Only use CK foil price (avg_market_price_foil_usd) — no Scryfall fallback
                   const priceToUseFoil = Number(v.avg_market_price_foil_usd || 0);
+
+                  console.log(`[Price Trace API] Expanded foil ${v.printing_id} (synthetic=${isSynthetic}): avg_market_price_foil_usd=${v.avg_market_price_foil_usd}, mappedToPrice=${priceToUseFoil}`);
+
                   expandedVersions.push({
                     ...baseVersion,
                     printing_id: isSynthetic ? `${v.printing_id}-foil` : v.printing_id,
@@ -462,12 +471,15 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
             // EXACT finish match only — never fall back to another finish for price
             const exactProd = matches.find((p: any) => (p.finish || 'nonfoil').toLowerCase() === vFinish);
 
+            const finalPrice = exactProd?.price ?? v.price;
+            console.log(`[Price Trace API] version ${v.printing_id} (${vFinish}): original_v.price=${v.price}, exactProdPrice=${exactProd?.price}, finalPrice=${finalPrice}`);
+
             return {
               ...v,
               product_id: exactProd?.id,
               stock: exactProd?.stock || 0,
               // Only override price if there's an exact product match for this finish
-              price: exactProd?.price ?? v.price
+              price: finalPrice
             };
           });
 
