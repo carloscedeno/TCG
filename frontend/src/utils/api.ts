@@ -259,8 +259,10 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
       }
     }
 
-    // 2. If API fails or returns insufficient data, fallback to Supabase
-    if (!data || !data.name || (!data.all_versions || data.all_versions.length === 0)) {
+    // 2. If API fails, returns insufficient data, OR all_versions lack foil/finish data (FastAPI shortcut), fallback to Supabase
+    const apiVersionsLackFinishData = data?.all_versions?.length > 0 &&
+      !data.all_versions[0]?.finishes && !data.all_versions[0]?.avg_market_price_foil_usd;
+    if (!data || !data.name || (!data.all_versions || data.all_versions.length === 0) || apiVersionsLackFinishData) {
       console.log('[Supabase] Falling back for details or missing versions');
       const { data: sbData, error: sbError } = await supabase
         .from('card_printings')
