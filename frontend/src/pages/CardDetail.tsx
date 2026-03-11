@@ -388,10 +388,10 @@ export const CardDetail: React.FC = () => {
                                                         }}
                                                         disabled={(activeGroup.normal?.stock || 0) === 0}
                                                         className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${activeFinish !== 'foil'
-                                                                ? 'bg-white text-black shadow-lg scale-[1.05]'
-                                                                : (activeGroup.normal?.stock || 0) === 0
-                                                                    ? 'text-neutral-700 cursor-not-allowed opacity-50'
-                                                                    : 'text-neutral-500 hover:text-white'
+                                                            ? 'bg-white text-black shadow-lg scale-[1.05]'
+                                                            : (activeGroup.normal?.stock || 0) === 0
+                                                                ? 'text-neutral-700 cursor-not-allowed opacity-50'
+                                                                : 'text-neutral-500 hover:text-white'
                                                             }`}
                                                     >
                                                         Normal
@@ -405,10 +405,10 @@ export const CardDetail: React.FC = () => {
                                                         }}
                                                         disabled={(activeGroup.foil?.stock || 0) === 0}
                                                         className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${activeFinish === 'foil'
-                                                                ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 border-transparent text-white shadow-[0_0_15px_rgba(236,72,153,0.3)] scale-[1.05]'
-                                                                : (activeGroup.foil?.stock || 0) === 0
-                                                                    ? 'text-neutral-700 cursor-not-allowed opacity-50'
-                                                                    : 'text-neutral-500 hover:text-white'
+                                                            ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 border-transparent text-white shadow-[0_0_15px_rgba(236,72,153,0.3)] scale-[1.05]'
+                                                            : (activeGroup.foil?.stock || 0) === 0
+                                                                ? 'text-neutral-700 cursor-not-allowed opacity-50'
+                                                                : 'text-neutral-500 hover:text-white'
                                                             }`}
                                                     >
                                                         Foil
@@ -422,7 +422,7 @@ export const CardDetail: React.FC = () => {
                                             className="h-16 px-10 rounded-2xl bg-geeko-cyan text-black font-black text-sm uppercase tracking-widest flex items-center gap-3 shadow-[0_0_30px_rgba(0,229,255,0.4)] hover:shadow-[0_0_50px_rgba(0,229,255,0.6)] hover:scale-105 active:scale-95 transition-all disabled:opacity-50"
                                         >
                                             {isAdding ? <Loader2 size={24} className="animate-spin" /> : <ShoppingCart size={24} fill="currentColor" />}
-                                            {isAdding ? 'Processing...' : 'Add to Inventory'}
+                                            {isAdding ? 'Procesando...' : ((activeVersion?.stock || 0) > 0 ? 'Agregar al Carrito' : 'Por encargo')}
                                         </button>
                                     </div>
                                 </div>

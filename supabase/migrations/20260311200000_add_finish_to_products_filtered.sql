@@ -56,8 +56,15 @@ BEGIN
     p.name::text,
     p.game::text,
     s.set_code::text,
-    -- THE FIX: Prioritize the denormalized Card Kingdom price from card_printings
-    COALESCE(cp.avg_market_price_usd, p.price, 0) as price,
+    -- THE FIX: Prioritize the denormalized Card Kingdom price from card_printings, keeping finishes in mind!
+    COALESCE(
+        CASE 
+            WHEN LOWER(p.finish) IN ('foil', 'etched') THEN cp.avg_market_price_foil_usd
+            ELSE cp.avg_market_price_usd 
+        END, 
+        p.price, 
+        0
+    ) as price,
     COALESCE(p.image_url, cp.image_url)::text as image_url,
     p.rarity::text,
     p.printing_id,

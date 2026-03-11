@@ -722,7 +722,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                     }`}
                                             >
                                                 {isAdding ? <Loader2 size={16} className="animate-spin" /> : addedSuccess ? '¡Añadido! ✓' : <ShoppingCart size={16} fill="currentColor" />}
-                                                {!isAdding && !addedSuccess && 'Agregar al Carrito'}
+                                                {!isAdding && !addedSuccess && ((activeVersion?.stock || 0) > 0 ? 'Agregar al Carrito' : 'Por encargo')}
                                             </button>
                                         )}
                                     </div>

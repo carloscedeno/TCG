@@ -161,7 +161,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
               DISP: {total_stock}
             </span>
           ) : (
-            <span className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest">Agotado</span>
+            <span className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest">Por Encargo</span>
           )}
         </div>
 
@@ -183,7 +183,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
           <button
             onClick={handleQuickAdd}
             className={`ml-4 w-9 h-9 rounded-full flex items-center justify-center transition-all border border-white/5 ${addingToCart ? 'bg-geeko-cyan text-black' : 'bg-white/5 text-neutral-400 hover:bg-geeko-cyan hover:text-black hover:scale-110'}`}
-            title="Agregar al Carrito Rápido"
+            title={(total_stock || 0) > 0 ? "Agregar al Carrito Rápido" : "Por encargo"}
           >
             {addingToCart ? <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /> : <ShoppingCart size={16} />}
           </button>
@@ -303,7 +303,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
           {!isArchive && (
             <button
               onClick={handleQuickAdd}
-              title="Agregar al Carrito Rápido"
+              title={(total_stock || 0) > 0 ? "Agregar al Carrito Rápido" : "Por encargo"}
               className={`absolute right-3 bottom-3 w-8 h-8 rounded-full flex items-center justify-center transition-all shadow-lg ${isHovered || addingToCart ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
                 } ${addingToCart ? 'bg-geeko-cyan text-black' : 'bg-neutral-800 text-white hover:bg-geeko-cyan hover:text-black border border-white/10'}`}
             >
