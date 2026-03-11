@@ -451,13 +451,13 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
           .rpc('get_products_stock_by_printing_ids', { p_printing_ids: pIds });
 
         if (pData) {
-          const sMap = new Map();
-          pData.forEach((p: any) => sMap.set(p.printing_id, p));
-
           data.all_versions = data.all_versions.map((v: any) => {
-            // Find the best match: by printing_id AND name (for finishes)
+            // Match by printing_id AND finish to correctly separate foil/nonfoil stock
+            const vFinish = (v.finish || (v.is_foil ? 'foil' : 'nonfoil')).toLowerCase();
             const matches = pData.filter((p: any) => p.printing_id === v.printing_id);
-            const prod = matches.find((p: any) => p.name === v.card_name || p.name === v.name) || matches[0];
+            const prod =
+              matches.find((p: any) => (p.finish || 'nonfoil').toLowerCase() === vFinish) ||
+              matches[0];
 
             return {
               ...v,
@@ -610,7 +610,7 @@ export const fetchCart = async (): Promise<any> => {
   }
 };
 
-export const addToCart = async (printingId: string, quantity: number = 1): Promise<any> => {
+export const addToCart = async (printingId: string, quantity: number = 1, finish: string = 'nonfoil'): Promise<any> => {
   try {
     const session = await supabase.auth.getSession();
 
@@ -619,7 +619,8 @@ export const addToCart = async (printingId: string, quantity: number = 1): Promi
       const { data, error } = await supabase.rpc('add_to_cart', {
         p_printing_id: printingId,
         p_quantity: quantity,
-        p_user_id: session.data.session.user.id
+        p_user_id: session.data.session.user.id,
+        p_finish: (finish || 'nonfoil').toLowerCase()
       });
 
       if (error) throw error;

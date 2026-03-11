@@ -201,7 +201,9 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
 
         setIsAdding(true);
         try {
-            const result = await addToCart(activePrintingId, 1);
+            // Use the real printing_id (strip any synthetic suffix before calling RPC)
+            const baseId = activePrintingId.replace(/-foil$/, '').replace(/-nonfoil$/, '').replace(/-etched$/, '');
+            const result = await addToCart(baseId, 1, selectedFinish);
             if (result && !result.success) {
                 alert(result.message || result.error || 'No se pudo agregar al carrito');
                 setIsAdding(false);
@@ -227,7 +229,10 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
 
     const handleVersionAddToCart = async (v: any) => {
         try {
-            const result = await addToCart(v.printing_id, 1);
+            // Strip synthetic suffix, pass finish explicitly
+            const baseId = (v.printing_id || '').replace(/-foil$/, '').replace(/-nonfoil$/, '').replace(/-etched$/, '');
+            const vFinish = v.finish || (v.is_foil ? 'foil' : 'nonfoil');
+            const result = await addToCart(baseId, 1, vFinish);
             if (result && !result.success) {
                 // Show error message to user
                 alert(result.message || result.error || 'No se pudo agregar al carrito');
@@ -667,10 +672,10 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                                 }}
                                                                 disabled={(activeGroup.normal?.stock || 0) === 0}
                                                                 className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${selectedFinish === 'nonfoil'
-                                                                        ? 'bg-white text-black shadow-lg scale-[1.05]'
-                                                                        : (activeGroup.normal?.stock || 0) === 0
-                                                                            ? 'text-neutral-700 cursor-not-allowed opacity-50'
-                                                                            : 'text-neutral-500 hover:text-white'
+                                                                    ? 'bg-white text-black shadow-lg scale-[1.05]'
+                                                                    : (activeGroup.normal?.stock || 0) === 0
+                                                                        ? 'text-neutral-700 cursor-not-allowed opacity-50'
+                                                                        : 'text-neutral-500 hover:text-white'
                                                                     }`}
                                                             >
                                                                 Normal
@@ -684,10 +689,10 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                                 }}
                                                                 disabled={(activeGroup.foil?.stock || 0) === 0}
                                                                 className={`px-3 py-1 rounded text-[8px] font-black uppercase tracking-widest transition-all ${selectedFinish === 'foil'
-                                                                        ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 border-transparent text-white shadow-lg'
-                                                                        : (activeGroup.foil?.stock || 0) === 0
-                                                                            ? 'text-neutral-700 cursor-not-allowed opacity-50'
-                                                                            : 'text-neutral-500 hover:text-white'
+                                                                    ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 border-transparent text-white shadow-lg'
+                                                                    : (activeGroup.foil?.stock || 0) === 0
+                                                                        ? 'text-neutral-700 cursor-not-allowed opacity-50'
+                                                                        : 'text-neutral-500 hover:text-white'
                                                                     }`}
                                                             >
                                                                 Foil
