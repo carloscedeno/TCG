@@ -146,8 +146,11 @@ def run_ck_sync():
         
         # Edition name normalization map (CK -> DB)
         EDITION_NORM = {
-            "teenage mutant ninja turtles source material cards": "teenage mutant ninja turtles source material",
-            "mystery booster/the list": "mystery booster",
+            "teenage mutant ninja turtles source material cards": [
+                "teenage mutant ninja turtles source material",
+                "teenage mutant ninja turtles"
+            ],
+            "mystery booster/the list": ["mystery booster"],
         }
         
         for card in pricelist:
@@ -159,9 +162,6 @@ def run_ck_sync():
             
             # Fallback matching keys
             edition = card.get('edition', '').lower().strip()
-            # Normalize edition name if known
-            norm_edition = EDITION_NORM.get(edition, edition)
-            
             variation = card.get('variation', '').lower().strip()
             sku = card.get('sku', '')
             
@@ -172,14 +172,30 @@ def run_ck_sync():
                 sku_parts = sku.split('-')
                 if len(sku_parts) > 1:
                     col_num = sku_parts[1].lstrip('0')
+
+            # Store under both original and normalized editions for safety
+            edition_candidates = set([edition])
+            if edition in EDITION_NORM:
+                norm_val = EDITION_NORM[edition]
+                if isinstance(norm_val, list):
+                    edition_candidates.update(norm_val)
+                else:
+                    edition_candidates.add(norm_val)
             
-            if norm_edition and col_num:
-                # Store under both original and normalized edition for safety
-                for ed in set([edition, norm_edition]):
-                    key = (ed, col_num.lower())
-                    if key not in fallback_map:
-                        fallback_map[key] = []
-                    fallback_map[key].append(card)
+            if edition_candidates and (col_num or sku):
+                sku_num = col_num
+                if '-' in sku:
+                    parts = sku.split('-')
+                    if len(parts) > 1:
+                        sku_num = ''.join(filter(str.isdigit, parts[1])).lstrip('0')
+                
+                for cn in set([col_num.lower(), sku_num.lower()]):
+                    if not cn: continue
+                    for ed in edition_candidates:
+                        key = (ed, cn)
+                        if key not in fallback_map:
+                            fallback_map[key] = []
+                        fallback_map[key].append(card)
         
         batch_size = 1000
         offset = 0

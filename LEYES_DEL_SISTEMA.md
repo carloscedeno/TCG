@@ -351,6 +351,10 @@ Al importar cartas sin edición (Set) específica, el sistema **siempre** debe p
 
 **Siempre** agregar o consolidar filas duplicadas (mismo `printing_id`, `condition` y `finish`) dentro de un mismo lote de importación antes de enviarlo a la base de datos. El sistema debe sumar las cantidades (`stock`) de las filas duplicadas para evitar errores de restricción de unicidad (`ON CONFLICT`) durante el procesamiento por lotes.
 
+### Regla 4: Gestión de Procesos y Estado
+
+Antes de iniciar procesos de sincronización pesados o de larga duración, se deben identificar y terminar instancias previas del mismo script para evitar condiciones de carrera, agotamiento de conexiones o el uso de credenciales/entornos obsoletos (`stale environment`).
+
 ---
 
 ## 📝 CHANGELOG DE LEYES
@@ -363,6 +367,11 @@ Al importar cartas sin edición (Set) específica, el sistema **siempre** debe p
 
 - ✅ Agregada **Ley 12**: Única Fuente de Verdad para Configuración (.env) (Prohibición de múltiples archivos .env).
 - ✅ Actualizada Regla de Negocio 1: Incluida mención a la lógica de fallback por `collector_number`.
+
+### v3.0 (2026-03-11)
+
+- ✅ Agregada **Regla de Operación 4**: Gestión de Procesos y Estado (Control de procesos huérfanos).
+- ✅ Documentadas lecciones #53 y #54 sobre diagnóstico robusto y limpieza de entorno.
 
 ### v2.7 (2026-03-07)
 

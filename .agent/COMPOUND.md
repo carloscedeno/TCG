@@ -527,11 +527,11 @@ Se actualizó la identidad visual en toda la aplicación, migrando de `Logo.jpg`
 
 **Lo que cambió:**
 
-- `lessons_learned.md` → Lecciones #51 (Fallback Matching) y #52 (Env Unification).
+- `lessons_learned.md` → Lecciones #51 (Fallback Matching), #52 (Env Unification), #53 (Orphan Processes), #54 (Diagnostic Robustness).
 - `AGENTS.md` → Actualizado con features de sincronización de precios y unificación de entorno.
-- `LEYES_DEL_SISTEMA.md` → Agregada **Ley 12** (Única Fuente de Verdad para Configuración).
-- `scripts/sync_cardkingdom_api.py` → Implementada lógica de match por SKU/Collector Number.
+- `LEYES_DEL_SISTEMA.md` → Agregada **Ley 12** (Entorno único) y **Regla de Operación 4** (Gestión de procesos).
+- `scripts/sync_cardkingdom_api.py` → Implementada lógica de match por SKU/Collector Number y corregido error de variables no definidas post-refactor.
 - `frontend/vite.config.ts` → Configurado para leer `.env` desde la raíz.
 
 **Regla derivada:**
-> Todo sistema con múltiples puntos de entrada (frontend, scripts, API) debe usar un único archivo `.env` centralizado para garantizar la coherencia de secretos y evitar corrupciones técnicas.
+> Todo cambio estructural en configuración o sincronización masiva requiere un reinicio limpio de procesos para evitar el uso de estados obsoletos (`stale state`).
