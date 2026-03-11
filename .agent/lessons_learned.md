@@ -469,3 +469,17 @@ ear_mint, lightly_played) deben normalizarse en el backend a cÃ³digos internos
 - **Causa Raíz**: Desincronización manual entre archivos y herramientas (Vite vs Python) buscando configuraciones en lugares distintos.
 - **Solución**: Centralizar todas las variables en un único `.env` en la raíz. Configurar Vite con `envDir: '../'` para leer desde la raíz.
 - **Lección**: En monorepos pequeños o proyectos con subcarpetas, un solo archivo de entorno en la raíz garantiza que todos los servicios (Frontend, API, Scripts) operen sobre la misma "fuente de verdad".
+
+### 53. Gestión de Procesos Huérfanos en Sincronización — 2026-03-11
+
+- **Problema**: Errores intermitentes de `Invalid API Key` o falta de actualización de datos a pesar de aplicar correcciones en el código y el `.env`.
+- **Causa Raíz**: Procesos de Python persistentes en segundo plano que mantienen versiones obsoletas de las variables de entorno o que bloquean conexiones a la base de datos.
+- **Solución**: Antes de reintentar sincronizaciones críticas tras cambios en la configuración, es obligatorio listar y terminar procesos huérfanos (`Stop-Process -Name python -Force`).
+- **Regla Derivada**: (Codificada en LEYES_DEL_SISTEMA.md) Todo cambio estructural en configuración requiere un reinicio limpio de servicios y procesos de mantenimiento.
+
+### 54. Robustez en Scripts de Diagnóstico (Supabase SQL vs API) — 2026-03-11
+
+- **Problema**: Scripts de diagnóstico rápido fallan por `APIError` al intentar realizar joins complejos (`table.select('*, cards(name)')`).
+- **Causa Raíz**: Restricciones de aliasing en la API PostgREST o desconfiguración momentánea de relaciones en el cliente Python.
+- **Solución**: Para verificaciones manuales rápidas, preferir consultas SQL directas vía `psycopg2` o realizar selecciones simples de IDs y resolver relaciones programáticamente.
+- **Lección**: La simplicidad en el diagnóstico previene falsos negativos causados por la propia herramienta de prueba.
