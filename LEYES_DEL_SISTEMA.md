@@ -424,3 +424,6 @@ Antes de iniciar procesos de sincronización pesados o de larga duración, se de
 ---
 
 **Estas leyes son inmutables y deben ser respetadas en todo momento por el agente autónomo.**
+
+### 13. Sincronización Estricta de Migraciones (CI/CD)
+Ningún archivo de migración SQL (`supabase/migrations/`) desplegado y registrado en la rama de `dev` o `main` debe ser borrado localmente para "limpiar". Si se requiere consolidar migraciones o eliminar versiones antiguas, se debe purgar su registro equivalente en la tabla `supabase_migrations.schema_migrations` del entorno remoto alojado correspondiente. De lo contrario, GitHub Actions y Supabase CLI fallarán con un `Migration mismatch`.

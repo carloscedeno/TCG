@@ -492,3 +492,17 @@ ear_mint, lightly_played) deben normalizarse en el backend a cÃ³digos internos
 - **Variables faltantes descubiertas en Cloudflare**: `VITE_SUPABASE_PROJECT_ID` y `VITE_ROBOTS`.
 - **Regla Derivada**: Auditar `index.html` en cada setup de proyecto nuevo. Todo `%VITE_*%` que no esté en el dashboard del hosting es un bug silencioso. Las metas SEO estáticas (título, descripción de marca) deben hardcodearse; las dinámicas por entorno (robots, URL canónica) se parametrizan.
 - **Google Search Console**: Para que Google indexe un sitio nuevo, NO basta con tener `robots: index, follow`. Se requiere verificar el dominio en GSC (via registro TXT en DNS de Cloudflare) y enviar el sitemap manualmente. Sin esto, el crawl puede tardar semanas o no ocurrir.
+
+### 56. Error de "Migration Mismatch" en Supabase CI/CD (GitHub Actions) — 2026-03-11
+
+- **Problema**: El pipeline `supabase/setup` en GitHub Actions fallaba con "Migration mismatch" al intentar hacer push o reset a la base de datos de Preview.
+- **Causa Raíz**: Borrar o renombrar archivos de migración localmente no elimina sus registros históricos de la DB remota en Supabase (`supabase_migrations.schema_migrations`). El CLI detecta esta divergencia y aborta.
+- **Solución**: Ir al SQL Editor del proyecto Supabase remoto y hacer `DELETE FROM supabase_migrations.schema_migrations WHERE version = 'VERSION_HUERFANA';` para alinear la DB con los archivos locales antes de re-ejecutar el pipeline.
+- **Regla Derivada**: Nunca eliminar scripts de migración que ya se ejecutaron en un entorno alojado, a menos que también se purgue su huella en la tabla interna de Supabase o se haga un reset completo desde cero.
+
+### 57. Sobrecritura Incompleta en Patrones de Fallback API a Supabase — 2026-03-11
+
+- **Problema**: Una carta Foil obtenía el precio de `$5.99` (precio Normal) en lugar de `$59.99` (precio Foil) en el frontend.
+- **Causa Raíz**: En `api.ts`, una respuesta exitosa pero incompleta desde FastAPI llenaba la propiedad `data.all_versions` con objetos sin `finish` ni `avg_market_price_foil_usd`. Aunque se detectaba que faltaba data (`apiVersionsLackFinishData`), la lógica saltaba el *query de Supabase fallback* porque la condición original era `if (!data.all_versions || data.all_versions.length === 0)`.
+- **Solución**: Cuando se detecta data incompleta (e.g., `apiVersionsLackFinishData`), es obligatorio vaciar el atributo base explícitamente (`data.all_versions = []` o `delete data.all_versions`) antes del chequeo condicional del fallback para forzar la re-evaluación estructurada desde la base de datos directa.
+- **Regla Derivada**: En patrones donde un API proxy falla/devuelve data parcial y el frontend tiene un fallback directo a la DB de Supabase, la data parcial errónea DEBE purgarse por completo en memoria. Mezclar las respuestas (`{...baseData, ...data}`) sin purgar provoca cortocircuitos lógicos en la UI.

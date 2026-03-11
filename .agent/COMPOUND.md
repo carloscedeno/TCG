@@ -561,3 +561,16 @@ Se actualizó la identidad visual en toda la aplicación, migrando de `Logo.jpg`
 
 **Regla derivada:**
 > Auditar `index.html` en cada setup nuevo: todo `%VITE_*%` sin variable en el hosting es un bug silencioso. SEO estático → hardcode. SEO dinámico por entorno → parametrizar.
+
+## 2026-03-11 — CI/CD Migration Mismatch & Frontend Fallback Bug
+
+**Qué pasó:** Se resolvió un error crítico que detenía los despliegues automáticos en GitHub Actions debido a desajustes en el historial de migraciones de Supabase. A su vez, se corrigió un bug en el frontend donde el renderizado de cartas Foil heredaba precios de la variante Normal porque FastAPI respondía de forma incompleta, evadiendo la lógica de fallback de Supabase.
+
+**Lo que cambió:**
+- `lessons_learned.md` → Lección #56 (Migration Mismatch en CI/CD) y #57 (Sobrecritura en Fallbacks API a Supabase).
+- `frontend/src/utils/api.ts` → Limpieza explícita del pipeline de `all_versions` cuando el API retorna data sin atributos de acabado (*finish*).
+- `LEYES_DEL_SISTEMA.md` → Agregada Regla sobre el control de migraciones en entornos alojados y la sincronización con CI/CD.
+
+**Regla derivada:** 
+1. Eliminar migraciones locales requiere limpieza de `supabase_migrations.schema_migrations` remoto.
+2. Todo dato devuelto de un API con deficiencias estructurales debe purgarse si el frontend planea usar un fallback directo, nunca iterar sobre el dato corrompido.
