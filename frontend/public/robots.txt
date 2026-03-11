@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Allow: /tournaments
+Allow: /help
+Allow: /legal
+
+# Sitemaps
+Sitemap: https://geekorium.shop/sitemap.xml
