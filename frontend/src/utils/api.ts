@@ -346,7 +346,8 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
 
                 if (pushesNonFoil) {
                   const isSynthetic = baseIsFoil && (pushesFoil || pushesEtched);
-                  const priceToUse = Number(v.prices?.usd || v.prices?.eur || 0);
+                  // Prefer CK price (avg_market_price_usd) over Scryfall prices json
+                  const priceToUse = Number(v.avg_market_price_usd || v.prices?.usd || v.prices?.eur || 0);
                   expandedVersions.push({
                     ...baseVersion,
                     printing_id: isSynthetic ? `${v.printing_id}-nonfoil` : v.printing_id,
@@ -359,7 +360,8 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
 
                 if (pushesFoil) {
                   const isSynthetic = !baseIsFoil && (pushesNonFoil || pushesEtched);
-                  const priceToUseFoil = Number(v.prices?.usd_foil || v.prices?.eur_foil || 0);
+                  // Prefer CK foil price (avg_market_price_foil_usd) over Scryfall prices json
+                  const priceToUseFoil = Number(v.avg_market_price_foil_usd || v.prices?.usd_foil || v.prices?.eur_foil || 0);
                   expandedVersions.push({
                     ...baseVersion,
                     printing_id: isSynthetic ? `${v.printing_id}-foil` : v.printing_id,
