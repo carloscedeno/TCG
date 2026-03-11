@@ -519,3 +519,19 @@ Se actualizó la identidad visual en toda la aplicación, migrando de `Logo.jpg`
 **Artefacto creado:** Ninguno (refactorización de assets).
 **Regla derivada:**
 > Los activos de branding en `docs/logos/` son la fuente de verdad y deben estar siempre sincronizados con `frontend/public/branding/`.
+---
+
+## 2026-03-11 — Pricing Fix (TMNT/PZA) & Env Consolidation
+
+**Qué pasó:** Se resolvió el problema de actualización de precios para ediciones especiales (TMNT, PZA) mediante un fallback por collector number. Se unificaron todos los archivos `.env` en uno solo en la raíz para evitar corrupciones y desincronización de llaves.
+
+**Lo que cambió:**
+
+- `lessons_learned.md` → Lecciones #51 (Fallback Matching) y #52 (Env Unification).
+- `AGENTS.md` → Actualizado con features de sincronización de precios y unificación de entorno.
+- `LEYES_DEL_SISTEMA.md` → Agregada **Ley 12** (Única Fuente de Verdad para Configuración).
+- `scripts/sync_cardkingdom_api.py` → Implementada lógica de match por SKU/Collector Number.
+- `frontend/vite.config.ts` → Configurado para leer `.env` desde la raíz.
+
+**Regla derivada:**
+> Todo sistema con múltiples puntos de entrada (frontend, scripts, API) debe usar un único archivo `.env` centralizado para garantizar la coherencia de secretos y evitar corrupciones técnicas.

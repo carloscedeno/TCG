@@ -455,3 +455,17 @@ ear_mint, lightly_played) deben normalizarse en el backend a cÃ³digos internos
 455:   - Refactorizar todos los componentes frontend (`Footer`, `Home`, `WelcomeModal`, `HelpPage`, `LegalPage`) para usar el nuevo path y extensión.
 456:   - Actualizar `index.html` para el favicon y apple-touch-icon.
 457: - **Lección**: La identidad visual debe tratarse como código; cualquier cambio en el "Source of Truth" de diseño requiere una auditoría de referencias en todo el frontend para garantizar la integridad visual de la marca.
+
+### 51. Fallback Matching by Collector Number (CardKingdom Sync) — 2026-03-11
+
+- **Problema**: El script de sincronización de CardKingdom fallaba al actualizar precios para ediciones especiales (ej. TMNT, PZA) debido a IDs de Scryfall faltantes o discrepantes.
+- **Causa Raíz**: No siempre hay un mapeo 1:1 de `scryfall_id` en el catálogo de CardKingdom para sets promocionales o de colaboración.
+- **Solución**: Implementar una lógica de respaldo (fallback) que extraiga el `collector_number` del SKU de CardKingdom (ej. "TMT-0017" -> "17") y realice el match combinando `set_name` + `collector_number`.
+- **Regla Derivada**: Todo script de sincronización de precios externo debe tener un método de match de respaldo basado en metadatos físicos (set + número) si el ID único del proveedor falla.
+
+### 52. Unificación de Archivos de Entorno (.env) — 2026-03-11
+
+- **Problema**: Discrepancias de llaves (especialmente `SUPABASE_SERVICE_ROLE_KEY`) y corrupción de archivos debido a múltiples archivos `.env` (raíz y frontend/).
+- **Causa Raíz**: Desincronización manual entre archivos y herramientas (Vite vs Python) buscando configuraciones en lugares distintos.
+- **Solución**: Centralizar todas las variables en un único `.env` en la raíz. Configurar Vite con `envDir: '../'` para leer desde la raíz.
+- **Lección**: En monorepos pequeños o proyectos con subcarpetas, un solo archivo de entorno en la raíz garantiza que todos los servicios (Frontend, API, Scripts) operen sobre la misma "fuente de verdad".

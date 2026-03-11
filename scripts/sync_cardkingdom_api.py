@@ -140,14 +140,46 @@ def run_ck_sync():
         
         logger.info(f"Pricelist downloaded: {len(pricelist)} items.")
         
-        # Pre-process pricelist into a map for O(1) matching
+        # Pre-process pricelist into maps for O(1) matching
         pricelist_map = {}
+        fallback_map = {} # Key: (edition_name.lower(), collector_number.lower())
+        
+        # Edition name normalization map (CK -> DB)
+        EDITION_NORM = {
+            "teenage mutant ninja turtles source material cards": "teenage mutant ninja turtles source material",
+            "mystery booster/the list": "mystery booster",
+        }
+        
         for card in pricelist:
             scid = card.get('scryfall_id')
             if scid:
                 if scid not in pricelist_map:
                     pricelist_map[scid] = []
                 pricelist_map[scid].append(card)
+            
+            # Fallback matching keys
+            edition = card.get('edition', '').lower().strip()
+            # Normalize edition name if known
+            norm_edition = EDITION_NORM.get(edition, edition)
+            
+            variation = card.get('variation', '').lower().strip()
+            sku = card.get('sku', '')
+            
+            # Extract possible collector number from variations or SKU
+            col_num = variation
+            if not col_num and '-' in sku:
+                # SKU format is usually XXX-NUM, extract NUM
+                sku_parts = sku.split('-')
+                if len(sku_parts) > 1:
+                    col_num = sku_parts[1].lstrip('0')
+            
+            if norm_edition and col_num:
+                # Store under both original and normalized edition for safety
+                for ed in set([edition, norm_edition]):
+                    key = (ed, col_num.lower())
+                    if key not in fallback_map:
+                        fallback_map[key] = []
+                    fallback_map[key].append(card)
         
         batch_size = 1000
         offset = 0
@@ -158,8 +190,10 @@ def run_ck_sync():
         while True:
             logger.info(f"Processing batch: offset {offset}...")
             try:
+                # Use a raw SQL query via RCP or direct connection if possible for joins
+                # Since we have 'supabase' client, we can try to join using .select() with referenced tables
                 db_cards_query = supabase.table('card_printings').select(
-                    'printing_id, scryfall_id'
+                    'printing_id, scryfall_id, collector_number, cards(card_name), sets(set_name)'
                 ).not_.is_('scryfall_id', 'null').range(offset, offset + batch_size - 1).execute()
                 db_cards = db_cards_query.data
             except Exception as e:
@@ -176,10 +210,27 @@ def run_ck_sync():
             for db_card in db_cards:
                 try:
                     scryfall_id = db_card['scryfall_id']
-                    if scryfall_id not in pricelist_map:
+                    
+                    # 1. Primary match: Scryfall ID
+                    matching_cards = pricelist_map.get(scryfall_id, [])
+                    
+                    # 2. Fallback match: Edition Name + Collector Number
+                    if not matching_cards:
+                        edition_name = (db_card.get('sets', {}) or {}).get('set_name', '').lower().strip()
+                        collector_num = (db_card.get('collector_number', '') or '').lower().strip()
+                        # Normalize collector number (strip leading zeros)
+                        norm_col_num = collector_num.lstrip('0') if collector_num else ''
+                        
+                        if edition_name and (collector_num or norm_col_num):
+                            # Try both raw and normalized collector number
+                            matching_cards = fallback_map.get((edition_name, collector_num), [])
+                            if not matching_cards and norm_col_num:
+                                matching_cards = fallback_map.get((edition_name, norm_col_num), [])
+                    
+                    if not matching_cards:
                         continue
                         
-                    for card in pricelist_map[scryfall_id]:
+                    for card in matching_cards:
                         is_foil = card.get('is_foil') == 'true' or card.get('is_foil') is True
                         price = float(card.get('price_retail', 0))
                         

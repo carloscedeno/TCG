@@ -359,6 +359,11 @@ Al importar cartas sin edición (Set) específica, el sistema **siempre** debe p
 
 - ✅ Agregada **Ley 10**: Prioridad de Seguridad RLS (Mandato de 0 errores en Security Advisor).
 
+### v2.9 (2026-03-11)
+
+- ✅ Agregada **Ley 12**: Única Fuente de Verdad para Configuración (.env) (Prohibición de múltiples archivos .env).
+- ✅ Actualizada Regla de Negocio 1: Incluida mención a la lógica de fallback por `collector_number`.
+
 ### v2.7 (2026-03-07)
 
 - ✅ Actualizada Ley 9: Especificada segregación de ambientes (Main/Cloudflare vs Dev/GitHub Pages) y vinculación de ramas de Supabase.

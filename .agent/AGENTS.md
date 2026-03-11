@@ -88,6 +88,8 @@ Artefactos del Compound step:
 - ✅ API Routing Defensivo: Normalización de rutas en Edge Functions.
 - ✅ Sincronización de Precios Card Kingdom (Foil/Non-Foil): Batched updates implementados para evitar timeouts en producción.
 - ✅ Conexión Segura via Supabase Pooler: Unificación de `DATABASE_URL` para scripts de mantenimiento.
+- ✅ Lógica de Fallback de Precios (TMNT/PZA): Implementado matching por `collector_number` + `edition` para sets con Scryfall IDs inconsistentes.
+- ✅ Unificación de Entorno: Consolidación de todos los archivos `.env` en una única fuente de verdad en la raíz del proyecto.
 
 ## 🚧 Features Pendientes
 

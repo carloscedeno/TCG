@@ -10,4 +10,6 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  // Use the root .env file
+  envDir: '../',
 })
