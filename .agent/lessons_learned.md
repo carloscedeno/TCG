@@ -483,3 +483,12 @@ ear_mint, lightly_played) deben normalizarse en el backend a cÃ³digos internos
 - **Causa Raíz**: Restricciones de aliasing en la API PostgREST o desconfiguración momentánea de relaciones en el cliente Python.
 - **Solución**: Para verificaciones manuales rápidas, preferir consultas SQL directas vía `psycopg2` o realizar selecciones simples de IDs y resolver relaciones programáticamente.
 - **Lección**: La simplicidad en el diagnóstico previene falsos negativos causados por la propia herramienta de prueba.
+
+### 55. Variables SEO de Vite No Reemplazadas en Producción — 2026-03-11
+
+- **Problema**: El tab del navegador mostraba literalmente `%VITE_SEO_TITLE%` en producción (`geekorium.shop`).
+- **Causa Raíz**: Los placeholders `%VITE_*%` en `index.html` solo son reemplazados por Vite durante el build si la variable está definida como env var en ese momento. Las variables `VITE_SEO_TITLE`, `VITE_SEO_DESCRIPTION`, `VITE_SEO_KEYWORDS`, `VITE_SEO_IMAGE` y `VITE_APP_URL` nunca fueron configuradas en el dashboard de Cloudflare Pages → Environment Variables → Production.
+- **Solución**: Hardcodear los valores SEO estáticos directamente en `frontend/index.html`. Mantener solo `%VITE_ROBOTS%` como placeholder (para controlar indexación por entorno: `index, follow` en prod, `noindex, nofollow` en dev).
+- **Variables faltantes descubiertas en Cloudflare**: `VITE_SUPABASE_PROJECT_ID` y `VITE_ROBOTS`.
+- **Regla Derivada**: Auditar `index.html` en cada setup de proyecto nuevo. Todo `%VITE_*%` que no esté en el dashboard del hosting es un bug silencioso. Las metas SEO estáticas (título, descripción de marca) deben hardcodearse; las dinámicas por entorno (robots, URL canónica) se parametrizan.
+- **Google Search Console**: Para que Google indexe un sitio nuevo, NO basta con tener `robots: index, follow`. Se requiere verificar el dominio en GSC (via registro TXT en DNS de Cloudflare) y enviar el sitemap manualmente. Sin esto, el crawl puede tardar semanas o no ocurrir.

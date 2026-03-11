@@ -535,3 +535,29 @@ Se actualizó la identidad visual en toda la aplicación, migrando de `Logo.jpg`
 
 **Regla derivada:**
 > Todo cambio estructural en configuración o sincronización masiva requiere un reinicio limpio de procesos para evitar el uso de estados obsoletos (`stale state`).
+
+## 2026-03-11 — SEO Fix: Placeholders Literales en Producción
+
+**Qué pasó:** El tab del navegador mostraba `%VITE_SEO_TITLE%` en `geekorium.shop` porque las variables SEO (`VITE_SEO_TITLE`, `VITE_SEO_DESCRIPTION`, etc.) nunca fueron configuradas en el dashboard de Cloudflare Pages. Se hardcodearon los valores SEO estáticos directamente en `index.html` y se identificaron las variables de Cloudflare faltantes.
+
+**Problema encontrado:** Variables `%VITE_*%` no reemplazadas en el HTML de producción → aparecen como texto literal en el browser.
+
+**Causa raíz:** Cloudflare Pages buildea y reemplaza los placeholders de Vite SOLO si la variable está definida en su dashboard (Settings → Environment Variables). Esas variables nunca fueron agregadas allá.
+
+**Lo que cambió:**
+
+- `lessons_learned.md` → Lección #55 (Variables SEO de Vite No Reemplazadas en Producción)
+- `frontend/index.html` → SEO hardcodeado directamente (`<title>Geekorium Emporio Mágico</title>`, OG tags, Twitter cards). Solo `%VITE_ROBOTS%` queda como placeholder.
+- `.github/workflows/deploy.yml` → Añadida `VITE_SEO_TITLE` para el build de GitHub Pages.
+
+**Variables faltantes en Cloudflare identificadas:**
+
+| Variable | Valor |
+|---|---|
+| `VITE_SUPABASE_PROJECT_ID` | `sxuotvogwvmxuvwbsscv` |
+| `VITE_ROBOTS` | `index, follow` |
+
+**Pendiente:** Configurar Google Search Console (verificación DNS + sitemap) para que Google indexe el sitio.
+
+**Regla derivada:**
+> Auditar `index.html` en cada setup nuevo: todo `%VITE_*%` sin variable en el hosting es un bug silencioso. SEO estático → hardcode. SEO dinámico por entorno → parametrizar.
