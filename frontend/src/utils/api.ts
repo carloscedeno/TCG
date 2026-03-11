@@ -327,6 +327,23 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
 
             if (versionsData) {
               const expandedVersions: any[] = [];
+              const printingIds = versionsData.map((v: any) => v.printing_id);
+
+              // Fetch stock for all these printings from products
+              const { data: productsData } = await supabase
+                .from('products')
+                .select('printing_id, finish, stock')
+                .in('printing_id', printingIds);
+
+              const stockMap = new Map();
+              if (productsData) {
+                for (const p of productsData) {
+                  const safeFinish = (p.finish || 'nonfoil').toLowerCase();
+                  const key = `${p.printing_id}-${safeFinish}`;
+                  stockMap.set(key, (stockMap.get(key) || 0) + (p.stock || 0));
+                }
+              }
+
               versionsData.forEach((v: any) => {
                 const baseVersion = {
                   printing_id: v.printing_id,
@@ -335,7 +352,6 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                   collector_number: v.collector_number,
                   rarity: v.rarity,
                   image_url: v.image_url,
-                  stock: v.stock || 0,
                   prices: v.prices
                 };
 
@@ -362,7 +378,8 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                     price: priceToUse,
                     market_price: priceToUse,
                     finish: 'nonfoil',
-                    is_foil: false
+                    is_foil: false,
+                    stock: stockMap.get(`${v.printing_id}-nonfoil`) || 0
                   });
                 }
 
@@ -379,7 +396,8 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                     price: priceToUseFoil,
                     market_price: priceToUseFoil,
                     finish: 'foil',
-                    is_foil: true
+                    is_foil: true,
+                    stock: stockMap.get(`${v.printing_id}-foil`) || 0
                   });
                 }
 
@@ -392,7 +410,8 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                     price: priceToUseEtched,
                     market_price: priceToUseEtched,
                     finish: 'etched',
-                    is_foil: true
+                    is_foil: true,
+                    stock: stockMap.get(`${v.printing_id}-etched`) || 0
                   });
                 }
               });
