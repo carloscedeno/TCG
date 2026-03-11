@@ -1,0 +1,293 @@
+
+Running 2 tests using 1 worker
+
+  ✓  1 [setup] › tests\e2e\auth.setup.ts:7:1 › authenticate (1.0s)
+TEST STARTED: Guest Checkout
+BROWSER LOG: API Sets failed, falling back to Supabase TypeError: Failed to fetch
+    at rE (https://dev.geekorium.shop/assets/index-C4LqSJh-.js:437:49776)
+    at https://dev.geekorium.shop/assets/index-C4LqSJh-.js:441:12070
+    at ti (https://dev.geekorium.shop/assets/index-C4LqSJh-.js:48:83625)
+    at T0 (https://dev.geekorium.shop/assets/index-C4LqSJh-.js:48:98320)
+    at Ss (https://dev.geekorium.shop/assets/index-C4LqSJh-.js:48:98204)
+    at T0 (https://dev.geekorium.shop/assets/index-C4LqSJh-.js:48:99056)
+    at Ss (https://dev.geekorium.shop/assets/index-C4LqSJh-.js:48:98204)
+    at T0 (https://dev.geekorium.shop/assets/index-C4LqSJh-.js:48:98300)
+    at Ss (https://dev.geekorium.shop/assets/index-C4LqSJh-.js:48:98204)
+    at T0 (https://dev.geekorium.shop/assets/index-C4LqSJh-.js:48:98300)
+Switching to Marketplace tab...
+BROWSER LOG: Failed to load resource: the server responded with a status of 404 ()
+BROWSER LOG: Failed to load resource: the server responded with a status of 404 ()
+<< MARKETPLACE [33m200[39m https://sxuotvogwvmxuvwbsscv.supabase.co/rest/v1/rpc/get_products_filtered
+Waiting for card image visibility...
+Found 50 cards in marketplace.
+Waiting for card image visibility...
+Clicking card...
+TEST FAILED: locator.click: Test timeout of 60000ms exceeded.
+Call log:
+[2m  - waiting for getByTestId('product-card').first().getByTestId('product-image')[22m
+[2m    - locator resolved to <img loading="lazy" decoding="async" data-testid="product-image" alt="Storm Fleet Negotiator" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://cards.scryfall.io/normal/front/7/a/7ac4efff-eb66-48dd-9d6b-14eaf1684034.jpg?1699022406"/>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not stable[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    - waiting for element to be visible, enabled and stable[22m
+[2m    - element is visible, enabled and stable[22m
+[2m    - scrolling into view if needed[22m
+[2m    - done scrolling[22m
+[2m    - <img alt="El Emporio" src="/branding/Logo.jpg" class="relative w-32 h-32 rounded-full border-4 border-[#00AEB4]/30 shadow-2xl mb-4 group-hover:scale-105 transition-transform duration-500"/> from <div class="fixed inset-0 z-[200] flex items-center justify-center p-4">…</div> subtree intercepts pointer events[22m
+[2m  2 × retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m      - waiting for element to be visible, enabled and stable[22m
+[2m      - element is visible, enabled and stable[22m
+[2m      - scrolling into view if needed[22m
+[2m      - done scrolling[22m
+[2m      - <div class="absolute -top-24 -left-24 w-64 h-64 bg-[#00AEB4]/10 rounded-full blur-[80px]"></div> from <div class="fixed inset-0 z-[200] flex items-center justify-center p-4">…</div> subtree intercepts pointer events[22m
+[2m  23 × retrying click action[22m
+[2m       - waiting 500ms[22m
+[2m       - waiting for element to be visible, enabled and stable[22m
+[2m       - element is visible, enabled and stable[22m
+[2m       - scrolling into view if needed[22m
+[2m       - done scrolling[22m
+[2m       - <img alt="El Emporio" src="/branding/Logo.jpg" class="relative w-32 h-32 rounded-full border-4 border-[#00AEB4]/30 shadow-2xl mb-4 group-hover:scale-105 transition-transform duration-500"/> from <div class="fixed inset-0 z-[200] flex items-center justify-center p-4">…</div> subtree intercepts pointer events[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+[2m       - waiting for element to be visible, enabled and stable[22m
+[2m       - element is visible, enabled and stable[22m
+[2m       - scrolling into view if needed[22m
+[2m       - done scrolling[22m
+[2m       - <img alt="El Emporio" src="/branding/Logo.jpg" class="relative w-32 h-32 rounded-full border-4 border-[#00AEB4]/30 shadow-2xl mb-4 group-hover:scale-105 transition-transform duration-500"/> from <div class="fixed inset-0 z-[200] flex items-center justify-center p-4">…</div> subtree intercepts pointer events[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+[2m       - waiting for element to be visible, enabled and stable[22m
+[2m       - element is visible, enabled and stable[22m
+[2m       - scrolling into view if needed[22m
+[2m       - done scrolling[22m
+[2m       - <div class="absolute -top-24 -left-24 w-64 h-64 bg-[#00AEB4]/10 rounded-full blur-[80px]"></div> from <div class="fixed inset-0 z-[200] flex items-center justify-center p-4">…</div> subtree intercepts pointer events[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+[2m       - waiting for element to be visible, enabled and stable[22m
+[2m       - element is visible, enabled and stable[22m
+[2m       - scrolling into view if needed[22m
+[2m       - done scrolling[22m
+[2m       - <div class="absolute -top-24 -left-24 w-64 h-64 bg-[#00AEB4]/10 rounded-full blur-[80px]"></div> from <div class="fixed inset-0 z-[200] flex items-center justify-center p-4">…</div> subtree intercepts pointer events[22m
+[2m  - retrying click action[22m
+[2m    - waiting 500ms[22m
+
+    at [90mC:\Users\carlo\OneDrive\Documents\Antigravity\TCG\frontend\[39mtests\e2e\guest_checkout.spec.ts:75:29 {
+  [32mSymbol(step)[39m: {
+    location: {
+      file: [32m'C:\\Users\\carlo\\OneDrive\\Documents\\Antigravity\\TCG\\frontend\\tests\\e2e\\guest_checkout.spec.ts'[39m,
+      line: [33m75[39m,
+      column: [33m29[39m
+    },
+    category: [32m'pw:api'[39m,
+    title: [32m"Click getByTestId('product-card').first().getByTestId('product-image')"[39m,
+    apiName: [32m'locator.click'[39m,
+    params: {
+      selector: [32m'internal:testid=[data-testid="product-card"s] >> nth=0 >> internal:testid=[data-testid="product-image"s]'[39m,
+      strict: [33mtrue[39m,
+      timeout: [33m0[39m
+    },
+    group: [90mundefined[39m,
+    stepId: [32m'pw:api@46'[39m,
+    boxedStack: [90mundefined[39m,
+    steps: [],
+    attachmentIndices: [],
+    info: TestStepInfoImpl {
+      annotations: [],
+      _testInfo: [36m[TestInfoImpl][39m,
+      _stepId: [32m'pw:api@46'[39m,
+      _title: [32m"Click getByTestId('product-card').first().getByTestId('product-image')"[39m,
+      _parentStep: [90mundefined[39m,
+      skip: [36m[Function (anonymous)][39m
+    },
+    complete: [36m[Function: complete][39m,
+    endWallTime: [33m1772423104794[39m,
+    error: {
+      message: [32m'Error: locator.click: Test timeout of 60000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m"\x1B[2m  - waiting for getByTestId('product-card').first().getByTestId('product-image')\x1B[22m\n"[39m +
+        [32m'\x1B[2m    - locator resolved to <img loading="lazy" decoding="async" data-testid="product-image" alt="Storm Fleet Negotiator" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://cards.scryfall.io/normal/front/7/a/7ac4efff-eb66-48dd-9d6b-14eaf1684034.jpg?1699022406"/>\x1B[22m\n'[39m +
+        [32m'\x1B[2m  - attempting click action\x1B[22m\n'[39m +
+        [32m'\x1B[2m    2 × waiting for element to be visible, enabled and stable\x1B[22m\n'[39m +
+        [32m'\x1B[2m      - element is not stable\x1B[22m\n'[39m +
+        [32m'\x1B[2m    - retrying click action\x1B[22m\n'[39m +
+        [32m'\x1B[2m    - waiting 20ms\x1B[22m\n'[39m +
+        [32m'\x1B[2m    - waiting for element to be visible, enabled and stable\x1B[22m\n'[39m +
+        [32m'\x1B[2m    - element is visible, enabled and stable\x1B[22m\n'[39m +
+        [32m'\x1B[2m    - scrolling into view if needed\x1B[22m\n'[39m +
+        [32m'\x1B[2m    - done scrolling\x1B[22m\n'[39m +
+        [32m'\x1B[2m    - <img alt="El Emporio" src="/branding/Logo.jpg" class="relative w-32 h-32 rounded-full border-4 border-[#00AEB4]/30 shadow-2xl mb-4 group-hover:scale-105 transition-transform duration-500"/> from <div class="fixed inset-0 z-[200] flex items-center justify-center p-4">…</div> subtree intercepts pointer events\x1B[22m\n'[39m +
+        [32m'\x1B[2m  2 × retrying click action\x1B[22m\n'[39m +
+        [32m'\x1B[2m      - waiting 100ms\x1B[22m\n'[39m +
+        [32m'\x1B[2m      - waiting for element to be visible, enabled and stable\x1B[22m\n'[39m +
+        [32m'\x1B[2m      - element is visible, enabled and stable\x1B[22m\n'[39m +
+        [32m'\x1B[2m      - scrolling into view if needed\x1B[22m\n'[39m +
+        [32m'\x1B[2m      - done scrolling\x1B[22m\n'[39m +
+        [32m'\x1B[2m      - <div class="absolute -top-24 -left-24 w-64 h-64 bg-[#00AEB4]/10 rounded-full blur-[80px]"></div> from <div class="fixed inset-0 z-[200] flex items-center justify-center p-4">…</div> subtree intercepts pointer events\x1B[22m\n'[39m +
+        [32m'\x1B[2m  23 × retrying click action\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - waiting 500ms\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - waiting for element to be visible, enabled and stable\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - element is visible, enabled and stable\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - scrolling into view if needed\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - done scrolling\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - <img alt="El Emporio" src="/branding/Logo.jpg" class="relative w-32 h-32 rounded-full border-4 border-[#00AEB4]/30 shadow-2xl mb-4 group-hover:scale-105 transition-transform duration-500"/> from <div class="fixed inset-0 z-[200] flex items-center justify-center p-4">…</div> subtree intercepts pointer events\x1B[22m\n'[39m +
+        [32m'\x1B[2m     - retrying click action\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - waiting 500ms\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - waiting for element to be visible, enabled and stable\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - element is visible, enabled and stable\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - scrolling into view if needed\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - done scrolling\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - <img alt="El Emporio" src="/branding/Logo.jpg" class="relative w-32 h-32 rounded-full border-4 border-[#00AEB4]/30 shadow-2xl mb-4 group-hover:scale-105 transition-transform duration-500"/> from <div class="fixed inset-0 z-[200] flex items-center justify-center p-4">…</div> subtree intercepts pointer events\x1B[22m\n'[39m +
+        [32m'\x1B[2m     - retrying click action\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - waiting 500ms\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - waiting for element to be visible, enabled and stable\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - element is visible, enabled and stable\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - scrolling into view if needed\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - done scrolling\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - <div class="absolute -top-24 -left-24 w-64 h-64 bg-[#00AEB4]/10 rounded-full blur-[80px]"></div> from <div class="fixed inset-0 z-[200] flex items-center justify-center p-4">…</div> subtree intercepts pointer events\x1B[22m\n'[39m +
+        [32m'\x1B[2m     - retrying click action\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - waiting 500ms\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - waiting for element to be visible, enabled and stable\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - element is visible, enabled and stable\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - scrolling into view if needed\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - done scrolling\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - <div class="absolute -top-24 -left-24 w-64 h-64 bg-[#00AEB4]/10 rounded-full blur-[80px]"></div> from <div class="fixed inset-0 z-[200] flex items-center justify-center p-4">…</div> subtree intercepts pointer events\x1B[22m\n'[39m +
+        [32m'\x1B[2m  - retrying click action\x1B[22m\n'[39m +
+        [32m'\x1B[2m    - waiting 500ms\x1B[22m\n'[39m,
+      stack: [32m'Error: locator.click: Test timeout of 60000ms exceeded.\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m"\x1B[2m  - waiting for getByTestId('product-card').first().getByTestId('product-image')\x1B[22m\n"[39m +
+        [32m'\x1B[2m    - locator resolved to <img loading="lazy" decoding="async" data-testid="product-image" alt="Storm Fleet Negotiator" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://cards.scryfall.io/normal/front/7/a/7ac4efff-eb66-48dd-9d6b-14eaf1684034.jpg?1699022406"/>\x1B[22m\n'[39m +
+        [32m'\x1B[2m  - attempting click action\x1B[22m\n'[39m +
+        [32m'\x1B[2m    2 × waiting for element to be visible, enabled and stable\x1B[22m\n'[39m +
+        [32m'\x1B[2m      - element is not stable\x1B[22m\n'[39m +
+        [32m'\x1B[2m    - retrying click action\x1B[22m\n'[39m +
+        [32m'\x1B[2m    - waiting 20ms\x1B[22m\n'[39m +
+        [32m'\x1B[2m    - waiting for element to be visible, enabled and stable\x1B[22m\n'[39m +
+        [32m'\x1B[2m    - element is visible, enabled and stable\x1B[22m\n'[39m +
+        [32m'\x1B[2m    - scrolling into view if needed\x1B[22m\n'[39m +
+        [32m'\x1B[2m    - done scrolling\x1B[22m\n'[39m +
+        [32m'\x1B[2m    - <img alt="El Emporio" src="/branding/Logo.jpg" class="relative w-32 h-32 rounded-full border-4 border-[#00AEB4]/30 shadow-2xl mb-4 group-hover:scale-105 transition-transform duration-500"/> from <div class="fixed inset-0 z-[200] flex items-center justify-center p-4">…</div> subtree intercepts pointer events\x1B[22m\n'[39m +
+        [32m'\x1B[2m  2 × retrying click action\x1B[22m\n'[39m +
+        [32m'\x1B[2m      - waiting 100ms\x1B[22m\n'[39m +
+        [32m'\x1B[2m      - waiting for element to be visible, enabled and stable\x1B[22m\n'[39m +
+        [32m'\x1B[2m      - element is visible, enabled and stable\x1B[22m\n'[39m +
+        [32m'\x1B[2m      - scrolling into view if needed\x1B[22m\n'[39m +
+        [32m'\x1B[2m      - done scrolling\x1B[22m\n'[39m +
+        [32m'\x1B[2m      - <div class="absolute -top-24 -left-24 w-64 h-64 bg-[#00AEB4]/10 rounded-full blur-[80px]"></div> from <div class="fixed inset-0 z-[200] flex items-center justify-center p-4">…</div> subtree intercepts pointer events\x1B[22m\n'[39m +
+        [32m'\x1B[2m  23 × retrying click action\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - waiting 500ms\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - waiting for element to be visible, enabled and stable\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - element is visible, enabled and stable\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - scrolling into view if needed\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - done scrolling\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - <img alt="El Emporio" src="/branding/Logo.jpg" class="relative w-32 h-32 rounded-full border-4 border-[#00AEB4]/30 shadow-2xl mb-4 group-hover:scale-105 transition-transform duration-500"/> from <div class="fixed inset-0 z-[200] flex items-center justify-center p-4">…</div> subtree intercepts pointer events\x1B[22m\n'[39m +
+        [32m'\x1B[2m     - retrying click action\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - waiting 500ms\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - waiting for element to be visible, enabled and stable\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - element is visible, enabled and stable\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - scrolling into view if needed\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - done scrolling\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - <img alt="El Emporio" src="/branding/Logo.jpg" class="relative w-32 h-32 rounded-full border-4 border-[#00AEB4]/30 shadow-2xl mb-4 group-hover:scale-105 transition-transform duration-500"/> from <div class="fixed inset-0 z-[200] flex items-center justify-center p-4">…</div> subtree intercepts pointer events\x1B[22m\n'[39m +
+        [32m'\x1B[2m     - retrying click action\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - waiting 500ms\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - waiting for element to be visible, enabled and stable\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - element is visible, enabled and stable\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - scrolling into view if needed\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - done scrolling\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - <div class="absolute -top-24 -left-24 w-64 h-64 bg-[#00AEB4]/10 rounded-full blur-[80px]"></div> from <div class="fixed inset-0 z-[200] flex items-center justify-center p-4">…</div> subtree intercepts pointer events\x1B[22m\n'[39m +
+        [32m'\x1B[2m     - retrying click action\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - waiting 500ms\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - waiting for element to be visible, enabled and stable\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - element is visible, enabled and stable\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - scrolling into view if needed\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - done scrolling\x1B[22m\n'[39m +
+        [32m'\x1B[2m       - <div class="absolute -top-24 -left-24 w-64 h-64 bg-[#00AEB4]/10 rounded-full blur-[80px]"></div> from <div class="fixed inset-0 z-[200] flex items-center justify-center p-4">…</div> subtree intercepts pointer events\x1B[22m\n'[39m +
+        [32m'\x1B[2m  - retrying click action\x1B[22m\n'[39m +
+        [32m'\x1B[2m    - waiting 500ms\x1B[22m\n'[39m +
+        [32m'\n'[39m +
+        [32m'    at C:\\Users\\carlo\\OneDrive\\Documents\\Antigravity\\TCG\\frontend\\tests\\e2e\\guest_checkout.spec.ts:75:29'[39m,
+      cause: [90mundefined[39m
+    }
+  }
+}
+  ✘  2 [chromium] › tests\e2e\guest_checkout.spec.ts:14:5 › Guest Checkout Flow › should allow guest to add items and checkout (1.0m)
+
+
+  1) [chromium] › tests\e2e\guest_checkout.spec.ts:14:5 › Guest Checkout Flow › should allow guest to add items and checkout 
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 60000ms exceeded.
+    Call log:
+    [2m  - waiting for getByTestId('product-card').first().getByTestId('product-image')[22m
+    [2m    - locator resolved to <img loading="lazy" decoding="async" data-testid="product-image" alt="Storm Fleet Negotiator" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://cards.scryfall.io/normal/front/7/a/7ac4efff-eb66-48dd-9d6b-14eaf1684034.jpg?1699022406"/>[22m
+    [2m  - attempting click action[22m
+    [2m    2 × waiting for element to be visible, enabled and stable[22m
+    [2m      - element is not stable[22m
+    [2m    - retrying click action[22m
+    [2m    - waiting 20ms[22m
+    [2m    - waiting for element to be visible, enabled and stable[22m
+    [2m    - element is visible, enabled and stable[22m
+    [2m    - scrolling into view if needed[22m
+    [2m    - done scrolling[22m
+    [2m    - <img alt="El Emporio" src="/branding/Logo.jpg" class="relative w-32 h-32 rounded-full border-4 border-[#00AEB4]/30 shadow-2xl mb-4 group-hover:scale-105 transition-transform duration-500"/> from <div class="fixed inset-0 z-[200] flex items-center justify-center p-4">…</div> subtree intercepts pointer events[22m
+    [2m  2 × retrying click action[22m
+    [2m      - waiting 100ms[22m
+    [2m      - waiting for element to be visible, enabled and stable[22m
+    [2m      - element is visible, enabled and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="absolute -top-24 -left-24 w-64 h-64 bg-[#00AEB4]/10 rounded-full blur-[80px]"></div> from <div class="fixed inset-0 z-[200] flex items-center justify-center p-4">…</div> subtree intercepts pointer events[22m
+    [2m  23 × retrying click action[22m
+    [2m       - waiting 500ms[22m
+    [2m       - waiting for element to be visible, enabled and stable[22m
+    [2m       - element is visible, enabled and stable[22m
+    [2m       - scrolling into view if needed[22m
+    [2m       - done scrolling[22m
+    [2m       - <img alt="El Emporio" src="/branding/Logo.jpg" class="relative w-32 h-32 rounded-full border-4 border-[#00AEB4]/30 shadow-2xl mb-4 group-hover:scale-105 transition-transform duration-500"/> from <div class="fixed inset-0 z-[200] flex items-center justify-center p-4">…</div> subtree intercepts pointer events[22m
+    [2m     - retrying click action[22m
+    [2m       - waiting 500ms[22m
+    [2m       - waiting for element to be visible, enabled and stable[22m
+    [2m       - element is visible, enabled and stable[22m
+    [2m       - scrolling into view if needed[22m
+    [2m       - done scrolling[22m
+    [2m       - <img alt="El Emporio" src="/branding/Logo.jpg" class="relative w-32 h-32 rounded-full border-4 border-[#00AEB4]/30 shadow-2xl mb-4 group-hover:scale-105 transition-transform duration-500"/> from <div class="fixed inset-0 z-[200] flex items-center justify-center p-4">…</div> subtree intercepts pointer events[22m
+    [2m     - retrying click action[22m
+    [2m       - waiting 500ms[22m
+    [2m       - waiting for element to be visible, enabled and stable[22m
+    [2m       - element is visible, enabled and stable[22m
+    [2m       - scrolling into view if needed[22m
+    [2m       - done scrolling[22m
+    [2m       - <div class="absolute -top-24 -left-24 w-64 h-64 bg-[#00AEB4]/10 rounded-full blur-[80px]"></div> from <div class="fixed inset-0 z-[200] flex items-center justify-center p-4">…</div> subtree intercepts pointer events[22m
+    [2m     - retrying click action[22m
+    [2m       - waiting 500ms[22m
+    [2m       - waiting for element to be visible, enabled and stable[22m
+    [2m       - element is visible, enabled and stable[22m
+    [2m       - scrolling into view if needed[22m
+    [2m       - done scrolling[22m
+    [2m       - <div class="absolute -top-24 -left-24 w-64 h-64 bg-[#00AEB4]/10 rounded-full blur-[80px]"></div> from <div class="fixed inset-0 z-[200] flex items-center justify-center p-4">…</div> subtree intercepts pointer events[22m
+    [2m  - retrying click action[22m
+    [2m    - waiting 500ms[22m
+
+
+      73 |             await expect(cardImage).toBeVisible({ timeout: 10000 });
+      74 |             console.log('Clicking card...');
+    > 75 |             await cardImage.click();
+         |                             ^
+      76 |
+      77 |             const modal = page.getByTestId('card-modal');
+      78 |             console.log('Waiting for card modal...');
+        at C:\Users\carlo\OneDrive\Documents\Antigravity\TCG\frontend\tests\e2e\guest_checkout.spec.ts:75:29
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\guest_checkout-Guest-Check-07d4d-t-to-add-items-and-checkout-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\guest_checkout-Guest-Check-07d4d-t-to-add-items-and-checkout-chromium\error-context.md
+
+  1 failed
+    [chromium] › tests\e2e\guest_checkout.spec.ts:14:5 › Guest Checkout Flow › should allow guest to add items and checkout 
+  1 passed (1.1m)

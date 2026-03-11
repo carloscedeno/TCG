@@ -173,25 +173,25 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
             return; // Allow native browser behavior for ctrl+click if it's a link
         }
 
-        let targetId = id;
-
-        // If finish is explicitly provided (toggle buttons), try to find that specific version in the current group
+        // If finish is explicitly provided (FOIL/NORMAL toggle buttons), only update
+        // selectedFinish + activePrintingId — do NOT reload card details.
+        // The activeVersion memo already picks the correct price from all_versions,
+        // and a reload would overwrite that price with the nonfoil product price.
         if (finish) {
             setSelectedFinish(finish as any);
             if (activeGroup) {
                 const targetVersion = finish === 'foil' ? activeGroup.foil : (finish === 'etched' ? activeGroup.etched : activeGroup.normal);
                 if (targetVersion) {
-                    targetId = targetVersion.printing_id;
+                    setActivePrintingId(targetVersion.printing_id);
                 }
             }
-        } else if (finish === undefined) {
-            // If clicking from the versions list, we might want to preserve the finish or use the one from the clicked version
-            // In this case, id is provided, so we just use it.
+            return; // ← skip loadCardDetails entirely for finish toggle
         }
 
-        if (targetId !== activePrintingId) {
-            setActivePrintingId(targetId);
-            loadCardDetails(targetId, true); // User explicitly clicked, don't auto-switch finishes anymore
+        // Clicking a different edition row → full reload
+        if (id !== activePrintingId) {
+            setActivePrintingId(id);
+            loadCardDetails(id, true);
         }
     };
 

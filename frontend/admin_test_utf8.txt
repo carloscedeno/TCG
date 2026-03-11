@@ -1,0 +1,60 @@
+﻿
+Running 3 tests using 2 workers
+
+  Γ£ô  1 [setup] ΓÇ║ tests\e2e\auth.setup.ts:7:1 ΓÇ║ authenticate (709ms)
+  Γ£ÿ  2 [chromium] ΓÇ║ tests\e2e\admin.spec.ts:26:5 ΓÇ║ Admin & Inventory Management ΓÇ║ should handle zero-stock items visibility (1.0m)
+  Γ£ÿ  3 [chromium] ΓÇ║ tests\e2e\admin.spec.ts:4:5 ΓÇ║ Admin & Inventory Management ΓÇ║ should add a product and verify in list (1.0m)
+
+
+  1) [chromium] ΓÇ║ tests\e2e\admin.spec.ts:4:5 ΓÇ║ Admin & Inventory Management ΓÇ║ should add a product and verify in list 
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 60000ms exceeded.
+    Call log:
+    [2m  - waiting for getByRole('button', { name: /Agregar Producto|Add Product/i })[22m
+
+
+       7 |
+       8 |         // Open Add Product Modal
+    >  9 |         await page.getByRole('button', { name: /Agregar Producto|Add Product/i }).click();
+         |                                                                                   ^
+      10 |
+      11 |         // Search for a card
+      12 |         await page.locator('.modal-search-input').fill('Black Lotus'); // Adjust selector
+        at C:\Users\carlo\OneDrive\Documents\Antigravity\TCG\frontend\tests\e2e\admin.spec.ts:9:83
+
+    attachment #1: screenshot (image/png) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\admin-Admin-Inventory-Mana-042d9--product-and-verify-in-list-chromium\test-failed-1.png
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+    Error Context: test-results\admin-Admin-Inventory-Mana-042d9--product-and-verify-in-list-chromium\error-context.md
+
+  2) [chromium] ΓÇ║ tests\e2e\admin.spec.ts:26:5 ΓÇ║ Admin & Inventory Management ΓÇ║ should handle zero-stock items visibility 
+
+    [31mTest timeout of 60000ms exceeded.[39m
+
+    Error: locator.click: Test timeout of 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('button:has-text("Edit")').first()[22m
+
+
+      28 |         await page.goto('/admin/inventory');
+      29 |         const editBtn = page.locator('button:has-text("Edit")').first();
+    > 30 |         await editBtn.click();
+         |                       ^
+      31 |         await page.locator('input[name="stock"]').fill('0');
+      32 |         await page.getByRole('button', { name: /Guardar|Save/i }).click();
+      33 |
+        at C:\Users\carlo\OneDrive\Documents\Antigravity\TCG\frontend\tests\e2e\admin.spec.ts:30:23
+
+    attachment #1: screenshot (image/png) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\admin-Admin-Inventory-Mana-ac507-zero-stock-items-visibility-chromium\test-failed-1.png
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+    Error Context: test-results\admin-Admin-Inventory-Mana-ac507-zero-stock-items-visibility-chromium\error-context.md
+
+  2 failed
+    [chromium] ΓÇ║ tests\e2e\admin.spec.ts:4:5 ΓÇ║ Admin & Inventory Management ΓÇ║ should add a product and verify in list 
+    [chromium] ΓÇ║ tests\e2e\admin.spec.ts:26:5 ΓÇ║ Admin & Inventory Management ΓÇ║ should handle zero-stock items visibility 
+  1 passed (1.1m)

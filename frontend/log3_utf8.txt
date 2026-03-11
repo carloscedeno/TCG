@@ -1,0 +1,242 @@
+﻿
+Running 2 tests using 1 worker
+
+  Γ£ô  1 [setup] ΓÇ║ tests\e2e\auth.setup.ts:7:1 ΓÇ║ authenticate (603ms)
+TEST STARTED: Guest Checkout
+BROWSER LOG: Failed to load resource: the server responded with a status of 404 ()
+BROWSER LOG: Failed to load resource: the server responded with a status of 404 ()
+BROWSER LOG: API Sets failed, falling back to Supabase TypeError: Failed to fetch
+    at rE (https://dev.geekorium.shop/assets/index-DbY7nL1m.js:437:49776)
+    at https://dev.geekorium.shop/assets/index-DbY7nL1m.js:441:12070
+    at ti (https://dev.geekorium.shop/assets/index-DbY7nL1m.js:48:83625)
+    at T0 (https://dev.geekorium.shop/assets/index-DbY7nL1m.js:48:98320)
+    at Ss (https://dev.geekorium.shop/assets/index-DbY7nL1m.js:48:98204)
+    at T0 (https://dev.geekorium.shop/assets/index-DbY7nL1m.js:48:99056)
+    at Ss (https://dev.geekorium.shop/assets/index-DbY7nL1m.js:48:98204)
+    at T0 (https://dev.geekorium.shop/assets/index-DbY7nL1m.js:48:98300)
+    at Ss (https://dev.geekorium.shop/assets/index-DbY7nL1m.js:48:98204)
+    at T0 (https://dev.geekorium.shop/assets/index-DbY7nL1m.js:48:98300)
+BROWSER LOG: Failed to load resource: the server responded with a status of 404 ()
+BROWSER LOG: Failed to load resource: the server responded with a status of 404 ()
+Switching to Marketplace tab...
+<< MARKETPLACE [33m200[39m https://sxuotvogwvmxuvwbsscv.supabase.co/rest/v1/rpc/get_products_filtered
+Waiting for card image visibility...
+Found 50 cards in marketplace.
+Waiting for card image visibility...
+Clicking card...
+BROWSER LOG: CardModal: Start loading details for: 7ac4efff-eb66-48dd-9d6b-14eaf1684034
+BROWSER LOG: CardModal: Fetching details...
+Waiting for card modal...
+Waiting for add to cart button...
+BROWSER LOG: CardModal: Data received: yes
+BROWSER LOG: CardModal: Details set with Printing ID: 7ac4efff-eb66-48dd-9d6b-14eaf1684034
+BROWSER LOG: CardModal: Loading finished
+BROWSER LOG: Failed to load resource: the server responded with a status of 404 ()
+BROWSER LOG: Failed to load resource: the server responded with a status of 404 ()
+Clicking add to cart...
+Guest Cart Content: [{"printing_id":"7ac4efff-eb66-48dd-9d6b-14eaf1684034","quantity":1}]
+Checking if cart drawer is open...
+Cart drawer closed, opening manually...
+Waiting for cart item...
+Waiting for checkout button...
+Clicking checkout...
+Verifying checkout URL...
+Filling customer data...
+Continuing to payment...
+Placing order...
+node.exe : TEST FAILED: ExpectError: 
+[2mexpect([22m[31mlocator[39m[2m).
+[22mtoBeVisible[2m([22m[2m)[22m 
+failed
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" "C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpec 
+   ified: (TEST FAILED: Ex...2m)[22  
+  m failed:String) [], RemoteExcept   
+ ion
+    + FullyQualifiedErrorId : NativeC 
+   ommandError
+ 
+
+Locator: 
+getByTestId('place-order-button')
+Expected: visible
+Timeout: 5000ms
+Error: element(s) not found
+
+Call log:
+[2m  - Expect "toBeVisible" with 
+timeout 5000ms[22m
+[2m  - waiting for 
+getByTestId('place-order-button')[22m
+
+    at [90mC:\Users\carlo\OneDrive\Do
+cuments\Antigravity\TCG\frontend\[39m
+tests\e2e\guest_checkout.spec.ts:150:4
+1 {
+  matcherResult: {
+    message: [32m'\x1B[2mexpect(\x1B[
+22m\x1B[31mlocator\x1B[39m\x1B[2m).\x1
+B[22mtoBeVisible\x1B[2m(\x1B[22m\x1B[2
+m)\x1B[22m failed\n'[39m +
+      [32m'\n'[39m +
+      [32m"Locator: getByTestId('plac
+e-order-button')\n"[39m +
+      [32m'Expected: visible\n'[39m 
++
+      [32m'Timeout: 5000ms\n'[39m +
+      [32m'Error: element(s) not 
+found\n'[39m +
+      [32m'\n'[39m +
+      [32m'Call log:\n'[39m +
+      [32m'\x1B[2m  - Expect 
+"toBeVisible" with timeout 
+5000ms\x1B[22m\n'[39m +
+      [32m"\x1B[2m  - waiting for get
+ByTestId('place-order-button')\x1B[22m
+\n"[39m,
+    pass: [33mfalse[39m,
+    actual: [90mundefined[39m,
+    name: [32m'toBeVisible'[39m,
+    expected: [32m'visible'[39m,
+    log: [
+      [32m'  - Expect "toBeVisible" 
+with timeout 5000ms'[39m,
+      [32m"  - waiting for getByTestI
+d('place-order-button')"[39m
+    ],
+    timeout: [33m5000[39m
+  },
+  [32mSymbol(step)[39m: {
+    category: [32m'expect'[39m,
+    apiName: 
+[32m'expect.toBeVisible'[39m,
+    title: [32m`Expect "toBeVisible" 
+getByTestId('place-order-button')`[39
+m,
+    shortTitle: [32m'Expect 
+"toBeVisible"'[39m,
+    params: [90mundefined[39m,
+    infectParentStepsWithError: 
+[90mundefined[39m,
+    stepId: [32m'expect@67'[39m,
+    group: [90mundefined[39m,
+    boxedStack: [90mundefined[39m,
+    location: {
+      file: [32m'C:\\Users\\carlo\\On
+eDrive\\Documents\\Antigravity\\TCG\\f
+rontend\\tests\\e2e\\guest_checkout.sp
+ec.ts'[39m,
+      line: [33m150[39m,
+      column: [33m41[39m
+    },
+    steps: [],
+    attachmentIndices: [],
+    info: TestStepInfoImpl {
+      annotations: [],
+      _testInfo: 
+[36m[TestInfoImpl][39m,
+      _stepId: [32m'expect@67'[39m,
+      _title: [32m`Expect 
+"toBeVisible" getByTestId('place-order
+-button')`[39m,
+      _parentStep: 
+[90mundefined[39m,
+      skip: [36m[Function 
+(anonymous)][39m
+    },
+    complete: [36m[Function: 
+complete][39m,
+    endWallTime: 
+[33m1772423830955[39m,
+    error: {
+      message: [32m'Error: \x1B[2mexp
+ect(\x1B[22m\x1B[31mlocator\x1B[39m\x1
+B[2m).\x1B[22mtoBeVisible\x1B[2m(\x1B[
+22m\x1B[2m)\x1B[22m failed\n'[39m +
+        [32m'\n'[39m +
+        [32m"Locator: getByTestId('pl
+ace-order-button')\n"[39m +
+        [32m'Expected: 
+visible\n'[39m +
+        [32m'Timeout: 5000ms\n'[39m 
++
+        [32m'Error: element(s) not 
+found\n'[39m +
+        [32m'\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m'\x1B[2m  - Expect 
+"toBeVisible" with timeout 
+5000ms\x1B[22m\n'[39m +
+        [32m"\x1B[2m  - waiting for g
+etByTestId('place-order-button')\x1B[2
+2m\n"[39m,
+      stack: [32m'Error: \x1B[2mexpec
+t(\x1B[22m\x1B[31mlocator\x1B[39m\x1B[
+2m).\x1B[22mtoBeVisible\x1B[2m(\x1B[22
+m\x1B[2m)\x1B[22m failed\n'[39m +
+        [32m'\n'[39m +
+        [32m"Locator: getByTestId('pl
+ace-order-button')\n"[39m +
+        [32m'Expected: 
+visible\n'[39m +
+        [32m'Timeout: 5000ms\n'[39m 
++
+        [32m'Error: element(s) not 
+found\n'[39m +
+        [32m'\n'[39m +
+        [32m'Call log:\n'[39m +
+        [32m'\x1B[2m  - Expect 
+"toBeVisible" with timeout 
+5000ms\x1B[22m\n'[39m +
+        [32m"\x1B[2m  - waiting for g
+etByTestId('place-order-button')\x1B[2
+2m\n"[39m +
+        [32m'\n'[39m +
+        [32m'    at C:\\Users\\carlo\
+\OneDrive\\Documents\\Antigravity\\TCG
+\\frontend\\tests\\e2e\\guest_checkout
+.spec.ts:150:41'[39m,
+      cause: [90mundefined[39m
+    }
+  }
+}
+  Γ£ÿ  2 [chromium] ΓÇ║ tests\e2e\guest_checkout.spec.ts:17:5 ΓÇ║ Guest Checkout Flow ΓÇ║ should allow guest to add items and checkout (17.1s)
+
+
+  1) [chromium] ΓÇ║ tests\e2e\guest_checkout.spec.ts:17:5 ΓÇ║ Guest Checkout Flow ΓÇ║ should allow guest to add items and checkout 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByTestId('place-order-button')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for getByTestId('place-order-button')[22m
+
+
+      148 |             console.log('Placing order...');
+      149 |             const placeOrderBtn = page.getByTestId('place-order-button');
+    > 150 |             await expect(placeOrderBtn).toBeVisible();
+          |                                         ^
+      151 |             await placeOrderBtn.click();
+      152 |
+      153 |             // 5. Success / WhatsApp
+        at C:\Users\carlo\OneDrive\Documents\Antigravity\TCG\frontend\tests\e2e\guest_checkout.spec.ts:150:41
+
+    attachment #1: screenshot (image/png) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\guest_checkout-Guest-Check-07d4d-t-to-add-items-and-checkout-chromium\test-failed-1.png
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+    Error Context: test-results\guest_checkout-Guest-Check-07d4d-t-to-add-items-and-checkout-chromium\error-context.md
+
+  1 failed
+    [chromium] ΓÇ║ tests\e2e\guest_checkout.spec.ts:17:5 ΓÇ║ Guest Checkout Flow ΓÇ║ should allow guest to add items and checkout 
+  1 passed (22.3s)
