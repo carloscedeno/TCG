@@ -136,13 +136,15 @@ const Home: React.FC = () => {
 
           result = {
             cards: productRes.products.map((p: any) => ({
-              card_id: p.printing_id || p.id,
+              card_id: p.printing_id ? `${p.printing_id}-${p.finish || 'nonfoil'}` : p.id,
               name: p.name,
               set: p.set_code || 'Unknown',
               price: Number(p.price) || 0,
               image_url: p.image_url,
               rarity: p.rarity,
               total_stock: Number(p.stock) || 0,
+              finish: p.finish,
+              is_foil: p.finish === 'foil' || p.finish === 'etched'
             })),
             total_count: productRes.total_count
           };
