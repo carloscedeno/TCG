@@ -569,7 +569,8 @@ export const fetchCart = async (): Promise<any> => {
           price: row.price,
           image_url: row.image_url,
           set_code: row.set_code,
-          stock: row.stock || 0
+          stock: row.stock || 0,
+          finish: row.finish || 'nonfoil'  // pass finish so Cart can show FOIL/POR ENCARGO badges
         }
       }));
       return { items };

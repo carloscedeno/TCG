@@ -14,6 +14,7 @@ interface CartItem {
         image_url: string;
         set_code: string;
         stock?: number;
+        finish?: string;  // nonfoil | foil | etched
     }
 }
 
@@ -149,6 +150,20 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                                         <div>
                                             <h4 className="text-sm font-bold text-white leading-tight mb-1">{item.products?.name}</h4>
                                             <p className="text-[10px] font-black uppercase text-neutral-500">{item.products?.set_code}</p>
+
+                                            {/* Finish & stock badges */}
+                                            <div className="flex flex-wrap gap-1 mt-1">
+                                                {(item.products?.finish || 'nonfoil').toLowerCase() === 'foil' && (
+                                                    <span className="inline-block px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white">
+                                                        ✦ Foil
+                                                    </span>
+                                                )}
+                                                {(item.products?.stock ?? 1) === 0 && (
+                                                    <span className="inline-block px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest bg-amber-500/20 border border-amber-500/40 text-amber-400">
+                                                        Por Encargo
+                                                    </span>
+                                                )}
+                                            </div>
                                         </div>
                                         <div className="flex items-center justify-between">
                                             <span className="text-sm font-mono font-black text-geeko-cyan">${(item.products?.price || 0).toFixed(2)}</span>
