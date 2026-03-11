@@ -337,7 +337,15 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
 
     const marketPrice = useMemo(() => {
         if (!activeVersion || !details) return details?.valuation?.market_price || 0;
-        return activeVersion.market_price || details?.valuation?.market_price || 0;
+        const resolvedPrice = activeVersion.price || details?.valuation?.market_price || 0;
+        console.log("CardModal Price Calc:", {
+            activeVersionId: activeVersion.printing_id,
+            activeVersionFinish: activeVersion.finish,
+            activeVersionPrice: activeVersion.price,
+            fallbackBasePrice: details?.valuation?.market_price,
+            finalResolvedPrice: resolvedPrice
+        });
+        return resolvedPrice;
     }, [activeVersion, details]);
 
     if (!isOpen) return null;
