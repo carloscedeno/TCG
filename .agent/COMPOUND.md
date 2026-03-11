@@ -588,3 +588,15 @@ Se actualizó la identidad visual en toda la aplicación, migrando de `Logo.jpg`
 - `frontend/src/pages/Home.tsx` → Keys dinámicas de React basadas en `printing_id` + `finish`.
 
 **Regla derivada:** Todo RPC que retorne listas de inventario físico debe siempre exponer y proyectar los diferenciadores físicos (ej. `finish`, `condition`) al frontend para garantizar unicidad en React Components.
+
+## 2026-03-11 — Recarga de Caché PostgREST y Precios Ramificados
+
+**Qué pasó:** Tras corregir las duplicaciones de React Keys iterando sobre la propiedad `finish`, la UI seguía sin mostrar Foil o los precios Foil correctos, porque la caché del API de Supabase (PostgREST) no se invalidó tras el parche manual, y porque el SQL proyectaba el `avg_market_price_usd` para toda variante, sin discriminar el acabado.
+
+**Lo que cambió:**
+
+- `lessons_learned.md` → Lección #59 (Recarga de Caché API y Precios Ramificados en RPCs).
+- `supabase/migrations/20260311200000_add_finish_to_products_filtered.sql` → Añadida lógica condicional `CASE WHEN finish='foil' THEN foil_price ELSE nonfoil_price END`.
+- `scripts/apply_sql.py` → Script de utilidad en Python creado para inyectar parches de emergencia, forzando automáticamente `NOTIFY pgrst, 'reload schema'`.
+
+**Regla derivada:** Cualquier parche SQL hotfix aplicado remotamente sobre PostgREST requiere estrictamente `NOTIFY pgrst, 'reload schema'`. Además, la proyección de la propiedad `price` no puede ser plana en inventario TCG; debe ramificarse en el RPC tras evaluar las banderas físicas del elemento iterado.

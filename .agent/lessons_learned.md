@@ -513,3 +513,14 @@ ear_mint, lightly_played) deben normalizarse en el backend a cÃ³digos internos
 - **Causa Raíz**: En la tabla `products`, las variantes Foil y Nonfoil del mismo `printing_id` están separadas. Sin embargo, si el RPC no retorna la columna `finish`, el frontend las mapeaba ambas usando unicámente `printing_id` como React Key, causando advertencias de UI de claves duplicadas, sobreescritura de cartas, y perdiendo el estado visual "Foil".
 - **Solución**: Asegurarse de que el RPC recupere la columna `finish` (`LOWER(COALESCE(p.finish, 'nonfoil')) as finish`) y utilizarla en el frontend para generar un React Key único (`${printing_id}-${finish}`). Adicionalmente, pasar `is_foil` explicitamente al componente derivándolo de `finish`.
 - **Regla Derivada**: Todo RPC que retorne listas de inventario físico TCG debe siempre exponer y proyectar los diferenciadores físicos (ej. `finish`, `condition`) al frontend para garantizar unicidad garantizada en las visualizaciones de React y posibilitar lógica UI condicional.
+
+### 59. Recarga de Caché PostgREST y Precios Ramificados en RPCs — 2026-03-11
+
+- **Problema**: Tras añadir la columna `finish` al RPC `get_products_filtered` en la base de datos de producción mediante un script SQL directo, el frontend seguía recibiendo la respuesta antigua (sin `finish`) y mostrando precios incorrectos para las versiones Foil.
+- **Causa Raíz**:
+  1. PostgREST (la capa API de Supabase) mantiene un caché del schema de la base de datos. Los cambios directos en funciones SQL no invalidan este caché automáticamente, lo que provoca que la API siga retornando la firma antigua de la función.
+  2. Inicialmente, no se consideró que el precio a mostrar (*market price*) debe ramificarse dependiendo del *finish*. La consulta SQL usaba `avg_market_price_usd` de forma genérica para todas las variantes.
+- **Solución**:
+  1. Ejecutar `NOTIFY pgrst, 'reload schema';` inmediatamente después de alterar una función SQL cruda.
+  2. Modificar el RPC para que el precio devuelto dependa inteligentemente de la variante física que se va a imprimir en esa fila: `COALESCE(CASE WHEN LOWER(p.finish) IN ('foil', 'etched') THEN cp.avg_market_price_foil_usd ELSE cp.avg_market_price_usd END, p.price, 0)`.
+- **Regla Derivada**: Al desarrollar RPCs unificados de inventario TCG, la proyección de la propiedad `price` no puede ser plana; **debe** ramificarse evaluando las banderas físicas (`finish`, y en el futuro `condition` o `language`). Además, cualquier parche SQL *hotfix* aplicado en vivo sobre Supabase requiere estrictamente recargar la capa API HTTP (`NOTIFY pgrst, 'reload schema'`).
