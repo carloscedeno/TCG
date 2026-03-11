@@ -346,8 +346,8 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
 
                 if (pushesNonFoil) {
                   const isSynthetic = baseIsFoil && (pushesFoil || pushesEtched);
-                  // Prefer CK price (avg_market_price_usd) over Scryfall prices json
-                  const priceToUse = Number(v.avg_market_price_usd || v.prices?.usd || v.prices?.eur || 0);
+                  // Only use CK price (avg_market_price_usd) — no Scryfall fallback
+                  const priceToUse = Number(v.avg_market_price_usd || 0);
                   expandedVersions.push({
                     ...baseVersion,
                     printing_id: isSynthetic ? `${v.printing_id}-nonfoil` : v.printing_id,
@@ -360,8 +360,8 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
 
                 if (pushesFoil) {
                   const isSynthetic = !baseIsFoil && (pushesNonFoil || pushesEtched);
-                  // Prefer CK foil price (avg_market_price_foil_usd) over Scryfall prices json
-                  const priceToUseFoil = Number(v.avg_market_price_foil_usd || v.prices?.usd_foil || v.prices?.eur_foil || 0);
+                  // Only use CK foil price (avg_market_price_foil_usd) — no Scryfall fallback
+                  const priceToUseFoil = Number(v.avg_market_price_foil_usd || 0);
                   expandedVersions.push({
                     ...baseVersion,
                     printing_id: isSynthetic ? `${v.printing_id}-foil` : v.printing_id,
@@ -454,25 +454,29 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
 
         if (pData) {
           data.all_versions = data.all_versions.map((v: any) => {
-            // Match by printing_id AND finish to correctly separate foil/nonfoil stock
+            // Match by printing_id AND finish exactly to correctly separate foil/nonfoil
             const vFinish = (v.finish || (v.is_foil ? 'foil' : 'nonfoil')).toLowerCase();
             const matches = pData.filter((p: any) => p.printing_id === v.printing_id);
-            const prod =
-              matches.find((p: any) => (p.finish || 'nonfoil').toLowerCase() === vFinish) ||
-              matches[0];
+            // EXACT finish match only — never fall back to another finish for price
+            const exactProd = matches.find((p: any) => (p.finish || 'nonfoil').toLowerCase() === vFinish);
 
             return {
               ...v,
-              product_id: prod?.id,
-              stock: prod?.stock || 0,
-              price: prod?.price || v.price
+              product_id: exactProd?.id,
+              stock: exactProd?.stock || 0,
+              // Only override price if there's an exact product match for this finish
+              price: exactProd?.price ?? v.price
             };
           });
 
-          // Update main price/stock for the current printingId
+          // Update main price/stock for the current printingId — match by finish too
           const baseId = printingId.replace('-foil', '').replace('-nonfoil', '').replace('-etched', '');
+          const currentFinish = data.finish || (data.is_foil ? 'foil' : 'nonfoil');
           const matches = pData.filter((p: any) => p.printing_id === baseId);
-          const currentProd = matches.find((p: any) => p.name === data.name) || matches[0];
+          // Require exact finish match so nonfoil product never overrides foil price
+          const currentProd = matches.find((p: any) =>
+            (p.finish || 'nonfoil').toLowerCase() === currentFinish.toLowerCase()
+          );
           if (currentProd) {
             data.product_id = currentProd.id;
             data.total_stock = currentProd.stock;
