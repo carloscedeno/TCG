@@ -169,7 +169,7 @@ const LegalPage: React.FC = () => {
                 </section>
 
                 <div className="flex justify-center mt-20">
-                    <img src="/branding/Logo.png" alt="Logo" className="w-16 h-16 object-contain opacity-20 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700" />
+                    <img src="/branding/Logo.png" alt="Logo" className="w-32 object-contain opacity-20 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700" />
                 </div>
 
             </main>

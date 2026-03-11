@@ -12,7 +12,7 @@ const HelpPage: React.FC = () => {
             <div className="bg-[#121212] border-b border-white/10 p-4">
                 <div className="max-w-[1600px] mx-auto flex items-center justify-between">
                     <a href="/" className="flex items-center gap-3 group">
-                        <img src="/branding/Logo.png" alt="Logo" className="w-10 h-10 object-contain" />
+                        <img src="/branding/Logo.png" alt="Logo" className="w-32 object-contain" />
                         <span className="text-xl font-black tracking-tighter text-white uppercase group-hover:text-geeko-cyan transition-colors">
                             Volver al Emporio
                         </span>
