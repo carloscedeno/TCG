@@ -290,8 +290,9 @@ export const CardDetail: React.FC = () => {
                                                     <div className="flex items-center justify-between md:justify-end gap-6 shrink-0">
                                                         <div className="flex items-center gap-3 font-mono font-bold text-xs">
                                                             {group.normal && (
-                                                                <span className={activePrintingId === group.normal.printing_id ? 'text-white' : 'text-neutral-500'}>
+                                                                <span className={`flex items-center gap-1 ${activePrintingId === group.normal.printing_id ? 'text-white' : 'text-neutral-500'}`}>
                                                                     ${group.normal.price.toFixed(2)}
+                                                                    {(group.normal.stock || 0) <= 0 && <span className="text-[8px] opacity-60 font-sans tracking-wide">(P/E)</span>}
                                                                 </span>
                                                             )}
                                                             {group.normal && group.foil && <span className="text-neutral-700 mx-1">/</span>}
@@ -299,6 +300,7 @@ export const CardDetail: React.FC = () => {
                                                                 <span className={`flex items-center gap-1.5 ${activePrintingId === group.foil.printing_id ? 'text-purple-400' : 'text-neutral-600'}`}>
                                                                     <span className="text-[10px]">✨</span>
                                                                     ${Number(group.foil.price).toFixed(2)}
+                                                                    {(group.foil.stock || 0) <= 0 && <span className="text-[8px] opacity-60 font-sans tracking-wide">(P/E)</span>}
                                                                 </span>
                                                             )}
                                                         </div>
@@ -384,34 +386,32 @@ export const CardDetail: React.FC = () => {
                                                     <button
                                                         onClick={() => {
                                                             const targetId = activeGroup?.normal?.printing_id;
-                                                            if (targetId && (activeGroup.normal?.stock || 0) > 0) handleVersionClick(targetId, 'nonfoil');
+                                                            if (targetId) handleVersionClick(targetId, 'nonfoil');
                                                         }}
-                                                        disabled={(activeGroup.normal?.stock || 0) === 0}
-                                                        className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${activeFinish !== 'foil'
+                                                        className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-1 ${activeFinish !== 'foil'
                                                             ? 'bg-white text-black shadow-lg scale-[1.05]'
                                                             : (activeGroup.normal?.stock || 0) === 0
-                                                                ? 'text-neutral-700 cursor-not-allowed opacity-50'
+                                                                ? 'text-neutral-500 opacity-60'
                                                                 : 'text-neutral-500 hover:text-white'
                                                             }`}
                                                     >
-                                                        Normal
+                                                        Normal {(activeGroup.normal?.stock || 0) <= 0 && <span className="text-[8px] opacity-70 tracking-tighter">(P/E)</span>}
                                                     </button>
                                                 )}
                                                 {activeGroup?.foil && (
                                                     <button
                                                         onClick={() => {
                                                             const targetId = activeGroup?.foil?.printing_id;
-                                                            if (targetId && (activeGroup.foil?.stock || 0) > 0) handleVersionClick(targetId, 'foil');
+                                                            if (targetId) handleVersionClick(targetId, 'foil');
                                                         }}
-                                                        disabled={(activeGroup.foil?.stock || 0) === 0}
-                                                        className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${activeFinish === 'foil'
+                                                        className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-1 ${activeFinish === 'foil'
                                                             ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 border-transparent text-white shadow-[0_0_15px_rgba(236,72,153,0.3)] scale-[1.05]'
                                                             : (activeGroup.foil?.stock || 0) === 0
-                                                                ? 'text-neutral-700 cursor-not-allowed opacity-50'
+                                                                ? 'text-neutral-500 opacity-60'
                                                                 : 'text-neutral-500 hover:text-white'
                                                             }`}
                                                     >
-                                                        Foil
+                                                        Foil {(activeGroup.foil?.stock || 0) <= 0 && <span className="text-[8px] opacity-70 tracking-tighter">(P/E)</span>}
                                                     </button>
                                                 )}
                                             </div>

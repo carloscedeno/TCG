@@ -494,8 +494,9 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                 <div className="flex items-center justify-between md:justify-end gap-6 shrink-0">
                                                     <div className="flex items-center gap-3 font-titles font-medium text-[10px] md:text-xs">
                                                         {group.normal && (
-                                                            <span className={activePrintingId === group.normal.printing_id ? 'text-white' : 'text-neutral-500'}>
+                                                            <span className={`flex items-center gap-1 ${activePrintingId === group.normal.printing_id ? 'text-white' : 'text-neutral-500'}`}>
                                                                 ${Number(group.normal.price).toFixed(2)}
+                                                                {(group.normal.stock || 0) <= 0 && <span className="text-[8px] opacity-60 font-sans tracking-wide">(P/E)</span>}
                                                             </span>
                                                         )}
                                                         {group.normal && group.foil && <span className="text-neutral-700 mx-1">/</span>}
@@ -503,6 +504,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                             <span className={`flex items-center gap-1.5 ${activePrintingId === group.foil.printing_id ? 'text-purple-400' : 'text-neutral-600'}`}>
                                                                 <span className="text-[10px]">✨</span>
                                                                 ${Number(group.foil.price).toFixed(2)}
+                                                                {(group.foil.stock || 0) <= 0 && <span className="text-[8px] opacity-60 font-sans tracking-wide">(P/E)</span>}
                                                             </span>
                                                         )}
                                                     </div>
@@ -678,12 +680,14 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                                     const targetId = activeGroup?.normal?.printing_id;
                                                                     if (targetId) handleVersionClick(targetId, 'nonfoil');
                                                                 }}
-                                                                className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${selectedFinish === 'nonfoil'
+                                                                className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-1 ${selectedFinish === 'nonfoil'
                                                                     ? 'bg-white text-black shadow-lg scale-[1.05]'
-                                                                    : 'text-neutral-500 hover:text-white'
+                                                                    : (activeGroup.normal?.stock || 0) === 0
+                                                                        ? 'text-neutral-500 opacity-60'
+                                                                        : 'text-neutral-500 hover:text-white'
                                                                     }`}
                                                             >
-                                                                Normal
+                                                                Normal {(activeGroup.normal?.stock || 0) <= 0 && <span className="text-[8px] opacity-70 tracking-tighter">(P/E)</span>}
                                                             </button>
                                                         )}
                                                         {activeGroup?.foil && (
@@ -692,12 +696,14 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                                     const targetId = activeGroup?.foil?.printing_id;
                                                                     if (targetId) handleVersionClick(targetId, 'foil');
                                                                 }}
-                                                                className={`px-3 py-1 rounded text-[8px] font-black uppercase tracking-widest transition-all ${selectedFinish === 'foil'
+                                                                className={`px-3 py-1 rounded text-[8px] font-black uppercase tracking-widest transition-all flex items-center gap-1 ${selectedFinish === 'foil'
                                                                     ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 border-transparent text-white shadow-lg'
-                                                                    : 'text-neutral-500 hover:text-white'
+                                                                    : (activeGroup.foil?.stock || 0) === 0
+                                                                        ? 'text-neutral-500 opacity-60'
+                                                                        : 'text-neutral-500 hover:text-white'
                                                                     }`}
                                                             >
-                                                                Foil
+                                                                Foil {(activeGroup.foil?.stock || 0) <= 0 && <span className="text-[8px] opacity-70 tracking-tighter">(P/E)</span>}
                                                             </button>
                                                         )}
                                                     </div>
