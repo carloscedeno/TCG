@@ -525,6 +525,26 @@ ear_mint, lightly_played) deben normalizarse en el backend a cÃ³digos internos
   2. Modificar el RPC para que el precio devuelto dependa inteligentemente de la variante física que se va a imprimir en esa fila: `COALESCE(CASE WHEN LOWER(p.finish) IN ('foil', 'etched') THEN cp.avg_market_price_foil_usd ELSE cp.avg_market_price_usd END, p.price, 0)`.
 - **Regla Derivada**: Al desarrollar RPCs unificados de inventario TCG, la proyección de la propiedad `price` no puede ser plana; **debe** ramificarse evaluando las banderas físicas (`finish`, y en el futuro `condition` o `language`). Además, cualquier parche SQL *hotfix* aplicado en vivo sobre Supabase requiere estrictamente recargar la capa API HTTP (`NOTIFY pgrst, 'reload schema'`).
 
+### 60. Uso de Supabase CLI en Windows (npx) — 2026-03-12
+
+- **Problema**: El comando `supabase` falla con `CommandNotFoundException` si no está en el PATH global del sistema.
+- **Solución**: Usar siempre `npx supabase` para invocar el CLI local. Para despliegues remotos, es obligatorio incluir el flag `--project-ref [ID]` para evitar ambigüedades si el enlace local (`.supabase/config`) no está sincronizado.
+- **Regla Derivada**: [LEYES_DEL_SISTEMA.md] -> Regla Técnica (Herramientas CLI).
+
+### 61. Sincronización de Edge Functions Duplicadas — 2026-03-12
+
+- **Problema**: Desplegar una función corregida (ej. `api`) no solucionaba el problema en todas las partes del sitio (ej. Admin o Import) porque existía otra función idéntica con distinto nombre (`tcg-api`) desplegada previamente.
+- **Lección**: Durante fases de transición o refactorización de nombres de funciones, es Mandatorio sincronizar el código en ambas carpetas (`api/` y `tcg-api/`) antes del despliegue para garantizar consistencia en todo el ecosistema.
+- **Regla Derivada**: Evitar la fragmentación de lógica compartida; si dos Edge Functions hacen lo mismo, deben eliminarse o mantenerse estrictamente en espejo hasta la migración total.
+
+### 62. Lógica de Pedidos "Por Encargo" (Stock 0) — 2026-03-12
+
+- **Problema**: El sistema bloqueaba la venta de cartas sin stock físico, limitando el e-commerce solo a lo disponible en preventa o inventario actual.
+- **Solución**:
+  - **Bypassing**: Modificar RPC `add_to_cart` para ignorar la validación de `stock_actual` si el producto permite pedidos on-demand.
+  - **Creación On-the-fly**: Si una variante (Foil/NM) no existe en la tabla `products`, el RPC debe crearla con stock 0 en lugar de fallar, permitiendo que el usuario la "encargue".
+- **Regla Derivada**: [LEYES_DEL_SISTEMA.md] -> Regla de Negocio 4 (Soporte Por Encargo).
+
 ### 68. Discrepancia de Stock "8 fuera / 1 dentro" (Marzo 2026)
 
 - **Problema**: El buscador mostraba stock disponible, pero el modal mostraba "Por encargo".

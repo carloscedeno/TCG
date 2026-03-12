@@ -252,7 +252,24 @@ Cuando un comando falla:
 
 ---
 
-## 🟢 MEJORES PRÁCTICAS
+### Regla de Negocio 4 (Soporte "Por Encargo")
+
+- El sistema debe permitir la venta de cualquier carta, incluso si no hay stock físico disponible (stock 0).
+- Si un usuario intenta añadir al carrito una variante (Foil/NM) que no existe en el catálogo local (`products`), el sistema la creará automáticamente con stock 0.
+- Estas órdenes se procesan bajo la etiqueta "POR ENCARGO" en el flujo de checkout y notificaciones.
+
+---
+
+## 🛠 REGLAS TÉCNICAS
+
+### Herramientas CLI (Entorno Windows)
+
+- **Supabase**: Se debe usar `npx supabase` para asegurar la compatibilidad con el entorno local del usuario.
+- **Project Ref**: En comandos de despliegue, incluir siempre el flag `--project-ref` seguido del ID del proyecto (`sxuotvogwvmxuvwbsscv`) para garantizar que los cambios se apliquen al proyecto correcto.
+
+### Sincronización de Edge Functions
+
+- Si existen múltiples carpetas de funciones con lógica compartida (ej: `api/` y `tcg-api/`), todo cambio debe ser replicado en ambas antes de cualquier despliegue para evitar estados inconsistentes en el frontend.
 
 ### Práctica 1: Commits Descriptivos
 
@@ -426,4 +443,5 @@ Antes de iniciar procesos de sincronización pesados o de larga duración, se de
 **Estas leyes son inmutables y deben ser respetadas en todo momento por el agente autónomo.**
 
 ### 13. Sincronización Estricta de Migraciones (CI/CD)
+
 Ningún archivo de migración SQL (`supabase/migrations/`) desplegado y registrado en la rama de `dev` o `main` debe ser borrado localmente para "limpiar". Si se requiere consolidar migraciones o eliminar versiones antiguas, se debe purgar su registro equivalente en la tabla `supabase_migrations.schema_migrations` del entorno remoto alojado correspondiente. De lo contrario, GitHub Actions y Supabase CLI fallarán con un `Migration mismatch`.

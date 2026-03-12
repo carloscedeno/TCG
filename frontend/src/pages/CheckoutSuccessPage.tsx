@@ -47,29 +47,8 @@ export const CheckoutSuccessPage = () => {
                     </div>
                 )}
 
-                {trackingUrl && (
-                    <div className="bg-geeko-cyan/5 border border-geeko-cyan/20 rounded-2xl p-6 mb-8 text-left">
-                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-geeko-cyan mb-2">URL de Seguimiento</p>
-                        <p className="text-[11px] text-neutral-400 mb-4">Guarda este enlace único para ver el estado de tu pedido en tiempo real:</p>
-                        <div className="flex items-center gap-2 bg-black/40 border border-white/10 rounded-xl p-3">
-                            <input
-                                readOnly
-                                value={trackingUrl}
-                                className="bg-transparent border-none text-white text-[10px] font-mono w-full outline-none overflow-hidden text-ellipsis"
-                            />
-                            <button
-                                onClick={() => {
-                                    navigator.clipboard.writeText(trackingUrl);
-                                    // Could add a toast here
-                                }}
-                                className="text-geeko-cyan hover:text-white transition-colors p-1"
-                                title="Copiar al portapapeles"
-                            >
-                                <ExternalLink size={16} />
-                            </button>
-                        </div>
-                    </div>
-                )}
+                {/* Tracking button is preserved below in the primary actions section */}
+
 
                 {!isRealOrder && (
                     <div className="p-4 bg-amber-500/5 border border-amber-500/20 rounded-xl mb-8 flex items-start gap-3 text-left">

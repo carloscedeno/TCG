@@ -1178,9 +1178,25 @@ async function handleNotificationsEndpoint(supabase: SupabaseClient, path: strin
 
   try {
     const itemsArray = Array.isArray(items) ? items : [];
-    const items_html = itemsArray.map((item: any) =>
-      `<li>${item?.quantity || 1}x ${item?.products?.name || 'Unknown Item'} - $${item?.products?.price || 0}</li>`
-    ).join('');
+    const items_html = itemsArray.map((item: any) => {
+      const name = item?.products?.name || item?.name || 'Unknown Item';
+      const finish = item?.products?.finish || item?.finish;
+      const onDemand = item?.products?.is_on_demand || item?.is_on_demand;
+
+      let variantLabel = '';
+      if (finish === 'foil' || finish === 'etched') {
+        variantLabel += ` [${finish.toUpperCase()}]`;
+      }
+      if (onDemand) {
+        variantLabel += ` [POR ENCARGO]`;
+      }
+
+      return `<li style="margin-bottom: 8px;">
+        <strong>${item?.quantity || 1}x ${name}${variantLabel}</strong> - $${(item?.products?.price || item?.price || 0).toFixed(2)}
+      </li>`;
+    }).join('');
+
+    const trackingLink = `https://www.geekorium.shop/order/${order_id}`;
 
     const customerEmailPromise = user_email ? transporter.sendMail({
       from: `"Geekorium Shop" <${SmtpUser}>`,
@@ -1191,12 +1207,23 @@ async function handleNotificationsEndpoint(supabase: SupabaseClient, path: strin
             <body>
                 <h2>¡Gracias por tu compra en Geekorium Shop!</h2>
                 <p>Tu pedido <strong>${order_id}</strong> ha sido confirmado.</p>
-                <h3>Resumen de la compra:</h3>
-                <ul>
-                    ${items_html}
-                </ul>
-                <h3>Total: $${order_total}</h3>
-                <p>Nos pondremos en contacto pronto para el envío.</p>
+                <div style="background-color: #f9f9f9; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <h3 style="margin-top: 0;">Resumen de la compra:</h3>
+                    <ul style="padding-left: 20px;">
+                        ${items_html}
+                    </ul>
+                    <h3 style="margin-bottom: 0;">Total: $${Number(order_total).toFixed(2)}</h3>
+                </div>
+                
+                <div style="margin: 30px 0; text-align: center;">
+                    <a href="${trackingLink}" style="background-color: #00AEB4; color: white; padding: 15px 25px; text-decoration: none; font-weight: bold; border-radius: 5px; display: inline-block;">
+                        Rastrear mi Pedido
+                    </a>
+                </div>
+
+                <p style="color: #666; font-size: 12px;">Si el botón no funciona, copia y pega este enlace: <br> ${trackingLink}</p>
+                <p>Nos pondremos en contacto pronto para coordinar la entrega o pago final.</p>
+
             </body>
         </html>
       `,
@@ -1214,10 +1241,11 @@ async function handleNotificationsEndpoint(supabase: SupabaseClient, path: strin
                 <p>Se ha registrado un nuevo pedido con el ID: <strong>${order_id}</strong>.</p>
                 <p>ID del Usuario: ${current_user_id || 'Guest'}</p>
                 <h3>Artículos comprados:</h3>
-                <ul>
+                <ul style="padding-left: 20px;">
                     ${items_html}
                 </ul>
-                <h3>Total: $${order_total}</h3>
+                <h3>Total: $${Number(order_total).toFixed(2)}</h3>
+
                 <p>Por favor revisa el panel de administración para más detalles.</p>
             </body>
         </html>

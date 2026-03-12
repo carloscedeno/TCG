@@ -90,6 +90,9 @@ Artefactos del Compound step:
 - ✅ Conexión Segura via Supabase Pooler: Unificación de `DATABASE_URL` para scripts de mantenimiento.
 - ✅ Lógica de Fallback de Precios (TMNT/PZA): Implementado matching por `collector_number` + `edition` para sets con Scryfall IDs inconsistentes.
 - ✅ Unificación de Entorno: Consolidación de todos los archivos `.env` en una única fuente de verdad en la raíz del proyecto.
+- ✅ **Soporte "Por Encargo" (On-Demand)**: El sistema ahora permite añadir cartas sin stock al carrito, creándolas automáticamente en la DB con stock 0 si es necesario.
+- ✅ **Notificaciones Premium**: Los correos incluyen botones de rastreo funcionales, etiquetas [FOIL] y [POR ENCARGO] dinámicas.
+- ✅ **Limpieza de Checkout Success**: Eliminación de campos redundantes y activación del botón de seguimiento integrado.
 
 ## 🚧 Features Pendientes
 

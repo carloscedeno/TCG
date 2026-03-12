@@ -53,9 +53,10 @@ async def test_valuation_calculation_logic():
     with patch('src.api.services.valuation_service.supabase', mock_supabase):
         result = await ValuationService.get_two_factor_valuation("test-id")
 
-        assert result['store_price'] == 100.0
+        # Regla de negocio actual: CK NM es la fuente de verdad única (120.0)
+        assert result['store_price'] == 120.0
         assert result['market_price'] == 120.0
-        assert result['valuation_avg'] == 110.0
+        assert result['valuation_avg'] == 120.0
 
 
 @pytest.mark.asyncio

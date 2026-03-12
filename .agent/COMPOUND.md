@@ -30,6 +30,36 @@
 
 ---
 
+## 2026-03-12 — Soporte "Por Encargo" y Notificaciones Premium
+
+**Qué pasó:** Se implementó la capacidad de pedir productos sin stock físico (On-Demand), se refinó la página de éxito y se mejoraron las notificaciones por correo con botones de rastreo y etiquetas de variante precisas.
+**Problema encontrado:** El sistema bloqueaba pedidos sin stock y los correos carecían de detalles visuales (foil/encargo) y links funcionales. Se encontró confusión entre los slugs `api` y `tcg-api` en despliegues remotos.
+**Causa raíz:** Validaciones de stock rígidas en el RPC `add_to_cart`. Falta de sincronización entre carpetas de funciones duplicadas.
+**Lo que cambió:**
+
+- `lessons_learned.md` → Lecciones #60 (npx Supabase), #61 (Sync Edge Functions), #62 (On-Demand Logic).
+- `LEYES_DEL_SISTEMA.md` → Regla de Negocio 4 y Regla Técnica (CLI).
+- `AGENTS.md` → Marcadas features de On-Demand y Notificaciones como completadas.
+- `supabase/functions/` → Sincronización total de `api` y `tcg-api`.
+- `tests/unit/test_valuation_service.py` → Corregido para seguir la regla "CK single source of truth".
+**Regla derivada:** Todo pedido permite cartas con stock 0 (On-Demand). Los despliegues en Windows deben usar `npx`. Ambas carpetas de funciones deben estar en espejo hasta la migración total.
+
+## 2026-03-12 — Priorización de Stock y Fix Fiendlash
+
+**Qué pasó:** Resolví la discrepancia de stock de 'Fiendlash' y optimicé el buscador para priorizar cartas disponibles.
+**Problema encontrado:** El buscador mostraba stock pero el modal decía "Por encargo".
+**Causa raíz:** Desfase entre IDs sintéticos del frontend (`uuid-foil`) y IDs físicos de la DB al consultar stock.
+**Lo que cambió:**
+
+- `lessons_learned.md` → Lección #68 (Discrepancia de IDs)
+- `AGENTS.md` → Activada feature de priorización de stock.
+- `PROGRESS.md` → Reporte de éxito en fix de stock.
+- `api.ts` → Refactor de `fetchCardDetails` para normalizar IDs.
+- `get_products_filtered` (RPC) → Actualizado para ordenar por stock desc y matches exactos.
+**Regla derivada:** Las búsquedas siempre priorizan stock > 0. El modal auto-selecciona la variante con stock real.
+
+---
+
 ## 2026-02-27 Ã¢â‚¬â€� AdopciÃƒÂ³n del Framework Compounding Engineer
 
 **QuÃƒÂ© pasÃƒÂ³:** Se formalizÃƒÂ³ la adopciÃƒÂ³n del framework *Compounding Engineer* sobre la base existente del proyecto (`.agent/`, `LEYES_DEL_SISTEMA.md`, `lessons_learned.md`).

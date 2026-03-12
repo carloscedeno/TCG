@@ -93,6 +93,7 @@ export const CheckoutPage = () => {
 
             const simplifiedItems = cartItems.map(item => ({
                 product_id: item.product_id,
+                printing_id: item.printing_id,
                 quantity: item.quantity,
                 name: item.products?.name,
                 set: item.products?.set_code,
@@ -166,7 +167,12 @@ export const CheckoutPage = () => {
                 // Map frontend items format to expected notification format
                 const mappedItems = simplifiedItems.map(item => ({
                     quantity: item.quantity,
-                    products: { name: item.name, price: item.price }
+                    products: {
+                        name: item.name,
+                        price: item.price,
+                        finish: item.finish,
+                        is_on_demand: item.is_on_demand
+                    }
                 }));
 
                 // Fire and forget, don't await blocking UI
