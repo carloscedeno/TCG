@@ -666,8 +666,8 @@ async function handleImportEndpoint(supabase: SupabaseClient, path: string, meth
 
       const condition = normalizeCondition(row[mapping?.condition] || row['Condition'] || row['condition']);
 
-      let finish = row[mapping?.finish] || row['Foil'] || row['finish'] || row['Finish'] || 'nonfoil';
-      finish = String(finish).toLowerCase().includes('foil') ? 'foil' : 'nonfoil';
+      const lowerFinish = String(row[mapping?.finish] || row['Foil'] || row['finish'] || row['Finish'] || 'nonfoil').toLowerCase();
+      const finish = (lowerFinish === 'foil' || (lowerFinish.includes('foil') && !lowerFinish.includes('nonfoil'))) ? 'foil' : 'nonfoil';
 
       return {
         name: name || '',

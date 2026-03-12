@@ -578,3 +578,16 @@ ear_mint, lightly_played) deben normalizarse en el backend a cÃ³digos internos
   1. Refactorizar el RPC `get_products_filtered` con una cadena de fallback: `Market(Finish) -> Market(Nonfoil) -> Market(Foil) -> Store Price -> 0`.
   2. Ejecutar un script de corrección de datos para copiar precios de versiones base a versiones starred.
 - **Regla Derivada:** Todo RPC de inventario debe implementar fallbacks de precio entre acabados (finish) para mitigar falta de metadata específica.
+### 71. Lógica de Detección de Foil y Remediación Masiva (Marzo 2026)
+
+- **Problema**: El sistema importaba casi todas las cartas como "Foil", incluso tierras duales de 3ED que no existen en ese acabado.
+- **Causa Raíz**:
+  1. **Bug en Edge Function**: La lógica `finish.toLowerCase().includes('foil')` devolvía true para "nonfoil" porque contiene la palabra "foil".
+  2. **Data Inconsistente**: Miles de registros en `products` heredaron este error, ensuciando el inventario y la visualización.
+- **Solución**:
+  - **Código**: Refactorizar a `(finish === 'foil' || (finish.includes('foil') && !finish.includes('nonfoil')))` para exclusividad.
+  - **DB**: Script PL/pgSQL masivo que:
+    - Identifica cartas marcadas como `foil` que no soportan ese acabado segÃºn `card_printings`.
+    - Fusiona el stock con la versión `nonfoil` si existe, o renombra la entrada en place.
+    - Actualiza `order_items` y `cart_items` para mantener integridad referencial antes de borrar registros duplicados.
+- **Regla Derivada**: `LEYES_DEL_SISTEMA.md` -> Ley 6 (Performance y Datos). Las correcciones de finish deben considerar la tabla unida `card_printings`.

@@ -445,3 +445,8 @@ Antes de iniciar procesos de sincronización pesados o de larga duración, se de
 ### 13. Sincronización Estricta de Migraciones (CI/CD)
 
 Ningún archivo de migración SQL (`supabase/migrations/`) desplegado y registrado en la rama de `dev` o `main` debe ser borrado localmente para "limpiar". Si se requiere consolidar migraciones o eliminar versiones antiguas, se debe purgar su registro equivalente en la tabla `supabase_migrations.schema_migrations` del entorno remoto alojado correspondiente. De lo contrario, GitHub Actions y Supabase CLI fallarán con un `Migration mismatch`.
+---
+
+### Regla de Negocio 5 (Integridad de Acabados / Finish)
+
+**Nunca** permitir que un producto sea marcado como 'foil' si la impresión base (`card_printings`) no soporta oficialmente ese acabado. En caso de duda durante una importación masiva, el sistema debe defaultear a 'nonfoil' a menos que se detecte una coincidencia exacta y exclusiva de la palabra 'foil' (evitando falsos positivos con 'nonfoil').
