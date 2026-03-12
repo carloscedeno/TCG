@@ -88,8 +88,24 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
 
     useEffect(() => {
         if (isOpen && cardId) {
-            setActivePrintingId(cardId);
-            loadCardDetails(cardId);
+            // Extract requested finish from ID suffix if present (e.g. uuid-foil)
+            let initialFinish: 'nonfoil' | 'foil' | 'etched' = 'nonfoil';
+            let basePrintingId = cardId;
+
+            if (cardId.endsWith('-foil')) {
+                initialFinish = 'foil';
+                basePrintingId = cardId.replace('-foil', '');
+            } else if (cardId.endsWith('-etched')) {
+                initialFinish = 'etched';
+                basePrintingId = cardId.replace('-etched', '');
+            } else if (cardId.endsWith('-nonfoil')) {
+                initialFinish = 'nonfoil';
+                basePrintingId = cardId.replace('-nonfoil', '');
+            }
+
+            setSelectedFinish(initialFinish);
+            setActivePrintingId(basePrintingId);
+            loadCardDetails(basePrintingId, true, initialFinish); // skipAutoSwitch=true to preserve our extracted finish
             // Lock background scroll
             document.body.style.overflow = 'hidden';
         } else {
@@ -106,7 +122,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
 
     const [error, setError] = useState<string | null>(null);
 
-    const loadCardDetails = async (id: string, skipAutoSwitch = false) => {
+    const loadCardDetails = async (id: string, skipAutoSwitch = false, forcedFinish?: 'nonfoil' | 'foil' | 'etched') => {
         console.log("CardModal: Start loading details for:", id);
         setLoading(true);
         setError(null);
@@ -128,8 +144,9 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                 }
             }
 
-            // DEFAULT TO NORMAL: If we just loaded a foil version, but there is a normal version 
-            // of this same card (same set + collector_num), switch to the normal one by default.
+            // DEFAULT TO NORMAL: If we just loaded a specific version (like clicking from Versions list),
+            // or if we didn't specify one (skipAutoSwitch = false), logic follows:
+
             if (!skipAutoSwitch) {
                 const hasNonFoil = data.all_versions?.some((v: Version) =>
                     v.set_code === data.set_code &&
@@ -145,6 +162,19 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                     setSelectedFinish('foil');
                 } else {
                     setSelectedFinish('nonfoil');
+                }
+            } else {
+                // If skipAutoSwitch is true, we keep the forcedFinish we had or current state
+                const currentReqFinish = forcedFinish || selectedFinish;
+
+                // Ensure it's valid for this card or fallback safely
+                const hasFinish = data.all_versions?.some((v: any) => (v.finish || (v.is_foil ? 'foil' : 'nonfoil')) === currentReqFinish);
+                if (hasFinish) {
+                    setSelectedFinish(currentReqFinish);
+                } else {
+                    // Safe fallback if the requested finish doesn't exist in the loaded card
+                    if (data.is_foil || data.finish === 'foil') setSelectedFinish('foil');
+                    else setSelectedFinish('nonfoil');
                 }
             }
 
@@ -307,7 +337,8 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
         if (!activeGroup) return null;
         if (selectedFinish === 'foil' && activeGroup.foil) return activeGroup.foil;
         if (selectedFinish === 'etched' && activeGroup.etched) return activeGroup.etched;
-        return activeGroup.normal || activeGroup.base;
+        // Fallback to whichever is available in the group
+        return activeGroup.normal || activeGroup.foil || activeGroup.etched || activeGroup.base;
     }, [activeGroup, selectedFinish]);
 
     // Detect DFC from card name (e.g. "Aang, at the Crossroads // Aang, Destined Savior")
@@ -492,20 +523,30 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                 </div>
 
                                                 <div className="flex items-center justify-between md:justify-end gap-6 shrink-0">
-                                                    <div className="flex items-center gap-3 font-titles font-medium text-[10px] md:text-xs">
+                                                    <div className="flex flex-col items-end gap-1">
                                                         {group.normal && (
-                                                            <span className={`flex items-center gap-1 ${activePrintingId === group.normal.printing_id ? 'text-white' : 'text-neutral-500'}`}>
-                                                                ${Number(group.normal.price).toFixed(2)}
-                                                                {(group.normal.stock || 0) <= 0 && <span className="text-[8px] opacity-60 font-sans tracking-wide">(P/E)</span>}
-                                                            </span>
+                                                            <div className="flex items-center gap-2">
+                                                                <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-widest">Normal</span>
+                                                                <span className={`text-[11px] font-black ${group.normal.stock > 0 ? 'text-white' : 'text-neutral-600'}`}>
+                                                                    ${group.normal.price.toFixed(2)}
+                                                                    {group.normal.stock <= 0 && <span className="ml-1.5 text-[9px] text-orange-500/80 italic font-medium">(P/E)</span>}
+                                                                </span>
+                                                            </div>
                                                         )}
-                                                        {group.normal && group.foil && <span className="text-neutral-700 mx-1">/</span>}
                                                         {group.foil && (
-                                                            <span className={`flex items-center gap-1.5 ${activePrintingId === group.foil.printing_id ? 'text-purple-400' : 'text-neutral-600'}`}>
-                                                                <span className="text-[10px]">✨</span>
-                                                                ${Number(group.foil.price).toFixed(2)}
-                                                                {(group.foil.stock || 0) <= 0 && <span className="text-[8px] opacity-60 font-sans tracking-wide">(P/E)</span>}
-                                                            </span>
+                                                            <div className="flex items-center gap-2">
+                                                                <span className="text-[10px] text-purple-400 font-bold uppercase tracking-widest flex items-center gap-1">
+                                                                    <svg width="8" height="8" viewBox="0 0 10 12" fill="none">
+                                                                        <rect x="0.5" y="0.5" width="9" height="11" rx="1.5" stroke="currentColor" strokeWidth="1" />
+                                                                        <path d="M2 3 L8 3" stroke="currentColor" strokeWidth="1" />
+                                                                    </svg>
+                                                                    Foil
+                                                                </span>
+                                                                <span className={`text-[11px] font-black ${group.foil.stock > 0 ? 'text-geeko-cyan' : 'text-neutral-600'}`}>
+                                                                    ${group.foil.price.toFixed(2)}
+                                                                    {group.foil.stock <= 0 && <span className="ml-1.5 text-[9px] text-orange-500/80 italic font-medium">(P/E)</span>}
+                                                                </span>
+                                                            </div>
                                                         )}
                                                     </div>
 

@@ -67,15 +67,24 @@ export const CardDetail: React.FC = () => {
             setIsAuthModalOpen(true);
             return;
         }
-        if (!details) return;
+        if (!activeVersion) return;
 
         setIsAdding(true);
         try {
-            await addToCart(details.card_id, 1);
-            // Show success (maybe a toast or open cart)
+            // Strip synthetic suffix from id, pass finish explicitly
+            const baseId = activeVersion.printing_id.replace(/-foil$/, '').replace(/-nonfoil$/, '').replace(/-etched$/, '');
+            const result = await addToCart(baseId, 1, activeFinish);
+
+            if (result && !result.success) {
+                alert(result.message || result.error || 'No se pudo agregar al carrito');
+                return;
+            }
+
+            // Show success
             setIsCartOpen(true);
-        } catch (err) {
+        } catch (err: any) {
             console.error('Error adding to cart:', err);
+            alert(err.message || 'Error al agregar al carrito');
         } finally {
             setIsAdding(false);
         }
@@ -133,7 +142,12 @@ export const CardDetail: React.FC = () => {
 
     const activeVersion = useMemo(() => {
         if (!activeGroup) return null;
-        return (activeFinish === 'foil' && activeGroup.foil) ? activeGroup.foil : (activeGroup.normal || activeGroup.base);
+        // Use activeFinish from URL searchParams
+        const reqFinish = activeFinish || 'nonfoil';
+        if (reqFinish === 'foil' && activeGroup.foil) return activeGroup.foil;
+        if (reqFinish === 'etched' && activeGroup.etched) return activeGroup.etched;
+        // Fallback to whichever is available in the group
+        return activeGroup.normal || activeGroup.foil || activeGroup.etched || activeGroup.base;
     }, [activeGroup, activeFinish]);
 
     const ckUrl = useMemo(() => {
@@ -248,7 +262,7 @@ export const CardDetail: React.FC = () => {
                                     {versionGroups.length > 0 ? (
                                         versionGroups.map((group: any) => {
                                             const isGroupActive = activePrintingId === group.base.printing_id;
-                                            const activeVersion = (activeFinish === 'foil' && group.foil) ? group.foil : (group.normal || group.base);
+                                            const rowActiveVersion = (activeFinish === 'foil' && group.foil) ? group.foil : (group.normal || group.base);
 
                                             return (
                                                 <div
@@ -288,27 +302,43 @@ export const CardDetail: React.FC = () => {
                                                     </div>
 
                                                     <div className="flex items-center justify-between md:justify-end gap-6 shrink-0">
-                                                        <div className="flex items-center gap-3 font-mono font-bold text-xs">
+                                                        <div className="flex flex-col items-end gap-1">
                                                             {group.normal && (
-                                                                <span className={`flex items-center gap-1 ${activePrintingId === group.normal.printing_id ? 'text-white' : 'text-neutral-500'}`}>
-                                                                    ${group.normal.price.toFixed(2)}
-                                                                    {(group.normal.stock || 0) <= 0 && <span className="text-[8px] opacity-60 font-sans tracking-wide">(P/E)</span>}
-                                                                </span>
+                                                                <div className="flex items-center gap-2">
+                                                                    <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-widest leading-none">Normal</span>
+                                                                    <span className={`text-[11px] font-black ${group.normal.stock > 0 ? 'text-white' : 'text-neutral-600'}`}>
+                                                                        ${group.normal.price.toFixed(2)}
+                                                                        {group.normal.stock <= 0 && <span className="ml-1.5 text-[9px] text-orange-500/80 italic font-medium">(P/E)</span>}
+                                                                    </span>
+                                                                </div>
                                                             )}
-                                                            {group.normal && group.foil && <span className="text-neutral-700 mx-1">/</span>}
                                                             {group.foil && (
-                                                                <span className={`flex items-center gap-1.5 ${activePrintingId === group.foil.printing_id ? 'text-purple-400' : 'text-neutral-600'}`}>
-                                                                    <span className="text-[10px]">✨</span>
-                                                                    ${Number(group.foil.price).toFixed(2)}
-                                                                    {(group.foil.stock || 0) <= 0 && <span className="text-[8px] opacity-60 font-sans tracking-wide">(P/E)</span>}
-                                                                </span>
+                                                                <div className="flex items-center gap-2">
+                                                                    <span className="text-[10px] text-purple-400 font-bold uppercase tracking-widest flex items-center gap-1 leading-none">
+                                                                        <svg width="8" height="8" viewBox="0 0 10 12" fill="none">
+                                                                            <rect x="0.5" y="0.5" width="9" height="11" rx="1.5" stroke="currentColor" strokeWidth="1" />
+                                                                            <path d="M2 3 L8 3" stroke="currentColor" strokeWidth="1" />
+                                                                        </svg>
+                                                                        Foil
+                                                                    </span>
+                                                                    <span className={`text-[11px] font-black ${group.foil.stock > 0 ? 'text-geeko-cyan' : 'text-neutral-600'}`}>
+                                                                        ${group.foil.price.toFixed(2)}
+                                                                        {group.foil.stock <= 0 && <span className="ml-1.5 text-[9px] text-orange-500/80 italic font-medium">(P/E)</span>}
+                                                                    </span>
+                                                                </div>
                                                             )}
                                                         </div>
 
                                                         <div className="flex items-center gap-4">
-                                                            <span className="text-[9px] font-black text-geeko-cyan uppercase tracking-tighter">
-                                                                {activeVersion?.stock || 0}
-                                                            </span>
+                                                            {rowActiveVersion?.stock > 0 ? (
+                                                                <span className="text-[9px] font-black text-geeko-green bg-geeko-green/10 px-2 py-0.5 rounded-full border border-geeko-green/20 uppercase tracking-tight">
+                                                                    En Stock
+                                                                </span>
+                                                            ) : (
+                                                                <span className="text-[9px] font-bold text-neutral-600 bg-neutral-900 px-2 py-0.5 rounded-full border border-white/5 uppercase tracking-tight">
+                                                                    Por Encargo
+                                                                </span>
+                                                            )}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -462,14 +492,15 @@ export const CardDetail: React.FC = () => {
                             </div>
                         </div>
                     </div>
-                ) : null}
-            </main>
+                ) : null
+                }
+            </main >
 
             <Footer />
 
             <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
             <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
-        </div>
+        </div >
     );
 };
 

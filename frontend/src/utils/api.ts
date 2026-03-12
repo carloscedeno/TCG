@@ -488,15 +488,19 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
             const vFinish = (v.finish || (v.is_foil ? 'foil' : 'nonfoil')).toLowerCase();
             const matches = pData.filter((p: any) => p.printing_id === v.printing_id);
             // EXACT finish match only — never fall back to another finish for price
-            const exactProd = matches.find((p: any) => (p.finish || 'nonfoil').toLowerCase() === vFinish);
+            const finishMatches = matches.filter((p: any) => (p.finish || 'nonfoil').toLowerCase() === vFinish);
+            // Sum stock across all rows for this finish to avoid "8 outside / 1 inside" mismatch
+            const totalStockForFinish = finishMatches.reduce((acc: number, curr: any) => acc + (curr.stock || 0), 0);
+            // Use the first match for price and product_id
+            const exactProd = finishMatches[0];
 
             const finalPrice = exactProd?.price ?? v.price;
-            console.log(`[Price Trace API] version ${v.printing_id} (${vFinish}): original_v.price=${v.price}, exactProdPrice=${exactProd?.price}, finalPrice=${finalPrice}`);
+            console.log(`[Price Trace API] version ${v.printing_id} (${vFinish}): matches=${finishMatches.length}, totalStock=${totalStockForFinish}, finalPrice=${finalPrice}`);
 
             return {
               ...v,
               product_id: exactProd?.id,
-              stock: exactProd?.stock || 0,
+              stock: totalStockForFinish,
               // Only override price if there's an exact product match for this finish
               price: finalPrice
             };
@@ -506,15 +510,18 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
           const baseId = printingId.replace('-foil', '').replace('-nonfoil', '').replace('-etched', '');
           const currentFinish = data.finish || (data.is_foil ? 'foil' : 'nonfoil');
           const matches = pData.filter((p: any) => p.printing_id === baseId);
-          // Require exact finish match so nonfoil product never overrides foil price
-          const currentProd = matches.find((p: any) =>
+
+          const currentMatches = matches.filter((p: any) =>
             (p.finish || 'nonfoil').toLowerCase() === currentFinish.toLowerCase()
           );
-          if (currentProd) {
-            data.product_id = currentProd.id;
-            data.total_stock = currentProd.stock;
-            data.price = currentProd.price;
-            if (data.valuation) data.valuation.store_price = currentProd.price;
+
+          if (currentMatches.length > 0) {
+            const first = currentMatches[0];
+            data.product_id = first.id;
+            // Also sum here for consistency
+            data.total_stock = currentMatches.reduce((acc: number, curr: any) => acc + (curr.stock || 0), 0);
+            data.price = first.price;
+            if (data.valuation) data.valuation.store_price = first.price;
           }
         }
       }
