@@ -9,6 +9,7 @@ export interface Filters {
   colors: string[];
   types: string[];
   yearRange: [number, number];
+  priceRange: [number, number];
 }
 
 export interface FiltersPanelProps {
@@ -216,6 +217,35 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
         <div className="mt-3 flex justify-between text-[8px] font-black tracking-widest text-neutral-600 uppercase">
           <span>Orígenes (1993)</span>
           <span>Presente (2026)</span>
+        </div>
+      </section>
+
+      {/* Rango de Precio */}
+      <section>
+        <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
+          <div className="w-1.5 h-1.5 bg-geeko-gold rounded-full shadow-[0_0_10px_rgba(255,215,0,0.8)]"></div>
+          Rango de Precio (USD)
+        </h3>
+        <div className="flex items-center gap-3">
+          <input
+            type="number"
+            placeholder="Mín"
+            value={selected.priceRange?.[0] || ''}
+            onChange={(e) => onChange({ ...selected, priceRange: [parseFloat(e.target.value) || 0, selected.priceRange?.[1] || 1000] })}
+            className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-geeko-gold/50 transition-all font-medium"
+          />
+          <span className="text-neutral-700 font-bold">→</span>
+          <input
+            type="number"
+            placeholder="Máx"
+            value={selected.priceRange?.[1] || ''}
+            onChange={(e) => onChange({ ...selected, priceRange: [selected.priceRange?.[0] || 0, parseFloat(e.target.value) || 1000] })}
+            className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-geeko-gold/50 transition-all font-medium"
+          />
+        </div>
+        <div className="mt-3 flex justify-between text-[8px] font-black tracking-widest text-neutral-600 uppercase">
+          <span>Accesible</span>
+          <span>Coleccionista</span>
         </div>
       </section>
       <section>

@@ -22,7 +22,8 @@ const mockFilters: Filters = {
   colors: ['White', 'Blue', 'Black', 'Red', 'Green', 'Colorless', 'Multicolor'],
   types: ['Creature', 'Instant', 'Sorcery', 'Enchantment', 'Artifact', 'Planeswalker', 'Land'],
   sets: [],
-  yearRange: [1993, 2026]
+  yearRange: [1993, 2026],
+  priceRange: [0, 1000]
 };
 
 const colorCodeMap: Record<string, string> = {
@@ -47,7 +48,15 @@ const Home: React.FC = () => {
       return g;
     }).filter(Boolean) || ['Magic: The Gathering'],
     sets: searchParams.get('set')?.split(',').filter(Boolean) || [],
-    rarities: searchParams.get('rarity')?.split(',').filter(Boolean) || []
+    rarities: searchParams.get('rarity')?.split(',').filter(Boolean) || [],
+    yearRange: [
+      parseInt(searchParams.get('year_from') || '1993'),
+      parseInt(searchParams.get('year_to') || '2026')
+    ],
+    priceRange: [
+      parseFloat(searchParams.get('price_min') || '0'),
+      parseFloat(searchParams.get('price_max') || '1000')
+    ]
   });
   const [sets, setSets] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState(searchParams.get('sort') || 'release_date');
@@ -129,9 +138,11 @@ const Home: React.FC = () => {
             type: filters.types && filters.types.length > 0 ? filters.types : undefined,
             year_from: filters.yearRange ? filters.yearRange[0] : undefined,
             year_to: filters.yearRange ? filters.yearRange[1] : undefined,
+            price_min: filters.priceRange ? filters.priceRange[0] : undefined,
+            price_max: filters.priceRange ? filters.priceRange[1] : undefined,
             limit: LIMIT,
             offset,
-            sort: sortBy === 'price' ? 'price_desc' : sortBy
+            sort: sortBy
           });
 
           result = {
@@ -213,6 +224,14 @@ const Home: React.FC = () => {
     else if (filters.rarities && filters.rarities.length > 0) newParams.set('rarity', filters.rarities.join(','));
     if (sortBy !== 'release_date') newParams.set('sort', sortBy);
     if (activeTab !== 'marketplace') newParams.set('tab', activeTab);
+    if (filters.yearRange && (filters.yearRange[0] !== 1993 || filters.yearRange[1] !== 2026)) {
+      newParams.set('year_from', filters.yearRange[0].toString());
+      newParams.set('year_to', filters.yearRange[1].toString());
+    }
+    if (filters.priceRange && (filters.priceRange[0] !== 0 || filters.priceRange[1] !== 1000)) {
+      newParams.set('price_min', filters.priceRange[0].toString());
+      newParams.set('price_max', filters.priceRange[1].toString());
+    }
 
     setSearchParams(newParams, { replace: true });
 
@@ -429,9 +448,9 @@ const Home: React.FC = () => {
                   </button>
                   <button
                     onClick={() => setSortBy(sortBy === 'release_date' ? 'release_date_asc' : 'release_date')}
-                    className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase transition-all ${sortBy.includes('release_date') ? 'bg-neutral-700 text-white' : 'text-neutral-500 hover:text-neutral-300'}`}
+                    className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase transition-all ${sortBy.includes('release_date') || sortBy === 'newest' ? 'bg-neutral-700 text-white' : 'text-neutral-500 hover:text-neutral-300'}`}
                   >
-                    Fecha {sortBy === 'release_date' ? '↓' : (sortBy === 'release_date_asc' ? '↑' : '⇅')}
+                    Fecha {(sortBy === 'release_date' || sortBy === 'newest') ? '↓' : (sortBy === 'release_date_asc' ? '↑' : '⇅')}
                   </button>
                 </div>
               </div>

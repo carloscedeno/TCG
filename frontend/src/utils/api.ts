@@ -200,7 +200,9 @@ export const fetchProducts = async (params: any = {}): Promise<any> => {
       year_to: params.year_to || null,
       sort_by: params.sort || 'newest',
       limit_count: params.limit || 50,
-      offset_count: params.offset || 0
+      offset_count: params.offset || 0,
+      price_min: params.price_min || null,
+      price_max: params.price_max || null
     });
 
     if (error) throw error;
