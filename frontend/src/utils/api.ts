@@ -495,7 +495,7 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
             const exactProd = finishMatches[0];
 
             const finalPrice = exactProd?.price ?? v.price;
-            console.log(`[Price Trace API] version ${v.printing_id} (${vFinish}): matches=${finishMatches.length}, totalStock=${totalStockForFinish}, finalPrice=${finalPrice}`);
+            // console.log(`[Price Trace API] version ${v.printing_id} (${vFinish}): matches=${finishMatches.length}, totalStock=${totalStockForFinish}, finalPrice=${finalPrice}`);
 
             return {
               ...v,
@@ -508,20 +508,39 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
 
           // Update main price/stock for the current printingId — match by finish too
           const baseId = printingId.replace('-foil', '').replace('-nonfoil', '').replace('-etched', '');
-          const currentFinish = data.finish || (data.is_foil ? 'foil' : 'nonfoil');
-          const matches = pData.filter((p: any) => p.printing_id === baseId);
+          const requestedFinish = (data.finish || (data.is_foil ? 'foil' : 'nonfoil')).toLowerCase();
 
-          const currentMatches = matches.filter((p: any) =>
-            (p.finish || 'nonfoil').toLowerCase() === currentFinish.toLowerCase()
+          // THE FIX: Find if the requested version is in stock
+          const inStockVersions = data.all_versions.filter((v: any) => v.stock > 0);
+          const requestedVersionInStock = data.all_versions.find((v: any) =>
+            v.printing_id === baseId && v.finish.toLowerCase() === requestedFinish && v.stock > 0
           );
 
-          if (currentMatches.length > 0) {
-            const first = currentMatches[0];
-            data.product_id = first.id;
-            // Also sum here for consistency
-            data.total_stock = currentMatches.reduce((acc: number, curr: any) => acc + (curr.stock || 0), 0);
-            data.price = first.price;
-            if (data.valuation) data.valuation.store_price = first.price;
+          // If current version is OOS, but we have others in stock, pick the first in-stock version!
+          let targetVersion = requestedVersionInStock;
+          if (!targetVersion && inStockVersions.length > 0) {
+            targetVersion = inStockVersions[0];
+          }
+
+          if (targetVersion) {
+            data.product_id = targetVersion.product_id;
+            data.total_stock = targetVersion.stock;
+            data.price = targetVersion.price;
+            data.finish = targetVersion.finish;
+            data.is_foil = targetVersion.is_foil;
+            if (data.valuation) data.valuation.store_price = targetVersion.price;
+          } else {
+            // Fallback to whatever matches the ID/finish if nothing is in stock
+            const fallback = data.all_versions.find((v: any) =>
+              v.printing_id === baseId && v.finish.toLowerCase() === requestedFinish
+            ) || data.all_versions[0];
+
+            data.product_id = fallback.product_id;
+            data.total_stock = fallback.stock || 0;
+            data.price = fallback.price;
+            data.finish = fallback.finish;
+            data.is_foil = fallback.is_foil;
+            if (data.valuation) data.valuation.store_price = fallback.price;
           }
         }
       }
