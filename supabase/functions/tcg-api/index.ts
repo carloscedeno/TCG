@@ -9,10 +9,10 @@ const corsHeaders = {
     'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-const SmtpHost = Deno.env.get('SMTP_HOST') || 'smtp.hostinger.com';
-const SmtpPort = parseInt(Deno.env.get('SMTP_PORT') || '587');
-const SmtpUser = Deno.env.get('SMTP_USER') || 'info@geekorium.shop';
-const SmtpPass = Deno.env.get('SMTP_PASS');
+const SmtpHost = Deno.env.get('SMTP_SERVER') || 'smtp.hostinger.com';
+const SmtpPort = parseInt(Deno.env.get('SMTP_PORT') || '465');
+const SmtpUser = Deno.env.get('SMTP_USERNAME');
+const SmtpPass = Deno.env.get('SMTP_PASSWORD');
 
 const transporter = nodemailer.createTransport({
     host: SmtpHost,
@@ -96,6 +96,7 @@ async function handleNotificationsEndpoint(body: any) {
     const { order_id, user_email, admin_email, order_total, items, current_user_id } = body;
 
     try {
+        console.log(`[Email Notification] Request for order ${order_id}. SMTP_USERNAME configured: ${!!SmtpUser}`);
         if (!order_id) throw new Error("order_id is required");
 
         // Formatear items para el correo

@@ -1160,8 +1160,10 @@ async function handleNotificationsEndpoint(supabase: SupabaseClient, path: strin
   const SmtpPass = Deno.env.get('SMTP_PASSWORD');
   const SmtpServer = Deno.env.get('SMTP_SERVER') || 'smtp.hostinger.com';
 
+  console.log(`[Email Service] Attempting to send order email for ${order_id}. SMTP_USERNAME configured: ${!!SmtpUser}`);
+
   if (!SmtpUser || !SmtpPass) {
-    console.warn("Email Service: SMTP credentials not configured, skipping email.");
+    console.warn("Email Service: SMTP credentials not configured (SMTP_USERNAME/SMTP_PASSWORD), skipping email.");
     return { success: true, message: "Emails skipped (not configured)" };
   }
 
