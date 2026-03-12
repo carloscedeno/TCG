@@ -483,7 +483,6 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
           .rpc('get_products_stock_by_printing_ids', { p_printing_ids: pIds });
 
         if (pData) {
-          const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
           data.all_versions = data.all_versions.map((v: any) => {
             // THE FIX: Use base UUID for matching, stripping synthetic suffixes
             const baseVId = v.printing_id.replace(/-foil$/, '').replace(/-nonfoil$/, '').replace(/-etched$/, '');
