@@ -483,25 +483,29 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
           .rpc('get_products_stock_by_printing_ids', { p_printing_ids: pIds });
 
         if (pData) {
+          const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
           data.all_versions = data.all_versions.map((v: any) => {
-            // Match by printing_id AND finish exactly to correctly separate foil/nonfoil
+            // THE FIX: Use base UUID for matching, stripping synthetic suffixes
+            const baseVId = v.printing_id.replace(/-foil$/, '').replace(/-nonfoil$/, '').replace(/-etched$/, '');
             const vFinish = (v.finish || (v.is_foil ? 'foil' : 'nonfoil')).toLowerCase();
-            const matches = pData.filter((p: any) => p.printing_id === v.printing_id);
+            const matches = pData.filter((p: any) => p.printing_id === baseVId);
+
             // EXACT finish match only — never fall back to another finish for price
             const finishMatches = matches.filter((p: any) => (p.finish || 'nonfoil').toLowerCase() === vFinish);
+
             // Sum stock across all rows for this finish to avoid "8 outside / 1 inside" mismatch
             const totalStockForFinish = finishMatches.reduce((acc: number, curr: any) => acc + (curr.stock || 0), 0);
+
             // Use the first match for price and product_id
             const exactProd = finishMatches[0];
 
             const finalPrice = exactProd?.price ?? v.price;
-            // console.log(`[Price Trace API] version ${v.printing_id} (${vFinish}): matches=${finishMatches.length}, totalStock=${totalStockForFinish}, finalPrice=${finalPrice}`);
+            console.log(`[Stock mapping] ${v.printing_id} -> baseID: ${baseVId} finish: ${vFinish} stock: ${totalStockForFinish}`);
 
             return {
               ...v,
               product_id: exactProd?.id,
               stock: totalStockForFinish,
-              // Only override price if there's an exact product match for this finish
               price: finalPrice
             };
           });
