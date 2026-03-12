@@ -167,12 +167,26 @@ export const OrderTrackingPage = () => {
                             <h3 className="text-sm font-black uppercase tracking-tight mt-6 mb-4 border-b border-white/5 pb-4">Productos</h3>
                             <div className="space-y-3 max-h-[300px] overflow-y-auto custom-scrollbar">
                                 {(order.order_items || []).map((item: any) => (
-                                    <div key={item.id} className="flex justify-between items-center text-xs">
-                                        <div className="flex items-center gap-2">
-                                            <span className="text-neutral-500 font-mono">x{item.quantity}</span>
-                                            <span className="font-bold">{item.product_name || `Card ID: ${item.product_id}`}</span>
+                                    <div key={item.id} className="flex justify-between items-center text-xs py-1">
+                                        <div className="flex flex-col gap-1 min-w-0 flex-1">
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-neutral-500 font-mono shrink-0">x{item.quantity}</span>
+                                                <span className="font-bold truncate">{item.product_name || `Card ID: ${item.product_id}`}</span>
+                                            </div>
+                                            <div className="flex items-center gap-1.5 ml-6">
+                                                {(item.finish === 'foil' || item.finish === 'etched') && (
+                                                    <span className={`text-[9px] px-1.5 py-0.5 rounded font-black uppercase tracking-widest shadow-sm ${item.finish === 'foil' ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30' : 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'}`}>
+                                                        {item.finish}
+                                                    </span>
+                                                )}
+                                                {item.is_on_demand && (
+                                                    <span className="text-[9px] px-1.5 py-0.5 rounded bg-orange-500/20 text-orange-400 border border-orange-500/30 font-black uppercase tracking-widest italic">
+                                                        Por Encargo
+                                                    </span>
+                                                )}
+                                            </div>
                                         </div>
-                                        <span className="font-mono text-[#00AEB4] font-bold">${(item.price_at_purchase * item.quantity).toFixed(2)}</span>
+                                        <span className="font-mono text-[#00AEB4] font-bold shrink-0 ml-4">${(item.price_at_purchase * item.quantity).toFixed(2)}</span>
                                     </div>
                                 ))}
                             </div>

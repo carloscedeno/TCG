@@ -33,7 +33,8 @@ export const CheckoutSuccessPage = () => {
                                     <div className="flex gap-3 items-center min-w-0">
                                         <span className="text-neutral-500 font-mono text-xs">x{item.quantity}</span>
                                         <span className="text-white font-bold truncate">{item.name}</span>
-                                        {item.foil && <span className="text-[10px] bg-amber-500/10 text-amber-500 px-1.5 py-0.5 rounded font-black uppercase">Foil</span>}
+                                        {item.foil && <span className="text-[10px] bg-purple-500/10 text-purple-400 border border-purple-500/20 px-1.5 py-0.5 rounded font-black uppercase">Foil</span>}
+                                        {item.is_on_demand && <span className="text-[10px] bg-orange-500/10 text-orange-400 border border-orange-500/20 px-1.5 py-0.5 rounded font-black uppercase italic">Por Encargo</span>}
                                     </div>
                                     <span className="text-geeko-cyan font-mono font-bold ml-2">${(item.price * item.quantity).toFixed(2)}</span>
                                 </div>

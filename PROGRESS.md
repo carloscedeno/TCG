@@ -41,6 +41,7 @@ Successfully implemented enhanced bulk import functionality supporting the **Man
 - Added `Array.isArray()` guards to all `.reduce()` calls in `PortfolioStats.tsx`, `CartDrawer.tsx`, `CheckoutPage.tsx`, `Home.tsx`, `CardDetail.tsx`, and `CardModal.tsx`.
 - Ensured `CartContext.tsx` and `CollectionService.ts` provide stable array fallbacks.
 - Verified that production build completes successfully after fixes.
+- **Stock Prioritization & Fix (Fiendlash)**: Optimized SQL search to prioritize in-stock items and fixed the frontend printing ID mapping that caused "8 outside / 1 inside" stock mismatches.
 
 ---
 

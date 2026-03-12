@@ -14,6 +14,8 @@ interface OrderItem {
         image_url: string;
         set_code: string;
     };
+    finish?: string;
+    is_on_demand?: boolean;
 }
 
 const ORDER_STATUSES: Record<string, { label: string; color: string; border?: string }> = {
@@ -87,7 +89,9 @@ const OrdersPage = () => {
                             name,
                             image_url,
                             set_code
-                        )
+                        ),
+                        finish,
+                        is_on_demand
                     )
                 `)
                 .order('created_at', { ascending: false });
@@ -336,7 +340,19 @@ const OrdersPage = () => {
                                                         <div className="flex flex-col justify-between py-1">
                                                             <div>
                                                                 <h5 className="font-bold text-sm text-white line-clamp-1">{item.product.name}</h5>
-                                                                <p className="text-[10px] text-neutral-400 uppercase tracking-wider font-bold">{item.product.set_code}</p>
+                                                                <div className="flex items-center gap-1.5 mt-0.5">
+                                                                    <p className="text-[10px] text-neutral-400 uppercase tracking-wider font-bold">{item.product.set_code}</p>
+                                                                    {(item.finish === 'foil' || item.finish === 'etched') && (
+                                                                        <span className={`text-[8px] px-1 py-0.5 rounded font-black uppercase tracking-widest ${item.finish === 'foil' ? 'bg-purple-500/20 text-purple-400 border border-purple-500/20' : 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/20'}`}>
+                                                                            {item.finish}
+                                                                        </span>
+                                                                    )}
+                                                                    {item.is_on_demand && (
+                                                                        <span className="text-[8px] px-1 py-0.5 rounded bg-orange-500/20 text-orange-400 border border-orange-500/20 font-black uppercase tracking-widest italic">
+                                                                            Por Encargo
+                                                                        </span>
+                                                                    )}
+                                                                </div>
                                                             </div>
                                                             <div className="flex items-center justify-between gap-4 mt-2">
                                                                 <span className="text-xs bg-white/10 px-2 py-1 rounded font-mono text-white">x{item.quantity}</span>

@@ -524,3 +524,11 @@ ear_mint, lightly_played) deben normalizarse en el backend a cÃ³digos internos
   1. Ejecutar `NOTIFY pgrst, 'reload schema';` inmediatamente después de alterar una función SQL cruda.
   2. Modificar el RPC para que el precio devuelto dependa inteligentemente de la variante física que se va a imprimir en esa fila: `COALESCE(CASE WHEN LOWER(p.finish) IN ('foil', 'etched') THEN cp.avg_market_price_foil_usd ELSE cp.avg_market_price_usd END, p.price, 0)`.
 - **Regla Derivada**: Al desarrollar RPCs unificados de inventario TCG, la proyección de la propiedad `price` no puede ser plana; **debe** ramificarse evaluando las banderas físicas (`finish`, y en el futuro `condition` o `language`). Además, cualquier parche SQL *hotfix* aplicado en vivo sobre Supabase requiere estrictamente recargar la capa API HTTP (`NOTIFY pgrst, 'reload schema'`).
+
+### 68. Discrepancia de Stock "8 fuera / 1 dentro" (Marzo 2026)
+
+- **Problema**: El buscador mostraba stock disponible, pero el modal mostraba "Por encargo".
+- **Causa Raíz**: Uso de IDs sintéticos en el frontend (`uuid-foil`, `uuid-nonfoil`) que no coincidían con el `printing_id` real al consultar el stock por RPC.
+- **Solución**: Refactorizar `api.ts` para extraer el base UUID (stripping suffixes) antes de filtrar el resultado del RPC de stock.
+- **Lección**: Las llaves de React y los IDs de navegación pueden ser sintéticos para garantizar unicidad visual, pero los queries de datos de negocio (stock, precio) DEBEN trabajar sobre el ID canónico de la base de datos.
+- **Regla Derivada**: [api.ts](file:///c:/Users/carlo/OneDrive/Documents/Antigravity/TCG/frontend/src/utils/api.ts) -> `fetchCardDetails` ahora normaliza los IDs antes del mapeo de stock.

@@ -98,7 +98,8 @@ export const CheckoutPage = () => {
                 set: item.products?.set_code,
                 price: item.products?.price || 0,
                 foil: item.products?.is_foil || item.products?.finish === 'foil' || false,
-                finish: item.products?.finish || (item.products?.is_foil ? 'foil' : 'normal'),
+                finish: item.products?.finish || (item.products?.is_foil ? 'foil' : 'nonfoil'),
+                is_on_demand: (item.products?.stock || 0) <= 0
             }));
 
             const cedula = `${form.cedula_prefix}-${form.cedula_number}`;
