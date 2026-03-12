@@ -93,6 +93,8 @@ Artefactos del Compound step:
 - ✅ **Soporte "Por Encargo" (On-Demand)**: El sistema ahora permite añadir cartas sin stock al carrito, creándolas automáticamente en la DB con stock 0 si es necesario.
 - ✅ **Notificaciones Premium**: Los correos incluyen botones de rastreo funcionales, etiquetas [FOIL] y [POR ENCARGO] dinámicas.
 - ✅ **Limpieza de Checkout Success**: Eliminación de campos redundantes y activación del botón de seguimiento integrado.
+- ✅ **Sincronización de Credenciales SMTP**: Unificación de nombres de variables (`SMTP_USERNAME`/`SMTP_PASSWORD`) y sincronización de lógica entre las funciones `api` y `tcg-api` para garantizar fiabilidad en las notificaciones.
+
 
 ## 🚧 Features Pendientes
 

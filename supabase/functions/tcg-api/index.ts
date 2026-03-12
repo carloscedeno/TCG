@@ -115,7 +115,7 @@ async function handleNotificationsEndpoint(body: any) {
             }
 
             return `<li style="margin-bottom: 8px;">
-        <strong>${item?.quantity || 1}x ${name}${variantLabel}</strong> - $${(item?.products?.price || item?.price || 0).toFixed(2)}
+        <strong>${item?.quantity || 1}x ${name}${variantLabel}</strong> - $${Number(item?.products?.price || item?.price || 0).toFixed(2)}
       </li>`;
         }).join('');
 

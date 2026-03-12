@@ -560,3 +560,21 @@ ear_mint, lightly_played) deben normalizarse en el backend a cÃ³digos internos
 - **Solución**: Refactorizar la lógica en `fetchCardDetails` para validar que el precio de inventario sea estrictamente mayor a 0 antes de usarlo como override.
 - **Lección**: Un precio de `0` en el inventario debe tratarse pedagógicamente como "sin precio manual" (fallback al mercado), no como "precio gratis". La lógica de negocio debe ser consistente entre el listado (`get_products_filtered` RPC) y el detalle (`api.ts`).
 - **Regla Derivada**: [api.ts](file:///c:/Users/carlo/OneDrive/Documents/Antigravity/TCG/frontend/src/utils/api.ts) -> `finalPrice` ahora valida `Number(exactProd.price) > 0`.
+
+### 69. Unificación de Credenciales SMTP y Sincronización de Edge Functions — 2026-03-12
+
+- **Problema**: El envío de correos fallaba silenciosamente tras cambios en la configuración debido a discrepancias en los nombres de variables de entorno entre las funciones `api` (`SMTP_USERNAME`) y `tcg-api` (`SMTP_USER`).
+- **Causa Raíz**: Fragmentación de código entre funciones duplicadas que realizan tareas similares y falta de logs de diagnóstico para la carga de secretos de Supabase.
+- **Solución**:
+  - Unificar los nombres de variables a `SMTP_USERNAME` y `SMTP_PASSWORD` en todas las Edge Functions.
+  - Sincronizar la lógica de envío de notificaciones entre `api/index.ts` y `tcg-api/index.ts`.
+  - Añadir logs de consola explícitos (`SMTP credentials loaded: true/false`) para facilitar el debugging en el dashboard de Supabase.
+- **Regla Derivada**: Las variables de entorno para infraestructuras compartidas (SMTP, API Keys) deben seguir un esquema de nombrado único en todo el proyecto. Cualquier cambio en una Edge Function "espejo" debe replicarse inmediatamente en la otra.
+
+### 70. Price Fallback Chain & Starred Collector Numbers — 2026-03-12
+- **Problema:** Cartas en stock mostraban "S/P" (Sin Precio) a pesar de tener datos de mercado en otras versiones.
+- **Causa Raíz:** Existencia de versiones duplicadas (con "★" en el número de coleccionista) que carecían de metadatos de precio, mientras que la versión base sí los tenía. El buscador devolvía la versión sin precio.
+- **Solución:**
+  1. Refactorizar el RPC `get_products_filtered` con una cadena de fallback: `Market(Finish) -> Market(Nonfoil) -> Market(Foil) -> Store Price -> 0`.
+  2. Ejecutar un script de corrección de datos para copiar precios de versiones base a versiones starred.
+- **Regla Derivada:** Todo RPC de inventario debe implementar fallbacks de precio entre acabados (finish) para mitigar falta de metadata específica.

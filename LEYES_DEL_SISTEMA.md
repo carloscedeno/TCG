@@ -1,7 +1,7 @@
 # ⚖️ LEYES DEL SISTEMA - TCG Application
 
-**Versión**: 2.6
-**Última Actualización**: 2026-03-07
+**Versión**: 2.7
+**Última Actualización**: 2026-03-12
 **Propósito**: Definir reglas inmutables para operación autónoma del agente
 
 ---
@@ -358,7 +358,7 @@ Antes de merge a `main`:
 
 ### Regla 1: Precios de Geekorium
 
-**Siempre** usar el precio de **Card Kingdom (NM)** para los ítems de **Geekorium**, a menos que un administrador especifique lo contrario explícitamente. Esta es la fuente única de verdad para la valoración de la tienda.
+**Siempre** usar el precio de **Card Kingdom (NM)** para los ítems de **Geekorium**, a menos que un administrador especifique lo contrario explícitamente. Esta es la fuente única de verdad para la valoración de la tienda. Si el precio de un acabado específico (Foil/Etched) falta, el sistema debe aplicar un fallback automático al precio de mercado general (Nonfoil) antes de mostrar "S/P".
 
 ### Regla 2: Importación Ambigua
 
