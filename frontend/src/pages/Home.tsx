@@ -67,6 +67,7 @@ const Home: React.FC = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
   const [debouncedQuery, setDebouncedQuery] = useState(searchParams.get('q') || '');
+  const [debouncedFilters, setDebouncedFilters] = useState<Partial<Filters>>(filters);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [activeTab, setActiveTab] = useState<'marketplace' | 'reference'>((searchParams.get('tab') as 'marketplace' | 'reference') || 'marketplace');
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -100,16 +101,14 @@ const Home: React.FC = () => {
       window.removeEventListener('cart-updated', handleCartUpdate);
     };
   }, [user]); // Re-run when user changes
-
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (query !== debouncedQuery) {
-        setDebouncedQuery(query);
-        setPage(0);
-      }
-    }, 300); // Optimized from 500ms for better responsiveness
+      setDebouncedQuery(query);
+      setDebouncedFilters(filters);
+      setPage(0);
+    }, 400); // 400ms is a good sweet spot for sliders
     return () => clearTimeout(timer);
-  }, [query, debouncedQuery]);
+  }, [query, filters]);
 
   useEffect(() => {
     let ignore = false;
@@ -123,23 +122,23 @@ const Home: React.FC = () => {
 
         if (activeTab === 'marketplace') {
           // Normalize game names for RPC mapping
-          const mappedGame = filters.games?.[0] ? (
-            filters.games[0] === 'Magic: The Gathering' ? 'MTG' :
-              filters.games[0] === 'Pokémon' ? 'PKM' :
-                filters.games[0]
+          const mappedGame = debouncedFilters.games?.[0] ? (
+            debouncedFilters.games[0] === 'Magic: The Gathering' ? 'MTG' :
+              debouncedFilters.games[0] === 'Pokémon' ? 'PKM' :
+                debouncedFilters.games[0]
           ) : undefined;
 
           const productRes = await fetchProducts({
             q: debouncedQuery || undefined,
             game: mappedGame,
-            set: filters.sets && filters.sets.length > 0 ? filters.sets.join(',') : undefined,
-            rarity: activeRarity !== 'All' ? activeRarity : (filters.rarities && filters.rarities.length > 0 ? filters.rarities.join(',') : undefined),
-            color: filters.colors && filters.colors.length > 0 ? filters.colors.map(c => colorCodeMap[c] || c) : undefined,
-            type: filters.types && filters.types.length > 0 ? filters.types : undefined,
-            year_from: filters.yearRange ? filters.yearRange[0] : undefined,
-            year_to: filters.yearRange ? filters.yearRange[1] : undefined,
-            price_min: filters.priceRange ? filters.priceRange[0] : undefined,
-            price_max: filters.priceRange ? filters.priceRange[1] : undefined,
+            set: debouncedFilters.sets && debouncedFilters.sets.length > 0 ? debouncedFilters.sets.join(',') : undefined,
+            rarity: activeRarity !== 'All' ? activeRarity : (debouncedFilters.rarities && debouncedFilters.rarities.length > 0 ? debouncedFilters.rarities.join(',') : undefined),
+            color: debouncedFilters.colors && debouncedFilters.colors.length > 0 ? debouncedFilters.colors.map(c => colorCodeMap[c] || c) : undefined,
+            type: debouncedFilters.types && debouncedFilters.types.length > 0 ? debouncedFilters.types : undefined,
+            year_from: debouncedFilters.yearRange ? debouncedFilters.yearRange[0] : undefined,
+            year_to: debouncedFilters.yearRange ? debouncedFilters.yearRange[1] : undefined,
+            price_min: debouncedFilters.priceRange ? debouncedFilters.priceRange[0] : undefined,
+            price_max: debouncedFilters.priceRange ? debouncedFilters.priceRange[1] : undefined,
             limit: LIMIT,
             offset,
             sort: sortBy
@@ -162,13 +161,13 @@ const Home: React.FC = () => {
         } else {
           const cardRes = await fetchCards({
             q: debouncedQuery || undefined,
-            rarity: activeRarity !== 'All' ? activeRarity : (filters.rarities && filters.rarities.length > 0 ? filters.rarities.join(',') : undefined),
-            game: filters.games && filters.games.length > 0 ? filters.games.join(',') : undefined,
-            set: filters.sets && filters.sets.length > 0 ? filters.sets.join(',') : undefined,
-            color: filters.colors && filters.colors.length > 0 ? filters.colors.map(c => colorCodeMap[c] || c).join(',') : undefined,
-            type: filters.types && filters.types.length > 0 ? filters.types.join(',') : undefined,
-            year_from: filters.yearRange ? filters.yearRange[0] : undefined,
-            year_to: filters.yearRange ? filters.yearRange[1] : undefined,
+            rarity: activeRarity !== 'All' ? activeRarity : (debouncedFilters.rarities && debouncedFilters.rarities.length > 0 ? debouncedFilters.rarities.join(',') : undefined),
+            game: debouncedFilters.games && debouncedFilters.games.length > 0 ? debouncedFilters.games.join(',') : undefined,
+            set: debouncedFilters.sets && debouncedFilters.sets.length > 0 ? debouncedFilters.sets.join(',') : undefined,
+            color: debouncedFilters.colors && debouncedFilters.colors.length > 0 ? debouncedFilters.colors.map(c => colorCodeMap[c] || c).join(',') : undefined,
+            type: debouncedFilters.types && debouncedFilters.types.length > 0 ? debouncedFilters.types.join(',') : undefined,
+            year_from: debouncedFilters.yearRange ? debouncedFilters.yearRange[0] : undefined,
+            year_to: debouncedFilters.yearRange ? debouncedFilters.yearRange[1] : undefined,
             limit: LIMIT,
             offset,
             sort: sortBy
@@ -213,24 +212,24 @@ const Home: React.FC = () => {
     // Update URL Search Params
     const newParams = new URLSearchParams();
     if (debouncedQuery) newParams.set('q', debouncedQuery);
-    if (filters.games && filters.games.length > 0) {
-      newParams.set('game', filters.games.map(g => {
+    if (debouncedFilters.games && debouncedFilters.games.length > 0) {
+      newParams.set('game', debouncedFilters.games.map(g => {
         if (g === 'Magic: The Gathering') return 'MTG';
         return g;
       }).join(','));
     }
-    if (filters.sets && filters.sets.length > 0) newParams.set('set', filters.sets.join(','));
+    if (debouncedFilters.sets && debouncedFilters.sets.length > 0) newParams.set('set', debouncedFilters.sets.join(','));
     if (activeRarity !== 'All') newParams.set('rarity', activeRarity);
-    else if (filters.rarities && filters.rarities.length > 0) newParams.set('rarity', filters.rarities.join(','));
+    else if (debouncedFilters.rarities && debouncedFilters.rarities.length > 0) newParams.set('rarity', debouncedFilters.rarities.join(','));
     if (sortBy !== 'release_date') newParams.set('sort', sortBy);
     if (activeTab !== 'marketplace') newParams.set('tab', activeTab);
-    if (filters.yearRange && (filters.yearRange[0] !== 1993 || filters.yearRange[1] !== 2026)) {
-      newParams.set('year_from', filters.yearRange[0].toString());
-      newParams.set('year_to', filters.yearRange[1].toString());
+    if (debouncedFilters.yearRange && (debouncedFilters.yearRange[0] !== 1993 || debouncedFilters.yearRange[1] !== 2026)) {
+      newParams.set('year_from', debouncedFilters.yearRange[0].toString());
+      newParams.set('year_to', debouncedFilters.yearRange[1].toString());
     }
-    if (filters.priceRange && (filters.priceRange[0] !== 0 || filters.priceRange[1] !== 1000)) {
-      newParams.set('price_min', filters.priceRange[0].toString());
-      newParams.set('price_max', filters.priceRange[1].toString());
+    if (debouncedFilters.priceRange && (debouncedFilters.priceRange[0] !== 0 || debouncedFilters.priceRange[1] !== 1000)) {
+      newParams.set('price_min', debouncedFilters.priceRange[0].toString());
+      newParams.set('price_max', debouncedFilters.priceRange[1].toString());
     }
 
     setSearchParams(newParams, { replace: true });
@@ -238,7 +237,7 @@ const Home: React.FC = () => {
     return () => {
       ignore = true;
     };
-  }, [debouncedQuery, filters, activeRarity, sortBy, page, activeTab]);
+  }, [debouncedQuery, debouncedFilters, activeRarity, sortBy, page, activeTab]);
 
   useEffect(() => {
     const gameCodeMap: Record<string, string> = {
