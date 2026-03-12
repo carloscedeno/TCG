@@ -1,5 +1,5 @@
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { CheckCircle, ArrowRight, ShoppingBag, ExternalLink, AlertCircle } from 'lucide-react';
+import { CheckCircle, ArrowRight, ShoppingBag, AlertCircle } from 'lucide-react';
 
 export const CheckoutSuccessPage = () => {
     const navigate = useNavigate();
@@ -8,7 +8,7 @@ export const CheckoutSuccessPage = () => {
 
     // If we have an ID but it's not 'PENDIENTE', we can build a real URL
     const isRealOrder = orderId && orderId !== 'PENDIENTE';
-    const trackingUrl = isRealOrder ? `${window.location.origin}/order/${orderId}` : null;
+
 
     return (
         <div className="min-h-[100dvh] bg-[#080808] flex items-center justify-center p-4 py-12">

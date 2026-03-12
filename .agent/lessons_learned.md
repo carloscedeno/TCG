@@ -552,3 +552,11 @@ ear_mint, lightly_played) deben normalizarse en el backend a cÃ³digos internos
 - **Solución**: Refactorizar `api.ts` para extraer el base UUID (stripping suffixes) antes de filtrar el resultado del RPC de stock.
 - **Lección**: Las llaves de React y los IDs de navegación pueden ser sintéticos para garantizar unicidad visual, pero los queries de datos de negocio (stock, precio) DEBEN trabajar sobre el ID canónico de la base de datos.
 - **Regla Derivada**: [api.ts](file:///c:/Users/carlo/OneDrive/Documents/Antigravity/TCG/frontend/src/utils/api.ts) -> `fetchCardDetails` ahora normaliza los IDs antes del mapeo de stock.
+
+### 23. Prioridad de Precios: Mercado vs Inventario — 2026-03-12
+
+- **Problema**: Cartas en stock mostraban precio de $0.00 o "---" en el modal, aunque en la búsqueda se veía el precio correcto ($24.99).
+- **Causa Raíz**: En `api.ts`, la lógica de mezcla de datos de inventario usaba el operador `??` (nullish coalescing), lo que permitía que un valor de `0` en la tabla `products` (precio no seteado manualmente) sobrescribiera el `market_price` de la tabla `card_printings`.
+- **Solución**: Refactorizar la lógica en `fetchCardDetails` para validar que el precio de inventario sea estrictamente mayor a 0 antes de usarlo como override.
+- **Lección**: Un precio de `0` en el inventario debe tratarse pedagógicamente como "sin precio manual" (fallback al mercado), no como "precio gratis". La lógica de negocio debe ser consistente entre el listado (`get_products_filtered` RPC) y el detalle (`api.ts`).
+- **Regla Derivada**: [api.ts](file:///c:/Users/carlo/OneDrive/Documents/Antigravity/TCG/frontend/src/utils/api.ts) -> `finalPrice` ahora valida `Number(exactProd.price) > 0`.

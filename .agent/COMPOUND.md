@@ -12,6 +12,20 @@
 
 ---
 
+## 2026-03-12 — Fix Visualización Precios (Market vs Store)
+
+**Qué pasó:** Se resolvió el glitch donde cartas "En Stock" mostraban $0.00 en el modal. La lógica ahora prioriza correctamente el precio de mercado si la tienda no ha definido un sobre-precio manual.
+**Problema encontrado:** Los resultados de búsqueda mostraban precios correctos ($24.99) pero el modal mostraba $0.00 o ---.
+**Causa raíz:** Uso de `??` en `api.ts` que trataba el `0` de inventory como un valor válido en lugar de disparar el fallback al mercado.
+**Lo que cambió:**
+
+- `lessons_learned.md` → Lección #23: Prioridad de Precios.
+- `api.ts` → Refactor de `fetchCardDetails` (validación de precio > 0).
+- `CheckoutSuccessPage.tsx` → Cleanup de código (unused vars/imports).
+**Regla derivada:** Los precios en inventario con valor 0 se ignoran a favor del precio de mercado (CK NM). La consistencia entre búsqueda y detalle es prioridad máxima.
+
+---
+
 ## Formato de Entrada
 
 ```markdown

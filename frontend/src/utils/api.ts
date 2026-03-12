@@ -498,7 +498,7 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
             // Use the first match for price and product_id
             const exactProd = finishMatches[0];
 
-            const finalPrice = exactProd?.price ?? v.price;
+            const finalPrice = (exactProd?.price && Number(exactProd.price) > 0) ? Number(exactProd.price) : v.price;
             console.log(`[Stock mapping] ${v.printing_id} -> baseID: ${baseVId} finish: ${vFinish} stock: ${totalStockForFinish}`);
 
             return {
