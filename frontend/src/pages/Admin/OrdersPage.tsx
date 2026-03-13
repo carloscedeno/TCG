@@ -346,7 +346,7 @@ const OrdersPage = () => {
                                                     <div>
                                                         <p className="text-[10px] uppercase font-black text-neutral-500 tracking-widest mb-1">Correo Electrónico</p>
                                                         <p className="text-sm font-bold text-blue-400">
-                                                            {order.guest_info?.email || 'N/A'}
+                                                            {order.guest_info?.email || order.user_email || 'N/A'}
                                                         </p>
                                                     </div>
                                                 </div>
