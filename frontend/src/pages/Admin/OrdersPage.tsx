@@ -41,9 +41,6 @@ interface Order {
     status: string;
     created_at: string;
     user_email?: string;
-    profiles?: {
-        email?: string;
-    } | null;
     order_items: OrderItem[];
     payment_proof_url?: string | null;
     deleted_at?: string | null;
@@ -55,10 +52,15 @@ interface Order {
     shipping_address?: {
         full_name?: string;
         address?: string;
+        address_line1?: string;
         city?: string;
+        state?: string;
         department?: string;
         phone?: string;
+        email?: string;
         shipping_method?: string;
+        country?: string;
+        zip_code?: string;
     } | null;
 }
 
@@ -108,9 +110,6 @@ const OrdersPage = () => {
                         ),
                         finish,
                         is_on_demand
-                    ),
-                    profiles:profiles (
-                        email
                     )
                 `)
                 .order('created_at', { ascending: false });
@@ -352,7 +351,7 @@ const OrdersPage = () => {
                                                     <div>
                                                         <p className="text-[10px] uppercase font-black text-neutral-500 tracking-widest mb-1">Correo Electrónico</p>
                                                         <p className="text-sm font-bold text-blue-400">
-                                                            {order.guest_info?.email || order.profiles?.email || 'N/A'}
+                                                            {order.guest_info?.email || order.shipping_address?.email || 'N/A'}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -367,10 +366,11 @@ const OrdersPage = () => {
                                                     <div>
                                                         <p className="text-[10px] uppercase font-black text-neutral-500 tracking-widest mb-1">Dirección de Entrega</p>
                                                         <p className="text-sm font-bold text-white leading-relaxed">
-                                                            {order.shipping_address?.address || 'Recojo en tienda / No especificado'}
+                                                            {order.shipping_address?.address || order.shipping_address?.address_line1 || 'Recojo en tienda / No especificado'}
                                                         </p>
                                                         <p className="text-xs text-neutral-400 mt-1 font-medium">
-                                                            {order.shipping_address?.city}{order.shipping_address?.department ? `, ${order.shipping_address?.department}` : ''}
+                                                            {order.shipping_address?.city || order.shipping_address?.state || ''}{order.shipping_address?.department ? `, ${order.shipping_address?.department}` : ''}
+                                                            {order.shipping_address?.zip_code ? ` (${order.shipping_address.zip_code})` : ''}
                                                         </p>
                                                     </div>
                                                     <div className="pt-2 border-t border-white/5 flex items-center justify-between">
