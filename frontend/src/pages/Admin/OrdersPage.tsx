@@ -41,6 +41,9 @@ interface Order {
     status: string;
     created_at: string;
     user_email?: string;
+    profiles?: {
+        email?: string;
+    } | null;
     order_items: OrderItem[];
     payment_proof_url?: string | null;
     deleted_at?: string | null;
@@ -105,6 +108,9 @@ const OrdersPage = () => {
                         ),
                         finish,
                         is_on_demand
+                    ),
+                    profiles:profiles (
+                        email
                     )
                 `)
                 .order('created_at', { ascending: false });
@@ -346,7 +352,7 @@ const OrdersPage = () => {
                                                     <div>
                                                         <p className="text-[10px] uppercase font-black text-neutral-500 tracking-widest mb-1">Correo Electrónico</p>
                                                         <p className="text-sm font-bold text-blue-400">
-                                                            {order.guest_info?.email || order.user_email || 'N/A'}
+                                                            {order.guest_info?.email || order.profiles?.email || 'N/A'}
                                                         </p>
                                                     </div>
                                                 </div>
