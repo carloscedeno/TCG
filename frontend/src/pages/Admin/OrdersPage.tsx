@@ -44,6 +44,19 @@ interface Order {
     order_items: OrderItem[];
     payment_proof_url?: string | null;
     deleted_at?: string | null;
+    guest_info?: {
+        full_name?: string;
+        email?: string;
+        phone?: string;
+    } | null;
+    shipping_address?: {
+        full_name?: string;
+        address?: string;
+        city?: string;
+        department?: string;
+        phone?: string;
+        shipping_method?: string;
+    } | null;
 }
 
 const OrdersPage = () => {
@@ -304,70 +317,135 @@ const OrdersPage = () => {
                                     </div>
                                 </div>
 
-                                {/* Order Items Details */}
+                                {/* Order Details Layout */}
                                 {expandedOrderId === order.id && (
-                                    <div className="border-t border-white/5 bg-black/40 p-6 animate-in slide-in-from-top-2 duration-200">
-                                        <div className="flex justify-between items-center mb-4">
-                                            <h4 className="text-sm font-black uppercase tracking-widest text-neutral-400 flex items-center gap-2">
-                                                <Package size={14} /> Contenido de la Orden
-                                            </h4>
-                                            {order.payment_proof_url && (
-                                                <a
-                                                    href={order.payment_proof_url}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="text-xs font-bold text-lime-400 hover:text-white transition-colors flex items-center gap-1 bg-lime-400/10 px-3 py-1.5 rounded-lg border border-lime-400/20"
-                                                >
-                                                    Ver Comprobante de Pago
-                                                </a>
-                                            )}
-                                        </div>
-                                        {order.order_items && order.order_items.length > 0 ? (
-                                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                                {order.order_items.map((item) => (
-                                                    <div key={item.id} className="flex gap-4 p-4 bg-white/5 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
-                                                        {item.product.image_url ? (
-                                                            <img
-                                                                src={item.product.image_url}
-                                                                alt={item.product.name}
-                                                                className="w-16 h-24 object-cover rounded-lg shadow-lg"
-                                                            />
-                                                        ) : (
-                                                            <div className="w-16 h-24 bg-neutral-800 rounded-lg flex items-center justify-center text-neutral-600">
-                                                                <Package size={20} />
-                                                            </div>
-                                                        )}
-                                                        <div className="flex flex-col justify-between py-1">
-                                                            <div>
-                                                                <h5 className="font-bold text-sm text-white line-clamp-1">{item.product.name}</h5>
-                                                                <div className="flex items-center gap-1.5 mt-0.5">
-                                                                    <p className="text-[10px] text-neutral-400 uppercase tracking-wider font-bold">{item.product.set_code}</p>
-                                                                    {(item.finish === 'foil' || item.finish === 'etched') && (
-                                                                        <span className={`text-[8px] px-1 py-0.5 rounded font-black uppercase tracking-widest ${item.finish === 'foil' ? 'bg-purple-500/20 text-purple-400 border border-purple-500/20' : 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/20'}`}>
-                                                                            {item.finish}
-                                                                        </span>
-                                                                    )}
-                                                                    {item.is_on_demand && (
-                                                                        <span className="text-[8px] px-1 py-0.5 rounded bg-orange-500/20 text-orange-400 border border-orange-500/20 font-black uppercase tracking-widest italic">
-                                                                            Por Encargo
-                                                                        </span>
-                                                                    )}
-                                                                </div>
-                                                            </div>
-                                                            <div className="flex items-center justify-between gap-4 mt-2">
-                                                                <span className="text-xs bg-white/10 px-2 py-1 rounded font-mono text-white">x{item.quantity}</span>
-                                                                <span className="font-mono text-emerald-400 font-bold">${item.price_at_purchase.toFixed(2)}</span>
-                                                            </div>
+                                    <div className="border-t border-white/5 bg-black/40 p-6 animate-in slide-in-from-top-2 duration-200 space-y-8">
+                                        
+                                        {/* Buyer & Shipping Info */}
+                                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 pb-8 border-b border-white/5">
+                                            {/* Contact Details */}
+                                            <div className="space-y-4">
+                                                <h4 className="text-sm font-black uppercase tracking-widest text-blue-400 flex items-center gap-2">
+                                                    <User size={14} /> Información del Comprador
+                                                </h4>
+                                                <div className="bg-white/5 rounded-2xl p-5 border border-white/5 space-y-4">
+                                                    <div className="grid grid-cols-2 gap-4">
+                                                        <div>
+                                                            <p className="text-[10px] uppercase font-black text-neutral-500 tracking-widest mb-1">Nombre Completo</p>
+                                                            <p className="text-sm font-bold text-white">
+                                                                {order.guest_info?.full_name || order.shipping_address?.full_name || 'No proporcionado'}
+                                                            </p>
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-[10px] uppercase font-black text-neutral-500 tracking-widest mb-1">Teléfono</p>
+                                                            <p className="text-sm font-bold text-white">
+                                                                {order.guest_info?.phone || order.shipping_address?.phone || 'No proporcionado'}
+                                                            </p>
                                                         </div>
                                                     </div>
-                                                ))}
+                                                    <div>
+                                                        <p className="text-[10px] uppercase font-black text-neutral-500 tracking-widest mb-1">Correo Electrónico</p>
+                                                        <p className="text-sm font-bold text-blue-400">
+                                                            {order.guest_info?.email || 'N/A'}
+                                                        </p>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        ) : (
-                                            <div className="text-neutral-500 text-sm font-mono italic p-4 text-center bg-white/5 rounded-xl border border-dashed border-white/10">
-                                                <AlertCircle size={16} className="inline mr-2 mb-1" />
-                                                No se encontraron artículos en el historial de esta orden.
+
+                                            {/* Shipping Details */}
+                                            <div className="space-y-4">
+                                                <h4 className="text-sm font-black uppercase tracking-widest text-cyan-400 flex items-center gap-2">
+                                                    <Package size={14} /> Detalles de Envío
+                                                </h4>
+                                                <div className="bg-white/5 rounded-2xl p-5 border border-white/5 space-y-4">
+                                                    <div>
+                                                        <p className="text-[10px] uppercase font-black text-neutral-500 tracking-widest mb-1">Dirección de Entrega</p>
+                                                        <p className="text-sm font-bold text-white leading-relaxed">
+                                                            {order.shipping_address?.address || 'Recojo en tienda / No especificado'}
+                                                        </p>
+                                                        <p className="text-xs text-neutral-400 mt-1 font-medium">
+                                                            {order.shipping_address?.city}{order.shipping_address?.department ? `, ${order.shipping_address?.department}` : ''}
+                                                        </p>
+                                                    </div>
+                                                    <div className="pt-2 border-t border-white/5 flex items-center justify-between">
+                                                        <div>
+                                                            <p className="text-[10px] uppercase font-black text-neutral-500 tracking-widest mb-0.5">Método</p>
+                                                            <span className="text-[10px] font-black uppercase px-2 py-0.5 bg-cyan-500/20 text-cyan-400 rounded-md border border-cyan-500/20">
+                                                                {order.shipping_address?.shipping_method || 'Envío Standard'}
+                                                            </span>
+                                                        </div>
+                                                        {order.payment_proof_url && (
+                                                            <div className="text-right">
+                                                                <p className="text-[10px] uppercase font-black text-neutral-500 tracking-widest mb-0.5">Comprobante</p>
+                                                                <a
+                                                                    href={order.payment_proof_url}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    className="text-[10px] font-black uppercase text-lime-400 hover:text-white transition-colors underline decoration-lime-400/30 underline-offset-4"
+                                                                >
+                                                                    Abrir Adjunto
+                                                                </a>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
                                             </div>
-                                        )}
+                                        </div>
+
+                                        {/* Order Contents */}
+                                        <div className="space-y-4">
+                                            <div className="flex justify-between items-center mb-4">
+                                                <h4 className="text-sm font-black uppercase tracking-widest text-neutral-400 flex items-center gap-2">
+                                                    <Package size={14} /> Contenido de la Orden
+                                                </h4>
+                                            </div>
+                                            {order.order_items && order.order_items.length > 0 ? (
+                                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                                    {order.order_items.map((item) => (
+                                                        <div key={item.id} className="flex gap-4 p-4 bg-white/5 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
+                                                            {item.product.image_url ? (
+                                                                <img
+                                                                    src={item.product.image_url}
+                                                                    alt={item.product.name}
+                                                                    className="w-16 h-24 object-cover rounded-lg shadow-lg"
+                                                                />
+                                                            ) : (
+                                                                <div className="w-16 h-24 bg-neutral-800 rounded-lg flex items-center justify-center text-neutral-600">
+                                                                    <Package size={20} />
+                                                                </div>
+                                                            )}
+                                                            <div className="flex flex-col justify-between py-1">
+                                                                <div>
+                                                                    <h5 className="font-bold text-sm text-white line-clamp-1">{item.product.name}</h5>
+                                                                    <div className="flex items-center gap-1.5 mt-0.5">
+                                                                        <p className="text-[10px] text-neutral-400 uppercase tracking-wider font-bold">{item.product.set_code}</p>
+                                                                        {(item.finish === 'foil' || item.finish === 'etched') && (
+                                                                            <span className={`text-[8px] px-1 py-0.5 rounded font-black uppercase tracking-widest ${item.finish === 'foil' ? 'bg-purple-500/20 text-purple-400 border border-purple-500/20' : 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/20'}`}>
+                                                                                {item.finish}
+                                                                            </span>
+                                                                        )}
+                                                                        {item.is_on_demand && (
+                                                                            <span className="text-[8px] px-1 py-0.5 rounded bg-orange-500/20 text-orange-400 border border-orange-500/20 font-black uppercase tracking-widest italic">
+                                                                                Por Encargo
+                                                                            </span>
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                                <div className="flex items-center justify-between gap-4 mt-2">
+                                                                    <span className="text-xs bg-white/10 px-2 py-1 rounded font-mono text-white">x{item.quantity}</span>
+                                                                    <span className="font-mono text-emerald-400 font-bold">${item.price_at_purchase.toFixed(2)}</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            ) : (
+                                                <div className="text-neutral-500 text-sm font-mono italic p-4 text-center bg-white/5 rounded-xl border border-dashed border-white/10">
+                                                    <AlertCircle size={16} className="inline mr-2 mb-1" />
+                                                    No se encontraron artículos en el historial de esta orden.
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 )}
                             </div>
