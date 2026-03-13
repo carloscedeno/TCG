@@ -642,3 +642,10 @@ useEffect(() => {
 - **Causa**: Falta de validación reactiva en el momento de la inserción o desincronización con el mercado.
 - **Solución**: Implementar barridos (sweeps) automáticos que busquen precios 0 y los reparen consultando `card_printings`.
 - **Regla Derivada**: [LEYES_DEL_SISTEMA.md] -> Regla 7 (Prevención de Zero-Price).
+
+### 78. Remoción Proactiva de Funcionalidades "On-Hold" (Marzo 2026)
+
+- **Problema**: El inicio de sesión social (Google, Discord, Microsoft) fue solicitado para ser ocultado o puesto en "hold" para simplificar la experiencia de usuario inicial.
+- **Lección**: Cuando una funcionalidad secundaria se pone en pausa por decisión del usuario, no basta con comentarla si genera advertencias de lint o aumenta el peso muerto del código. Es preferible removerla limpiamente de la UI y los componentes asociados, manteniendo el estado de autenticación core intacto.
+- **Regla Derivada**: [LEYES_DEL_SISTEMA.md] -> Regla de Negocio 8 (Simplicidad y Foco). Funcionalidades en hold deben ser removidas de la vista activa para evitar ruido visual y técnico.
+
