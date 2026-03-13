@@ -98,6 +98,9 @@ Artefactos del Compound step:
 - ✅ **Extrema Performance (Denormalización)**: Eliminación de timeouts mediante denormalización de metadatos (`colors`, `type`, `release_date`) en tabla `products`. RPC `get_products_filtered` optimizado para single-table query.
 - ✅ **Frontend Request Cancellation**: Implementación de `AbortController` en `Home.tsx` para cancelar peticiones de red obsoletas durante el filtrado.
 
+- ✅ **Detalles del Comprador en Admin**: El panel de órdenes ahora muestra Nombre, Teléfono, Email y Dirección completa (priorizando datos de invitado y envío).
+- ✅ **Saneamiento Automático de Precios**: Implementado script de barrido que identifica y corrige productos con precio $0.00 usando metadata de mercado.
+
 ## 🚧 Features Pendientes
 
 - Swipe-down cierre modal en móvil
@@ -111,9 +114,11 @@ Artefactos del Compound step:
 1. **Testing Lazy Imports**: Parchear siempre la clase importada desde el módulo de origen (`modulo.Clase`), no desde el importador.
 2. **Estrategia de Branching Obligatoria**: Todo cambio debe integrarse en `dev` para validación en el entorno de "Preview" de Cloudflare antes de ser mergeado a `main` para producción.
 3. **Segregación de Bases de Datos**: Uso obligatorio de proyectos Supabase independientes para `dev` y `main`, gestionados vía Cloudflare Environment Overrides.
+4. **Prioridad de Datos del Comprador**: No intentar joins con `profiles` para obtener el email; usar siempre `guest_info` o `shipping_address` en `orders`.
+5. **Cero Tolerancia a Precio 0**: Todo producto activo en inventario debe tener un precio mayor a 0 o fallback manual al mercado.
 
 ---
 
 ## 🛡️ Footer
 
-*Geekorium — Geeko-Engineering Division | Limpieza: 2026-03-12*
+*Geekorium — Geeko-Engineering Division | Limpieza: 2026-03-13*

@@ -637,10 +637,21 @@ async function handleSearchEndpoint(supabase: SupabaseClient, path: string, meth
 async function handleImportEndpoint(supabase: SupabaseClient, path: string, method: string, params: RequestParams, authToken?: string) {
   if (method !== 'POST') throw new Error('Method not allowed')
 
+  console.log(`[DEBUG] handleImportEndpoint: authToken=${authToken ? 'present' : 'missing'}, importType=${params.import_type}`);
+
   // Authenticate user
-  if (!authToken) throw new Error('Unauthorized: No auth token provided')
+  if (!authToken) {
+    console.error('[DEBUG] handleImportEndpoint: No auth token provided');
+    throw new Error('Unauthorized: No auth token provided');
+  }
+  
   const { data: { user }, error: authError } = await supabase.auth.getUser(authToken)
-  if (authError || !user) throw new Error('Unauthorized: Invalid token')
+  if (authError || !user) {
+    console.error('[DEBUG] handleImportEndpoint: Auth failed', authError);
+    throw new Error('Unauthorized: Invalid token');
+  }
+
+  console.log(`[DEBUG] handleImportEndpoint: User authenticated: ${user.id}`);
 
   const importType = params.import_type || 'collection'
   const importData = params.data as any[]
@@ -718,19 +729,41 @@ async function handleImportEndpoint(supabase: SupabaseClient, path: string, meth
       }
 
       // Look up card_printing
+      const cleanName = String(name).trim();
+      const cleanSet = setCode ? String(setCode).trim() : null;
+      const cleanCollectorNum = collectorNum ? String(collectorNum).trim() : null;
+
+      const finishValue = (row[mapping?.finish] || row['Finish'] || row['finish'] || row['Foil'] || row['foil'] || '').toLowerCase();
+      const isFoilRequested = finishValue === 'foil' || finishValue === 'true' || finishValue === 'yes';
+
       let query = supabase
         .from('card_printings')
-        .select('printing_id, cards(card_name), sets(set_code)')
+        .select('printing_id, cards(card_name), sets(set_code), is_foil, is_non_foil, finishes')
 
       if (scryfallId && String(scryfallId).trim().length > 0) {
         query = query.eq('scryfall_id', String(scryfallId).trim())
       } else {
-        query = query.ilike('cards.card_name', String(name).trim())
-        if (setCode) query = query.ilike('sets.set_code', String(setCode).trim())
-        if (collectorNum) query = query.eq('collector_number', String(collectorNum).trim())
+        query = query.ilike('cards.card_name', cleanName)
+        if (cleanSet) query = query.ilike('sets.set_code', cleanSet)
+        if (cleanCollectorNum) query = query.eq('collector_number', cleanCollectorNum)
       }
 
-      const { data: printings, error: lookupError } = await query.limit(1)
+      let { data: printings, error: lookupError } = await query
+
+      // --- RESILIENCE FALLBACKS ---
+      // 1. If strict match fails, try double-faced format (Name // ...) WITH strict Set/Collector Number
+      if ((!printings || printings.length === 0) && !scryfallId && !lookupError) {
+        const dfQuery = supabase
+          .from('card_printings')
+          .select('printing_id, cards(card_name), sets(set_code), is_foil, is_non_foil, finishes')
+          .ilike('cards.card_name', `${cleanName} // %`);
+        
+        if (cleanSet) dfQuery.ilike('sets.set_code', cleanSet);
+        if (cleanCollectorNum) dfQuery.eq('collector_number', cleanCollectorNum);
+        
+        const { data: dfData } = await dfQuery;
+        if (dfData && dfData.length > 0) printings = dfData;
+      }
 
       if (lookupError) {
         errors.push(`Row ${i + 1} (${name}): Lookup error - ${lookupError.message}`)
@@ -744,7 +777,20 @@ async function handleImportEndpoint(supabase: SupabaseClient, path: string, meth
         continue
       }
 
-      const printingId = printings[0].printing_id
+      // Pick the best match based on foil status
+      let bestMatch = printings[0];
+      if (printings.length > 1) {
+        const match = printings.find(p => {
+          if (isFoilRequested) {
+            return p.is_foil === true || (Array.isArray(p.finishes) && p.finishes.includes('foil'));
+          } else {
+            return p.is_non_foil === true || (Array.isArray(p.finishes) && p.finishes.includes('nonfoil'));
+          }
+        });
+        if (match) bestMatch = match;
+      }
+
+      const printingId = bestMatch.printing_id
 
       const { error: insertError } = await supabase
         .from('user_collections')

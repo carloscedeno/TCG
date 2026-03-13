@@ -19,7 +19,7 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
     const [isAutoMapped, setIsAutoMapped] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const TXT_FORMAT_REGEX = /^(\d+)\s+(.+?)\s+\((.+?)\)\s+(\d+)(?:\s+(\*F\*))?$/;
+    const TXT_FORMAT_REGEX = /^(\d+)\s+(.+?)\s+\((.+?)\)\s+(\d+)(?:\s+([\*F]+))?$/;
 
     const handleDragOver = (e: React.DragEvent) => {
         e.preventDefault();
@@ -39,21 +39,22 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
         const reader = new FileReader();
         reader.onload = (e) => {
             const text = e.target?.result as string;
-            const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
+            const lines = text.split(/\r?\n/).filter(line => line.trim().length > 0);
+            if (lines.length === 0) return;
 
             // Detect special .txt format: "1 Agatha's Soul Cauldron (WOE) 242"
-            const isSpecialTxt = selectedFile.name.endsWith('.txt') && lines.length > 0 && TXT_FORMAT_REGEX.test(lines[0]);
+            const isSpecialTxt = selectedFile.name.endsWith('.txt') && TXT_FORMAT_REGEX.test(lines[0]);
 
             if (isSpecialTxt) {
                 const parsedRows = lines.map(line => {
-                    const match = line.match(TXT_FORMAT_REGEX);
+                    const match = line.trim().match(TXT_FORMAT_REGEX);
                     if (match) {
                         return [
                             match[1], // quantity
                             match[2], // name
                             match[3], // set
                             match[4], // collector_number
-                            match[5] ? 'foil' : 'nonfoil' // finish
+                            (match[5] && (match[5].includes('*') || match[5].toLowerCase().includes('f'))) ? 'foil' : 'nonfoil' // finish
                         ];
                     }
                     return null;
@@ -76,18 +77,24 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
                     setStep(2);
                 }
             } else {
+                // CSV parsing with improved delimiter detection (comma, tab, semicolon, pipe)
+                const firstLine = lines[0];
+                let delimiter = ',';
+                if (!firstLine.includes(',') && firstLine.includes('\t')) delimiter = '\t';
+                else if (!firstLine.includes(',') && firstLine.includes(';')) delimiter = ';';
+                else if (!firstLine.includes(',') && firstLine.includes('|')) delimiter = '|';
+
                 const parsedRows = lines.map(line => {
                     const rowText = line.trim();
-
-                    // Simple split for now, but handle commas inside quotes
                     const cells = [];
                     let currentCell = '';
                     let inQuotes = false;
 
                     for (let i = 0; i < rowText.length; i++) {
                         const char = rowText[i];
-                        if (char === '"') inQuotes = !inQuotes;
-                        else if (char === ',' && !inQuotes) {
+                        if (char === '"') {
+                            inQuotes = !inQuotes;
+                        } else if (char === delimiter && !inQuotes) {
                             cells.push(currentCell.trim().replace(/^"|"$/g, ''));
                             currentCell = '';
                         } else {

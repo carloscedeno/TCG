@@ -34,7 +34,7 @@ BEGIN
         FROM jsonb_array_elements(p_items) WITH ORDINALITY AS t(elem, idx)
     ),
     matched_by_id AS (
-        -- High accuracy match via Scryfall ID
+        -- Level 0: High accuracy match via Scryfall ID
         SELECT 
             id.original_index,
             cp.printing_id,
@@ -51,8 +51,9 @@ BEGIN
             AND cp.scryfall_id = id.scryfall_id::UUID
         LEFT JOIN cards c ON cp.card_id = c.card_id
     ),
-    matched_by_name AS (
-        -- Baseline match via Name/Set/Collector Number
+    matched_by_name_strict AS (
+        -- Level 1: Strict match via Name + Set + Collector Number
+        -- Supports DFC (Double Faced Cards) where name matches front part
         SELECT 
             id.original_index,
             cp.printing_id,
@@ -64,15 +65,41 @@ BEGIN
             cp.released_at,
             1 as match_priority
         FROM input_data id
-        JOIN cards c ON id.name IS NOT NULL AND LOWER(c.card_name) = LOWER(id.name)
+        JOIN cards c ON id.name IS NOT NULL AND (
+            LOWER(c.card_name) = LOWER(id.name) OR 
+            LOWER(c.card_name) LIKE (LOWER(id.name) || ' // %')
+        )
         JOIN card_printings cp ON cp.card_id = c.card_id
-            AND (id.set_code IS NULL OR LOWER(cp.set_code) = LOWER(id.set_code))
-            AND (id.collector_number IS NULL OR cp.collector_number = id.collector_number)
+            AND id.set_code IS NOT NULL AND LOWER(cp.set_code) = LOWER(id.set_code)
+            AND id.collector_number IS NOT NULL AND cp.collector_number = id.collector_number
+    ),
+    matched_by_name_partial AS (
+        -- Level 2: Partial match via Name + Set (fallback for cases without collector number)
+        SELECT 
+            id.original_index,
+            cp.printing_id,
+            c.card_name as db_card_name,
+            cp.set_code as db_set_code,
+            COALESCE(cp.image_url_normal, cp.image_url) as db_image_url,
+            cp.rarity as db_rarity,
+            cp.is_foil,
+            cp.released_at,
+            2 as match_priority
+        FROM input_data id
+        JOIN cards c ON id.name IS NOT NULL AND (
+            LOWER(c.card_name) = LOWER(id.name) OR 
+            LOWER(c.card_name) LIKE (LOWER(id.name) || ' // %')
+        )
+        JOIN card_printings cp ON cp.card_id = c.card_id
+            AND id.set_code IS NOT NULL AND LOWER(cp.set_code) = LOWER(id.set_code)
+            AND id.collector_number IS NULL
     ),
     all_matches AS (
         SELECT * FROM matched_by_id
         UNION ALL
-        SELECT * FROM matched_by_name
+        SELECT * FROM matched_by_name_strict
+        UNION ALL
+        SELECT * FROM matched_by_name_partial
     ),
     best_matches AS (
         SELECT DISTINCT ON (original_index)

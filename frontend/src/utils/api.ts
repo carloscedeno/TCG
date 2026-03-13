@@ -71,7 +71,7 @@ export interface CardDetails extends Card {
   }[];
 }
 
-export const fetchCards = async (filters: any): Promise<{ cards: Card[]; total_count: number }> => {
+export const fetchCards = async (filters: any, signal?: AbortSignal): Promise<{ cards: Card[]; total_count: number }> => {
   try {
     console.log('Fetching cards with filters:', filters);
 
@@ -108,7 +108,7 @@ export const fetchCards = async (filters: any): Promise<{ cards: Card[]; total_c
       limit_count: filters.limit || 50,
       offset_count: filters.offset || 0,
       sort_by: filters.sort || 'release_date'
-    });
+    }).abortSignal(signal);
 
     if (error) {
       console.error('RPC Error:', error);
@@ -185,7 +185,7 @@ export const fetchUserCollections = async (): Promise<any[]> => {
   return data || [];
 };
 
-export const fetchProducts = async (params: any = {}): Promise<any> => {
+export const fetchProducts = async (params: any = {}, signal?: AbortSignal): Promise<any> => {
   try {
     const { data, error } = await supabase.rpc('get_products_filtered', {
       search_query: params.q || null,
@@ -203,7 +203,7 @@ export const fetchProducts = async (params: any = {}): Promise<any> => {
       offset_count: params.offset || 0,
       price_min: params.price_min || null,
       price_max: params.price_max || null
-    });
+    }).abortSignal(signal);
 
     if (error) throw error;
 
