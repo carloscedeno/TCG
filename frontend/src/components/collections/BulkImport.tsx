@@ -220,11 +220,34 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
     const [result, setResult] = useState<any>(null);
     const [progress, setProgress] = useState({ current: 0, total: 0, items: 0 });
 
-    const handleImport = async () => {
+const handleImport = async () => {
         if (!session) {
             alert('Por favor, inicia sesión para importar tu colección.');
             return;
         }
+
+        // Potential foil mismatch check
+        const priceCol = headers.indexOf(mapping.price);
+        const finishCol = headers.indexOf(mapping.finish);
+        const nameCol = headers.indexOf(mapping.name);
+
+        if (priceCol !== -1 && finishCol !== -1) {
+            const highPricedNonFoils = rows.filter(row => {
+                const price = parseFloat(row[priceCol]);
+                const finish = row[finishCol]?.toLowerCase();
+                return price > 50 && (finish === 'nonfoil' || !finish);
+            });
+
+            if (highPricedNonFoils.length > 0) {
+                const firstCard = highPricedNonFoils[0][nameCol];
+                const confirm = window.confirm(
+                    `Se detectaron ${highPricedNonFoils.length} cartas con precio alto ($ > 50) marcadas como NO-FOIL (ej: ${firstCard}).\n\n` +
+                    `¿Estás seguro de que quieres continuar? Esto podría ser un error de formato y causar que se guarden con el acabado incorrecto.`
+                );
+                if (!confirm) return;
+            }
+        }
+
         setLoading(true);
         try {
             const SUPABASE_PROJECT_ID = import.meta.env.VITE_SUPABASE_PROJECT_ID || 'sxuotvogwvmxuvwbsscv';
