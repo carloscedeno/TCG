@@ -6,7 +6,9 @@ import { CollectionService } from '../services/CollectionService';
 import type { CollectionItem } from '../services/CollectionService';
 import { UserMenu } from '../components/Navigation/UserMenu';
 import { Link } from 'react-router-dom';
-import { Loader2, Package } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
+
+import OrdersList from '../components/Profile/OrdersList';
 
 const ProfilePage: React.FC = () => {
     const { session, user } = useAuth();
@@ -105,18 +107,7 @@ const ProfilePage: React.FC = () => {
                             <div className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent"></div>
                         </div>
 
-                        <Link
-                            to="/checkout"
-                            className="block p-8 bg-neutral-900/50 border border-dashed border-white/10 rounded-3xl text-center hover:bg-white/5 transition-all group"
-                        >
-                            <Package className="w-12 h-12 text-slate-600 mx-auto mb-4 group-hover:scale-110 transition-transform" />
-                            <p className="text-slate-400 font-bold uppercase tracking-widest text-xs mb-2">
-                                Historial de pedidos en sincronización con la terminal central...
-                            </p>
-                            <p className="text-[10px] text-geeko-gold uppercase font-black tracking-widest opacity-60">
-                                Los pedidos realizados como invitado se rastrean vía link de WhatsApp
-                            </p>
-                        </Link>
+                        <OrdersList />
                     </section>
 
                     {/* Portfolio Section */}
