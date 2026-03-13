@@ -111,7 +111,8 @@ const Home: React.FC = () => {
   }, [query, filters]);
 
   useEffect(() => {
-    let ignore = false;
+    const controller = new AbortController();
+    
     const fetchData = async () => {
       setLoading(true);
       setError(null);
@@ -142,7 +143,7 @@ const Home: React.FC = () => {
             limit: LIMIT,
             offset,
             sort: sortBy
-          });
+          }, controller.signal);
 
           result = {
             cards: productRes.products.map((p: any) => ({
@@ -171,39 +172,34 @@ const Home: React.FC = () => {
             limit: LIMIT,
             offset,
             sort: sortBy
-          });
+          }, controller.signal);
 
           result = {
             cards: cardRes.cards.map(c => ({
               ...c,
-              card_id: c.card_id
+              card_id: (c as any).card_id
             })),
             total_count: cardRes.total_count
           };
         }
 
-        if (ignore) return;
-
         if (offset === 0) {
           setCards(result.cards);
         } else {
           setCards(prev => {
-            // Prevent duplicates when appending
-            const existingIds = new Set(prev.map(c => c.card_id));
-            const newCards = result.cards.filter(c => !existingIds.has(c.card_id));
+            const existingIds = new Set(prev.map(c => (c as any).card_id));
+            const newCards = result.cards.filter(c => !existingIds.has((c as any).card_id));
             return [...prev, ...newCards];
           });
         }
         setTotalCount(result.total_count);
       } catch (err: any) {
-        if (!ignore) {
-          setError('Failed to fetch cards. Please try again later.');
-          console.error(err);
-        }
+        if (err.name === 'AbortError' || err.message === 'Fetch aborted') return;
+        setError('Failed to fetch cards. Please try again later.');
+        console.error(err);
       } finally {
-        if (!ignore) {
-          setLoading(false);
-        }
+        if (controller.signal.aborted) return;
+        setLoading(false);
       }
     };
 
@@ -235,7 +231,7 @@ const Home: React.FC = () => {
     setSearchParams(newParams, { replace: true });
 
     return () => {
-      ignore = true;
+      controller.abort();
     };
   }, [debouncedQuery, debouncedFilters, activeRarity, sortBy, page, activeTab]);
 
