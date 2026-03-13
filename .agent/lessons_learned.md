@@ -615,3 +615,13 @@ useEffect(() => {
 ```
 
 - **Regla Derivada**: Todo component de búsqueda/filtrado masivo DEBE implementar `AbortController` para gestionar el ciclo de vida de las peticiones de red.
+### 74. Robust Foil Matching & Finishes Array (March 2026)
+
+- **Problema**: Cartas importadas como foil eran guardadas como non-foil por el RPC `bulk_import_inventory`, resultando en visualización y precios incorrectos (ej. "Wan Shi Tong, Librarian").
+- **Causa Raíz**:
+  1. El RPC priorizaba el match por la columna `is_foil`, ignorando el array `finishes` usado por sets modernos (Avatar, etc.).
+  2. Fallback de Scryfall: Algunas versiones (starred collector numbers) no tienen metadata de precio foil, causando confusión en el matching si no hay una jerarquía clara.
+- **Solución**:
+  - **Backend**: Actualizar RPC para que considere `requested_finish` vs (`is_foil` OR `finishes` array) con prioridad sobre la fecha de lanzamiento.
+  - **Frontend**: Implementar una heurística de validación en `BulkImport.tsx` que detecta precios altos ($ > 50) en cartas marcadas como non-foil, lanzando un aviso de confirmación.
+- **Regla Derivada**: [LEYES_DEL_SISTEMA.md] -> Regla de Negocio 6 (Importación Robusta).

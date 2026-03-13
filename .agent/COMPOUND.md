@@ -40,3 +40,16 @@
 **Regla derivada:** Todo RPC de inventario debe implementar fallbacks de precio entre acabados.
 
 ---
+---
+
+## 2026-03-13 — Foil Import Reliability & Robust Matching
+
+**Qué pasó:** Se detectó una inconsistencia en la importación de "Wan Shi Tong, Librarian" donde una carta foil se guardó como normal. Se identificó la causa en el RPC de importación (ignoraba el array `finishes`). Se robusteció el backend y se añadió validación proactiva en el frontend.
+**Lo que cambió:**
+- `lessons_learned.md` → Lección #74 (Foil Matching & Finishes)
+- `LEYES_DEL_SISTEMA.md` → Regla de Negocio 6 (Importación Robusta)
+- `AGENTS.md` → Features Implementadas (Foil Reliability)
+- `BulkImport.tsx` → Validación de precios altos vs acabado
+- `bulk_import_inventory` RPC → Soporte para array `finishes`
+**Artefacto creado:** Walkthrough final.
+**Regla derivada:** Validar siempre finishes array y emitir alertas de precio/finish en frontend.

@@ -451,3 +451,10 @@ Ningún archivo de migración SQL (`supabase/migrations/`) desplegado y registra
 ### Regla de Negocio 5 (Integridad de Acabados / Finish)
 
 **Nunca** permitir que un producto sea marcado como 'foil' si la impresión base (`card_printings`) no soporta oficialmente ese acabado. En caso de duda durante una importación masiva, el sistema debe defaultear a 'nonfoil' a menos que se detecte una coincidencia exacta y exclusiva de la palabra 'foil' (evitando falsos positivos con 'nonfoil').
+---
+
+### Regla de Negocio 6 (Importación Robusta - Foil Reliability)
+
+**Siempre** validar la intención del acabado (foil/nonfoil) contra todas las fuentes disponibles en la metadata:
+- Priorizar la coincidencia del array `finishes` de `card_printings` si el booleano `is_foil` es falso o ambiguo.
+- **Validación de Capa Superior**: El frontend debe emitir alertas si se detectan discrepancias entre el valor declarado (Precio) y el acabado seleccionado (ej. precio de foil en carta marcada como normal) para prevenir errores de mapeo del usuario.
