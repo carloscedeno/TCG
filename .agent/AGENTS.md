@@ -95,6 +95,8 @@ Artefactos del Compound step:
 - ✅ **Limpieza de Checkout Success**: Eliminación de campos redundantes y activación del botón de seguimiento integrado.
 - ✅ **Sincronización de Credenciales SMTP**: Unificación de nombres de variables (`SMTP_USERNAME`/`SMTP_PASSWORD`) y sincronización de lógica entre las funciones `api` y `tcg-api` para garantizar fiabilidad en las notificaciones.
 
+- ✅ **Extrema Performance (Denormalización)**: Eliminación de timeouts mediante denormalización de metadatos (`colors`, `type`, `release_date`) en tabla `products`. RPC `get_products_filtered` optimizado para single-table query.
+- ✅ **Frontend Request Cancellation**: Implementación de `AbortController` en `Home.tsx` para cancelar peticiones de red obsoletas durante el filtrado.
 
 ## 🚧 Features Pendientes
 
@@ -114,4 +116,4 @@ Artefactos del Compound step:
 
 ## 🛡️ Footer
 
-*Geekorium — Geeko-Engineering Division | Limpieza: 2026-03-06*
+*Geekorium — Geeko-Engineering Division | Limpieza: 2026-03-12*

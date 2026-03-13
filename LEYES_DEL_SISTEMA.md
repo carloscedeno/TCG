@@ -75,14 +75,15 @@
 
 ---
 
-### Ley 6: Performance Garantizado (La Regla del Timeout)
+### Ley 6: Performance Garantizado (La Regla del Tiempo Real)
 
 **Siempre** validar que las consultas críticas respondan en <200ms.
 
-- **Vistas Materializadas**: OBLIGATORIAS para consultas que involucren `DISTINCT ON` + `JOIN` + `ORDER BY` en tablas principales (>10k registros). No confiar en queries dinámicas complejas para la vista principal.
-- **Indices**: OBLIGATORIO crear índices B-Tree o GIN para CADA columna usada en filtros o sorts ANTES de desplegar código que los use.
-- **Timeouts**: Si una query da timeout (500), la solución NO es aumentar el timeout, es optimizar la query (generalmente pasando a Materialized View).
-- **Almacenamiento Diferencial**: PROHIBIDO guardar snapshots diarios de datos que no cambian (ej. precios). Siempre implementar lógica de comparación en la ingesta para guardar solo el diferencial cronológico.
+- **Denormalización Extrema**: Si una consulta de filtrado (marketplace/buscador) requiere más de 2 joins en tablas masivas (>50k filas), es **OBLIGATORIO** denormalizar los metadatos de filtrado (`colors`, `type`, `release_date`) a la tabla principal (`products`).
+- **RPC Single-Table**: Los RPCs de búsqueda deben tender a ser consultas de una sola tabla sobre datos denormalizados para maximizar la velocidad de los índices.
+- **Indices**: OBLIGATORIO crear índices B-Tree o GIN para CADA columna usada en filtros o sorts ANTES de desplegar código que los use. Usar `pg_trgm` para bÃºsquedas de texto.
+- **Timeouts**: Si una query da timeout (500), la solución NO es aumentar el timeout, es optimizar la query (generalmente denormalizando o pasando a Materialized View).
+- **Almacenamiento Diferencial**: PROHIBIDO guardar snapshots diarios de datos que no cambian. Siempre implementar lógica de comparación en la ingesta.
 
 **Excepciones**: Consultas analíticas offline o scripts de migración manual.
 

@@ -591,3 +591,27 @@ ear_mint, lightly_played) deben normalizarse en el backend a cÃ³digos internos
     - Fusiona el stock con la versión `nonfoil` si existe, o renombra la entrada en place.
     - Actualiza `order_items` y `cart_items` para mantener integridad referencial antes de borrar registros duplicados.
 - **Regla Derivada**: `LEYES_DEL_SISTEMA.md` -> Ley 6 (Performance y Datos). Las correcciones de finish deben considerar la tabla unida `card_printings`.
+### 72. Ultra-Performance Filtering via Single-Table Denormalization (March 2026)
+
+- **Problema**: Timeouts (500) y latencia alta en filtros complejos (Color, Tipo, Rareza) sobre tablas de 200k+ registros con múltiples joins.
+- **Causa Raíz**: La ejecución de joins dinámicos en Supabase/PostgREST es costosa. Los índices en tablas relacionales no siempre compensan el overhead del planificador de Postgres en queries muy ramificadas.
+- **Solución**: **Extrema Denormalización**. Mover metadatos críticos (`release_date`, `colors`, `set_name`, `type_line`) directamente a la tabla `products`. Rediseñar el RPC `get_products_filtered` para que sea un query de una sola tabla (`FROM products`).
+- **Sincronización**: Usar un trigger `BEFORE INSERT OR UPDATE` en la tabla destino para poblar los datos, y triggers `AFTER UPDATE` en las tablas fuente para "tocar" los registros relacionados y forzar la sincronización sin recursión infinita.
+- **Regla Derivada**: `LEYES_DEL_SISTEMA.md` -> Ley 6 (Performance). Si una query con Joins supera los 200ms, denormalizar metadatos a la tabla principal.
+
+### 73. Frontend Request Cancellation with AbortController (March 2026)
+
+- **Problema**: "Race conditions" visuales y sobrecarga del servidor al mover sliders de filtros (Precio/Año) rápidamente. El servidor procesaba peticiones que el usuario ya no necesitaba.
+- **Causa Raíz**: Cada cambio en el estado disparaba un `fetch` asíncrono. Sin cancelación, las respuestas podían llegar desordenadas o acumularse en el backend.
+- **Solución**: Implementar `AbortController` en el hook `useEffect` de data fetching.
+- **Patrón**:
+
+```typescript
+useEffect(() => {
+  const controller = new AbortController();
+  fetchData(controller.signal);
+  return () => controller.abort();
+}, [filters]);
+```
+
+- **Regla Derivada**: Todo component de búsqueda/filtrado masivo DEBE implementar `AbortController` para gestionar el ciclo de vida de las peticiones de red.
