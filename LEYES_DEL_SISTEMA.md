@@ -458,3 +458,8 @@ Ningún archivo de migración SQL (`supabase/migrations/`) desplegado y registra
 **Siempre** validar la intención del acabado (foil/nonfoil) contra todas las fuentes disponibles en la metadata:
 - Priorizar la coincidencia del array `finishes` de `card_printings` si el booleano `is_foil` es falso o ambiguo.
 - **Validación de Capa Superior**: El frontend debe emitir alertas si se detectan discrepancias entre el valor declarado (Precio) y el acabado seleccionado (ej. precio de foil en carta marcada como normal) para prevenir errores de mapeo del usuario.
+
+### v3.1 (2026-03-13)
+
+- ✅ Agregada **Regla de Negocio 7**: Prevención de Zero-Price (Cero tolerancia a precios nulos o 0 en inventario activo).
+- ✅ Actualizado **Protocolo de Auditoría**: Inclusión de buyer metadata en flujos de administración.

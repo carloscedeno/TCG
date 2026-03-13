@@ -53,3 +53,14 @@
 - `bulk_import_inventory` RPC → Soporte para array `finishes`
 **Artefacto creado:** Walkthrough final.
 **Regla derivada:** Validar siempre finishes array y emitir alertas de precio/finish en frontend.
+## 2026-03-13 — Admin Experience & Price Integrity
+
+**Qué pasó:** Se mejoró significativamente el panel de administración para mostrar datos del comprador y detalles de envío. Además, se detectó y corrigió un error masivo de precios a $0.00 en 1,000 productos del inventario.
+**Lo que cambió:**
+- `lessons_learned.md` → Lecciones #75, #76 y #77
+- `LEYES_DEL_SISTEMA.md` → Regla de Negocio 7 (Cero Tolerancia a Precio 0)
+- `AGENTS.md` → Features Implementadas (Buyer Info & Price Sweep)
+- `OrdersPage.tsx` → UI de detalles del comprador y envío corregida
+- `Database` → Precio de 1,000 ítems restaurados mediante sweep programático
+**Artefacto creado:** Walkthrough de Resolución de Precios.
+**Regla derivada:** Los datos del comprador deben priorizar `guest_info` y fallbacks de `shipping_address`.

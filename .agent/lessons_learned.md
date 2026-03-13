@@ -625,3 +625,20 @@ useEffect(() => {
   - **Backend**: Actualizar RPC para que considere `requested_finish` vs (`is_foil` OR `finishes` array) con prioridad sobre la fecha de lanzamiento.
   - **Frontend**: Implementar una heurística de validación en `BulkImport.tsx` que detecta precios altos ($ > 50) en cartas marcadas como non-foil, lanzando un aviso de confirmación.
 - **Regla Derivada**: [LEYES_DEL_SISTEMA.md] -> Regla de Negocio 6 (Importación Robusta).
+### 75. Non-Automatic Joins in Supabase Client — 2026-03-13
+- **Problema**: `Could not find a relationship between 'orders' and 'profiles' in the schema cache` al intentar un join simple.
+- **Causa**: Supabase PostgREST no detecta relaciones automáticas si los campos no tienen foreign keys explícitas en el schema real de Postgres o si hay ambigüedades en la caché del cliente.
+- **Solución**: Evitar joins forzados si no son necesarios. Para `orders`, los datos del comprador ya están denormalizados en `guest_info` o `shipping_address`. Usar esos campos directamente es más resiliente.
+- **Regla Derivada**: No asumir que `select('*, table(*)')` funcionará siempre; verificar foreign keys en el schema antes de intentar joins profundos.
+
+### 76. Email Priority in Orders — 2026-03-13
+- **Problema**: El admin mostraba "N/A" en el correo del comprador.
+- **Causa**: Se buscaba en `orders.user_email` (columna inexistente) o se intentaba unir con `profiles` (que no guarda emails en esta arquitectura).
+- **Solución**: La jerarquía de email correcta es: `guest_info.email` -> `shipping_address.email`.
+- **Regla Derivada**: Para órdenes de invitados y usuarios registrados, el email de contacto seguro reside en los metadatos de envío/invitado.
+
+### 77. Inventory Zero-Price Integrity Sweep — 2026-03-13
+- **Problema**: Productos "On-Demand" o con errores de importación terminaban con precio $0.00 en el carrito.
+- **Causa**: Falta de validación reactiva en el momento de la inserción o desincronización con el mercado.
+- **Solución**: Implementar barridos (sweeps) automáticos que busquen precios 0 y los reparen consultando `card_printings`.
+- **Regla Derivada**: [LEYES_DEL_SISTEMA.md] -> Regla 7 (Prevención de Zero-Price).
