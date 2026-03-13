@@ -57,6 +57,7 @@ Artefactos del Compound step:
 
 - `/audit` — **Post-ejecución**: verificar integridad del sistema (build, git, tests, docs)
 - `/compound` — **Post-sesión**: codificar lo aprendido (Compound step)
+- `/finalize` — **Cierre de Sesión**: Auditoría, Compound y Push en un solo paso
 - `/import` — Implementar y verificar el Bulk Import feature
 - `/nightly-sync` — Ejecución autónoma del framework Strata
 
@@ -94,6 +95,7 @@ Artefactos del Compound step:
 - ✅ **Notificaciones Premium**: Los correos incluyen botones de rastreo funcionales, etiquetas [FOIL] y [POR ENCARGO] dinámicas.
 - ✅ **Limpieza de Checkout Success**: Eliminación de campos redundantes y activación del botón de seguimiento integrado.
 - ✅ **Sincronización de Credenciales SMTP**: Unificación de nombres de variables (`SMTP_USERNAME`/`SMTP_PASSWORD`) y sincronización de lógica entre las funciones `api` y `tcg-api` para garantizar fiabilidad en las notificaciones.
+- ✅ **Visibilidad Condicional de Carrito**: El botón "Añadir al carrito" ahora está oculto por defecto en la vista general (grid/list) y solo es visible en el modal de detalles, mejorando la estética de navegación masiva.
 
 - ✅ **Extrema Performance (Denormalización)**: Eliminación de timeouts mediante denormalización de metadatos (`colors`, `type`, `release_date`) en tabla `products`. RPC `get_products_filtered` optimizado para single-table query.
 - ✅ **Frontend Request Cancellation**: Implementación de `AbortController` en `Home.tsx` para cancelar peticiones de red obsoletas durante el filtrado.

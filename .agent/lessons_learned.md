@@ -649,3 +649,12 @@ useEffect(() => {
 - **Lección**: Cuando una funcionalidad secundaria se pone en pausa por decisión del usuario, no basta con comentarla si genera advertencias de lint o aumenta el peso muerto del código. Es preferible removerla limpiamente de la UI y los componentes asociados, manteniendo el estado de autenticación core intacto.
 - **Regla Derivada**: [LEYES_DEL_SISTEMA.md] -> Regla de Negocio 8 (Simplicidad y Foco). Funcionalidades en hold deben ser removidas de la vista activa para evitar ruido visual y técnico.
 
+### 79. Component Prop Drilling for Visibility Control (March 2026)
+
+- **Problema**: Necesidad de ocultar elementos de UI (ej: botón "Añadir al carrito") en vistas generales pero mantenerlos en vistas de detalle (modales).
+- **Solución**: Implementar un patrón de `showElement` prop con un valor por defecto.
+- **Implementación**:
+  - `CardProps` ahora incluye `showCartButton?: boolean = false`.
+  - Los padres (`CardGrid`) propagan este prop.
+  - El modal de detalle (`CardModal`) lo ignora o lo fuerza a `true`, manteniendo la funcionalidad aislada.
+- **Lección**: Al rediseñar visibilidad de componentes compartidos, usar props booleanos explícitos en lugar de lógicas globales de estado si el cambio es puramente de visualización contextual. Esto permite mayor flexibilidad sin efectos secundarios en otras partes de la app.

@@ -31,10 +31,11 @@ export interface CardProps {
   finish?: string;
   is_foil?: boolean;
   isArchive?: boolean;
+  showCartButton?: boolean;
   onClick?: () => void;
 }
 
-export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, price, card_id, rarity, type, card_faces, viewMode = 'grid', total_stock, finish, is_foil, isArchive, onClick }) => {
+export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, price, card_id, rarity, type, card_faces, viewMode = 'grid', total_stock, finish, is_foil, isArchive, showCartButton = false, onClick }) => {
   const [currentFaceIndex, setCurrentFaceIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [addingToCart, setAddingToCart] = useState(false);
@@ -179,7 +180,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
           </div>
         </div>
 
-        {!isArchive && (
+        {showCartButton && !isArchive && (
           <button
             onClick={handleQuickAdd}
             className={`ml-4 w-9 h-9 rounded-full flex items-center justify-center transition-all border border-white/5 ${addingToCart ? 'bg-geeko-cyan text-black' : 'bg-white/5 text-neutral-400 hover:bg-geeko-cyan hover:text-black hover:scale-110'}`}
@@ -300,7 +301,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
           </div>
 
           {/* Quick Add Button showing on Hover */}
-          {!isArchive && (
+          {showCartButton && !isArchive && (
             <button
               onClick={handleQuickAdd}
               title={(total_stock || 0) > 0 ? "Agregar al Carrito Rápido" : "Por encargo"}

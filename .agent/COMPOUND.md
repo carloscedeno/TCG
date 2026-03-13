@@ -64,3 +64,15 @@
 - `Database` → Precio de 1,000 ítems restaurados mediante sweep programático
 **Artefacto creado:** Walkthrough de Resolución de Precios.
 **Regla derivada:** Los datos del comprador deben priorizar `guest_info` y fallbacks de `shipping_address`.
+---
+
+## 2026-03-13 — Conditional Cart Button Visibility
+
+**Qué pasó:** El usuario solicitó ocultar el botón de "Añadir al carrito" de la vista general para mejorar la estética, manteniéndolo solo dentro del modal de detalles de la carta.
+**Lo que cambió:**
+- `lessons_learned.md` → Lección #79 (Prop Drilling for Visibility)
+- `AGENTS.md` → Features Implementadas (Visibilidad Condicional de Carrito)
+- `Card.tsx` → Implementación de `showCartButton` prop y renderizado condicional.
+- `CardGrid.tsx` → Propagación del prop `showCartButton`.
+**Artefacto creado:** Walkthrough de Visibilidad de Carrito.
+**Regla derivada:** Usar props booleanos explícitos para control de visibilidad contextual en componentes compartidos.
