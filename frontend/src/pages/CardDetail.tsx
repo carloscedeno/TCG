@@ -44,7 +44,10 @@ export const CardDetail: React.FC = () => {
         setError(null);
         try {
             const data = await fetchCardDetails(printingId);
-            setDetails(data);
+                if (data.all_versions) {
+                    data.all_versions = data.all_versions.filter((v: any) => (v.stock || 0) > 0);
+                }
+                setDetails(data);
         } catch (err) {
             console.error('Error loading card details:', err);
             setError('Failed to load card details. Please try again.');
@@ -117,6 +120,9 @@ export const CardDetail: React.FC = () => {
         if (!details?.all_versions) return [];
 
         const groups = (Array.isArray(details.all_versions) ? details.all_versions : []).reduce((acc: any, v: any) => {
+            // ONLY include versions with stock > 0
+            if ((v.stock || 0) <= 0) return acc;
+
             const key = `${v.set_code}-${v.collector_number}`;
             if (!acc[key]) {
                 acc[key] = {

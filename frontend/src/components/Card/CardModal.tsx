@@ -178,6 +178,11 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                 }
             }
 
+            // Aggressively filter all_versions to only include those with stock > 0
+            if (data.all_versions) {
+                data.all_versions = data.all_versions.filter((v: any) => (v.stock || 0) > 0);
+            }
+
             setDetails(data);
 
             // PRESERVE SELECTED ID: If the requested `id` (e.g. uuid-foil) exists in the versions list, keep it!
@@ -294,6 +299,9 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
         if (!details?.all_versions) return [];
 
         const groups = (Array.isArray(details.all_versions) ? details.all_versions : []).reduce((acc: any, v: any) => {
+            // ONLY include versions with stock > 0
+            if ((v.stock || 0) <= 0) return acc;
+
             const key = `${v.set_code || 'unk'}-${v.collector_number || Math.random()}`;
             if (!acc[key]) {
                 const isNormal = !(v.is_foil || v.finish === 'foil' || v.finish === 'etched');
@@ -463,7 +471,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                     <div className="h-auto md:flex-[0_0_35%] md:min-h-[200px] border-t border-white/5 bg-[#080808] flex flex-col shrink-0">
                         <div className="px-6 py-3 flex items-center justify-between border-b border-white/5 bg-[#0a0a0a]/50">
                             <h3 className="text-[10px] font-web-titles font-normal uppercase tracking-widest text-neutral-500">Edición / Impresiones</h3>
-                            <span className="text-[10px] text-neutral-600 font-normal">{details?.all_versions?.length || 0} Versiones</span>
+                            <span className="text-[10px] text-neutral-600 font-normal">{versionGroups.length} {versionGroups.length === 1 ? 'Versión' : 'Versiones'}</span>
                         </div>
                         <div
                             data-testid="versions-list-container"

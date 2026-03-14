@@ -486,22 +486,13 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
 
         if (pData) {
           data.all_versions = data.all_versions.map((v: any) => {
-            // THE FIX: Use base UUID for matching, stripping synthetic suffixes
             const baseVId = v.printing_id.replace(/-foil$/, '').replace(/-nonfoil$/, '').replace(/-etched$/, '');
             const vFinish = (v.finish || (v.is_foil ? 'foil' : 'nonfoil')).toLowerCase();
             const matches = pData.filter((p: any) => p.printing_id === baseVId);
-
-            // EXACT finish match only — never fall back to another finish for price
             const finishMatches = matches.filter((p: any) => (p.finish || 'nonfoil').toLowerCase() === vFinish);
-
-            // Sum stock across all rows for this finish to avoid "8 outside / 1 inside" mismatch
             const totalStockForFinish = finishMatches.reduce((acc: number, curr: any) => acc + (curr.stock || 0), 0);
-
-            // Use the first match for price and product_id
             const exactProd = finishMatches[0];
-
             const finalPrice = (exactProd?.price && Number(exactProd.price) > 0) ? Number(exactProd.price) : v.price;
-            console.log(`[Stock mapping] ${v.printing_id} -> baseID: ${baseVId} finish: ${vFinish} stock: ${totalStockForFinish}`);
 
             return {
               ...v,
@@ -510,43 +501,31 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
               price: finalPrice
             };
           });
+        } else {
+          data.all_versions.forEach((v: any) => v.stock = 0);
+        }
 
-          // Update main price/stock for the current printingId — match by finish too
-          const baseId = printingId.replace('-foil', '').replace('-nonfoil', '').replace('-etched', '');
-          const requestedFinish = (data.finish || (data.is_foil ? 'foil' : 'nonfoil')).toLowerCase();
+        // Filter out versions with NO stock
+        data.all_versions = data.all_versions.filter((v: any) => (v.stock || 0) > 0);
 
-          // THE FIX: Find if the requested version is in stock
-          const inStockVersions = data.all_versions.filter((v: any) => v.stock > 0);
-          const requestedVersionInStock = data.all_versions.find((v: any) =>
-            v.printing_id === baseId && v.finish.toLowerCase() === requestedFinish && v.stock > 0
-          );
+        // Update main price/stock for the current printingId
+        const baseId = printingId.replace(/-foil$/, '').replace(/-nonfoil$/, '').replace(/-etched$/, '');
+        const requestedFinish = (data.finish || (data.is_foil ? 'foil' : 'nonfoil')).toLowerCase();
 
-          // If current version is OOS, but we have others in stock, pick the first in-stock version!
-          let targetVersion = requestedVersionInStock;
-          if (!targetVersion && inStockVersions.length > 0) {
-            targetVersion = inStockVersions[0];
-          }
+        const requestedVersionInStock = data.all_versions.find((v: any) =>
+          v.printing_id.replace(/-foil$/, '').replace(/-nonfoil$/, '').replace(/-etched$/, '') === baseId &&
+          v.finish.toLowerCase() === requestedFinish
+        );
 
-          if (targetVersion) {
-            data.product_id = targetVersion.product_id;
-            data.total_stock = targetVersion.stock;
-            data.price = targetVersion.price;
-            data.finish = targetVersion.finish;
-            data.is_foil = targetVersion.is_foil;
-            if (data.valuation) data.valuation.store_price = targetVersion.price;
-          } else {
-            // Fallback to whatever matches the ID/finish if nothing is in stock
-            const fallback = data.all_versions.find((v: any) =>
-              v.printing_id === baseId && v.finish.toLowerCase() === requestedFinish
-            ) || data.all_versions[0];
+        const targetVersion = requestedVersionInStock || data.all_versions[0];
 
-            data.product_id = fallback.product_id;
-            data.total_stock = fallback.stock || 0;
-            data.price = fallback.price;
-            data.finish = fallback.finish;
-            data.is_foil = fallback.is_foil;
-            if (data.valuation) data.valuation.store_price = fallback.price;
-          }
+        if (targetVersion) {
+          data.product_id = targetVersion.product_id;
+          data.total_stock = targetVersion.stock || 0;
+          data.price = targetVersion.price;
+          data.finish = targetVersion.finish;
+          data.is_foil = targetVersion.is_foil;
+          if (data.valuation) data.valuation.store_price = targetVersion.price;
         }
       }
     }

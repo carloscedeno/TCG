@@ -266,7 +266,8 @@ const Home: React.FC = () => {
   };
 
   const handleTabChange = (tab: 'marketplace' | 'reference') => {
-    if (tab === 'reference') return; 
+    // Force marketplace only for now since Reference (get_unique_cards_optimized) is not filtered by stock
+    // if (tab === 'reference') return; 
     setActiveTab('marketplace');
     setPage(0);
     setCards([]); // Clear cards to avoid showing stale data during tab switch
@@ -382,6 +383,20 @@ const Home: React.FC = () => {
                   <img src="/branding/Emporio.jpg" alt="Icon" className="w-5 h-5 rounded-full" />
                   Stock Geekorium
                 </button>
+                {/* 
+                // Tab removed as per stock filtering requirement
+                <button
+                  onClick={() => handleTabChange('reference')}
+                  data-testid="archive-tab"
+                  className={`px-6 py-2 rounded-full text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'reference'
+                    ? 'bg-neutral-700 text-white shadow-lg'
+                    : 'text-neutral-500 hover:text-neutral-300'
+                    }`}
+                >
+                  <img src="/branding/Misiones.jpg" alt="Icon" className="w-5 h-5 rounded-full" />
+                  Archivo Geeko
+                </button>
+                */}
               </div>
 
               <div className="flex bg-neutral-900/50 p-1 rounded-full border border-neutral-800">
