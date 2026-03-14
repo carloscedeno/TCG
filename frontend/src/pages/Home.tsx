@@ -69,7 +69,7 @@ const Home: React.FC = () => {
   const [debouncedQuery, setDebouncedQuery] = useState(searchParams.get('q') || '');
   const [debouncedFilters, setDebouncedFilters] = useState<Partial<Filters>>(filters);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [activeTab, setActiveTab] = useState<'marketplace' | 'reference'>((searchParams.get('tab') as 'marketplace' | 'reference') || 'marketplace');
+  const [activeTab, setActiveTab] = useState<'marketplace' | 'reference'>('marketplace');
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0); // Cart count state
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
@@ -266,7 +266,8 @@ const Home: React.FC = () => {
   };
 
   const handleTabChange = (tab: 'marketplace' | 'reference') => {
-    setActiveTab(tab);
+    if (tab === 'reference') return; 
+    setActiveTab('marketplace');
     setPage(0);
     setCards([]); // Clear cards to avoid showing stale data during tab switch
   };
@@ -376,24 +377,10 @@ const Home: React.FC = () => {
                 <button
                   onClick={() => handleTabChange('marketplace')}
                   data-testid="inventory-tab"
-                  className={`px-6 py-2 rounded-full text-[11px] font-black tracking-widest uppercase transition-all ring-2 ring-geeko-cyan/30 flex items-center gap-2 ${activeTab === 'marketplace'
-                    ? 'bg-geeko-cyan text-black shadow-[0_0_15px_rgba(0,229,255,0.4)]'
-                    : 'text-neutral-500 hover:text-neutral-300'
-                    }`}
+                  className="px-6 py-2 rounded-full text-[11px] font-black tracking-widest uppercase transition-all ring-2 ring-geeko-cyan/30 flex items-center gap-2 bg-geeko-cyan text-black shadow-[0_0_15px_rgba(0,229,255,0.4)]"
                 >
                   <img src="/branding/Emporio.jpg" alt="Icon" className="w-5 h-5 rounded-full" />
                   Stock Geekorium
-                </button>
-                <button
-                  onClick={() => handleTabChange('reference')}
-                  data-testid="archives-tab"
-                  className={`px-6 py-2 rounded-full text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'reference'
-                    ? 'bg-neutral-700 text-white shadow-lg'
-                    : 'text-neutral-500 hover:text-neutral-300'
-                    }`}
-                >
-                  <img src="/branding/Misiones.jpg" alt="Icon" className="w-5 h-5 rounded-full" />
-                  Archivo
                 </button>
               </div>
 
