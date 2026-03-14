@@ -29,7 +29,6 @@
 
 ## 2026-03-12 — Fix Missing Card Prices ("S/P")
 
-
 **Qué pasó:** Se detectó que cartas en stock (8th Edition y otras) mostraban "S/P" debido a falta de metadata de precio en impresiones variadas (starred numbers).
 **Lo que cambió:**
 - `lessons_learned.md` → Lección #70 (Price Fallback Chain)
@@ -40,7 +39,6 @@
 **Regla derivada:** Todo RPC de inventario debe implementar fallbacks de precio entre acabados.
 
 ---
----
 
 ## 2026-03-13 — Foil Import Reliability & Robust Matching
 
@@ -48,22 +46,24 @@
 **Lo que cambió:**
 - `lessons_learned.md` → Lección #74 (Foil Matching & Finishes)
 - `LEYES_DEL_SISTEMA.md` → Regla de Negocio 6 (Importación Robusta)
-- `AGENTS.md` → Features Implementadas (Foil Reliability)
 - `BulkImport.tsx` → Validación de precios altos vs acabado
 - `bulk_import_inventory` RPC → Soporte para array `finishes`
 **Artefacto creado:** Walkthrough final.
 **Regla derivada:** Validar siempre finishes array y emitir alertas de precio/finish en frontend.
+
+---
+
 ## 2026-03-13 — Admin Experience & Price Integrity
 
 **Qué pasó:** Se mejoró significativamente el panel de administración para mostrar datos del comprador y detalles de envío. Además, se detectó y corrigió un error masivo de precios a $0.00 en 1,000 productos del inventario.
 **Lo que cambió:**
 - `lessons_learned.md` → Lecciones #75, #76 y #77
 - `LEYES_DEL_SISTEMA.md` → Regla de Negocio 7 (Cero Tolerancia a Precio 0)
-- `AGENTS.md` → Features Implementadas (Buyer Info & Price Sweep)
 - `OrdersPage.tsx` → UI de detalles del comprador y envío corregida
 - `Database` → Precio de 1,000 ítems restaurados mediante sweep programático
 **Artefacto creado:** Walkthrough de Resolución de Precios.
 **Regla derivada:** Los datos del comprador deben priorizar `guest_info` y fallbacks de `shipping_address`.
+
 ---
 
 ## 2026-03-13 — Conditional Cart Button Visibility
@@ -73,6 +73,18 @@
 - `lessons_learned.md` → Lección #79 (Prop Drilling for Visibility)
 - `AGENTS.md` → Features Implementadas (Visibilidad Condicional de Carrito)
 - `Card.tsx` → Implementación de `showCartButton` prop y renderizado condicional.
-- `CardGrid.tsx` → Propagación del prop `showCartButton`.
-**Artefacto creado:** Walkthrough de Visibilidad de Carrito.
 **Regla derivada:** Usar props booleanos explícitos para control de visibilidad contextual en componentes compartidos.
+
+---
+
+## 2026-03-14 — Robust Stock Filtering Implementation
+
+**Qué pasó:** Se implementó una estrategia de filtrado de stock multi-capa para asegurar que solo ítems con stock > 0 sean visibles. Se corrigieron errores de mapeo en `api.ts` y se ocultó la pestaña de "Archivo" para simplificar la UX.
+**Lo que cambió:**
+- `lessons_learned.md` → Lección #80 (Robust Stock Filtering)
+- `LEYES_DEL_SISTEMA.md` → Ley 14 (Filtro de Stock Garantizado)
+- `api.ts` → Filtrado proactivo en `fetchCardDetails`.
+- `Home.tsx` → Ocultamiento de la pestaña "Reference".
+- `CardModal.tsx` & `CardDetail.tsx` → Limpieza de `details.all_versions`.
+**Artefacto creado:** Walkthrough de Filtrado de Stock.
+**Regla derivada:** Las reglas de negocio críticas de visibilidad deben aplicarse en la capa de API/Datos.

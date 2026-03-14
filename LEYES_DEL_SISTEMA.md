@@ -441,6 +441,15 @@ Antes de iniciar procesos de sincronización pesados o de larga duración, se de
 
 ---
 
+### Ley 14: Filtro de Stock Garantizado
+
+**Siempre** filtrar los resultados para mostrar únicamente ítems con existencia real (`stock > 0`) en las vistas de Marketplace y Detalle de Carta.
+
+- **Implementación**: El filtrado principal debe ocurrir en `api.ts` (`fetchCardDetails`) y en los RPCs de búsqueda (`get_products_filtered`).
+- **Excepción**: Vistas administrativas de inventario o si el cliente solicita explícitamente habilitar el modo "Archivo / Referencia".
+
+---
+
 **Estas leyes son inmutables y deben ser respetadas en todo momento por el agente autónomo.**
 
 ### 13. Sincronización Estricta de Migraciones (CI/CD)

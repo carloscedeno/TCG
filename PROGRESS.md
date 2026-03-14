@@ -1,7 +1,6 @@
-# 📊 Progress Report - Card Price Fallback Fix
-
-**Last Updated**: 2026-03-13 13:10 (Social Login Removal)
-**Status**: ✅ Auth Modal Simplified & Social Login Removed (On-Hold)
+# 📊 Progress Report - Robust Stock Filtering
+**Last Updated**: 2026-03-14 14:30 (Stock filtering fix)
+**Status**: ✅ Marketplace & Detail Stock Filtering Fixed
 
 ---
 

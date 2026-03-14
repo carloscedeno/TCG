@@ -648,11 +648,13 @@ useEffect(() => {
 - **Problema**: El inicio de sesión social (Google, Discord, Microsoft) fue solicitado para ser ocultado o puesto en "hold" para simplificar la experiencia de usuario inicial.
 - **Lección**: Cuando una funcionalidad secundaria se pone en pausa por decisión del usuario, no basta con comentarla si genera advertencias de lint o aumenta el peso muerto del código. Es preferible removerla limpiamente de la UI y los componentes asociados, manteniendo el estado de autenticación core intacto.
 - **Regla Derivada**: [LEYES_DEL_SISTEMA.md] -> Regla de Negocio 8 (Simplicidad y Foco). Funcionalidades en hold deben ser removidas de la vista activa para evitar ruido visual y técnico.
+- ✅ **Visibilidad Condicional de Carrito**: El botón "Añadir al carrito" ahora está oculto por defecto en la vista general (grid/list) y solo es visible en el modal de detalles, mejorando la estética de navegación masiva.
+- ✅ **Filtrado de Stock Robusto (Multi-capa)**: Implementación de limpieza de ítems agotados directamente en `api.ts` y componentes de detalle. Eliminación completa de versiones "Por Encargo" ($0.00) en el flujo de vista de stock.
+- ✅ **Ocultamiento de Sección Archivo**: Removida la pestaña de histórico para simplificar la UX. El sistema ahora opera exclusivamente sobre el inventario vivo (Marketplace).
 
 ### 79. Component Prop Drilling for Visibility Control (March 2026)
 
-- **Problema**: Necesidad de ocultar elementos de UI (ej: botón "Añadir al carrito") en vistas generales pero mantenerlos en vistas de detalle (modales).
-- **Solución**: Implementar un patrón de `showElement` prop con un valor por defecto.
+- **Problema**: Necesidad de implementar un patrón de `showElement` prop con un valor por defecto.
 - **Implementación**:
   - `CardProps` ahora incluye `showCartButton?: boolean = false`.
   - Los padres (`CardGrid`) propagan este prop.
