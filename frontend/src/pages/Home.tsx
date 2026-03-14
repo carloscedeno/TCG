@@ -265,12 +265,9 @@ const Home: React.FC = () => {
     setPage(0);
   };
 
-  const handleTabChange = (tab: 'marketplace' | 'reference') => {
-    // Force marketplace only for now since Reference (get_unique_cards_optimized) is not filtered by stock
-    // if (tab === 'reference') return; 
+  const handleTabChange = (_tab: 'marketplace' | 'reference') => {
+    // Force stay on marketplace since reference tab is hidden/unfiltered
     setActiveTab('marketplace');
-    setPage(0);
-    setCards([]); // Clear cards to avoid showing stale data during tab switch
   };
 
 
