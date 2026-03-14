@@ -101,7 +101,8 @@ Artefactos del Compound step:
 - ✅ **Frontend Request Cancellation**: Implementación de `AbortController` en `Home.tsx` para cancelar peticiones de red obsoletas durante el filtrado.
 
 - ✅ **Detalles del Comprador en Admin**: El panel de órdenes ahora muestra Nombre, Teléfono, Email y Dirección completa (priorizando datos de invitado y envío).
-- ✅ **Saneamiento Automático de Precios**: Implementado script de barrido que identifica y corrige productos con precio $0.00 usando metadata de mercado.
+- ✅ **Ocultamiento de Sección Archivo**: Removida la pestaña de histórico para simplificar la UX. El sistema ahora opera exclusivamente sobre el inventario vivo (Marketplace).
+- ✅ **Version 1.0 Baseline**: Creación de rama estable `v1.0-productiva` para preservar features apagadas.
 
 ## 🚧 Features Pendientes
 

@@ -658,3 +658,10 @@ useEffect(() => {
   - Los padres (`CardGrid`) propagan este prop.
   - El modal de detalle (`CardModal`) lo ignora o lo fuerza a `true`, manteniendo la funcionalidad aislada.
 - **Lección**: Al rediseñar visibilidad de componentes compartidos, usar props booleanos explícitos en lugar de lógicas globales de estado si el cambio es puramente de visualización contextual. Esto permite mayor flexibilidad sin efectos secundarios en otras partes de la app.
+### 25. Ocultamiento de Features vs. Eliminación (Marzo 2026)
+
+- **Problema**: El sistema de "Archivo" confundía a los usuarios recién registrados.
+- **Causa Raíz**: Presencia de una funcionalidad de referencia histórica en un sitio de venta directa.
+- **Lección**: Para cambios de UX rápidos bajo presión, ocultar el punto de entrada (`tabs`) y forzar el estado inicial (`activeTab`) es más seguro y rápido que eliminar código de fondo.
+- **Implementación**: En `Home.tsx`, forzar `activeTab: 'marketplace'`, retornar `null` en el botón de toggle e ignorar el parámetro URL `?tab=reference`.
+- **Integridad**: Mantener una rama de referencia (`v1.0-productiva`) antes de apagar funcionalidades importantes garantiza la reversibilidad total sin miedo a perder código legado.
