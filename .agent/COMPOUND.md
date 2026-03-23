@@ -88,3 +88,16 @@
 - `CardModal.tsx` & `CardDetail.tsx` → Limpieza de `details.all_versions`.
 **Artefacto creado:** Walkthrough de Filtrado de Stock.
 **Regla derivada:** Las reglas de negocio críticas de visibilidad deben aplicarse en la capa de API/Datos.
+
+---
+
+## 2026-03-23 — Codebase Cleanup & Source ID Alignment
+
+**Qué pasó:** Se realizó una limpieza masiva del repositorio eliminando más de 70 archivos "basura" (scripts de depuración, logs, temporales). Se identificó y documentó una inconsistencia histórica en los IDs de fuentes de precios.
+**Lo que cambió:**
+- `lessons_learned.md` → Lección #81 (Alineación de IDs de Fuentes)
+- `Raíz & scripts/` → Eliminación de 70+ archivos redundantes.
+- `sync_cardkingdom_api.py` → Confirmado como la fuente de verdad para denormalización de precios.
+**Artefacto creado:** Walkthrough de Limpieza de Código.
+**Regla derivada:** Mantener el repositorio libre de scripts de un solo uso; el conocimiento debe residir en `lessons_learned.md` y el código productivo en `scripts/` o `src/`.
+

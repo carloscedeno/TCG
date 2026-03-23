@@ -103,6 +103,9 @@ Artefactos del Compound step:
 - ✅ **Detalles del Comprador en Admin**: El panel de órdenes ahora muestra Nombre, Teléfono, Email y Dirección completa (priorizando datos de invitado y envío).
 - ✅ **Ocultamiento de Sección Archivo**: Removida la pestaña de histórico para simplificar la UX. El sistema ahora opera exclusivamente sobre el inventario vivo (Marketplace).
 - ✅ **Version 1.0 Baseline**: Creación de rama estable `v1.0-productiva` para preservar features apagadas.
+- ✅ **Limpieza de Repositorio (Garbage Removal)**: Eliminación de más de 70 scripts de depuración, logs y archivos temporales redundantes para mejorar la mantenibilidad.
+- ✅ **Alineación de IDs de Fuentes**: Estandarización de IDs de mercado (17: Card Kingdom, 16: TCGplayer) para integridad del historial de precios.
+
 
 ## 🚧 Features Pendientes
 
@@ -124,4 +127,4 @@ Artefactos del Compound step:
 
 ## 🛡️ Footer
 
-*Geekorium — Geeko-Engineering Division | Limpieza: 2026-03-13*
+*Geekorium — Geeko-Engineering Division | Limpieza: 2026-03-23*
