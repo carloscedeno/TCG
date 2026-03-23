@@ -667,3 +667,11 @@ useEffect(() => {
 - **Lección**: Para cambios de UX rápidos bajo presión, ocultar el punto de entrada (`tabs`) y forzar el estado inicial (`activeTab`) es más seguro y rápido que eliminar código de fondo.
 - **Implementación**: En `Home.tsx`, forzar `activeTab: 'marketplace'`, retornar `null` en el botón de toggle e ignorar el parámetro URL `?tab=reference`.
 - **Integridad**: Mantener una rama de referencia (`v1.0-productiva`) antes de apagar funcionalidades importantes garantiza la reversibilidad total sin miedo a perder código legado.
+
+### 81. Alineación de IDs de Fuentes de Precios (Marzo 2026)
+
+- **Problema**: Discrepancias en el historial de precios debido a múltiples IDs (`1`, `21`) asignados a la misma fuente (Card Kingdom) en diferentes etapas del desarrollo.
+- **Causa Raíz**: Inconsistencia en scripts de raspado (scrapers) iniciales que no compartían una tabla de referencia de fuentes.
+- **Solución**: Estandarizar IDs de fuentes críticas: **16 para TCGplayer** y **17 para Card Kingdom**. Ejecutar scripts de alineación (`align_everything.py`) para migrar registros históricos al ID oficial y consolidar las tablas `sources` y `price_sources`.
+- **Regla Derivada**: [LEYES_DEL_SISTEMA.md] -> Regla de Negocio 1. Todo script de sincronización debe usar el ID 17 para Card Kingdom de forma hardcodeada o mediante lookup en la tabla de referencia oficial.
+
