@@ -1,0 +1,9 @@
+Name,Set code,Set name,Collector number,Foil,Rarity,Quantity,ManaBox ID,Scryfall ID,Purchase price,Misprint,Altered,Condition,Language,Purchase price currency
+Golem Foundry,EOC,Edge of Eternities Commander,138,normal,common,1,107233,18724f37-d50b-4b00-bd47-c5bc6e62697a,0.29,false,false,near_mint,en,USD
+Dragon Throne of Tarkir,PKTK,Khans of Tarkir Promos,219,foil,rare,7,13398,497c8a84-2f1f-447f-9a52-a0b97d85f5ee,0.49,false,false,near_mint,en,USD
+Heroes' Podium,DMC,Dominaria United Commander,185,normal,rare,1,71290,1b2bee5c-7ea0-4713-a60b-dccaf89c5d48,1.36,false,false,near_mint,en,USD
+Staff of Nin,PM13,Magic 2013 Promos,217★,foil,rare,1,17824,5be0ec9b-17ea-4503-b9c2-67a3ca2a2b13,1.42,false,false,near_mint,en,USD
+Tenza, Godo's Maul,DMC,Dominaria United Commander,193,normal,uncommon,2,71398,3f918d2a-5769-43ce-a8e8-41db6c8f251d,2.12,false,false,near_mint,en,USD
+Moonsilver Spear,PAVR,Avacyn Restored Promos,217★,foil,rare,5,18286,3f37ac81-6656-4929-a979-9d2ad5f90feb,2.26,false,false,near_mint,en,USD
+Prophetic Prism,DMC,Dominaria United Commander,189,normal,common,1,71652,a0dcb495-9562-4961-b095-8b844dfdb601,0.12,false,false,near_mint,en,USD
+Wayfarer's Bauble,AFC,Forgotten Realms Commander,222,normal,common,2,60668,32a52319-e4a5-42a9-b9c5-35df42b46fd9,0.34,false,false,near_mint,en,USD

@@ -1,0 +1,9 @@
+Name,Set code,Set name,Collector number,Foil,Rarity,Quantity,ManaBox ID,Scryfall ID,Purchase price,Misprint,Altered,Condition,Language,Purchase price currency
+Champion of Wits,AFC,Forgotten Realms Commander,80,normal,rare,1,60862,cce2fce1-8172-43ed-937d-a543a474ef46,0.49,false,false,near_mint,en,USD
+Daring Saboteur,NCC,New Capenna Commander,217,normal,uncommon,1,68222,546c5194-13f4-4860-8438-67732ea761c3,0.35,false,false,near_mint,en,USD
+Nightveil Sprite,MKC,Murders at Karlov Manor Commander,113,normal,uncommon,1,90428,82f806fe-3970-4ae2-b232-d99002d46062,0.35,false,false,near_mint,ja,USD
+Looter il-Kor,NCC,New Capenna Commander,225,normal,common,1,68323,9b43cfff-e14d-4792-8a5b-98fca88456e0,0.35,false,false,near_mint,en,USD
+Skyway Robber,NCC,New Capenna Commander,31,normal,rare,1,68288,7df5aaae-4fa6-4945-bdd4-577ff3235a7d,0.49,false,false,near_mint,en,USD
+Sphinx of Foresight,PRNA,Ravnica Allegiance Promos,55s,foil,rare,1,44077,b8edd796-34c4-4d3b-a5a8-3417af96b3b0,1.79,false,false,near_mint,en,USD
+Shu Yun, the Silent Tempest,PFRF,Fate Reforged Promos,52s,foil,rare,1,12155,e521a1a3-1523-43c6-8917-de9065334e2e,2.49,false,false,near_mint,en,USD
+Mizzium Meddler,PORI,Magic Origins Promos,64,foil,rare,2,10624,e999c5cc-2999-4ae4-8cdb-b475f0a990ec,0.49,false,false,near_mint,en,USD

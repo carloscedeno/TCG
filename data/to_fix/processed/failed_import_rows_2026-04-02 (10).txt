@@ -1,0 +1,15 @@
+Name,Set code,Set name,Collector number,Foil,Rarity,Quantity,ManaBox ID,Scryfall ID,Purchase price,Misprint,Altered,Condition,Language,Purchase price currency
+Junk Winder,BLC,Bloomburrow Commander,169,normal,uncommon,1,96168,0ee1b75a-18e3-43ce-a1db-b27fd1771279,0.39,false,false,near_mint,en,USD
+Colossal Whale,PM14,Magic 2014 Promos,48★,foil,rare,1,16054,20968c42-d63b-4b2a-ae47-f986f3c35fdc,0.59,false,false,near_mint,en,USD
+Ephara's Dispersal,MKC,Murders at Karlov Manor Commander,103,normal,common,2,90493,b622aad1-4f57-472e-9bd8-9404da88d6be,0.35,false,false,near_mint,en,USD
+Repulse,OTP,Breaking News,13,normal,uncommon,3,93246,88941ed3-1cae-47ce-8ccb-938c5d0e767f,0.35,false,false,near_mint,en,USD
+Echoing Truth,DMC,Dominaria United Commander,109,normal,common,7,71479,5d987d26-c8e8-4edf-8ac0-6a2980265710,0.49,false,false,near_mint,en,USD
+Prognostic Sphinx,AFC,Forgotten Realms Commander,90,normal,rare,3,60822,acd9e468-093b-4c88-8bf6-041bee6a1ea2,0.49,false,false,near_mint,en,USD
+Mercurial Pretender,PM15,Magic 2015 Promos,68,foil,rare,2,13864,3998c87e-e71f-4432-afca-974c9dc79676,0.49,false,false,near_mint,en,USD
+Master Thief,ZNC,Zendikar Rising Commander,30,normal,uncommon,3,55406,703f57d5-d8bb-4fb6-9dc9-71a5b4308f04,0.35,false,false,near_mint,en,USD
+Stolen Identity,NCC,New Capenna Commander,233,normal,rare,4,68158,2831fe77-ea98-4334-a78e-01580fb002c0,0.59,false,false,near_mint,en,USD
+Saheeli's Artistry,PKLD,Kaladesh Promos,62,foil,rare,3,7714,422e3475-551f-405e-9467-5d244ce698e7,0.49,false,false,near_mint,en,USD
+Confiscation Coup,PKLD,Kaladesh Promos,41s,foil,rare,1,7719,9f97953f-0cf9-4a78-b048-ae4d08c0e5de,1.99,false,false,near_mint,en,USD
+Talrand's Invocation,NCC,New Capenna Commander,234,normal,uncommon,2,68305,88f43c2c-fee4-4df2-b326-a1d9840f64b0,0.35,false,false,near_mint,en,USD
+Mask of the Schemer,NCC,New Capenna Commander,28,normal,rare,1,68234,5df2a854-5807-4ce2-b2ef-cbd8aa3f86b5,0.49,false,false,near_mint,en,USD
+Browse,CST,Coldsnap Theme Decks,25,normal,uncommon,1,27080,3611f9dc-f129-4a9f-a251-1185248f8f16,0.35,false,false,near_mint,en,USD

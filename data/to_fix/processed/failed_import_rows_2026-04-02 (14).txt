@@ -1,0 +1,8 @@
+Name,Set code,Set name,Collector number,Foil,Rarity,Quantity,ManaBox ID,Scryfall ID,Purchase price,Misprint,Altered,Condition,Language,Purchase price currency
+Frontier Warmonger,MKC,Murders at Karlov Manor Commander,154,normal,rare,2,90426,824aa845-0523-4434-8992-bce42f5b2bcb,0.49,false,false,near_mint,ja,USD
+Lord of Shatterskull Pass,PROE,Rise of the Eldrazi Promos,156★,foil,rare,1,21707,72c0427d-4666-407d-b5f6-03836dff52ae,0.79,false,false,near_mint,en,USD
+Quicksmith Rebel,PAER,Aether Revolt Promos,93,foil,rare,1,6442,54b8a03a-de93-43ed-b90d-7d168a21801a,0.49,false,false,near_mint,en,USD
+Bogardan Hellkite,AFC,Forgotten Realms Commander,115,normal,mythic,4,60644,22dd2242-2fd8-4752-886c-fc6dbabcf89a,0.99,false,false,near_mint,en,USD
+Inferno Titan,BLC,Bloomburrow Commander,198,normal,mythic,2,96302,5b99f2f2-7000-401a-9201-b604238baf7a,0.99,false,false,near_mint,en,USD
+Hoard-Smelter Dragon,AFC,Forgotten Realms Commander,128,normal,rare,1,60663,2f4c5867-73c4-4e10-bbf5-6a69df879547,0.49,false,false,near_mint,en,USD
+Kazuul, Tyrant of the Cliffs,MKC,Murders at Karlov Manor Commander,157,normal,rare,1,90400,721df547-d777-4247-b130-a4e247445b04,0.59,false,false,near_mint,ja,USD

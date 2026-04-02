@@ -308,11 +308,17 @@ const handleImport = async () => {
 
                 chunkResults.forEach((chunkResult, batchIdx) => {
                     totalImported += chunkResult.imported_count || 0;
+                    
+                    const offset = (i + batchIdx) * CHUNK_SIZE;
+                    
                     if (chunkResult.errors) {
-                        allErrors = [...allErrors, ...chunkResult.errors];
+                        const adjustedErrors = chunkResult.errors.map((err: string) => {
+                            // Find the "Row N" pattern and adjust it
+                            return err.replace(/Row (\d+)/, (_, p1) => `Row ${parseInt(p1) + offset}`);
+                        });
+                        allErrors = [...allErrors, ...adjustedErrors];
                     }
                     if (chunkResult.failed_indices) {
-                        const offset = (i + batchIdx) * CHUNK_SIZE;
                         allFailedIndices = [...allFailedIndices, ...chunkResult.failed_indices.map((idx: number) => idx + offset)];
                     }
                 });

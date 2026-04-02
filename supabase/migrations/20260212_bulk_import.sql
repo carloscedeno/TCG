@@ -178,6 +178,7 @@ BEGIN
             updated_at = now()
         RETURNING 1
     )
+    -- We must select from upserted to ensure the CTE is executed
     SELECT count(*) INTO v_imported_count FROM upserted;
 
     -- 3. Collect errors for missing cards

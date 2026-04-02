@@ -1,0 +1,20 @@
+Name,Set code,Set name,Collector number,Foil,Rarity,Quantity,ManaBox ID,Scryfall ID,Purchase price,Misprint,Altered,Condition,Language,Purchase price currency
+Mystic Sanctuary,MKC,Murders at Karlov Manor Commander,277,normal,common,2,90383,67652446-6d12-4e2a-bb51-ba685f2e79d1,4.99,false,false,near_mint,en,USD
+Figure of Destiny,PEVE,Eventide Promos,139★,foil,rare,3,24363,3b2866a9-9f44-410c-8132-9d9822253332,1.49,false,false,near_mint,en,USD
+Kinnan, Bonder Prodigy,PIKO,Ikoria: Lair of Behemoths Promos,192p,normal,mythic,1,50615,9c68b00a-2c78-4cb1-b93e-e27c6954657f,27.99,false,false,near_mint,en,USD
+Assassin's Trophy,PGRN,Guilds of Ravnica Promos,152p,normal,rare,1,44980,b2a40582-790e-4629-ba13-7ae96f825dca,3.99,false,false,near_mint,en,USD
+Malik, Grim Manipulator,SLX,Universes Within,23,normal,mythic,1,85141,5cf4fee3-3059-4ca4-a47d-0848410b294d,5.49,false,false,near_mint,en,USD
+Maelstrom Nexus,DMC,Dominaria United Commander,159,normal,mythic,1,71662,a3107767-6c36-4982-8e0d-e100d5fca204,2.79,false,false,near_mint,en,USD
+Savai Triome,PIKO,Ikoria: Lair of Behemoths Promos,253p,normal,rare,1,50630,b3693bf9-51d0-4508-bb9a-6de3ee44daab,27.99,false,false,near_mint,en,USD
+Ancient Den,BRC,The Brothers' War Commander,172,normal,common,1,75738,bc74f956-3bef-46bc-a180-6b1773ee4ca6,4.49,false,false,near_mint,en,USD
+Eumidian Hatchery,EOC,Edge of Eternities Commander,20,normal,rare,1,106976,25b57aaf-04fa-463d-8516-40fccd24d6ed,0.99,false,false,near_mint,en,USD
+Command Tower,NCC,New Capenna Commander,395,normal,common,1,68199,43a32bdf-c430-46a0-9d23-8b8e8468391b,0.69,false,false,near_mint,en,USD
+Sulfurous Springs,EOC,Edge of Eternities Commander,185,normal,rare,1,107202,eedb9df2-20d3-4cfd-8aed-336edc37d5a9,1.99,false,false,near_mint,en,USD
+Temple of Deceit,BRC,The Brothers' War Commander,205,normal,rare,1,75331,1f604a40-dbe4-464f-98da-69c8125614f0,0.59,false,false,near_mint,en,USD
+Port Town,AFC,Forgotten Realms Commander,255,normal,rare,1,60898,e6a12a68-a88c-440d-a6ee-b235afbbbfb8,0.49,false,false,near_mint,en,USD
+Karazikar, the Eye Tyrant,AFC,Forgotten Realms Commander,49,foil,mythic,1,60574,da46b47b-0156-4a01-b4b1-28526a6826f4,14.99,false,false,near_mint,en,USD
+Lim-Dûl's Vault,SLC,Secret Lair Countdown,1996,normal,rare,1,75249,9911cc02-ef9a-458b-94d2-50af92ad6628,11.99,false,false,near_mint,en,USD
+Oskar, Rubbish Reclaimer,NCC,New Capenna Commander,77,normal,rare,1,68462,ed87e25f-9dad-4858-92bc-e859fd2be2a4,0.99,false,false,near_mint,en,USD
+Fallen Shinobi,NCC,New Capenna Commander,338,normal,rare,1,68463,ed9110d1-508f-4c87-a49e-6ec00039d924,11.99,false,false,near_mint,en,USD
+Emet-Selch, Unsundered // Hades, Sorcerer of Eld,PFIN,Final Fantasy Promos,218s,foil,mythic,1,106821,5580fc6e-0192-4bd9-aace-ac2040fa729a,18.99,false,false,near_mint,en,USD
+Golbez, Crystal Collector,PFIN,Final Fantasy Promos,225s,foil,rare,1,106877,effc26cf-3e80-4e67-a703-5c3579abc9f4,4.99,false,false,near_mint,en,USD

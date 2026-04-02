@@ -1,0 +1,12 @@
+Name,Set code,Set name,Collector number,Foil,Rarity,Quantity,ManaBox ID,Scryfall ID,Purchase price,Misprint,Altered,Condition,Language,Purchase price currency
+Malik, Grim Manipulator,SLX,Universes Within,23,normal,mythic,1,85141,5cf4fee3-3059-4ca4-a47d-0848410b294d,5.49,false,false,near_mint,en,USD
+Blaze,POR,Portal,118†,normal,uncommon,1,37436,5ab9da23-624e-4c33-ab5d-82a30015b0e7,,false,false,near_mint,en,USD
+Endbringer,POGW,Oath of the Gatewatch Promos,3,foil,rare,1,9442,103cee09-5938-4a5b-bfd6-78f0e57826c8,0.79,false,false,near_mint,en,USD
+Eldrazi Scion,TBFZ,Battle for Zendikar Tokens,2,normal,common,1,10050,b999a0fe-d2d0-4367-9abb-6ce5f3764f19,0.35,false,false,near_mint,en,USD
+Eldrazi Scion,TOGW,Oath of the Gatewatch Tokens,2,normal,common,1,9194,f88da33f-a944-4cc4-978e-3858c2e17e3a,0.35,false,false,near_mint,en,USD
+Eldrazi Scion,TOGW,Oath of the Gatewatch Tokens,1,normal,common,1,9195,a03edf14-3495-4f61-ad73-f16e9456472c,0.35,false,false,near_mint,en,USD
+Flash Flood,LEGI,Legends Italian,57,normal,common,1,65839,d5a113c3-5bd3-46e8-a6f8-4fee3f066688,,false,false,near_mint,en,USD
+Thalia, Heretic Cathar,PEMN,Eldritch Moon Promos,46,foil,rare,1,8393,46928c55-969b-487a-a869-37052ca096c1,2.49,false,false,near_mint,en,USD
+Swords to Plowshares,CST,Coldsnap Theme Decks,54,normal,uncommon,1,27072,7d751566-7246-4580-9a12-0fd1d6c8b5e8,10.99,false,false,near_mint,en,USD
+Dryad Militant,PRTR,Return to Ravnica Promos,214,normal,uncommon,2,17423,d88f8449-748f-4843-b4a2-480f6ebd384d,0.79,false,false,near_mint,en,USD
+Mirran Crusader,PMBS,Mirrodin Besieged Promos,14★,foil,rare,2,20145,d9a8a187-c479-429c-b0ef-c98153ffa5e5,2.99,false,false,near_mint,en,USD

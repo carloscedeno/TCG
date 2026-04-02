@@ -7,7 +7,7 @@ import { Footer } from '../components/Navigation/Footer';
 
 const HelpPage: React.FC = () => {
     return (
-        <div className="min-h-screen bg-[#0a0a0a]">
+        <div className="min-h-screen flex flex-col bg-[#0a0a0a]">
             {/* Header / Nav Placeholder (Reuse standard nav or simplified back button) */}
             <div className="bg-[#121212] border-b border-white/10 p-4">
                 <div className="max-w-[1600px] mx-auto flex items-center justify-between">
@@ -20,7 +20,9 @@ const HelpPage: React.FC = () => {
                 </div>
             </div>
 
-            <HelpSection />
+            <div className="flex-1">
+                <HelpSection />
+            </div>
 
             {/* Contact Footer */}
             <div className="bg-[#373266] py-12 border-t border-white/10">

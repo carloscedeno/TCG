@@ -1,0 +1,37 @@
+Name,Set code,Set name,Collector number,Foil,Rarity,Quantity,ManaBox ID,Scryfall ID,Purchase price,Misprint,Altered,Condition,Language,Purchase price currency
+Dakmor Salvage,EOC,Edge of Eternities Commander,156,normal,uncommon,1,107057,72474b66-1dda-409d-8703-b026c1777081,0.35,false,false,near_mint,en,USD
+Forgotten Cave,BLC,Bloomburrow Commander,305,normal,common,1,96511,e8ae2de4-0460-40b4-aa41-70f95919923e,0.39,false,false,near_mint,en,USD
+Zoetic Cavern,MKC,Murders at Karlov Manor Commander,311,normal,uncommon,1,90320,37f10035-bf05-460d-9390-433caa2570f4,0.35,false,false,near_mint,en,USD
+Seachrome Coast,BLC,Bloomburrow Commander,328,normal,rare,1,96372,88ec4d3b-f1f1-489c-b41e-0206e5e59fbd,0.59,false,false,near_mint,en,USD
+Jwar Isle Refuge,ZNC,Zendikar Rising Commander,133,normal,uncommon,1,55404,6d103181-25a1-4928-ac37-adf11038d5b5,0.39,false,false,near_mint,en,USD
+Grixis Panorama,NCC,New Capenna Commander,407,normal,common,11,68448,e49dd5f0-1afa-4301-acdb-28424e2553b9,0.99,false,false,near_mint,en,USD
+March of the Multitudes,NCC,New Capenna Commander,346,normal,mythic,1,68254,65c7067d-61ec-4558-b0d4-0048d2d86743,1.79,false,false,near_mint,en,USD
+Maze's End,PDGM,Dragon's Maze Promos,152★,foil,mythic,3,16468,6966ecf0-6dab-4652-bf5b-6e766b8347d0,2.29,false,false,near_mint,en,USD
+Seat of the Synod,EOC,Edge of Eternities Commander,176,normal,common,5,107272,57a194b3-2899-4dee-977a-c77df0b94dfe,1.29,false,false,near_mint,en,USD
+Vivid Meadow,NCC,New Capenna Commander,446,normal,uncommon,1,68246,625a42b4-d88c-48e0-96b1-77388ca48810,0.35,false,false,near_mint,en,USD
+Grove of the Guardian,PRTR,Return to Ravnica Promos,240★,foil,rare,1,17422,b164a0b4-b2b8-4ea6-b271-e89291d0d4b3,0.79,false,false,near_mint,en,USD
+Port of Karfell,MKC,Murders at Karlov Manor Commander,280,normal,uncommon,1,90516,c1377ca1-aa54-4fed-b289-45309eb2f6b6,0.35,false,false,near_mint,en,USD
+Naya Panorama,NCC,New Capenna Commander,417,normal,common,1,68263,6a546a28-8df5-4080-9f50-af86d84a066f,0.49,false,false,near_mint,en,USD
+Dismal Backwater,ZNC,Zendikar Rising Commander,128,normal,common,1,55488,e20c6b51-48a3-4dbc-90b5-e08f40a58f63,0.35,false,false,near_mint,en,USD
+Temple of Epiphany,EOC,Edge of Eternities Commander,187,normal,rare,1,107309,a4ee2565-a630-4c7b-93c2-8baba3d3441e,0.49,false,false,near_mint,en,USD
+Evolving Wilds,EOC,Edge of Eternities Commander,158,normal,common,1,106990,31181bd2-3a1f-4cb9-ba30-637ac479133a,0.35,false,false,near_mint,en,USD
+Desert,AFC,Forgotten Realms Commander,233,normal,uncommon,1,60854,c74e13eb-6f82-4db1-9d0d-8310f48d9f6d,2.99,false,false,near_mint,en,USD
+Glacial Fortress,BLC,Bloomburrow Commander,307,normal,rare,1,96356,805ce12b-58eb-4584-a02e-d55ce3e527ce,0.99,false,false,near_mint,en,USD
+Sungrass Prairie,NCC,New Capenna Commander,430,normal,rare,1,68262,69f8f64c-2a4d-4df0-8356-cb15a60b54a6,0.49,false,false,near_mint,en,USD
+Throne of the High City,MKC,Murders at Karlov Manor Commander,307,normal,rare,1,90598,fdf6eb1d-aea4-4705-acbe-b428ad8616aa,0.49,false,false,near_mint,en,USD
+Lonely Sandbar,EOC,Edge of Eternities Commander,166,normal,common,2,107264,42f8591e-df30-49ec-962c-a75d32e6d9f5,0.39,false,false,near_mint,en,USD
+Boros Guildgate,ZNC,Zendikar Rising Commander,123,normal,common,3,55395,62512962-8d98-4e18-a910-39abd72229ce,0.35,false,false,near_mint,en,USD
+Myriad Landscape,EOC,Edge of Eternities Commander,169,normal,uncommon,2,107112,a0e2098f-1d94-491a-a7e9-a45a9f69e3a8,0.69,false,false,near_mint,en,USD
+Evolving Wilds,BLC,Bloomburrow Commander,302,normal,common,7,96280,516d6669-929e-4884-ae92-9a98cb7f9376,0.35,false,false,near_mint,en,USD
+Secluded Steppe,EOC,Edge of Eternities Commander,177,normal,common,5,107312,aaa5bee9-3f6a-45b0-a282-6b23222e948f,0.35,false,false,near_mint,en,USD
+Jungle Hollow,BLC,Bloomburrow Commander,313,normal,common,2,96288,5401ef4c-b1e8-4f37-abe8-25c405d4f6ea,0.35,false,false,near_mint,en,USD
+Jund Panorama,NCC,New Capenna Commander,408,normal,common,6,68215,50d8346a-e0b5-41eb-be89-7d1eb0e84f28,0.99,false,false,near_mint,en,USD
+Esper Panorama,NCC,New Capenna Commander,399,normal,common,5,68367,b89070ab-4fe6-4919-b160-b32100fb4930,0.49,false,false,near_mint,en,USD
+Bant Panorama,NCC,New Capenna Commander,387,normal,common,3,68429,dc506497-4ecd-41d3-9042-f92f498251b0,0.39,false,false,near_mint,en,USD
+Temple of Enlightenment,EOC,Edge of Eternities Commander,186,normal,rare,4,107342,dd139d4d-3a40-4015-93de-c838c64156c6,0.49,false,false,near_mint,en,USD
+Mystic Monastery,BLC,Bloomburrow Commander,318,normal,uncommon,2,96459,c59b9295-1802-4452-ae8b-72adeb566c3a,0.35,false,false,near_mint,en,USD
+Murmuring Bosk,DMC,Dominaria United Commander,220,normal,rare,4,71464,5aca73a9-e90d-48c6-bdd9-9a3f4f552de3,0.99,false,false,near_mint,en,USD
+Bojuka Bog,EOC,Edge of Eternities Commander,149,normal,common,11,107128,b0c6fb5e-07e2-4d22-be19-60592f00584a,2.29,false,false,near_mint,en,USD
+Vivid Creek,NCC,New Capenna Commander,444,normal,uncommon,4,68398,c9082527-aa88-42f7-b2f2-de21878cb179,0.49,false,false,near_mint,en,USD
+Submerged Boneyard,ZNC,Zendikar Rising Commander,141,normal,uncommon,2,55431,8b949b06-210d-4658-97a6-43f54eb18b87,0.35,false,false,near_mint,en,USD
+Mystic Monastery,EOC,Edge of Eternities Commander,170,normal,uncommon,2,107305,9fd41ad5-6b36-482e-8305-bbc709668470,0.35,false,false,near_mint,en,USD

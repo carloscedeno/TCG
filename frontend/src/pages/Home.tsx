@@ -273,7 +273,7 @@ const Home: React.FC = () => {
 
 
   return (
-    <div className="min-h-[100dvh] bg-[#050505] text-white font-sans relative selection:bg-cyan-500/30">
+    <div className="min-h-[100dvh] flex flex-col bg-[#050505] text-white font-sans relative selection:bg-cyan-500/30">
 
       {/* Ambient Background Mesh */}
       <div className="fixed inset-0 z-0 pointer-events-none">
@@ -283,7 +283,7 @@ const Home: React.FC = () => {
       </div>
 
       {/* Content Wrapper */}
-      <div className="relative z-10">
+      <div className="relative z-10 flex-1 flex flex-col">
 
         {/* Header */}
         <header className="min-h-[70px] bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-white/5 sticky top-0 z-50 shadow-2xl flex items-center">
@@ -470,7 +470,7 @@ const Home: React.FC = () => {
         </div>
 
         {/* Main Content */}
-        <main className="max-w-[1600px] mx-auto px-6 py-8">
+        <main className="max-w-[1600px] w-full mx-auto px-6 py-8 flex-1">
           <div className="flex flex-col lg:flex-row gap-10">
             {/* Sidebar Filters */}
             <aside className="hidden lg:block w-72 flex-shrink-0">

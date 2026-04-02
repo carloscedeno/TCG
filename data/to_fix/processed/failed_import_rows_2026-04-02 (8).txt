@@ -1,0 +1,267 @@
+Name,Set code,Set name,Collector number,Foil,Rarity,Quantity,ManaBox ID,Scryfall ID,Purchase price,Misprint,Altered,Condition,Language,Purchase price currency
+Clue,TPIP,Fallout Tokens,11,normal,common,1,92252,65ff5544-bdf8-43a3-a74d-4a2b7d79245a,0.35,false,false,near_mint,en,USD
+Spirit,TLTR,Tales of Middle-earth Tokens,3,normal,common,1,83093,57b674ef-f541-4ee8-9727-1c5b3c0c8f4e,0.39,false,false,near_mint,en,USD
+Bird,TLCC,The Lost Caverns of Ixalan Commander Tokens,2,normal,common,1,88678,8ccdac6c-5bce-4f39-a7d9-b459f5113812,0.39,false,false,near_mint,en,USD
+Knight,TWOE,Wilds of Eldraine Tokens,3,normal,common,1,85211,f4035134-a162-4651-86c5-ae006b6e0e20,,false,false,near_mint,en,USD
+Bird,TWOE,Wilds of Eldraine Tokens,1,normal,common,1,85185,4b0c59f8-b407-47e7-8885-8c968f4ceecf,,false,false,near_mint,en,USD
+Elemental,TWOE,Wilds of Eldraine Tokens,9,normal,common,1,85214,ff615495-a230-484e-a858-ead84f880bdd,,false,false,near_mint,en,USD
+Food,TTLA,Avatar: The Last Airbender Tokens,21,normal,common,2,109985,d0e54f01-1301-481f-ace0-87966b5135f0,,false,false,near_mint,en,USD
+Clue,TTLA,Avatar: The Last Airbender Tokens,17,normal,common,2,109972,98bdb578-e81e-40f9-9c06-b2867158baef,,false,false,near_mint,en,USD
+Ally,TTLA,Avatar: The Last Airbender Tokens,6,normal,common,2,109950,3f9ab0ca-fe08-4d90-9c54-3137620647cb,,false,false,near_mint,en,USD
+Copy,TTLA,Avatar: The Last Airbender Tokens,2,normal,common,2,109963,6f361ecd-045d-43a3-bb1b-83c23f070ff8,,false,false,near_mint,en,USD
+Dragon,TTLA,Avatar: The Last Airbender Tokens,9,foil,common,1,109983,cddc0746-6d3e-441f-866f-28587bf54801,,false,false,near_mint,en,USD
+Food,TTLA,Avatar: The Last Airbender Tokens,19,foil,common,1,109987,db202f04-61e7-4e12-848e-6c1761956a58,,false,false,near_mint,en,USD
+Faerie Rogue,TMOR,Morningtide Tokens,2,normal,common,1,24873,1666cae8-8750-4091-8e45-259e76268db9,2.49,false,false,near_mint,en,USD
+Soldier,TUMA,Ultimate Masters Tokens,11,normal,common,1,43508,039b8e44-b435-4e05-b94c-02c4dda11943,0.39,false,false,near_mint,en,USD
+Snake,THOU,Hour of Devastation Tokens,11,normal,common,1,4678,57708b3d-ddfb-4924-b5c9-123aa9e967ad,0.39,false,false,near_mint,en,USD
+Cat Soldier,TBNG,Born of the Gods Tokens,2,normal,common,1,14793,921d6192-6b6d-4aa1-be80-bc0b9f503e33,1.29,false,false,near_mint,ja,USD
+Elemental,TOGW,Oath of the Gatewatch Tokens,9,normal,common,1,9187,bc6f27f7-0248-4c04-8022-41073966e4d8,0.35,false,false,near_mint,en,USD
+Insect,TA25,Masters 25 Tokens,12,normal,common,2,2719,43d7c6dc-4d0b-4a05-8b79-5dd728a74bb3,0.59,false,false,near_mint,en,USD
+Cat,TFDN,Foundations Tokens,2,normal,common,1,101599,d16213b5-c0da-4a24-9f2e-b9432652859e,,false,false,near_mint,en,USD
+Goblin,TCMM,Commander Masters Tokens,27,normal,common,2,84285,419c1799-1525-44ec-9f6c-dfc290f04ba7,0.35,false,false,near_mint,en,USD
+Soldier,TMH1,Modern Horizons Tokens,4,normal,common,2,44951,c61b83cf-791a-48bf-81c8-c6c940b89d83,0.35,false,false,near_mint,en,USD
+Spirit,TSOI,Shadows over Innistrad Tokens,3,normal,common,1,8696,3a53a7c6-6b32-4491-8c96-e564abea8880,0.35,false,false,near_mint,en,USD
+Bird,TM12,Magic 2012 Tokens,1,normal,common,1,19017,b6311cc7-8431-43a3-83ec-b2a5f07acf56,0.35,false,false,near_mint,en,USD
+Demon,TINR,Innistrad Remastered Tokens,6,normal,common,1,102453,1f75f7a3-b4d2-40e1-9721-cbe6a63971ba,,false,false,near_mint,en,USD
+Frog Lizard,TTDC,Tarkir: Dragonstorm Commander Tokens,21,normal,common,1,104423,018e138e-adef-45db-ae2a-31f0c98658ed,,false,false,near_mint,en,USD
+Bird,TTDM,Tarkir: Dragonstorm Tokens,2,normal,common,1,104683,6105623a-ff2c-46bf-8881-e8b899d47d54,,false,false,near_mint,en,USD
+Monk,TTDM,Tarkir: Dragonstorm Tokens,3,normal,common,1,104688,633d2d10-def7-426f-8496-ed6b45684299,,false,false,near_mint,en,USD
+Tentacle,TLTR,Tales of Middle-earth Tokens,4,normal,common,1,83623,eea4e628-4ae2-4e33-a3b6-176ed87c1840,0.59,false,false,near_mint,en,USD
+Timeless Witness,TTDC,Tarkir: Dragonstorm Commander Tokens,11,normal,common,1,104438,0902163b-9a92-4df3-afdd-396db24c7fd4,,false,false,near_mint,en,USD
+Treasure,TSPM,Marvel's Spider-Man Tokens,7,normal,common,3,108663,d52efeb3-661d-45e9-97c3-af167f889684,,false,false,near_mint,en,USD
+Ticket Bucket-Bot,TUNF,Unfinity Tokens,14,normal,common,1,73360,52942a5c-0552-4a9b-9c0f-7a9ffd04d0af,0.35,false,false,near_mint,en,USD
+Storm Crow,TUNF,Unfinity Tokens,5,normal,common,1,73356,32c73960-1dd9-4f11-81b3-2ae4d3a5e283,0.79,false,false,near_mint,en,USD
+Treasure,TSTX,Strixhaven: School of Mages Tokens,7,normal,common,1,58887,1a2d027f-8996-4761-a776-47cd428f6779,0.39,false,false,near_mint,ja,USD
+Construct,TNEO,Kamigawa: Neon Dynasty Tokens,15,normal,common,1,67107,2770f887-7e96-44d1-864a-8c0504a39785,0.35,false,false,near_mint,en,USD
+Hero,TFIN,Final Fantasy Tokens,8,normal,common,1,106008,7fc68b53-e23d-4762-aa53-e634e856be47,,false,false,near_mint,en,USD
+Radiation,TPIP,Fallout Tokens,22,normal,common,1,91849,0886657d-afb0-4f1f-9af7-960724793077,0.35,false,false,near_mint,en,USD
+Hellion,TM13,Magic 2013 Tokens,7,normal,common,1,17567,3b43b811-ec0f-4ad7-a152-f7f077bafaa4,0.35,false,false,near_mint,en,USD
+Zombie,TCMA,Commander Anthology Tokens,5,normal,common,1,4960,eedfd94c-862d-4946-a726-417e142e1c1b,0.35,false,false,near_mint,en,USD
+Faerie Rogue,TMMA,Modern Masters Tokens,14,normal,common,1,16066,e1eb3b8a-f9d3-4ce1-b171-ba7b0c3f4830,1.99,false,false,near_mint,en,USD
+Drake,TUMA,Ultimate Masters Tokens,3,normal,common,1,43516,2fd81e9a-69b5-4764-91a7-8b6cdddcaa40,0.35,false,false,near_mint,en,USD
+Giant Warrior,TMOR,Morningtide Tokens,1,normal,common,1,24874,0661166a-7d6c-4cba-8190-8d3eedf7f58c,0.35,false,false,near_mint,en,USD
+Food,TLTR,Tales of Middle-earth Tokens,10,normal,common,1,83466,bfcff41e-b6ff-4ddd-bcb6-8943f7d88aef,0.35,false,false,near_mint,en,USD
+Cyberman,TWHO,Doctor Who Tokens,24,normal,common,1,86955,9bc273b8-05bb-4c8f-92b1-c178d4bbadb0,0.59,false,false,near_mint,en,USD
+Soldier,TWHO,Doctor Who Tokens,8,normal,common,1,87626,93c2a3ff-a2f6-40c1-a246-0041c6145fc0,0.35,false,false,near_mint,en,USD
+Ally,TTLA,Avatar: The Last Airbender Tokens,5,foil,common,1,109982,cae9c13e-fda2-4591-bd52-888d12194e4d,,false,false,near_mint,en,USD
+Clue,TTLA,Avatar: The Last Airbender Tokens,14,foil,common,1,109966,82016bc3-8905-454a-b4aa-b9eac69d42c4,,false,false,near_mint,en,USD
+Food,TLTR,Tales of Middle-earth Tokens,11,normal,common,1,83592,e4b7e3b5-2f3c-4eb7-abc9-322a049a9e1a,0.35,false,false,near_mint,en,USD
+Samurai,TNEO,Kamigawa: Neon Dynasty Tokens,3,normal,common,1,67130,f68e5337-6e44-4f8f-a102-2f97b433beea,0.35,false,false,near_mint,en,USD
+On an Adventure,TWOE,Wilds of Eldraine Tokens,18,normal,common,1,85213,fcf4c7fb-7859-4c11-8552-6817f5119d2e,,false,false,near_mint,en,USD
+Human Monk,TNEO,Kamigawa: Neon Dynasty Tokens,10,normal,common,1,67116,86dd086e-c757-4a6a-8838-51860f2095f8,0.35,false,false,near_mint,en,USD
+Gremlin,TAER,Aether Revolt Tokens,1,normal,common,1,6219,c6071fed-39c1-4f3b-a821-1611aedd8054,0.35,false,false,near_mint,en,USD
+Merfolk Wizard,TLRW,Lorwyn Tokens,4,normal,common,1,25137,526da544-23dd-42b8-8c00-c3609eea4489,0.59,false,false,near_mint,en,USD
+Spider,TEMN,Eldritch Moon Tokens,8,normal,common,1,8121,ce90c48f-74fb-4e87-9e46-7f8c3d79cbb0,0.59,false,false,near_mint,en,USD
+Phyrexian Germ,TMH3,Modern Horizons 3 Tokens,16,normal,common,1,95196,5ec719dc-6b07-4b1d-a79c-84ebced33422,,false,false,near_mint,en,USD
+Food,TTLA,Avatar: The Last Airbender Tokens,20,normal,common,1,109964,6fb7cf0b-48d1-4a35-be63-a331987400de,,false,false,near_mint,en,USD
+Mutavault,TECL,Lorwyn Eclipsed Tokens,11,normal,common,1,110728,3d2f5d31-a1c6-465f-b518-b40acdfab8aa,,false,false,near_mint,en,USD
+Wolf,TINR,Innistrad Remastered Tokens,18,normal,common,1,102658,89b89a55-3ea2-4186-b946-06831bc16169,,false,false,near_mint,en,USD
+Homunculus,TUMA,Ultimate Masters Tokens,4,normal,common,1,43515,f3c6ef29-b879-4813-87b0-0e3ba2b5cb29,0.35,false,false,near_mint,en,USD
+Zombie,TM12,Magic 2012 Tokens,3,normal,common,2,19015,8db7e3f4-0153-425a-8edc-2747bbb89638,0.59,false,false,near_mint,en,USD
+Treefolk,TECL,Lorwyn Eclipsed Tokens,3,normal,common,3,110778,82e01706-ab45-4e52-9ee1-7070567234fd,,false,false,near_mint,en,USD
+Treasure,TFDN,Foundations Tokens,23,normal,common,1,101484,21210145-8edd-41f5-9a64-9f0b5be79864,,false,false,near_mint,en,USD
+Elemental,TTDC,Tarkir: Dragonstorm Commander Tokens,27,normal,common,1,104756,7b19a41d-95c1-4cd8-89fc-4ec89ab10884,,false,false,near_mint,en,USD
+Dragon,TTLA,Avatar: The Last Airbender Tokens,9,normal,common,1,109983,cddc0746-6d3e-441f-866f-28587bf54801,,false,false,near_mint,en,USD
+Food,TTLA,Avatar: The Last Airbender Tokens,19,normal,common,1,109987,db202f04-61e7-4e12-848e-6c1761956a58,,false,false,near_mint,en,USD
+Food,TTLA,Avatar: The Last Airbender Tokens,21,foil,common,1,109985,d0e54f01-1301-481f-ace0-87966b5135f0,,false,false,near_mint,en,USD
+Elemental,TCMM,Commander Masters Tokens,26,normal,common,1,84919,d461a38d-761b-47bb-b49d-1b2522cf2f6e,0.35,false,false,near_mint,en,USD
+Elephant,TBLC,Bloomburrow Commander Tokens,27,normal,common,2,96523,f0a8841d-1d2d-429f-a14d-bb2251dbf898,,false,false,near_mint,en,USD
+Squirrel,TDMR,Dominaria Remastered Tokens,13,normal,common,1,78354,27f8ccb9-32b2-4562-a60f-843e82795984,0.69,false,false,near_mint,en,USD
+Insect,TDMR,Dominaria Remastered Tokens,10,normal,common,1,78364,e662eefb-c454-44b9-8270-f2229e20024e,0.35,false,false,near_mint,en,USD
+Wolf,TINR,Innistrad Remastered Tokens,9,normal,common,1,102848,f5561f57-34e2-4c01-8094-0ecb101c7fa1,,false,false,near_mint,en,USD
+Elemental,TECC,Lorwyn Eclipsed Commander Tokens,10,normal,common,1,110774,7ec88cb2-7a77-45ae-b2c8-f8d09452d619,,false,false,near_mint,en,USD
+Rhino Warrior,TECC,Lorwyn Eclipsed Commander Tokens,6,normal,common,1,110789,8f4188d4-a371-49be-ad33-ad87801ba99d,,false,false,near_mint,en,USD
+Zombie,TECC,Lorwyn Eclipsed Commander Tokens,3,normal,common,1,110694,17f001ab-514b-49e7-a657-b2872ad7a1de,,false,false,near_mint,en,USD
+Snake,TECC,Lorwyn Eclipsed Commander Tokens,8,normal,common,1,110797,9a9380a8-8f38-47cd-8648-20626c06b9b3,,false,false,near_mint,en,USD
+Scarecrow,TECC,Lorwyn Eclipsed Commander Tokens,11,normal,common,1,110798,9ae02771-2917-4d6e-9608-1a592389439a,,false,false,near_mint,en,USD
+Treasure,TECL,Lorwyn Eclipsed Tokens,10,foil,common,2,110812,ac4384b7-853c-417d-b3b4-f54cd0b5d361,,false,false,near_mint,en,USD
+Kithkin,TECL,Lorwyn Eclipsed Tokens,7,foil,common,3,110711,2ed11e1b-2289-48d2-8d96-ee7e590ecfd4,,false,false,near_mint,en,USD
+Robot,TPIP,Fallout Tokens,16,normal,common,1,92326,76cde21f-2f01-4560-972b-7ecd6740d6de,1.99,false,false,near_mint,en,USD
+Devil,TMID,Innistrad: Midnight Hunt Tokens,6,normal,common,1,63739,14f9c505-a833-4240-83a0-fbd160bdbf0f,0.49,false,false,near_mint,en,USD
+Assassin,TACR,Assassin's Creed Tokens,4,normal,common,1,95302,19cb2062-86f0-4ce3-b5fb-d3c310f36ec3,0.35,false,false,near_mint,en,USD
+Shapeshifter,TACR,Assassin's Creed Tokens,2,normal,common,1,95502,d20ad1e6-d698-4a0a-8ed5-903e1d463004,6.99,false,false,near_mint,en,USD
+Clue,TTLA,Avatar: The Last Airbender Tokens,16,normal,common,4,109953,4c9669e6-e093-4f88-9699-a1a32793bfa9,,false,false,near_mint,en,USD
+Ally,TTLA,Avatar: The Last Airbender Tokens,8,normal,common,4,109928,01439983-8394-4a0c-9e9e-92a3f1927fe3,,false,false,near_mint,en,USD
+Soldier,TMM3,Modern Masters 2017 Tokens,19,normal,common,1,5945,6d49a56f-2a5e-4d42-b75c-f3f3735829d3,0.35,false,false,near_mint,en,USD
+Human,TC19,Commander 2019 Tokens,3,normal,common,3,45492,95f99a6a-dcd9-412e-84cf-916aafad5dfb,0.35,false,false,near_mint,en,USD
+Zombie,TCN2,Conspiracy: Take the Crown Tokens,6,normal,common,1,7869,4ccc931f-4586-4d7e-a984-dc7142359a85,0.49,false,false,near_mint,en,USD
+Boar,TM3C,Modern Horizons 3 Commander Tokens,17,normal,common,4,95230,e56623ff-2f7e-470d-bdb3-ddd25e002dcb,,false,false,near_mint,en,USD
+Plant,TECC,Lorwyn Eclipsed Commander Tokens,5,normal,common,4,110731,3db07715-d315-4361-8af5-ce68d20e6c08,,false,false,near_mint,en,USD
+Insect,TTDC,Tarkir: Dragonstorm Commander Tokens,22,normal,common,2,104938,c5c3553b-010f-48ef-bca1-93ba12eaf558,,false,false,near_mint,en,USD
+Incubator // Phyrexian,TEOC,Edge of Eternities Commander Tokens,15,normal,common,4,107325,c5229eb0-9356-43a6-9b1b-6366f3c1e405,,false,false,near_mint,en,USD
+Rhino,TMH1,Modern Horizons Tokens,13,normal,common,1,44942,007c828b-5854-41ac-9c18-f9d41c69ed33,0.35,false,false,near_mint,en,USD
+Goblin Rogue,TLRW,Lorwyn Tokens,5,normal,common,1,25136,f44d5271-5d10-46b2-9ba2-5788d99de2e6,0.35,false,false,near_mint,en,USD
+Wicked // Cursed,TWOE,Wilds of Eldraine Tokens,17,normal,common,1,85207,a9b7040e-cd24-42cc-b043-9af8c557da6a,,false,false,near_mint,en,USD
+Goblin,TCM2,Commander Anthology Volume II Tokens,9,normal,common,1,1408,dff50bc7-3d7e-49e9-9557-658a4f083c6e,0.35,false,false,near_mint,en,USD
+Servo,TCMM,Commander Masters Tokens,45,normal,common,1,84995,e6a5faa3-b86e-4e05-93db-5db9507ae7d0,0.35,false,false,near_mint,en,USD
+Zombie,TCMM,Commander Masters Tokens,13,normal,common,1,85066,f7ee09ec-0d88-469d-b61c-976f3be47766,0.59,false,false,near_mint,en,USD
+Moogle,TFIN,Final Fantasy Tokens,11,normal,common,1,105862,295b78dc-b26d-4e92-8f75-916566c4db14,,false,false,near_mint,en,USD
+Elemental Shaman,TCM2,Commander Anthology Volume II Tokens,8,normal,common,1,1409,a271bdf3-2868-425d-987c-4ce272152a2f,0.35,false,false,near_mint,en,USD
+Faerie Rogue,TWOC,Wilds of Eldraine Commander Tokens,11,normal,common,1,85192,d680c3f1-a3c0-4f38-8958-2402612c8dd1,,false,false,near_mint,en,USD
+Goblin,TDMR,Dominaria Remastered Tokens,7,normal,common,1,78365,f9b8316a-ec6d-43de-a1c5-6ef3c5c53146,0.35,false,false,near_mint,en,USD
+Zombie Druid,TTDM,Tarkir: Dragonstorm Tokens,10,normal,common,1,105047,f10d5813-7818-43e8-b08d-4ed8c54d0366,,false,false,near_mint,en,USD
+Soldier,TTDM,Tarkir: Dragonstorm Tokens,4,normal,common,1,104692,6455d903-6996-448f-9148-9068febecb00,,false,false,near_mint,en,USD
+Soldier,TTDM,Tarkir: Dragonstorm Tokens,5,normal,common,1,105141,7ddd5153-2d16-4a4e-b9bc-f20313d322da,,false,false,near_mint,en,USD
+Saproling,TMKC,Murders at Karlov Manor Commander Tokens,19,normal,common,1,90144,f38381fd-e368-46b2-94e9-89c9b182435d,0.35,false,false,near_mint,en,USD
+Gremlin,TDSK,Duskmourn: House of Horror Tokens,11,normal,common,1,99365,d948b503-890a-49d5-a3cf-cb6e604851b8,,false,false,near_mint,en,USD
+Settlement,TPIP,Fallout Tokens,8,normal,common,1,91825,02789d01-f939-4515-a6e4-db6aff36f893,0.35,false,false,near_mint,en,USD
+Human Soldier,TPIP,Fallout Tokens,3,normal,common,1,92308,737741e7-b2b2-4c41-ab7c-4eeaf9f37b71,0.35,false,false,near_mint,en,USD
+Elemental,TMOM,March of the Machine Tokens,9,normal,common,1,81573,28a7a9b0-d823-4b34-829f-ade81fc141e0,0.35,false,false,near_mint,en,USD
+Sunscourge Champion,THOU,Hour of Devastation Tokens,9,normal,common,1,4680,289a9593-151e-47d0-b0de-5eb9f061515a,0.35,false,false,near_mint,en,USD
+Spirit,TRVR,Ravnica Remastered Tokens,18,normal,common,1,89661,48ed5471-ab04-4178-b72d-ce3fae12758c,0.35,false,false,near_mint,en,USD
+Servo,TC18,Commander 2018 Tokens,24,normal,common,1,512,6ec42fab-86b8-4479-90f2-a1690318d6d4,0.35,false,false,near_mint,en,USD
+Spider,TMH1,Modern Horizons Tokens,14,normal,common,1,44941,01591603-d903-419d-9957-cf0ae7f79240,0.39,false,false,near_mint,en,USD
+Alien Rhino,TWHO,Doctor Who Tokens,3,normal,common,1,87428,68243f3e-c311-47cf-b1f4-583625919a2c,0.35,false,false,near_mint,en,USD
+Alien Salamander,TWHO,Doctor Who Tokens,16,normal,common,1,87949,db45133d-ce37-42b4-b068-fbcc8be0e907,0.35,false,false,near_mint,en,USD
+Golem,TMH1,Modern Horizons Tokens,18,normal,common,1,44937,dc77b308-9d0c-492f-b3fe-e00d60470767,0.35,false,false,near_mint,en,USD
+Construct,TCNS,Conspiracy Tokens,8,normal,common,1,14202,5f30e5e6-e9df-4ae2-9e40-ad2fee58fc29,0.35,false,false,near_mint,en,USD
+Spirit,TMH3,Modern Horizons 3 Tokens,28,normal,common,1,95233,ef77c8eb-aa24-46d5-8036-6651c7602383,,false,false,near_mint,en,USD
+Energy Reserve,TKLD,Kaladesh Tokens,13,normal,common,2,7643,a446b9f8-cb22-408a-93ff-bee44a0dccc0,0.35,false,false,near_mint,en,USD
+Bird,TMH1,Modern Horizons Tokens,3,normal,common,2,44952,43c72f53-db47-48d1-85f0-626440b0c88c,0.35,false,false,near_mint,en,USD
+Spirit,TBBD,Battlebond Tokens,1,normal,common,2,1424,b3c9a097-219b-4aaf-831f-cc0cddbcfaae,0.35,false,false,near_mint,en,USD
+Warrior,TAKH,Amonkhet Tokens,17,normal,common,2,5767,2d1446ed-f114-421d-bb60-9aeb655e5adb,0.35,false,false,near_mint,en,USD
+Spirit,TLCI,The Lost Caverns of Ixalan Tokens,14,normal,common,1,88242,072cd10b-98d3-452e-bf8d-13a75cc3d72e,0.35,false,false,near_mint,en,USD
+Centaur,TRVR,Ravnica Remastered Tokens,10,normal,common,5,89707,5f657b65-67fc-4b7d-bc9e-840190f69362,0.39,false,false,near_mint,en,USD
+Treasure,TLCI,The Lost Caverns of Ixalan Tokens,18,normal,common,5,88426,3dfaedeb-f8ec-4f0e-b243-c850770a86f2,0.35,false,false,near_mint,en,USD
+Spirit,TUMA,Ultimate Masters Tokens,16,normal,common,2,43503,c9a306c6-57e9-4c99-b2a9-ee27a557d69b,0.35,false,false,near_mint,en,USD
+Shapeshifter,TECL,Lorwyn Eclipsed Tokens,1,normal,common,8,110407,c2963ce1-f9d8-437a-9489-e0913a8b8d26,,false,false,near_mint,en,USD
+Hero,TFIN,Final Fantasy Tokens,5,normal,common,2,105938,5619d240-3832-477b-ad30-8d310c90f555,,false,false,near_mint,en,USD
+Energy Reserve,TPIP,Fallout Tokens,21,normal,common,1,91997,2a794202-875f-4397-a8de-9722c8d78448,0.35,false,false,near_mint,en,USD
+Eldrazi Spawn,TCMM,Commander Masters Tokens,3,normal,common,1,84124,1e820258-933f-4ad2-b63b-c6cd7f5bddf3,0.99,false,false,near_mint,en,USD
+Human Soldier,TDSC,Duskmourn Commander Tokens,3,normal,common,1,99304,b4293d70-13d0-4540-af69-5afc79821102,,false,false,near_mint,en,USD
+Clue,TEOC,Edge of Eternities Commander Tokens,10,normal,common,1,106960,15866ed4-1ca3-427f-99ba-ee26ede9ae18,,false,false,near_mint,en,USD
+Pilot,TNEO,Kamigawa: Neon Dynasty Tokens,1,normal,common,1,67121,be84f259-2809-48c9-9c70-861437f08c23,1.29,false,false,near_mint,en,USD
+Insect,TDSK,Duskmourn: House of Horror Tokens,5,normal,common,1,99311,b802aea8-0ca3-4d2c-a8ef-a80e16729c9b,,false,false,near_mint,en,USD
+Treasure,TWOE,Wilds of Eldraine Tokens,14,normal,common,1,85204,73cbf189-a79b-4dca-8b29-33aef6306b5a,,false,false,near_mint,en,USD
+Soldier,TM12,Magic 2012 Tokens,2,normal,common,1,19016,7c2a26d0-2687-41f6-99b9-6ed4e5e8a5e4,0.35,false,false,near_mint,en,USD
+Spirit,T2X2,Double Masters 2022 Tokens,8,normal,common,1,70335,7ebb3b03-943e-4b5a-be04-f59316b81333,0.35,false,false,near_mint,en,USD
+Elephant,TTDM,Tarkir: Dragonstorm Tokens,14,normal,common,1,105125,243bcfa9-0310-4d68-9864-df46069906fa,,false,false,near_mint,en,USD
+Reliquary Dragon,TTDM,Tarkir: Dragonstorm Tokens,15,normal,common,2,105129,44465924-8cc2-49a4-bc07-8dbae7570af6,,false,false,near_mint,en,USD
+Dragon,TTDM,Tarkir: Dragonstorm Tokens,11,normal,common,2,105128,434c2965-82b8-4e89-bf45-a8fc093f9a21,,false,false,near_mint,en,USD
+Spirit,TTDM,Tarkir: Dragonstorm Tokens,9,normal,common,2,105143,8ea4fc2f-95a4-49d0-b06e-b88d19637737,,false,false,near_mint,en,USD
+Spirit,TTDM,Tarkir: Dragonstorm Tokens,6,normal,common,3,105175,f22410b3-5c0b-4282-9b0b-5ba61229b6e7,,false,false,near_mint,en,USD
+Spirit,TTDM,Tarkir: Dragonstorm Tokens,8,normal,common,2,105147,997edcc4-6021-4443-9470-3fd7f7595cc6,,false,false,near_mint,en,USD
+Spirit,TTDM,Tarkir: Dragonstorm Tokens,7,normal,common,3,105158,b83a7343-9f5f-4b79-8929-c84011de401c,,false,false,near_mint,en,USD
+Human Soldier,TWOC,Wilds of Eldraine Commander Tokens,7,normal,common,1,85193,dd0f8dba-e34e-443c-9e92-9ae9d3e4d585,,false,false,near_mint,en,USD
+Phyrexian Myr,TCMM,Commander Masters Tokens,44,normal,common,1,85111,f4ef9889-e61d-4733-b27c-9e78aea8e84b,1.49,false,false,near_mint,en,USD
+Rat,TTDC,Tarkir: Dragonstorm Commander Tokens,9,normal,common,1,104426,02c73185-3062-4801-8ab2-5006b9c3b232,,false,false,near_mint,en,USD
+Saproling,TCMM,Commander Masters Tokens,35,normal,common,1,84555,82f710ed-fda6-44dd-9a42-d5b37656307d,0.69,false,false,near_mint,en,USD
+Ballistic Boulder,TLTR,Tales of Middle-earth Tokens,8,normal,common,1,83438,b9d70342-9d3c-44cb-9026-db5e5941b9fc,0.35,false,false,near_mint,en,USD
+Insect,TMH3,Modern Horizons 3 Tokens,25,normal,common,1,95165,059e9d51-c7bf-41c0-a6f0-c0bbc6d3b434,,false,false,near_mint,en,USD
+Wizard,TFIN,Final Fantasy Tokens,14,normal,common,1,105559,187fe54c-7d0c-4225-9d46-3affbead897d,,false,false,near_mint,en,USD
+Bird,TFIN,Final Fantasy Tokens,16,normal,common,1,106716,1fbc471d-5948-47fc-b7cc-81cc13a4cd15,,false,false,near_mint,en,USD
+Spirit,TTLA,Avatar: The Last Airbender Tokens,3,normal,common,1,109993,f59eba51-458a-40e0-b754-999f91d5d839,,false,false,near_mint,en,USD
+Copy,TTLA,Avatar: The Last Airbender Tokens,1,normal,common,1,109938,2b3d7795-3fc3-4b78-bdf4-0a79981f1eee,,false,false,near_mint,en,USD
+Detective,TMKM,Murders at Karlov Manor Tokens,10,normal,common,1,90767,30a109aa-99d4-4cfe-a9b1-1b40db5b7885,0.35,false,false,near_mint,en,USD
+Snake,TZEN,Zendikar Tokens,10,normal,common,1,22625,83a6a142-f065-4a74-9a73-8105be29bc94,0.35,false,false,near_mint,en,USD
+Wolf,TA25,Masters 25 Tokens,13,normal,common,2,2718,4ff5727c-7001-45db-9e0c-771824e849b0,0.35,false,false,near_mint,en,USD
+Elemental,TROE,Rise of the Eldrazi Tokens,2,normal,common,1,21715,fd0c9fb3-5f4c-47f9-a9b3-369d4936de60,0.35,false,false,near_mint,en,USD
+Zombie,TISD,Innistrad Tokens,8,normal,common,1,18626,afec06c5-28e3-462c-9e15-4b0c405cc810,0.35,false,false,near_mint,en,USD
+Zombie,TISD,Innistrad Tokens,9,normal,common,1,18625,8a98d0bf-4106-4ff1-89d4-3f6040b2cd5e,0.49,false,false,near_mint,en,USD
+Fish,TMH3,Modern Horizons 3 Tokens,10,normal,common,2,95225,e081becb-40f1-4151-aea3-5a9a9bd672c6,,false,false,near_mint,en,USD
+Mutagen,TTMT,Teenage Mutant Ninja Turtles Tokens,9,normal,common,15,109283,6559c423-449c-4e8e-8384-3ce78183e317,,false,false,near_mint,en,USD
+Food,TTMT,Teenage Mutant Ninja Turtles Tokens,8,normal,common,2,111603,e2b62092-57df-4d95-b2b9-961794e7c20b,,false,false,near_mint,en,USD
+Experience,TTDC,Tarkir: Dragonstorm Commander Tokens,34,normal,common,1,105035,edf99449-b176-460b-afb3-14a35e3ae35a,,false,false,near_mint,en,USD
+Insect,T40K,Warhammer 40,000 Tokens,22,normal,common,1,72596,9af00a97-9938-4ab2-938a-669cdfe4332a,0.49,false,false,near_mint,en,USD
+Lander,TEOE,Edge of Eternities Tokens,6,normal,common,7,107715,49164e15-252a-46e2-8c5a-66e41e071072,,false,false,near_mint,en,USD
+Oko, Shadowmoor Scion Emblem,TECL,Lorwyn Eclipsed Tokens,12,normal,common,1,110681,0d9d6611-bc46-4fc1-8e39-460f56236ceb,,false,false,near_mint,en,USD
+Pest,TEOC,Edge of Eternities Commander Tokens,9,normal,common,1,107168,cf9587a6-7497-4f49-a5d0-a19fdfd969aa,,false,false,near_mint,en,USD
+Beast,TMH2,Modern Horizons 2 Tokens,9,normal,common,1,59970,a1eff7f8-b645-41cb-bcd9-3dc1ab10200e,0.35,false,false,near_mint,en,USD
+Necron Warrior,T40K,Warhammer 40,000 Tokens,14,normal,common,1,72592,542b3490-1247-4f47-98b6-c67cabae53cb,0.49,false,false,near_mint,en,USD
+Spirit,TNEO,Kamigawa: Neon Dynasty Tokens,2,normal,common,1,67123,ca20548f-6324-4858-adbe-87303ff1ca52,0.39,false,false,near_mint,en,USD
+Mutant,TTMT,Teenage Mutant Ninja Turtles Tokens,7,normal,common,6,111573,51e33613-7a24-461c-8d9f-12680af4b92a,,false,false,near_mint,en,USD
+Insect Warrior,TTMT,Teenage Mutant Ninja Turtles Tokens,4,normal,common,1,111585,86e41be4-d555-4e35-b9b0-1e937ac5edce,,false,false,near_mint,en,USD
+Robot,TTMT,Teenage Mutant Ninja Turtles Tokens,10,normal,common,6,111551,08497fc5-1c0e-4c3c-a356-bf4b34bd4c45,,false,false,near_mint,en,USD
+Ninja,TTMT,Teenage Mutant Ninja Turtles Tokens,5,normal,common,4,111593,a7b76498-d696-40d1-b7c7-91657525b44f,,false,false,near_mint,en,USD
+Call the Skybreaker,NCC,New Capenna Commander,333,normal,rare,1,68449,e52586f2-dcf2-4605-b354-3ab441a43638,0.49,false,false,near_mint,es,USD
+Hypothesizzle,OTP,Breaking News,48,normal,uncommon,1,93142,4448d31e-faf4-4281-af48-4f638b939a62,0.35,false,false,near_mint,en,USD
+Hypersonic Dragon,PRTR,Return to Ravnica Promos,170★,foil,rare,2,17426,ba617296-3cce-4933-8939-dde6445225e2,0.59,false,false,near_mint,es,USD
+Abzan Charm,DMC,Dominaria United Commander,138,normal,uncommon,4,71735,bd5b386e-e71e-492d-8456-6cd178ef5b3d,0.35,false,false,near_mint,es,USD
+Sultai Charm,DMC,Dominaria United Commander,168,normal,uncommon,4,71535,72af6c1f-33a0-4e02-95b7-74ecaa6a6d87,0.35,false,false,near_mint,es,USD
+Fusion Elemental,DMC,Dominaria United Commander,150,normal,uncommon,1,71760,c8ab1550-0cd3-4dc9-82c2-121615f2ceee,0.35,false,false,near_mint,es,USD
+Duneblast,DMC,Dominaria United Commander,148,normal,rare,2,71424,4a38e37b-d458-402a-8b36-13a0e0a115ce,0.49,false,false,near_mint,es,USD
+Cruel Ultimatum,OTP,Breaking News,40,normal,rare,1,93162,539e00a6-6cb0-4960-8a45-52d70b575f5a,0.49,false,false,near_mint,es,USD
+Zombie Mutant,TPIP,Fallout Tokens,7,normal,common,2,92628,ba45bc9c-8257-43f8-9ba1-116b9fea90f4,0.35,false,false,near_mint,en,USD
+Orc Army,TLTR,Tales of Middle-earth Tokens,5,normal,common,3,82965,2f8b43e8-dd89-452e-b572-8559e19fdea2,0.35,false,false,near_mint,en,USD
+Merfolk,TLCC,The Lost Caverns of Ixalan Commander Tokens,3,normal,common,7,88520,5b551cd5-430f-4ff8-9aae-b0614eae7baa,0.35,false,false,near_mint,en,USD
+Rat,TGTC,Gatecrash Tokens,2,normal,common,2,16830,f1fb8ca6-7351-457a-b2a4-48f57ec3c64a,2.29,false,false,near_mint,en,USD
+Shapeshifter,TC18,Commander 2018 Tokens,2,normal,common,2,534,d01a5225-4a61-4fa3-b38b-452606140781,0.69,false,false,near_mint,en,USD
+Treasure,TMOM,March of the Machine Tokens,20,normal,common,2,81791,86e82686-0574-4fb3-8c3b-c6dbe3b24c8d,0.35,false,false,near_mint,en,USD
+Saproling,TDDH,Duel Decks: Ajani vs. Nicol Bolas Tokens,2,normal,common,2,18910,4fb8f4f1-6372-41ea-802c-4b952a78a08b,0.69,false,false,near_mint,en,USD
+Knight,TCMM,Commander Masters Tokens,7,normal,common,8,84269,3df61c33-38b3-4549-9e5d-ae1b5c1afd62,0.35,false,false,near_mint,en,USD
+Worm,T2X2,Double Masters 2022 Tokens,20,normal,common,2,70536,d8b71ab8-7f94-4cd9-9a15-0c2291e17b47,0.35,false,false,near_mint,en,USD
+Aven Initiate,T2X2,Double Masters 2022 Tokens,4,normal,common,2,70066,12feaabf-7b3e-4cef-8d45-1b9bbe2baaf6,0.35,false,false,near_mint,en,USD
+Clown Robot,TUNF,Unfinity Tokens,2,normal,common,2,73361,54d001ca-285e-4033-9d97-0a1db3a8ec7b,0.39,false,false,near_mint,en,USD
+Clown Robot,TUNF,Unfinity Tokens,3,normal,common,3,73366,7fcd324b-8325-40f3-8a02-b84102cc63ab,0.39,false,false,near_mint,en,USD
+Soldier,TDMU,Dominaria United Tokens,4,normal,common,3,71599,8c4b0257-2ca5-4015-9d63-d7cf6e87ab9d,0.35,false,false,near_mint,en,USD
+Soldier,TONC,Phyrexia: All Will Be One Commander Tokens,7,normal,common,2,79040,461532a6-ef9c-4a9b-9815-3b5158ada976,0.49,false,false,near_mint,en,USD
+The Ring // The Ring Tempts You,TLTR,Tales of Middle-earth Tokens,H13,normal,common,6,82677,7215460e-8c06-47d0-94e5-d1832d0218af,0.35,false,false,near_mint,en,USD
+Human,TLTC,Tales of Middle-earth Commander Tokens,4,normal,common,4,83155,68264336-6bfb-44d9-86f5-86ef6433bc2f,0.35,false,false,near_mint,en,USD
+Human Soldier,TLTR,Tales of Middle-earth Tokens,1,normal,common,2,83561,dbab4309-daca-42d9-ad0b-0457717c4503,0.59,false,false,near_mint,en,USD
+Cat,TDMR,Dominaria Remastered Tokens,8,normal,common,3,78353,07b58d5f-8a9f-4fd6-83d6-efe3a92e89b2,0.35,false,false,near_mint,en,USD
+Fungus,TLCI,The Lost Caverns of Ixalan Tokens,7,normal,common,5,88599,73ff66e3-ea24-4542-887f-c41abb1759e6,0.59,false,false,near_mint,en,USD
+Eldrazi Spawn,TC17,Commander 2017 Tokens,11,normal,common,6,4135,1feaa879-ceb3-4b20-8021-ae41d8be9005,1.49,false,false,near_mint,en,USD
+Treasure,TPIP,Fallout Tokens,18,normal,common,2,92722,cf0d0741-028f-481b-8982-55f36304c343,0.35,false,false,near_mint,en,USD
+Human Soldier,TLTR,Tales of Middle-earth Tokens,2,normal,common,2,83655,f6df0025-8f6a-43e1-8f07-36f18da3a485,0.79,false,false,near_mint,en,USD
+Treasure,TLTR,Tales of Middle-earth Tokens,12,normal,common,2,83044,46a2c363-c879-4c36-b08a-dd57e3da19ae,0.39,false,false,near_mint,en,USD
+Eldrazi Spawn,TPCA,Planechase Anthology Tokens,4,normal,common,4,6521,e7a55908-ad02-43f4-8968-cd5598cb05c6,2.79,false,false,near_mint,en,USD
+Bird,TMOC,March of the Machine Commander Tokens,5,normal,common,2,81608,38476293-627e-44e6-a83e-24aaf3de8e9a,0.59,false,false,near_mint,en,USD
+Elemental,TZEN,Zendikar Tokens,8,normal,common,2,22627,f9e12780-9c25-4cb0-b1ff-a36ca50b19d8,0.35,false,false,near_mint,en,USD
+Enthusiastic Mechanaut,EOC,Edge of Eternities Commander,114,normal,uncommon,2,107357,fbfcbfed-74c7-4b1e-897c-44f25e45a4a5,0.39,false,false,near_mint,en,USD
+Abzan Charm,DMC,Dominaria United Commander,138,normal,uncommon,3,71735,bd5b386e-e71e-492d-8456-6cd178ef5b3d,0.35,false,false,near_mint,en,USD
+Naya Charm,DMC,Dominaria United Commander,162,normal,uncommon,3,71769,ce1d6f9b-2ca8-48b8-b4a6-46a61c7c3905,0.35,false,false,near_mint,es,USD
+Monk,TTLA,Avatar: The Last Airbender Tokens,10,normal,common,3,109990,e49c80ac-5c90-4fd2-ad40-cc77af160f64,,false,false,near_mint,en,USD
+Goat,TTDC,Tarkir: Dragonstorm Commander Tokens,4,normal,common,6,104784,878dd055-646a-4552-a316-8f71226258d4,,false,false,near_mint,en,USD
+Clue,TTLA,Avatar: The Last Airbender Tokens,14,normal,common,3,109966,82016bc3-8905-454a-b4aa-b9eac69d42c4,,false,false,near_mint,en,USD
+Ally,TTLA,Avatar: The Last Airbender Tokens,5,normal,common,4,109982,cae9c13e-fda2-4591-bd52-888d12194e4d,,false,false,near_mint,en,USD
+Clue,TTLA,Avatar: The Last Airbender Tokens,18,normal,common,2,109970,8db9a248-d380-48e9-850c-38b2907332c1,,false,false,near_mint,en,USD
+Ally,TTLA,Avatar: The Last Airbender Tokens,7,normal,common,3,109979,b52bae4c-3831-442a-a944-b1f3548dbd39,,false,false,near_mint,en,USD
+Ally,TTLA,Avatar: The Last Airbender Tokens,4,normal,common,5,109995,f842c52a-04b6-4625-ba58-45b043ada340,,false,false,near_mint,en,USD
+Clue,TTLA,Avatar: The Last Airbender Tokens,15,normal,common,5,109945,33648889-2715-40f0-81fa-b6571d0bb0c9,,false,false,near_mint,en,USD
+Soldier,TTLA,Avatar: The Last Airbender Tokens,11,normal,common,5,109940,2de43b03-9ac5-4292-ab29-2dc6210ef3d9,,false,false,near_mint,en,USD
+Hero,TFIN,Final Fantasy Tokens,4,normal,common,3,106091,a257329e-28b9-4ab6-ae05-f6ce0070cb35,,false,false,near_mint,en,USD
+Wizard,TFIN,Final Fantasy Tokens,15,normal,common,5,106211,e27f28ec-d5e7-4415-96cc-b666cdecae08,,false,false,near_mint,en,USD
+Bird,TFIN,Final Fantasy Tokens,17,normal,common,3,106722,8632216a-33c3-4d16-bf25-42e41af53986,,false,false,near_mint,en,USD
+Human Soldier,TEOE,Edge of Eternities Tokens,2,normal,common,10,107728,631c2c16-132d-4607-ab7e-207a6af188e5,,false,false,near_mint,en,USD
+Lander,TEOE,Edge of Eternities Tokens,7,normal,common,8,107768,c1d0baf8-db86-4a98-84fa-43aa32e0980f,,false,false,near_mint,en,USD
+Lander,TEOE,Edge of Eternities Tokens,5,normal,common,8,107761,ba3b3b34-0ffa-41a4-8529-7b9d2946a1ac,,false,false,near_mint,en,USD
+Robot,TEOE,Edge of Eternities Tokens,10,normal,common,31,107769,c46f9a07-005c-44b7-8057-b2f00b274dd6,,false,false,near_mint,en,USD
+Drone,TEOE,Edge of Eternities Tokens,3,normal,common,11,107712,3fcf8950-117a-4587-8522-79001dffa500,,false,false,near_mint,en,USD
+Ballistic Boulder,TTLA,Avatar: The Last Airbender Tokens,13,normal,common,3,109930,0b1b8ff0-0b1e-4a55-a937-fde7ec15c41a,,false,false,near_mint,en,USD
+Treasure,TFIN,Final Fantasy Tokens,23,normal,common,3,106110,ab0cda01-10b5-4a1b-b2bb-ad8bb296590f,,false,false,near_mint,en,USD
+Hero,TFIN,Final Fantasy Tokens,2,normal,common,2,106175,d0657ce1-bf75-4007-ac1b-0623eb263357,,false,false,near_mint,en,USD
+Hero,TFIN,Final Fantasy Tokens,7,normal,common,3,106160,c82c74c1-fb73-4d4d-808e-2f4d7b97c97d,,false,false,near_mint,en,USD
+Robot Warrior,TFIN,Final Fantasy Tokens,12,normal,common,2,106727,c2b4e93b-6b27-4dd3-a6dd-a75d6fab14dc,,false,false,near_mint,en,USD
+Beast,TBLC,Bloomburrow Commander Tokens,24,normal,common,2,96481,d93d0098-2147-4e84-af15-91dec8b98d21,,false,false,near_mint,en,USD
+Zombie,TINR,Innistrad Remastered Tokens,10,normal,common,7,102819,e6474e0d-a3ca-439f-b9b8-82022c59ff14,,false,false,near_mint,en,USD
+Spider,TSPM,Marvel's Spider-Man Tokens,3,normal,common,9,108635,4a40f6e1-3545-4503-af3e-f0acfb735e3a,,false,false,near_mint,en,USD
+Illusion Villain,TSPM,Marvel's Spider-Man Tokens,2,normal,common,6,108672,f67d6b6d-c57e-431f-ae80-a9658d628827,,false,false,near_mint,en,USD
+Food,TSPM,Marvel's Spider-Man Tokens,5,normal,common,8,108616,0fb2c5a4-859e-40ac-8091-7ba44f57b878,,false,false,near_mint,en,USD
+Robot,TSPM,Marvel's Spider-Man Tokens,6,normal,common,8,108618,15796c4b-6041-4e0a-bc4f-0518d165549e,,false,false,near_mint,en,USD
+Pest,TEOC,Edge of Eternities Commander Tokens,9,normal,common,2,107168,cf9587a6-7497-4f49-a5d0-a19fdfd969aa,,false,false,near_mint,ja,USD
+Spider,TINR,Innistrad Remastered Tokens,16,normal,common,2,102489,362fb82b-d1ea-471f-be0a-cc2c0c600fd1,,false,false,near_mint,en,USD
+Soldier,TFDN,Foundations Tokens,6,normal,common,2,101597,d093322e-a717-4e2d-8199-fa560792bcf6,,false,false,near_mint,en,USD
+Gnome,TEOC,Edge of Eternities Commander Tokens,11,normal,common,3,107344,e32673cc-bec9-49b3-bc34-e2b3982ca245,,false,false,near_mint,en,USD
+Hero,TFIN,Final Fantasy Tokens,3,normal,common,3,105882,3308e4bf-950f-4b83-969a-2a95f077552f,,false,false,near_mint,en,USD
+Knight,TFIN,Final Fantasy Tokens,10,normal,common,2,106726,a7758a0b-9e85-4b4a-bf1c-ffcc6761dbad,,false,false,near_mint,en,USD
+Elk,TECL,Lorwyn Eclipsed Tokens,2,normal,common,2,110844,cf36b5f2-e699-41c0-ae89-23cd9c414b54,,false,false,near_mint,en,USD
+Lander,TEOE,Edge of Eternities Tokens,4,normal,common,7,107755,b25a7de0-0d5d-4b7a-a1bf-7483fa51392a,,false,false,near_mint,en,USD
+Beast,TTDC,Tarkir: Dragonstorm Commander Tokens,20,normal,common,2,105045,f0aba72c-4dd1-47e5-a447-e074d0ab4ba1,,false,false,near_mint,en,USD
+Faerie,TECL,Lorwyn Eclipsed Tokens,5,normal,common,6,110674,01524db2-c96f-4902-8394-bc7a7128e573,,false,false,near_mint,en,USD
+Goblin,TECL,Lorwyn Eclipsed Tokens,6,normal,common,9,110758,6139a45d-ebc7-4bca-8c13-73c85ea5fe0d,,false,false,near_mint,en,USD
+Worm,TECL,Lorwyn Eclipsed Tokens,9,normal,common,4,110823,b3c0ff23-6c20-4637-99d6-6cbca26d75ba,,false,false,near_mint,en,USD
+Bird,TBLC,Bloomburrow Commander Tokens,3,normal,common,3,96338,72328455-560b-4ead-98bb-3c71b1e8baac,,false,false,near_mint,en,USD
+Saproling,TECC,Lorwyn Eclipsed Commander Tokens,7,normal,common,2,110716,34032448-fe31-44c7-845c-37fea0b8e762,,false,false,near_mint,en,USD
+Elf,TECL,Lorwyn Eclipsed Tokens,4,normal,common,19,110725,39b36f22-21f9-44fe-8a49-bdc859503342,,false,false,near_mint,en,USD
+Food,TFIN,Final Fantasy Tokens,22,normal,common,2,103784,4853f6f5-476d-4109-a1c6-f98f4d332db3,,false,false,near_mint,en,USD
+Lander,TEOE,Edge of Eternities Tokens,8,normal,common,11,107081,85ef1950-219f-401b-8ff5-914f9aaec122,,false,false,near_mint,en,USD
+Munitions,TEOE,Edge of Eternities Tokens,9,normal,common,7,107751,a16f931a-9fa3-45b1-8d54-04b6b5bf7b71,,false,false,near_mint,en,USD
+Treasure,TECL,Lorwyn Eclipsed Tokens,10,normal,common,11,110812,ac4384b7-853c-417d-b3b4-f54cd0b5d361,,false,false,near_mint,en,USD
+Kithkin,TECL,Lorwyn Eclipsed Tokens,7,normal,common,17,110711,2ed11e1b-2289-48d2-8d96-ee7e590ecfd4,,false,false,near_mint,en,USD
+Treasure,TTDM,Tarkir: Dragonstorm Tokens,16,normal,common,3,104831,9c8f66e1-4eab-4d51-b10e-9cedd607d709,,false,false,near_mint,en,USD
+Glimmer,TDSK,Duskmourn: House of Horror Tokens,4,normal,common,2,98968,475c7449-2c95-4873-94de-68a5e06cdfb8,,false,false,near_mint,en,USD
+Manifest,TDSK,Duskmourn: House of Horror Tokens,18,normal,common,3,98602,01104ab1-84e1-4c78-853d-637c6554bdf9,,false,false,near_mint,en,USD
+Merfolk,TECL,Lorwyn Eclipsed Tokens,8,normal,common,13,110744,4c5ad4e1-b489-4023-88ab-1200c5f26ffc,,false,false,near_mint,en,USD
+Warrior,TTDM,Tarkir: Dragonstorm Tokens,13,normal,common,2,104765,7edc0515-a130-45a7-aa09-0e23bba41587,,false,false,near_mint,en,USD
+Goblin,TTDM,Tarkir: Dragonstorm Tokens,12,normal,common,2,105012,e265ca24-96c0-4654-a8f3-bbffe288970a,,false,false,near_mint,en,USD
+Beast,TFDN,Foundations Tokens,33,normal,common,3,101485,21bd6fb3-f60c-49cc-8854-6a20a1e1d9c7,,false,false,near_mint,en,USD

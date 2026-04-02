@@ -1,0 +1,11 @@
+Name,Set code,Set name,Collector number,Foil,Rarity,Quantity,ManaBox ID,Scryfall ID,Purchase price,Misprint,Altered,Condition,Language,Purchase price currency
+Silent Sentinel,PBNG,Born of the Gods Promos,26★,foil,rare,2,14969,4b3d1c04-4094-4d9f-af4d-b5593b7b58d2,0.49,false,false,near_mint,en,USD
+Sunblast Angel,AFC,Forgotten Realms Commander,74,normal,rare,1,60745,680f7d5c-d518-4ebb-92d5-e835cd9eafe0,0.99,false,false,near_mint,en,USD
+Retreat to Emeria,ZNC,Zendikar Rising Commander,20,normal,uncommon,1,55442,9f18221f-e900-48ef-9b8e-e8ee52b31939,0.39,false,false,near_mint,en,USD
+Search the Premises,MKC,Murders at Karlov Manor Commander,81,normal,rare,1,90253,08877e2c-79ac-4a4d-a7dd-60652c5eb5f6,0.49,false,false,near_mint,en,USD
+Day of Destiny,DMC,Dominaria United Commander,99,normal,rare,2,71452,56b27e0c-bf8e-43d6-b99d-3e25d4954d34,0.79,false,false,near_mint,en,USD
+Soul Snare,MKC,Murders at Karlov Manor Commander,85,normal,uncommon,1,90276,18f3a850-b2e1-4970-9971-5f662fb3df31,0.35,false,false,near_mint,en,USD
+Mastery of the Unseen,MKC,Murders at Karlov Manor Commander,74,normal,rare,2,90489,b27f4217-881d-401d-860e-d3d8689ca1e4,0.49,false,false,near_mint,en,USD
+Seal of Cleansing,MKC,Murders at Karlov Manor Commander,80,normal,common,1,90284,22a6673b-1528-4e0f-b316-bd482c7ed8aa,0.49,false,false,near_mint,en,USD
+Angelic Gift,AFC,Forgotten Realms Commander,64,normal,common,2,60723,5a2122c0-5fb4-4767-b969-c61bd959d604,0.35,false,false,near_mint,en,USD
+Riot Control,BLC,Bloomburrow Commander,151,normal,common,4,96525,f0ca86cd-1b24-4abc-a877-c3aee6acf873,0.59,false,false,near_mint,en,USD

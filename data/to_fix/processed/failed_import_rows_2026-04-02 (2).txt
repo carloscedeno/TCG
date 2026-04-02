@@ -1,0 +1,17 @@
+Name,Set code,Set name,Collector number,Foil,Rarity,Quantity,ManaBox ID,Scryfall ID,Purchase price,Misprint,Altered,Condition,Language,Purchase price currency
+Rattleclaw Mystic,PKTK,Khans of Tarkir Promos,144s,foil,rare,1,13432,1b29c166-7a58-4963-b846-02bf3c8988a4,1.99,false,false,near_mint,en,USD
+Resilient Khenra,PHOU,Hour of Devastation Promos,131s,foil,rare,1,4708,36a0893f-c767-4351-91e4-3c1b98eb30e7,0.49,false,false,near_mint,en,USD
+Rattleclaw Mystic,PKTK,Khans of Tarkir Promos,144,foil,rare,1,13433,c92ac95d-7a5e-4e5e-960b-9d2bf39f0179,0.99,false,false,near_mint,en,USD
+Heir of the Wilds,PKTK,Khans of Tarkir Promos,134,normal,uncommon,2,13434,f18d7e24-3ba9-458e-a8e1-05a9834e0cce,0.49,false,false,near_mint,en,USD
+Doomskar Warrior,PMOM,March of the Machine Promos,185p,normal,rare,1,82391,dcbc1868-3820-4563-8df9-cb20b2506a07,0.49,false,false,near_mint,en,USD
+Ant Queen,PM10,Magic 2010 Promos,166★,foil,rare,1,23353,d868d3b8-997c-4984-a2b3-72de90e280f7,0.99,false,false,near_mint,en,USD
+Conclave Naturalists,PORI,Magic Origins Promos,171,normal,uncommon,2,10599,7efef088-e214-40dd-920d-039ff4770bc9,0.35,false,false,near_mint,en,USD
+Acidic Slime,P30A,30th Anniversary Play Promos,17,foil,rare,2,74013,058da946-cf26-4190-98bc-c155244339fb,0.49,false,false,near_mint,en,USD
+Deadbridge Goliath,PRTR,Return to Ravnica Promos,120★,foil,rare,1,17431,f5833bc8-dfbe-42d1-b47a-c107ff4f5916,0.59,false,false,near_mint,en,USD
+Garruk's Horde,PM12,Magic 2012 Promos,176★,foil,rare,1,19267,3313f4ea-1275-4835-b4ff-73d3601c04e1,0.49,false,false,near_mint,en,USD
+Sandsteppe Mastodon,PFRF,Fate Reforged Promos,137,foil,rare,2,12138,b2951f16-40da-467c-a1cc-fc9823d2aeb3,0.49,false,false,near_mint,en,USD
+Earl of Squirrel,PUST,Unstable Promos,108,foil,rare,1,3645,c7188d0f-0329-4ecc-ab2e-dea7c5f39852,2.29,false,false,near_mint,en,USD
+Skarrg Goliath,PGTC,Gatecrash Promos,133★,foil,rare,2,16840,0357e2ce-da68-46ff-a7e6-86df8a8ce91c,0.49,false,false,near_mint,en,USD
+Migration Path,NCC,New Capenna Commander,301,normal,uncommon,1,68274,754b1dfa-66c6-464a-aaea-688ffdc95ca2,0.69,false,false,near_mint,en,USD
+Dragonscale Boon,UGIN,Ugin's Fate,131,normal,common,1,12171,52b0640c-2aaf-4744-8558-94fb7325ba3b,0.59,false,false,near_mint,en,USD
+Thornado,OTP,Breaking News,33,normal,uncommon,2,93255,8eb4b155-ddde-465d-bd2e-3b7eb32bc052,0.35,false,false,near_mint,en,USD

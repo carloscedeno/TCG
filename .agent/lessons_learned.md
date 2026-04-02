@@ -675,3 +675,9 @@ useEffect(() => {
 - **Solución**: Estandarizar IDs de fuentes críticas: **16 para TCGplayer** y **17 para Card Kingdom**. Ejecutar scripts de alineación (`align_everything.py`) para migrar registros históricos al ID oficial y consolidar las tablas `sources` y `price_sources`.
 - **Regla Derivada**: [LEYES_DEL_SISTEMA.md] -> Regla de Negocio 1. Todo script de sincronización debe usar el ID 17 para Card Kingdom de forma hardcodeada o mediante lookup en la tabla de referencia oficial.
 
+
+### 82. Storefront Caching & Pricing Updates (April 2026)
+- **Problema**: El inventario (products) fue actualizado exitosamente para eliminar productos con precio .00, pero la grilla en la tienda seguía mostrando .00.
+- **Causa Raíz**: La visualización principal del frontend depende de la Vista Materializada mv_unique_cards, la cual se alimenta de la tabla de catálogo card_printings, no del inventario directo.
+- **Solución**: Para que un ajuste de mercado se refleje visualmente, el script debe actualizar la columna de precios denormalizada en card_printings y luego ejecutar explícitamente REFRESH MATERIALIZED VIEW mv_unique_cards;.
+- **Regla Derivada**: Todo update de pricing que deba verse en frontend requiere refrescar la vista materializada como último paso obligatorio.

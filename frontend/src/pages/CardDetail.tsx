@@ -178,7 +178,7 @@ export const CardDetail: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-cyan-500/30">
+        <div className="min-h-screen flex flex-col bg-[#050505] text-white font-sans selection:bg-cyan-500/30">
             {/* Ambient Background */}
             <div className="fixed inset-0 z-0 pointer-events-none">
                 <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-purple-600/5 rounded-full blur-[150px]" />
@@ -226,7 +226,7 @@ export const CardDetail: React.FC = () => {
                 </nav>
             </header>
 
-            <main className="relative z-10 max-w-[1600px] mx-auto p-6 lg:p-12">
+            <main className="relative z-10 w-full max-w-[1600px] mx-auto p-6 lg:p-12 flex-1">
                 {loading ? (
                     <div className="flex flex-col items-center justify-center h-[60vh]">
                         <Loader2 size={48} className="text-geeko-cyan animate-spin mb-4" />

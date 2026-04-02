@@ -1,0 +1,22 @@
+Name,Set code,Set name,Collector number,Foil,Rarity,Quantity,ManaBox ID,Scryfall ID,Purchase price,Misprint,Altered,Condition,Language,Purchase price currency
+Talisman of Dominance,MKC,Murders at Karlov Manor Commander,242,normal,uncommon,1,90594,f6c8e0b5-218e-41dd-8b09-2d4aaec2c979,2.99,false,false,near_mint,en,USD
+Dark Ritual,FWB,Foreign White Border,99,normal,common,1,66028,0b25767e-805f-45d4-8395-ee047b12a3ea,,false,false,near_mint,en,USD
+Beast,TALA,Shards of Alara Tokens,10,normal,common,1,23840,a7382e4b-43dc-4b35-8a9e-ab886ea0a981,16.99,false,false,near_mint,en,USD
+Mesmeric Orb,BRR,The Brothers' War Retro Artifacts,31,normal,mythic,1,75514,671cb8c4-4019-4d40-9e3d-691aad555356,23.99,false,false,near_mint,en,USD
+Spark Double,PWAR,War of the Spark Promos,68p,normal,rare,1,46534,fad8ae2f-f003-415c-b79a-34406e9df42d,17.99,false,false,near_mint,en,USD
+Sakashima of a Thousand Faces,SLD,Secret Lair Drop,1541,normal,mythic,1,91368,f973a1f3-6dcb-470d-89d2-6ddbf2426999,44.99,false,false,near_mint,en,USD
+Orvar, the All-Form,PKHM,Kaldheim Promos,70p,normal,mythic,1,57304,0cd55a90-440e-4b0e-92b3-a022b8d34c0f,8.49,false,false,near_mint,en,USD
+Trophy Mage,PAER,Aether Revolt Promos,48,normal,uncommon,2,6458,317ffc8a-4b6e-4ff7-b049-7494cb41e448,1.99,false,false,near_mint,en,USD
+Emry, Lurker of the Loch,SLC,Secret Lair Countdown,2019,normal,rare,1,75237,24e85f3d-a2f5-43ac-937a-ebb754de2f8a,5.99,false,false,near_mint,en,USD
+Greymond, Avacyn's Stalwart,SLX,Universes Within,18,normal,mythic,1,85144,b7848325-c46e-4e63-90d0-c9524380eb63,89.99,false,false,near_mint,en,USD
+Felidar Sovereign,PBFZ,Battle for Zendikar Promos,26s,foil,rare,1,10423,02afcfc4-3a88-4b1e-b992-36204b44c315,6.99,false,false,near_mint,en,USD
+Sun Titan,PM11,Magic 2011 Promos,35★,foil,mythic,1,21393,bb07690e-d816-46de-84e7-617149a51b18,5.49,false,false,near_mint,en,USD
+Ugin, the Spirit Dragon,SLP,Secret Lair Promo,6,normal,mythic,1,79075,3e64afdc-7623-4b88-a952-45243b4dff79,84.99,false,false,near_mint,en,USD
+Emrakul, the Aeons Torn,PROE,Rise of the Eldrazi Promos,4★,foil,mythic,1,21711,cbfc29b0-a72d-4f91-bc6c-86c79c626be8,24.99,false,false,near_mint,en,USD
+Roaming Throne,PLCI,The Lost Caverns of Ixalan Promos,258p,normal,rare,1,89465,c321a867-cb86-4c0e-9719-be490f578925,79.99,false,false,near_mint,en,USD
+Component Pouch,AFC,Forgotten Realms Commander,59,normal,uncommon,1,60555,8aa4eacb-48d8-49a1-90dd-042f3f1f75bb,8.49,false,false,near_mint,en,USD
+Blackblade Reforged,DMC,Dominaria United Commander,178,normal,rare,1,71316,240448cd-c308-49ae-9e4b-0c35adc59fba,4.49,false,false,near_mint,en,USD
+Sephiroth, Fabled SOLDIER // Sephiroth, One-Winged Angel,PFIN,Final Fantasy Promos,115s,foil,mythic,1,106843,7f31721a-8fd4-46ca-bef9-d24ad4663a58,84.99,false,false,near_mint,en,USD
+Bloodletter of Aclazotz,PLCI,The Lost Caverns of Ixalan Promos,92p,normal,mythic,1,89441,882de3fc-f84b-4b73-8f63-fce189c85ee8,42.99,false,false,near_mint,en,USD
+Imp's Mischief,OTP,Breaking News,15,normal,rare,1,93134,41137be4-cfc2-40dc-873a-b9a63d0d8ea6,7.99,false,false,near_mint,en,USD
+Comet Storm,PWWK,Worldwake Promos,76★,foil,mythic,1,22043,14b0011a-f0b4-40c1-85ff-a83f45601cb8,5.99,false,false,near_mint,en,USD

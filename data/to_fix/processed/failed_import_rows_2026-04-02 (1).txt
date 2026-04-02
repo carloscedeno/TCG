@@ -1,0 +1,17 @@
+Name,Set code,Set name,Collector number,Foil,Rarity,Quantity,ManaBox ID,Scryfall ID,Purchase price,Misprint,Altered,Condition,Language,Purchase price currency
+Tyrant's Scorn,OTP,Breaking News,56,normal,uncommon,1,93394,e61f8b36-6ad2-4295-bd1d-7f9e90b23190,0.35,false,false,near_mint,en,USD
+Shadowmage Infiltrator,NCC,New Capenna Commander,351,normal,rare,1,68386,c2ac3ee0-3adf-4e81-9194-cb0e9faf2826,0.49,false,false,near_mint,en,USD
+Inkfathom Witch,NCC,New Capenna Commander,342,normal,uncommon,1,68488,fe2837c6-8fb8-4ab6-97f3-3602a92374ec,0.35,false,false,near_mint,en,USD
+Dimir Spybug,MKC,Murders at Karlov Manor Commander,206,normal,uncommon,1,90389,69840910-eb86-49a4-915f-d21b5628fc04,0.35,false,false,near_mint,zh_CN,USD
+Terminal Agony,OTP,Breaking News,55,normal,uncommon,2,93409,ebccedbd-558c-419d-a18f-8751afd937b2,0.35,false,false,near_mint,en,USD
+Carnival Hellsteed,PRTR,Return to Ravnica Promos,147★,foil,rare,1,17429,f7c622d7-c8e4-4eaa-8102-3fae136559cb,0.49,false,false,near_mint,en,USD
+Malfegor,PCON,Conflux Promos,117★,foil,mythic,2,23729,104fd4d9-a911-401a-95ae-50e0502ed35b,0.99,false,false,near_mint,en,USD
+Muerra, Trash Tactician,PBLB,Bloomburrow Promos,227p,normal,rare,1,96702,2a902aed-8289-47d5-a407-03679a147b88,0.49,false,false,near_mint,en,USD
+Savage Smash,OTP,Breaking News,53,normal,uncommon,3,93149,4b05cacb-1f62-46ca-90a0-202d4adcff2c,0.35,false,false,near_mint,en,USD
+Knight of New Alara,PARB,Alara Reborn Promos,70★,foil,rare,1,23358,34f5458f-1745-499e-90ee-4f81a0508c54,1.79,false,false,near_mint,en,USD
+Buried in the Garden,OTP,Breaking News,38,normal,uncommon,1,93157,507073ca-4f97-4fcb-b570-233f096bf0fd,0.35,false,false,near_mint,en,USD
+Elenda, Saint of Dusk,PFDN,Foundations Promos,119p,normal,rare,1,109360,f8fc3a6d-22a8-42ce-95e4-855df8a20f76,0.79,false,false,near_mint,en,USD
+Fathom Mage,PGTC,Gatecrash Promos,162★,foil,rare,1,16838,f67f79ac-f28d-4244-994e-44cb8819db61,3.99,false,false,near_mint,en,USD
+Zameck Guildmage,PGTC,Gatecrash Promos,209,normal,uncommon,2,16833,ed0bdf8f-9086-4e30-8865-bb1eb55516f8,0.69,false,false,near_mint,en,USD
+Izoni, Center of the Web,PMKM,Murders at Karlov Manor Promos,209p,normal,rare,1,91509,87f81ee1-9826-4ac6-b7b1-9633984e7fa0,0.49,false,false,near_mint,en,USD
+Corpsejack Menace,PRTR,Return to Ravnica Promos,152★,foil,rare,1,17428,b519f1ed-0411-4c85-a266-3c4f2895000a,2.79,false,false,near_mint,en,USD

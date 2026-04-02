@@ -192,6 +192,10 @@ class CollectionService:
                     'quantity': r['quantity'],
                     'purchase_price': r['price']
                 })
+                cond_text = CollectionService.CONDITION_ID_TO_TEXT.get(r['condition_id'], 'NM')
+                key = (p_id, cond_text)
+                if key not in item_source_indices: item_source_indices[key] = []
+                item_source_indices[key].append(r['row_index'])
 
         # Step 5: Execute Bulk Upsert
         if items_to_upsert:
@@ -290,7 +294,8 @@ class CollectionService:
                              'set_code': details['sets']['set_code'],
                              'image_url': details.get('image_url') or "",
                              'rarity': details.get('rarity') or "Common",
-                             'updated_at': 'now()'
+                             'updated_at': 'now()',
+                             'finish': details.get('finish') or "nonfoil" # default
                          }
                      
                      aggregated_inventory[key]['stock'] += it['quantity']
@@ -299,6 +304,12 @@ class CollectionService:
                          aggregated_inventory[key]['price'] = it['purchase_price']
 
                  inventory_upsert = list(aggregated_inventory.values())
+                 
+                 # Map chunks to their source indices for correct counting
+                 upsert_to_indices = {}
+                 for pos, prod in enumerate(inventory_upsert):
+                     key = (prod['printing_id'], prod['condition'])
+                     upsert_to_indices[pos] = item_source_indices.get(key, [])
 
                  # Auto-pricing logic: If price is 0, try to fetch from Card Kingdom (via ValuationService)
                  zero_price_pids = list(set([item['printing_id'] for item in inventory_upsert if item['price'] == 0]))
@@ -342,9 +353,13 @@ class CollectionService:
                         chunk = inventory_upsert[j:j+100]
                         try:
                              supabase_admin.table('products').upsert(chunk).execute()
-                             success_count += len(chunk)
+                             # Add the count of ORIGINAL csv lines that made this chunk
+                             success_count += sum([len(upsert_to_indices.get(k, [])) for k in range(j, min(j+100, len(inventory_upsert)))])
                         except Exception as e:
                              errors.append(f"Inventory sync failed for batch {j // 100 + 1}: {str(e)}")
+                             # Mark failures
+                             for k in range(j, min(j+100, len(inventory_upsert))):
+                                 failed_indices.extend(upsert_to_indices.get(k, []))
 
         return {
             "success": True,
