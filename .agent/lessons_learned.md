@@ -681,3 +681,11 @@ useEffect(() => {
 - **Causa Raíz**: La visualización principal del frontend depende de la Vista Materializada mv_unique_cards, la cual se alimenta de la tabla de catálogo card_printings, no del inventario directo.
 - **Solución**: Para que un ajuste de mercado se refleje visualmente, el script debe actualizar la columna de precios denormalizada en card_printings y luego ejecutar explícitamente REFRESH MATERIALIZED VIEW mv_unique_cards;.
 - **Regla Derivada**: Todo update de pricing que deba verse en frontend requiere refrescar la vista materializada como último paso obligatorio.
+
+### 83. Integridad en Egresos Masivos (Abril 2026)
+- **Problema**: Riesgo de inconsistencia de stock al procesar archivos CSV con filas duplicadas o cantidades que exceden el stock disponible en un entorno multi-transaccional.
+- **Causa Raíz**: Si no se agrupan las cantidades por "Printing + Condition + Finish" antes de comparar con la DB, dos filas pequeñas podrían pasar la validación individualmente pero fallar la resta combinada, o generar errores de restricción.
+- **Solución**: 
+  - **Agregación Previa**: El RPC de validación (`preview_bulk_egress`) y ejecución debe usar un CTE para sumar todas las cantidades del lote por nodo físico antes de evaluar el stock.
+  - **Aborto Transaccional**: La operación de egreso debe ser atómica (una sola función RPC). Si una sola carta del lote falla la validación de stock final (stock - pedido < 0), se debe lanzar una excepción para revertir el lote completo, evitando estados de inventario parciales.
+- **Regla Derivada**: Todo proceso de baja de inventario debe registrarse obligatoriamente en `inventory_logs` con un motivo explícito para auditoría administrativa.

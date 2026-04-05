@@ -5,9 +5,10 @@ import {
     Plus, Search, Trash2, Package, Save, X,
     ChevronUp, ChevronDown, Check,
     ArrowUpDown, AlertTriangle,
-    ShieldAlert, FileUp
+    ShieldAlert, FileUp, ArrowDownFromLine
 } from "lucide-react";
 import { ImportInventoryModal } from "../../components/Admin/ImportInventoryModal";
+import { EgressInventoryModal } from "../../components/Admin/EgressInventoryModal";
 
 interface InventoryItem {
     product_id: string;
@@ -32,6 +33,7 @@ export function InventoryPage() {
     const [loading, setLoading] = useState(true);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+    const [isEgressModalOpen, setIsEgressModalOpen] = useState(false);
 
     // Filtering & Sorting
     const [searchQuery, setSearchQuery] = useState("");
@@ -316,7 +318,17 @@ export function InventoryPage() {
                         >
                             <span className="relative z-10 flex items-center gap-3">
                                 <FileUp size={18} className="text-neutral-500 group-hover:text-purple-400 transition-colors" />
-                                Importar Lote
+                                Ingreso (Lote)
+                            </span>
+                        </button>
+
+                        <button
+                            onClick={() => setIsEgressModalOpen(true)}
+                            className="group relative px-6 py-4 bg-black border border-white/10 text-rose-500 font-black text-xs uppercase tracking-[0.2em] rounded-2xl overflow-hidden active:scale-95 transition-all w-full md:w-auto hover:border-rose-500/50"
+                        >
+                            <span className="relative z-10 flex items-center gap-3">
+                                <ArrowDownFromLine size={18} className="text-rose-500/70 group-hover:text-rose-400 transition-colors" />
+                                Egreso (Lote)
                             </span>
                         </button>
                     </div>
@@ -724,8 +736,14 @@ export function InventoryPage() {
                 onClose={() => setIsImportModalOpen(false)}
                 onSuccess={() => {
                     fetchInventory();
-                    // Keep modal open or let it handle its own state? 
-                    // The modal has its own success step, so we just refresh data here.
+                }}
+            />
+
+            <EgressInventoryModal
+                isOpen={isEgressModalOpen}
+                onClose={() => setIsEgressModalOpen(false)}
+                onSuccess={() => {
+                    fetchInventory();
                 }}
             />
         </div>
