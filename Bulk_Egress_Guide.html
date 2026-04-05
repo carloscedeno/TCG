@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Egreso Masivo | Geekorium</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #f43f5e; /* Rose 500 */
+            --primary-glow: rgba(244, 63, 94, 0.4);
+            --bg: #09090b; /* Zinc 950 */
+            --card-bg: rgba(24, 24, 27, 0.6); /* Zinc 900 with alpha */
+            --text: #f4f4f5; /* Zinc 100 */
+            --accent: #fb7185; /* Rose 400 */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(244, 63, 94, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 40%);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 4rem;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            background-clip: text; /* Fixed compatibility lint */
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #a1a1aa;
+            font-weight: 300;
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 450px;
+            background: url('C:/Users/carlo/.gemini/antigravity/brain/c81192ed-2928-4a23-a6df-125ef794980b/bulk_egress_guide_illustration_1775372435015.png') center/cover;
+            border-radius: 24px;
+            margin-bottom: 4rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 20px var(--primary-glow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: pulse 4s infinite ease-in-out;
+        }
+
+        /* New Sections */
+        .workflow-section {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 3rem;
+            margin-bottom: 4rem;
+            border: 1px solid rgba(244, 63, 94, 0.2);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .workflow-section h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .step {
+            text-align: center;
+            padding: 1.5rem;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .step .icon {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .step h3 {
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .step p {
+            color: #a1a1aa;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .step-img {
+            width: 100%;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease;
+        }
+
+        .step-img:hover {
+            transform: scale(1.02);
+            border-color: var(--primary);
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px var(--primary-glow);
+        }
+
+        .download-btn:hover {
+            transform: scale(1.05);
+            background: var(--accent);
+            box-shadow: 0 6px 20px var(--primary-glow);
+        }
+
+        .preview-table {
+            background: #000;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .preview-table table {
+            font-size: 0.85rem;
+        }
+
+        .preview-table th { font-size: 0.8rem; padding: 0.5rem; }
+        .preview-table td { padding: 0.5rem; font-family: monospace; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 2.5rem;
+            border-radius: 20px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(244, 63, 94, 0.1);
+        }
+
+        .card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .card p {
+            color: #d4d4d8;
+            font-size: 1rem;
+        }
+
+        .step-number {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 8rem;
+            font-weight: 800;
+            color: rgba(255, 255, 255, 0.02);
+            z-index: -1;
+        }
+
+        .table-container {
+            margin-top: 4rem;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            color: var(--accent);
+            padding: 1rem;
+            border-bottom: 1px solid rgba(244, 63, 94, 0.2);
+            font-weight: 600;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            color: #d4d4d8;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: rgba(244, 63, 94, 0.1);
+            color: var(--accent);
+            border: 1px solid rgba(244, 63, 94, 0.2);
+        }
+
+        footer {
+            margin-top: 6rem;
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #71717a;
+            font-size: 0.9rem;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 20px var(--primary-glow); }
+            50% { transform: scale(1.005); box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 40px var(--primary-glow); }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #27272a;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Egreso Masivo</h1>
+            <p class="subtitle">Guía de usuario para la gestión inteligente de inventario Geekorium</p>
+        </header>
+
+        <div class="hero-image"></div>
+
+        <div class="workflow-section">
+            <h2>🗺️ Workflow: ¿Cómo llegar ahí?</h2>
+            <div class="workflow-steps">
+                <div class="step">
+                    <span class="icon">👤</span>
+                    <h3>Inicia Sesión</h3>
+                    <p>Accede con tu cuenta de administrador de Geekorium.</p>
+                </div>
+                <div class="step">
+                    <span class="icon">🔍</span>
+                    <h3>Inventario</h3>
+                    <p>Navega al menú lateral y selecciona <b>Admin Dashboard</b>.</p>
+                    <img src="C:/Users/carlo/.gemini/antigravity/brain/c81192ed-2928-4a23-a6df-125ef794980b/media__1775373150942.png" alt="Sidebar Navigation" class="step-img">
+                </div>
+                <div class="step">
+                    <span class="icon">📤</span>
+                    <h3>Exportar Actual</h3>
+                    <p>Haz clic en el botón verde <b>Exportar</b> para bajar tu stock real en CSV.</p>
+                </div>
+                <div class="step">
+                    <span class="icon">🌸</span>
+                    <h3>Botón Rosa</h3>
+                    <p>En el encabezado, busca el botón rojo <b>EGRESO (LOTE)</b>.</p>
+                    <img src="C:/Users/carlo/.gemini/antigravity/brain/c81192ed-2928-4a23-a6df-125ef794980b/media__1775373198226.png" alt="Header Buttons" class="step-img">
+                </div>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <span class="step-number">01</span>
+                <h2>📂 Preparación</h2>
+                <p>Usa el botón <b>Exportar</b> para obtener tu inventario actual o usa nuestra plantilla base.</p>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <a href="Geekorium_Egreso_Masivo_Template.csv" download class="download-btn">⬇️ Plantilla Base</a>
+                </div>
+            </div>
+
+            <div class="card" style="grid-column: span 2;">
+                <span class="step-number">02</span>
+                <h2>👁️ Previsualización del Formato</h2>
+                <div class="preview-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>name</th>
+                                <th>set_code</th>
+                                <th>collector</th>
+                                <th>condition</th>
+                                <th>finish</th>
+                                <th>qty</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Black Lotus</td><td>LEA</td><td>1</td><td>NM</td><td>nonfoil</td><td>1</td></tr>
+                            <tr><td>Lightning Bolt</td><td>CLB</td><td>187</td><td>LP</td><td>foil</td><td>4</td></tr>
+                            <tr><td>Sol Ring</td><td>C16</td><td>272</td><td>NM</td><td>nonfoil</td><td>2</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid" style="margin-top: 2rem;">
+            <div class="card">
+                <span class="step-number">03</span>
+                <h2>⚡ Validación y Carga</h2>
+                <p>Arrastra tu archivo al panel rosa. El sistema analiza el stock en tiempo real y detecta si hay unidades suficientes.</p>
+            </div>
+
+            <div class="card">
+                <span class="step-number">04</span>
+                <h2>⚖️ Atomicidad</h2>
+                <p>Seguridad total: o se egresa todo, o nada. Si una sola carta falla, el sistema aborta para proteger tu stock.</p>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Campo</th>
+                        <th>Tipo</th>
+                        <th>Importancia</th>
+                        <th>Ejemplo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>name</td>
+                        <td>Texto</td>
+                        <td><span class="badge">Crítico</span></td>
+                        <td>Black Lotus</td>
+                    </tr>
+                    <tr>
+                        <td>quantity</td>
+                        <td>Número</td>
+                        <td><span class="badge">Crítico</span></td>
+                        <td>4</td>
+                    </tr>
+                    <tr>
+                        <td>condition</td>
+                        <td>NM / LP / MP</td>
+                        <td><span class="badge">Necesario</span></td>
+                        <td>NM</td>
+                    </tr>
+                    <tr>
+                        <td>finish</td>
+                        <td>nonfoil / foil</td>
+                        <td><span class="badge">Necesario</span></td>
+                        <td>nonfoil</td>
+                    </tr>
+                    <tr>
+                        <td>scryfall_id</td>
+                        <td>UUID</td>
+                        <td><span class="badge">Opcional</span></td>
+                        <td>bd8fa327...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <footer>
+            &copy; 2026 Geekorium TCG Systems | Implementación Premium por Antigravity
+        </footer>
+    </div>
+</body>
+</html>

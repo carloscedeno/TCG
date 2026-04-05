@@ -5,7 +5,8 @@ import {
     Plus, Search, Trash2, Package, Save, X,
     ChevronUp, ChevronDown, Check,
     ArrowUpDown, AlertTriangle,
-    ShieldAlert, FileUp, ArrowDownFromLine
+    ShieldAlert, FileUp, ArrowDownFromLine,
+    Download
 } from "lucide-react";
 import { ImportInventoryModal } from "../../components/Admin/ImportInventoryModal";
 import { EgressInventoryModal } from "../../components/Admin/EgressInventoryModal";
@@ -280,6 +281,43 @@ export function InventoryPage() {
         setPage(0);
     };
 
+    const handleExportInventory = async () => {
+        try {
+            const { data, error } = await supabase.rpc('get_inventory_for_export');
+            if (error) throw error;
+            if (!data || data.length === 0) {
+                alert("No hay inventario para exportar.");
+                return;
+            }
+
+            const headers = ['name', 'set_code', 'collector', 'condition', 'finish', 'qty'];
+            const csvRows = [
+                headers.join(','),
+                ...data.map((row: any) => 
+                    headers.map(fieldName => {
+                        const val = row[fieldName] ?? "";
+                        const stringVal = String(val).includes(',') ? `"${val}"` : String(val);
+                        return stringVal;
+                    }).join(',')
+                )
+            ];
+
+            const csvContent = csvRows.join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', `Geekorium_Inventario_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (err: any) {
+            console.error("Export error:", err);
+            alert("Error al exportar inventario: " + err.message);
+        }
+    };
+
     return (
         <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-purple-500/30">
             <div className="max-w-[1600px] mx-auto p-4 md:p-8 space-y-8">
@@ -319,6 +357,17 @@ export function InventoryPage() {
                             <span className="relative z-10 flex items-center gap-3">
                                 <FileUp size={18} className="text-neutral-500 group-hover:text-purple-400 transition-colors" />
                                 Ingreso (Lote)
+                            </span>
+                        </button>
+
+                        <button
+                            onClick={handleExportInventory}
+                            className="group relative px-6 py-4 bg-black border border-white/10 text-emerald-500 font-black text-xs uppercase tracking-[0.2em] rounded-2xl overflow-hidden active:scale-95 transition-all w-full md:w-auto hover:border-emerald-500/50"
+                            title="Descargar inventario actual"
+                        >
+                            <span className="relative z-10 flex items-center gap-3">
+                                <Download size={18} className="text-emerald-500/70 group-hover:text-emerald-400 transition-colors" />
+                                Exportar
                             </span>
                         </button>
 
