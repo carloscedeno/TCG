@@ -291,11 +291,13 @@ export function InventoryPage() {
             }
 
             const headers = ['name', 'set_code', 'collector', 'condition', 'finish', 'qty'];
+            // Map RPC result properties (out_ prefixed) back to the expected CSV headers
             const csvRows = [
                 headers.join(','),
                 ...data.map((row: any) => 
                     headers.map(fieldName => {
-                        const val = row[fieldName] ?? "";
+                        const rpcKey = `out_${fieldName}`;
+                        const val = row[rpcKey] ?? "";
                         const stringVal = String(val).includes(',') ? `"${val}"` : String(val);
                         return stringVal;
                     }).join(',')
