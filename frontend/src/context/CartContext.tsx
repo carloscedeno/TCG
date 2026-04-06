@@ -93,7 +93,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         } finally {
             setIsLoading(false);
         }
-    }, []);
+    }, [user, isAdmin]);
 
     // Load on mount and subscribe to cart-updated events
     useEffect(() => {
