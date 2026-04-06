@@ -26,8 +26,12 @@ const MISSION_STEPS = [
 
 export const WelcomeModal: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
+    
+    // Banner toggle - Set to true to re-enable
+    const ENABLED = false;
 
     useEffect(() => {
+        if (!ENABLED) return;
         const timer = setTimeout(() => {
             const hasSeenModal = sessionStorage.getItem('hasSeenWelcomeModal');
             if (!hasSeenModal) {
@@ -35,14 +39,14 @@ export const WelcomeModal: React.FC = () => {
             }
         }, 1500);
         return () => clearTimeout(timer);
-    }, []);
+    }, [ENABLED]);
 
     const closeMirror = () => {
         setIsOpen(false);
         sessionStorage.setItem('hasSeenWelcomeModal', 'true');
     };
 
-    if (!isOpen) return null;
+    if (!ENABLED || !isOpen) return null;
 
     return (
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
