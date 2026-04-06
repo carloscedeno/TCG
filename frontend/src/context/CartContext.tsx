@@ -40,7 +40,7 @@ const CartContext = createContext<CartContextType>({
 const CART_STORAGE_KEY = 'geekorium_cart_snapshot';
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const { user } = useAuth();
+    const { user, isAdmin } = useAuth();
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [availableCarts, setAvailableCarts] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -52,8 +52,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             // Fetch items in the CURRENT ACTIVE cart
             const data = await fetchCart();
             
-            // If admin or logged in user, fetch list of carts too
-            if (user) {
+            // If admin, fetch list of carts too
+            if (user && isAdmin) {
                 const carts = await listUserCarts();
                 setAvailableCarts(carts);
             }
