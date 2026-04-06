@@ -890,9 +890,7 @@ export const listUserCarts = async (): Promise<any[]> => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return [];
 
-    const { data, error } = await supabase.rpc('list_user_carts', {
-      p_user_id: user.id
-    });
+    const { data, error } = await supabase.rpc('list_user_carts');
 
     if (error) throw error;
     return data || [];
@@ -908,7 +906,6 @@ export const createNamedCart = async (name: string): Promise<any> => {
     if (!user) throw new Error("Not logged in");
 
     const { data, error } = await supabase.rpc('create_named_cart', {
-      p_user_id: user.id,
       p_name: name
     });
 
@@ -928,7 +925,6 @@ export const switchActiveCart = async (cartId: string): Promise<void> => {
     if (!user) throw new Error("Not logged in");
 
     const { error } = await supabase.rpc('switch_active_cart', {
-      p_user_id: user.id,
       p_cart_id: cartId
     });
 
