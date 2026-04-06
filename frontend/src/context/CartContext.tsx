@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { fetchCart } from '../utils/api';
+import { fetchCart, listUserCarts, switchActiveCart, createNamedCart } from '../utils/api';
+import { useAuth } from './AuthContext';
 
 interface CartItem {
     id: string;
@@ -14,33 +15,48 @@ interface CartItem {
 
 interface CartContextType {
     cartItems: CartItem[];
+    availableCarts: any[];
     cartCount: number;
     priceChangeAlert: boolean;
     dismissPriceAlert: () => void;
     refreshCart: () => Promise<void>;
+    switchCart: (cartId: string) => Promise<void>;
+    createCart: (name: string) => Promise<void>;
     isLoading: boolean;
 }
 
 const CartContext = createContext<CartContextType>({
     cartItems: [],
+    availableCarts: [],
     cartCount: 0,
     priceChangeAlert: false,
     dismissPriceAlert: () => { },
     refreshCart: async () => { },
+    switchCart: async () => { },
+    createCart: async () => { },
     isLoading: false,
 });
 
 const CART_STORAGE_KEY = 'geekorium_cart_snapshot';
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    const { user } = useAuth();
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
+    const [availableCarts, setAvailableCarts] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [priceChangeAlert, setPriceChangeAlert] = useState(false);
 
     const refreshCart = useCallback(async () => {
         setIsLoading(true);
         try {
+            // Fetch items in the CURRENT ACTIVE cart
             const data = await fetchCart();
+            
+            // If admin or logged in user, fetch list of carts too
+            if (user) {
+                const carts = await listUserCarts();
+                setAvailableCarts(carts);
+            }
             const items: CartItem[] = (data.items || []).map((item: any) => ({
                 id: item.id,
                 product_id: item.product_id,
@@ -93,8 +109,42 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const dismissPriceAlert = () => setPriceChangeAlert(false);
 
+    const switchCart = async (cartId: string) => {
+        setIsLoading(true);
+        try {
+            await switchActiveCart(cartId);
+            await refreshCart();
+        } catch (err) {
+            console.error('Failed to switch cart:', err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const createCart = async (name: string) => {
+        setIsLoading(true);
+        try {
+            await createNamedCart(name);
+            await refreshCart();
+        } catch (err) {
+            console.error('Failed to create cart:', err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return (
-        <CartContext.Provider value={{ cartItems, cartCount, priceChangeAlert, dismissPriceAlert, refreshCart, isLoading }}>
+        <CartContext.Provider value={{ 
+            cartItems, 
+            availableCarts,
+            cartCount, 
+            priceChangeAlert, 
+            dismissPriceAlert, 
+            refreshCart, 
+            switchCart,
+            createCart,
+            isLoading 
+        }}>
             {children}
         </CartContext.Provider>
     );

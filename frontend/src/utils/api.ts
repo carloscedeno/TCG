@@ -881,3 +881,62 @@ export const removeFromCart = async (cartItemId: string): Promise<any> => {
     throw error;
   }
 };
+/**
+ * Multi-Cart Management (Store Employees)
+ */
+
+export const listUserCarts = async (): Promise<any[]> => {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return [];
+
+    const { data, error } = await supabase.rpc('list_user_carts', {
+      p_user_id: user.id
+    });
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.error('Error listing user carts:', error);
+    return [];
+  }
+};
+
+export const createNamedCart = async (name: string): Promise<any> => {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error("Not logged in");
+
+    const { data, error } = await supabase.rpc('create_named_cart', {
+      p_user_id: user.id,
+      p_name: name
+    });
+
+    if (error) throw error;
+    
+    window.dispatchEvent(new Event('cart-updated'));
+    return data;
+  } catch (error) {
+    console.error('Error creating named cart:', error);
+    throw error;
+  }
+};
+
+export const switchActiveCart = async (cartId: string): Promise<void> => {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error("Not logged in");
+
+    const { error } = await supabase.rpc('switch_active_cart', {
+      p_user_id: user.id,
+      p_cart_id: cartId
+    });
+
+    if (error) throw error;
+    
+    window.dispatchEvent(new Event('cart-updated'));
+  } catch (error) {
+    console.error('Error switching active cart:', error);
+    throw error;
+  }
+};

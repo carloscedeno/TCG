@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Play, Settings, Users, Database, Shield, AlertCircle, Package } from 'lucide-react';
+import { CartManager } from '../../components/Admin/CartManager';
 
 import { supabase } from '../../utils/supabaseClient';
 
@@ -226,6 +227,8 @@ export const AdminDashboard = () => {
                     <StatCard title="Índice de Cartas" value={stats.total_cards} change="Cartas" icon={<Database className="text-purple-400" />} />
                     <StatCard title="Actualizaciones de Precios" value={stats.total_updates} change="Operaciones" icon={<Settings className="text-emerald-400" />} />
                 </div>
+
+                <CartManager />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
                     <Link to="/admin/inventory" className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-900/50 to-slate-900 border border-white/10 p-8 hover:border-purple-500/50 transition-all">
