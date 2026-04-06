@@ -686,6 +686,16 @@ useEffect(() => {
 - **Problema**: Riesgo de inconsistencia de stock al procesar archivos CSV con filas duplicadas o cantidades que exceden el stock disponible en un entorno multi-transaccional.
 - **Causa Raíz**: Si no se agrupan las cantidades por "Printing + Condition + Finish" antes de comparar con la DB, dos filas pequeñas podrían pasar la validación individualmente pero fallar la resta combinada, o generar errores de restricción.
 - **Solución**: 
-  - **Agregación Previa**: El RPC de validación (`preview_bulk_egress`) y ejecución debe usar un CTE para sumar todas las cantidades del lote por nodo físico antes de evaluar el stock.
+- **Agregación Previa**: El RPC de validación (`preview_bulk_egress`) y ejecución debe usar un CTE para sumar todas las cantidades del lote por nodo físico antes de evaluar el stock.
   - **Aborto Transaccional**: La operación de egreso debe ser atómica (una sola función RPC). Si una sola carta del lote falla la validación de stock final (stock - pedido < 0), se debe lanzar una excepción para revertir el lote completo, evitando estados de inventario parciales.
 - **Regla Derivada**: Todo proceso de baja de inventario debe registrarse obligatoriamente en `inventory_logs` con un motivo explícito para auditoría administrativa.
+
+### 84. Frictionless WhatsApp Checkout (April 2026)
+- **Concept**: Reducing a 2-step checkout to a single form by using "safe defaults" (Cédula, Address, etc.) for required backend fields while focusing the UI on Name, WhatsApp, and Email.
+- **UI Logic**: Use of a dynamic "Confirm & Pay" button that remains disabled (grey) until the 3 mandatory fields are valid, then turns green with a glow effect.
+- **Notification**: Email is mandatory as it's the primary channel for automated order confirmation, complementary to the manual WhatsApp flow.
+
+### 85. Branding & "Secret" Access (April 2026)
+- **Pattern**: Hiding "Login" buttons from the public view during BETA to prioritize conversion and reduce unauthorized support requests.
+- **Implementation**: Providing a "Secret Link" (`/geeko-login`) for the internal team instead of a UI-hidden button.
+- **UX**: Updating the restricted route handler (`AdminRoute`) to provide a helpful "Restricted Access" screen with a link to the secret login, improving internal use while keeping public users away.

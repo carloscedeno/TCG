@@ -189,9 +189,10 @@ export const CardDetail: React.FC = () => {
             <header className="h-[70px] bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-white/5 sticky top-0 z-50 shadow-2xl flex items-center">
                 <nav className="max-w-[1600px] mx-auto px-6 py-3 flex items-center justify-between w-full">
                     <div className="flex items-center gap-8">
-                        <Link to="/" className="flex items-center gap-4 group">
+                        <Link to="/" className="flex items-center gap-4 group relative">
                             <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center font-black text-xl italic shadow-lg shadow-blue-600/20 group-hover:scale-110 transition-transform">T</div>
                             <h1 className="text-xl font-black tracking-tighter text-white">TCG HUB</h1>
+                            <span className="absolute -top-1 -right-4 bg-red-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded-md tracking-tighter shadow-lg rotate-12">BETA</span>
                         </Link>
                         <div className="hidden lg:flex items-center gap-6 text-[13px] font-medium text-neutral-400">
                             <Link to="/" className="hover:text-white transition-colors flex items-center gap-1">
@@ -215,12 +216,15 @@ export const CardDetail: React.FC = () => {
                             </button>
                         )}
                         {user ? <UserMenu /> : (
-                            <button
-                                onClick={() => setIsAuthModalOpen(true)}
-                                className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-5 rounded-full shadow-lg shadow-blue-600/20 transition-all text-xs"
-                            >
-                                Login
-                            </button>
+                            /* Hidden per simplification request */
+                            <div className="hidden">
+                                <button
+                                    onClick={() => setIsAuthModalOpen(true)}
+                                    className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-5 rounded-full shadow-lg shadow-blue-600/20 transition-all text-xs"
+                                >
+                                    Login
+                                </button>
+                            </div>
                         )}
                     </div>
                 </nav>

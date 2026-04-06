@@ -59,7 +59,7 @@ const Home: React.FC = () => {
     ]
   });
   const [sets, setSets] = useState<string[]>([]);
-  const [sortBy, setSortBy] = useState(searchParams.get('sort') || 'release_date');
+  const [sortBy, setSortBy] = useState(searchParams.get('sort') || 'price_desc');
   const [activeRarity, setActiveRarity] = useState(searchParams.get('rarity') || 'All');
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(0);
@@ -289,9 +289,10 @@ const Home: React.FC = () => {
         <header className="min-h-[70px] bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-white/5 sticky top-0 z-50 shadow-2xl flex items-center">
           <nav className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 py-3 flex items-center justify-between flex-wrap gap-y-2">
             <div className="flex items-center gap-4 sm:gap-8">
-              <Link to="/" className="flex items-center gap-4 group">
+              <Link to="/" className="flex items-center gap-4 group relative">
                 <div className="flex items-center justify-center group-hover:scale-105 transition-transform relative">
                   <img src="/branding/Logo.png" alt="Logo" className="w-32 sm:w-40 object-contain" />
+                  <span className="absolute -top-1 -right-4 bg-red-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded-md tracking-tighter shadow-lg rotate-12">BETA</span>
                 </div>
               </Link>
             </div>
@@ -354,12 +355,15 @@ const Home: React.FC = () => {
               {user ? (
                 <UserMenu />
               ) : (
-                <button
-                  onClick={() => setIsAuthModalOpen(true)}
-                  className="bg-geeko-cyan hover:bg-geeko-cyan/80 text-black font-black py-2 px-5 rounded-full shadow-lg shadow-geeko-cyan/20 transition-all transform active:scale-95 flex items-center gap-2 text-xs uppercase tracking-widest whitespace-nowrap"
-                >
-                  <LogIn size={14} /> <span className="hidden sm:inline">Conectarse</span>
-                </button>
+                /* Button hidden per user request to simplify entry and direct people to store only */
+                <div className="hidden">
+                  <button
+                    onClick={() => setIsAuthModalOpen(true)}
+                    className="bg-geeko-cyan hover:bg-geeko-cyan/80 text-black font-black py-2 px-5 rounded-full shadow-lg shadow-geeko-cyan/20 transition-all transform active:scale-95 flex items-center gap-2 text-xs uppercase tracking-widest whitespace-nowrap"
+                  >
+                    <LogIn size={14} /> <span className="hidden sm:inline">Conectarse</span>
+                  </button>
+                </div>
               )}
             </div>
           </nav>

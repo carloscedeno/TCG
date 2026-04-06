@@ -20,6 +20,7 @@ import HelpPage from './pages/HelpPage';
 import LegalPage from './pages/LegalPage';
 import { WhatsAppWidget } from './components/Navigation/WhatsAppWidget';
 import { WelcomeModal } from './components/Navigation/WelcomeModal';
+import LoginPage from './pages/Admin/LoginPage';
 
 const isSupabaseConfigured = !!import.meta.env.VITE_SUPABASE_URL && !!import.meta.env.VITE_SUPABASE_ANON_KEY;
 
@@ -79,6 +80,7 @@ function App() {
                         <Route path="/order/:orderId" element={<OrderTrackingPage />} />
 
                         <Route path="/update-password" element={<UpdatePassword />} />
+                        <Route path="/geeko-login" element={<LoginPage />} />
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                     <WelcomeModal />
