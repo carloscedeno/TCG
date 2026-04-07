@@ -885,13 +885,12 @@ export const removeFromCart = async (cartItemId: string): Promise<any> => {
  * Multi-Cart Management (Store Employees)
  */
 
-export const listUserCarts = async (): Promise<any[]> => {
+export const listUserCarts = async (is_pos: boolean = false): Promise<any[]> => {
   try {
-    // We already check for session at the context level. 
-    // The RPC itself uses auth.uid() in the DB, so we don't need to manually validate getUser here
-    // unless we want to catch anonymous users early. But for redundancy/permissiveness, let's just call it.
-    console.log('DEBUG: api.ts calling list_user_carts RPC');
-    const { data, error } = await supabase.rpc('list_user_carts');
+    console.log(`DEBUG: api.ts calling list_user_carts RPC (is_pos=${is_pos})`);
+    const { data, error } = await supabase.rpc('list_user_carts', {
+      p_is_pos: is_pos
+    });
 
     if (error) throw error;
     return data || [];
@@ -901,18 +900,34 @@ export const listUserCarts = async (): Promise<any[]> => {
   }
 };
 
-export const createNamedCart = async (name: string): Promise<any> => {
+export const createNamedCart = async (name: string, is_pos: boolean = false): Promise<any> => {
   try {
     const { data, error } = await supabase.rpc('create_named_cart', {
-      p_name: name
+      p_name: name,
+      p_is_pos: is_pos
     });
 
     if (error) throw error;
     
-    window.dispatchEvent(new Event('cart-updated'));
+    window.dispatchEvent(new CustomEvent('cart-updated', { detail: { isPos: is_pos } }));
     return data;
   } catch (error) {
     console.error('Error creating named cart:', error);
+    throw error;
+  }
+};
+
+export const deleteCart = async (cartId: string): Promise<void> => {
+  try {
+    const { error } = await supabase.rpc('delete_cart', {
+      p_cart_id: cartId
+    });
+
+    if (error) throw error;
+    
+    window.dispatchEvent(new CustomEvent('cart-updated'));
+  } catch (error) {
+    console.error('Error deleting cart:', error);
     throw error;
   }
 };
@@ -925,7 +940,7 @@ export const switchActiveCart = async (cartId: string): Promise<void> => {
 
     if (error) throw error;
     
-    window.dispatchEvent(new Event('cart-updated'));
+    window.dispatchEvent(new CustomEvent('cart-updated'));
   } catch (error) {
     console.error('Error switching active cart:', error);
     throw error;

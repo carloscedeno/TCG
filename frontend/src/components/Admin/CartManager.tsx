@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCart } from '../../context/CartContext';
-import { Users, ChevronRight, ShoppingCart, UserPlus, RefreshCw } from 'lucide-react';
+import { Users, ChevronRight, ShoppingCart, UserPlus, RefreshCw, Trash2 } from 'lucide-react';
 
 export const CartManager: React.FC = () => {
-    const { availableCarts, switchCart, createCart, isLoading, refreshCart } = useCart();
+    const { availableCarts, switchCart, createCart, removeCart, isLoading, refreshCart } = useCart();
     const [isCreating, setIsCreating] = useState(false);
     const [newCartName, setNewCartName] = useState('');
+
+    // Initial fetch for POS carts specifically
+    useEffect(() => {
+        refreshCart(true);
+    }, [refreshCart]);
 
     // Use a more permissive render for debugging visibility issues.
     // The route itself is already protected by AdminRoute in App.tsx
@@ -14,7 +19,7 @@ export const CartManager: React.FC = () => {
     const handleCreateCart = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!newCartName.trim()) return;
-        await createCart(newCartName);
+        await createCart(newCartName, true); // true = isPos
         setNewCartName('');
         setIsCreating(false);
     };
@@ -39,7 +44,7 @@ export const CartManager: React.FC = () => {
                 
                 <div className="flex items-center gap-2">
                     <button 
-                        onClick={() => refreshCart()}
+                        onClick={() => refreshCart(true)}
                         disabled={isLoading}
                         className="p-2 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white rounded-xl transition-all disabled:opacity-50"
                         title="Refrescar Lista"
@@ -110,13 +115,26 @@ export const CartManager: React.FC = () => {
                             </div>
                         </div>
                         
-                        {cart.is_active ? (
-                            <div className="flex items-center gap-1 bg-geeko-cyan text-black text-[10px] uppercase font-black px-2 py-0.5 rounded-full shadow-lg animate-pulse">
-                                Activo
-                            </div>
-                        ) : (
-                            <ChevronRight size={16} className="text-slate-600 group-hover:text-slate-400 transition-colors" />
-                        )}
+                        <div className="flex items-center gap-2">
+                            {cart.is_active ? (
+                                <div className="flex items-center gap-1 bg-geeko-cyan text-black text-[10px] uppercase font-black px-2 py-0.5 rounded-full shadow-lg animate-pulse">
+                                    Activo
+                                </div>
+                            ) : (
+                                <ChevronRight size={16} className="text-slate-600 group-hover:text-slate-400 transition-colors" />
+                            )}
+                            
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    removeCart(cart.id);
+                                }}
+                                className="p-2 text-slate-500 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all"
+                                title="Eliminar Cliente"
+                            >
+                                <Trash2 size={14} />
+                            </button>
+                        </div>
 
                         {cart.is_active && (
                             <div className="absolute -inset-0.5 bg-gradient-to-r from-geeko-cyan to-blue-500 rounded-xl blur opacity-10 group-hover:opacity-20 transition duration-1000 group-hover:duration-200"></div>

@@ -19,9 +19,10 @@ interface CartContextType {
     cartCount: number;
     priceChangeAlert: boolean;
     dismissPriceAlert: () => void;
-    refreshCart: () => Promise<void>;
+    refreshCart: (isPos?: boolean) => Promise<void>;
     switchCart: (cartId: string) => Promise<void>;
-    createCart: (name: string) => Promise<void>;
+    createCart: (name: string, isPos?: boolean) => Promise<void>;
+    removeCart: (cartId: string) => Promise<void>;
     isLoading: boolean;
     activeCartName: string | null;
 }
@@ -35,6 +36,7 @@ const CartContext = createContext<CartContextType>({
     refreshCart: async () => { },
     switchCart: async () => { },
     createCart: async () => { },
+    removeCart: async () => { },
     isLoading: false,
     activeCartName: null,
 });
@@ -49,9 +51,11 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [isLoading, setIsLoading] = useState(false);
     const [priceChangeAlert, setPriceChangeAlert] = useState(false);
     const [activeCartName, setActiveCartName] = useState<string | null>(null);
+    const [currentIsPos, setCurrentIsPos] = useState<boolean>(false);
 
-    const refreshCart = useCallback(async () => {
-        console.log('DEBUG: refreshCart [v16] - fetching state for:', user?.email || 'guest');
+    const refreshCart = useCallback(async (isPos: boolean = false) => {
+        console.log(`DEBUG: refreshCart [v17] - fetching state (is_pos=${isPos}) for:`, user?.email || 'guest');
+        setCurrentIsPos(isPos);
         setIsLoading(true);
         try {
             // 1. Fetch items in the CURRENT ACTIVE cart
@@ -81,7 +85,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             // Even if not admin, we try to fetch to support personal multi-cart if enabled later
             if (user) {
                 try {
-                    const carts = await listUserCarts();
+                    const carts = await listUserCarts(isPos);
                     setAvailableCarts(carts);
                     
                     // Find and set the active cart name based on is_active flag from DB
@@ -128,22 +132,24 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Load on mount and subscribe to cart-updated events
     useEffect(() => {
-        refreshCart();
+        // Initial load as regular cart
+        refreshCart(false);
         
-        const handler = () => {
-            console.log('DEBUG: cart-updated event detected - refreshing...');
-            refreshCart();
+        const handler = (e: any) => {
+            const isPosUpdate = e.detail?.isPos ?? currentIsPos;
+            console.log(`DEBUG: cart-updated event detected (isPos=${isPosUpdate}) - refreshing...`);
+            refreshCart(isPosUpdate);
         };
-        window.addEventListener('cart-updated', handler);
+        window.addEventListener('cart-updated', handler as any);
         
         // Polling as a last resort (once every 30s in v16, less aggressive)
-        const interval = setInterval(handler, 30000); 
+        const interval = setInterval(() => refreshCart(currentIsPos), 30000); 
         
         return () => {
-            window.removeEventListener('cart-updated', handler);
+            window.removeEventListener('cart-updated', handler as any);
             clearInterval(interval);
         };
-    }, [refreshCart]); 
+    }, [refreshCart, currentIsPos]); 
 
     const cartCount = Array.isArray(cartItems)
         ? cartItems.reduce((acc, item) => acc + (item.quantity || 1), 0)
@@ -163,17 +169,32 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     };
 
-    const createCart = async (name: string) => {
+    const createCart = async (name: string, isPos: boolean = false) => {
         setIsLoading(true);
         try {
-            await createNamedCart(name);
-            await refreshCart();
+            await createNamedCart(name, isPos);
+            await refreshCart(isPos);
         } catch (err: any) {
             console.error('Failed to create cart:', err);
             // Alert user of permission issues
-            if (err.message?.includes('admin')) {
+            if (err.message?.includes('admin') || err.message?.includes('permisos')) {
                 alert('Error: Solo los administradores pueden realizar esta acción.');
             }
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const removeCart = async (cartId: string) => {
+        if (!window.confirm('¿Estás seguro de eliminar este cliente de la terminal?')) return;
+        
+        setIsLoading(true);
+        try {
+            await (import('../utils/api').then(api => api.deleteCart(cartId)));
+            await refreshCart(currentIsPos);
+        } catch (err: any) {
+            console.error('Failed to delete cart:', err);
+            alert(err.message || 'Error al eliminar el carrito');
         } finally {
             setIsLoading(false);
         }
@@ -189,6 +210,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             refreshCart, 
             switchCart,
             createCart,
+            removeCart,
             isLoading,
             activeCartName
         }}>
