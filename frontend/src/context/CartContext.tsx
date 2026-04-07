@@ -25,6 +25,7 @@ interface CartContextType {
     removeCart: (cartId: string) => Promise<void>;
     isLoading: boolean;
     activeCartName: string | null;
+    currentIsPos: boolean;
 }
 
 const CartContext = createContext<CartContextType>({
@@ -39,6 +40,7 @@ const CartContext = createContext<CartContextType>({
     removeCart: async () => { },
     isLoading: false,
     activeCartName: null,
+    currentIsPos: false,
 });
 
 const CART_STORAGE_KEY = 'geekorium_cart_snapshot';
@@ -212,7 +214,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             createCart,
             removeCart,
             isLoading,
-            activeCartName
+            activeCartName,
+            currentIsPos
         }}>
             {children}
         </CartContext.Provider>

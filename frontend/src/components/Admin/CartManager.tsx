@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { Users, ChevronRight, ShoppingCart, UserPlus, RefreshCw, Trash2 } from 'lucide-react';
 
 export const CartManager: React.FC = () => {
+    const navigate = useNavigate();
     const { availableCarts, switchCart, createCart, removeCart, isLoading, refreshCart } = useCart();
     const [isCreating, setIsCreating] = useState(false);
     const [newCartName, setNewCartName] = useState('');
@@ -35,7 +37,7 @@ export const CartManager: React.FC = () => {
                         <h3 className="text-xl font-bold text-white tracking-tight">Terminal de Atención</h3>
                         <div className="flex items-center gap-2 mt-1">
                             <span className="text-[10px] text-geeko-cyan font-black uppercase tracking-widest bg-geeko-cyan/10 px-2 py-0.5 rounded border border-geeko-cyan/20">
-                                Terminal v18 • POS Ready
+                                Terminal v20 • POS Session Logic
                             </span>
                             <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
                         </div>
@@ -96,7 +98,10 @@ export const CartManager: React.FC = () => {
                 {availableCarts.map((cart) => (
                     <button
                         key={cart.id}
-                        onClick={() => switchCart(cart.id)}
+                        onClick={async () => {
+                            await switchCart(cart.id);
+                            navigate('/');
+                        }}
                         className={`relative group flex items-start justify-between p-4 rounded-xl border transition-all duration-300 ${
                             cart.is_active 
                             ? 'bg-geeko-cyan bg-opacity-10 border-geeko-cyan shadow-[inset_0_0_20px_rgba(31,235,219,0.1)]' 

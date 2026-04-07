@@ -22,6 +22,7 @@ import { WhatsAppWidget } from './components/Navigation/WhatsAppWidget';
 import { WelcomeModal } from './components/Navigation/WelcomeModal';
 import LoginPage from './pages/Admin/LoginPage';
 import CustomersPage from './pages/Admin/CustomersPage';
+import { PosSessionBanner } from './components/Admin/PosSessionBanner';
 
 const isSupabaseConfigured = !!import.meta.env.VITE_SUPABASE_URL && !!import.meta.env.VITE_SUPABASE_ANON_KEY;
 
@@ -64,6 +65,7 @@ function App() {
         <AuthProvider>
             <CartProvider>
                 <Router basename="/">
+                    <PosSessionBanner />
                     <Routes>
                         <Route path="/" element={<Home />} />
                         <Route path="/card/:id" element={<CardDetail />} />
