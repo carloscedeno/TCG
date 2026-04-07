@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { fetchCart, listUserCarts, switchActiveCart, createNamedCart } from '../utils/api';
+import { fetchCart, listUserCarts, switchActiveCart, createNamedCart, clearActiveCart as clearActiveCartApi } from '../utils/api';
 import { useAuth } from './AuthContext';
 
 interface CartItem {
@@ -23,6 +23,7 @@ interface CartContextType {
     switchCart: (cartId: string) => Promise<void>;
     createCart: (name: string, isPos?: boolean) => Promise<void>;
     removeCart: (cartId: string) => Promise<void>;
+    clearActiveCart: () => Promise<void>;
     isLoading: boolean;
     activeCartName: string | null;
     currentIsPos: boolean;
@@ -38,6 +39,7 @@ const CartContext = createContext<CartContextType>({
     switchCart: async () => { },
     createCart: async () => { },
     removeCart: async () => { },
+    clearActiveCart: async () => { },
     isLoading: false,
     activeCartName: null,
     currentIsPos: false,
@@ -197,6 +199,18 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     };
 
+    const clearActiveCart = async () => {
+        setIsLoading(true);
+        try {
+            await clearActiveCartApi();
+            await refreshCart(false);
+        } catch (err) {
+            console.error('Failed to clear active cart:', err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return (
         <CartContext.Provider value={{ 
             cartItems, 
@@ -208,6 +222,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             switchCart,
             createCart,
             removeCart,
+            clearActiveCart,
             isLoading,
             activeCartName,
             currentIsPos

@@ -945,4 +945,13 @@ export const switchActiveCart = async (cartId: string): Promise<void> => {
     console.error('Error switching active cart:', error);
     throw error;
   }
+};export const clearActiveCart = async (): Promise<void> => {
+  try {
+    const { error } = await supabase.rpc('clear_active_cart');
+    if (error) throw error;
+    window.dispatchEvent(new CustomEvent('cart-updated'));
+  } catch (error) {
+    console.error('Error clearing active cart:', error);
+    throw error;
+  }
 };

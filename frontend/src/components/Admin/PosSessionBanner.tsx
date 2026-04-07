@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 export const PosSessionBanner: React.FC = () => {
     const { isAdmin } = useAuth();
-    const { currentIsPos, activeCartName } = useCart();
+    const { currentIsPos, activeCartName, clearActiveCart } = useCart();
     const navigate = useNavigate();
 
     // Only show for admins when a POS cart is active
@@ -35,8 +35,7 @@ export const PosSessionBanner: React.FC = () => {
                     </button>
                     <button 
                         onClick={async () => {
-                            // In a full implementation, this might 'close' the session
-                            // For now, we just go back to terminal to select another or clear
+                            await clearActiveCart();
                             navigate('/admin/customers');
                         }}
                         className="flex items-center gap-1.5 px-3 py-1.5 bg-black text-geeko-cyan rounded-full text-[10px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-lg"
