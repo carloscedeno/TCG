@@ -44,7 +44,7 @@ const CartContext = createContext<CartContextType>({
 const CART_STORAGE_KEY = 'geekorium_cart_snapshot';
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    console.log('DEBUG: CartProvider Mounting v16 - POS Unified Logic Active');
+    console.log('DEBUG: CartProvider Mounting v18 - POS Provider Order Fixed');
     const { user } = useAuth();
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [availableCarts, setAvailableCarts] = useState<any[]>([]);
@@ -54,7 +54,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [currentIsPos, setCurrentIsPos] = useState<boolean>(false);
 
     const refreshCart = useCallback(async (isPos: boolean = false) => {
-        console.log(`DEBUG: refreshCart [v17] - fetching state (is_pos=${isPos}) for:`, user?.email || 'guest');
+        console.log(`DEBUG: refreshCart [v18] - fetching state (is_pos=${isPos}) for:`, user?.email || 'guest');
         setCurrentIsPos(isPos);
         setIsLoading(true);
         try {
@@ -137,7 +137,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         const handler = (e: any) => {
             const isPosUpdate = e.detail?.isPos ?? currentIsPos;
-            console.log(`DEBUG: cart-updated event detected (isPos=${isPosUpdate}) - refreshing...`);
+            console.log(`DEBUG: cart-updated event detected (isPos=${isPosUpdate}) [v18] - refreshing...`);
             refreshCart(isPosUpdate);
         };
         window.addEventListener('cart-updated', handler as any);

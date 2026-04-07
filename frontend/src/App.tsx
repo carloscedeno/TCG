@@ -61,8 +61,8 @@ function App() {
     }
 
     return (
-        <CartProvider>
-            <AuthProvider>
+        <AuthProvider>
+            <CartProvider>
                 <Router basename="/">
                     <Routes>
                         <Route path="/" element={<Home />} />
@@ -88,8 +88,8 @@ function App() {
                     <WelcomeModal />
                     <WhatsAppWidget />
                 </Router>
-            </AuthProvider>
-        </CartProvider>
+            </CartProvider>
+        </AuthProvider>
     );
 }
 

@@ -35,7 +35,7 @@ export const CartManager: React.FC = () => {
                         <h3 className="text-xl font-bold text-white tracking-tight">Terminal de Atención</h3>
                         <div className="flex items-center gap-2 mt-1">
                             <span className="text-[10px] text-geeko-cyan font-black uppercase tracking-widest bg-geeko-cyan/10 px-2 py-0.5 rounded border border-geeko-cyan/20">
-                                Terminal v16 • POS Ready
+                                Terminal v18 • POS Ready
                             </span>
                             <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
                         </div>
