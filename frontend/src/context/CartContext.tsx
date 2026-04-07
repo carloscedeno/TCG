@@ -130,13 +130,20 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Load on mount and subscribe to cart-updated events
     useEffect(() => {
-        if (user) {
-            refreshCart();
-        }
+        // Force refresh on mount regardless of 'user' or 'isAdmin' state to bypass initial hydration lag
+        refreshCart();
+        
         const handler = () => refreshCart();
         window.addEventListener('cart-updated', handler);
-        return () => window.removeEventListener('cart-updated', handler);
-    }, [refreshCart, user, isAdmin]); // Added user and isAdmin to ensure it runs when state updates
+        
+        // Polling as a last resort for production visibility issues
+        const interval = setInterval(handler, 10000); 
+        
+        return () => {
+            window.removeEventListener('cart-updated', handler);
+            clearInterval(interval);
+        };
+    }, [refreshCart]); 
 
     const cartCount = Array.isArray(cartItems)
         ? cartItems.reduce((acc, item) => acc + (item.quantity || 1), 0)
@@ -185,7 +192,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             isLoading,
             activeCartName
         }}>
-            {console.log('DEBUG: Cart Context Initialized v10 - Bypass Active')}
             {children}
         </CartContext.Provider>
     );

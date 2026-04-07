@@ -887,9 +887,10 @@ export const removeFromCart = async (cartItemId: string): Promise<any> => {
 
 export const listUserCarts = async (): Promise<any[]> => {
   try {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return [];
-
+    // We already check for session at the context level. 
+    // The RPC itself uses auth.uid() in the DB, so we don't need to manually validate getUser here
+    // unless we want to catch anonymous users early. But for redundancy/permissiveness, let's just call it.
+    console.log('DEBUG: api.ts calling list_user_carts RPC');
     const { data, error } = await supabase.rpc('list_user_carts');
 
     if (error) throw error;
