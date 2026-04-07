@@ -26,8 +26,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
+        console.log('DEBUG: AuthContext initializing...');
         // Get initial session
         supabase.auth.getSession().then(({ data: { session } }: { data: { session: Session | null } }) => {
+            console.log('DEBUG: Auth session fetched:', session?.user?.id || 'no-session');
             setSession(session);
             setUser(session?.user ?? null);
             if (session?.user) {

@@ -42,7 +42,7 @@ const CartContext = createContext<CartContextType>({
 const CART_STORAGE_KEY = 'geekorium_cart_snapshot';
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    console.log('DEBUG: CartProvider Mounting v11');
+    console.log('DEBUG: CartProvider Mounting v14 - SPA Redirects Active');
     const { user, isAdmin } = useAuth();
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [availableCarts, setAvailableCarts] = useState<any[]>([]);
@@ -51,7 +51,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [activeCartName, setActiveCartName] = useState<string | null>(null);
 
     const refreshCart = useCallback(async () => {
-        console.log('DEBUG: refreshCart called, user id:', user?.id);
+        console.log('DEBUG: refreshCart called [v14], user id:', user?.id || 'guest');
         setIsLoading(true);
         try {
             // 1. Fetch items in the CURRENT ACTIVE cart
