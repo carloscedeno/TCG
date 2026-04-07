@@ -52,38 +52,51 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const refreshCart = useCallback(async () => {
         setIsLoading(true);
         try {
-            // Fetch items in the CURRENT ACTIVE cart
-            const data = await fetchCart();
-            
-            // If logged in, fetch list of carts (The RPC handles admin/non-admin logic safely)
-            if (user) {
-                const carts = await listUserCarts();
-                setAvailableCarts(carts);
+            // 1. Fetch items in the CURRENT ACTIVE cart
+            try {
+                const data = await fetchCart();
+                const items: CartItem[] = (data.items || []).map((item: any) => ({
+                    id: item.id,
+                    product_id: item.product_id,
+                    quantity: item.quantity || 1,
+                    price: Number(item.products?.price || 0),
+                    name: item.products?.name,
+                    image_url: item.products?.image_url,
+                    is_foil: item.products?.is_foil,
+                    set_code: item.products?.set_code,
+                }));
+                setCartItems(Array.isArray(items) ? items : []);
                 
-                // Find and set the active cart name
-                const active = carts.find(c => c.is_active);
-                if (active) {
-                    setActiveCartName(active.name || 'Carrito Principal');
-                } else if (carts.length > 0) {
-                    // Fallback to the first one if none is active (failsafe)
-                    setActiveCartName(carts[0].name || 'Carrito Principal');
-                } else {
-                    setActiveCartName(null);
+                // Save snapshot for price change detection
+                localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+            } catch (err) {
+                console.warn('CartContext: current cart items load failed', err);
+                setCartItems([]);
+            }
+            
+            // 2. Fetch list of available carts (Crucial for Admin Management)
+            if (user) {
+                try {
+                    const carts = await listUserCarts();
+                    setAvailableCarts(carts);
+                    
+                    // Find and set the active cart name
+                    const active = carts.find(c => c.is_active);
+                    if (active) {
+                        setActiveCartName(active.name || 'Carrito Principal');
+                    } else if (carts.length > 0) {
+                        setActiveCartName(carts[0].name || 'Carrito Principal');
+                    } else {
+                        setActiveCartName(null);
+                    }
+                } catch (err) {
+                    console.error('CartContext: available carts load failed', err);
+                    setAvailableCarts([]);
                 }
             } else {
                 setActiveCartName(null);
+                setAvailableCarts([]);
             }
-
-            const items: CartItem[] = (data.items || []).map((item: any) => ({
-                id: item.id,
-                product_id: item.product_id,
-                quantity: item.quantity || 1,
-                price: Number(item.products?.price || 0),
-                name: item.products?.name,
-                image_url: item.products?.image_url,
-                is_foil: item.products?.is_foil,
-                set_code: item.products?.set_code,
-            }));
 
             // Compare against localStorage snapshot to detect price changes
             const snapshot = localStorage.getItem(CART_STORAGE_KEY);
