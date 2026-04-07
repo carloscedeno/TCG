@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
-import { Users, ChevronRight, ShoppingCart, UserPlus } from 'lucide-react';
+import { Users, ChevronRight, ShoppingCart, UserPlus, RefreshCw } from 'lucide-react';
 
 export const CartManager: React.FC = () => {
     const { isAdmin } = useAuth();
-    const { availableCarts, switchCart, createCart, isLoading } = useCart();
+    const { availableCarts, switchCart, createCart, isLoading, refreshCart } = useCart();
     const [isCreating, setIsCreating] = useState(false);
     const [newCartName, setNewCartName] = useState('');
 
@@ -32,15 +32,25 @@ export const CartManager: React.FC = () => {
                     </div>
                 </div>
                 
-                {!isCreating && (
+                <div className="flex items-center gap-2">
                     <button 
-                        onClick={() => setIsCreating(true)}
-                        className="flex items-center gap-2 px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg shadow-rose-600/20"
+                        onClick={() => refreshCart()}
+                        disabled={isLoading}
+                        className="p-2 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white rounded-xl transition-all disabled:opacity-50"
+                        title="Refrescar Lista"
                     >
-                        <UserPlus size={16} />
-                        <span className="text-sm font-semibold">Nuevo Cliente</span>
+                        <RefreshCw size={16} className={isLoading ? 'animate-spin' : ''} />
                     </button>
-                )}
+                    {!isCreating && (
+                        <button 
+                            onClick={() => setIsCreating(true)}
+                            className="flex items-center gap-2 px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg shadow-rose-600/20"
+                        >
+                            <UserPlus size={16} />
+                            <span className="text-sm font-semibold">Nuevo Cliente</span>
+                        </button>
+                    )}
+                </div>
             </div>
 
             {isCreating && (

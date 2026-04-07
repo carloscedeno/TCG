@@ -53,9 +53,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setIsLoading(true);
         try {
             // 1. Fetch items in the CURRENT ACTIVE cart
+            let fetchedItems: CartItem[] = [];
             try {
                 const data = await fetchCart();
-                const items: CartItem[] = (data.items || []).map((item: any) => ({
+                fetchedItems = (data.items || []).map((item: any) => ({
                     id: item.id,
                     product_id: item.product_id,
                     quantity: item.quantity || 1,
@@ -65,10 +66,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     is_foil: item.products?.is_foil,
                     set_code: item.products?.set_code,
                 }));
-                setCartItems(Array.isArray(items) ? items : []);
+                setCartItems(Array.isArray(fetchedItems) ? fetchedItems : []);
                 
                 // Save snapshot for price change detection
-                localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+                localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(fetchedItems));
             } catch (err) {
                 console.warn('CartContext: current cart items load failed', err);
                 setCartItems([]);
@@ -103,7 +104,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             if (snapshot) {
                 try {
                     const savedItems: CartItem[] = JSON.parse(snapshot);
-                    const hasPriceChange = items.some(item => {
+                    const hasPriceChange = fetchedItems.some(item => {
                         const saved = savedItems.find(s => s.product_id === item.product_id);
                         return saved && Math.abs(saved.price - item.price) > 0.01;
                     });
@@ -116,8 +117,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             }
 
             // Save snapshot
-            localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
-            setCartItems(Array.isArray(items) ? items : []);
+            localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(fetchedItems));
+            setCartItems(Array.isArray(fetchedItems) ? fetchedItems : []);
         } catch (err) {
             console.error('CartContext: failed to load cart', err);
         } finally {
