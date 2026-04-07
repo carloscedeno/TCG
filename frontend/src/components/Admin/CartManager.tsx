@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useCart } from '../../context/CartContext';
-import { useAuth } from '../../context/AuthContext';
 import { Users, ChevronRight, ShoppingCart, UserPlus, RefreshCw } from 'lucide-react';
 
 export const CartManager: React.FC = () => {
