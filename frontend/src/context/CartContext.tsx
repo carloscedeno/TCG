@@ -42,7 +42,7 @@ const CartContext = createContext<CartContextType>({
 const CART_STORAGE_KEY = 'geekorium_cart_snapshot';
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    console.log('DEBUG: CartProvider Mounting v14 - SPA Redirects Active');
+    console.log('DEBUG: CartProvider Mounting v16 - POS Unified Logic Active');
     const { user } = useAuth();
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [availableCarts, setAvailableCarts] = useState<any[]>([]);
