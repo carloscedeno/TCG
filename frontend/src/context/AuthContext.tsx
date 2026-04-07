@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const checkAdmin = async (currentUser: User) => {
         try {
             // First check app_metadata (fastest)
-            const metadataRole = currentUser.app_metadata?.role;
+            const metadataRole = currentUser.app_metadata?.role?.toString().toLowerCase();
             if (metadataRole === 'admin') {
                 setIsAdmin(true);
                 setLoading(false);
@@ -76,7 +76,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 console.warn('Error checking admin role in profiles:', error);
                 setIsAdmin(false);
             } else {
-                setIsAdmin(data?.role === 'admin');
+                setIsAdmin(data?.role?.toString().toLowerCase() === 'admin');
             }
         } catch (err) {
             console.error('Fatal error in checkAdmin:', err);
