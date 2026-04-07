@@ -132,27 +132,22 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     }, [user]);
 
-    // Load on mount and subscribe to cart-updated events
+    // Load once on mount and subscribe to cart-updated events
     useEffect(() => {
-        // Initial load as regular cart
+        // Initial load as regular cart - only on mount
         refreshCart(false);
         
         const handler = (e: any) => {
             const isPosUpdate = e.detail?.isPos ?? currentIsPos;
-            console.log(`DEBUG: cart-updated event detected (isPos=${isPosUpdate}) [v18] - refreshing...`);
+            console.log(`DEBUG: cart-updated event detected (isPos=${isPosUpdate}) [v21] - refreshing...`);
             refreshCart(isPosUpdate);
         };
         window.addEventListener('cart-updated', handler as any);
         
-        // Polling as a last resort (once every 30s in v16, less aggressive)
-        const interval = setInterval(() => refreshCart(currentIsPos), 30000); 
-        
         return () => {
             window.removeEventListener('cart-updated', handler as any);
-            clearInterval(interval);
         };
-    }, [refreshCart, currentIsPos]); 
-
+    }, []); // Empty dependency array to prevent loops and only run on mount/unmount
     const cartCount = Array.isArray(cartItems)
         ? cartItems.reduce((acc, item) => acc + (item.quantity || 1), 0)
         : 0;
