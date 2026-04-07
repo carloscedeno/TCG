@@ -57,9 +57,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [activeCartName, setActiveCartName] = useState<string | null>(null);
     const [currentIsPos, setCurrentIsPos] = useState<boolean>(false);
 
-    const refreshCart = useCallback(async (isPos: boolean = false) => {
-        console.log(`DEBUG: refreshCart [v18] - fetching state (is_pos=${isPos}) for:`, user?.email || 'guest');
-        setCurrentIsPos(isPos);
+    const refreshCart = useCallback(async (forcedIsPos?: boolean) => {
+        console.log(`DEBUG: refreshCart [v24] - fetching state for:`, user?.email || 'guest');
         setIsLoading(true);
         try {
             // 1. Fetch items in the CURRENT ACTIVE cart
@@ -96,11 +95,14 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     const active = carts.find(c => c.is_active);
                     if (active) {
                         setActiveCartName(active.name || 'Carrito Principal');
+                        setCurrentIsPos(active.is_pos || false);
                     } else if (carts.length > 0) {
                         // Fallback if none marked active but they exist
                         setActiveCartName(carts[0].name || 'Carrito Principal');
+                        setCurrentIsPos(carts[0].is_pos || false);
                     } else {
                         setActiveCartName(null);
+                        setCurrentIsPos(false);
                     }
                 } catch (err) {
                     console.error('CartContext: available carts load failed', err);
@@ -140,9 +142,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         refreshCart(false);
         
         const handler = (e: any) => {
-            const isPosUpdate = e.detail?.isPos ?? currentIsPos;
-            console.log(`DEBUG: cart-updated event detected (isPos=${isPosUpdate}) [v21] - refreshing...`);
-            refreshCart(isPosUpdate);
+            console.log(`DEBUG: cart-updated event detected [v24] - refreshing...`);
+            refreshCart();
         };
         window.addEventListener('cart-updated', handler as any);
         

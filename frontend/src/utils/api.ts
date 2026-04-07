@@ -731,14 +731,16 @@ export const createOrder = async (orderData: {
   shippingAddress: any;
   totalAmount: number;
   guestInfo?: { email: string; phone: string };
+  cartId?: string;
 }): Promise<any> => {
   try {
     const { data, error } = await supabase.rpc('create_order_atomic', {
-      p_user_id: orderData.userId, // RPC must handle NULL or we need updated RPC
+      p_user_id: orderData.userId,
       p_items: orderData.items,
       p_shipping_address: orderData.shippingAddress,
       p_total_amount: orderData.totalAmount,
-      p_guest_info: orderData.guestInfo || null // Pass guest info if available
+      p_guest_info: orderData.guestInfo || null,
+      p_cart_id: orderData.cartId || null
     });
 
     if (error) throw error;

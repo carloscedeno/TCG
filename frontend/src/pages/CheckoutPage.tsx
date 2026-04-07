@@ -15,6 +15,7 @@ export const CheckoutPage = () => {
     const [loading, setLoading] = useState(true);
     const [validationError, setValidationError] = useState<string | null>(null);
     const [isProcessing, setIsProcessing] = useState(false);
+    const [cartId, setCartId] = useState<string | null>(null);
 
     // Customer form (Simplified to Name and Phone)
     const [form, setForm] = useState({
@@ -40,6 +41,7 @@ export const CheckoutPage = () => {
                     return;
                 }
                 setCartItems(cartData.items);
+                setCartId(cartData.id || null);
             } catch (error) {
                 console.error('Error loading cart:', error);
             } finally {
@@ -106,6 +108,7 @@ export const CheckoutPage = () => {
                 },
                 totalAmount: total,
                 guestInfo: !user ? { email: form.email || 'guest@geekorium.com', phone: form.whatsapp } : undefined,
+                cartId: cartId || undefined
             });
 
             let orderIdForMsg = 'PENDIENTE';
