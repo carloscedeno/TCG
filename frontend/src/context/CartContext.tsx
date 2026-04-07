@@ -43,7 +43,7 @@ const CART_STORAGE_KEY = 'geekorium_cart_snapshot';
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     console.log('DEBUG: CartProvider Mounting v14 - SPA Redirects Active');
-    const { user, isAdmin } = useAuth();
+    const { user } = useAuth();
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [availableCarts, setAvailableCarts] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -51,7 +51,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [activeCartName, setActiveCartName] = useState<string | null>(null);
 
     const refreshCart = useCallback(async () => {
-        console.log('DEBUG: refreshCart called [v14], user id:', user?.id || 'guest');
+        console.log('DEBUG: refreshCart [v16] - fetching state for:', user?.email || 'guest');
         setIsLoading(true);
         try {
             // 1. Fetch items in the CURRENT ACTIVE cart
@@ -78,16 +78,18 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             }
             
             // 2. Fetch list of available carts (Crucial for Admin Management)
+            // Even if not admin, we try to fetch to support personal multi-cart if enabled later
             if (user) {
                 try {
                     const carts = await listUserCarts();
                     setAvailableCarts(carts);
                     
-                    // Find and set the active cart name
+                    // Find and set the active cart name based on is_active flag from DB
                     const active = carts.find(c => c.is_active);
                     if (active) {
                         setActiveCartName(active.name || 'Carrito Principal');
                     } else if (carts.length > 0) {
+                        // Fallback if none marked active but they exist
                         setActiveCartName(carts[0].name || 'Carrito Principal');
                     } else {
                         setActiveCartName(null);
@@ -117,27 +119,25 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     // Ignore parsing errors
                 }
             }
-
-            // Save snapshot
-            localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(fetchedItems));
-            setCartItems(Array.isArray(fetchedItems) ? fetchedItems : []);
         } catch (err) {
-            console.error('CartContext: failed to load cart', err);
+            console.error('CartContext: failed to load cart state', err);
         } finally {
             setIsLoading(false);
         }
-    }, [user, isAdmin]);
+    }, [user]);
 
     // Load on mount and subscribe to cart-updated events
     useEffect(() => {
-        // Force refresh on mount regardless of 'user' or 'isAdmin' state to bypass initial hydration lag
         refreshCart();
         
-        const handler = () => refreshCart();
+        const handler = () => {
+            console.log('DEBUG: cart-updated event detected - refreshing...');
+            refreshCart();
+        };
         window.addEventListener('cart-updated', handler);
         
-        // Polling as a last resort for production visibility issues
-        const interval = setInterval(handler, 10000); 
+        // Polling as a last resort (once every 30s in v16, less aggressive)
+        const interval = setInterval(handler, 30000); 
         
         return () => {
             window.removeEventListener('cart-updated', handler);
