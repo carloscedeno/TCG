@@ -64,6 +64,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 const active = carts.find(c => c.is_active);
                 if (active) {
                     setActiveCartName(active.name || 'Carrito Principal');
+                } else if (carts.length > 0) {
+                    // Fallback to the first one if none is active (failsafe)
+                    setActiveCartName(carts[0].name || 'Carrito Principal');
                 } else {
                     setActiveCartName(null);
                 }
@@ -140,8 +143,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         try {
             await createNamedCart(name);
             await refreshCart();
-        } catch (err) {
+        } catch (err: any) {
             console.error('Failed to create cart:', err);
+            // Alert user of permission issues
+            if (err.message?.includes('admin')) {
+                alert('Error: Solo los administradores pueden realizar esta acción.');
+            }
         } finally {
             setIsLoading(false);
         }
