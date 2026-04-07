@@ -4,7 +4,6 @@ import { useAuth } from '../../context/AuthContext';
 import { Users, ChevronRight, ShoppingCart, UserPlus, RefreshCw } from 'lucide-react';
 
 export const CartManager: React.FC = () => {
-    const { isAdmin } = useAuth();
     const { availableCarts, switchCart, createCart, isLoading, refreshCart } = useCart();
     const [isCreating, setIsCreating] = useState(false);
     const [newCartName, setNewCartName] = useState('');
@@ -30,9 +29,9 @@ export const CartManager: React.FC = () => {
                     </div>
                     <div>
                         <h3 className="text-xl font-bold text-white tracking-tight">Gestión de Clientes</h3>
-                        <p className="text-[10px] text-slate-400 font-medium uppercase tracking-widest bg-slate-900 bg-opacity-50 px-2 py-0.5 rounded mt-1">
-                            Terminal v13 • DEBUG: {availableCarts.length} CARROS ({isAdmin ? 'ADMIN' : 'USER'})
-                        </p>
+                        <span className="text-[10px] text-slate-400 font-medium uppercase tracking-widest bg-slate-900 bg-opacity-50 px-2 py-0.5 rounded mt-1">
+                            Terminal v15 • DEBUG: {availableCarts.length} CARROS (NUCLEAR BYPASS)
+                        </span>
                     </div>
                 </div>
                 
