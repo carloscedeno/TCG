@@ -183,6 +183,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             isLoading,
             activeCartName
         }}>
+            {console.log('DEBUG: Cart Context Initialized v10 - Bypass Active')}
             {children}
         </CartContext.Provider>
     );
