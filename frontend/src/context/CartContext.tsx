@@ -57,8 +57,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [activeCartName, setActiveCartName] = useState<string | null>(null);
     const [currentIsPos, setCurrentIsPos] = useState<boolean>(false);
 
-    const refreshCart = useCallback(async (forcedIsPos?: boolean) => {
-        console.log(`DEBUG: refreshCart [v24] - fetching state for:`, user?.email || 'guest');
+    const refreshCart = useCallback(async (_forcedIsPos?: boolean) => {
+        console.log(`DEBUG: refreshCart [v25] - fetching state for:`, user?.email || 'guest');
         setIsLoading(true);
         try {
             // 1. Fetch items in the CURRENT ACTIVE cart
@@ -88,7 +88,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             // Even if not admin, we try to fetch to support personal multi-cart if enabled later
             if (user) {
                 try {
-                    const carts = await listUserCarts(isPos);
+                    const carts = await listUserCarts(true); // Fetch all POS-aware carts
                     setAvailableCarts(carts);
                     
                     // Find and set the active cart name based on is_active flag from DB
@@ -141,8 +141,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // Initial load as regular cart - only on mount
         refreshCart(false);
         
-        const handler = (e: any) => {
-            console.log(`DEBUG: cart-updated event detected [v24] - refreshing...`);
+        const handler = () => {
+            console.log(`DEBUG: cart-updated event detected [v25] - refreshing...`);
             refreshCart();
         };
         window.addEventListener('cart-updated', handler as any);

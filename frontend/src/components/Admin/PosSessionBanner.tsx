@@ -13,15 +13,16 @@ export const PosSessionBanner: React.FC = () => {
     if (!isAdmin || !currentIsPos || !activeCartName) return null;
 
     return (
-        <div className="sticky top-0 z-[60] bg-geeko-cyan text-black px-4 py-2 shadow-[0_4px_20px_rgba(31,235,219,0.3)] animate-in slide-in-from-top duration-500">
+        <div className="relative z-[9999] bg-geeko-cyan text-black px-4 py-2 shadow-[0_4px_20px_rgba(31,235,219,0.3)] animate-in slide-in-from-top duration-500 border-b border-black/10">
             <div className="max-w-[1600px] mx-auto flex items-center justify-between">
                 <div className="flex items-center gap-3">
                     <div className="bg-black/10 p-1.5 rounded-lg">
                         <ShoppingBag size={18} />
                     </div>
                     <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
-                        <span className="text-[10px] font-black uppercase tracking-wider opacity-60">Sesión POS Activa:</span>
+                        <span className="text-[10px] font-black uppercase tracking-wider opacity-60">Gestionando:</span>
                         <span className="text-sm font-black uppercase tracking-tight">{activeCartName}</span>
+                        <span className="text-[8px] opacity-30 font-mono ml-2">v25</span>
                     </div>
                 </div>
 
