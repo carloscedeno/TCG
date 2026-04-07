@@ -8,12 +8,15 @@ import {
     Upload,
     Home,
     ChevronDown,
-    Package
+    Package,
+    Users
 } from 'lucide-react';
 import { QuickStockPanel } from './QuickStockPanel';
+import { useCart } from '../../context/CartContext';
 
 export const UserMenu: React.FC = () => {
     const { user, isAdmin, signOut } = useAuth();
+    const { activeCartName } = useCart();
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
@@ -46,6 +49,7 @@ export const UserMenu: React.FC = () => {
             show: !!user
         },
         { icon: Upload, label: 'Importar Colección', path: '/import', show: !!user },
+        { icon: Users, label: 'Atención a Clientes', path: '/admin/customers', show: isAdmin },
         { icon: Shield, label: 'Admin Dashboard', path: '/admin', show: isAdmin },
     ];
 
@@ -73,8 +77,16 @@ export const UserMenu: React.FC = () => {
                         {userEmail.split('@')[0]}
                     </div>
                     {isAdmin && (
-                        <div className="text-[10px] font-black uppercase tracking-wider text-geeko-gold">
-                            Admin
+                        <div className="flex flex-col">
+                            <div className="text-[10px] font-black uppercase tracking-wider text-geeko-gold">
+                                Admin
+                            </div>
+                            {activeCartName && (
+                                <div className="text-[9px] font-bold text-emerald-400 mt-0.5 animate-pulse flex items-center gap-1">
+                                    <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_5px_rgba(52,211,153,0.5)]"></div>
+                                    {activeCartName}
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>
@@ -105,8 +117,16 @@ export const UserMenu: React.FC = () => {
                                     {userEmail}
                                 </div>
                                 {isAdmin && (
-                                    <div className="text-[10px] font-black uppercase tracking-wider text-geeko-gold mt-1">
-                                        ⭐ Administrator
+                                    <div className="flex flex-col mt-1">
+                                        <div className="text-[10px] font-black uppercase tracking-wider text-geeko-gold">
+                                            ⭐ Administrator
+                                        </div>
+                                        {activeCartName && (
+                                            <div className="text-[9px] font-bold text-emerald-400 mt-1 flex items-center gap-1.5 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 w-fit">
+                                                <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
+                                                Atendiendo a: {activeCartName}
+                                            </div>
+                                        )}
                                     </div>
                                 )}
                             </div>

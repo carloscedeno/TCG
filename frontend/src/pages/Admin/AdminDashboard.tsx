@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Play, Settings, Users, Database, Shield, AlertCircle, Package } from 'lucide-react';
-import { CartManager } from '../../components/Admin/CartManager';
+import { Play, Settings, Users, Database, Shield, AlertCircle, Package, ExternalLink } from 'lucide-react';
 
 import { supabase } from '../../utils/supabaseClient';
 
@@ -228,7 +227,35 @@ export const AdminDashboard = () => {
                     <StatCard title="Actualizaciones de Precios" value={stats.total_updates} change="Operaciones" icon={<Settings className="text-emerald-400" />} />
                 </div>
 
-                <CartManager />
+                <div className="mb-12">
+                    <Link to="/admin/customers" className="group block relative overflow-hidden rounded-[2.5rem] bg-gradient-to-r from-emerald-900/40 via-slate-900 to-slate-900 border border-emerald-500/20 p-10 hover:border-emerald-500/50 transition-all shadow-2xl">
+                        <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-[100px] group-hover:bg-emerald-500/20 transition-all" />
+                        <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+                            <div className="flex-1 text-center md:text-left">
+                                <div className="flex items-center justify-center md:justify-start gap-3 mb-4">
+                                    <div className="w-12 h-12 bg-emerald-500/20 rounded-2xl flex items-center justify-center border border-emerald-500/30">
+                                        <Users className="text-emerald-400" size={24} />
+                                    </div>
+                                    <span className="text-emerald-400 font-black text-xs tracking-[0.3em] uppercase">Módulo de Punto de Venta</span>
+                                </div>
+                                <h2 className="text-4xl font-black italic text-white tracking-tighter mb-4 leading-none">PORTAL DE <span className="text-emerald-400">ATENCIÓN A CLIENTES</span></h2>
+                                <p className="text-slate-400 text-sm font-bold uppercase tracking-widest max-w-xl">Gestiona carritos múltiples, atiende clientes en tienda y procesa ventas rápidas de forma centralizada.</p>
+                            </div>
+                            <div className="flex items-center gap-6">
+                                <div className="hidden lg:flex flex-col items-end">
+                                    <span className="text-[10px] text-slate-500 font-black uppercase tracking-widest mb-1">Estado del Sistema</span>
+                                    <div className="flex items-center gap-2 px-3 py-1 bg-emerald-500/10 rounded-full border border-emerald-500/20">
+                                        <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                                        <span className="text-[10px] font-black text-emerald-400 uppercase tracking-tighter">Terminal Operativa</span>
+                                    </div>
+                                </div>
+                                <div className="w-20 h-20 bg-emerald-500 rounded-[2rem] flex items-center justify-center shadow-[0_0_40px_rgba(16,185,129,0.3)] group-hover:scale-110 transition-transform group-hover:rotate-6">
+                                    <ExternalLink size={32} className="text-black" />
+                                </div>
+                            </div>
+                        </div>
+                    </Link>
+                </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
                     <Link to="/admin/inventory" className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-900/50 to-slate-900 border border-white/10 p-8 hover:border-purple-500/50 transition-all">

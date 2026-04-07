@@ -23,6 +23,7 @@ interface CartContextType {
     switchCart: (cartId: string) => Promise<void>;
     createCart: (name: string) => Promise<void>;
     isLoading: boolean;
+    activeCartName: string | null;
 }
 
 const CartContext = createContext<CartContextType>({
@@ -35,6 +36,7 @@ const CartContext = createContext<CartContextType>({
     switchCart: async () => { },
     createCart: async () => { },
     isLoading: false,
+    activeCartName: null,
 });
 
 const CART_STORAGE_KEY = 'geekorium_cart_snapshot';
@@ -45,6 +47,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [availableCarts, setAvailableCarts] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [priceChangeAlert, setPriceChangeAlert] = useState(false);
+    const [activeCartName, setActiveCartName] = useState<string | null>(null);
 
     const refreshCart = useCallback(async () => {
         setIsLoading(true);
@@ -56,7 +59,18 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             if (user && isAdmin) {
                 const carts = await listUserCarts();
                 setAvailableCarts(carts);
+                
+                // Find and set the active cart name
+                const active = carts.find(c => c.is_active);
+                if (active) {
+                    setActiveCartName(active.name || 'Carrito Principal');
+                } else {
+                    setActiveCartName(null);
+                }
+            } else {
+                setActiveCartName(null);
             }
+
             const items: CartItem[] = (data.items || []).map((item: any) => ({
                 id: item.id,
                 product_id: item.product_id,
@@ -143,7 +157,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             refreshCart, 
             switchCart,
             createCart,
-            isLoading 
+            isLoading,
+            activeCartName
         }}>
             {children}
         </CartContext.Provider>

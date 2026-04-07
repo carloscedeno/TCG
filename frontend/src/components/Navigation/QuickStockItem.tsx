@@ -1,7 +1,9 @@
 
 import React, { useState } from 'react';
-import { Save, Check, Loader2 } from 'lucide-react';
+import { Save, Check, Loader2, ShoppingCart } from 'lucide-react';
 import { supabase } from '../../utils/supabaseClient';
+import { addToCart } from '../../utils/api';
+import { useCart } from '../../context/CartContext';
 
 interface QuickStockItemProps {
     item: {
@@ -21,6 +23,8 @@ export const QuickStockItem: React.FC<QuickStockItemProps> = ({ item }) => {
     const [loading, setLoading] = useState(false);
     const [currentPrice, setCurrentPrice] = useState(item.price);
     const [showSuccess, setShowSuccess] = useState(false);
+    const [isAddingToCart, setIsAddingToCart] = useState(false);
+    const { refreshCart } = useCart();
 
     const handleSave = async (e: React.MouseEvent | React.KeyboardEvent) => {
         e.stopPropagation();
@@ -44,6 +48,26 @@ export const QuickStockItem: React.FC<QuickStockItemProps> = ({ item }) => {
             console.error('Error updating price:', err);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleAddToCart = async (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setIsAddingToCart(true);
+        try {
+            // Determine finish from condition (simplification)
+            const finish = item.condition === 'Foil' ? 'foil' : 'nonfoil';
+            const result = await addToCart(item.product_id, 1, finish);
+            if (result && !result.success) {
+                alert(result.message || 'Error al agregar');
+            } else {
+                await refreshCart();
+                // We could show a tiny success animation here too
+            }
+        } catch (err) {
+            console.error('Error adding to cart:', err);
+        } finally {
+            setIsAddingToCart(false);
         }
     };
 
@@ -116,6 +140,26 @@ export const QuickStockItem: React.FC<QuickStockItemProps> = ({ item }) => {
                         )}
                     </button>
                 )}
+            </div>
+
+            {/* Add to Cart Action */}
+            <div className="pl-2 border-l border-white/5">
+                <button
+                    onClick={handleAddToCart}
+                    disabled={isAddingToCart || item.stock <= 0}
+                    className={`p-2 rounded-lg transition-all ${
+                        item.stock > 0 
+                        ? 'bg-geeko-cyan/10 text-geeko-cyan hover:bg-geeko-cyan hover:text-black' 
+                        : 'bg-slate-800 text-slate-600 cursor-not-allowed opacity-50'
+                    }`}
+                    title={item.stock > 0 ? "Añadir al carrito activo" : "Sin stock"}
+                >
+                    {isAddingToCart ? (
+                        <Loader2 size={12} className="animate-spin" />
+                    ) : (
+                        <ShoppingCart size={12} />
+                    )}
+                </button>
             </div>
         </div>
     );
