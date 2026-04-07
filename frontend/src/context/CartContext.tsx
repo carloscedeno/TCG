@@ -114,11 +114,13 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Load on mount and subscribe to cart-updated events
     useEffect(() => {
-        refreshCart();
+        if (user) {
+            refreshCart();
+        }
         const handler = () => refreshCart();
         window.addEventListener('cart-updated', handler);
         return () => window.removeEventListener('cart-updated', handler);
-    }, [refreshCart]);
+    }, [refreshCart, user, isAdmin]); // Added user and isAdmin to ensure it runs when state updates
 
     const cartCount = Array.isArray(cartItems)
         ? cartItems.reduce((acc, item) => acc + (item.quantity || 1), 0)
