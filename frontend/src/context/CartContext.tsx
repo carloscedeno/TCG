@@ -55,8 +55,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             // Fetch items in the CURRENT ACTIVE cart
             const data = await fetchCart();
             
-            // If admin, fetch list of carts too
-            if (user && isAdmin) {
+            // If logged in, fetch list of carts (The RPC handles admin/non-admin logic safely)
+            if (user) {
                 const carts = await listUserCarts();
                 setAvailableCarts(carts);
                 
