@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../utils/supabaseClient';
 import { useAuth } from '../../context/AuthContext';
-import { Package, ChevronDown, X, User, Calendar, AlertCircle } from 'lucide-react';
+import { Package, ChevronDown, X, User, Calendar, AlertCircle, FileDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface OrderItem {
@@ -62,6 +62,99 @@ interface Order {
         country?: string;
         zip_code?: string;
     } | null;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Receipt HTML generator — admin version, pulls data from Order object
+// ─────────────────────────────────────────────────────────────────────────────
+function generateOrderReceiptHTML(order: Order) {
+    const customerName = order.guest_info?.full_name || order.shipping_address?.full_name || 'No proporcionado';
+    const customerPhone = order.guest_info?.phone || order.shipping_address?.phone || 'No proporcionado';
+    const customerEmail = order.guest_info?.email || order.shipping_address?.email || 'N/A';
+    const statusLabel = ORDER_STATUSES[order.status]?.label || order.status;
+    const dateStr = new Date(order.created_at).toLocaleDateString('es-VE', {
+        year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
+    });
+
+    const itemRows = (order.order_items || []).map(item => {
+        const foilBadge = (item.finish === 'foil' || item.finish === 'etched')
+            ? `<span style="background:#7c3aed;color:#fff;font-size:9px;font-weight:900;padding:2px 5px;border-radius:3px;letter-spacing:1px;margin-left:6px;">${item.finish.toUpperCase()}</span>`
+            : '';
+        const demandBadge = item.is_on_demand
+            ? `<span style="background:#d97706;color:#fff;font-size:9px;font-weight:900;padding:2px 5px;border-radius:3px;letter-spacing:1px;margin-left:4px;">ENCARGO</span>`
+            : '';
+        return `<tr>
+          <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:14px;color:#374151;">
+            <span style="font-family:monospace;color:#6b7280;margin-right:8px;">x${item.quantity}</span>
+            ${item.product?.name || 'Artículo'}${foilBadge}${demandBadge}
+          </td>
+          <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;text-align:right;font-family:monospace;font-weight:700;font-size:14px;color:#00AEB4;">
+            $${(item.price_at_purchase * item.quantity).toFixed(2)}
+          </td>
+        </tr>`;
+    }).join('');
+
+    return `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Comprobante #${order.id.slice(0,8)} — Geekorium</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Inter','Helvetica Neue',Arial,sans-serif; background:#f3f4f6; padding:40px 20px; color:#111827; }
+    .page { max-width:600px; margin:0 auto; background:#fff; border-radius:16px; padding:48px 44px; box-shadow:0 4px 32px rgba(0,0,0,0.08); }
+    .header { text-align:center; margin-bottom:28px; }
+    .logo { font-size:26px; font-weight:900; letter-spacing:-1px; color:#111827; }
+    .sub { font-size:12px; color:#9ca3af; letter-spacing:3px; text-transform:uppercase; margin-top:2px; }
+    .bar { width:48px; height:4px; background:#00AEB4; border-radius:2px; margin:10px auto 0; }
+    .order-box { background:#f0fdfd; border:1px solid #99f6e4; border-radius:10px; padding:14px 18px; margin-bottom:24px; display:flex; justify-content:space-between; align-items:center; }
+    .order-box .lbl { font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:2px; color:#0d9488; }
+    .order-box .val { font-family:monospace; font-size:13px; font-weight:700; color:#111827; }
+    .customer { background:#f9fafb; border-radius:10px; padding:16px 20px; margin-bottom:24px; }
+    .section-title { font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:2px; color:#9ca3af; margin-bottom:10px; }
+    .customer p { font-size:14px; line-height:2; color:#374151; }
+    table { width:100%; border-collapse:collapse; }
+    thead th { font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:1.5px; color:#9ca3af; border-bottom:2px solid #e5e7eb; padding:0 0 10px 0; text-align:left; }
+    thead th:last-child { text-align:right; }
+    .total-row td { border-top:2px solid #111827; padding-top:14px; font-size:16px; font-weight:900; color:#111827; }
+    .total-row td:last-child { text-align:right; font-family:monospace; }
+    .footer { text-align:center; margin-top:32px; padding-top:20px; border-top:1px solid #e5e7eb; font-size:12px; color:#9ca3af; line-height:1.9; }
+    .status-pill { display:inline-block; background:#f3f4f6; color:#374151; border:1px solid #d1d5db; border-radius:20px; padding:4px 14px; font-size:11px; font-weight:900; letter-spacing:1px; text-transform:uppercase; margin-top:12px; }
+    @media print { body { background:#fff; padding:0; } .page { box-shadow:none; border-radius:0; padding:32px; } }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="header">
+      <div class="logo">Geekorium Shop</div>
+      <div class="sub">Comprobante de Orden — Admin</div>
+      <div class="bar"></div>
+    </div>
+    <div class="order-box">
+      <span class="lbl">Orden ID</span>
+      <span class="val">#${order.id.slice(0,8)} <span style="color:#9ca3af;font-size:11px;">(${order.id})</span></span>
+    </div>
+    <p class="section-title">Datos del Cliente</p>
+    <div class="customer">
+      <p><strong style="color:#111827;">Nombre:</strong> ${customerName}</p>
+      <p><strong style="color:#111827;">WhatsApp:</strong> ${customerPhone}</p>
+      <p><strong style="color:#111827;">Correo:</strong> ${customerEmail}</p>
+    </div>
+    <p class="section-title">Detalle del Pedido</p>
+    <table>
+      <thead><tr><th>Artículo</th><th style="text-align:right">Subtotal</th></tr></thead>
+      <tbody>${itemRows}</tbody>
+      <tbody><tr class="total-row"><td>Total</td><td>$${Number(order.total_amount).toFixed(2)}</td></tr></tbody>
+    </table>
+    <div class="footer">
+      <p>📅 ${dateStr}</p>
+      <p>📧 info@geekorium.shop</p>
+      <div class="status-pill">${statusLabel}</div>
+    </div>
+  </div>
+  <script>window.addEventListener('load',()=>setTimeout(()=>window.print(),400));</script>
+</body></html>`;
 }
 
 const OrdersPage = () => {
@@ -404,6 +497,16 @@ const OrdersPage = () => {
                                                 <h4 className="text-sm font-black uppercase tracking-widest text-neutral-400 flex items-center gap-2">
                                                     <Package size={14} /> Contenido de la Orden
                                                 </h4>
+                                                <button
+                                                    onClick={() => {
+                                                        const html = generateOrderReceiptHTML(order);
+                                                        const win = window.open('', '_blank');
+                                                        if (win) { win.document.write(html); win.document.close(); }
+                                                    }}
+                                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#00AEB4]/10 border border-[#00AEB4]/30 text-[#00AEB4] hover:bg-[#00AEB4]/20 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all"
+                                                >
+                                                    <FileDown size={12} /> Comprobante PDF
+                                                </button>
                                             </div>
                                             {order.order_items && order.order_items.length > 0 ? (
                                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
