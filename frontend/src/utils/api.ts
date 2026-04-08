@@ -607,9 +607,12 @@ export const fetchCart = async (): Promise<any> => {
       }
 
       // Map RPC result to Frontend Cart Item format
-      const items = (data || []).map((row: any) => ({
+      if (!data || data.length === 0) return { items: [], id: null, name: 'Carrito Principal', is_pos: false };
+
+      const cartData = data[0];
+      const items = (cartData.items || []).map((row: any) => ({
         id: row.cart_item_id,
-        product_id: row.product_id, // Use actual products.id
+        product_id: row.product_id,
         printing_id: row.printing_id,
         quantity: row.quantity,
         products: {
@@ -619,10 +622,16 @@ export const fetchCart = async (): Promise<any> => {
           image_url: row.image_url,
           set_code: row.set_code,
           stock: row.stock || 0,
-          finish: row.finish || 'nonfoil'  // pass finish so Cart can show FOIL/POR ENCARGO badges
+          finish: row.finish || 'nonfoil'
         }
       }));
-      return { items };
+      
+      return { 
+        items, 
+        id: cartData.cart_id, 
+        name: cartData.cart_name, 
+        is_pos: cartData.is_pos 
+      };
     }
 
     // Guest Cart Logic
@@ -640,7 +649,7 @@ export const fetchCart = async (): Promise<any> => {
           products: {
             id: details.product_id || details.card_id,
             name: details.name,
-            price: details.price || details.valuation?.market_price || 0,
+            price: Number(details.price || details.market_price || details.valuation?.market_price || 0),
             image_url: details.image_url,
             set_code: details.set_code,
             stock: details.total_stock || 0
@@ -816,8 +825,8 @@ export const updateCartItemQuantity = async (cartItemId: string, quantity: numbe
   try {
     const session = await supabase.auth.getSession();
 
-    // If logged in, use RPC
-    if (session.data.session?.user) {
+    // If logged in AND NOT a guest item, use RPC
+    if (session.data.session?.user && !cartItemId.startsWith('guest-')) {
       const { data, error } = await supabase.rpc('update_cart_item_quantity', {
         p_cart_item_id: cartItemId,
         p_new_quantity: quantity
@@ -856,8 +865,8 @@ export const removeFromCart = async (cartItemId: string): Promise<any> => {
   try {
     const session = await supabase.auth.getSession();
 
-    // If logged in, use RPC
-    if (session.data.session?.user) {
+    // If logged in AND NOT a guest item, use RPC
+    if (session.data.session?.user && !cartItemId.startsWith('guest-')) {
       const { data, error } = await supabase.rpc('remove_from_cart', {
         p_cart_item_id: cartItemId
       });

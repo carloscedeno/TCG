@@ -1,7 +1,7 @@
 import React from 'react';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
-import { ShoppingBag, ArrowLeft, CheckCircle } from 'lucide-react';
+import { ShoppingBag, CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export const PosSessionBanner: React.FC = () => {
@@ -31,8 +31,8 @@ export const PosSessionBanner: React.FC = () => {
                         onClick={() => navigate('/admin/customers')}
                         className="flex items-center gap-1.5 px-3 py-1.5 bg-black/5 hover:bg-black/10 rounded-full text-[10px] font-black uppercase tracking-widest transition-all"
                     >
-                        <ArrowLeft size={14} />
-                        <span className="hidden sm:inline">Terminal</span>
+                        <ShoppingBag size={14} />
+                        <span className="hidden sm:inline">Clientes</span>
                     </button>
                     <button 
                         onClick={async () => {

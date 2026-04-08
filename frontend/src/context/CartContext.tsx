@@ -54,8 +54,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [availableCarts, setAvailableCarts] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [priceChangeAlert, setPriceChangeAlert] = useState(false);
-    const [activeCartName, setActiveCartName] = useState<string | null>(null);
-    const [currentIsPos, setCurrentIsPos] = useState<boolean>(false);
+    const [activeCartName, setActiveCartName] = useState<string | null>(() => {
+        return localStorage.getItem('pos_active_name');
+    });
+    const [currentIsPos, setCurrentIsPos] = useState<boolean>(() => {
+        return localStorage.getItem('pos_active_is_pos') === 'true';
+    });
 
     const refreshCart = useCallback(async (_forcedIsPos?: boolean) => {
         console.log(`DEBUG: refreshCart [v25] - fetching state for:`, user?.email || 'guest');
@@ -63,20 +67,36 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         try {
             // 1. Fetch items in the CURRENT ACTIVE cart
             let fetchedItems: CartItem[] = [];
+            let cartResponse: any = null;
             try {
-                const data = await fetchCart();
-                fetchedItems = (data.items || []).map((item: any) => ({
-                    id: item.id,
-                    product_id: item.product_id,
-                    quantity: item.quantity || 1,
-                    price: Number(item.products?.price || 0),
-                    name: item.products?.name,
-                    image_url: item.products?.image_url,
-                    is_foil: item.products?.is_foil,
-                    set_code: item.products?.set_code,
-                }));
+                cartResponse = await fetchCart();
+                const rawItems = cartResponse.items || [];
+                
+                // CRITICAL: If logged in, prioritize DB items and IGNORE local guest items 
+                // to prevent $0.00 ghosting/contamination.
+                fetchedItems = rawItems
+                    .filter((item: any) => !user || !String(item.id).startsWith('guest-'))
+                    .map((item: any) => ({
+                        id: item.id,
+                        product_id: item.product_id,
+                        quantity: item.quantity || 1,
+                        price: Number(item.products?.price || 0),
+                        name: item.products?.name,
+                        image_url: item.products?.image_url,
+                        is_foil: item.products?.is_foil,
+                        set_code: item.products?.set_code,
+                    }));
+                
                 setCartItems(Array.isArray(fetchedItems) ? fetchedItems : []);
                 
+                // Update Session state from unified RPC result
+                if (user && cartResponse.id) {
+                    setActiveCartName(cartResponse.name || 'Carrito Principal');
+                    setCurrentIsPos(cartResponse.is_pos || false);
+                    localStorage.setItem('pos_active_name', cartResponse.name || '');
+                    localStorage.setItem('pos_active_is_pos', String(cartResponse.is_pos || false));
+                }
+
                 // Save snapshot for price change detection
                 localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(fetchedItems));
             } catch (err) {
@@ -85,24 +105,16 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             }
             
             // 2. Fetch list of available carts (Crucial for Admin Management)
-            // Even if not admin, we try to fetch to support personal multi-cart if enabled later
             if (user) {
                 try {
                     const carts = await listUserCarts(true); // Fetch all POS-aware carts
                     setAvailableCarts(carts);
                     
-                    // Find and set the active cart name based on is_active flag from DB
+                    // If metadata wasn't set by fetchCart result alone (fallback):
                     const active = carts.find(c => c.is_active);
-                    if (active) {
+                    if (active && (!cartResponse?.id || active.id === cartResponse.id)) {
                         setActiveCartName(active.name || 'Carrito Principal');
                         setCurrentIsPos(active.is_pos || false);
-                    } else if (carts.length > 0) {
-                        // Fallback if none marked active but they exist
-                        setActiveCartName(carts[0].name || 'Carrito Principal');
-                        setCurrentIsPos(carts[0].is_pos || false);
-                    } else {
-                        setActiveCartName(null);
-                        setCurrentIsPos(false);
                     }
                 } catch (err) {
                     console.error('CartContext: available carts load failed', err);
@@ -110,7 +122,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 }
             } else {
                 setActiveCartName(null);
+                setCurrentIsPos(false);
                 setAvailableCarts([]);
+                localStorage.removeItem('pos_active_name');
+                localStorage.removeItem('pos_active_is_pos');
             }
 
             // Compare against localStorage snapshot to detect price changes
@@ -136,11 +151,17 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     }, [user]);
 
-    // Load once on mount and subscribe to cart-updated events
+    // Load whenever user or auth state changes
     useEffect(() => {
-        // Initial load as regular cart - only on mount
-        refreshCart(false);
+        // Only run if we actually have context or after initial mount delay
+        const timer = setTimeout(() => {
+            refreshCart();
+        }, 100);
         
+        return () => clearTimeout(timer);
+    }, [user, refreshCart]);
+
+    useEffect(() => {
         const handler = () => {
             console.log(`DEBUG: cart-updated event detected [v25] - refreshing...`);
             refreshCart();
@@ -150,7 +171,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return () => {
             window.removeEventListener('cart-updated', handler as any);
         };
-    }, []); // Empty dependency array to prevent loops and only run on mount/unmount
+    }, [refreshCart]);
     const cartCount = Array.isArray(cartItems)
         ? cartItems.reduce((acc, item) => acc + (item.quantity || 1), 0)
         : 0;

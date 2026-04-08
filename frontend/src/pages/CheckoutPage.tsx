@@ -123,19 +123,19 @@ export const CheckoutPage = () => {
             // WhatsApp Redirection
             const WA_NUMBER = '584242507802';
             const items = Array.isArray(cartItems) ? cartItems : [];
-            const normalCount = items.reduce((acc, item) => {
-                const isFoil = item.products?.finish === 'foil' || item.products?.is_foil;
-                return acc + (isFoil ? 0 : (item.quantity || 1));
-            }, 0);
-            const foilCount = items.reduce((acc, item) => {
-                const isFoil = item.products?.finish === 'foil' || item.products?.is_foil;
-                return acc + (isFoil ? (item.quantity || 1) : 0);
-            }, 0);
 
-            const typeLines = [
-                normalCount > 0 ? `- Normal: ${normalCount} unidad(es)` : '',
-                foilCount > 0 ? `- Foil: ${foilCount} unidad(es)` : '',
-            ].filter(Boolean).join('\n');
+            // Build per-card detail lines (max 40 items per AGENTS.md lesson #84)
+            const itemLines = items.slice(0, 40).map((item) => {
+                const name = item.products?.name || 'Carta';
+                const qty = item.quantity || 1;
+                const unitPrice = (item.products?.price || 0);
+                const lineTotal = (unitPrice * qty).toFixed(2);
+                const finish = item.products?.finish || (item.products?.is_foil ? 'foil' : 'nonfoil');
+                const finishLabel = (finish === 'foil' || finish === 'etched') ? ' [FOIL]' : '';
+                const setCode = item.products?.set_code ? ` [${item.products.set_code.toUpperCase()}]` : '';
+                return `• ${qty}x ${name}${setCode}${finishLabel} - $${lineTotal}`;
+            }).join('\n');
+            const overflowNote = items.length > 40 ? `\n_(+${items.length - 40} ítems más — ver correo)_` : '';
 
             const waMessage = [
                 `¡Hola Geeko-Asesor! Quiero concretar esta orden:`,
@@ -144,8 +144,8 @@ export const CheckoutPage = () => {
                 `*Correo:* ${form.email}`,
                 `*Total:* $${total.toFixed(2)}`,
                 ``,
-                `*Detalle de cartas:*`,
-                typeLines,
+                `*Detalle (${items.length} ítem${items.length !== 1 ? 's' : ''}):*`,
+                itemLines + overflowNote,
                 ``,
                 `*Orden ID:* ${orderIdForMsg}`,
             ].join('\n');
@@ -169,7 +169,16 @@ export const CheckoutPage = () => {
             }
 
             navigate('/checkout/success', {
-                state: { orderId: orderIdForMsg, total, items: simplifiedItems }
+                state: {
+                    orderId: orderIdForMsg,
+                    total,
+                    items: simplifiedItems,
+                    customerInfo: {
+                        full_name: form.full_name,
+                        whatsapp: form.whatsapp,
+                        email: form.email,
+                    }
+                }
             });
 
         } catch (error: any) {
