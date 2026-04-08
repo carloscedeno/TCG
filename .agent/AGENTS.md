@@ -98,6 +98,8 @@ Artefactos del Compound step:
 - ✅ **Visibilidad Condicional de Carrito**: El botón "Añadir al carrito" ahora está oculto por defecto en la vista general (grid/list) y solo es visible en el modal de detalles, mejorando la estética de navegación masiva.
 
 - ✅ **Extrema Performance (Denormalización)**: Eliminación de timeouts mediante denormalización de metadatos (`colors`, `type`, `release_date`) en tabla `products`. RPC `get_products_filtered` optimizado para single-table query.
+- ✅ **Comprobante PDF Real**: `CheckoutSuccessPage` genera un HTML de recibo completo (Inter font, tabla itemizada, datos del cliente, ID de orden, total, status) en una nueva pestaña que auto-dispara el diálogo de impresión. Sin librerías externas.
+- ✅ **WhatsApp Itemizado (Restaurado)**: El mensaje de WhatsApp incluye línea por carta (`• Qty x Nombre [SET] [FINISH] - $Total`) con límite de 40 ítems y overflow note. Los datos del cliente ahora se pasan vía `navigate()` state.
 - ✅ **Frontend Request Cancellation**: Implementación de `AbortController` en `Home.tsx` para cancelar peticiones de red obsoletas durante el filtrado.
 
 - ✅ **Detalles del Comprador en Admin**: El panel de órdenes ahora muestra Nombre, Teléfono, Email y Dirección completa (priorizando datos de invitado y envío).
@@ -122,6 +124,7 @@ Artefactos del Compound step:
 3. **Segregación de Bases de Datos**: Uso obligatorio de proyectos Supabase independientes para `dev` y `main`, gestionados vía Cloudflare Environment Overrides.
 4. **Prioridad de Datos del Comprador**: No intentar joins con `profiles` para obtener el email; usar siempre `guest_info` o `shipping_address` en `orders`.
 5. **Cero Tolerancia a Precio 0**: Todo producto activo en inventario debe tener un precio mayor a 0 o fallback manual al mercado.
+6. **WhatsApp = Canal Operacional Primario**: El mensaje de WhatsApp en el checkout SIEMPRE debe incluir el detalle por carta (nombre, cantidad, set, finish, subtotal). Nunca simplificar a conteos agregados. (Lección #86)
 
 ---
 

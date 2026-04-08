@@ -699,3 +699,15 @@ useEffect(() => {
 - **Pattern**: Hiding "Login" buttons from the public view during BETA to prioritize conversion and reduce unauthorized support requests.
 - **Implementation**: Providing a "Secret Link" (`/geeko-login`) for the internal team instead of a UI-hidden button.
 - **UX**: Updating the restricted route handler (`AdminRoute`) to provide a helpful "Restricted Access" screen with a link to the secret login, improving internal use while keeping public users away.
+
+### 86. WhatsApp Itemized Order Detail — Regression Risk (April 2026)
+- **Problema**: After a UX simplification session (April 6), the WhatsApp redirect message was reduced to aggregate counts ("Normal: 5, Foil: 2"), losing the per-card breakdown. This blocked operational review of orders.
+- **Causa Raíz**: Frictionless checkout improvements over-simplified the WA message to reduce message length, inadvertently removing data needed by the store team.
+- **Solución**: Restore the itemized format: `• Qty x Name [SET] [FINISH] - $Total`. Cap at 40 items and append an overflow note directing to email for full detail.
+- **Regla Derivada**: The WhatsApp message is the PRIMARY operational channel for the Geekorium team. It MUST always include a per-card breakdown. Simplification of the checkout form must NEVER simplify the order detail sent to the store.
+
+### 87. PDF Receipt via New Window (No Library) (April 2026)
+- **Problema**: `window.print()` called on the main checkout page produced an unstyled browser print of the entire app UI, not a real comprobante.
+- **Solución**: `generateReceiptHTML()` in `CheckoutSuccessPage.tsx` produces a standalone, self-contained HTML document (with Google Fonts, full CSS branding, item table, and status badge) opened via `window.open()`. The receipt page auto-fires `window.print()` on load.
+- **Patrón**: Pass all data needed for the receipt (`customerInfo`, `items`, `total`, `orderId`) through React Router's `navigate()` state. No DB round-trip needed on the success page.
+- **Regla Derivada**: For lightweight, one-time document generation in a React SPA, prefer the new-window HTML approach over PDF libraries (jsPDF, react-pdf). It requires zero npm dependencies and produces a print-ready, fully branded document.

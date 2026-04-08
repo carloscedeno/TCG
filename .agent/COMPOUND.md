@@ -63,3 +63,43 @@ Remediate the functional failure of the administrative multi-cart manager. Resto
 ---
 
 *Compounded for Geekorium TCG Ecosystem.*
+
+# 🧠 COMPOUND: Order Receipt & WhatsApp Detail Fix
+
+**Date**: 2026-04-08
+
+## Objective
+
+Respond to operational feedback: orders were confirmed via WhatsApp with only aggregate card counts (e.g., "Normal: 5, Foil: 2") instead of a full itemized breakdown. Additionally, the "Download PDF" button was a bare `window.print()` with no styling — not usable as a real comprobante.
+
+## Knowledge Codification
+
+### 1. WhatsApp Message Must Be Itemized
+
+- **Bug**: The `CheckoutPage.tsx` WA message was simplified to type-counts during the April 6 frictionless checkout session, regressing from the behavior documented in `AGENTS.md` (Lesson #84).
+- **Fix**: Replaced aggregate count logic with a `items.slice(0, 40).map(...)` that produces lines like `• 2x Black Lotus [LEA] [FOIL] - $35.00`.
+- **Overflow**: Orders > 40 items append `_(+N ítems más — ver correo)_` to keep the WA message manageable while directing to email for full detail.
+
+### 2. Real PDF Receipt via New Window
+
+- **Pattern**: No external library needed. `generateReceiptHTML()` builds a self-contained HTML page (Inter font via Google Fonts, full CSS, branding) and opens it in a new tab via `window.open()`. The page auto-fires `window.print()` after load.
+- **Content**: Order ID, customer name/phone/email, itemized card table with finish badges, total, date, and status tag.
+- **Location**: Receipt button lives in `CheckoutSuccessPage` — the correct place, after the order is confirmed.
+
+### 3. Pass customerInfo Through Navigate State
+
+- **Pattern**: `CheckoutPage` now passes `{ orderId, total, items, customerInfo: { full_name, whatsapp, email } }` in the `navigate('/checkout/success')` call so the success page can include buyer data in the PDF without making a DB round-trip.
+
+## Files Changed
+
+- `frontend/src/pages/CheckoutPage.tsx` — WA message logic, navigate state
+- `frontend/src/pages/CheckoutSuccessPage.tsx` — full rewrite with `generateReceiptHTML` and `handleDownloadPDF`
+
+## Technical Validation
+
+- **Frontend Build**: ✅ Exit code 0 (`tsc -b && vite build && postbuild`)
+- **Git Push**: ✅ Pushed to `main` (commit e965b97)
+
+---
+
+*Compounded for Geekorium TCG Ecosystem.*
