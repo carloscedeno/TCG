@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
 Carga todos los sets de Magic: The Gathering desde Scryfall y los inserta en la tabla 'sets' de Supabase.
-Optimizado para procesamiento por lotes (batch).
+Optimizado para procesamiento por lotes (batch) con upsert para evitar 502s por requests individuales.
 """
 import os
+import time
 import requests
 from datetime import datetime, timezone
 from supabase import create_client, Client
@@ -23,6 +24,7 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 SCRYFALL_SETS_URL = "https://api.scryfall.com/sets"
 
+
 def map_scryfall_set(s):
     return {
         'game_id': GAME_ID,
@@ -35,6 +37,27 @@ def map_scryfall_set(s):
         'printed_total': s.get('printed_size'),
         'updated_at': datetime.now(timezone.utc).isoformat(),
     }
+
+
+def upsert_batch(batch: list, batch_num: int, total_batches: int, max_retries: int = 3):
+    """Upsert a batch with exponential backoff retry on transient errors (502, etc.)."""
+    for attempt in range(max_retries):
+        try:
+            supabase.table('sets').upsert(
+                batch,
+                on_conflict='set_code,game_id'
+            ).execute()
+            print(f"  ✅ Lote {batch_num}/{total_batches} ({len(batch)} sets)")
+            return
+        except Exception as e:
+            if attempt < max_retries - 1:
+                wait = 2 ** attempt  # 1s, 2s, 4s
+                print(f"  ⚠️ Lote {batch_num} falló (intento {attempt + 1}), reintentando en {wait}s... [{e}]")
+                time.sleep(wait)
+            else:
+                print(f"  ❌ Lote {batch_num} falló definitivamente tras {max_retries} intentos.")
+                raise
+
 
 def main():
     print("🚀 Iniciando sincronización de sets desde Scryfall...")
@@ -51,46 +74,26 @@ def main():
     # Mapear datos
     mapped_sets = [map_scryfall_set(s) for s in mtg_sets]
 
-    # 1. Obtener sets existentes en la DB para comparar
-    print("📋 Obteniendo sets actuales de la base de datos...")
-    existing_sets_resp = supabase.table('sets').select('set_code').eq('game_id', GAME_ID).execute()
-    existing_codes = {s['set_code'] for s in existing_sets_resp.data}
-    print(f"Sets actuales en la DB: {len(existing_codes)}")
+    # Upsert en lotes (INSERT + UPDATE via on_conflict)
+    # La estrategia anterior hacía 727 requests individuales que saturaban la API y provocaban 502s.
+    # Ahora agrupamos en lotes de 100 + retry con backoff exponencial.
+    batch_size = 100
+    total_batches = (len(mapped_sets) - 1) // batch_size + 1
+    print(f"📦 Haciendo upsert de {len(mapped_sets)} sets en {total_batches} lotes de {batch_size}...")
 
-    to_insert = []
-    to_update = []
+    for i in range(0, len(mapped_sets), batch_size):
+        batch = mapped_sets[i:i + batch_size]
+        batch_num = i // batch_size + 1
+        upsert_batch(batch, batch_num, total_batches)
 
-    for mapped in mapped_sets:
-        if mapped['set_code'] in existing_codes:
-            to_update.append(mapped)
-        else:
-            to_insert.append(mapped)
+    print("✨ Sincronización completada.")
 
-    print(f"➕ Sets nuevos a insertar: {len(to_insert)}")
-    print(f"🔄 Sets existentes a actualizar: {len(to_update)}")
-
-    # Insertar en lotes
-    if to_insert:
-        batch_size = 100
-        for i in range(0, len(to_insert), batch_size):
-            batch = to_insert[i:i + batch_size]
-            supabase.table('sets').insert(batch).execute()
-            print(f"  ✅ Insertado lote {i//batch_size + 1}/{(len(to_insert)-1)//batch_size + 1}")
-
-    # Actualizar individualmente (o en lotes si tuviéramos un ID, pero por ahora individualmente es más seguro)
-    if to_update:
-        print("🛠️ Actualizando sets existentes...")
-        for s in to_update:
-            # Para mayor velocidad en el log, no imprimimos cada uno
-            supabase.table('sets').update(s).eq('set_code', s['set_code']).eq('game_id', GAME_ID).execute()
-    
-    print(f"✨ Sincronización completada.")
-    
     # Verificar específicamente si ECL está presente
     if 'ecl' in [s['set_code'] for s in mapped_sets]:
-        print(f"🔍 Confirmado: Set 'Lorwyn Eclipsed' (ECL) encontrado.")
+        print("🔍 Confirmado: Set 'Lorwyn Eclipsed' (ECL) encontrado.")
     else:
-        print(f"⚠️ Alerta: Set 'ECL' no encontrado en Scryfall.")
+        print("⚠️ Alerta: Set 'ECL' no encontrado en Scryfall.")
+
 
 if __name__ == "__main__":
     main()
