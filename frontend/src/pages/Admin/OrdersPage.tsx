@@ -254,7 +254,11 @@ const OrdersPage = () => {
     };
 
     const handleRemoveItem = async (orderId: string, itemId: string) => {
-        if (!confirm('¿Estás seguro de que deseas eliminar este artículo de la orden? El stock será restaurado si la orden está activa.')) return;
+        console.log('handleRemoveItem called for item:', itemId, 'in order:', orderId);
+        if (!window.confirm('¿Estás seguro de que deseas eliminar este artículo de la orden? El stock será restaurado si la orden está activa.')) {
+            console.log('Removal cancelled by user');
+            return;
+        }
 
         setRemovingItemId(itemId);
         try {
@@ -576,12 +580,14 @@ const OrdersPage = () => {
                                                                     <div className="flex items-center gap-2">
                                                                         <span className="text-xs bg-white/10 px-2 py-1 rounded font-mono text-white">x{item.quantity}</span>
                                                                         <button
+                                                                            type="button"
                                                                             onClick={(e) => {
+                                                                                e.preventDefault();
                                                                                 e.stopPropagation();
                                                                                 handleRemoveItem(order.id, item.id);
                                                                             }}
                                                                             disabled={removingItemId === item.id}
-                                                                            className="p-1.5 hover:bg-red-500/10 text-neutral-500 hover:text-red-500 rounded-lg transition-colors"
+                                                                            className="p-2 hover:bg-red-500/20 text-neutral-500 hover:text-red-500 rounded-xl transition-all active:scale-90 border border-transparent hover:border-red-500/20"
                                                                             title="Eliminar de la orden"
                                                                         >
                                                                             {removingItemId === item.id ? (
