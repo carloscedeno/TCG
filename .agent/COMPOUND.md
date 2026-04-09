@@ -140,3 +140,33 @@ Stabilize the POS Terminal session persistence and data integrity. Resolve criti
 ---
 
 *Compounded for Geekorium TCG Ecosystem.*
+# 🧠 COMPOUND: Order Item Deletion & Fixes
+**Date**: 2026-04-09 16:35
+
+## Objective
+Implement a secure, administrative feature to remove individual items from existing orders. Ensure stock is correctly restored to the inventory and the order total is recalculated atomically. Resolve production build failures and browser-level event conflicts.
+
+## Knowledge Codification
+
+### 1. Atomic Order Item Deletion (v1)
+- **RPC Logic**: `delete_order_item_v1` handles the entire transaction.
+- **Stock Restoration**: Automatically increments `products.stock` for the deleted item if the order status is active (not cancelled/returned).
+- **Snapshot Integrity**: Recalculates `orders.total_amount` using a `SUM` of remaining items to ensure the total is always accurate after removal.
+
+### 2. Inline UI Confirmation Pattern
+- **Problem**: `window.confirm()` was auto-cancelling in production due to event collisions or browser policies.
+- **Solution**: Implemented a state-based confirmation (`confirmingItemId`). The UI transforms the button into a "Confirm (Check) / Cancel (X)" set of icons. 
+- **Rule**: For destructive actions in the Admin Panel, prioritize "Inline Confirmation" over native browser dialogs for better reliability and UX.
+
+### 3. Production Build Integrity (TS6133)
+- **Issue**: Build failed due to unused imports in `InventoryPage.tsx` and `OrdersPage.tsx`.
+- **Action**: Cleaned all unused imports (`AlertTriangle`, `ShieldAlert`, `RotateCcw`) to satisfy the `noUnusedParameters: true` constraint in `tsconfig.json`.
+
+## Technical Validation
+- **Database Logic**: ✅ RPC `delete_order_item_v1` verified and applied.
+- **Frontend Build**: ✅ Build successful after removing unused imports.
+- **Git Push**: ✅ Pushed to production (main).
+
+---
+
+*Compounded for Geekorium TCG Ecosystem.*

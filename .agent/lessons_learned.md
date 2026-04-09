@@ -711,3 +711,17 @@ useEffect(() => {
 - **Solución**: `generateReceiptHTML()` in `CheckoutSuccessPage.tsx` produces a standalone, self-contained HTML document (with Google Fonts, full CSS branding, item table, and status badge) opened via `window.open()`. The receipt page auto-fires `window.print()` on load.
 - **Patrón**: Pass all data needed for the receipt (`customerInfo`, `items`, `total`, `orderId`) through React Router's `navigate()` state. No DB round-trip needed on the success page.
 - **Regla Derivada**: For lightweight, one-time document generation in a React SPA, prefer the new-window HTML approach over PDF libraries (jsPDF, react-pdf). It requires zero npm dependencies and produces a print-ready, fully branded document.
+
+### 88. Atómica Eliminación de Ítems e Inventario (Abril 2026)
+- **Problema**: Eliminar un ítem de un pedido requiere actualizar el total y restaurar el stock físico simúltaneamente para evitar discrepancias.
+- **Causa Raíz**: Lógica distribuida en el frontend puede fallar si la conexión se interrumpe entre llamadas.
+- **Solución**: Crear una función RPC `delete_order_item_v1` que maneje: 1. Verificación de estado de orden, 2. Incremento de stock en `products`, 3. Recálculo de `total_amount`, 4. Eliminación de la fila en `order_items`.
+- **Regla Derivada**: [LEYES_DEL_SISTEMA.md] -> Ley 6 (Integridad Global). Operaciones cruzadas entre Pedidos e Inventario deben ser atómicas vía SQL.
+
+### 89. UI-Based Confirmation vs Browser Native (Abril 2026)
+- **Problema**: El uso de `window.confirm()` en entornos de producción puede ser bloqueado o auto-cancelado por el navegador si se detectan múltiples re-renders o interferencias de eventos, resultando en botones que "no hacen nada".
+- **Causa Raíz**: El log de consola mostraba "User clicked CANCEL" instantáneamente sin que el usuario interactuara.
+- **Solución**: Implementar un estado de confirmación en línea (`confirmingItemId`). Al pulsar la acción, el botón cambia a un set de iconos "Confirmar [Check] / Cancelar [X]".
+- **Ventaja**: Evita bloqueos de scripts del navegador, es más rápido y coherente con el lenguaje visual de la app (Rose-Neon).
+- **Regla Derivada**: Preferir estados de confirmación "Inline" para acciones destructivas en el panel administrativo para garantizar robustez ante políticas de seguridad de navegadores modernos.
+
