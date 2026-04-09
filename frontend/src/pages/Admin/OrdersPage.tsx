@@ -254,34 +254,51 @@ const OrdersPage = () => {
     };
 
     const handleRemoveItem = async (orderId: string, itemId: string) => {
-        console.log('handleRemoveItem called for item:', itemId, 'in order:', orderId);
-        if (!window.confirm('¿Estás seguro de que deseas eliminar este artículo de la orden? El stock será restaurado si la orden está activa.')) {
-            console.log('Removal cancelled by user');
+        console.log('handleRemoveItem initiated for item:', itemId, 'order:', orderId);
+        
+        const confirmed = window.confirm('¿Eliminar este artículo de la orden?');
+        if (!confirmed) {
+            console.log('User clicked CANCEL on confirm dialog');
             return;
         }
 
+        console.log('User clicked OK. Starting deletion process...');
         setRemovingItemId(itemId);
         try {
+            console.log('Calling Supabase RPC delete_order_item_v1...');
             const { data, error } = await supabase.rpc('delete_order_item_v1', {
                 p_order_item_id: itemId
             });
 
-            if (error) throw error;
-            if (!data.success) throw new Error(data.error);
+            if (error) {
+                console.error('RPC Error:', error);
+                throw error;
+            }
+            if (!data.success) {
+                console.error('RPC Business Logic Error:', data.error);
+                throw new Error(data.error);
+            }
+
+            console.log('RPC Success! New total:', data.new_total);
 
             // Update local state
-            setOrders(prev => prev.map(order => {
-                if (order.id === orderId) {
-                    return {
-                        ...order,
-                        total_amount: data.new_total,
-                        order_items: order.order_items.filter(item => item.id !== itemId)
-                    };
-                }
-                return order;
-            }));
+            setOrders(prev => {
+                const updated = prev.map(order => {
+                    if (order.id === orderId) {
+                        return {
+                            ...order,
+                            total_amount: data.new_total,
+                            order_items: order.order_items.filter(item => item.id !== itemId)
+                        };
+                    }
+                    return order;
+                });
+                console.log('Local state updated. Remaining items in order:', 
+                    updated.find(o => o.id === orderId)?.order_items.length);
+                return updated;
+            });
         } catch (err: any) {
-            console.error("Error removing item:", err);
+            console.error("Critical error in handleRemoveItem:", err);
             alert("Error al eliminar el artículo: " + err.message);
         } finally {
             setRemovingItemId(null);
@@ -582,7 +599,6 @@ const OrdersPage = () => {
                                                                         <button
                                                                             type="button"
                                                                             onClick={(e) => {
-                                                                                e.preventDefault();
                                                                                 e.stopPropagation();
                                                                                 handleRemoveItem(order.id, item.id);
                                                                             }}
