@@ -4,8 +4,8 @@ import { AddProductDrawer } from "../../components/Admin/AddProductDrawer";
 import {
     Plus, Search, Trash2, Package, Save, X,
     ChevronUp, ChevronDown, Check,
-    ArrowUpDown, AlertTriangle,
-    ShieldAlert, FileUp, ArrowDownFromLine,
+    ArrowUpDown,
+    FileUp, ArrowDownFromLine,
     Download, ShoppingCart
 } from "lucide-react";
 import { ImportInventoryModal } from "../../components/Admin/ImportInventoryModal";
