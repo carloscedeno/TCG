@@ -103,3 +103,40 @@ Respond to operational feedback: orders were confirmed via WhatsApp with only ag
 ---
 
 *Compounded for Geekorium TCG Ecosystem.*
+
+# 🧠 COMPOUND: POS Terminal Stabilization (v44)
+
+**Date**: 2026-04-09
+
+## Objective
+
+Stabilize the POS Terminal session persistence and data integrity. Resolve critical bugs causing $0.00 pricing, $NaN subtotal calculations, and failed cart additions due to schema mismatches and identifier confusion.
+
+## Knowledge Codification
+
+### 1. The "Bulletproof" Master RPC Policy
+
+- **Pattern**: `add_to_cart_v2` acts as a polymorphic entry point. 
+- **Flexibility**: It accepts **Identifier Strings** (both `product_id` and `printing_id`) and automatically strips synthetic suffixes (e.g., `-foil`, `-nonfoil`) provided by the frontend.
+- **Auto-Repair**: If a product record is missing or lacks a price/image, the RPC performs an immediate lookup in the master TCG catalog (`card_printings`) and "self-heals" the products table to ensure no item ever shows as $0.00 or broken.
+
+### 2. Schema Integrity & Persistence
+
+- **Bug**: Missing `updated_at` column in the production `cart_items` table was causing silent SQL failures when updating quantities.
+- **Fix**: Applied `ALTER TABLE public.cart_items ADD COLUMN IF NOT EXISTS updated_at timestamptz DEFAULT now();` and updated RPC to explicitly touch this column.
+- **Session Layer**: Validated that `currentIsPos` and `activeCartName` must persist through `localStorage` hints to ensure the "Managing: [Customer]" banner survives browser refreshes and page transitions.
+
+### 3. Direct Pass-Through Mapping
+
+- **Logic**: Replaced error-prone frontend data translation layers with a "Direct Pass-Through" from Database JSON to UI.
+- **Rule**: Pricing data must remain a `numeric` type throughout the SQL -> RPC -> API -> Context pipeline to prevent Javascript's `NaN` errors during aggregate calculations.
+
+## Technical Validation
+
+- **Frontend Build**: ✅ Corrected JSX syntax error in `InventoryPage.tsx` and removed unused icons.
+- **Database Logic**: ✅ RPC `add_to_cart_v2` verified working in production with Sol Ring and dual-face card test cases.
+- **Git Sync**: ✅ All changes pushed to `main`.
+
+---
+
+*Compounded for Geekorium TCG Ecosystem.*

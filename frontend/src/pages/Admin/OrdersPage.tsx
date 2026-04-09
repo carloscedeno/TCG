@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../utils/supabaseClient';
 import { useAuth } from '../../context/AuthContext';
-import { Package, ChevronDown, X, User, Calendar, AlertCircle, FileDown } from 'lucide-react';
+import { Package, ChevronDown, X, User, Calendar, AlertCircle, FileDown, Trash2, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface OrderItem {
@@ -168,6 +168,7 @@ const OrdersPage = () => {
     const [deletingId, setDeletingId] = useState<string | null>(null);
     const [filterStatus, setFilterStatus] = useState<string>('all');
     const [showDeleted, setShowDeleted] = useState(false);
+    const [removingItemId, setRemovingItemId] = useState<string | null>(null);
 
     const filteredOrders = orders.filter(order => {
         if (!showDeleted && order.deleted_at) return false;
@@ -250,6 +251,37 @@ const OrdersPage = () => {
 
     const toggleExpand = (orderId: string) => {
         setExpandedOrderId(expandedOrderId === orderId ? null : orderId);
+    };
+
+    const handleRemoveItem = async (orderId: string, itemId: string) => {
+        if (!confirm('¿Estás seguro de que deseas eliminar este artículo de la orden? El stock será restaurado si la orden está activa.')) return;
+
+        setRemovingItemId(itemId);
+        try {
+            const { data, error } = await supabase.rpc('delete_order_item_v1', {
+                p_order_item_id: itemId
+            });
+
+            if (error) throw error;
+            if (!data.success) throw new Error(data.error);
+
+            // Update local state
+            setOrders(prev => prev.map(order => {
+                if (order.id === orderId) {
+                    return {
+                        ...order,
+                        total_amount: data.new_total,
+                        order_items: order.order_items.filter(item => item.id !== itemId)
+                    };
+                }
+                return order;
+            }));
+        } catch (err: any) {
+            console.error("Error removing item:", err);
+            alert("Error al eliminar el artículo: " + err.message);
+        } finally {
+            setRemovingItemId(null);
+        }
     };
 
     if (!isAdmin) return <div className="p-8 text-white">Acceso Denegado</div>;
@@ -541,7 +573,24 @@ const OrdersPage = () => {
                                                                     </div>
                                                                 </div>
                                                                 <div className="flex items-center justify-between gap-4 mt-2">
-                                                                    <span className="text-xs bg-white/10 px-2 py-1 rounded font-mono text-white">x{item.quantity}</span>
+                                                                    <div className="flex items-center gap-2">
+                                                                        <span className="text-xs bg-white/10 px-2 py-1 rounded font-mono text-white">x{item.quantity}</span>
+                                                                        <button
+                                                                            onClick={(e) => {
+                                                                                e.stopPropagation();
+                                                                                handleRemoveItem(order.id, item.id);
+                                                                            }}
+                                                                            disabled={removingItemId === item.id}
+                                                                            className="p-1.5 hover:bg-red-500/10 text-neutral-500 hover:text-red-500 rounded-lg transition-colors"
+                                                                            title="Eliminar de la orden"
+                                                                        >
+                                                                            {removingItemId === item.id ? (
+                                                                                <Loader2 size={14} className="animate-spin" />
+                                                                            ) : (
+                                                                                <Trash2 size={14} />
+                                                                            )}
+                                                                        </button>
+                                                                    </div>
                                                                     <span className="font-mono text-emerald-400 font-bold">${item.price_at_purchase.toFixed(2)}</span>
                                                                 </div>
                                                             </div>
