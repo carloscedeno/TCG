@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../utils/supabaseClient';
 import { useAuth } from '../../context/AuthContext';
-import { Package, ChevronDown, X, User, Calendar, AlertCircle, FileDown, Trash2, Loader2 } from 'lucide-react';
+import { Package, ChevronDown, X, User, Calendar, AlertCircle, FileDown, Trash2, Loader2, Check, RotateCcw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface OrderItem {
@@ -169,6 +169,7 @@ const OrdersPage = () => {
     const [filterStatus, setFilterStatus] = useState<string>('all');
     const [showDeleted, setShowDeleted] = useState(false);
     const [removingItemId, setRemovingItemId] = useState<string | null>(null);
+    const [confirmingItemId, setConfirmingItemId] = useState<string | null>(null);
 
     const filteredOrders = orders.filter(order => {
         if (!showDeleted && order.deleted_at) return false;
@@ -256,13 +257,6 @@ const OrdersPage = () => {
     const handleRemoveItem = async (orderId: string, itemId: string) => {
         console.log('handleRemoveItem initiated for item:', itemId, 'order:', orderId);
         
-        const confirmed = window.confirm('¿Eliminar este artículo de la orden?');
-        if (!confirmed) {
-            console.log('User clicked CANCEL on confirm dialog');
-            return;
-        }
-
-        console.log('User clicked OK. Starting deletion process...');
         setRemovingItemId(itemId);
         try {
             console.log('Calling Supabase RPC delete_order_item_v1...');
@@ -302,6 +296,7 @@ const OrdersPage = () => {
             alert("Error al eliminar el artículo: " + err.message);
         } finally {
             setRemovingItemId(null);
+            setConfirmingItemId(null);
         }
     };
 
@@ -596,22 +591,52 @@ const OrdersPage = () => {
                                                                 <div className="flex items-center justify-between gap-4 mt-2">
                                                                     <div className="flex items-center gap-2">
                                                                         <span className="text-xs bg-white/10 px-2 py-1 rounded font-mono text-white">x{item.quantity}</span>
-                                                                        <button
-                                                                            type="button"
-                                                                            onClick={(e) => {
-                                                                                e.stopPropagation();
-                                                                                handleRemoveItem(order.id, item.id);
-                                                                            }}
-                                                                            disabled={removingItemId === item.id}
-                                                                            className="p-2 hover:bg-red-500/20 text-neutral-500 hover:text-red-500 rounded-xl transition-all active:scale-90 border border-transparent hover:border-red-500/20"
-                                                                            title="Eliminar de la orden"
-                                                                        >
-                                                                            {removingItemId === item.id ? (
-                                                                                <Loader2 size={14} className="animate-spin" />
+                                                                        <div className="flex items-center gap-1">
+                                                                            {confirmingItemId === item.id ? (
+                                                                                <div className="flex items-center gap-1 bg-red-500/10 p-0.5 rounded-lg border border-red-500/20">
+                                                                                    <button
+                                                                                        type="button"
+                                                                                        onClick={(e) => {
+                                                                                            e.stopPropagation();
+                                                                                            handleRemoveItem(order.id, item.id);
+                                                                                        }}
+                                                                                        disabled={removingItemId === item.id}
+                                                                                        className="p-1.5 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors shadow-lg"
+                                                                                        title="Confirmar eliminación"
+                                                                                    >
+                                                                                        {removingItemId === item.id ? (
+                                                                                            <Loader2 size={12} className="animate-spin" />
+                                                                                        ) : (
+                                                                                            <Check size={12} />
+                                                                                        )}
+                                                                                    </button>
+                                                                                    <button
+                                                                                        type="button"
+                                                                                        onClick={(e) => {
+                                                                                            e.stopPropagation();
+                                                                                            setConfirmingItemId(null);
+                                                                                        }}
+                                                                                        className="p-1.5 text-neutral-400 hover:text-white transition-colors"
+                                                                                        title="Cancelar"
+                                                                                    >
+                                                                                        <X size={12} />
+                                                                                    </button>
+                                                                                </div>
                                                                             ) : (
-                                                                                <Trash2 size={14} />
+                                                                                <button
+                                                                                    type="button"
+                                                                                    onClick={(e) => {
+                                                                                        e.stopPropagation();
+                                                                                        setConfirmingItemId(item.id);
+                                                                                    }}
+                                                                                    disabled={removingItemId === item.id}
+                                                                                    className="p-2 hover:bg-red-500/20 text-neutral-500 hover:text-red-500 rounded-xl transition-all active:scale-90 border border-transparent hover:border-red-500/20"
+                                                                                    title="Eliminar de la orden"
+                                                                                >
+                                                                                    <Trash2 size={14} />
+                                                                                </button>
                                                                             )}
-                                                                        </button>
+                                                                        </div>
                                                                     </div>
                                                                     <span className="font-mono text-emerald-400 font-bold">${item.price_at_purchase.toFixed(2)}</span>
                                                                 </div>
