@@ -6,10 +6,12 @@ import {
     ChevronUp, ChevronDown, Check,
     ArrowUpDown, AlertTriangle,
     ShieldAlert, FileUp, ArrowDownFromLine,
-    Download
+    Download, ShoppingCart
 } from "lucide-react";
 import { ImportInventoryModal } from "../../components/Admin/ImportInventoryModal";
 import { EgressInventoryModal } from "../../components/Admin/EgressInventoryModal";
+import { useCart } from "../../context/CartContext";
+import { addProductToCart } from "../../utils/api";
 
 interface InventoryItem {
     product_id: string;
@@ -58,6 +60,10 @@ export function InventoryPage() {
     // State for Stock Editing
     const [editingStockId, setEditingStockId] = useState<string | null>(null);
     const [tempStock, setTempStock] = useState<string>("");
+
+    // Cart Integration
+    const { activeCartName, currentIsPos } = useCart();
+    const [addingId, setAddingId] = useState<string | null>(null);
 
     const pageSize = 50;
 
@@ -279,6 +285,22 @@ export function InventoryPage() {
             setSortOrder('asc');
         }
         setPage(0);
+    };
+
+    const handleAddToCart = async (item: InventoryItem) => {
+        if (!activeCartName) return;
+        
+        setAddingId(item.product_id);
+        try {
+            const result = await addProductToCart(item.product_id, 1);
+            if (result && !result.success) {
+                alert(result.message || "Error al agregar al carrito");
+            }
+        } catch (err) {
+            console.error("Add to cart error:", err);
+        } finally {
+            setAddingId(null);
+        }
     };
 
     const handleExportInventory = async () => {
@@ -569,6 +591,7 @@ export function InventoryPage() {
                                                 Nodos de Stock <ArrowUpDown size={12} className={sortBy === 'stock' ? 'text-purple-500' : ''} />
                                             </button>
                                         </th>
+                                        <th className="px-6 py-6 font-black text-[10px] text-neutral-500 uppercase tracking-widest text-center">Venta</th>
                                         <th className="pr-8 py-6 font-black text-[10px] text-neutral-500 uppercase tracking-widest text-right">Ops</th>
                                     </tr>
                                 </thead>
@@ -704,6 +727,30 @@ export function InventoryPage() {
                                                                 <AlertTriangle size={8} /> Stock Bajo
                                                             </span>
                                                         ) : null}
+                                                    </div>
+                                                )}
+                                            <td className="px-6 py-4 text-center">
+                                                {activeCartName || currentIsPos ? (
+                                                    <button
+                                                        onClick={() => handleAddToCart(item)}
+                                                        disabled={addingId === item.product_id || item.stock <= 0}
+                                                        className={`group relative px-4 py-2 border rounded-xl flex items-center gap-2 transition-all active:scale-95 mx-auto ${
+                                                            addingId === item.product_id 
+                                                                ? 'bg-purple-500 border-purple-500 text-white' 
+                                                                : 'bg-black border-white/10 text-purple-400 hover:border-purple-500/50 hover:bg-purple-500/5'
+                                                        } disabled:opacity-30 disabled:grayscale`}
+                                                        title={`Agregar a sesión: ${activeCartName || 'Carrito Principal'}`}
+                                                    >
+                                                        {addingId === item.product_id ? (
+                                                            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                                        ) : (
+                                                            <ShoppingCart size={14} className="group-hover:scale-110 transition-transform" />
+                                                        )}
+                                                        <span className="text-[9px] font-black uppercase tracking-wider">Vender</span>
+                                                    </button>
+                                                ) : (
+                                                    <div className="text-[8px] font-black text-neutral-700 uppercase tracking-widest italic">
+                                                        Sin Sesión
                                                     </div>
                                                 )}
                                             </td>

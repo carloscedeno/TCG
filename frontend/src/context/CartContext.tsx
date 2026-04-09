@@ -70,7 +70,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             let cartResponse: any = null;
             try {
                 cartResponse = await fetchCart();
-                const rawItems = cartResponse.items || [];
+                const rawItems = (cartResponse && cartResponse.items) || [];
                 
                 // CRITICAL: If logged in, prioritize DB items and IGNORE local guest items 
                 // to prevent $0.00 ghosting/contamination.
@@ -79,22 +79,22 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     .map((item: any) => ({
                         id: item.id,
                         product_id: item.product_id,
-                        quantity: item.quantity || 1,
-                        price: Number(item.products?.price || 0),
-                        name: item.products?.name,
-                        image_url: item.products?.image_url,
-                        is_foil: item.products?.is_foil,
-                        set_code: item.products?.set_code,
+                        quantity: Number(item.quantity || 1),
+                        price: Number(item.price || 0),
+                        name: item.name,
+                        image_url: item.image_url,
+                        is_foil: item.finish === 'foil',
+                        set_code: item.set_code,
                     }));
                 
                 setCartItems(Array.isArray(fetchedItems) ? fetchedItems : []);
                 
                 // Update Session state from unified RPC result
-                if (user && cartResponse.id) {
+                if (user && cartResponse && cartResponse.id) {
                     setActiveCartName(cartResponse.name || 'Carrito Principal');
-                    setCurrentIsPos(cartResponse.is_pos || false);
+                    setCurrentIsPos(!!cartResponse.is_pos);
                     localStorage.setItem('pos_active_name', cartResponse.name || '');
-                    localStorage.setItem('pos_active_is_pos', String(cartResponse.is_pos || false));
+                    localStorage.setItem('pos_active_is_pos', String(!!cartResponse.is_pos));
                 }
 
                 // Save snapshot for price change detection
@@ -148,8 +148,25 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             console.error('CartContext: failed to load cart state', err);
         } finally {
             setIsLoading(false);
+            // Dispatch custom event for vanilla components
+            window.dispatchEvent(new CustomEvent('cart-refreshed', { 
+                detail: { activeCartName, currentIsPos } 
+            }));
         }
     }, [user]);
+
+    // Persistent storage synchronization
+    useEffect(() => {
+        if (activeCartName !== null) {
+            localStorage.setItem('pos_active_name', activeCartName);
+        } else {
+            localStorage.removeItem('pos_active_name');
+        }
+    }, [activeCartName]);
+
+    useEffect(() => {
+        localStorage.setItem('pos_active_is_pos', String(currentIsPos));
+    }, [currentIsPos]);
 
     // Load whenever user or auth state changes
     useEffect(() => {
@@ -180,9 +197,14 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const switchCart = async (cartId: string) => {
         setIsLoading(true);
+        console.log(`DEBUG: Switching to cart ${cartId}...`);
         try {
             await switchActiveCart(cartId);
+            // Give a small breathing room for DB consistency if needed, 
+            // though RPC should be synchronous.
+            await new Promise(resolve => setTimeout(resolve, 100));
             await refreshCart();
+            console.log(`DEBUG: Switch complete.`);
         } catch (err) {
             console.error('Failed to switch cart:', err);
         } finally {

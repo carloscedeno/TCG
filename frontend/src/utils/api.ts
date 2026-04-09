@@ -606,24 +606,15 @@ export const fetchCart = async (): Promise<any> => {
         throw error;
       }
 
-      // Map RPC result to Frontend Cart Item format
+      // Master Pass-through [v40]
       if (!data || data.length === 0) return { items: [], id: null, name: 'Carrito Principal', is_pos: false };
 
       const cartData = data[0];
-      const items = (cartData.items || []).map((row: any) => ({
-        id: row.cart_item_id,
-        product_id: row.product_id,
-        printing_id: row.printing_id,
-        quantity: row.quantity,
-        products: {
-          id: row.product_id,
-          name: row.product_name,
-          price: row.price,
-          image_url: row.image_url,
-          set_code: row.set_code,
-          stock: row.stock || 0,
-          finish: row.finish || 'nonfoil'
-        }
+      // The RPC now returns the exact structure needed.
+      const items = (cartData.items || []).map((item: any) => ({
+        ...item,
+        price: Number(item.price || 0),
+        quantity: Number(item.quantity || 1)
       }));
       
       return { 
@@ -673,20 +664,24 @@ export const addToCart = async (printingId: string, quantity: number = 1, finish
   try {
     const session = await supabase.auth.getSession();
 
-    // If logged in, use RPC
+    // If logged in, use Master RPC v2 [v43]
     if (session.data.session?.user) {
-      const { data, error } = await supabase.rpc('add_to_cart', {
-        p_printing_id: printingId,
+      const { data, error } = await supabase.rpc('add_to_cart_v2', {
+        p_identifier: printingId, // The master RPC now handles both product_id and printing_id
         p_quantity: quantity,
         p_user_id: session.data.session.user.id,
         p_finish: (finish || 'nonfoil').toLowerCase()
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error("RPC add_to_cart_v2 failed:", error);
+        throw error;
+      }
 
-      // Check if RPC returned an error in the data
-      if (data && !data.success) {
-        return data; // Return the error object from RPC
+      // Check if RPC returned an internal logic error
+      if (data && data.success === false) {
+        console.warn("RPC add_to_cart_v2 internal error:", data.error);
+        return data;
       }
 
       // Dispatch event to update cart drawer
@@ -713,6 +708,26 @@ export const addToCart = async (printingId: string, quantity: number = 1, finish
 
   } catch (error) {
     console.error('Error adding to cart:', error);
+    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+};
+
+export const addProductToCart = async (productId: string, quantity: number = 1): Promise<any> => {
+  try {
+    const session = await supabase.auth.getSession();
+    if (!session.data.session?.user) throw new Error("Authentication required");
+
+    const { data, error } = await supabase.rpc('add_to_cart', {
+      p_product_id: productId,
+      p_quantity: quantity
+    });
+
+    if (error) throw error;
+
+    window.dispatchEvent(new Event('cart-updated'));
+    return { success: true, data };
+  } catch (error) {
+    console.error('Error adding product to cart:', error);
     return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
   }
 };
