@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../utils/supabaseClient';
 import { useAuth } from '../../context/AuthContext';
-import { Package, ChevronDown, X, User, Calendar, AlertCircle, FileDown, Trash2, Loader2, Check, RotateCcw } from 'lucide-react';
+import { Package, ChevronDown, X, User, Calendar, AlertCircle, FileDown, Trash2, Loader2, Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface OrderItem {
