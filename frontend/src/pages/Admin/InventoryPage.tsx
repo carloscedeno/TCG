@@ -718,17 +718,9 @@ export function InventoryPage() {
                                                             </button>
                                                         </div>
 
-                                                        {item.stock === 0 ? (
-                                                            <span className="flex items-center gap-1 text-[8px] font-black text-red-500 uppercase tracking-widest bg-red-500/10 px-2 py-0.5 rounded-full">
-                                                                <ShieldAlert size={8} /> Agotado
-                                                            </span>
-                                                        ) : item.stock < 10 ? (
-                                                            <span className="flex items-center gap-1 text-[8px] font-black text-yellow-500 uppercase tracking-widest bg-yellow-500/10 px-2 py-0.5 rounded-full">
-                                                                <AlertTriangle size={8} /> Stock Bajo
-                                                            </span>
-                                                        ) : null}
                                                     </div>
                                                 )}
+                                            </td>
                                             <td className="px-6 py-4 text-center">
                                                 {activeCartName || currentIsPos ? (
                                                     <button
