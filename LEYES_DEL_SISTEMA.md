@@ -468,7 +468,19 @@ Ningún archivo de migración SQL (`supabase/migrations/`) desplegado y registra
 - Priorizar la coincidencia del array `finishes` de `card_printings` si el booleano `is_foil` es falso o ambiguo.
 - **Validación de Capa Superior**: El frontend debe emitir alertas si se detectan discrepancias entre el valor declarado (Precio) y el acabado seleccionado (ej. precio de foil en carta marcada como normal) para prevenir errores de mapeo del usuario.
 
-### v3.1 (2026-03-13)
-
-- ✅ Agregada **Regla de Negocio 7**: Prevención de Zero-Price (Cero tolerancia a precios nulos o 0 en inventario activo).
 - ✅ Actualizado **Protocolo de Auditoría**: Inclusión de buyer metadata en flujos de administración.
+
+### v3.2 (2026-04-12)
+
+- ✅ Agregada **Ley 15**: Resiliencia de Conectividad (Uso preferente de API REST para sincronización masiva).
+
+---
+
+### Ley 15: Resiliencia de Conectividad (Cross-Branch Sync)
+
+**Siempre** priorizar el uso de la API REST (PostgREST/HTTPS) sobre conexiones directas de Postgres (psycopg2/port 5432) al realizar tareas de sincronización masiva entre ramas de Supabase, especialmente en entornos con restricciones de red o DNS inestables.
+
+- **Implementación**: Utilizar scripts basados en `requests` que consuman el endpoint de la API con el header `Prefer: resolution=merge-duplicates`.
+- **Scripts de Referencia**: Mantener [**`sync_inventory_only.py`**](file:///c:/Users/carlo/OneDrive/Documents/Antigravity/TCG/scripts/debug/sync_inventory_only.py) como la herramienta estándar para duplicar estados de inventario entre entornos.
+
+---

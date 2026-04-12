@@ -170,3 +170,35 @@ Implement a secure, administrative feature to remove individual items from exist
 ---
 
 *Compounded for Geekorium TCG Ecosystem.*
+
+# 🧠 COMPOUND: Environment Duplication & Connectivity (v45)
+
+**Date**: 2026-04-12
+
+## Objective
+
+Successfully recreate the `dev` environment and duplicate production catalog/inventory data to a fresh branch, overcoming local network restrictions.
+
+## Knowledge Codification
+
+### 1. HTTPS/REST Sync Pattern
+- **Problem**: Direct Postgres connections (port 5432) reported `getaddrinfo failed` or `Connection Reset`, blocking standard migration tools.
+- **Solution**: Developed a synchronization layer using the Supabase REST API (PostgREST). HTTPS (Port 443) is significantly more resilient to local DNS and corporate firewall restrictions.
+- **Logic**: Implemented `sync_inventory_only.py` which uses `Prefer: resolution=merge-duplicates` for idempotent upserts.
+
+### 2. Catalog Filtering by Inventory
+- **Strategy**: Instead of a full 33k card dump, the sync identifies the **14,136 items in active inventory** and fetches only their related card and printing ancestors.
+- **Benefit**: Reduced data volume by ~60%, leading to faster branch performance and lower storage costs.
+
+### 3. Schema Metadata Alignment
+- **Observation**: `create_branch` in certain Supabase environments might miss specific table columns if they weren't part of the initial migration.
+- **Fix**: Performed a manual metadata audit using `information_schema` and reconstructed the catalog tables (`cards`, `card_printings`) with 100% column parity before the sync.
+
+## Technical Validation
+- **Database Logic**: ✅ Dev branch `bqfkqnnostzaqueujdms` fully populated and verified via SQL counts.
+- **Frontend Sync**: ✅ `frontend/.env.local` updated and verified connecting to the new branch.
+- **Environment Parity**: ✅ Verified that `MTG` games, sets, and 14k+ products match production state.
+
+---
+
+*Compounded for Geekorium TCG Ecosystem.*
