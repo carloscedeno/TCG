@@ -474,6 +474,10 @@ Ningún archivo de migración SQL (`supabase/migrations/`) desplegado y registra
 
 - ✅ Agregada **Ley 15**: Resiliencia de Conectividad (Uso preferente de API REST para sincronización masiva).
 
+### v3.3 (2026-04-14)
+
+- ✅ Agregada **Ley 16**: Cero Suposiciones (Obligación del agente de auditar/leer el código real con comandos antes de emitir o proponer cambios).
+
 ---
 
 ### Ley 15: Resiliencia de Conectividad (Cross-Branch Sync)
@@ -482,5 +486,14 @@ Ningún archivo de migración SQL (`supabase/migrations/`) desplegado y registra
 
 - **Implementación**: Utilizar scripts basados en `requests` que consuman el endpoint de la API con el header `Prefer: resolution=merge-duplicates`.
 - **Scripts de Referencia**: Mantener [**`sync_inventory_only.py`**](file:///c:/Users/carlo/OneDrive/Documents/Antigravity/TCG/scripts/debug/sync_inventory_only.py) como la herramienta estándar para duplicar estados de inventario entre entornos.
+
+---
+
+### Ley 16: Cero Suposiciones (Lectura Obligatoria - AI Agent)
+
+**Nunca** proponer una solución estructurada ni ejecutar ediciones de código (`replace_file_content` / `write_to_file`) basándose únicamente en la memoria o en el historial de la conversación.
+
+- **Auditoría Previa**: **Siempre** utilizar las herramientas del sistema (como `view_file` o `grep_search`) para leer el estado ACTUAL y completo del archivo o función involucrada antes de hacer o sugerir cualquier modificación.
+- **Seguridad**: Es obligatorio gastar tiempo computacional entendiendo el contexto real antes que romper la lógica de un sistema en funcionamiento por exceso de confianza del agente.
 
 ---
