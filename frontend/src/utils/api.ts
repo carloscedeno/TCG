@@ -609,19 +609,68 @@ export const fetchCart = async (): Promise<any> => {
       // Master Pass-through [v40]
       if (!data || data.length === 0) return { items: [], id: null, name: 'Carrito Principal', is_pos: false };
 
-      const cartData = data[0];
-      // The RPC now returns the exact structure needed.
-      const items = (cartData.items || []).map((item: any) => ({
-        ...item,
-        price: Number(item.price || 0),
-        quantity: Number(item.quantity || 1)
+      // The RPC returns { id: ..., name: ..., is_pos: ..., items: [...] }
+      // Depending on Supabase JS client version, data could be the object directly or an array containing it.
+      const cartData = Array.isArray(data) ? data[0] : data;
+      
+      const rawItems = cartData?.items || [];
+      
+      // We will map and then enrich if needed
+      const items = await Promise.all(rawItems.map(async (item: any) => {
+        // Try to extract from flat or nested 'products' object
+        const nested = item.products || item.product || {};
+        const extractName = item.product_name || item.name || nested.name || nested.product_name;
+        const extractPrice = item.price ?? nested.price;
+        const extractImageUrl = item.image_url || nested.image_url;
+        const extractSetCode = item.set_code || nested.set_code;
+        const extractStock = item.stock ?? nested.stock ?? 0;
+        const extractFinish = item.finish || nested.finish;
+        
+        let mappedItem = {
+          id: item.cart_item_id || item.id,
+          product_id: item.product_id || nested.id,
+          quantity: Number(item.quantity || 1),
+          products: {
+            id: item.product_id || nested.id,
+            name: extractName || '',
+            price: Number(extractPrice || 0),
+            image_url: extractImageUrl || '',
+            set_code: extractSetCode || '',
+            stock: extractStock,
+            finish: extractFinish || ''
+          }
+        };
+
+        // If data is still missing (e.g. old RPC version that only returns cart_items columns)
+        if (!mappedItem.products.name || !mappedItem.products.image_url) {
+            try {
+                const { data: pData } = await supabase
+                    .from('products')
+                    .select('*')
+                    .eq('id', mappedItem.product_id)
+                    .single();
+                    
+                if (pData) {
+                    mappedItem.products.name = pData.name;
+                    mappedItem.products.price = Number(pData.price || pData.store_price || 0);
+                    mappedItem.products.image_url = pData.image_url;
+                    mappedItem.products.set_code = pData.set_code || '';
+                    mappedItem.products.finish = pData.finish || '';
+                    mappedItem.products.stock = pData.stock || 0;
+                }
+            } catch (err) {
+                console.error("Fallback product fetch failed for item: ", mappedItem.id, err);
+            }
+        }
+
+        return mappedItem;
       }));
       
       return { 
         items, 
-        id: cartData.cart_id, 
-        name: cartData.cart_name, 
-        is_pos: cartData.is_pos 
+        id: cartData?.id || cartData?.cart_id, 
+        name: cartData?.name || cartData?.cart_name, 
+        is_pos: cartData?.is_pos || false
       };
     }
 
