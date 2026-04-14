@@ -202,3 +202,35 @@ Successfully recreate the `dev` environment and duplicate production catalog/inv
 ---
 
 *Compounded for Geekorium TCG Ecosystem.*
+
+# 🧠 COMPOUND: Multi-Cart Data Parsing Fallback
+
+**Date**: 2026-04-14
+
+## Objective
+
+Fix the critical UI bug in the POS Multi-Cart where items appear with empty names, missing images, and `$0.00` prices despite possessing a correct quantity, ensuring resilience across differing RPC payload schemas.
+
+## Knowledge Codification
+
+### 1. The Database vs UI Mismatch
+
+- **Observation**: `get_user_cart` RPC has evolved. Older or alternate variants returned a flat `cart_items` shape (only `product_id`), while the UI strictly expects nested product structures (`item.products.image_url`, `price`, etc).
+- **Impact**: Without defensive mapping, missing product data attributes evaluate to `undefined`, which the React component renders as empty visual fields and `$0.00` values, hiding the item completely.
+
+### 2. The Universal Extraction Fallback
+
+- **Solution**: Developed a universal parsing function in `api.ts` -> `fetchCart()`.
+- **Logic**: 
+  - Iteratively probe multiple potential access paths (`item.products.name`, `item.product_name`, `item.name`).
+  - If still missing (due to an old flat RPC), seamlessly `await supabase.from('products')` to fetch and graft the explicit product details on-the-fly (`pData.name`, `pData.price`).
+
+## Technical Validation
+
+- **Frontend Sync**: ✅ `api.ts` updated.
+- **Resilience**: ✅ TS compiler success, gracefully handles sparse legacy SQL structures.
+- **Git Push**: ✅ Pushed securely to `main` branch deployed to production via CI/CD.
+
+---
+
+*Compounded for Geekorium TCG Ecosystem.*
