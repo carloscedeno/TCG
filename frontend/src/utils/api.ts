@@ -674,34 +674,90 @@ export const fetchCart = async (): Promise<any> => {
       };
     }
 
-    // Guest Cart Logic
+    // Guest Cart Logic Optimized [v44]
     const guestCart = JSON.parse(localStorage.getItem('guest_cart') || '[]');
     if (guestCart.length === 0) return { items: [] };
 
-    // Fetch details for each item in guest cart
-    const items = await Promise.all(guestCart.map(async (item: any) => {
-      try {
-        const details = await fetchCardDetails(item.printing_id);
+    // Group items by base printing ID for batch fetching
+    const guestItemMappings = guestCart.map((item: any) => {
+      const baseId = item.printing_id.replace(/-foil$/, '').replace(/-nonfoil$/, '').replace(/-etched$/, '');
+      const explicitFinish = item.printing_id.includes('-foil') ? 'foil' : (item.printing_id.includes('-etched') ? 'etched' : 'nonfoil');
+      return { ...item, baseId, explicitFinish };
+    });
+
+    const uniqueBaseIds = Array.from(new Set(guestItemMappings.map((m: any) => m.baseId)));
+
+    try {
+      // 1. Batch fetch Card metadata (Name, Image, Sets)
+      const { data: printingsData, error: pError } = await supabase
+        .from('card_printings')
+        .select('*, cards(*), sets(*)')
+        .in('printing_id', uniqueBaseIds);
+
+      if (pError) throw pError;
+
+      // 2. Batch fetch Product live data (Price, Stock, Actual Product IDs)
+      const { data: productsData, error: prError } = await supabase
+        .rpc('get_products_stock_by_printing_ids', { p_printing_ids: uniqueBaseIds });
+
+      if (prError) console.warn("Guest cart products fetch failed, using printings fallback", prError);
+
+      const items = guestItemMappings.map((itemMapping: any) => {
+        const printing = (printingsData || []).find((p: any) => p.printing_id === itemMapping.baseId);
+        if (!printing) return null;
+
+        // Find matching product by finish
+        const matches = (productsData || []).filter((p: any) => p.printing_id === itemMapping.baseId);
+        const exactProduct = matches.find((p: any) => (p.finish || 'nonfoil').toLowerCase() === itemMapping.explicitFinish.toLowerCase());
+        const fallbackProduct = matches[0]; // If finish doesn't match exactly, take the first one available
+        const product = exactProduct || fallbackProduct;
+
+        const priceFallback = (itemMapping.explicitFinish === 'foil' || itemMapping.explicitFinish === 'etched')
+          ? (printing.avg_market_price_foil_usd || 0)
+          : (printing.avg_market_price_usd || 0);
+
         return {
-          id: `guest-${item.printing_id}`, // temporary ID
-          product_id: details.product_id || item.printing_id, // use actual product_id if found
-          quantity: item.quantity,
+          id: `guest-${itemMapping.printing_id}`,
+          product_id: product?.id || itemMapping.baseId,
+          quantity: itemMapping.quantity,
           products: {
-            id: details.product_id || details.card_id,
-            name: details.name,
-            price: Number(details.price || details.market_price || details.valuation?.market_price || 0),
-            image_url: details.image_url,
-            set_code: details.set_code,
-            stock: details.total_stock || 0
+            id: product?.id || itemMapping.baseId,
+            name: printing.cards?.card_name || printing.name || 'Unknown Card',
+            price: Number(product?.price ?? priceFallback),
+            image_url: printing.image_url,
+            set_code: printing.sets?.set_code || '',
+            stock: product?.stock || 0,
+            finish: product?.finish || itemMapping.explicitFinish
           }
         };
-      } catch (e) {
-        console.error(`Failed to load details for ${item.printing_id}`, e);
-        return null;
-      }
-    }));
+      }).filter(Boolean);
 
-    return { items: items.filter((i: any) => i !== null) };
+      return { items };
+    } catch (batchError) {
+      console.error('Batch guest cart fetch failed, falling back to manual loop', batchError);
+      // Last resort fallback to original slow logic if batch fetch fails for some reason
+      const items = await Promise.all(guestCart.map(async (item: any) => {
+        try {
+          const details = await fetchCardDetails(item.printing_id);
+          return {
+            id: `guest-${item.printing_id}`,
+            product_id: details.product_id || item.printing_id,
+            quantity: item.quantity,
+            products: {
+              id: details.product_id || details.card_id,
+              name: details.name,
+              price: Number(details.price || details.market_price || details.valuation?.market_price || 0),
+              image_url: details.image_url,
+              set_code: details.set_code,
+              stock: details.total_stock || 0
+            }
+          };
+        } catch (e) {
+          return null;
+        }
+      }));
+      return { items: items.filter((i: any) => i !== null) };
+    }
 
   } catch (error) {
     console.error('Error fetching cart:', error);
