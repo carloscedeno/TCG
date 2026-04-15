@@ -1,12 +1,14 @@
--- Migration: Decoupled Global New Cards Filter
--- Created: 2026-04-15
--- Author: Antigravity
+import os
+import psycopg2
+from dotenv import load_dotenv
 
--- 1. Update get_inventory_list (DECOUPLED)
-DROP FUNCTION IF EXISTS public.get_inventory_list(INTEGER, INTEGER, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT);
-DROP FUNCTION IF EXISTS public.get_inventory_list(INTEGER, INTEGER, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, BOOLEAN);
+def update_rpcs_decoupled():
+    load_dotenv('e:/TCG Web App/.env')
+    db_url = f"postgresql://{os.getenv('user')}:{os.getenv('password')}@{os.getenv('host')}:{os.getenv('port')}/{os.getenv('dbname')}"
 
-CREATE OR REPLACE FUNCTION public.get_inventory_list(
+    # 1. Update get_inventory_list (DECOUPLED)
+    sql_inventory = """
+CREATE OR REPLACE FUNCTION get_inventory_list(
     p_page INTEGER,
     p_page_size INTEGER,
     p_search TEXT DEFAULT NULL,
@@ -79,6 +81,7 @@ BEGIN
     FROM filtered_inventory fi
     CROSS JOIN total_c tc
     ORDER BY 
+        -- DECOUPLED SORT: Respect explicitly requested p_sort_by regardless of p_only_new
         CASE WHEN p_sort_by = 'newest' THEN fi.updated_at END DESC,
         CASE WHEN p_sort_by = 'name' AND p_sort_order = 'asc' THEN fi.name END ASC,
         CASE WHEN p_sort_by = 'name' AND p_sort_order = 'desc' THEN fi.name END DESC,
@@ -91,8 +94,10 @@ BEGIN
     OFFSET v_offset;
 END;
 $$ LANGUAGE plpgsql;
+"""
 
--- 2. Update get_products_filtered (DECOUPLED)
+    # 2. Update get_products_filtered (DECOUPLED)
+    sql_products = """
 CREATE OR REPLACE FUNCTION public.get_products_filtered(
     search_query text DEFAULT NULL::text,
     game_filter text DEFAULT NULL::text,
@@ -166,6 +171,7 @@ RETURNS TABLE (
                 AND (price_max IS NULL OR p.price_usd <= price_max)
                 AND (type_filter IS NULL OR EXISTS (SELECT 1 FROM unnest(type_filter) tf WHERE p.type_line ILIKE '%' || tf || '%'))
               ORDER BY
+                -- DECOUPLED SORT: Priority should be Relevance (if search) > Chosen Sort > Updated At
                 CASE 
                     WHEN search_query IS NOT NULL AND p.name ILIKE search_query THEN 0 
                     WHEN search_query IS NOT NULL AND p.name ILIKE search_query || '%' THEN 1
@@ -182,3 +188,18 @@ RETURNS TABLE (
               OFFSET offset_count;
             END;
 $$ LANGUAGE plpgsql;
+"""
+
+    try:
+        conn = psycopg2.connect(db_url)
+        with conn.cursor() as cur:
+            cur.execute(sql_inventory)
+            cur.execute(sql_products)
+            conn.commit()
+            print("Successfully updated decoupled RPCs")
+        conn.close()
+    except Exception as e:
+        print(f"Error updating RPCs: {e}")
+
+if __name__ == "__main__":
+    update_rpcs_decoupled()

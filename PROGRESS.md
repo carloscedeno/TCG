@@ -1,6 +1,6 @@
 # 📊 Progress Report - Geekorium Optimization
-**Last Updated**: 2026-04-15 15:45 (Guest Cart Performance & Batch Fetch)
-**Status**: ✅ Dev Branch Recreation | ✅ Catalog & Inventory Sync | ✅ Quick Add UX Optimized | ✅ Performance Optimization (Batch Fetch)
+**Last Updated**: 2026-04-15 17:33 (Global 'Nuevo' Filter & Sort Decoupling)
+**Status**: ✅ Dev Branch Recreation | ✅ Catalog & Inventory Sync | ✅ Quick Add UX Optimized | ✅ Performance Optimization (Batch Fetch) | ✅ Global 'Nuevo' Feature
 
 ---
 
@@ -37,7 +37,14 @@ This session focused on reactivating the "Fast Add to Cart" feature with a premi
 - **Batch Processing**: Replaced sequential API calls with a batch-fetch strategy for guest carts, reducing latency from $O(N)$ to $O(1)$ database trips.
 - **Context Mapping Fix**: Resolved a data mapping issue in `CartContext` where nested product properties were being lost, ensuring correct price and image display.
 - **Production Performance**: Successfully deployed these optimizations to both `dev` and `main` branches.
-- **Build Integrity**: Fixed TypeScript implicit `any` errors that were blocking the production build pipeline.
+- **Sort Vectorization**: Fixed TypeScript implicit `any` errors that were blocking the production build pipeline.
+
+### ✅ Global "Nuevo" (New) Feature (Compound v49)
+- **Attribute Source**: Shifted from `created_at` to `updated_at` to accurately reflect re-stocks and stock updates as "New" events.
+- **Global Badges**: Implemented premium "Nuevo" badges with purple gradients and ping animations across the Marketplace, search, and admin dashboard.
+- **Decoupled Filtering**: Refactored frontend and backend (RPCs) to allow independent toggling of the "Nuevo" filter. Users can now filter for new items and sort them by price, name, or stock simultaneously.
+- **Graceful Fallback**: Implemented SQL logic that automatically drops the 12-day "New" window restriction if no items are found, ensuring the marketplace never displays an empty state when "Nuevo" is active.
+- **Production Deployment**: Successfully migrated database RPCs and deployed frontend code to `main`.
 
 ---
 
