@@ -1,7 +1,7 @@
 # ⚖️ LEYES DEL SISTEMA - TCG Application
 
-**Versión**: 2.7
-**Última Actualización**: 2026-03-12
+**Versión**: 2.8
+**Última Actualización**: 2026-04-15 (Filtro Global Nuevo)
 **Propósito**: Definir reglas inmutables para operación autónoma del agente
 
 ---
@@ -497,3 +497,11 @@ Ningún archivo de migración SQL (`supabase/migrations/`) desplegado y registra
 - **Seguridad**: Es obligatorio gastar tiempo computacional entendiendo el contexto real antes que romper la lógica de un sistema en funcionamiento por exceso de confianza del agente.
 
 ---
+
+### Ley 17: Gestión de Novedades (Inventory & Marketplace)
+
+**Siempre** utilizar el campo `updated_at` como fuente de verdad para identificar ítems "Nuevos" (re-stock o subida inicial).
+
+- **Ventana de Novedad**: El estándar de visualización es de **12 días**.
+- **Lógica de Fallback (Graceful Degradation)**: Si el filtro de 12 días no devuelve resultados, los RPCs financieros (`get_products_filtered`, `get_inventory_list`) deben ignorar automáticamente la restricción temporal para mostrar los ítems más recientes disponibles en stock, evitando listas vacías para el usuario.
+- **Desacoplamiento**: El filtro "Nuevo" debe operar siempre como un **toggle independiente**. Nunca debe sobreescribir o bloquear la capacidad del usuario de ordenar los elementos por otras columnas (Precio, Nombre, Stock) mientras el filtro esté activo.

@@ -344,3 +344,35 @@ Resolve the high latency experienced by guest users (non-logged-in) when interac
 ---
 
 *Compounded for Geekorium TCG Ecosystem.*
+# 🧠 COMPOUND: Global "Nuevo" Filter & Decoupled Sorting (v49)
+
+**Date**: 2026-04-15 17:35
+
+## Objective
+
+Implement a global "Nuevo" (New) filter across the Marketplace and Admin Dashboard, based on real stock updates (`updated_at`) and decoupled from sorting criteria.
+
+## Knowledge Codification
+
+### 1. The `updated_at` Truth Source
+- **Strategy**: Shifted the "Newest" definition from `created_at` (fixed) to `updated_at` (variable).
+- **Reasoning**: In a TCG shop, a "new" item is often a "re-stock" of a classic card. This allows the shop to feel dynamic every time inventory is replenished.
+
+### 2. Graceful Fallback (SQL Layer)
+- **Logic**: Implemented a "12-day window" filter with a silent fallback.
+- **RPC Implementation**: If the 12-day interval results in zero matches, the SQL dynamically ignores the date restriction to show the most recent stock overall. This prevents the "Nuevo" filter from ever leading to a "No products found" dead end.
+
+### 3. Decoupled Filter Architecture
+- **UX Rule**: The "Nuevo" indicator is a **pure filter (binary toggle)**, while "Nombre", "Precio", and "Stock" are **sort vectors**.
+- **Refinement**: Refactored `Home.tsx` and `InventoryPage.tsx` logic to allow a user to toggle "Nuevo" and *then* sort those new items by Price or Alpha without the button resetting its state.
+
+## Technical Validation
+
+- **Database Migrations**: ✅ Applied `20260415201900_global_new_cards_filter.sql`.
+- **Frontend Build**: ✅ Success (`tsc` and `vite build` clean).
+- **Unit Tests**: ✅ 28 Passed.
+- **Git Push**: ✅ Deployed to `dev` and `main` branches.
+
+---
+
+*Compounded for Geekorium TCG Ecosystem.*
