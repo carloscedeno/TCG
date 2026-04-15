@@ -276,8 +276,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
           <button
             onClick={handleQuickAdd}
             title={(total_stock || 0) > 0 ? "Agregar al Carrito Rápido" : "Por encargo"}
-            className={`absolute bottom-3 right-3 w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-2xl z-30 ${isHovered || addingToCart ? 'opacity-100 scale-100' : 'opacity-0 scale-90 translate-y-2'
-              } ${addingToCart ? 'bg-geeko-cyan text-black' : 'bg-black/80 text-white hover:bg-geeko-cyan hover:text-black border border-white/20 backdrop-blur-md'}`}
+            className={`absolute bottom-3 right-3 w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-2xl z-40 ${addingToCart ? 'bg-geeko-cyan text-black scale-100 opacity-100' : 'bg-black/60 text-white hover:bg-geeko-cyan hover:text-black hover:scale-110 border border-white/20 backdrop-blur-md opacity-100 translate-y-0 scale-100'}`}
           >
             {addingToCart ? <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /> : <ShoppingCart size={18} />}
           </button>
