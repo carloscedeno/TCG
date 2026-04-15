@@ -454,7 +454,7 @@ const Home: React.FC = () => {
                     className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase transition-all flex items-center gap-1.5 ${sortBy === 'newest' ? 'bg-purple-600 text-white shadow-[0_0_10px_rgba(147,51,234,0.5)]' : 'text-neutral-500 hover:text-neutral-300'}`}
                   >
                     <Sparkles size={12} className={sortBy === 'newest' ? 'animate-pulse' : ''} />
-                    Novedades
+                    Nuevo
                   </button>
                 </div>
               </div>
