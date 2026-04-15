@@ -725,3 +725,12 @@ useEffect(() => {
 - **Ventaja**: Evita bloqueos de scripts del navegador, es más rápido y coherente con el lenguaje visual de la app (Rose-Neon).
 - **Regla Derivada**: Preferir estados de confirmación "Inline" para acciones destructivas en el panel administrativo para garantizar robustez ante políticas de seguridad de navegadores modernos.
 
+### 90. Touch-First Visibility vs Desktop-Only Hover (April 2026)
+- **Problem**: Critical actions (like "Add to Cart") were hidden behind a hover state (`opacity-0 group-hover:opacity-100`). This made the feature inaccessible on smartphones, tablets, and POS touchscreens.
+- **Solution**: Switch to **Permanent Visibility**. Important CTA (Call to Action) buttons should always be visible (at least partially) or have a very clear visual affordance that doesn't rely on mouse pointers.
+- **Improved UX**: Use a "Pulse" or subtle expansion animation on hover for *desktop enrichment*, but ensure the base state is usable for touch.
+
+### 91. React.memo Custom Comparison Pitfalls (April 2026)
+- **Problem**: A component (`Card.tsx`) refused to show a new button even when the parent passed `showCartButton={true}`.
+- **Causa Raíz**: The `React.memo` second argument (comparison function) was manually listing props to watch (`card_id`, `price`, etc.) but was **omitting** `showCartButton`. React saw the props changed, but the manual check said "nothing important changed", blocking the re-render.
+- **Lección**: Avoid manual prop comparison in `React.memo` unless strictly necessary for performance. If used, it MUST include every prop that affects the visual output. When in doubt, let React's default shallow comparison handle it.

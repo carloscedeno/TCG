@@ -1,6 +1,6 @@
 # 📊 Progress Report - Geekorium Optimization
-**Last Updated**: 2026-04-15 09:45 (Quick Add Reactivation & Price Sync)
-**Status**: ✅ Dev Branch Recreation | ✅ Catalog & Inventory Sync | ✅ Quick Add UX Optimized 
+**Last Updated**: 2026-04-15 13:15 (Touch-First Quick Add icons)
+**Status**: ✅ Dev Branch Recreation | ✅ Catalog & Inventory Sync | ✅ Quick Add UX Optimized | ✅ Production Visibility Fix
 
 ---
 
@@ -25,6 +25,13 @@ This session focused on reactivating the "Fast Add to Cart" feature with a premi
 - **Finish-Aware Cart Logic**: Optimized `Card.tsx` and `add_to_cart_v2` integration to correctly handle foil/nonfoil/etched variants during one-click additions.
 - **Automated Price Propagation**: Updated `sync_cardkingdom_api.py` to automatically sync `products` table prices with the latest CardKingdom market data after every catalog update.
 - **Env Health**: Restored missing `fastapi-mail` dependency in the dev environment to unblock automated tests.
+
+### ✅ UX Polishing & Production Deployment (Compound v47)
+- **Touch-First Visibility**: Changed the "Quick Add" button from hover-only to **permanently visible**. This solved visibility issues on mobile and touch devices where hover states don't exist.
+- **Icon Refinement**: Replaced the Shopping Cart icon with a **Plus sign (+)** for a more intuitive "Add" action.
+- **Micro-Animations**: Implemented a smooth horizontal expansion on hover that reveals the "Añadir al carrito" text without shifting the layout.
+- **Render Optimization**: Removed a restrictive `React.memo` custom comparison that was preventing the `showCartButton` prop updates from triggering re-renders.
+- **Production Merge**: Pushed the finalized visibility fixes to the `main` branch to resolve 404/build errors on `www.geekorium.shop`.
 
 ---
 
