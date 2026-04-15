@@ -234,3 +234,39 @@ Fix the critical UI bug in the POS Multi-Cart where items appear with empty name
 ---
 
 *Compounded for Geekorium TCG Ecosystem.*
+
+# 🧠 COMPOUND: Fast-Add Reactivation & Price Sync (v46)
+
+**Date**: 2026-04-15 09:45
+
+## Objective
+
+Reactivate the "Quick Add to Cart" feature with refined UX and ensure consistent pricing across the catalog and inventory tables.
+
+## Knowledge Codification
+
+### 1. Overlay UX Pattern
+
+- **Pattern**: Moved the Add to Cart button from the text area to an image overlay (`absolute bottom-3 right-3`).
+- **Visibility**: Used `isHovered` state for smooth scale/opacity transitions, keeping the grid clean while idle but responsive on interaction.
+- **Affordance**: Added "Por encargo" (On Order) fallback for items with zero stock to maintain the Geekorium business model.
+
+### 2. Polymorphic Identifier Handling
+
+- **Logic**: Updated `Card.tsx` to pass the `finish` prop explicitly to `addToCart`.
+- **Resilience**: The backend RPC `add_to_cart_v2` was verified to handle polymorphic identifiers (stripping `-foil` synthetic suffixes) and idempotent product creation/price-healing.
+
+### 3. Cross-Table Price Synchronization
+
+- **Scripting**: Modified `sync_cardkingdom_api.py` to include an atomic `UPDATE public.products` step.
+- **Rule**: Prices in the `products` (Inventory) table now automatically match the `card_printings` (Catalog) market data, mapped strictly by `finish`.
+
+## Technical Validation
+
+- **Frontend Build**: ✅ Success (`dist/assets` generated correctly).
+- **Unit Tests**: ✅ 28 Passed (after resolving `fastapi-mail` dependency).
+- **Git Push**: 🚀 Proceeding to synchronization.
+
+---
+
+*Compounded for Geekorium TCG Ecosystem.*

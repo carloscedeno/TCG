@@ -66,7 +66,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
 
     setAddingToCart(true);
     try {
-      await addToCart(card_id, 1);
+      await addToCart(card_id, 1, finish);
       // Optional: Show toast
     } catch (err) {
       console.error("Failed to add to cart", err);
@@ -270,6 +270,18 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
             Foil
           </div>
         )}
+
+        {/* Quick Add Button OVER IMAGE in Grid View */}
+        {showCartButton && !isArchive && (
+          <button
+            onClick={handleQuickAdd}
+            title={(total_stock || 0) > 0 ? "Agregar al Carrito Rápido" : "Por encargo"}
+            className={`absolute bottom-3 right-3 w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-2xl z-30 ${isHovered || addingToCart ? 'opacity-100 scale-100' : 'opacity-0 scale-90 translate-y-2'
+              } ${addingToCart ? 'bg-geeko-cyan text-black' : 'bg-black/80 text-white hover:bg-geeko-cyan hover:text-black border border-white/20 backdrop-blur-md'}`}
+          >
+            {addingToCart ? <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /> : <ShoppingCart size={18} />}
+          </button>
+        )}
       </div>
 
       {/* Card Info */}
@@ -300,17 +312,6 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
             </div>
           </div>
 
-          {/* Quick Add Button showing on Hover */}
-          {showCartButton && !isArchive && (
-            <button
-              onClick={handleQuickAdd}
-              title={(total_stock || 0) > 0 ? "Agregar al Carrito Rápido" : "Por encargo"}
-              className={`absolute right-3 bottom-3 w-8 h-8 rounded-full flex items-center justify-center transition-all shadow-lg ${isHovered || addingToCart ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
-                } ${addingToCart ? 'bg-geeko-cyan text-black' : 'bg-neutral-800 text-white hover:bg-geeko-cyan hover:text-black border border-white/10'}`}
-            >
-              {addingToCart ? <div className="w-3 h-3 border-2 border-black/30 border-t-black rounded-full animate-spin" /> : <ShoppingCart size={14} />}
-            </button>
-          )}
         </div>
       </div>
     </a>

@@ -114,6 +114,40 @@ def update_denormalized_prices(printing_ids=None):
             cur.execute(update_sql, params)
             conn.commit()
             logger.info(f"Denormalized columns updated successfully ({cur.rowcount} cards affected).")
+            
+            # Sync product prices to match the freshly updated card_printings
+            logger.info("Syncing product prices to match CardKingdom...")
+            prod_where_clause = ""
+            prod_params = ()
+            if printing_ids:
+                prod_where_clause = "AND p.printing_id IN %s"
+                prod_params = (tuple(printing_ids),)
+                
+            prod_update_sql = f"""
+            UPDATE public.products p
+            SET 
+              price_usd = COALESCE(
+                  CASE WHEN LOWER(COALESCE(p.finish, 'nonfoil')) IN ('foil', 'etched') THEN cp.avg_market_price_foil_usd 
+                       ELSE cp.avg_market_price_usd 
+                  END, 
+                  p.price_usd, p.price, 0),
+              price = COALESCE(
+                  CASE WHEN LOWER(COALESCE(p.finish, 'nonfoil')) IN ('foil', 'etched') THEN cp.avg_market_price_foil_usd 
+                       ELSE cp.avg_market_price_usd 
+                  END, 
+                  p.price, p.price_usd, 0)
+            FROM public.card_printings cp
+            WHERE p.printing_id = cp.printing_id {prod_where_clause}
+              AND (
+                 COALESCE(p.price_usd, 0) != COALESCE(CASE WHEN LOWER(COALESCE(p.finish, 'nonfoil')) IN ('foil', 'etched') THEN cp.avg_market_price_foil_usd ELSE cp.avg_market_price_usd END, p.price_usd, 0)
+                 OR
+                 COALESCE(p.price, 0) != COALESCE(CASE WHEN LOWER(COALESCE(p.finish, 'nonfoil')) IN ('foil', 'etched') THEN cp.avg_market_price_foil_usd ELSE cp.avg_market_price_usd END, p.price, 0)
+              );
+            """
+            cur.execute(prod_update_sql, prod_params)
+            conn.commit()
+            logger.info(f"Product prices synced successfully ({cur.rowcount} products affected).")
+            
         conn.close()
     except Exception as e:
         logger.error(f"Failed to update denormalized columns (SQL Error): {e}")
