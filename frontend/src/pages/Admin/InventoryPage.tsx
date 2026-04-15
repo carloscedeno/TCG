@@ -78,8 +78,8 @@ export function InventoryPage() {
                 p_search: searchQuery || null,
                 p_game: selectedGame || null,
                 p_condition: selectedCondition || null,
-                p_sort_by: isNewFilterActive ? 'newest' : sortBy,
-                p_sort_order: isNewFilterActive ? 'desc' : sortOrder,
+                p_sort_by: sortBy,
+                p_sort_order: sortOrder,
                 p_only_new: isNewFilterActive
             });
 
