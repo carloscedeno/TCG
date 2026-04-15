@@ -557,7 +557,7 @@ const Home: React.FC = () => {
                     </div>
                   )}
 
-                  <CardGrid cards={cards} onCardClick={setSelectedCardId} viewMode={viewMode} isArchive={activeTab === 'reference'} />
+                  <CardGrid cards={cards} onCardClick={setSelectedCardId} viewMode={viewMode} isArchive={activeTab === 'reference'} showCartButton={true} />
                   {cards.length < totalCount && (
                     <div className="flex justify-center pb-20">
                       <button

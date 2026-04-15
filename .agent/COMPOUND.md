@@ -202,3 +202,71 @@ Successfully recreate the `dev` environment and duplicate production catalog/inv
 ---
 
 *Compounded for Geekorium TCG Ecosystem.*
+
+# 🧠 COMPOUND: Multi-Cart Data Parsing Fallback
+
+**Date**: 2026-04-14
+
+## Objective
+
+Fix the critical UI bug in the POS Multi-Cart where items appear with empty names, missing images, and `$0.00` prices despite possessing a correct quantity, ensuring resilience across differing RPC payload schemas.
+
+## Knowledge Codification
+
+### 1. The Database vs UI Mismatch
+
+- **Observation**: `get_user_cart` RPC has evolved. Older or alternate variants returned a flat `cart_items` shape (only `product_id`), while the UI strictly expects nested product structures (`item.products.image_url`, `price`, etc).
+- **Impact**: Without defensive mapping, missing product data attributes evaluate to `undefined`, which the React component renders as empty visual fields and `$0.00` values, hiding the item completely.
+
+### 2. The Universal Extraction Fallback
+
+- **Solution**: Developed a universal parsing function in `api.ts` -> `fetchCart()`.
+- **Logic**: 
+  - Iteratively probe multiple potential access paths (`item.products.name`, `item.product_name`, `item.name`).
+  - If still missing (due to an old flat RPC), seamlessly `await supabase.from('products')` to fetch and graft the explicit product details on-the-fly (`pData.name`, `pData.price`).
+
+## Technical Validation
+
+- **Frontend Sync**: ✅ `api.ts` updated.
+- **Resilience**: ✅ TS compiler success, gracefully handles sparse legacy SQL structures.
+- **Git Push**: ✅ Pushed securely to `main` branch deployed to production via CI/CD.
+
+---
+
+*Compounded for Geekorium TCG Ecosystem.*
+
+# 🧠 COMPOUND: Fast-Add Reactivation & Price Sync (v46)
+
+**Date**: 2026-04-15 09:45
+
+## Objective
+
+Reactivate the "Quick Add to Cart" feature with refined UX and ensure consistent pricing across the catalog and inventory tables.
+
+## Knowledge Codification
+
+### 1. Overlay UX Pattern
+
+- **Pattern**: Moved the Add to Cart button from the text area to an image overlay (`absolute bottom-3 right-3`).
+- **Visibility**: Used `isHovered` state for smooth scale/opacity transitions, keeping the grid clean while idle but responsive on interaction.
+- **Affordance**: Added "Por encargo" (On Order) fallback for items with zero stock to maintain the Geekorium business model.
+
+### 2. Polymorphic Identifier Handling
+
+- **Logic**: Updated `Card.tsx` to pass the `finish` prop explicitly to `addToCart`.
+- **Resilience**: The backend RPC `add_to_cart_v2` was verified to handle polymorphic identifiers (stripping `-foil` synthetic suffixes) and idempotent product creation/price-healing.
+
+### 3. Cross-Table Price Synchronization
+
+- **Scripting**: Modified `sync_cardkingdom_api.py` to include an atomic `UPDATE public.products` step.
+- **Rule**: Prices in the `products` (Inventory) table now automatically match the `card_printings` (Catalog) market data, mapped strictly by `finish`.
+
+## Technical Validation
+
+- **Frontend Build**: ✅ Success (`dist/assets` generated correctly).
+- **Unit Tests**: ✅ 28 Passed (after resolving `fastapi-mail` dependency).
+- **Git Push**: 🚀 Proceeding to synchronization.
+
+---
+
+*Compounded for Geekorium TCG Ecosystem.*

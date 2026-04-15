@@ -37,7 +37,6 @@ export interface CardProps {
 
 export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, price, card_id, rarity, type, card_faces, viewMode = 'grid', total_stock, finish, is_foil, isArchive, showCartButton = false, onClick }) => {
   const [currentFaceIndex, setCurrentFaceIndex] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
   const [addingToCart, setAddingToCart] = useState(false);
 
   const hasMultipleFaces = card_faces && card_faces.length > 1;
@@ -66,7 +65,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
 
     setAddingToCart(true);
     try {
-      await addToCart(card_id, 1);
+      await addToCart(card_id, 1, finish);
       // Optional: Show toast
     } catch (err) {
       console.error("Failed to add to cart", err);
@@ -87,18 +86,13 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
 
   const isFoil = is_foil === true || finish === 'foil' || name.toLowerCase().includes(' foil ') || (type?.toLowerCase().includes('foil')); // Simple heuristic if finish prop not fully populated yet
 
-  const handleMouseEnter = () => {
-    setIsHovered(true);
+  const handlePreFetch = () => {
     // Pre-fetch card details on hover
     try {
       fetchCardDetails(card_id);
     } catch (err) {
       // Ignore errors during pre-fetch
     }
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
   };
 
   if (viewMode === 'list') {
@@ -111,8 +105,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
             onClick?.();
           }
         }}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        onMouseEnter={handlePreFetch}
         className="flex items-center gap-4 px-4 py-3 bg-black/40 hover:bg-neutral-900 border border-white/5 hover:border-geeko-cyan/30 rounded-xl transition-all cursor-pointer group"
       >
         <div className="w-12 h-16 bg-[#1a1a1a] rounded-md overflow-hidden flex-shrink-0 relative">
@@ -203,8 +196,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
           onClick?.();
         }
       }}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      onMouseEnter={handlePreFetch}
       data-testid="product-card"
       className={`flex flex-col glass-card rounded-2xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 group relative ${getRarityStyle(rarity)} cursor-pointer h-full`}
     >
@@ -270,6 +262,16 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
             Foil
           </div>
         )}
+
+        {showCartButton && (
+          <button
+            onClick={handleQuickAdd}
+            title={(total_stock || 0) > 0 ? "Agregar al Carrito Rápido" : "Por encargo"}
+            className={`absolute bottom-3 right-3 w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-2xl z-40 ${addingToCart ? 'bg-white text-black scale-100 opacity-100' : 'bg-geeko-cyan text-black hover:scale-110 border border-white/20 shadow-[0_0_15px_rgba(0,255,255,0.4)] opacity-100 translate-y-0 scale-100'}`}
+          >
+            {addingToCart ? <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /> : <ShoppingCart size={20} strokeWidth={2.5} />}
+          </button>
+        )}
       </div>
 
       {/* Card Info */}
@@ -300,26 +302,8 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
             </div>
           </div>
 
-          {/* Quick Add Button showing on Hover */}
-          {showCartButton && !isArchive && (
-            <button
-              onClick={handleQuickAdd}
-              title={(total_stock || 0) > 0 ? "Agregar al Carrito Rápido" : "Por encargo"}
-              className={`absolute right-3 bottom-3 w-8 h-8 rounded-full flex items-center justify-center transition-all shadow-lg ${isHovered || addingToCart ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
-                } ${addingToCart ? 'bg-geeko-cyan text-black' : 'bg-neutral-800 text-white hover:bg-geeko-cyan hover:text-black border border-white/10'}`}
-            >
-              {addingToCart ? <div className="w-3 h-3 border-2 border-black/30 border-t-black rounded-full animate-spin" /> : <ShoppingCart size={14} />}
-            </button>
-          )}
         </div>
       </div>
     </a>
   );
-}, (prevProps, nextProps) => {
-  // Only re-render if these props change
-  return prevProps.card_id === nextProps.card_id &&
-    prevProps.price === nextProps.price &&
-    prevProps.viewMode === nextProps.viewMode &&
-    prevProps.total_stock === nextProps.total_stock &&
-    prevProps.finish === nextProps.finish;
 });
