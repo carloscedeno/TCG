@@ -263,14 +263,13 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
           </div>
         )}
 
-        {/* Quick Add Button OVER IMAGE in Grid View */}
-        {showCartButton && !isArchive && (
+        {showCartButton && (
           <button
             onClick={handleQuickAdd}
             title={(total_stock || 0) > 0 ? "Agregar al Carrito Rápido" : "Por encargo"}
-            className={`absolute bottom-3 right-3 w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-2xl z-40 ${addingToCart ? 'bg-geeko-cyan text-black scale-100 opacity-100' : 'bg-black/60 text-white hover:bg-geeko-cyan hover:text-black hover:scale-110 border border-white/20 backdrop-blur-md opacity-100 translate-y-0 scale-100'}`}
+            className={`absolute bottom-3 right-3 w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-2xl z-40 ${addingToCart ? 'bg-white text-black scale-100 opacity-100' : 'bg-geeko-cyan text-black hover:scale-110 border border-white/20 shadow-[0_0_15px_rgba(0,255,255,0.4)] opacity-100 translate-y-0 scale-100'}`}
           >
-            {addingToCart ? <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /> : <ShoppingCart size={18} />}
+            {addingToCart ? <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /> : <ShoppingCart size={20} strokeWidth={2.5} />}
           </button>
         )}
       </div>
@@ -307,11 +306,4 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
       </div>
     </a>
   );
-}, (prevProps, nextProps) => {
-  // Only re-render if these props change
-  return prevProps.card_id === nextProps.card_id &&
-    prevProps.price === nextProps.price &&
-    prevProps.viewMode === nextProps.viewMode &&
-    prevProps.total_stock === nextProps.total_stock &&
-    prevProps.finish === nextProps.finish;
 });
