@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { RotateCw, Shield, ShoppingCart } from 'lucide-react';
+import { RotateCw, Shield, Plus } from 'lucide-react';
 import { fetchCardDetails, addToCart } from '../../utils/api';
 
 export interface CardFace {
@@ -179,7 +179,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
             className={`ml-4 w-9 h-9 rounded-full flex items-center justify-center transition-all border border-white/5 ${addingToCart ? 'bg-geeko-cyan text-black' : 'bg-white/5 text-neutral-400 hover:bg-geeko-cyan hover:text-black hover:scale-110'}`}
             title={(total_stock || 0) > 0 ? "Agregar al Carrito Rápido" : "Por encargo"}
           >
-            {addingToCart ? <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /> : <ShoppingCart size={16} />}
+            {addingToCart ? <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /> : <Plus size={20} strokeWidth={3} />}
           </button>
         )}
       </a>
@@ -269,7 +269,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
             title={(total_stock || 0) > 0 ? "Agregar al Carrito Rápido" : "Por encargo"}
             className={`absolute bottom-3 right-3 w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-2xl z-40 ${addingToCart ? 'bg-white text-black scale-100 opacity-100' : 'bg-geeko-cyan text-black hover:scale-110 border border-white/20 shadow-[0_0_15px_rgba(0,255,255,0.4)] opacity-100 translate-y-0 scale-100'}`}
           >
-            {addingToCart ? <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /> : <ShoppingCart size={20} strokeWidth={2.5} />}
+            {addingToCart ? <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /> : <Plus size={24} strokeWidth={3} />}
           </button>
         )}
       </div>
