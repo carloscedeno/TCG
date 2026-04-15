@@ -464,7 +464,7 @@ export function InventoryPage() {
                             }`}
                         >
                             <Sparkles size={14} className={isNewFilterActive ? 'animate-pulse' : ''} />
-                            Cartas Nuevas
+                            Nuevo
                         </button>
 
                         <button
@@ -637,7 +637,7 @@ export function InventoryPage() {
                                                         <span className="text-sm font-black text-white italic tracking-tight lowercase truncate">
                                                             {item.name}
                                                             {(new Date().getTime() - new Date(item.updated_at).getTime()) < (12 * 24 * 60 * 60 * 1000) && (
-                                                                <span className="ml-2 items-center px-1.5 py-0.5 bg-gradient-to-r from-purple-500 to-pink-500 text-[7px] font-black uppercase rounded shadow-lg shadow-purple-500/20 animate-in fade-in zoom-in duration-500">New</span>
+                                                                <span className="ml-2 items-center px-1.5 py-0.5 bg-gradient-to-r from-purple-500 to-pink-500 text-[7px] font-black uppercase rounded shadow-lg shadow-purple-500/20 animate-in fade-in zoom-in duration-500">Nuevo</span>
                                                             )}
                                                         </span>
                                                         <div className="flex items-center gap-2 mt-1">
