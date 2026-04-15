@@ -6,7 +6,7 @@ import {
     ChevronUp, ChevronDown, Check,
     ArrowUpDown,
     FileUp, ArrowDownFromLine,
-    Download, ShoppingCart
+    Download, ShoppingCart, Sparkles
 } from "lucide-react";
 import { ImportInventoryModal } from "../../components/Admin/ImportInventoryModal";
 import { EgressInventoryModal } from "../../components/Admin/EgressInventoryModal";
@@ -24,10 +24,11 @@ interface InventoryItem {
     stock: number;
     image_url: string;
     rarity: string;
+    updated_at: string;
     total_count: number;
 }
 
-type SortField = 'name' | 'price' | 'stock';
+type SortField = 'name' | 'price' | 'stock' | 'newest';
 type SortOrder = 'asc' | 'desc';
 
 export function InventoryPage() {
@@ -45,6 +46,7 @@ export function InventoryPage() {
     const [selectedGame, setSelectedGame] = useState<string | null>(null);
     const [sortBy, setSortBy] = useState<SortField>('name');
     const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
+    const [isNewFilterActive, setIsNewFilterActive] = useState(false);
 
     // NEW: Catalog Suggestions State
     const [catalogResults, setCatalogResults] = useState<any[]>([]);
@@ -76,8 +78,9 @@ export function InventoryPage() {
                 p_search: searchQuery || null,
                 p_game: selectedGame || null,
                 p_condition: selectedCondition || null,
-                p_sort_by: sortBy,
-                p_sort_order: sortOrder
+                p_sort_by: isNewFilterActive ? 'newest' : sortBy,
+                p_sort_order: isNewFilterActive ? 'desc' : sortOrder,
+                p_only_new: isNewFilterActive
             });
 
             if (error) throw error;
@@ -451,9 +454,25 @@ export function InventoryPage() {
 
                         <button
                             onClick={() => {
+                                setIsNewFilterActive(!isNewFilterActive);
+                                setPage(0);
+                            }}
+                            className={`flex items-center gap-2 px-4 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border ${
+                                isNewFilterActive 
+                                    ? 'bg-purple-500 border-purple-500 text-white shadow-lg shadow-purple-500/20' 
+                                    : 'bg-black/40 border-white/5 text-neutral-400 hover:border-purple-500/30'
+                            }`}
+                        >
+                            <Sparkles size={14} className={isNewFilterActive ? 'animate-pulse' : ''} />
+                            Cartas Nuevas
+                        </button>
+
+                        <button
+                            onClick={() => {
                                 setSearchQuery("");
                                 setSelectedGame(null);
                                 setSelectedCondition(null);
+                                setIsNewFilterActive(false);
                                 setPage(0);
                             }}
                             className="p-4 bg-white/5 hover:bg-white/10 rounded-2xl text-neutral-500 hover:text-white transition-all border border-white/5"
@@ -617,6 +636,9 @@ export function InventoryPage() {
                                                     <div className="flex flex-col min-w-0 max-w-[200px] md:max-w-md">
                                                         <span className="text-sm font-black text-white italic tracking-tight lowercase truncate">
                                                             {item.name}
+                                                            {(new Date().getTime() - new Date(item.updated_at).getTime()) < (12 * 24 * 60 * 60 * 1000) && (
+                                                                <span className="ml-2 items-center px-1.5 py-0.5 bg-gradient-to-r from-purple-500 to-pink-500 text-[7px] font-black uppercase rounded shadow-lg shadow-purple-500/20 animate-in fade-in zoom-in duration-500">New</span>
+                                                            )}
                                                         </span>
                                                         <div className="flex items-center gap-2 mt-1">
                                                             <span className="text-[9px] font-black text-neutral-600 uppercase tracking-widest px-2 py-0.5 bg-white/5 rounded-md">

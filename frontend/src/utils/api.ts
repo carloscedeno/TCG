@@ -202,7 +202,8 @@ export const fetchProducts = async (params: any = {}, signal?: AbortSignal): Pro
       limit_count: params.limit || 50,
       offset_count: params.offset || 0,
       price_min: params.price_min || null,
-      price_max: params.price_max || null
+      price_max: params.price_max || null,
+      p_only_new: params.only_new || false
     }).abortSignal(signal);
 
     if (error) throw error;

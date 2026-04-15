@@ -10,6 +10,7 @@ export interface Filters {
   types: string[];
   yearRange: [number, number];
   priceRange: [number, number];
+  only_new?: boolean;
 }
 
 export interface FiltersPanelProps {
@@ -41,7 +42,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
     setSetSearch('');
   };
 
-  const hasActiveFilters = Object.values(selected).some(v => v && v.length > 0);
+  const hasActiveFilters = Object.values(selected).some(v => v && (typeof v === 'boolean' ? v : (v as any).length > 0));
 
   return (
     <aside className="w-full glass-panel border border-white/5 p-8 rounded-[32px] shadow-2xl space-y-10">
