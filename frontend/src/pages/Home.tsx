@@ -142,6 +142,7 @@ const Home: React.FC = () => {
             price_max: debouncedFilters.priceRange ? debouncedFilters.priceRange[1] : undefined,
             limit: LIMIT,
             offset,
+            only_new: debouncedFilters.only_new,
             sort: sortBy
           }, controller.signal);
 
