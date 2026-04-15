@@ -37,7 +37,6 @@ export interface CardProps {
 
 export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, price, card_id, rarity, type, card_faces, viewMode = 'grid', total_stock, finish, is_foil, isArchive, showCartButton = false, onClick }) => {
   const [currentFaceIndex, setCurrentFaceIndex] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
   const [addingToCart, setAddingToCart] = useState(false);
 
   const hasMultipleFaces = card_faces && card_faces.length > 1;
@@ -87,18 +86,13 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
 
   const isFoil = is_foil === true || finish === 'foil' || name.toLowerCase().includes(' foil ') || (type?.toLowerCase().includes('foil')); // Simple heuristic if finish prop not fully populated yet
 
-  const handleMouseEnter = () => {
-    setIsHovered(true);
+  const handlePreFetch = () => {
     // Pre-fetch card details on hover
     try {
       fetchCardDetails(card_id);
     } catch (err) {
       // Ignore errors during pre-fetch
     }
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
   };
 
   if (viewMode === 'list') {
@@ -111,8 +105,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
             onClick?.();
           }
         }}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        onMouseEnter={handlePreFetch}
         className="flex items-center gap-4 px-4 py-3 bg-black/40 hover:bg-neutral-900 border border-white/5 hover:border-geeko-cyan/30 rounded-xl transition-all cursor-pointer group"
       >
         <div className="w-12 h-16 bg-[#1a1a1a] rounded-md overflow-hidden flex-shrink-0 relative">
@@ -203,8 +196,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
           onClick?.();
         }
       }}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      onMouseEnter={handlePreFetch}
       data-testid="product-card"
       className={`flex flex-col glass-card rounded-2xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 group relative ${getRarityStyle(rarity)} cursor-pointer h-full`}
     >
