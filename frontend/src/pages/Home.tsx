@@ -447,13 +447,11 @@ const Home: React.FC = () => {
                   </button>
                   <button
                     onClick={() => {
-                      const isNew = sortBy === 'newest';
-                      setSortBy(isNew ? 'price_asc' : 'newest');
-                      handleFilterChange({ ...filters, only_new: !isNew });
+                      handleFilterChange({ ...filters, only_new: !filters.only_new });
                     }}
-                    className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase transition-all flex items-center gap-1.5 ${sortBy === 'newest' ? 'bg-purple-600 text-white shadow-[0_0_10px_rgba(147,51,234,0.5)]' : 'text-neutral-500 hover:text-neutral-300'}`}
+                    className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase transition-all flex items-center gap-1.5 ${filters.only_new ? 'bg-purple-600 text-white shadow-[0_0_10px_rgba(147,51,234,0.5)]' : 'text-neutral-500 hover:text-neutral-300'}`}
                   >
-                    <Sparkles size={12} className={sortBy === 'newest' ? 'animate-pulse' : ''} />
+                    <Sparkles size={12} className={filters.only_new ? 'animate-pulse' : ''} />
                     Nuevo
                   </button>
                 </div>
