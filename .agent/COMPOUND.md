@@ -305,3 +305,42 @@ Solve the persistent visibility issues of the "Quick Add" button reported by the
 ---
 
 *Compounded for Geekorium TCG Ecosystem.*
+
+# ?? COMPOUND: Guest Cart Performance & Context Mapping (v48)
+
+**Date**: 2026-04-15 15:50
+
+## Objective
+
+Resolve the high latency experienced by guest users (non-logged-in) when interacting with the cart. Ensure data consistency across the application state management.
+
+## Knowledge Codification
+
+### 1. Batch-Fetch Strategy for Guests
+
+- **Optimization**: Replaced the sequential fetchCardDetails loop in api.ts with a vectorized approach. 
+- **Logic**: 
+  1. Extract unique printing_ids from localStorage.
+  2. Single .in() query to card_printings.
+  3. Single RPC call to get_products_stock_by_printing_ids.
+- **Performance**: Reduced network requests from N (number of items) to exactly 2, eliminating the visible delay.
+
+### 2. Defensive Mapping in CartContext
+
+- **Fix**: Updated CartContext.tsx to handle the nested products object returned by the optimized fetchCart.
+- **Resilience**: Added fallbacks for price, name, image_url, and set_code to ensure components using useCart().cartItems show correct data.
+
+### 3. TypeScript Build Strictness
+
+- **Rule**: Added a new lesson to lessons_learned.md regarding implicit any types. 
+- **Validation**: Verified that npm run build must pass before any push to production.
+
+## Technical Validation
+
+- **Frontend Build**: ? Success.
+- **Deployment**: ? Pushed to dev and merged to main (Production).
+- **Site Performance**: ? Direct verification shows instant cart updates for guests.
+
+---
+
+*Compounded for Geekorium TCG Ecosystem.*

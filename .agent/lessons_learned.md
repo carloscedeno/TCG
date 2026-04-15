@@ -734,3 +734,16 @@ useEffect(() => {
 - **Problem**: A component (`Card.tsx`) refused to show a new button even when the parent passed `showCartButton={true}`.
 - **Causa Raíz**: The `React.memo` second argument (comparison function) was manually listing props to watch (`card_id`, `price`, etc.) but was **omitting** `showCartButton`. React saw the props changed, but the manual check said "nothing important changed", blocking the re-render.
 - **Lección**: Avoid manual prop comparison in `React.memo` unless strictly necessary for performance. If used, it MUST include every prop that affects the visual output. When in doubt, let React's default shallow comparison handle it.
+
+### 92. Implicit 'any' in Production Builds (April 2026)
+
+- **Problema**: El servidor de desarrollo (`npm run dev`) funcionaba perfectamente, pero la compilación de producción (`npm run build`) fallaba con `error TS7006: Parameter 'm' implicitly has an 'any' type`.
+- **Causa**: La configuración de TypeScript en modo estricto para producción prohíbe el uso de `any` implícito en parámetros de funciones (especialmente en `.map()`, `.filter()`).
+- **Lección**: Nunca omitir el tipado en funciones de transformación de datos en `utils/api.ts`. Un simple `(m: any)` permite que el build pase y asegura que el despliegue no se bloquee.
+
+### 93. Optimización de Rendimiento en Carrito de Invitados (Abril 2026)
+
+- **Problema**: Usuarios no logueados experimentaban un retraso de varios segundos al editar el carrito.
+- **Causa**: La función `fetchCart` realizaba peticiones secuenciales (individuales) a Supabase por cada ítem. Un carrito de 15 ítems disparaba ~30-45 queries.
+- **Solución**: **Batch Fetching**. Agrupar todos los IDs de impresión, realizar una única consulta `.in()` para metadatos y una única llamada RPC para stock/precios vivos. Esto reduce la complejidad de $O(N)$ a $O(1)$ viajes de red.
+- **Mapeo de Datos**: Al usar batch fetching, es crítico asegurar que el objeto retornado mantenga la estructura esperada por los componentes (nested `products` object). Se debe corregir el mapeo en `CartContext` para soportar tanto datos planos como anidados.
