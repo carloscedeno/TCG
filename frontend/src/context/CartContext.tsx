@@ -80,11 +80,11 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
                         id: item.id,
                         product_id: item.product_id,
                         quantity: Number(item.quantity || 1),
-                        price: Number(item.price || 0),
-                        name: item.name,
-                        image_url: item.image_url,
-                        is_foil: item.finish === 'foil',
-                        set_code: item.set_code,
+                        price: Number(item.price || item.products?.price || 0),
+                        name: item.name || item.products?.name,
+                        image_url: item.image_url || item.products?.image_url,
+                        is_foil: (item.finish || item.products?.finish) === 'foil',
+                        set_code: item.set_code || item.products?.set_code,
                     }));
                 
                 setCartItems(Array.isArray(fetchedItems) ? fetchedItems : []);
