@@ -266,10 +266,22 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         {showCartButton && (
           <button
             onClick={handleQuickAdd}
-            title={(total_stock || 0) > 0 ? "Agregar al Carrito Rápido" : "Por encargo"}
-            className={`absolute bottom-3 right-3 w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-2xl z-40 ${addingToCart ? 'bg-white text-black scale-100 opacity-100' : 'bg-geeko-cyan text-black hover:scale-110 border border-white/20 shadow-[0_0_15px_rgba(0,255,255,0.4)] opacity-100 translate-y-0 scale-100'}`}
+            className={`absolute bottom-3 right-3 h-10 rounded-full flex items-center justify-center transition-all duration-300 shadow-2xl z-40 group/addbtn ${
+              addingToCart 
+                ? 'w-10 bg-white text-black scale-100 opacity-100' 
+                : 'w-10 hover:w-[140px] bg-geeko-cyan text-black border border-white/20 shadow-[0_0_15px_rgba(0,174,180,0.4)] opacity-100 translate-y-0 scale-100'
+            }`}
           >
-            {addingToCart ? <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /> : <Plus size={24} strokeWidth={3} />}
+            <div className="flex items-center gap-2 whitespace-nowrap overflow-hidden px-1">
+              {addingToCart ? (
+                <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin flex-shrink-0" />
+              ) : (
+                <Plus size={22} strokeWidth={3.5} className="flex-shrink-0" />
+              )}
+              <span className="text-[10px] font-black uppercase tracking-tight opacity-0 group-hover/addbtn:opacity-100 transition-opacity duration-300 pointer-events-none">
+                Añadir al carrito
+              </span>
+            </div>
           </button>
         )}
       </div>
