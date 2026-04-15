@@ -32,10 +32,11 @@ export interface CardProps {
   is_foil?: boolean;
   isArchive?: boolean;
   showCartButton?: boolean;
+  updated_at?: string;
   onClick?: () => void;
 }
 
-export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, price, card_id, rarity, type, card_faces, viewMode = 'grid', total_stock, finish, is_foil, isArchive, showCartButton = false, onClick }) => {
+export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, price, card_id, rarity, type, card_faces, viewMode = 'grid', total_stock, finish, is_foil, isArchive, showCartButton = false, updated_at, onClick }) => {
   const [currentFaceIndex, setCurrentFaceIndex] = useState(0);
   const [addingToCart, setAddingToCart] = useState(false);
 
@@ -125,7 +126,12 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         </div>
 
         <div className="flex-1 min-w-0">
-          <h3 className="text-white font-bold text-sm group-hover:text-geeko-cyan transition-colors break-words whitespace-normal leading-snug">{currentName}</h3>
+          <h3 className="text-white font-bold text-sm group-hover:text-geeko-cyan transition-colors break-words whitespace-normal leading-snug flex items-center gap-2">
+            {currentName}
+            {updated_at && (new Date().getTime() - new Date(updated_at).getTime()) < (12 * 24 * 60 * 60 * 1000) && (
+              <span className="px-1.5 py-0.5 bg-purple-600 text-[7px] font-black uppercase rounded shadow-lg shadow-purple-500/20 animate-pulse">New</span>
+            )}
+          </h3>
           <div className="flex items-center gap-2 mt-0.5">
             <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider px-1.5 py-0.5 bg-white/5 rounded">{set}</span>
             {rarity && (
@@ -208,6 +214,14 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         >
           <RotateCw size={14} className="group-hover:rotate-180 transition-transform duration-500" />
         </button>
+      )}
+
+      {/* NEW Badge Overlay */}
+      {updated_at && (new Date().getTime() - new Date(updated_at).getTime()) < (12 * 24 * 60 * 60 * 1000) && (
+        <div className="absolute top-2 left-2 z-30 px-2 py-1 bg-purple-600 text-white text-[8px] font-black uppercase rounded shadow-lg shadow-purple-600/30 flex items-center gap-1 animate-in zoom-in duration-300">
+          <div className="w-1 h-1 bg-white rounded-full animate-ping" />
+          Nueva Subida
+        </div>
       )}
 
       {/* Dynamic Background Glow for Hover */}

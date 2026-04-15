@@ -11,7 +11,7 @@ import { useAuth } from '../context/AuthContext';
 import { AuthModal } from '../components/Auth/AuthModal';
 import { UserMenu } from '../components/Navigation/UserMenu';
 
-import { LogIn, X, ShoppingCart } from 'lucide-react';
+import { LogIn, X, ShoppingCart, Sparkles } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { CartDrawer } from '../components/Navigation/CartDrawer';
 import { Footer } from '../components/Navigation/Footer';
@@ -155,7 +155,8 @@ const Home: React.FC = () => {
               rarity: p.rarity,
               total_stock: Number(p.stock) || 0,
               finish: p.finish,
-              is_foil: p.finish === 'foil' || p.finish === 'etched'
+              is_foil: p.finish === 'foil' || p.finish === 'etched',
+              updated_at: p.updated_at
             })),
             total_count: productRes.total_count
           };
@@ -233,7 +234,7 @@ const Home: React.FC = () => {
     return () => {
       controller.abort();
     };
-  }, [debouncedQuery, debouncedFilters, activeRarity, sortBy, page, activeTab]);
+  }, [debouncedQuery, debouncedFilters, activeRarity, sortBy, page, activeTab, filters.only_new]);
 
   useEffect(() => {
     const gameCodeMap: Record<string, string> = {
@@ -422,7 +423,7 @@ const Home: React.FC = () => {
               >
                 <div className="relative">
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" /></svg>
-                  {Object.values(filters).some(v => v && v.length > 0) && (
+                  {Object.values(filters).some(v => v && (typeof v === 'boolean' ? v : (v as any).length > 0)) && (
                     <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full" />
                   )}
                 </div>
@@ -445,10 +446,15 @@ const Home: React.FC = () => {
                     Precio {sortBy === 'price_asc' ? '↑' : (sortBy === 'price_desc' ? '↓' : '⇅')}
                   </button>
                   <button
-                    onClick={() => setSortBy(sortBy === 'release_date' ? 'release_date_asc' : 'release_date')}
-                    className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase transition-all ${sortBy.includes('release_date') || sortBy === 'newest' ? 'bg-neutral-700 text-white' : 'text-neutral-500 hover:text-neutral-300'}`}
+                    onClick={() => {
+                      const isNew = sortBy === 'newest';
+                      setSortBy(isNew ? 'price_asc' : 'newest');
+                      handleFilterChange({ ...filters, only_new: !isNew });
+                    }}
+                    className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase transition-all flex items-center gap-1.5 ${sortBy === 'newest' ? 'bg-purple-600 text-white shadow-[0_0_10px_rgba(147,51,234,0.5)]' : 'text-neutral-500 hover:text-neutral-300'}`}
                   >
-                    Fecha {(sortBy === 'release_date' || sortBy === 'newest') ? '↓' : (sortBy === 'release_date_asc' ? '↑' : '⇅')}
+                    <Sparkles size={12} className={sortBy === 'newest' ? 'animate-pulse' : ''} />
+                    Novedades
                   </button>
                 </div>
               </div>
@@ -512,7 +518,7 @@ const Home: React.FC = () => {
               ) : (
                 <div className="flex flex-col gap-6">
                   {/* Active Filters Tokens */}
-                  {(Object.values(filters).some(v => v && v.length > 0) || activeRarity !== 'All' || debouncedQuery) && (
+                  {(Object.values(filters).some(v => v && (typeof v === 'boolean' ? v : (v as any).length > 0)) || activeRarity !== 'All' || debouncedQuery) && (
                     <div className="flex flex-wrap items-center gap-2 mb-2 animate-in fade-in slide-in-from-left-2 duration-300">
                       <span className="text-[10px] font-black uppercase tracking-widest text-neutral-600 mr-2">Activo:</span>
 
