@@ -270,3 +270,38 @@ Reactivate the "Quick Add to Cart" feature with refined UX and ensure consistent
 ---
 
 *Compounded for Geekorium TCG Ecosystem.*
+# 🧠 COMPOUND: Touch-First Quick Add & Production Visibility (v47)
+
+**Date**: 2026-04-15 13:20
+
+## Objective
+
+Solve the persistent visibility issues of the "Quick Add" button reported by the user, ensuring it works on mobile/touch devices and correctly propagates to the production environment.
+
+## Knowledge Codification
+
+### 1. Breaking the Hover Dependency
+
+- **Insight**: Many users browse TCGs on mobile. Hover-based UI triggers (`group-hover:opacity-100`) are invisible on mobile.
+- **Implementation**: Forced `opacity-100` and `translate-y-0` as the base state for critical action buttons.
+- **Branding**: used `bg-geeko-cyan` for the button background to provide high contrast against card artwork.
+
+### 2. The React.memo Ghost Bug
+
+- **Discovery**: A manual comparison function in `React.memo(Card, (prev, next) => ...)` was causing a silent failure where the component wouldn't update if `showCartButton` changed.
+- **Resolution**: Removed the manual comparison to allow React to perform standard shallow diffing, restoring reactive behavior to the prop.
+
+### 3. Production Branch Synchronization
+
+- **Process**: Verified that production deployment tracks `main`. Merged `dev` into `main` after local validation to ensure the "missing button" bug was resolved on `www.geekorium.shop`.
+- **UI Styling**: Implemented a smooth width-expansion hover effect using `transition-all duration-300` and `whitespace-nowrap` to show "AÑADIR AL CARRITO" without disrupting the card layout.
+
+## Technical Validation
+
+- **Frontend Build**: ✅ Success in `dev` and `main`.
+- **Site Check**: ✅ Verified visibility on `www.geekorium.shop`.
+- **Unit Tests**: ✅ 28 Passed.
+
+---
+
+*Compounded for Geekorium TCG Ecosystem.*
