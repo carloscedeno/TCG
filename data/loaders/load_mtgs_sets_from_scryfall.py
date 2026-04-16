@@ -3,6 +3,13 @@
 Carga todos los sets de Magic: The Gathering desde Scryfall y los inserta en la tabla 'sets' de Supabase.
 Optimizado para procesamiento por lotes (batch) con upsert para evitar 502s por requests individuales.
 """
+import sys
+import io
+
+# Forzar UTF-8 en la salida de consola para evitar errores en Windows con emojis
+if sys.platform == "win32":
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+
 import os
 import time
 import requests
@@ -50,9 +57,22 @@ def upsert_batch(batch: list, batch_num: int, total_batches: int, max_retries: i
             print(f"  ✅ Lote {batch_num}/{total_batches} ({len(batch)} sets)")
             return
         except Exception as e:
+            error_str = str(e)
+            # Schema difference handling: if environment doesn't have UNIQUE(game_id, set_code), fallback to set_code
+            if '42P10' in error_str:
+                try:
+                    supabase.table('sets').upsert(
+                        batch,
+                        on_conflict='set_code'
+                    ).execute()
+                    print(f"  ✅ Lote {batch_num}/{total_batches} ({len(batch)} sets) [Fallback: ON CONFLICT(set_code)]")
+                    return
+                except Exception as fallback_e:
+                    error_str = f"Original error: {error_str} | Fallback error: {fallback_e}"
+
             if attempt < max_retries - 1:
                 wait = 2 ** attempt  # 1s, 2s, 4s
-                print(f"  ⚠️ Lote {batch_num} falló (intento {attempt + 1}), reintentando en {wait}s... [{e}]")
+                print(f"  ⚠️ Lote {batch_num} falló (intento {attempt + 1}), reintentando en {wait}s... [{error_str}]")
                 time.sleep(wait)
             else:
                 print(f"  ❌ Lote {batch_num} falló definitivamente tras {max_retries} intentos.")
