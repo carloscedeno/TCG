@@ -747,3 +747,10 @@ useEffect(() => {
 - **Causa**: La función `fetchCart` realizaba peticiones secuenciales (individuales) a Supabase por cada ítem. Un carrito de 15 ítems disparaba ~30-45 queries.
 - **Solución**: **Batch Fetching**. Agrupar todos los IDs de impresión, realizar una única consulta `.in()` para metadatos y una única llamada RPC para stock/precios vivos. Esto reduce la complejidad de $O(N)$ a $O(1)$ viajes de red.
 - **Mapeo de Datos**: Al usar batch fetching, es crítico asegurar que el objeto retornado mantenga la estructura esperada por los componentes (nested `products` object). Se debe corregir el mapeo en `CartContext` para soportar tanto datos planos como anidados.
+
+### 94. Schema Discrepancies en CI/CD y Error 42P10 (Abril 2026)
+
+- **Problema**: El script de importación de Supabase fallaba en GitHub Actions con el error `postgrest.exceptions.APIError: {'code': '42P10', 'message': 'there is no unique or exclusion constraint matching the ON CONFLICT specification'}`.
+- **Causa**: El script intentaba un `upsert` usando `on_conflict='game_id,set_code'`. El entorno local de desarrollo sí poseía esa restricción explícita de clave compuesta, pero la base de datos remota de producción solo tenía implementado un `UNIQUE(set_code)`. PostgREST arrojaba excepción de esquema inmediatamente al no hallar correspondencia exacta a las columnas especificadas.
+- **Solución**: Programación defensiva en scripts de BD multi-entorno utilizando fallbacks dinámicos (Ej: atrapar específicamente el código `'42P10'` en el bloque de excepciones y re-ejecutar el `upsert` haciendo un "Fallback" a `on_conflict='set_code'`).
+- **Regla Derivada**: Todo proceso de automatización que escriba en proyectos distintos de Supabase (`dev` vs `prod`) debe considerar y mitigar las deudas técnicas de disparidad de Constraints manejándolo a nivel de excepciones.

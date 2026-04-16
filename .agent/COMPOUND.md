@@ -376,3 +376,35 @@ Implement a global "Nuevo" (New) filter across the Marketplace and Admin Dashboa
 ---
 
 *Compounded for Geekorium TCG Ecosystem.*
+
+# 🧠 COMPOUND: Cross-Environment Constraint Fallbacks (v50)
+
+**Date**: 2026-04-16
+
+## Objective
+
+Harden the catalog synchronization workflow (GitHub Actions) to dynamically adapt to `UNIQUE` constraint schema differences between development and production databases during `upsert` operations.
+
+## Knowledge Codification
+
+### 1. Schema-Agnostic PostgREST Error Handling
+
+- **Observation**: Development environments might use `UNIQUE(game_id, set_code)`, whereas legacy or simplified production schemas may rely on `UNIQUE(set_code)`. A mismatch during an `upsert` with `on_conflict` triggers a `42P10` Postgres exception.
+- **Solution**: Implemented an explicit catch for `42P10`. The script attempts the `game_id,set_code` constraint first, and if it fails, falls back instantly to `set_code` without breaking the batch loop.
+- **Benefit**: Ensures CI/CD sync scripts remain robust and identical across separate Supabase branches, eliminating the need to maintain different scripts per environment.
+
+### 2. Windows vs Linux stdout Consistency
+
+- **Observation**: Python console prints containing emojis (🚀, ✅) crashed with `UnicodeEncodeError: 'charmap' codec can't encode character` when run locally on Windows machines, despite running perfectly on Linux CI runtimes.
+- **Solution**: Added a platform-specific `sys.stdout` override forcing `utf-8` using `io.TextIOWrapper` safely.
+- **Rule**: All Python tooling designed for CI but testable locally by developers MUST implement explicit `utf-8` buffers if using rich logging characters.
+
+## Technical Validation
+
+- **Backend Logic**: ✅ Fallback mechanism successfully verified to bypass `42P10` and proceed with Upserts.
+- **OS Health**: ✅ Windows execution cleared via `sys.platform == 'win32'` catch.
+- **Git Push**: ✅ Commited and merged cleanly to `main` branch.
+
+---
+
+*Compounded for Geekorium TCG Ecosystem.*
