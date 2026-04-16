@@ -45,7 +45,7 @@ def upsert_batch(batch: list, batch_num: int, total_batches: int, max_retries: i
         try:
             supabase.table('sets').upsert(
                 batch,
-                on_conflict='set_code,game_id'
+                on_conflict='set_code'
             ).execute()
             print(f"  ✅ Lote {batch_num}/{total_batches} ({len(batch)} sets)")
             return
