@@ -637,6 +637,7 @@ export const fetchCart = async (): Promise<any> => {
             price: Number(extractPrice || 0),
             image_url: extractImageUrl || '',
             set_code: extractSetCode || '',
+            collector_number: item.collector_number || nested.collector_number || '',
             stock: extractStock,
             finish: extractFinish || ''
           }
@@ -656,6 +657,7 @@ export const fetchCart = async (): Promise<any> => {
                     mappedItem.products.price = Number(pData.price || pData.store_price || 0);
                     mappedItem.products.image_url = pData.image_url;
                     mappedItem.products.set_code = pData.set_code || '';
+                    mappedItem.products.collector_number = pData.collector_number || '';
                     mappedItem.products.finish = pData.finish || '';
                     mappedItem.products.stock = pData.stock || 0;
                 }
@@ -727,6 +729,7 @@ export const fetchCart = async (): Promise<any> => {
             price: Number(product?.price ?? priceFallback),
             image_url: printing.image_url,
             set_code: printing.sets?.set_code || '',
+            collector_number: printing.collector_number || '',
             stock: product?.stock || 0,
             finish: product?.finish || itemMapping.explicitFinish
           }

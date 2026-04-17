@@ -85,6 +85,7 @@ export const CheckoutPage = () => {
                 quantity: item.quantity,
                 name: item.products?.name,
                 set: item.products?.set_code,
+                collector_number: item.products?.collector_number,
                 price: item.products?.price || 0,
                 foil: item.products?.is_foil || item.products?.finish === 'foil' || false,
                 finish: item.products?.finish || (item.products?.is_foil ? 'foil' : 'nonfoil'),
