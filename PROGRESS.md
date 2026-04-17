@@ -38,6 +38,11 @@ This session focused on reactivating the "Fast Add to Cart" feature with a premi
 - **Context Mapping Fix**: Resolved a data mapping issue in `CartContext` where nested product properties were being lost, ensuring correct price and image display.
 - **Production Performance**: Successfully deployed these optimizations to both `dev` and `main` branches.
 - **Sort Vectorization**: Fixed TypeScript implicit `any` errors that were blocking the production build pipeline.
+- **Pricing Integrity**: 
+    - [x] Corrección masiva de precios contaminados (Diabolic Intent, Sleight of Hand).
+    - [x] Implementación de Sincronizador SKU-Aware (F prefix support).
+    - [x] Optimización de Performance en Sync (Batch VALUES updates).
+    - [ ] Refactorización de `sync_cardkingdom_api.py` para usar nueva lógica SKU.
 
 ### ✅ Global "Nuevo" (New) Feature (Compound v49)
 - **Attribute Source**: Shifted from `created_at` to `updated_at` to accurately reflect re-stocks and stock updates as "New" events.

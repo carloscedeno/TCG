@@ -107,7 +107,8 @@ Artefactos del Compound step:
 - ✅ **Ocultamiento de Sección Archivo**: Removida la pestaña de histórico para simplificar la UX. El sistema ahora opera exclusivamente sobre el inventario vivo (Marketplace).
 - ✅ **Version 1.0 Baseline**: Creación de rama estable `v1.0-productiva` para preservar features apagadas.
 - ✅ **Limpieza de Repositorio (Garbage Removal)**: Eliminación de más de 70 scripts de depuración, logs y archivos temporales redundantes para mejorar la mantenibilidad.
-- ✅ **Alineación de IDs de Fuentes**: Estandarización de IDs de mercado (17: Card Kingdom, 16: TCGplayer) para integridad del historial de precios.
+- ✅ **Alineación de IDs de Fuentes**: Estandarización de IDs de mercado (17: Card Kingdom, 16: TCGplayer) para integridad del historial de precios.- ✅ **Pricing Integrity & SKU Sync (v52)**: Resolución de contaminación global de precios. Implementación de mapeo basado en SKU para CardKingdom (soporte prefijo `F` y números de coleccionista).
+- ✅ **Optimización de Batch SQL (Ley 18)**: Aplicación de actualizaciones masivas mediante el patrón `VALUES` table, reduciendo tiempos de horas a segundos.
 
 
 ## 🚧 Features Pendientes
@@ -126,6 +127,7 @@ Artefactos del Compound step:
 4. **Prioridad de Datos del Comprador**: No intentar joins con `profiles` para obtener el email; usar siempre `guest_info` o `shipping_address` en `orders`.
 5. **Cero Tolerancia a Precio 0**: Todo producto activo en inventario debe tener un precio mayor a 0 o fallback manual al mercado.
 6. **WhatsApp = Canal Operacional Primario**: El mensaje de WhatsApp en el checkout SIEMPRE debe incluir el detalle por carta (nombre, cantidad, set, finish, subtotal). Nunca simplificar a conteos agregados. (Lección #86)
+7. **Sincronización SKU-Aware**: Los scripts de sincronización con CardKingdom deben priorizar el SKU (`[F]SET-NNNN`) sobre el campo `variation` para sets modernos y tokens para garantizar un mapeo 100% exacto de acabados y coleccionistas.
 
 ---
 

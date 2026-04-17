@@ -1,66 +1,85 @@
 import psycopg2
+import sys
+import io
 
-try:
-    conn = psycopg2.connect(
-        user="postgres.sxuotvogwvmxuvwbsscv",
-        password="jLta9LqEmpMzCI5r",
-        host="aws-0-us-west-2.pooler.supabase.com",
-        port="6543",
-        dbname="postgres"
-    )
-    cur = conn.cursor()
-    
-    # Read the full add_to_cart_v2 definition to fix the ON CONFLICT clause
-    cur.execute("""
-    CREATE OR REPLACE FUNCTION public.add_to_cart_v2(
-        p_identifier text,
-        p_quantity integer,
-        p_finish text DEFAULT 'nonfoil'
-    )
-    RETURNS json
-    LANGUAGE plpgsql
-    SECURITY DEFINER
-    AS $$
+# Forzar UTF-8 en la salida de consola para evitar errores en Windows con emojis
+if sys.platform == "win32":
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+
+def fix_cart_rpc_signature():
+    try:
+        conn = psycopg2.connect(
+            user="postgres.sxuotvogwvmxuvwbsscv",
+            password="jLta9LqEmpMzCI5r",
+            host="aws-0-us-west-2.pooler.supabase.com",
+            port="6543",
+            dbname="postgres"
+        )
+        cur = conn.cursor()
+        
+        print("🛠️  Adaptando RPC add_to_cart_v2 para compatibilidad total...")
+        
+        # Primero goteamos para evitar sobrecargas ambiguas
+        cur.execute("""
+            SELECT oidvectortypes(proargtypes) 
+            FROM pg_proc 
+            WHERE proname = 'add_to_cart_v2' 
+            AND pronamespace = 'public'::regnamespace;
+        """)
+        overloads = cur.fetchall()
+        for ov in overloads:
+            print(f"🗑️  Goteando overload: add_to_cart_v2({ov[0]})")
+            cur.execute(f"DROP FUNCTION IF EXISTS public.add_to_cart_v2({ov[0]})")
+
+        # 2. Re-crear con p_user_id OPCIONAL para evitar crash del frontend viejo (cache)
+        # NOTA: Aunque reciba p_user_id, usaremos auth.uid() por seguridad si est disponible.
+        print("📦 Re-creando add_to_cart_v2 (con p_user_id de compatibilidad)...")
+        logic = """
+CREATE OR REPLACE FUNCTION public.add_to_cart_v2(
+    p_identifier text,
+    p_quantity integer,
+    p_finish text DEFAULT 'nonfoil'::text,
+    p_user_id uuid DEFAULT NULL::uuid
+)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+AS $function$
     DECLARE
       v_user_id uuid;
-      v_cart_id uuid;
       v_product_id uuid;
+      v_cart_id uuid;
       v_printing_id uuid;
-      v_price numeric;
       v_name text;
       v_set_code text;
       v_image_url text;
+      v_price numeric;
     BEGIN
-      -- Get user ID
-      v_user_id := auth.uid();
+      -- Prioridad a auth.uid() para seguridad del cliente, p_user_id como backup (ej. admin o cache viejo)
+      v_user_id := COALESCE(auth.uid(), p_user_id);
+      
       IF v_user_id IS NULL THEN
         RETURN jsonb_build_object('success', false, 'message', 'No autenticado');
       END IF;
 
-      -- Resolve printing_id from identifier (it could be product_id or printing_id)
-      -- Check if it is a valid UUID
-      BEGIN
-        v_printing_id := p_identifier::uuid;
-      EXCEPTION WHEN OTHERS THEN
-        RETURN jsonb_build_object('success', false, 'message', 'ID de producto inválido');
-      END;
-
-      -- Check if it's already a product_id or a printing_id
-      SELECT id INTO v_product_id FROM public.products WHERE id = v_printing_id;
-      
-      IF v_product_id IS NOT NULL THEN
-        -- It was a product_id! We are good.
+      -- Check if p_identifier is a product_id (UUID) or printing_id (Text)
+      IF p_identifier ~ '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$' THEN
+        v_product_id := p_identifier::uuid;
       ELSE
-        -- It was likely a printing_id (Scryfall ID)
-        -- Try to find an existing product for this printing + condition (NM) + finish
-        SELECT id INTO v_product_id FROM public.products 
-        WHERE printing_id = v_printing_id AND condition = 'NM' AND LOWER(COALESCE(finish, 'nonfoil')) = LOWER(COALESCE(p_finish, 'nonfoil'));
+        v_printing_id := p_identifier::uuid;
+        
+        -- Try to find existing product
+        SELECT id INTO v_product_id 
+        FROM public.products 
+        WHERE printing_id = v_printing_id 
+          AND condition = 'NM' 
+          AND LOWER(COALESCE(finish, 'nonfoil')) = LOWER(COALESCE(p_finish, 'nonfoil'))
+        LIMIT 1;
 
+        -- If not found, create virtual product (v43 master logic)
         IF v_product_id IS NULL THEN
-          -- Need to create a product entry (stock 0) before adding to cart
-          -- Fetch card details from master tables
           SELECT 
-            c.card_name, s.set_code, cp.image_url,
+            c.card_name, s.set_code, cp.image_url, 
             COALESCE(
               CASE WHEN LOWER(COALESCE(p_finish, 'nonfoil')) = 'foil' THEN ap.avg_market_price_foil_usd ELSE ap.avg_market_price_usd END,
               0
@@ -102,12 +121,16 @@ try:
 
       RETURN jsonb_build_object('success', true, 'cart_id', v_cart_id, 'product_id', v_product_id);
     END;
-    $$;
-    """)
-    
-    conn.commit()
-    print("Successfully updated add_to_cart_v2 RPC")
-    cur.close()
-    conn.close()
-except Exception as e:
-    print(f"Error: {e}")
+$function$;
+"""
+        cur.execute(logic)
+        conn.commit()
+        print("✨ ¡RPC add_to_cart_v2 actualizado con éxito para compatibilidad!")
+        
+        cur.close()
+        conn.close()
+    except Exception as e:
+        print(f"❌ Error restaurando producción: {e}")
+
+if __name__ == "__main__":
+    fix_cart_rpc_signature()

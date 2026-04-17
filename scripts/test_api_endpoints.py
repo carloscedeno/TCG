@@ -9,7 +9,7 @@ BASE_URL = "http://localhost:8000"
 
 def test_health():
     """Test health endpoint"""
-    print("🔍 Testing health endpoint...")
+    print("Testing health endpoint...")
     try:
         response = requests.get(f"{BASE_URL}/health")
         if response.status_code == 200:

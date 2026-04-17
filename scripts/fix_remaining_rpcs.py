@@ -1,234 +1,251 @@
 import psycopg2
+import sys
+import io
 
-try:
-    conn = psycopg2.connect(
-        user="postgres.sxuotvogwvmxuvwbsscv",
-        password="jLta9LqEmpMzCI5r",
-        host="aws-0-us-west-2.pooler.supabase.com",
-        port="6543",
-        dbname="postgres"
-    )
-    cur = conn.cursor()
-    
-    # 1. Update add_to_cart
-    cur.execute("""
-    CREATE OR REPLACE FUNCTION public.add_to_cart(p_product_id uuid, p_quantity integer, p_user_id uuid, p_printing_id text DEFAULT NULL::text, p_finish text DEFAULT 'nonfoil'::text)
-    RETURNS json
-    LANGUAGE plpgsql
-    SECURITY DEFINER
-    AS $$
-    DECLARE
-        v_cart_id uuid;
-        v_resolved_product_id uuid;
-        v_printing_uuid uuid;
-        v_price numeric;
-        v_image_url text;
-        v_name text;
-        v_set_code text;
-        v_finish text := LOWER(COALESCE(p_finish, 'nonfoil'));
-    BEGIN
-        -- Resolve printing ID if provided
-        IF p_printing_id IS NOT NULL THEN
-            BEGIN
-                v_printing_uuid := p_printing_id::uuid;
-            EXCEPTION WHEN OTHERS THEN
-                RETURN jsonb_build_object('success', false, 'error', 'Invalid printing_id format');
-            END;
-        END IF;
+# Forzar UTF-8 en la salida de consola para evitar errores en Windows con emojis
+if sys.platform == "win32":
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
-        -- 1. Find or create active cart for the user
-        SELECT id INTO v_cart_id FROM public.carts WHERE user_id = p_user_id AND is_active = true LIMIT 1;
-        IF v_cart_id IS NULL THEN
-            INSERT INTO public.carts (user_id, name, is_active, is_pos)
-            VALUES (p_user_id, 'Carrito Principal', true, false)
-            RETURNING id INTO v_cart_id;
-        END IF;
-
-        -- 2. Resolve/Repair Product metadata
-        -- If p_product_id was provided directly
-        IF p_product_id IS NOT NULL THEN
-            SELECT id, price, image_url, name, set_code INTO v_resolved_product_id, v_price, v_image_url, v_name, v_set_code
-            FROM public.products WHERE id = p_product_id;
-        ELSIF v_printing_uuid IS NOT NULL THEN
-            -- Try to find product by printing + NM condition + finish
-            SELECT id, price, image_url, name, set_code INTO v_resolved_product_id, v_price, v_image_url, v_name, v_set_code
-            FROM public.products 
-            WHERE printing_id = v_printing_uuid AND condition = 'NM' AND LOWER(COALESCE(finish, 'nonfoil')) = v_finish;
-        END IF;
-
-        -- If product is missing or has issue, repair/create
-        IF v_resolved_product_id IS NULL OR COALESCE(v_price, 0) = 0 OR v_image_url IS NULL THEN
-            DECLARE
-                v_master_price numeric;
-                v_master_image text;
-                v_master_name text;
-                v_master_set text;
-                v_printing_to_use uuid := COALESCE(v_printing_uuid, (SELECT printing_id FROM products WHERE id = p_product_id));
-            BEGIN
-                IF v_printing_to_use IS NOT NULL THEN
-                    SELECT 
-                        COALESCE(
-                            CASE WHEN v_finish = 'foil' THEN ap.avg_market_price_foil_usd ELSE ap.avg_market_price_usd END,
-                            (cp.prices->>CASE WHEN v_finish = 'foil' THEN 'usd_foil' ELSE 'usd' END)::numeric,
-                            0
-                        ),
-                        cp.image_url,
-                        c.card_name,
-                        s.set_code
-                    INTO v_master_price, v_master_image, v_master_name, v_master_set
-                    FROM public.card_printings cp
-                    JOIN public.cards c ON cp.card_id = c.card_id
-                    JOIN public.sets s ON cp.set_id = s.set_id
-                    LEFT JOIN public.aggregated_prices ap ON cp.printing_id = ap.printing_id
-                    WHERE cp.printing_id = v_printing_to_use;
-
-                    IF v_resolved_product_id IS NULL THEN
-                        INSERT INTO public.products (printing_id, name, set_code, finish, price, image_url, stock, condition)
-                        VALUES (v_printing_to_use, v_master_name, v_master_set, v_finish, COALESCE(v_master_price, 0), v_master_image, 0, 'NM')
-                        ON CONFLICT (printing_id, condition, finish) DO UPDATE SET
-                            price = CASE WHEN COALESCE(public.products.price, 0) = 0 THEN EXCLUDED.price ELSE public.products.price END
-                        RETURNING id INTO v_resolved_product_id;
-                    ELSE
-                        UPDATE public.products 
-                        SET 
-                            price = CASE WHEN COALESCE(price, 0) = 0 THEN COALESCE(v_master_price, 0) ELSE price END,
-                            image_url = COALESCE(image_url, v_master_image)
-                        WHERE id = v_resolved_product_id;
-                    END IF;
-                END IF;
-            END;
-        END IF;
-
-        IF v_resolved_product_id IS NULL THEN
-             RETURN jsonb_build_object('success', false, 'error', 'Product not found and could not be resolved');
-        END IF;
-
-        -- 3. Update or Insert into cart_items
-        INSERT INTO public.cart_items (cart_id, product_id, quantity)
-        VALUES (v_cart_id, v_resolved_product_id, p_quantity)
-        ON CONFLICT (cart_id, product_id) 
-        DO UPDATE SET 
-            quantity = public.cart_items.quantity + EXCLUDED.quantity,
-            updated_at = now();
-
-        RETURN jsonb_build_object('success', true, 'cart_id', v_cart_id, 'product_id', v_resolved_product_id);
-    END;
-    $$;
-    """)
-
-    # 2. Update create_order_atomic (Fixing the product insertion point)
-    # Note: Using the previously fetched definition but adding ON CONFLICT
-    cur.execute("""
-    CREATE OR REPLACE FUNCTION public.create_order_atomic(p_user_id uuid, p_total_amount numeric, p_items jsonb, p_shipping_address jsonb, p_guest_info jsonb)
-    RETURNS json
-    LANGUAGE plpgsql
-    SECURITY DEFINER
-    AS $$
-    DECLARE
-        v_order_id UUID;
-        v_item JSONB;
-        v_product_id UUID;
-        v_printing_id UUID;
-        v_quantity INTEGER;
-        v_price NUMERIC;
-        v_current_stock INTEGER;
-        v_product_name TEXT;
-        v_finish TEXT;
-        v_is_on_demand BOOLEAN;
-        v_cart_id UUID;
-        v_set_code TEXT;
-        v_image_url TEXT;
-        v_rarity TEXT;
-        v_game_name TEXT;
-    BEGIN
-        INSERT INTO public.orders (
-            user_id, total_amount, status, shipping_address, guest_info
-        ) VALUES (
-            p_user_id, p_total_amount, 'pending_verification', p_shipping_address, p_guest_info
-        ) RETURNING id INTO v_order_id;
-
-        FOR v_item IN SELECT * FROM jsonb_array_elements(p_items)
-        LOOP
-            v_product_id := (v_item->>'product_id')::UUID;
-            v_printing_id := (v_item->>'printing_id')::UUID;
-            v_quantity := (v_item->>'quantity')::INTEGER;
-            v_price := (v_item->>'price')::NUMERIC;
-            v_finish := LOWER(COALESCE(v_item->>'finish', 'nonfoil'));
-            v_is_on_demand := COALESCE((v_item->>'is_on_demand')::BOOLEAN, false);
-
-            IF v_product_id IS NOT NULL THEN
-                SELECT id, stock, name INTO v_product_id, v_current_stock, v_product_name 
-                FROM public.products 
-                WHERE id = v_product_id FOR UPDATE;
-            END IF;
+def fix_all_rpcs():
+    try:
+        conn = psycopg2.connect(
+            user="postgres.sxuotvogwvmxuvwbsscv",
+            password="jLta9LqEmpMzCI5r",
+            host="aws-0-us-west-2.pooler.supabase.com",
+            port="6543",
+            dbname="postgres"
+        )
+        cur = conn.cursor()
+        
+        print("🛠️  Iniciando limpieza de RPCs en producción...")
+        
+        # 1. Obtener overloads de get_products_filtered para eliminarlos uno a uno
+        cur.execute("""
+            SELECT oidvectortypes(proargtypes) 
+            FROM pg_proc 
+            WHERE proname = 'get_products_filtered' 
+            AND pronamespace = 'public'::regnamespace;
+        """)
+        overloads = cur.fetchall()
+        for ov in overloads:
+            print(f"🗑️  Goteando overload: get_products_filtered({ov[0]})")
+            cur.execute(f"DROP FUNCTION IF EXISTS public.get_products_filtered({ov[0]})")
             
-            IF v_product_id IS NULL AND v_printing_id IS NOT NULL THEN
-                SELECT id, stock, name INTO v_product_id, v_current_stock, v_product_name
-                FROM public.products
-                WHERE printing_id = v_printing_id AND LOWER(COALESCE(finish, 'nonfoil')) = v_finish
-                AND condition = 'NM' -- Assuming orders from catalog are NM
-                FOR UPDATE;
+        # 2. Re-crear get_products_filtered con la lógica de Strixhaven
+        print("📦 Re-creando get_products_filtered...")
+        strixhaven_logic = """
+CREATE OR REPLACE FUNCTION public.get_products_filtered(
+    search_query text DEFAULT NULL::text,
+    game_filter text DEFAULT NULL::text,
+    set_filter text[] DEFAULT NULL::text[],
+    rarity_filter text[] DEFAULT NULL::text[],
+    type_filter text[] DEFAULT NULL::text[],
+    color_filter text[] DEFAULT NULL::text[],
+    year_from integer DEFAULT NULL::integer,
+    year_to integer DEFAULT NULL::integer,
+    price_min numeric DEFAULT NULL::numeric,
+    price_max numeric DEFAULT NULL::numeric,
+    limit_count integer DEFAULT 50,
+    offset_count integer DEFAULT 0,
+    p_only_new boolean DEFAULT false,
+    sort_by text DEFAULT 'newest'::text
+)
+ RETURNS TABLE(
+    id uuid,
+    name text,
+    game text,
+    set_code text,
+    price numeric,
+    image_url text,
+    rarity text,
+    printing_id uuid,
+    stock integer,
+    set_name text,
+    finish text,
+    updated_at timestamp with time zone
+ )
+ LANGUAGE plpgsql
+ STABLE
+AS $function$
+            DECLARE
+              v_game_code TEXT;
+              v_sort_by TEXT;
+              v_has_recent BOOLEAN;
+              v_strixhaven_sets TEXT[] := ARRAY['sos', 'soa', 'soc', 'tsos'];
+            BEGIN
+              v_sort_by := LOWER(TRIM(COALESCE(sort_by, 'newest')));
+              IF game_filter ILIKE 'Magic%' OR game_filter = 'MTG' THEN v_game_code := 'MTG';
+              ELSIF game_filter ILIKE 'Poke%' OR game_filter = 'PKM' THEN v_game_code := 'POKEMON';
+              ELSE v_game_code := game_filter; END IF;
 
-                IF v_product_id IS NULL THEN
-                    SELECT 
-                        c.card_name, cp.set_code, cp.image_url, c.rarity, g.game_name
-                    INTO v_product_name, v_set_code, v_image_url, v_rarity, v_game_name
-                    FROM card_printings cp
-                    JOIN cards c ON cp.card_id = c.card_id
-                    JOIN games g ON c.game_id = g.game_id
-                    WHERE cp.printing_id = v_printing_id;
+              IF p_only_new THEN
+                  SELECT EXISTS (
+                      SELECT 1 FROM public.products p
+                      WHERE p.stock > 0
+                        AND (search_query IS NULL OR p.name ILIKE '%' || search_query || '%')
+                        AND (v_game_code IS NULL OR p.game = v_game_code OR (v_game_code = 'MTG' AND p.game IN ('Magic', '22')))
+                        AND LOWER(p.set_code) = ANY(v_strixhaven_sets)
+                  ) INTO v_has_recent;
+              ELSE
+                  v_has_recent := FALSE;
+              END IF;
 
-                    IF v_product_name IS NOT NULL THEN
-                        INSERT INTO public.products (
-                            printing_id, name, game, set_code, price, stock, image_url, rarity, finish, condition
-                        ) VALUES (
-                            v_printing_id, v_product_name, v_game_name, v_set_code, v_price, 0, v_image_url, v_rarity, v_finish, 'NM'
-                        ) 
-                        ON CONFLICT (printing_id, condition, finish) DO UPDATE SET
-                            updated_at = now()
-                        RETURNING id INTO v_product_id;
-                        v_current_stock := 0;
-                    END IF;
-                END IF;
-            END IF;
-
-            IF v_product_id IS NULL THEN
-                RAISE EXCEPTION 'Product % not found and could not be resolved', (v_item->>'product_id');
-            END IF;
-
-            IF NOT v_is_on_demand AND v_current_stock > 0 THEN
-                IF v_current_stock < v_quantity THEN
-                     RAISE EXCEPTION 'Insufficient stock for product %. Available: %, Required: %', v_product_name, v_current_stock, v_quantity;
-                END IF;
-                UPDATE public.products SET stock = stock - v_quantity WHERE id = v_product_id;
-            ELSIF v_current_stock > 0 THEN
-                UPDATE public.products SET stock = GREATEST(0, stock - v_quantity) WHERE id = v_product_id;
-            END IF;
-
-            INSERT INTO public.order_items (
-                order_id, product_id, quantity, price_at_purchase, product_name, finish, is_on_demand
-            ) VALUES (
-                v_order_id, v_product_id, v_quantity, v_price, v_product_name, v_finish, COALESCE(v_is_on_demand, v_current_stock <= 0)
-            );
-        END LOOP;
-
-        IF p_user_id IS NOT NULL THEN
-            SELECT id INTO v_cart_id FROM public.carts WHERE user_id = p_user_id;
-            IF v_cart_id IS NOT NULL THEN
-                DELETE FROM public.cart_items WHERE cart_id = v_cart_id;
-            END IF;
+              RETURN QUERY
+              SELECT 
+                p.id, p.name::text, p.game::text, p.set_code::text, p.price as price,
+                p.image_url::text, p.rarity::text, p.printing_id, p.stock, p.set_name::text,
+                LOWER(COALESCE(p.finish, 'nonfoil')) as finish,
+                p.updated_at
+              FROM public.products p
+              WHERE 
+                p.stock > 0
+                AND (search_query IS NULL OR p.name ILIKE '%' || search_query || '%')
+                AND (v_game_code IS NULL OR p.game = v_game_code OR (v_game_code = 'MTG' AND p.game IN ('Magic', '22')))
+                AND (set_filter IS NULL OR p.set_name = ANY(set_filter))
+                AND (rarity_filter IS NULL OR LOWER(p.rarity) = ANY(rarity_filter))
+                AND (color_filter IS NULL OR p.colors && color_filter)
+                AND (NOT p_only_new OR NOT v_has_recent OR LOWER(p.set_code) = ANY(v_strixhaven_sets))
+                AND (year_from IS NULL OR EXTRACT(YEAR FROM p.release_date) >= year_from)
+                AND (year_to IS NULL OR EXTRACT(YEAR FROM p.release_date) <= year_to)
+                AND (price_min IS NULL OR p.price >= price_min)
+                AND (price_max IS NULL OR p.price <= price_max)
+                AND (type_filter IS NULL OR EXISTS (SELECT 1 FROM unnest(type_filter) tf WHERE p.type_line ILIKE '%' || tf || '%'))
+              ORDER BY
+                CASE 
+                    WHEN search_query IS NOT NULL AND p.name ILIKE search_query THEN 0 
+                    WHEN search_query IS NOT NULL AND p.name ILIKE search_query || '%' THEN 1
+                    ELSE 2 END ASC,
+                CASE WHEN v_sort_by = 'newest' THEN p.updated_at END DESC,
+                CASE WHEN v_sort_by = 'price_asc' THEN p.price END ASC,
+                CASE WHEN v_sort_by = 'price_desc' THEN p.price END DESC,
+                CASE WHEN v_sort_by = 'name' THEN p.name END ASC,
+                CASE WHEN v_sort_by = 'name_desc' THEN p.name END DESC,
+                CASE WHEN v_sort_by = 'release_date' THEN p.release_date END DESC,
+                CASE WHEN v_sort_by = 'release_date_asc' THEN p.release_date END ASC,
+                p.updated_at DESC
+              LIMIT limit_count
+              OFFSET offset_count;
+            END;
+$function$;
+"""
+        cur.execute(strixhaven_logic)
+        
+        # 3. Eliminar overloads de get_inventory_list
+        cur.execute("""
+            SELECT oidvectortypes(proargtypes) 
+            FROM pg_proc 
+            WHERE proname = 'get_inventory_list' 
+            AND pronamespace = 'public'::regnamespace;
+        """)
+        overloads_inv = cur.fetchall()
+        for ov in overloads_inv:
+            print(f"🗑️  Goteando overload: get_inventory_list({ov[0]})")
+            cur.execute(f"DROP FUNCTION IF EXISTS public.get_inventory_list({ov[0]})")
+            
+        # 4. Re-crear get_inventory_list con lógica de Strixhaven
+        print("📦 Re-creando get_inventory_list...")
+        strixhaven_logic_inv = """
+CREATE OR REPLACE FUNCTION public.get_inventory_list(
+    p_page integer,
+    p_page_size integer,
+    p_search text DEFAULT NULL::text,
+    p_game text DEFAULT NULL::text,
+    p_condition text DEFAULT NULL::text,
+    p_sort_by text DEFAULT 'name'::text,
+    p_sort_order text DEFAULT 'asc'::text,
+    p_only_new boolean DEFAULT false,
+    p_set_code text DEFAULT NULL::text
+)
+ RETURNS TABLE(
+    product_id uuid,
+    printing_id text,
+    name text,
+    game text,
+    set_code text,
+    condition text,
+    finish text,
+    price numeric,
+    stock integer,
+    image_url text,
+    rarity text,
+    updated_at timestamp with time zone,
+    total_count bigint
+ )
+ LANGUAGE plpgsql
+ STABLE
+AS $function$
+    DECLARE
+        v_offset INTEGER := p_page * p_page_size;
+        v_has_recent BOOLEAN;
+        v_strixhaven_sets TEXT[] := ARRAY['sos', 'soa', 'soc', 'tsos'];
+    BEGIN
+        IF p_only_new THEN
+            SELECT EXISTS (
+                SELECT 1 FROM public.products p
+                WHERE (p_search IS NULL OR p.name ILIKE '%' || p_search || '%')
+                  AND (p_game IS NULL OR p.game = p_game)
+                  AND (p_condition IS NULL OR p.condition = p_condition)
+                  AND (p_set_code IS NULL OR p.set_code = p_set_code)
+                  AND LOWER(p.set_code) = ANY(v_strixhaven_sets)
+            ) INTO v_has_recent;
+        ELSE
+            v_has_recent := FALSE;
         END IF;
 
-        RETURN jsonb_build_object('success', true, 'order_id', v_order_id);
-    EXCEPTION WHEN OTHERS THEN
-        RETURN jsonb_build_object('success', false, 'error', SQLERRM);
+        RETURN QUERY
+        WITH filtered_inventory AS (
+            SELECT 
+                p.id as product_id,
+                p.printing_id::text,
+                p.name,
+                p.game,
+                p.set_code,
+                p.condition,
+                COALESCE(p.finish, 'nonfoil') as finish,
+                p.price,
+                p.stock,
+                p.image_url,
+                p.rarity,
+                p.updated_at
+            FROM public.products p
+            WHERE (p_search IS NULL OR p.name ILIKE '%' || p_search || '%')
+              AND (p_game IS NULL OR p.game = p_game)
+              AND (p_condition IS NULL OR p.condition = p_condition)
+              AND (p_set_code IS NULL OR p.set_code = p_set_code)
+              AND (NOT p_only_new OR NOT v_has_recent OR LOWER(p.set_code) = ANY(v_strixhaven_sets))
+        ),
+        total_c AS (
+            SELECT COUNT(*) as full_count FROM filtered_inventory
+        )
+        SELECT 
+            fi.product_id, fi.printing_id, fi.name, fi.game, fi.set_code, 
+            fi.condition, fi.finish, fi.price, fi.stock, fi.image_url, fi.rarity, 
+            fi.updated_at, tc.full_count
+        FROM filtered_inventory fi
+        CROSS JOIN total_c tc
+        ORDER BY 
+            CASE WHEN p_sort_by = 'newest' THEN fi.updated_at END DESC,
+            CASE WHEN p_sort_by = 'name' AND p_sort_order = 'asc' THEN fi.name END ASC,
+            CASE WHEN p_sort_by = 'name' AND p_sort_order = 'desc' THEN fi.name END DESC,
+            CASE WHEN p_sort_by = 'price' AND p_sort_order = 'asc' THEN fi.price END ASC,
+            CASE WHEN p_sort_by = 'price' AND p_sort_order = 'desc' THEN fi.price END DESC,
+            CASE WHEN p_sort_by = 'stock' AND p_sort_order = 'asc' THEN fi.stock END ASC,
+            CASE WHEN p_sort_by = 'stock' AND p_sort_order = 'desc' THEN fi.stock END DESC,
+            fi.updated_at DESC
+        LIMIT p_page_size
+        OFFSET v_offset;
     END;
-    $$;
-    """)
-    
-    conn.commit()
-    print("Successfully updated add_to_cart and create_order_atomic RPCs")
-    cur.close()
-    conn.close()
-except Exception as e:
-    print(f"Error: {e}")
+$function$;
+"""
+        cur.execute(strixhaven_logic_inv)
+        
+        conn.commit()
+        print("✨ ¡Producción restaurada con éxito!")
+        
+        cur.close()
+        conn.close()
+    except Exception as e:
+        print(f"❌ Error restaurando producción: {e}")
+
+if __name__ == "__main__":
+    fix_all_rpcs()

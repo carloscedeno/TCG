@@ -763,3 +763,21 @@ useEffect(() => {
   - Actualizar el trigger de PostgreSQL para incluir `type_line`, `colors` y `release_date` (usando `COALESCE` para preservar datos manuales si existen).
   - Forzar una sincronización masiva ("Touch" update) de los productos afectados.
 - **Regla Derivada**: Todo gatillo de sincronización denormalizada entre el catálogo maestro y el inventario DEBE incluir la totalidad de los campos críticos para la UI del frontend.
+
+### 96. CardKingdom SKU-Based Mapping (April 2026)
+
+- **Problema**: La sincronización de precios para Strixhaven fallaba o se contaminaba con ediciones antiguas debido a que el campo `variation` de CK estaba vacío para sets modernos.
+- **Causa Raíz**: El catálogo de CardKingdom para sets modernos (Strixhaven, Tokens, etc.) incrusta el número de coleccionista y el acabado directamente en el SKU (`[F]SET-NNNN`), no en los campos de metadatos tradicionales.
+- **Lección**:
+  - **Foil Detection**: El prefijo `F` en el SKU es la fuente única de verdad para detectar versiones Foil.
+  - **Collector mapping**: Extraer el número del SKU sustrayendo ceros a la izquierda.
+  - **Prioridad de Edición**: Al mapear por código de set (ej: `soa`), priorizar manualmente ediciones primarias ("Secrets of Strixhaven") sobre aliases o sub-sets para evitar oscilaciones de precios.
+- **Regla Derivada**: [LEYES_DEL_SISTEMA.md] -> Regla de Negocio 7.
+
+### 97. High-Performance Batch SQL Updates (April 2026)
+
+- **Problema**: Actualizar >25,000 precios mediante `executemany` (múltiples `UPDATE` individuales) sobre un pooler (puerto 6543) excedía los 90 minutos de ejecución.
+- **Causa Raíz**: Latencia de red acumulada y round-trip por cada fila, sumado al overhead del gestor de conexiones por cada transacción individual.
+- **Solución**: **VALUES Table Pattern**. Agrupar los cambios en chunks (ej: 2,000 filas) y ejecutar un solo `UPDATE target_table SET col = v.new_val FROM (VALUES (...), (...)) AS v(id, new_val) WHERE target_table.id = v.id`.
+- **Resultado**: El tiempo de ejecución bajó de >90 minutos a **63 segundos** para 47,000 actualizaciones.
+- **Regla Derivada**: [LEYES_DEL_SISTEMA.md] -> Ley 18.

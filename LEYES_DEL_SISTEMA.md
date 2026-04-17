@@ -375,7 +375,31 @@ Antes de iniciar procesos de sincronización pesados o de larga duración, se de
 
 ---
 
-## 📝 CHANGELOG DE LEYES
+### Ley 18: Performance en Sincronizaciones Masivas
+
+**Siempre** utilizar actualizaciones en lote (Batch Updates) tipo `VALUES` single-statement para operaciones que involucren >1,000 registros.
+
+- **Prohibición**: Evitar el uso de `executemany` o bucles de `UPDATE` individuales sobre conexiones de pool (ej: port 6543) para grandes volúmenes de datos.
+- **Implementación**: Agrupar los cambios en chunks (ej: 2,000 filas) y ejecutar un solo `UPDATE ... FROM (VALUES ...)` para minimizar el round-trip y la latencia de red.
+
+---
+
+### Regla de Negocio 7: Sincronización SKU CardKingdom
+
+**Siempre** priorizar el SKU de CardKingdom como fuente de verdad para el mapeo de coleccionistas y acabados (Finish) en sets modernos/tokens donde la data de Scryfall o `variation` sea ambigua.
+
+- **Foil Detection**: El prefijo `F` en el SKU (ej: `FSOA-0022`) es la señal definitiva de acabado Foil/Etched.
+- **Collector Number**: Extraer del SKU después del guion (`SOA-0022` -> `22`) eliminando ceros a la izquierda.
+- **Prioridad de Edición**: Ante múltiples ediciones mapeadas al mismo código de set (ej: Strixhaven vs Secrets of Strixhaven), priorizar siempre la edición nominal completa ("Secrets of...") para evitar precios contaminados de aliases antiguos.
+
+---
+
+### 📝 CHANGELOG DE LEYES
+
+### v3.4 (2026-04-17)
+
+- ✅ Agregada **Ley 18**: Performance en Sincronizaciones Masivas (VALUES batch updates).
+- ✅ Agregada **Regla de Negocio 7**: Sincronización SKU CardKingdom (F prefix & collector mapping).
 
 ### v2.8 (2026-03-11)
 
