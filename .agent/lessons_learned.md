@@ -781,3 +781,12 @@ useEffect(() => {
 - **Solución**: **VALUES Table Pattern**. Agrupar los cambios en chunks (ej: 2,000 filas) y ejecutar un solo `UPDATE target_table SET col = v.new_val FROM (VALUES (...), (...)) AS v(id, new_val) WHERE target_table.id = v.id`.
 - **Resultado**: El tiempo de ejecución bajó de >90 minutos a **63 segundos** para 47,000 actualizaciones.
 - **Regla Derivada**: [LEYES_DEL_SISTEMA.md] -> Ley 18.
+
+### 98. RPC Overload and Frontend Consistency (April 2026)
+
+- **Problema**: El checkout fallaba en producción con el error "Function not found" a pesar de existir localmente y en el dashboard.
+- **Causa Raíz**: Un script de limpieza de sobrecargas (`drop_order_overloads.py`) eliminó la versión exacta que el frontend llamaba (con `p_cart_id`). PostgREST no hace fallback automático si la firma es ambigüa o falta un parámetro requerido.
+- **Lección**:
+    - **Protección de Firmas**: Nunca eliminar sobrecargas de funciones críticas sin verificar la versión exacta que el frontend (especialmente en producción) está llamando.
+    - **Resilient RPC Pattern**: Restaurar funciones con `DEFAULT NULL` en parámetros nuevos para mantener compatibilidad con callers antiguos (Edge Functions) y nuevos (Frontend).
+- **Regla Derivada**: Toda actualización de firma de RPC en producción debe ser retrocompatible o desplegarse simultáneamente con el frontend.
