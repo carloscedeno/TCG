@@ -775,7 +775,6 @@ export const addToCart = async (printingId: string, quantity: number = 1, finish
       const { data, error } = await supabase.rpc('add_to_cart_v2', {
         p_identifier: printingId, // The master RPC now handles both product_id and printing_id
         p_quantity: quantity,
-        p_user_id: session.data.session.user.id,
         p_finish: (finish || 'nonfoil').toLowerCase()
       });
 
