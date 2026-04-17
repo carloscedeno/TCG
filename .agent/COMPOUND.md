@@ -377,7 +377,39 @@ Implement a global "Nuevo" (New) filter across the Marketplace and Admin Dashboa
 
 *Compounded for Geekorium TCG Ecosystem.*
 
-# 🧠 COMPOUND: Cross-Environment Constraint Fallbacks (v50)
+# 🧠 COMPOUND: Strixhaven Visibility & Metadata Restoration (v51)
+
+**Date**: 2026-04-16 23:30 (Local)
+
+## Objective
+
+Restore visibility and operational integrity for the "Secrets of Strixhaven" (SOS/SOA/SOC) editions in the production inventory. Resolve the issue where imported products were hidden from the frontend Marketplace.
+
+## Knowledge Codification
+
+### 1. The Metadata Visibility Barrier
+- **Insight**: Even with stock and correct game code (`MTG`), cards remained invisible in the frontend Marketplace.
+- **Root Cause**: The React frontend uses `type_line` and `colors` for filtering and rendering logic. Missing metadata in the `products` table causes the API to omit items or the frontend to hide them to prevent broken UI cards.
+- **Remediation**: Updated the `sync_product_metadata` PostgreSQL trigger to include `type_line`, `colors`, and `release_date`.
+
+### 2. Mandatory Materialized View Refresh
+- **Pattern**: The optimize search endpoint (`get_unique_cards_optimized`) relies on `public.mv_unique_cards`. 
+- **Rule**: Any bulk change to prices or visibility-defining metadata (names, types, sets) MUST be followed by `REFRESH MATERIALIZED VIEW CONCURRENTLY public.mv_unique_cards;` (or standard `REFRESH` if concurrent is not available) to reflect the changes in the store's primary grid.
+
+### 3. Data Integrity & SQL Types
+- **Fix**: Resolved a critical Pydantic/SQL crash in the sync function caused by assuming `price_sources.source_id` was a UUID when it is actually an `integer`.
+- **Lesson**: Always verify foreign key types in `information_schema.columns` before assuming ID formats in PL/pgSQL functions.
+
+## Technical Validation
+
+- **Database Logic**: ✅ `sync_product_metadata` V3 applied with fix for `source_id` (integer) and `release_date` (sets join).
+- **Data Sync**: ✅ 938 products updated successfully via "Touch" script.
+- **Site Visibility**: ✅ Verified on `www.geekorium.shop` with SOS cards now fully visible.
+- **Frontend Build**: ✅ Success in production.
+
+---
+
+*Compounded for Geekorium TCG Ecosystem.*
 
 **Date**: 2026-04-16
 

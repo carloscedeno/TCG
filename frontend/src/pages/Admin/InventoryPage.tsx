@@ -20,6 +20,7 @@ interface InventoryItem {
     game: string;
     set_code: string;
     condition: string;
+    finish: string;
     price: number;
     stock: number;
     image_url: string;
@@ -636,7 +637,7 @@ export function InventoryPage() {
                                                     <div className="flex flex-col min-w-0 max-w-[200px] md:max-w-md">
                                                         <span className="text-sm font-black text-white italic tracking-tight lowercase truncate">
                                                             {item.name}
-                                                            {(new Date().getTime() - new Date(item.updated_at).getTime()) < (12 * 24 * 60 * 60 * 1000) && (
+                                                            {['sos', 'soa', 'soc', 'tsos'].includes(item.set_code?.toLowerCase()) && (
                                                                 <span className="ml-2 items-center px-1.5 py-0.5 bg-gradient-to-r from-purple-500 to-pink-500 text-[7px] font-black uppercase rounded shadow-lg shadow-purple-500/20 animate-in fade-in zoom-in duration-500">Nuevo</span>
                                                             )}
                                                         </span>
@@ -647,6 +648,13 @@ export function InventoryPage() {
                                                             <span className="text-[9px] font-black text-neutral-700 uppercase tracking-widest">
                                                                 {item.rarity}
                                                             </span>
+                                                            {item.finish && item.finish !== 'nonfoil' && (
+                                                                <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md ${
+                                                                    item.finish === 'foil' ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20' : 'bg-cyan-500/10 text-cyan-500 border border-cyan-500/20'
+                                                                }`}>
+                                                                    {item.finish}
+                                                                </span>
+                                                            )}
                                                         </div>
                                                     </div>
                                                 </div>

@@ -96,6 +96,7 @@ Artefactos del Compound step:
 - ✅ **Limpieza de Checkout Success**: Eliminación de campos redundantes y activación del botón de seguimiento integrado.
 - ✅ **Sincronización de Credenciales SMTP**: Unificación de nombres de variables (`SMTP_USERNAME`/`SMTP_PASSWORD`) y sincronización de lógica entre las funciones `api` y `tcg-api` para garantizar fiabilidad en las notificaciones.
 - ✅ **Visibilidad Condicional de Carrito**: El botón "Añadir al carrito" ahora está oculto por defecto en la vista general (grid/list) y solo es visible en el modal de detalles, mejorando la estética de navegación masiva.
+- ✅ **Sincronización de Metadatos Strixhaven**: Reparación de visibilidad de 360+ productos mediante la corrección del trigger `sync_product_metadata` en la base de datos, asegurando que `type_line`, `colors` y `release_date` se propaguen siempre al inventario.
 
 - ✅ **Extrema Performance (Denormalización)**: Eliminación de timeouts mediante denormalización de metadatos (`colors`, `type`, `release_date`) en tabla `products`. RPC `get_products_filtered` optimizado para single-table query.
 - ✅ **Comprobante PDF Real**: `CheckoutSuccessPage` genera un HTML de recibo completo (Inter font, tabla itemizada, datos del cliente, ID de orden, total, status) en una nueva pestaña que auto-dispara el diálogo de impresión. Sin librerías externas.

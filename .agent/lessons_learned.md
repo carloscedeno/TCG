@@ -753,4 +753,13 @@ useEffect(() => {
 - **Problema**: El script de importación de Supabase fallaba en GitHub Actions con el error `postgrest.exceptions.APIError: {'code': '42P10', 'message': 'there is no unique or exclusion constraint matching the ON CONFLICT specification'}`.
 - **Causa**: El script intentaba un `upsert` usando `on_conflict='game_id,set_code'`. El entorno local de desarrollo sí poseía esa restricción explícita de clave compuesta, pero la base de datos remota de producción solo tenía implementado un `UNIQUE(set_code)`. PostgREST arrojaba excepción de esquema inmediatamente al no hallar correspondencia exacta a las columnas especificadas.
 - **Solución**: Programación defensiva en scripts de BD multi-entorno utilizando fallbacks dinámicos (Ej: atrapar específicamente el código `'42P10'` en el bloque de excepciones y re-ejecutar el `upsert` haciendo un "Fallback" a `on_conflict='set_code'`).
-- **Regla Derivada**: Todo proceso de automatización que escriba en proyectos distintos de Supabase (`dev` vs `prod`) debe considerar y mitigar las deudas técnicas de disparidad de Constraints manejándolo a nivel de excepciones.
+### 95. Gatillos de Sincronización y Visibilidad de Inventario (Abril 2026)
+
+- **Problema**: Nuevas ediciones importadas exitosamente (ej: Strixhaven) no eran visibles en el inventario a pesar de tener stock y pertenecer al juego correcto (`MTG`).
+- **Causa Raíz**:
+  1. El frontend requiere `type_line` y `colors` para renderizar las cartas; si son nulos, la carta se omite.
+  2. La función de base de datos `sync_product_metadata` (gatillo en `products`) omitía estos campos en su cláusula `SELECT INTO`, por lo que nunca se poblaban automáticamente desde el catálogo.
+- **Solución**:
+  - Actualizar el trigger de PostgreSQL para incluir `type_line`, `colors` y `release_date` (usando `COALESCE` para preservar datos manuales si existen).
+  - Forzar una sincronización masiva ("Touch" update) de los productos afectados.
+- **Regla Derivada**: Todo gatillo de sincronización denormalizada entre el catálogo maestro y el inventario DEBE incluir la totalidad de los campos críticos para la UI del frontend.

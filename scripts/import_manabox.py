@@ -95,9 +95,10 @@ def import_manabox_csv(file_path: str, game: str = 'MTG'):
                         res = query.limit(1).execute()
                         
                         if not res.data:
+                             # Try fuzzy search if exact name/set failed
                              res = admin_client.table('card_printings').select(
-                                'printing_id, image_url, cards!inner(card_name), aggregated_prices(avg_market_price_usd)'
-                            ).eq('cards.card_name', name).limit(1).execute()
+                                'printing_id, image_url, cards!inner(card_name), sets!inner(set_code), aggregated_prices(avg_market_price_usd)'
+                            ).ilike('cards.card_name', f'%{name}%').limit(1).execute()
 
                         if res.data:
                             match = res.data[0]
@@ -109,7 +110,8 @@ def import_manabox_csv(file_path: str, game: str = 'MTG'):
                                 market_price = prices[0].get('avg_market_price_usd') or 0
                             elif isinstance(prices, dict):
                                 market_price = prices.get('avg_market_price_usd') or 0
-                except Exception as e:
+                        else:
+                            print(f"  ❌ No metadata found for: {name} in set {set_code}")                except Exception as e:
                     print(f"  ⚠️ Lookup failed for {name}: {e}")
 
                 products_to_process.append({
@@ -180,7 +182,7 @@ def import_manabox_csv(file_path: str, game: str = 'MTG'):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Import Manabox CSV to Emporio Inventory')
     parser.add_argument('file', help='Path to the CSV file')
-    parser.add_argument('--game', default='MTG', help='Game category (MTG, PKM, YGO)')
+    parser.add_argument('--game', default='MTG', help='Game category (MTG, POKEMON, etc.)')
     
     args = parser.parse_args()
     import_manabox_csv(args.file, args.game)

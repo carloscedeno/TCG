@@ -128,7 +128,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         <div className="flex-1 min-w-0">
           <h3 className="text-white font-bold text-sm group-hover:text-geeko-cyan transition-colors break-words whitespace-normal leading-snug flex items-center gap-2">
             {currentName}
-            {updated_at && (new Date().getTime() - new Date(updated_at).getTime()) < (12 * 24 * 60 * 60 * 1000) && (
+            {['sos', 'soa', 'soc', 'tsos'].includes(set?.toLowerCase()) && (
               <span className="px-1.5 py-0.5 bg-purple-600 text-[7px] font-black uppercase rounded shadow-lg shadow-purple-500/20 animate-pulse">Nuevo</span>
             )}
           </h3>
@@ -217,7 +217,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
       )}
 
       {/* NEW Badge Overlay */}
-      {updated_at && (new Date().getTime() - new Date(updated_at).getTime()) < (12 * 24 * 60 * 60 * 1000) && (
+      {['sos', 'soa', 'soc', 'tsos'].includes(set?.toLowerCase()) && (
         <div className="absolute top-2 left-2 z-30 px-2 py-1 bg-purple-600 text-white text-[8px] font-black uppercase rounded shadow-lg shadow-purple-600/30 flex items-center gap-1 animate-in zoom-in duration-300">
           <div className="w-1 h-1 bg-white rounded-full animate-ping" />
           Nuevo

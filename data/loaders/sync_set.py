@@ -6,6 +6,12 @@ Ejemplo: python data/loaders/sync_set.py LCC
 """
 import os
 import sys
+import io
+
+# Forzar UTF-8 en la salida de consola para evitar errores en Windows con emojis
+if sys.platform == "win32":
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+
 import argparse
 import requests
 import time
