@@ -440,3 +440,37 @@ Harden the catalog synchronization workflow (GitHub Actions) to dynamically adap
 ---
 
 *Compounded for Geekorium TCG Ecosystem.*
+
+# 🧠 COMPOUND: Global Pricing Integrity & SKU Sync (v52)
+
+**Date**: 2026-04-17
+
+## Objective
+
+Resolve widespread pricing contamination (foil prices assigned to non-foil versions) across the entire catalog and implement accurate SKU-based synchronization for Strixhaven and modern sets.
+
+## Knowledge Codification
+
+### 1. SKU-Centric Mapping (Rule of Order)
+- **Problem**: CardKingdom's `variation` field is unreliable for modern sets. Reliance on name-matching for foils caused extreme price contamination ($800 normal cards).
+- **Solution**: Pivot to SKU-parsing as the primary match vector. `[F]SET-NNNN` provides 100% accuracy for both collector number and finish.
+- **Rule**: Prefijo `F` = Foil. Suffix `SET-NNNN` = Collector Number (normalized).
+
+### 2. High-Performance Batch `UPDATE` (Law 18)
+- **Technique**: Used `UPDATE target FROM (VALUES (...) ) AS v(id, price)` chunked at 2,000 rows.
+- **Performance**: 47,000 updates applied in **63 seconds** via pooled connection (port 6543), overcoming the performance wall of `executemany`.
+- **Integrity**: Verified key corrections (Diabolic Intent $849 -> $27, Sleight of Hand restore to $0.69).
+
+### 3. Build & CI Integrity (The "Audit" Fixes)
+- **Refinement**: Cleaned `src/components/Card/Card.tsx` from unused `updated_at` prop to pass strict TS builds.
+- **Resilience**: Hardened `scripts/test_api_endpoints.py` against Windows console `UnicodeEncodeError` by removing non-essential emojis.
+
+## Technical Validation
+
+- **Frontend Build**: ✅ Success (`dist` assets generated).
+- **Production Audit**: ✅ Diabolic Intent (PLS) Normal = $27.99, Sleight of Hand (SOA) Normal = $0.69.
+- **Git State**: ✅ Clean branch (dev/main) sync ready.
+
+---
+
+*Compounded for Geekorium TCG Ecosystem.*
