@@ -20,6 +20,7 @@ interface InventoryItem {
     game: string;
     set_code: string;
     condition: string;
+    finish: string;
     price: number;
     stock: number;
     image_url: string;
@@ -647,6 +648,13 @@ export function InventoryPage() {
                                                             <span className="text-[9px] font-black text-neutral-700 uppercase tracking-widest">
                                                                 {item.rarity}
                                                             </span>
+                                                            {item.finish && item.finish !== 'nonfoil' && (
+                                                                <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md ${
+                                                                    item.finish === 'foil' ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20' : 'bg-cyan-500/10 text-cyan-500 border border-cyan-500/20'
+                                                                }`}>
+                                                                    {item.finish}
+                                                                </span>
+                                                            )}
                                                         </div>
                                                     </div>
                                                 </div>

@@ -28,6 +28,7 @@ export function AddProductDrawer({ isOpen, onClose, onSuccess, prefillCard }: Ad
     const [price, setPrice] = useState<string>("");
     const [stock, setStock] = useState<number>(1);
     const [condition, setCondition] = useState<string>("NM");
+    const [finish, setFinish] = useState<string>("nonfoil");
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [successMsg, setSuccessMsg] = useState<string | null>(null);
@@ -53,6 +54,7 @@ export function AddProductDrawer({ isOpen, onClose, onSuccess, prefillCard }: Ad
             setPrice("");
             setStock(1);
             setCondition("NM");
+            setFinish("nonfoil");
             setError(null);
             setSuccessMsg(null);
         }
@@ -164,7 +166,8 @@ export function AddProductDrawer({ isOpen, onClose, onSuccess, prefillCard }: Ad
                 p_printing_id: selectedCard.id,
                 p_price: numericPrice,
                 p_stock: stock,
-                p_condition: condition
+                p_condition: condition,
+                p_finish: finish
             });
 
             if (rpcError) throw rpcError;
@@ -322,6 +325,29 @@ export function AddProductDrawer({ isOpen, onClose, onSuccess, prefillCard }: Ad
                                                 }`}
                                         >
                                             {cond}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="space-y-4">
+                                <label className="text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em]">Acabado / Terminación</label>
+                                <div className="grid grid-cols-3 gap-2">
+                                    {[
+                                        { id: 'nonfoil', label: 'Normal' },
+                                        { id: 'foil', label: 'Foil' },
+                                        { id: 'etched', label: 'Etched' }
+                                    ].map((f) => (
+                                        <button
+                                            key={f.id}
+                                            type="button"
+                                            onClick={() => setFinish(f.id)}
+                                            className={`py-3 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${finish === f.id
+                                                ? 'bg-purple-600/10 border-purple-500 text-purple-400 shadow-[0_0_15px_rgba(147,51,234,0.15)]'
+                                                : 'bg-black/20 border-white/5 text-neutral-600 hover:border-white/20'
+                                                }`}
+                                        >
+                                            {f.label}
                                         </button>
                                     ))}
                                 </div>
