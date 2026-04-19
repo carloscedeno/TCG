@@ -25,12 +25,15 @@ function generateReceiptHTML({
             const demandBadge = item.is_on_demand
                 ? `<span style="background:#d97706;color:#fff;font-size:9px;font-weight:900;padding:2px 5px;border-radius:3px;letter-spacing:1px;margin-left:4px;">ENCARGO</span>`
                 : '';
+            const setBadge = item.set
+                ? `<span style="background:#4b5563;color:#fff;font-size:9px;font-weight:900;padding:2px 5px;border-radius:3px;letter-spacing:1px;margin-left:6px;">${item.set.toUpperCase()}</span>`
+                : '';
             return `
         <tr>
           <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:14px;color:#374151;">
             <span style="font-family:monospace;color:#6b7280;margin-right:8px;">x${item.quantity}</span>
             ${item.name}
-            ${finishBadge}${demandBadge}
+            ${setBadge}${finishBadge}${demandBadge}
           </td>
           <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;text-align:right;font-family:monospace;font-weight:700;font-size:14px;color:#00AEB4;">
             $${(item.price * item.quantity).toFixed(2)}
@@ -237,6 +240,7 @@ export const CheckoutSuccessPage = () => {
                                     <div className="flex gap-3 items-center min-w-0">
                                         <span className="text-neutral-500 font-mono text-xs">x{item.quantity}</span>
                                         <span className="text-white font-bold truncate">{item.name}</span>
+                                        {item.set && <span className="text-[10px] text-neutral-500 font-bold uppercase">[{item.set}]</span>}
                                         {item.foil && <span className="text-[10px] bg-purple-500/10 text-purple-400 border border-purple-500/20 px-1.5 py-0.5 rounded font-black uppercase">Foil</span>}
                                         {item.is_on_demand && <span className="text-[10px] bg-orange-500/10 text-orange-400 border border-orange-500/20 px-1.5 py-0.5 rounded font-black uppercase italic">Por Encargo</span>}
                                     </div>

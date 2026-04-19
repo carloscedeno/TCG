@@ -1230,8 +1230,12 @@ async function handleNotificationsEndpoint(supabase: SupabaseClient, path: strin
       const name = item?.products?.name || item?.name || 'Unknown Item';
       const finish = item?.products?.finish || item?.finish;
       const onDemand = item?.products?.is_on_demand || item?.is_on_demand;
+      const setCode = item?.products?.set_code || item?.set_code || item?.set;
 
       let variantLabel = '';
+      if (setCode) {
+        variantLabel += ` [${setCode.toUpperCase()}]`;
+      }
       if (finish === 'foil' || finish === 'etched') {
         variantLabel += ` [${finish.toUpperCase()}]`;
       }

@@ -160,7 +160,12 @@ export const CheckoutPage = () => {
                     order_total: total,
                     items: cartItems.map(item => ({
                         quantity: item.quantity,
-                        products: { name: item.products?.name, price: item.products?.price, finish: item.products?.finish }
+                        products: { 
+                            name: item.products?.name, 
+                            price: item.products?.price, 
+                            finish: item.products?.finish,
+                            set_code: item.products?.set_code
+                        }
                     })),
                     current_user_id: user?.id || "guest"
                 });
@@ -321,7 +326,12 @@ export const CheckoutPage = () => {
                                     </div>
                                     <div className="flex-1 min-w-0">
                                         <p className="text-xs font-bold text-white line-clamp-2 leading-snug">{item.products?.name}</p>
-                                        <p className="text-[9px] text-neutral-500 uppercase font-bold">{item.products?.set_code}</p>
+                                        <div className="flex gap-2 items-center">
+                                            <p className="text-[9px] text-neutral-500 uppercase font-bold">{item.products?.set_code}</p>
+                                            {(item.products?.finish === 'foil' || item.products?.finish === 'etched') && (
+                                                <span className="text-[8px] bg-purple-500/10 text-purple-400 border border-purple-500/20 px-1 py-0.5 rounded font-black uppercase">FOIL</span>
+                                            )}
+                                        </div>
                                         <div className="flex justify-between items-center mt-1">
                                             <span className="text-[10px] text-neutral-400">x{item.quantity}</span>
                                             <span className="text-[11px] font-mono text-[#00AEB4] font-bold">
