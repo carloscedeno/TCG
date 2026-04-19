@@ -19,7 +19,7 @@ export const OrderTrackingPage = () => {
             // Attempt 1: Full fetch with items mapping
             const { data, error } = await supabase
                 .from('orders')
-                .select('*, order_items(*)')
+                .select('*, order_items(*, product:products(name, set_code, image_url))')
                 .eq('id', orderId)
                 .single();
 
@@ -171,7 +171,8 @@ export const OrderTrackingPage = () => {
                                         <div className="flex flex-col gap-1 min-w-0 flex-1">
                                             <div className="flex items-center gap-2">
                                                 <span className="text-neutral-500 font-mono shrink-0">x{item.quantity}</span>
-                                                <span className="font-bold truncate">{item.product_name || `Card ID: ${item.product_id}`}</span>
+                                                <span className="font-bold truncate">{item.product?.name || item.product_name || `Card ID: ${item.product_id}`}</span>
+                                                {item.product?.set_code && <span className="text-[10px] text-neutral-500 font-bold uppercase ml-1">[{item.product.set_code}]</span>}
                                             </div>
                                             <div className="flex items-center gap-1.5 ml-6">
                                                 {(item.finish === 'foil' || item.finish === 'etched') && (

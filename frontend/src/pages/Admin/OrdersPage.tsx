@@ -83,10 +83,13 @@ function generateOrderReceiptHTML(order: Order) {
         const demandBadge = item.is_on_demand
             ? `<span style="background:#d97706;color:#fff;font-size:9px;font-weight:900;padding:2px 5px;border-radius:3px;letter-spacing:1px;margin-left:4px;">ENCARGO</span>`
             : '';
+        const setBadge = item.product?.set_code
+            ? `<span style="background:#4b5563;color:#fff;font-size:9px;font-weight:900;padding:2px 5px;border-radius:3px;letter-spacing:1px;margin-left:6px;">${item.product.set_code.toUpperCase()}</span>`
+            : '';
         return `<tr>
           <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:14px;color:#374151;">
             <span style="font-family:monospace;color:#6b7280;margin-right:8px;">x${item.quantity}</span>
-            ${item.product?.name || 'Artículo'}${foilBadge}${demandBadge}
+            ${item.product?.name || 'Artículo'}${setBadge}${foilBadge}${demandBadge}
           </td>
           <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;text-align:right;font-family:monospace;font-weight:700;font-size:14px;color:#00AEB4;">
             $${(item.price_at_purchase * item.quantity).toFixed(2)}
