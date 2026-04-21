@@ -53,7 +53,7 @@ serve(async (req: Request) => {
     const method = req.method
 
     // Remove only the function name prefix if present
-    const functionPrefixes = ['/functions/v1/api', '/tcg-api', '/api'];
+    const functionPrefixes = ['/functions/v1/api', '/functions/v1/tcg-api', '/tcg-api', '/api'];
     for (const prefix of functionPrefixes) {
       if (path.startsWith(prefix)) {
         const nextChar = path[prefix.length];

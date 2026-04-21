@@ -4,18 +4,13 @@ import os
 
 # Config
 PROD_URL = "https://sxuotvogwvmxuvwbsscv.supabase.co"
+PROD_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN4dW90dm9nd3ZteHV2d2Jzc2N2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcxMjUyNzUsImV4cCI6MjA4MjcwMTI3NX0.0qL7dIEnwg22RyORGX06G97VjdH4C8_l4Qgm2oPEYTY"
 DEV_URL = "https://bqfkqnnostzaqueujdms.supabase.co"
 DEV_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJxZmtxbm5vc3R6YXF1ZXVqZG1zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4MDA2NDUsImV4cCI6MjA5MTM3NjY0NX0.xwqN-nP-_93cd3R1Q9fSkQMkf10d7whvVU6Uhk5uG-s"
 
-def get_prod_key():
-    with open(".env", "r") as f:
-        for line in f:
-            if "SUPABASE_SERVICE_ROLE_KEY" in line:
-                return line.split("=")[1].strip().strip('"')
-
 def sync_inventory_only():
-    prod_key = get_prod_key()
-    headers = {"apikey": prod_key, "Authorization": f"Bearer {prod_key}"}
+    # USAR ANON KEY para lectura en PROD (permite lectura de tablas públicas)
+    headers = {"apikey": PROD_ANON_KEY, "Authorization": f"Bearer {PROD_ANON_KEY}"}
     dev_headers = {"apikey": DEV_KEY, "Authorization": f"Bearer {DEV_KEY}", "Content-Type": "application/json", "Prefer": "resolution=merge-duplicates"}
 
     # 1. Fetch ALL products first

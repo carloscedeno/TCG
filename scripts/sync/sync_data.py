@@ -2,9 +2,8 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 
 # Config
-# Note: Using port 5432 and the direct db.<ref> host
-PROD_DB = "postgresql://postgres.sxuotvogwvmxuvwbsscv:jLta9LqEmpMzCI5r@db.sxuotvogwvmxuvwbsscv.supabase.co:5432/postgres"
-DEV_DB = "postgresql://postgres.bqfkqnnostzaqueujdms:jLta9LqEmpMzCI5r@db.bqfkqnnostzaqueujdms.supabase.co:5432/postgres"
+PROD_DB = "postgresql://postgres.sxuotvogwvmxuvwbsscv:jLta9LqEmpMzCI5r@aws-0-us-west-2.pooler.supabase.com:6543/postgres"
+DEV_DB = "postgresql://postgres.bqfkqnnostzaqueujdms:jLta9LqEmpMzCI5r@aws-0-us-west-2.pooler.supabase.com:6543/postgres"
 
 def test_and_sync():
     print("Connecting to Prod...")

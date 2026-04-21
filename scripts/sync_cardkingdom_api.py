@@ -58,8 +58,22 @@ def update_denormalized_prices(printing_ids=None):
         logger.warning("DATABASE_URL not found, skipping denormalized update.")
         return
 
-    # Use consolidated CardKingdom source ID
-    ck_source_id = 17
+    # Fetch IDs dynamically instead of hardcoding
+    try:
+        source_res = supabase.table('sources').select('source_id').eq('source_code', 'CARDKINGDOM').maybe_single().execute()
+        if not source_res.data:
+            logger.warning("Source CARDKINGDOM not found, skipping denormalized update.")
+            return
+        ck_source_id = source_res.data['source_id']
+        
+        condition_res = supabase.table('conditions').select('condition_id').eq('condition_code', 'NM').maybe_single().execute()
+        if not condition_res.data:
+            logger.warning("Condition NM not found, skipping denormalized update.")
+            return
+        nm_condition_id = condition_res.data['condition_id']
+    except Exception as e:
+        logger.error(f"Failed to fetch metadata IDs: {e}")
+        return
 
     try:
         conn = psycopg2.connect(db_url)
@@ -82,7 +96,7 @@ def update_denormalized_prices(printing_ids=None):
                 SELECT DISTINCT ON (ph.printing_id) ph.printing_id, ph.price_usd
                 FROM public.price_history ph
                 WHERE ph.source_id = %s
-                AND ph.condition_id = 16 -- NM
+                AND ph.condition_id = %s -- NM
                 AND ph.is_foil = FALSE
                 {where_clause}
                 ORDER BY ph.printing_id, ph.timestamp DESC
@@ -99,7 +113,7 @@ def update_denormalized_prices(printing_ids=None):
                 SELECT DISTINCT ON (ph.printing_id) ph.printing_id, ph.price_usd
                 FROM public.price_history ph
                 WHERE ph.source_id = %s
-                AND ph.condition_id = 16 -- NM
+                AND ph.condition_id = %s -- NM
                 AND ph.is_foil = TRUE
                 {where_clause}
                 ORDER BY ph.printing_id, ph.timestamp DESC
@@ -111,7 +125,7 @@ def update_denormalized_prices(printing_ids=None):
             FROM latest_foil lf
             WHERE cp.printing_id = lf.printing_id;
             """
-            cur.execute(update_sql, params)
+            cur.execute(update_sql, (ck_source_id, nm_condition_id) + params[2:])
             conn.commit()
             logger.info(f"Denormalized columns updated successfully ({cur.rowcount} cards affected).")
             
@@ -158,8 +172,19 @@ def run_ck_sync():
     
     logger.info("--- Starting Optimized CardKingdom API Sync ---")
     
-    # Use consolidated ID 17
-    ck_source_id = 17
+    # Fetch source ID dynamically
+    try:
+        source_res = supabase.table('sources').select('source_id').eq('source_code', 'CARDKINGDOM').maybe_single().execute()
+        if not source_res.data:
+            logger.error("Source CARDKINGDOM not found in DB")
+            return
+        ck_source_id = source_res.data['source_id']
+        
+        condition_res = supabase.table('conditions').select('condition_id').eq('condition_code', 'NM').maybe_single().execute()
+        nm_condition_id = condition_res.data['condition_id'] if condition_res.data else 16
+    except Exception as e:
+        logger.error(f"Failed to fetch metadata IDs: {e}")
+        return
     
     try:
         from scrapers.cardkingdom_api import CardKingdomAPI
@@ -288,7 +313,7 @@ def run_ck_sync():
                             price_entries.append({
                                 "printing_id": db_card['printing_id'],
                                 "source_id": ck_source_id,
-                                "condition_id": 16, # Near Mint
+                                "condition_id": nm_condition_id,
                                 "price_usd": price,
                                 "url": f"https://www.cardkingdom.com{card.get('url')}" if card.get('url') else None,
                                 "is_foil": is_foil,
