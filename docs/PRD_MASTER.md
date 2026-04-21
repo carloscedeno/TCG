@@ -1,6 +1,6 @@
 # 📋 PRD MASTER — Geekorium v4.0
 >
-> **Estado:** Activo | **Última actualización:** 2026-02-26  
+> **Estado:** Activo | **Última actualización:** 2026-04-21 (Cloudflare Pages Migration)
 > **Fuente base:** `docs/PRD nuevas modificaciones 20260223.md` + estado real de implementación
 
 ---
@@ -9,7 +9,7 @@
 
 **Geekorium** es un marketplace TCG de alta fidelidad para coleccionistas de Magic: The Gathering (y otros TCGs). Opera como un **Generador de Leads Verificados**: el carrito no garantiza reserva de stock hasta que el Geeko-Asesor confirma la existencia física.
 
-**Stack:** React 18 + TypeScript | Supabase (Auth/DB/Storage/Edge Functions) | Tailwind CSS | GitHub Pages (deploy)
+**Stack:** React 18 + TypeScript | Supabase (Auth/DB/Storage/Edge Functions) | Tailwind CSS | Cloudflare Pages (deploy)
 
 ---
 
@@ -38,7 +38,7 @@ Todos los valores deben derivar de `tailwind.config.js`. Sin valores hardcoded.
 ## 3. Arquitectura Técnica
 
 ```
-frontend/           → React 18 + TypeScript (GitHub Pages)
+frontend/           → React 18 + TypeScript (Cloudflare Pages)
 supabase/
   functions/
     tcg-api/        → Edge Function principal (Deno)
@@ -141,6 +141,7 @@ status TEXT ('pending_verification' | 'confirmed' | 'cancelled')
 - Símbolos de maná renderizados (mana-font)
 - Auth (login/logout)
 - Precios de mercado via Scryfall sync
+- **Alineación de Entornos (Abril 2026)**: Sincronización total de `dev.geekorium.shop` con el proyecto Supabase de desarrollo (`bqfkqnnostzaqueujdms`) vía Cloudflare Environment Overrides. Refactorización de URLs hardcodeadas para usar variables de entorno dinámicas.
 
 ### 🚧 Pendiente / Mejoras
 

@@ -16,7 +16,7 @@ TCG/
 │   ├── rules/                  # Reglas adicionales
 │   └── workflows/              # Comandos automatizados (/import, /nightly-sync)
 │
-├── frontend/                   # React 18 + TypeScript (desplegado en GitHub Pages)
+├── frontend/                   # React 18 + TypeScript (desplegado en Cloudflare Pages)
 │   ├── src/
 │   │   ├── components/         # Componentes reutilizables
 │   │   │   ├── Card/           # Card + CardModal (componentes críticos)

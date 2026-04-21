@@ -13,12 +13,11 @@ if (-not $AccessToken) {
 }
 
 $env:SUPABASE_ACCESS_TOKEN = $AccessToken
-$ProjectId = "sxuotvogwvmxuvwbsscv"
-
+# Desplegar la funcion tcg-api al proyecto vinculado actualmente
 Write-Host "🚀 Iniciando despliegue de tcg-api..." -ForegroundColor Cyan
 
-# 1. Despliegue
-npx supabase functions deploy tcg-api --project-ref $ProjectId --no-verify-jwt
+# 1. Despliegue (Usa el proyecto vinculado via 'supabase link')
+npx supabase functions deploy tcg-api --no-verify-jwt
 
 if ($LASTEXITCODE -ne 0) {
     Write-Host "❌ Error durante el despliegue." -ForegroundColor Red

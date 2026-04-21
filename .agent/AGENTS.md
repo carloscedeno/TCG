@@ -82,7 +82,7 @@ Artefactos del Compound step:
 81: - **✅ Corrección de Branding y Contacto**: Sustitución del nombre en texto por el logo circular oficial (`Logo.png`) en Header, Footer, Home y WelcomeModal. Actualización del favicon oficial. Restauración del enlace `mailto` directo a `info@geekorium.shop` eliminando redirecciones obsoletas a Mailchimp. Sincronización de assets oficiales y eliminación de badges "DEV" hardcodeados.
 - **✅ Estabilización de Checkout y Persistencia de Schema**: Resolución del error "Orden no encontrada". Adición de snapshotting de `product_name` en `order_items`. Configuración de RLS pública para rastreo de pedidos.
 - **✅ Optimización de Storage**: Depreciación del flujo de carga de comprobantes automatizado para preservar cuota de base de datos; transición a flujo manual asistido (WhatsApp).
-- **✅ Multi-Environment & Dynamic IDs**: Refactorización total para usar `VITE_SUPABASE_PROJECT_ID`. Despliegue de entorno DEV en GitHub Pages (`dev.geekorium.shop`) con segregación total de base de datos.
+- **✅ Multi-Environment & Dynamic IDs**: Refactorización total para usar `VITE_SUPABASE_PROJECT_ID`. Despliegue de entorno DEV en Cloudflare Pages (`dev.geekorium.shop`) con segregación total de base de datos vinculada al proyecto `bqfkqnnostzaqueujdms`.
 - **✅ Regla "No Goldfish"**: Priorización absoluta de Card Kingdom sobre la tabla legacy `aggregated_prices` para valoraciones externas.
 - **✅ Simplificación de Precios (Card Kingdom NM)**: Todos los precios de Geekorium se basan exclusivamente en el precio NM de Card Kingdom. El branding original "Geekorium" ha sido preservado integralmente en frontend y notificaciones.
 - ✅ Migración de Precios de Alto Rendimiento: Implementado backfill de precios mediante CTEs y `UPDATE FROM`.
@@ -107,8 +107,9 @@ Artefactos del Compound step:
 - ✅ **Ocultamiento de Sección Archivo**: Removida la pestaña de histórico para simplificar la UX. El sistema ahora opera exclusivamente sobre el inventario vivo (Marketplace).
 - ✅ **Version 1.0 Baseline**: Creación de rama estable `v1.0-productiva` para preservar features apagadas.
 - ✅ **Limpieza de Repositorio (Garbage Removal)**: Eliminación de más de 70 scripts de depuración, logs y archivos temporales redundantes para mejorar la mantenibilidad.
-- ✅ **Alineación de IDs de Fuentes**: Estandarización de IDs de mercado (17: Card Kingdom, 16: TCGplayer) para integridad del historial de precios.- ✅ **Pricing Integrity & SKU Sync (v52)**: Resolución de contaminación global de precios. Implementación de mapeo basado en SKU para CardKingdom (soporte prefijo `F` y números de coleccionista).
+- ✅ **Alineación de IDs de Fuentes**: Estandarización de IDs de mercado (17: Card Kingdom, 16: TCGplayer) para integridad del historial de precios.- ✅ **Pricing Integrity & SKU Sync (Abril 2026)**: Resolución de contaminación global de precios. Implementación de mapeo basado en SKU para CardKingdom (soporte prefijo `F` y números de coleccionista).
 - ✅ **Optimización de Batch SQL (Ley 18)**: Aplicación de actualizaciones masivas mediante el patrón `VALUES` table, reduciendo tiempos de horas a segundos.
+- ✅ **Alineación Dev-Project (Abril 2026)**: Migración exitosa del frontend a Cloudflare Pages con Environment Overrides inyectando configuraciones dinámicas según el branch.
 
 
 ## 🚧 Features Pendientes
