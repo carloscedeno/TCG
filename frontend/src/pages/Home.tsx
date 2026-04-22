@@ -15,6 +15,7 @@ import { LogIn, X, ShoppingCart, Sparkles } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { CartDrawer } from '../components/Navigation/CartDrawer';
 import { Footer } from '../components/Navigation/Footer';
+import { HeroSection } from '../components/Home/HeroSection';
 
 const mockFilters: Filters = {
   games: ['Magic: The Gathering'],
@@ -480,6 +481,11 @@ const Home: React.FC = () => {
 
         {/* Main Content */}
         <main className="max-w-[1600px] w-full mx-auto px-6 py-8 flex-1">
+          {/* Dynamic Hero Section */}
+          <div className="mb-12">
+            <HeroSection />
+          </div>
+
           <div className="flex flex-col lg:flex-row gap-10">
             {/* Sidebar Filters */}
             <aside className="hidden lg:block w-72 flex-shrink-0">
