@@ -5,9 +5,7 @@ import { Play, Settings, Users, Database, Shield, AlertCircle, Package, External
 
 import { supabase } from '../../utils/supabaseClient';
 
-const SUPABASE_PROJECT_ID = import.meta.env.VITE_SUPABASE_PROJECT_ID || 'sxuotvogwvmxuvwbsscv';
-// Legacy API Base for external scrapers (currently offline/unused for stats)
-const API_BASE = import.meta.env.VITE_API_BASE || `https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/tcg-api`;
+const API_BASE = import.meta.env.VITE_API_BASE;
 
 export const AdminDashboard = () => {
     const { user, session, isAdmin, loading } = useAuth();
@@ -280,6 +278,32 @@ export const AdminDashboard = () => {
                             </div>
                             <div className="w-16 h-16 bg-blue-500/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
                                 <Package className="text-blue-400" size={32} />
+                            </div>
+                        </div>
+                    </Link>
+
+                    <Link to="/admin/accessories" className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-pink-900/50 to-slate-900 border border-white/10 p-8 hover:border-pink-500/50 transition-all">
+                        <div className="absolute inset-0 bg-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="relative z-10 flex items-center justify-between">
+                            <div>
+                                <h3 className="text-2xl font-black italic text-white mb-2">GESTIÓN DE ACCESORIOS</h3>
+                                <p className="text-pink-300 text-xs font-bold uppercase tracking-widest">Sleeves, Deck Boxes y Más</p>
+                            </div>
+                            <div className="w-16 h-16 bg-pink-500/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <Package className="text-pink-400" size={32} />
+                            </div>
+                        </div>
+                    </Link>
+
+                    <Link to="/admin/banners" className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-cyan-900/50 to-slate-900 border border-white/10 p-8 hover:border-cyan-500/50 transition-all">
+                        <div className="absolute inset-0 bg-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="relative z-10 flex items-center justify-between">
+                            <div>
+                                <h3 className="text-2xl font-black italic text-white mb-2">PROMOCIÓN Y BANNERS</h3>
+                                <p className="text-cyan-300 text-xs font-bold uppercase tracking-widest">Marketing del Home Page</p>
+                            </div>
+                            <div className="w-16 h-16 bg-cyan-500/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <Layout className="text-cyan-400" size={32} />
                             </div>
                         </div>
                     </Link>

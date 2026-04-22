@@ -1,19 +1,26 @@
 # 📊 Progress Report - Geekorium Optimization
-**Last Updated**: 2026-04-17 12:55 (Production Checkout Fixed)
-**Status**: ✅ Dev Branch Recreation | ✅ Catalog & Inventory Sync | ✅ Quick Add UX Optimized | ✅ Performance Optimization (Batch Fetch) | ✅ Global 'Nuevo' Feature | ✅ Schema Fallback implemented | ✅ Strixhaven Visibility Fix | ✅ Production Checkout Restored
+**Last Updated**: 2026-04-21 11:00 (Dev Environment Restored & Synced)
+**Status**: ✅ Dev Branch Migration (bqfkqnnostzaqueujdms) | ✅ RPC Logic Restoration | ✅ Catalog & Inventory Sync | ✅ Edge Functions Health Check | ✅ Quick Add UX Optimized | ✅ Performance Optimization (Batch Fetch) | ✅ Global 'Nuevo' Feature | ✅ Internal Documentation Updated
 
 ---
 
-This session focused on reactivating the "Fast Add to Cart" feature with a premium UX overlay and ensuring pricing consistency between the Catalog and Inventory tables. We also hardened the catalog sync scripts for cross-environment compatibility.
+This session focused on aligning the frontend deployment with Cloudflare Pages, refactoring environment variable management to support multi-environment isolation, and performing a comprehensive update of all internal documentation to reflect the current system architecture.
 
 ---
 
 ## Completed Work
 
-### ✅ Database Infrastructure
-- **Branch Recreation**: Eliminated corrupt `dev` branch and created a clean one keyed to `bqfkqnnostzaqueujdms`.
-- **Schema Alignment**: Manually reconstructed the catalog schema (`games`, `sets`, `cards`, `card_printings`, `products`) to ensure 100% parity with production metadata.
-- **Project Linking**: Successfully linked local development to the new branch via `npx supabase link`.
+### ✅ Infrastructure & Documentation (Compound v52)
+- **Cloudflare Alignment**: Refactored the development environment (`dev.geekorium.shop`) to support Cloudflare's Environment Overrides.
+- **Environment Isolation**: Eliminated hardcoded production references in `CollectionService.ts`, `AdminDashboard.tsx`, and `BulkImport.tsx`, replacing them with dynamic `VITE_SUPABASE_PROJECT_ID`.
+- **System Laws Update**: Synchronized `LEYES_DEL_SISTEMA.md` and `verify_deployment.ps1` with the real-world deployment architecture.
+- **PRD Synchronization**: Updated `PRD_MASTER.md` and `PROJECT_STRUCTURE.md` to reflect the move away from GitHub Pages.
+
+### ✅ Database Infrastructure & Restoration (Current Session)
+- **Emergency Dev Migration**: Finalized the move to project `bqfkqnnostzaqueujdms` on branch `dev`.
+- **Logic Restoration**: Manually restored critical RPCs (`get_products_filtered`, `get_inventory_list`) using `restore_logic.sql` to resolve 404 errors in the UI.
+- **Environment Discovery**: Identified and resolved authentication blocks between local CLI and Supabase Dev Pooler by using direct REST API verification.
+- **Edge Deployment**: Confirmed and verified the health of the `tcg-api` Edge Function in the new project.
 
 ### ✅ Data Synchronization (Compound v45)
 - **API-Based Sync**: Implemented a robust HTTPS/PostgREST synchronization strategy to bypass local DNS restrictions (`getaddrinfo failed`).

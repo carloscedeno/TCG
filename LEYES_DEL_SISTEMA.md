@@ -120,8 +120,8 @@
   - DB: Proyecto Supabase principal.
 - **Ambiente de Desarrollo (DEV)**:
   - Branch: `dev`
-  - Hosting: GitHub Pages (`dev.geekorium.shop`)
-  - DB: Branch de Supabase vinculada a la rama `dev`.
+  - Hosting: Cloudflare Pages (`dev.geekorium.shop`)
+  - DB: Proyecto Supabase de desarrollo (`bqfkqnnostzaqueujdms`).
 - **Flujo de Trabajo**: Todo cambio DEBE validarse primero en el ambiente `dev` antes de ser integrado a `main`.
 - **Configuración**: La inyección de variables de entorno debe ser específica por cada plataforma de hosting.
 

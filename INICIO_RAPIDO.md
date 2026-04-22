@@ -1,4 +1,8 @@
-# 🎉 Portfolio Dashboard - Listo para Usar
+# ⚠️ GUÍA LEGADA (DESARROLLO LOCAL) — INICIO RÁPIDO
+
+> [!CAUTION]
+> Esta guía contiene referencias a configuraciones locales (`localhost`) y antiguas (`GitHub Pages`). 
+> Para la operación actual del sistema, consulte **[LEYES_DEL_SISTEMA.md](file:///e:/TCG%20Web%20App/LEYES_DEL_SISTEMA.md)** y la documentación en **`.agent/`**.
 
 ## ✅ Estado Actual
 

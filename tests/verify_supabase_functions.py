@@ -9,9 +9,14 @@ import asyncio
 import sys
 import os
 from datetime import datetime
+from dotenv import load_dotenv
+
+# Cargar variables de entorno para autenticación
+load_dotenv()
 
 # URL de la Edge Function en Supabase
 SUPABASE_URL = "https://sxuotvogwvmxuvwbsscv.supabase.co/functions/v1/tcg-api"
+SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY")
 
 async def test_endpoint(client, endpoint, description):
     print(f"🔍 Probando: {description} ({endpoint})...", end="", flush=True)
@@ -35,7 +40,11 @@ async def run_e2e_edge_functions():
     print("🚀 INICIANDO VERIFICACIÓN E2E DE SUPABASE EDGE FUNCTIONS")
     print("=" * 60)
     
-    async with httpx.AsyncClient(base_url=SUPABASE_URL, timeout=30.0) as client:
+    headers = {
+        "Authorization": f"Bearer {SUPABASE_ANON_KEY}"
+    } if SUPABASE_ANON_KEY else {}
+    
+    async with httpx.AsyncClient(base_url=SUPABASE_URL, timeout=30.0, headers=headers) as client:
         results = []
         
         # 1. Verificar Root

@@ -257,8 +257,7 @@ const handleImport = async () => {
 
         setLoading(true);
         try {
-            const SUPABASE_PROJECT_ID = import.meta.env.VITE_SUPABASE_PROJECT_ID || 'sxuotvogwvmxuvwbsscv';
-            const API_BASE = import.meta.env.VITE_API_BASE || `https://${SUPABASE_PROJECT_ID}.supabase.co/functions/v1/tcg-api`;
+            const API_BASE = import.meta.env.VITE_API_BASE;
 
             const importData = rows.map(row => {
                 const obj: any = {};

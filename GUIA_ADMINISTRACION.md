@@ -1,13 +1,14 @@
-# 🛡️ Guía de Administración: Pedidos e Inventario
+# Guía de Administración: Pedidos e Inventario
 
 Esta guía detalla cómo utilizar las nuevas funcionalidades de administración para gestionar pedidos y el inventario en el sistema Geekorium.
 
 ## 🚀 Acceso al Panel de Administración
 
-Para acceder al panel de administración, asegúrate de que el servidor de desarrollo esté corriendo (normalmente en `http://localhost:5173` o `http://localhost:5174`).
+Para acceder al panel de administración, asegúrate de que el servidor de desarrollo esté corriendo (o usa el entorno de staging).
 
-1. Navega a la ruta: `/admin`
-    - Ejemplo: `http://localhost:5173/admin`
+1. **Entornos Disponibles**:
+    - **Local**: `http://localhost:5173/admin`
+    - **Staging/Dev**: `https://dev.geekorium.shop/admin`
 2. Si no tienes sesión iniciada, el sistema está configurado temporalmente para permitir acceso de demostración (Admin Mode Forzado para local).
 
 Desde el **Admin Dashboard**, verás tarjetas de acceso rápido a las diferentes secciones:
@@ -40,7 +41,7 @@ Accede mediante la tarjeta **"Order Terminal"** o navegando a `/admin/orders`.
   - Cantidad comprada (x1, x4, etc).
   - Precio unitario al momento de la compra.
 
-### 3. Gestión de Estados y Cancelaciones (Nuevo)
+### 3. Gestión de Estados y Cancelaciones
 
 - **Selector de Estado**: En cada fila de pedido encontrarás un desplegable con el estado actual (ej: `PENDING PAYMENT`, `PAID`, `READY FOR PICKUP`).
 - **Cambiar Estado**:
@@ -77,7 +78,7 @@ Accede mediante la tarjeta **"Inventory Terminal"** o navegando a `/admin/invent
 Para verificar que todo funciona correctamente:
 
 1. **Crear un Pedido (Frontend Guest):**
-    - Abre una ventana de incógnito o asegúrate de no estar logueado como admin (o usa el mock).
+    - Abre una ventana de incógnito o asegúrate de no estar logueado como admin.
     - Ve a la tienda pública (`/`).
     - Añade un producto al carrito (fíjate en su stock actual).
     - Procede al Checkout (`/checkout`).
@@ -107,8 +108,6 @@ Para verificar que todo funciona correctamente:
 - **Funciones RPC (Backend Logic)**:
   - `create_order_atomic`: Maneja la creación de pedidos, inserción de ítems y descuento de stock en una sola transacción.
   - `cancel_order_and_restock`: Maneja la cancelación y devolución de stock atómicamente.
-- **Seguridad (RLS)**:
-  - Para esta demostración local, las políticas RLS (Row Level Security) han sido deshabilitadas en las tablas de órdenes para facilitar las pruebas sin autenticación compleja.
 
 ---
-*Documento generado automáticamente por Antigravity Agent.*
+*Documento actualizado por Antigravity Agent (Alineación Abril 2026).*

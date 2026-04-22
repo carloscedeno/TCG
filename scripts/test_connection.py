@@ -12,21 +12,21 @@ load_dotenv()
 
 def test_supabase_connection():
     """Probar conexión con Supabase"""
-    print("🔍 Verificando configuración de Supabase...")
+    print("--- Verificando configuracion de Supabase ---")
     
     # Verificar variables de entorno
     supabase_url = os.getenv('SUPABASE_URL')
     supabase_anon_key = os.getenv('SUPABASE_ANON_KEY')
     supabase_service_key = os.getenv('SUPABASE_SERVICE_ROLE_KEY')
     
-    print(f"📋 Variables de entorno:")
-    print(f"   SUPABASE_URL: {'✅ Configurado' if supabase_url else '❌ No configurado'}")
-    print(f"   SUPABASE_ANON_KEY: {'✅ Configurado' if supabase_anon_key else '❌ No configurado'}")
-    print(f"   SUPABASE_SERVICE_ROLE_KEY: {'✅ Configurado' if supabase_service_key else '❌ No configurado'}")
+    print(f"Variables de entorno:")
+    print(f"   SUPABASE_URL: {'[OK]' if supabase_url else '[MISSING]'}")
+    print(f"   SUPABASE_ANON_KEY: {'[OK]' if supabase_anon_key else '[MISSING]'}")
+    print(f"   SUPABASE_SERVICE_ROLE_KEY: {'[OK]' if supabase_service_key else '[MISSING]'}")
     
     if not all([supabase_url, supabase_anon_key, supabase_service_key]):
-        print("\n❌ Variables de entorno faltantes")
-        print("💡 Para configurar Supabase:")
+        print("\nERROR: Variables de entorno faltantes")
+        print("Sugerencia para configurar Supabase:")
         print("   1. Ve a https://supabase.com")
         print("   2. Crea un nuevo proyecto")
         print("   3. Ve a Settings > API")
@@ -34,52 +34,52 @@ def test_supabase_connection():
         print("   5. O configura las variables de entorno directamente")
         return False
     
-    # Verificar formato de URL (supabase_url ya no es None aquí)
+    # Verificar formato de URL
     if not supabase_url or not supabase_url.startswith('https://') or '.supabase.co' not in supabase_url:
-        print("❌ URL de Supabase inválida")
+        print("ERROR: URL de Supabase invalida")
         print("   Debe ser: https://your-project-ref.supabase.co")
         return False
     
-    print("✅ Variables de entorno configuradas correctamente")
+    print("SUCCESS: Variables de entorno configuradas correctamente")
     
     # Intentar importar y probar conexión
     try:
-        print("\n🔌 Probando conexión con Supabase...")
+        print("\n--- Probando conexion con Supabase ---")
         from supabase import create_client, Client
         
-        # Crear cliente (supabase_url y supabase_anon_key ya no son None)
+        # Crear cliente
         supabase: Client = create_client(str(supabase_url), str(supabase_anon_key))
         
         # Probar conexión simple
         try:
             # Intentar una consulta simple
             response = supabase.table('games').select('count').limit(1).execute()
-            print("✅ Conexión exitosa con Supabase")
+            print("SUCCESS: Conexion exitosa con Supabase")
             return True
         except Exception as e:
-            print(f"❌ Error de conexión: {e}")
+            print(f"ERROR de conexion: {e}")
             
             # Verificar si es un error de autenticación
             if "JWT" in str(e) or "auth" in str(e).lower():
-                print("💡 Error de autenticación - verifica tus claves API")
+                print("HINT: Error de autenticacion - verifica tus claves API")
             elif "not found" in str(e).lower():
-                print("💡 Tabla no encontrada - la base de datos puede estar vacía")
+                print("HINT: Tabla no encontrada - la base de datos puede estar vacia")
             else:
-                print("💡 Error de red o configuración")
+                print("HINT: Error de red o configuracion")
             
             return False
             
     except ImportError:
-        print("❌ Error: No se pudo importar la librería supabase")
-        print("💡 Instala con: pip install supabase")
+        print("ERROR: No se pudo importar la libreria supabase")
+        print("HINT: Instala con: pip install supabase")
         return False
     except Exception as e:
-        print(f"❌ Error inesperado: {e}")
+        print(f"ERROR inesperado: {e}")
         return False
 
 def test_with_mock_data():
     """Probar con datos simulados"""
-    print("\n🧪 Probando con datos simulados...")
+    print("\n--- Probando con datos simulados ---")
     
     # Simular configuración
     mock_url = "https://test-project.supabase.co"
@@ -91,16 +91,15 @@ def test_with_mock_data():
     try:
         from supabase import create_client
         supabase = create_client(mock_url, mock_key)
-        print("✅ Cliente de Supabase creado correctamente")
-        print("💡 Para usar con datos reales, configura las variables de entorno")
+        print("SUCCESS: Cliente de Supabase creado correctamente")
         return True
     except Exception as e:
-        print(f"❌ Error creando cliente: {e}")
+        print(f"ERROR creando cliente: {e}")
         return False
 
 def show_setup_instructions():
     """Mostrar instrucciones de configuración"""
-    print("\n📚 INSTRUCCIONES DE CONFIGURACIÓN")
+    print("\nINSTRUCCIONES DE CONFIGURACION")
     print("=" * 50)
     
     print("1. Crear proyecto en Supabase:")
@@ -116,50 +115,37 @@ def show_setup_instructions():
     print("   - Copia 'service_role' key")
     
     print("\n3. Configurar variables de entorno:")
-    print("   Opción A - Archivo .env:")
+    print("   Opcion A - Archivo .env:")
     print("   ```")
     print("   SUPABASE_URL=https://your-project-ref.supabase.co")
     print("   SUPABASE_ANON_KEY=your-anon-key")
     print("   SUPABASE_SERVICE_ROLE_KEY=your-service-role-key")
     print("   ```")
     
-    print("\n   Opción B - Variables de entorno del sistema:")
+    print("\n   Opcion B - Variables de entorno del sistema:")
     print("   ```bash")
-    print("   export SUPABASE_URL=https://your-project-ref.supabase.co")
-    print("   export SUPABASE_ANON_KEY=your-anon-key")
-    print("   export SUPABASE_SERVICE_ROLE_KEY=your-service-role-key")
-    print("   ```")
-    
-    print("\n4. Ejecutar configuración:")
-    print("   ```bash")
-    print("   python setup_complete_system.py")
+    print("   set SUPABASE_URL=https://your-project-ref.supabase.co")
+    print("   set SUPABASE_ANON_KEY=your-anon-key")
+    print("   set SUPABASE_SERVICE_ROLE_KEY=your-service-role-key")
     print("   ```")
 
 def main():
     """Función principal"""
-    print("🚀 VERIFICACIÓN DE CONECTIVIDAD SUPABASE")
+    print("VERIFICACION DE CONECTIVIDAD SUPABASE")
     print("=" * 50)
     
     # Probar conexión real
     connection_success = test_supabase_connection()
     
     if not connection_success:
-        # Probar con datos simulados
         test_with_mock_data()
-        
-        # Mostrar instrucciones
         show_setup_instructions()
-        
-        print("\n❌ Supabase no está configurado correctamente")
-        print("💡 Sigue las instrucciones arriba para configurarlo")
+        print("\nERROR: Supabase no esta configurado correctamente")
         return False
     
-    print("\n🎉 ¡Supabase está funcionando correctamente!")
-    print("✅ Puedes proceder con la configuración completa")
-    print("💡 Ejecuta: python setup_complete_system.py")
-    
+    print("\nCONEXION COMPLETADA EXITOSAMENTE")
     return True
 
 if __name__ == "__main__":
     success = main()
-    sys.exit(0 if success else 1) 
+    sys.exit(0 if success else 1)
