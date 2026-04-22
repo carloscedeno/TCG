@@ -611,61 +611,30 @@ export const fetchCart = async (): Promise<any> => {
       if (!data || data.length === 0) return { items: [], id: null, name: 'Carrito Principal', is_pos: false };
 
       // The RPC returns { id: ..., name: ..., is_pos: ..., items: [...] }
-      // Depending on Supabase JS client version, data could be the object directly or an array containing it.
       const cartData = Array.isArray(data) ? data[0] : data;
-      
       const rawItems = cartData?.items || [];
       
-      // We will map and then enrich if needed
-      const items = await Promise.all(rawItems.map(async (item: any) => {
-        // Try to extract from flat or nested 'products' object
-        const nested = item.products || item.product || {};
-        const extractName = item.product_name || item.name || nested.name || nested.product_name;
-        const extractPrice = item.price ?? nested.price;
-        const extractImageUrl = item.image_url || nested.image_url;
-        const extractSetCode = item.set_code || nested.set_code;
-        const extractStock = item.stock ?? nested.stock ?? 0;
-        const extractFinish = item.finish || nested.finish;
+      const items = rawItems.map((item: any) => {
+        // Universal ID Mapper: collapse different IDs into product_id for compatibility
+        const universalId = item.product_id || item.accessory_id;
         
-        let mappedItem = {
+        return {
           id: item.cart_item_id || item.id,
-          product_id: item.product_id || nested.id,
+          product_id: universalId, // The "Auto-engaño" for map() keys
+          accessory_id: item.accessory_id,
           quantity: Number(item.quantity || 1),
+          type: item.type || (item.accessory_id ? 'accessory' : 'product'),
           products: {
-            id: item.product_id || nested.id,
-            name: extractName || '',
-            price: Number(extractPrice || 0),
-            image_url: extractImageUrl || '',
-            set_code: extractSetCode || '',
-            stock: extractStock,
-            finish: extractFinish || ''
+            id: universalId,
+            name: item.name || '',
+            price: Number(item.price || 0),
+            image_url: item.image_url || '',
+            set_code: item.set_code || '',
+            stock: item.stock || 0,
+            finish: item.finish || ''
           }
         };
-
-        // If data is still missing (e.g. old RPC version that only returns cart_items columns)
-        if (!mappedItem.products.name || !mappedItem.products.image_url) {
-            try {
-                const { data: pData } = await supabase
-                    .from('products')
-                    .select('*')
-                    .eq('id', mappedItem.product_id)
-                    .single();
-                    
-                if (pData) {
-                    mappedItem.products.name = pData.name;
-                    mappedItem.products.price = Number(pData.price || pData.store_price || 0);
-                    mappedItem.products.image_url = pData.image_url;
-                    mappedItem.products.set_code = pData.set_code || '';
-                    mappedItem.products.finish = pData.finish || '';
-                    mappedItem.products.stock = pData.stock || 0;
-                }
-            } catch (err) {
-                console.error("Fallback product fetch failed for item: ", mappedItem.id, err);
-            }
-        }
-
-        return mappedItem;
-      }));
+      });
       
       return { 
         items, 
@@ -703,15 +672,43 @@ export const fetchCart = async (): Promise<any> => {
 
       if (prError) console.warn("Guest cart products fetch failed, using printings fallback", prError);
 
+      // 3. Batch fetch Accessories for guest cart
+      const accessoryIds = guestCart.filter((i: any) => i.accessory_id).map((i: any) => i.accessory_id);
+      let accessoriesData: any[] = [];
+      if (accessoryIds.length > 0) {
+        const { data: aData } = await supabase.from('accessories').select('*').in('id', accessoryIds);
+        accessoriesData = aData || [];
+      }
+
       const items = guestItemMappings.map((itemMapping: any) => {
+        // Handle Accessories
+        if (itemMapping.accessory_id) {
+          const acc = accessoriesData.find(a => a.id === itemMapping.accessory_id);
+          if (!acc) return null;
+          return {
+            id: `guest-acc-${acc.id}`,
+            product_id: acc.id, // Universal ID
+            accessory_id: acc.id,
+            quantity: itemMapping.quantity,
+            type: 'accessory',
+            products: {
+              id: acc.id,
+              name: acc.name,
+              price: Number(acc.price || 0),
+              image_url: acc.image_url,
+              stock: acc.stock || 0,
+              type: 'accessory'
+            }
+          };
+        }
+
+        // Handle Singles (Original logic)
         const printing = (printingsData || []).find((p: any) => p.printing_id === itemMapping.baseId);
         if (!printing) return null;
 
-        // Find matching product by finish
         const matches = (productsData || []).filter((p: any) => p.printing_id === itemMapping.baseId);
         const exactProduct = matches.find((p: any) => (p.finish || 'nonfoil').toLowerCase() === itemMapping.explicitFinish.toLowerCase());
-        const fallbackProduct = matches[0]; // If finish doesn't match exactly, take the first one available
-        const product = exactProduct || fallbackProduct;
+        const product = exactProduct || matches[0];
 
         const priceFallback = (itemMapping.explicitFinish === 'foil' || itemMapping.explicitFinish === 'etched')
           ? (printing.avg_market_price_foil_usd || 0)
@@ -721,6 +718,7 @@ export const fetchCart = async (): Promise<any> => {
           id: `guest-${itemMapping.printing_id}`,
           product_id: product?.id || itemMapping.baseId,
           quantity: itemMapping.quantity,
+          type: 'product',
           products: {
             id: product?.id || itemMapping.baseId,
             name: printing.cards?.card_name || printing.name || 'Unknown Card',
@@ -728,7 +726,8 @@ export const fetchCart = async (): Promise<any> => {
             image_url: printing.image_url,
             set_code: printing.sets?.set_code || '',
             stock: product?.stock || 0,
-            finish: product?.finish || itemMapping.explicitFinish
+            finish: product?.finish || itemMapping.explicitFinish,
+            type: 'product'
           }
         };
       }).filter(Boolean);
@@ -1085,4 +1084,77 @@ export const switchActiveCart = async (cartId: string): Promise<void> => {
     console.error('Error clearing active cart:', error);
     throw error;
   }
+};
+
+/**
+ * Accessories & Assets Management
+ */
+
+export const addAccessoryToCart = async (accessoryId: string, quantity: number = 1): Promise<any> => {
+  try {
+    const session = await supabase.auth.getSession();
+    if (session.data.session?.user) {
+      const { data, error } = await supabase.rpc('add_accessory_to_cart_v1', {
+        p_accessory_id: accessoryId,
+        p_quantity: quantity
+      });
+      if (error) throw error;
+      window.dispatchEvent(new Event('cart-updated'));
+      return { success: true, data };
+    }
+    
+    // Guest logic for accessories
+    const guestCart = JSON.parse(localStorage.getItem('guest_cart') || '[]');
+    const existing = guestCart.find((i: any) => i.accessory_id === accessoryId);
+    if (existing) {
+      existing.quantity += quantity;
+    } else {
+      guestCart.push({ accessory_id: accessoryId, quantity, type: 'accessory' });
+    }
+    localStorage.setItem('guest_cart', JSON.stringify(guestCart));
+    window.dispatchEvent(new Event('cart-updated'));
+    return { success: true };
+  } catch (error) {
+    console.error('Error adding accessory to cart:', error);
+    return { success: false, error };
+  }
+};
+
+export const fetchAccessories = async (filters: any = {}) => {
+  let query = supabase.from('accessories').select('*');
+  if (filters.category) query = query.eq('category', filters.category);
+  if (filters.is_active !== undefined) query = query.eq('is_active', filters.is_active);
+  
+  const { data, error } = await query.order('name');
+  if (error) throw error;
+  return data || [];
+};
+
+export const upsertAccessory = async (accessory: any) => {
+  const { data, error } = await supabase.from('accessories').upsert(accessory).select().single();
+  if (error) throw error;
+  return data;
+};
+
+export const uploadAsset = async (file: File, path: string): Promise<string> => {
+  const { data, error } = await supabase.storage
+    .from('public_assets')
+    .upload(`${path}/${Date.now()}_${file.name}`, file);
+  
+  if (error) throw error;
+  
+  const { data: publicUrl } = supabase.storage.from('public_assets').getPublicUrl(data.path);
+  return publicUrl.publicUrl;
+};
+
+export const fetchBanners = async (category: string = 'main_hero') => {
+  const { data, error } = await supabase
+    .from('hero_banners')
+    .select('*')
+    .eq('category', category)
+    .eq('is_active', true)
+    .order('display_order');
+  
+  if (error) throw error;
+  return data || [];
 };

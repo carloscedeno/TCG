@@ -20,8 +20,10 @@ import HelpPage from './pages/HelpPage';
 import LegalPage from './pages/LegalPage';
 import { WhatsAppWidget } from './components/Navigation/WhatsAppWidget';
 import { WelcomeModal } from './components/Navigation/WelcomeModal';
-import LoginPage from './pages/Admin/LoginPage';
 import CustomersPage from './pages/Admin/CustomersPage';
+import AccessoriesManager from './pages/Admin/AccessoriesManager';
+import BannersManager from './pages/Admin/BannersManager';
+import LoginPage from './pages/Admin/LoginPage';
 import { PosSessionBanner } from './components/Admin/PosSessionBanner';
 
 const isSupabaseConfigured = !!import.meta.env.VITE_SUPABASE_URL && !!import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -79,6 +81,8 @@ function App() {
                         <Route path="/admin/inventory" element={<AdminRoute><InventoryPage /></AdminRoute>} />
                         <Route path="/admin/orders" element={<AdminRoute><OrdersPage /></AdminRoute>} />
                         <Route path="/admin/customers" element={<AdminRoute><CustomersPage /></AdminRoute>} />
+                        <Route path="/admin/accessories" element={<AdminRoute><AccessoriesManager /></AdminRoute>} />
+                        <Route path="/admin/banners" element={<AdminRoute><BannersManager /></AdminRoute>} />
                         <Route path="/checkout" element={<CheckoutPage />} />
                         <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
                         <Route path="/order/:orderId" element={<OrderTrackingPage />} />
