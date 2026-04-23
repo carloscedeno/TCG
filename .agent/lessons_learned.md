@@ -790,3 +790,17 @@ useEffect(() => {
     - **Protección de Firmas**: Nunca eliminar sobrecargas de funciones críticas sin verificar la versión exacta que el frontend (especialmente en producción) está llamando.
     - **Resilient RPC Pattern**: Restaurar funciones con `DEFAULT NULL` en parámetros nuevos para mantener compatibilidad con callers antiguos (Edge Functions) y nuevos (Frontend).
 - **Regla Derivada**: Toda actualización de firma de RPC en producción debe ser retrocompatible o desplegarse simultáneamente con el frontend.
+
+### 99. Batched Denormalization for Massive Tables (April 2026)
+
+- **Problema**: Operaciones de denormalización (propagación de precios) sobre 100k+ registros fallaban por `statement timeout` (Error 57014).
+- **Causa Raíz**: Actualizar columnas de gran volumetría en una sola transacción bloquea la tabla y excede los límites de seguridad de Supabase.
+- **Solución**: Implementar un patrón de **Batching Externo**. Procesar la tabla en trozos de 5,000 IDs, realizando una transacción independiente por cada trozo. Esto garantiza que la DB respire entre actualizaciones y el proceso nunca supere los 30s.
+- **Regla Derivada**: [LEYES_DEL_SISTEMA.md] -> Ley 20. Toda reparación masiva de metadatos en producción DEBE ser batcheada.
+
+### 100. Single Source of Truth: Inventory-Market Loop (April 2026)
+
+- **Problema**: Discrepancias de precios entre la grilla (Marketplace) y el detalle (CardModal) causaban confusión y pérdida de dinero.
+- **Causa Raíz**: La tabla de inventario (`products`) y la de catálogo (`card_printings`) se desincronizaban al fallar el proceso de actualización automático.
+- **Solución**: Forzar una sincronización atómica donde el precio de la tienda (`products.price`) se iguale al precio de mercado (`card_printings.avg_market_price_usd`) siempre que este último sea mayor a cero.
+- **Regla Derivada**: "GK Price" y "Mercado" deben nacer de la misma fuente en tiempo real para evitar descalces comerciales.

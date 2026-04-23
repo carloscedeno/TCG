@@ -22,17 +22,29 @@ export const HeroSection: React.FC = () => {
         const loadHeroData = async () => {
             setLoading(true);
             try {
-                // Try fetching banners first
-                const bannerData = await fetchBanners('main_hero');
+                // Try fetching banners
+                const bannerData = await fetchBanners('main_hero').catch(err => {
+                    console.warn("Banners table not available yet, falling back to cards:", err);
+                    return null;
+                });
+
                 if (bannerData && bannerData.length > 0) {
                     setBanners(bannerData);
                 } else {
-                    // Fallback to trending cards
-                    const { cards } = await fetchCards({ limit: 5, sort: 'release_date' });
+                    // Fallback to trending cards (latest releases)
+                    const { cards } = await fetchCards({ limit: 5, sort: 'release_date' }).catch(err => {
+                        console.error("Cards fallback failed:", err);
+                        return { cards: [] };
+                    });
                     setTrendingCards(cards);
+                    // If still empty, try one more time with default sort
+                    if (!cards || cards.length === 0) {
+                        const { cards: fallbackCards } = await fetchCards({ limit: 5 }).catch(() => ({ cards: [] }));
+                        setTrendingCards(fallbackCards);
+                    }
                 }
             } catch (err) {
-                console.error("Hero data load failed:", err);
+                console.error("Critical Hero data load error:", err);
             } finally {
                 setLoading(false);
             }
