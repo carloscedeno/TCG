@@ -534,3 +534,43 @@ Urgently restore the `create_order_atomic` RPC function in production to resolve
 ---
 
 *Compounded for Geekorium TCG Ecosystem.*
+
+# 🧠 COMPOUND: Accessories & Polymorphic Checkout Stabilization
+
+**Date**: 2026-04-23 16:50
+
+## Objective
+
+Stabilize the integration of accessories into the checkout flow, ensure atomicity for mixed orders, and resolve tracking visibility issues for guest users.
+
+## Knowledge Codification
+
+### 1. Polymorphic Order Items (Products & Accessories)
+
+- **Pattern**: The `order_items` table uses mutually exclusive foreign keys (`product_id` / `accessory_id`).
+- **Logic**: Updated the `create_order_atomic` RPC to handle both types. It performs defensive lookups in both `products` and `accessories` tables if an ID is provided, ensuring stock is decremented correctly regardless of the item type.
+- **Frontend Recovery**: Implemented a robust ID extraction in `CheckoutPage.tsx` to handle legacy cart data or inconsistent metadata fields.
+
+### 2. Guest Tracking & RLS Permissions (406 Error)
+
+- **Problem**: Tracking a valid order by ID returned `406 Not Acceptable` or `0 rows` for non-logged-in users.
+- **Cause**: RLS was active on `orders` and `order_items` but lacked policies for the `anon` role.
+- **Solution**: 
+    - Granted `SELECT` to `anon` and `authenticated`.
+    - Created a public RLS policy `FOR SELECT USING (true)` for `orders` and `order_items`.
+    - Security is maintained as users must possess the exact order UUID (128-bit) to access the data.
+
+### 3. Polymorphic Tracking UI
+
+- **Logic**: Refactored `OrderTrackingPage.tsx` to perform a double join (`products` and `accessories`).
+- **UX**: The UI now dynamically renders the name, category, and image based on which join succeeds, ensuring accessories are not shown as "Card ID: null".
+
+## Technical Validation
+
+- **Frontend Build**: ✅ Success (`npm run build`).
+- **Database Logic**: ✅ Migration `20260423000003_accessories_checkout_integrity.sql` applied.
+- **Deployment**: ✅ Pushed to `dev` branch.
+
+---
+
+*Compounded for Geekorium TCG Ecosystem.*

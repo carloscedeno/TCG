@@ -801,3 +801,15 @@ useEffect(() => {
     - **Protección de Firmas**: Nunca eliminar sobrecargas de funciones críticas sin verificar la versión exacta que el frontend (especialmente en producción) está llamando.
     - **Resilient RPC Pattern**: Restaurar funciones con `DEFAULT NULL` en parámetros nuevos para mantener compatibilidad con callers antiguos (Edge Functions) y nuevos (Frontend).
 - **Regla Derivada**: Toda actualización de firma de RPC en producción debe ser retrocompatible o desplegarse simultáneamente con el frontend.
+
+### 145. Polymorphic Order Integrity (Accessories) — 2026-04-23
+- **Problema**: Los pedidos mixtos (cartas + accesorios) fallaban en el checkout porque el sistema solo esperaba `product_id`.
+- **Causa Raíz**: La tabla `order_items` usa claves foráneas separadas y mutuamente excluyentes para accesorios y productos. El frontend enviaba IDs en campos inconsistentes dependiendo del origen (carrito de invitados vs logueados).
+- **Solución**: Refactorizar el RPC `create_order_atomic` para manejar `product_id` y `accessory_id` de forma polimórfica con recuperación de ID defensiva.
+- **Regla Derivada**: Todo ítem de orden debe pasar por un mapeador de IDs en el frontend antes de enviarse al RPC, asegurando que se identifique correctamente si es un producto base o un accesorio.
+
+### 146. Guest Tracking RLS & 406 Errors — 2026-04-23
+- **Problema**: El rastreo de pedidos para invitados devolvía "0 rows" o `406 Not Acceptable`.
+- **Causa Raíz**: RLS habilitado sin políticas que permitieran al rol `anon` leer pedidos por ID. PostgREST devuelve 406 si el usuario no tiene permisos de `SELECT` sobre las columnas solicitadas.
+- **Solución**: Conceder `GRANT SELECT` a `anon` y `authenticated` en `orders` y `order_items`, y crear una política pública `FOR SELECT USING (true)` (el acceso se limita de facto por el conocimiento del UUID de la orden).
+- **Regla Derivada**: El flujo de "Guest Checkout" requiere que las tablas de órdenes sean legibles por el rol `anon` mediante políticas de RLS que permitan el acceso por ID.

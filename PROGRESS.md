@@ -1,6 +1,6 @@
 # 📊 Progress Report - Geekorium Optimization
-**Last Updated**: 2026-04-17 12:55 (Production Checkout Fixed)
-**Status**: ✅ Dev Branch Recreation | ✅ Catalog & Inventory Sync | ✅ Quick Add UX Optimized | ✅ Performance Optimization (Batch Fetch) | ✅ Global 'Nuevo' Feature | ✅ Schema Fallback implemented | ✅ Strixhaven Visibility Fix | ✅ Production Checkout Restored
+**Last Updated**: 2026-04-23 12:51 (Accessories & Polymorphic Checkout Stable)
+**Status**: ✅ Accessories Module | ✅ Polymorphic Checkout | ✅ Public Tracking RLS | ✅ Admin Visibility | ✅ Dev Branch Recreation | ✅ Catalog & Inventory Sync | ✅ Quick Add UX Optimized | ✅ Performance Optimization (Batch Fetch) | ✅ Global 'Nuevo' Feature | ✅ Schema Fallback implemented | ✅ Strixhaven Visibility Fix | ✅ Production Checkout Restored
 
 ---
 
@@ -57,6 +57,13 @@ This session focused on reactivating the "Fast Add to Cart" feature with a premi
 - **Mass Inventory Sync**: Successfully performed a "Touch" update on 938 products to populate missing metadata from the master catalog.
 - **View Refresh**: Refreshed the `mv_unique_cards` materialized view to propagate visibility changes to the public marketplace.
 - **Production Verification**: Confirmed that "Secrets of Strixhaven" (SOS/SOA/SOC) cards are now fully visible and functional in the production environment.
+
+### ✅ Accessories & Polymorphic Checkout (Compound v52)
+- **Accessories Module**: Full integration of deck boxes, sleeves, and playmats with a dedicated management interface and storefront section.
+- **Polymorphic Checkout**: Refactored `create_order_atomic` to support mixed orders (cards + accessories) in a single transaction with automatic stock decrement.
+- **Guest Tracking RLS**: Implemented public RLS policies allowing tracking of orders via ID without authentication.
+- **Robust ID Recovery**: Updated frontend mapping to extract IDs from multiple cart data sources (Guest/Logged-in/Legacy).
+- **Admin Orders View**: Updated the dashboard to perform polymorphic joins, showing correct names and images for both cards and accessories in order summaries.
 
 ---
 

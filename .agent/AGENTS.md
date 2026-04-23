@@ -110,7 +110,9 @@ Artefactos del Compound step:
 - ✅ **Alineación de IDs de Fuentes**: Estandarización de IDs de mercado (17: Card Kingdom, 16: TCGplayer) para integridad del historial de precios.- ✅ **Pricing Integrity & SKU Sync (v52)**: Resolución de contaminación global de precios. Implementación de mapeo basado en SKU para CardKingdom (soporte prefijo `F` y números de coleccionista).
 - ✅ **Optimización de Batch SQL (Ley 18)**: Aplicación de actualizaciones masivas mediante el patrón `VALUES` table, reduciendo tiempos de horas a segundos.
 - ✅ **Gestión de Accesorios (Accessories Management)**: Módulo completo de administración de accesorios con soporte para imágenes (`public_assets`), historial de auditoría y vitrina dinámica en el marketplace.
-- ✅ **ResoluciA3n DinAmica de Juegos**: EliminaciA3n de IDs hardcodeados para garantizar compatibilidad entre entornos DEV y PROD.
+- ✅ **Resolución Dinámica de Juegos**: Eliminación de IDs hardcodeados para garantizar compatibilidad entre entornos DEV y PROD.
+- ✅ **Checkout Polimórfico (Products & Accessories)**: Soporte nativo para pedidos mixtos en una sola transacción atómica, con recuperación defensiva de IDs en el frontend y validación de integridad en el RPC.
+- ✅ **Rastreo de Pedidos Público**: Implementación de políticas RLS que permiten el rastreo de órdenes por ID para invitados y usuarios autenticados, con visualización detallada de accesorios y cartas.
 
 
 ## 🚧 Features Pendientes
@@ -130,6 +132,7 @@ Artefactos del Compound step:
 5. **Cero Tolerancia a Precio 0**: Todo producto activo en inventario debe tener un precio mayor a 0 o fallback manual al mercado.
 6. **WhatsApp = Canal Operacional Primario**: El mensaje de WhatsApp en el checkout SIEMPRE debe incluir el detalle por carta (nombre, cantidad, set, finish, subtotal). Nunca simplificar a conteos agregados. (Lección #86)
 7. **Sincronización SKU-Aware**: Los scripts de sincronización con CardKingdom deben priorizar el SKU (`[F]SET-NNNN`) sobre el campo `variation` para sets modernos y tokens para garantizar un mapeo 100% exacto de acabados y coleccionistas.
+8. **RLS de Rastreo**: El acceso de lectura a `orders` y `order_items` debe permitirse para el rol `anon` basado en el conocimiento del UUID de la orden para habilitar el rastreo de invitados.
 
 ---
 
