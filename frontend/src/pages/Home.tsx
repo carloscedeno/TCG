@@ -69,7 +69,9 @@ const Home: React.FC = () => {
   const [debouncedQuery, setDebouncedQuery] = useState(searchParams.get('q') || '');
   const [debouncedFilters, setDebouncedFilters] = useState<Partial<Filters>>(filters);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [activeTab, setActiveTab] = useState<'marketplace' | 'reference'>('marketplace');
+  const [activeTab, setActiveTab] = useState<'marketplace' | 'reference' | 'accessories'>(
+    (searchParams.get('tab') as 'marketplace' | 'reference' | 'accessories') || 'marketplace'
+  );
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0); // Cart count state
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
@@ -267,9 +269,9 @@ const Home: React.FC = () => {
     setPage(0);
   };
 
-  const handleTabChange = (_tab: 'marketplace' | 'reference') => {
-    // Force stay on marketplace since reference tab is hidden/unfiltered
-    setActiveTab('marketplace');
+  const handleTabChange = (tab: 'marketplace' | 'reference' | 'accessories') => {
+    setActiveTab(tab);
+    setPage(0);
   };
 
 
@@ -376,47 +378,49 @@ const Home: React.FC = () => {
         {/* Rarity Filter Tabs & Sort */}
         <div className="bg-[#0a0a0a]/95 border-b border-neutral-800 sticky top-[70px] z-40 backdrop-blur-md">
           <div className="max-w-[1600px] mx-auto px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex flex-col sm:flex-row items-center gap-4">
               <div className="flex bg-neutral-900/50 p-1 rounded-full border border-neutral-800">
                 <button
                   onClick={() => handleTabChange('marketplace')}
                   data-testid="inventory-tab"
-                  className="px-6 py-2 rounded-full text-[11px] font-black tracking-widest uppercase transition-all ring-2 ring-geeko-cyan/30 flex items-center gap-2 bg-geeko-cyan text-black shadow-[0_0_15px_rgba(0,229,255,0.4)]"
+                  className={`px-6 py-2 rounded-full text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'marketplace'
+                    ? 'ring-2 ring-geeko-cyan/30 bg-geeko-cyan text-black shadow-[0_0_15px_rgba(0,229,255,0.4)]'
+                    : 'text-neutral-500 hover:text-neutral-300'
+                    }`}
                 >
                   <img src="/branding/Emporio.jpg" alt="Icon" className="w-5 h-5 rounded-full" />
                   Stock Geekorium
                 </button>
-                {/* 
-                // Tab removed as per stock filtering requirement
                 <button
-                  onClick={() => handleTabChange('reference')}
-                  data-testid="archive-tab"
-                  className={`px-6 py-2 rounded-full text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'reference'
-                    ? 'bg-neutral-700 text-white shadow-lg'
+                  onClick={() => handleTabChange('accessories')}
+                  data-testid="accessories-tab"
+                  className={`px-6 py-2 rounded-full text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'accessories'
+                    ? 'ring-2 ring-geeko-cyan/30 bg-geeko-cyan text-black shadow-[0_0_15px_rgba(0,229,255,0.4)]'
                     : 'text-neutral-500 hover:text-neutral-300'
                     }`}
                 >
-                  <img src="/branding/Misiones.jpg" alt="Icon" className="w-5 h-5 rounded-full" />
-                  Archivo Geeko
+                  <Sparkles size={16} className={activeTab === 'accessories' ? 'text-black' : 'text-geeko-cyan'} />
+                  Accesorios
                 </button>
-                */}
               </div>
 
-              <div className="flex bg-neutral-900/50 p-1 rounded-full border border-neutral-800">
-                {rarities.map(r => (
-                  <button
-                    key={r}
-                    onClick={() => handleRarityChange(r)}
-                    className={`px-3 md:px-6 py-2 rounded-full text-[9px] md:text-[11px] font-black tracking-widest uppercase transition-all ${activeRarity === r
-                      ? 'bg-neutral-700 text-white shadow-lg'
-                      : 'text-neutral-500 hover:text-neutral-300'
-                      }`}
-                  >
-                    {rarityMap[r] || r}
-                  </button>
-                ))}
+              <div className="flex flex-col sm:flex-row items-center gap-4">
+                {activeTab !== 'accessories' && (
+                  <div className="flex bg-neutral-900/50 p-1 rounded-full border border-neutral-800">
+                    {rarities.map(r => (
+                      <button
+                        key={r}
+                        onClick={() => handleRarityChange(r)}
+                        className={`px-3 md:px-6 py-2 rounded-full text-[9px] md:text-[11px] font-black tracking-widest uppercase transition-all ${activeRarity === r
+                          ? 'bg-neutral-700 text-white shadow-lg'
+                          : 'text-neutral-500 hover:text-neutral-300'
+                          }`}
+                      >
+                        {rarityMap[r] || r}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
-            </div>
             <div className="flex items-center gap-2 md:gap-4">
               <button
                 onClick={() => setIsMobileFiltersOpen(true)}
@@ -482,16 +486,18 @@ const Home: React.FC = () => {
         <main className="max-w-[1600px] w-full mx-auto px-6 py-8 flex-1">
           <div className="flex flex-col lg:flex-row gap-10">
             {/* Sidebar Filters */}
-            <aside className="hidden lg:block w-72 flex-shrink-0">
-              <div className="sticky top-[140px] max-h-[calc(100vh-160px)] overflow-y-auto pr-2 custom-scrollbar">
-                <FiltersPanel
-                  filters={{ ...mockFilters, sets }}
-                  selected={filters}
-                  onChange={handleFilterChange}
-                  setsOptions={sets}
-                />
-              </div>
-            </aside>
+            {activeTab !== 'accessories' && (
+              <aside className="hidden lg:block w-72 flex-shrink-0">
+                <div className="sticky top-[140px] max-h-[calc(100vh-160px)] overflow-y-auto pr-2 custom-scrollbar">
+                  <FiltersPanel
+                    filters={{ ...mockFilters, sets }}
+                    selected={filters}
+                    onChange={handleFilterChange}
+                    setsOptions={sets}
+                  />
+                </div>
+              </aside>
+            )}
 
             {/* Cards Grid */}
             <div className="flex-1">
@@ -516,69 +522,82 @@ const Home: React.FC = () => {
                 </div>
               ) : (
                 <div className="flex flex-col gap-6">
-                  {/* Active Filters Tokens */}
-                  {(Object.values(filters).some(v => v && (typeof v === 'boolean' ? v : (v as any).length > 0)) || activeRarity !== 'All' || debouncedQuery) && (
-                    <div className="flex flex-wrap items-center gap-2 mb-2 animate-in fade-in slide-in-from-left-2 duration-300">
-                      <span className="text-[10px] font-black uppercase tracking-widest text-neutral-600 mr-2">Activo:</span>
+                  {activeTab === 'accessories' ? (
+                    <div className="flex flex-col items-center justify-center py-32 text-center">
+                      <div className="w-24 h-24 bg-neutral-900/50 rounded-3xl flex items-center justify-center mb-8 border border-white/5 relative group">
+                        <div className="absolute inset-0 bg-geeko-cyan/20 blur-2xl rounded-full group-hover:bg-geeko-cyan/30 transition-all" />
+                        <Sparkles size={40} className="text-geeko-cyan relative z-10" />
+                      </div>
+                      <h3 className="text-3xl font-black italic uppercase tracking-tighter mb-4 neon-text-cyan">Próximamente</h3>
+                      <p className="text-neutral-500 font-medium max-w-sm">Estamos preparando la mejor selección de accesorios para tu colección. ¡Vuelve pronto!</p>
+                    </div>
+                  ) : (
+                    <>
+                      {/* Active Filters Tokens */}
+                      {(Object.values(filters).some(v => v && (typeof v === 'boolean' ? v : (v as any).length > 0)) || activeRarity !== 'All' || debouncedQuery) && (
+                        <div className="flex flex-wrap items-center gap-2 mb-2 animate-in fade-in slide-in-from-left-2 duration-300">
+                          <span className="text-[10px] font-black uppercase tracking-widest text-neutral-600 mr-2">Activo:</span>
 
-                      {debouncedQuery && (
-                        <button onClick={() => { setQuery(''); setPage(0); }} className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600/10 border border-blue-500/30 rounded-full text-[10px] font-bold text-blue-400 hover:bg-blue-600/20 transition-all group">
-                          Búsqueda: {debouncedQuery}
-                          <X size={10} className="group-hover:rotate-90 transition-transform" />
-                        </button>
+                          {debouncedQuery && (
+                            <button onClick={() => { setQuery(''); setPage(0); }} className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600/10 border border-blue-500/30 rounded-full text-[10px] font-bold text-blue-400 hover:bg-blue-600/20 transition-all group">
+                              Búsqueda: {debouncedQuery}
+                              <X size={10} className="group-hover:rotate-90 transition-transform" />
+                            </button>
+                          )}
+
+                          {filters.games?.map(g => (
+                            <button key={g} data-testid="game-tab" data-active="true" onClick={() => handleFilterChange({ ...filters, games: filters.games?.filter(x => x !== g) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-600/10 border border-purple-500/30 rounded-full text-[10px] font-bold text-purple-400 hover:bg-purple-600/20 transition-all group">
+                              {g}
+                              <X size={10} className="group-hover:rotate-90 transition-transform" />
+                            </button>
+                          ))}
+
+                          {filters.sets?.map(s => (
+                            <button key={s} onClick={() => handleFilterChange({ ...filters, sets: filters.sets?.filter(x => x !== s) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600/10 border border-emerald-500/30 rounded-full text-[10px] font-bold text-emerald-400 hover:bg-emerald-600/20 transition-all group">
+                              Edición: {s}
+                              <X size={10} className="group-hover:rotate-90 transition-transform" />
+                            </button>
+                          ))}
+
+                          {filters.colors?.map(c => (
+                            <button key={c} onClick={() => handleFilterChange({ ...filters, colors: filters.colors?.filter(x => x !== c) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-cyan-600/10 border border-cyan-500/30 rounded-full text-[10px] font-bold text-cyan-400 hover:bg-cyan-600/20 transition-all group">
+                              {c}
+                              <X size={10} className="group-hover:rotate-90 transition-transform" />
+                            </button>
+                          ))}
+
+                          {filters.types?.map(t => (
+                            <button key={t} onClick={() => handleFilterChange({ ...filters, types: filters.types?.filter(x => x !== t) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600/10 border border-red-500/30 rounded-full text-[10px] font-bold text-red-400 hover:bg-red-600/20 transition-all group">
+                              {t}
+                              <X size={10} className="group-hover:rotate-90 transition-transform" />
+                            </button>
+                          ))}
+
+                          <button onClick={() => { setFilters({}); setQuery(''); setActiveRarity('All'); setPage(0); }} className="text-[10px] font-black uppercase tracking-widest text-neutral-500 hover:text-white transition-colors ml-2 underline underline-offset-4 decoration-neutral-800">
+                            Limpiar Todo
+                          </button>
+                        </div>
                       )}
 
-                      {filters.games?.map(g => (
-                        <button key={g} data-testid="game-tab" data-active="true" onClick={() => handleFilterChange({ ...filters, games: filters.games?.filter(x => x !== g) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-600/10 border border-purple-500/30 rounded-full text-[10px] font-bold text-purple-400 hover:bg-purple-600/20 transition-all group">
-                          {g}
-                          <X size={10} className="group-hover:rotate-90 transition-transform" />
-                        </button>
-                      ))}
-
-                      {filters.sets?.map(s => (
-                        <button key={s} onClick={() => handleFilterChange({ ...filters, sets: filters.sets?.filter(x => x !== s) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600/10 border border-emerald-500/30 rounded-full text-[10px] font-bold text-emerald-400 hover:bg-emerald-600/20 transition-all group">
-                          Edición: {s}
-                          <X size={10} className="group-hover:rotate-90 transition-transform" />
-                        </button>
-                      ))}
-
-                      {filters.colors?.map(c => (
-                        <button key={c} onClick={() => handleFilterChange({ ...filters, colors: filters.colors?.filter(x => x !== c) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-cyan-600/10 border border-cyan-500/30 rounded-full text-[10px] font-bold text-cyan-400 hover:bg-cyan-600/20 transition-all group">
-                          {c}
-                          <X size={10} className="group-hover:rotate-90 transition-transform" />
-                        </button>
-                      ))}
-
-                      {filters.types?.map(t => (
-                        <button key={t} onClick={() => handleFilterChange({ ...filters, types: filters.types?.filter(x => x !== t) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600/10 border border-red-500/30 rounded-full text-[10px] font-bold text-red-400 hover:bg-red-600/20 transition-all group">
-                          {t}
-                          <X size={10} className="group-hover:rotate-90 transition-transform" />
-                        </button>
-                      ))}
-
-                      <button onClick={() => { setFilters({}); setQuery(''); setActiveRarity('All'); setPage(0); }} className="text-[10px] font-black uppercase tracking-widest text-neutral-500 hover:text-white transition-colors ml-2 underline underline-offset-4 decoration-neutral-800">
-                        Limpiar Todo
-                      </button>
-                    </div>
-                  )}
-
-                  <CardGrid cards={cards} onCardClick={setSelectedCardId} viewMode={viewMode} isArchive={activeTab === 'reference'} showCartButton={true} />
-                  {cards.length < totalCount && (
-                    <div className="flex justify-center pb-20">
-                      <button
-                        onClick={() => setPage((p: number) => p + 1)}
-                        disabled={loading}
-                        className="group relative overflow-hidden px-12 py-5 bg-neutral-900 border border-neutral-800 rounded-full font-black text-[11px] tracking-[0.2em] uppercase hover:border-blue-500/50 transition-all flex items-center gap-4 disabled:opacity-50 shadow-2xl"
-                      >
-                        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/0 via-blue-600/10 to-blue-600/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
-                        {loading ? (
-                          <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
-                        ) : (
-                          'Cargar Más Cartas'
-                        )}
-                        {!loading && <span className="text-neutral-600 bg-neutral-800 px-2 py-0.5 rounded-md">[{totalCount - cards.length}]</span>}
-                      </button>
-                    </div>
+                      <CardGrid cards={cards} onCardClick={setSelectedCardId} viewMode={viewMode} isArchive={activeTab === 'reference'} showCartButton={true} />
+                      {cards.length < totalCount && (
+                        <div className="flex justify-center pb-20">
+                          <button
+                            onClick={() => setPage((p: number) => p + 1)}
+                            disabled={loading}
+                            className="group relative overflow-hidden px-12 py-5 bg-neutral-900 border border-neutral-800 rounded-full font-black text-[11px] tracking-[0.2em] uppercase hover:border-blue-500/50 transition-all flex items-center gap-4 disabled:opacity-50 shadow-2xl"
+                          >
+                            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/0 via-blue-600/10 to-blue-600/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                            {loading ? (
+                              <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+                            ) : (
+                              'Cargar Más Cartas'
+                            )}
+                            {!loading && <span className="text-neutral-600 bg-neutral-800 px-2 py-0.5 rounded-md">[{totalCount - cards.length}]</span>}
+                          </button>
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
               )}
