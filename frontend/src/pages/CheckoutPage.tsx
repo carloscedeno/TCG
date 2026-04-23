@@ -80,7 +80,8 @@ export const CheckoutPage = () => {
                 : 0;
 
             const simplifiedItems = cartItems.map(item => ({
-                product_id: item.product_id,
+                product_id: item.product_id || null,
+                accessory_id: item.accessory_id || null,
                 printing_id: item.printing_id,
                 quantity: item.quantity,
                 name: item.products?.name,
@@ -88,7 +89,7 @@ export const CheckoutPage = () => {
                 price: item.products?.price || 0,
                 foil: item.products?.is_foil || item.products?.finish === 'foil' || false,
                 finish: item.products?.finish || (item.products?.is_foil ? 'foil' : 'nonfoil'),
-                is_on_demand: (item.products?.stock || 0) <= 0
+                is_on_demand: !item.accessory_id && (item.products?.stock || 0) <= 0
             }));
 
             const cedula = `${form.cedula_prefix}-${form.cedula_number || '00000000'}`;
@@ -126,7 +127,7 @@ export const CheckoutPage = () => {
 
             // Build per-card detail lines (max 40 items per AGENTS.md lesson #84)
             const itemLines = items.slice(0, 40).map((item) => {
-                const name = item.products?.name || 'Carta';
+                const name = item.products?.name || 'Item';
                 const qty = item.quantity || 1;
                 const unitPrice = (item.products?.price || 0);
                 const lineTotal = (unitPrice * qty).toFixed(2);
@@ -160,7 +161,7 @@ export const CheckoutPage = () => {
                     order_total: total,
                     items: cartItems.map(item => ({
                         quantity: item.quantity,
-                        products: { name: item.products?.name, price: item.products?.price, finish: item.products?.finish }
+                        products: { name: item.products?.name, price: item.products?.price, finish: item.products?.finish, is_on_demand: !item.accessory_id && (item.products?.stock || 0) <= 0 }
                     })),
                     current_user_id: user?.id || "guest"
                 });

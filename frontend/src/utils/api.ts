@@ -913,7 +913,7 @@ export const checkoutCart = async (): Promise<any> => {
 
 export const createOrder = async (orderData: {
   userId: string | null;
-  items: { product_id: string; quantity: number; price: number; finish?: string; is_on_demand?: boolean }[];
+  items: { product_id?: string | null; accessory_id?: string | null; quantity: number; price: number; finish?: string; is_on_demand?: boolean }[];
   shippingAddress: any;
   totalAmount: number;
   guestInfo?: { email: string; phone: string };
