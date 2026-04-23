@@ -556,7 +556,7 @@ const Home: React.FC = () => {
                 </div>
               ) : (
                 <div className="flex flex-col gap-6">
-                  {activeTab === 'accessories' ? (
+                  {activeTab === 'accessories' && cards.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-32 text-center">
                       <div className="w-24 h-24 bg-neutral-900/50 rounded-3xl flex items-center justify-center mb-8 border border-white/5 relative group">
                         <div className="absolute inset-0 bg-geeko-cyan/20 blur-2xl rounded-full group-hover:bg-geeko-cyan/30 transition-all" />

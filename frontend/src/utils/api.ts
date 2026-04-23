@@ -1156,10 +1156,16 @@ export const fetchAccessories = async (params: {
 }) => {
   const { q, game, category, limit = 50, offset = 0 } = params;
   
-  // Game name to ID mapping (Simple for now)
+  // Dynamic game mapping
   let gameId: number | null = null;
-  if (game === 'Magic: The Gathering' || game === 'MTG') gameId = 22;
-  // TODO: Add more mappings or fetch from DB if needed
+  if (game) {
+    const { data: gameData } = await supabase
+      .from('games')
+      .select('game_id')
+      .or(`game_name.eq."${game}",game_code.eq."${game}"`)
+      .single();
+    if (gameData) gameId = gameData.game_id;
+  }
   
   const { data, error, count } = await supabase.rpc('get_accessories_filtered', {
     p_game_id: gameId,
