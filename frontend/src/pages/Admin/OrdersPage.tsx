@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'; // v2.2.1 support for accessories
 import { supabase } from '../../utils/supabaseClient';
 import { useAuth } from '../../context/AuthContext';
 import { Package, ChevronDown, X, User, Calendar, AlertCircle, FileDown, Trash2, Loader2, Check } from 'lucide-react';
