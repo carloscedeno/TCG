@@ -4,8 +4,15 @@
 
 BEGIN;
 
--- 1. Enhanced create_order_atomic to support accessories
--- We use CREATE OR REPLACE to update the existing function
+-- 1. CLEANUP: Drop existing overloads to avoid PGRST202 errors
+-- We drop all known variations to ensure a clean state
+DROP FUNCTION IF EXISTS public.create_order_atomic(uuid, jsonb, jsonb, numeric);
+DROP FUNCTION IF EXISTS public.create_order_atomic(uuid, jsonb, jsonb, numeric, uuid);
+DROP FUNCTION IF EXISTS public.create_order_atomic(jsonb, jsonb, numeric, uuid);
+DROP FUNCTION IF EXISTS public.create_order_atomic(uuid, jsonb, jsonb, numeric, jsonb);
+DROP FUNCTION IF EXISTS public.create_order_atomic(uuid, jsonb, jsonb, numeric, jsonb, uuid);
+
+-- 2. Enhanced create_order_atomic to support accessories
 CREATE OR REPLACE FUNCTION public.create_order_atomic(
     p_user_id uuid,
     p_items jsonb, -- Array of {product_id?: uuid, accessory_id?: uuid, quantity: int, price: numeric}
