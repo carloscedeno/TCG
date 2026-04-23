@@ -804,3 +804,10 @@ useEffect(() => {
 - **Causa Raíz**: La tabla de inventario (`products`) y la de catálogo (`card_printings`) se desincronizaban al fallar el proceso de actualización automático.
 - **Solución**: Forzar una sincronización atómica donde el precio de la tienda (`products.price`) se iguale al precio de mercado (`card_printings.avg_market_price_usd`) siempre que este último sea mayor a cero.
 - **Regla Derivada**: "GK Price" y "Mercado" deben nacer de la misma fuente en tiempo real para evitar descalces comerciales.
+
+### 101. Despliegue de Frontend vs. Migraciones de DB (Abril 2026)
+
+- **Problema**: El frontend mostraba un banner de "emergencia" (Bruce Banner) en Producción inmediatamente tras fusionar `dev` a `main`, antes de ejecutar migraciones SQL.
+- **Causa Raíz**: El código del frontend ya había sido desplegado vía Vercel/Cloudflare. Este código dependía de la nueva tabla `hero_banners`. Al no existir la tabla en Producción, el frontend activó su lógica de *fallback* para evitar romperse, engañando al usuario y haciéndole creer que un script de rollback local había afectado Producción.
+- **Solución**: Ocultar temporalmente el componente en el código (`main`) hasta que la base de datos esté lista para el *release* de la feature.
+- **Regla Derivada**: Nunca hacer *merge* a `main` de código frontend que dependa de un esquema nuevo de base de datos a menos que la base de datos de producción ya haya sido migrada o se despliegue en tándem.

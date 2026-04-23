@@ -529,3 +529,13 @@ Ningún archivo de migración SQL (`supabase/migrations/`) desplegado y registra
 - **Ventana de Novedad**: El estándar de visualización es de **12 días**.
 - **Lógica de Fallback (Graceful Degradation)**: Si el filtro de 12 días no devuelve resultados, los RPCs financieros (`get_products_filtered`, `get_inventory_list`) deben ignorar automáticamente la restricción temporal para mostrar los ítems más recientes disponibles en stock, evitando listas vacías para el usuario.
 - **Desacoplamiento**: El filtro "Nuevo" debe operar siempre como un **toggle independiente**. Nunca debe sobreescribir o bloquear la capacidad del usuario de ordenar los elementos por otras columnas (Precio, Nombre, Stock) mientras el filtro esté activo.
+
+---
+
+### Ley 19: Despliegue de Esquemas y Dependencias de UI
+
+**Siempre** desplegar (o migrar) el esquema de base de datos en Producción **antes** o en conjunto con el código del frontend que dependa de él.
+
+- **Feature Toggles**: Si se hace *merge* a `main` de una característica UI (ej. un banner, un menú de admin) que consulta tablas que aún no existen en el entorno de Producción, dicha característica debe estar oculta o protegida por un *Feature Toggle*.
+- **Prevención de Fallbacks Inesperados**: Componentes que implementan lógicas de *fallback* (como mostrar cartas "trending" cuando falla la lectura de una tabla promocional) se activarán irremediablemente si la base de datos devuelve un error por tabla inexistente.
+- **Regla**: Nunca asumir que Producción tiene el mismo esquema que Desarrollo sin haber ejecutado las migraciones explícitamente.

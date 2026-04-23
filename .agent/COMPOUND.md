@@ -513,3 +513,37 @@ Restore the integrity of CardKingdom pricing in the production environment. Reso
 ---
 
 *Compounded for Geekorium TCG Ecosystem.*
+
+# 🧠 COMPOUND: Production UI Fallbacks & Migration Desync (v55)
+
+**Date**: 2026-04-23 01:05 (Local)
+
+## Objective
+
+Identify and document the cause of the "Bruce Banner" incident in Production, where the frontend activated an emergency UI fallback immediately following a merge from `dev` to `main`, leading the user to mistakenly believe that a local development SQL script had corrupted the production database.
+
+## Knowledge Codification
+
+### 1. The Fallback Mismatch
+- **Observation**: The `HeroSection.tsx` component was programmed with a graceful fallback: if the `hero_banners` table fails to load or is empty, it queries the newest cards in the database to prevent a blank header.
+- **Incident**: When `dev` was merged into `main`, this new React code was deployed to Production. However, the Production database had not yet received the SQL migration creating `hero_banners`.
+- **Result**: The missing table triggered the API catch block, activating the fallback ("Bruce Banner" newest card) unexpectedly.
+
+### 2. Deployment Sequencing (Law 19)
+- **Rule**: Code that depends on new database schema MUST NOT be merged to `main` and deployed to production unless the corresponding SQL migrations have already been applied to the Production database, or they are deployed simultaneously.
+- **Remediation**: Temporarily hid the `HeroSection`, `AccessoriesManager`, and `BannersManager` components in the `main` branch until the backend features are ready for a full production release.
+
+### 3. Strict TS Checks on Vercel/Cloudflare
+- **Bug**: Commenting out React components left their `import` statements at the top of the files.
+- **Consequence**: `tsc -b` on the CI/CD pipeline failed with `error TS6133: 'Component' is declared but its value is never read`, blocking the hotfix deployment.
+- **Fix**: Removed all unused imports in `App.tsx`, `AdminDashboard.tsx`, and `Home.tsx`.
+
+## Technical Validation
+
+- **Code Fix**: ✅ Unused imports and components hidden on `main`.
+- **Frontend Build**: ✅ Vercel/Cloudflare pipeline success (`tsc` passed).
+- **Documentation**: ✅ Added Lesson 101 and Law 19 to system rules.
+
+---
+
+*Compounded for Geekorium TCG Ecosystem.*
