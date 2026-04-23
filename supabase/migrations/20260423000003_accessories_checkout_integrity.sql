@@ -162,7 +162,7 @@ BEGIN
                 RAISE EXCEPTION 'Stock insuficiente para el producto %', (v_item->>'name');
             END IF;
 
-            INSERT INTO public.order_items (order_id, product_id, quantity, price)
+            INSERT INTO public.order_items (order_id, product_id, quantity, price_at_purchase)
             VALUES (v_order_id, v_target_id, (v_item->>'quantity')::integer, COALESCE(v_real_price, (v_item->>'price')::numeric));
 
             UPDATE public.products SET stock = stock - (v_item->>'quantity')::integer WHERE id = v_target_id;
@@ -173,7 +173,7 @@ BEGIN
                 RAISE EXCEPTION 'Stock insuficiente para el accesorio %', (v_item->>'name');
             END IF;
 
-            INSERT INTO public.order_items (order_id, accessory_id, quantity, price)
+            INSERT INTO public.order_items (order_id, accessory_id, quantity, price_at_purchase)
             VALUES (v_order_id, v_acc_id, (v_item->>'quantity')::integer, COALESCE(v_real_price, (v_item->>'price')::numeric));
 
             UPDATE public.accessories SET stock = stock - (v_item->>'quantity')::integer WHERE id = v_acc_id;
