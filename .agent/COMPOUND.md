@@ -475,9 +475,37 @@ Resolve widespread pricing contamination (foil prices assigned to non-foil versi
 
 *Compounded for Geekorium TCG Ecosystem.*
 
-# 🧠 COMPOUND: Production Checkout Restoration (v53)
+# 🧠 COMPOUND: EstabilizaciA3n de Accesorios y ResoluciA3n DinAmica (v54)
 
-**Date**: 2026-04-17
+**Fecha**: 2026-04-23
+
+## Objetivo
+
+Finalizar la integraciA3n del mA3dulo de Accesorios en el entorno DEV, resolviendo bloqueos de carga de datos y errores de red.
+
+## Conocimiento Codificado
+
+### 1. ResoluciA3n DinAmica de Juegos
+- **Problema**: El frontend fallaba al filtrar accesorios porque buscaba el `game_id = 22` (MTG en PROD), pero en DEV el ID es `1`.
+- **SoluciA3n**: RefactorizaciA3n de `fetchAccessories` en `api.ts` para buscar el ID dinAmicamente por nombre o cA3digo antes de filtrar.
+
+### 2. Infraestructura de Accesorios
+- **Storage**: ConfiguraciA3n del bucket `public_assets` con polA-ticas RLS para permitir subida de imAgenes a administradores.
+- **Base de Datos**: Sembrado de la tabla `games` y desactivaciA3n de RLS de lectura para permitir el llenado de dropdowns en el admin.
+
+### 3. ActivaciA3n de Vitrina
+- **Frontend**: ModificaciA3n de `Home.tsx` para eliminar el bloqueo estAtico de "PrA3ximamente". Ahora la vitrina se activa automAticamente si detecta datos en la categorA-a de accesorios.
+
+## ValidaciA3n TAcnica
+
+- **Frontend Build**: ✅ Success.
+- **Prueba de Campo**: ✅ Accesorio "swampo" visible y funcional en `dev.geekorium.shop`.
+- **Integridad Git**: ✅ Rama `dev` sincronizada.
+
+---
+
+*Compounded for Geekorium TCG Ecosystem.*
+
 
 ## Objective
 

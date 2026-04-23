@@ -109,6 +109,8 @@ Artefactos del Compound step:
 - ✅ **Limpieza de Repositorio (Garbage Removal)**: Eliminación de más de 70 scripts de depuración, logs y archivos temporales redundantes para mejorar la mantenibilidad.
 - ✅ **Alineación de IDs de Fuentes**: Estandarización de IDs de mercado (17: Card Kingdom, 16: TCGplayer) para integridad del historial de precios.- ✅ **Pricing Integrity & SKU Sync (v52)**: Resolución de contaminación global de precios. Implementación de mapeo basado en SKU para CardKingdom (soporte prefijo `F` y números de coleccionista).
 - ✅ **Optimización de Batch SQL (Ley 18)**: Aplicación de actualizaciones masivas mediante el patrón `VALUES` table, reduciendo tiempos de horas a segundos.
+- ✅ **Gestión de Accesorios (Accessories Management)**: Módulo completo de administración de accesorios con soporte para imágenes (`public_assets`), historial de auditoría y vitrina dinámica en el marketplace.
+- ✅ **ResoluciA3n DinAmica de Juegos**: EliminaciA3n de IDs hardcodeados para garantizar compatibilidad entre entornos DEV y PROD.
 
 
 ## 🚧 Features Pendientes

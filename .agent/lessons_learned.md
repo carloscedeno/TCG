@@ -8,17 +8,28 @@ Este documento registra los desafÃƒÂ­os tÃƒÂ©cnicos encontrados durante 
 
 - **Problema**: `numpy==2.4.0` fallaba en GitHub con "No matching distribution found" a pesar de estar disponible localmente.
 - **Causa**: Versiones muy recientes de librerÃƒÂ­as a veces tardan horas/dÃƒÂ­as en estar disponibles en todos los mirrors de PyPI para Linux/x64, o requieren Python 3.12+.
-- **LecciÃƒÂ³n**:
-  - Sincronizar la versiÃƒÂ³n de Python del runner (3.12) con la local.
+- **Causa**: Versiones muy recientes de librerías a veces tardan horas/días en estar disponibles en todos los mirrors de PyPI para Linux/x64, o requieren Python 3.12+.
+- **LecciÃ³n**:
+  - Sincronizar la versión de Python del runner (3.12) con la local.
   - Usar versionamiento flexible (`>=2.0.0`) en `requirements.txt` para entornos de despliegue.
 
-## Ã°Å¸â€”â€žÃ¯Â¸ï¿½ Base de Datos y Supabase
+### 143. Sincronización SKU-Aware
+- **Problema**: Los scripts de sincronización con CardKingdom tenían errores de mapeo en sets modernos.
+- **Causa**: El uso de campos descriptivos ambiguos en lugar de identificadores únicos.
+- **Lección**: Los scripts de sincronización con CardKingdom deben priorizar el SKU (`[F]SET-NNNN`) sobre el campo `variation` para sets modernos y tokens para garantizar un mapeo 100% exacto de acabados y coleccionistas.
 
-### 2. "Precios Invisibles" (AgregaciÃƒÂ³n Fallida)
+### 144. Resolución Dinámica de Juegos
+- **Problema**: Errores en el frontend al intentar cargar datos de juegos debido a IDs cambiantes entre entornos.
+- **Causa**: Hardcoding de IDs de bases de datos seriales.
+- **Lección**: Evitar hardcoding de IDs de bases de datos seriales en el frontend. En entornos de desarrollo, Magic: The Gathering puede ser ID 1, mientras que en producción es ID 22. Se implementó una resolución dinámica en `api.ts` basada en el nombre del juego o su código (`MTG`).
 
-- **Problema**: El script de sincronizaciÃƒÂ³n insertaba precios pero no se reflejaban en la UI.
-- **Causa**: El trigger SQL `calculate_aggregated_prices` filtraba por `timestamp >= NOW() - INTERVAL '7 days'` y requerÃƒÂ­a un `condition_id` vÃƒÂ¡lido. Los inserts manuales omitÃƒÂ­an estos campos, dejando los precios en un limbo.
-- **LecciÃƒÂ³n**: Todo script de ingesta de precios debe incluir:
+## 🗄 Base de Datos y Supabase
+
+### 2. "Precios Invisibles" (Agregación Fallida)
+
+- **Problema**: El script de sincronización insertaba precios pero no se reflejaban en la UI.
+- **Causa**: El trigger SQL `calculate_aggregated_prices` filtraba por `timestamp >= NOW() - INTERVAL '7 days'` y requería un `condition_id` válido. Los inserts manuales omitían estos campos, dejando los precios en un limbo.
+- **Lección**: Todo script de ingesta de precios debe incluir:
   - `timestamp`: ISO string (UTC).
   - `condition_id`: ID numÃƒÂ©rico correspondiente (ej: 16 para Near Mint).
   - `is_foil`: Booleano explÃƒÂ­cito.
