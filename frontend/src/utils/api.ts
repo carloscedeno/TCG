@@ -800,32 +800,6 @@ export const fetchCart = async (): Promise<any> => {
 
     return { items: processedItems };
 
-    } catch (batchError) {
-      console.error('Batch guest cart fetch failed, falling back to manual loop', batchError);
-      // Last resort fallback to original slow logic if batch fetch fails for some reason
-      const items = await Promise.all(guestCart.map(async (item: any) => {
-        try {
-          const details = await fetchCardDetails(item.printing_id);
-          return {
-            id: `guest-${item.printing_id}`,
-            product_id: details.product_id || item.printing_id,
-            quantity: item.quantity,
-            products: {
-              id: details.product_id || details.card_id,
-              name: details.name,
-              price: Number(details.price || details.market_price || details.valuation?.market_price || 0),
-              image_url: details.image_url,
-              set_code: details.set_code,
-              stock: details.total_stock || 0
-            }
-          };
-        } catch (e) {
-          return null;
-        }
-      }));
-      return { items: items.filter((i: any) => i !== null) };
-    }
-
   } catch (error) {
     console.error('Error fetching cart:', error);
     return { items: [] };
