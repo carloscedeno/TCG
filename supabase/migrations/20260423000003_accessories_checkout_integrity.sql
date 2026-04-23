@@ -18,6 +18,7 @@ CREATE OR REPLACE FUNCTION public.create_order_atomic(
     p_items jsonb, -- Array of {product_id?: uuid, accessory_id?: uuid, quantity: int, price: numeric}
     p_shipping_address jsonb,
     p_total_amount numeric,
+    p_guest_info jsonb DEFAULT NULL,
     p_cart_id uuid DEFAULT NULL
 )
 RETURNS jsonb
