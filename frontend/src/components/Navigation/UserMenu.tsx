@@ -50,6 +50,8 @@ export const UserMenu: React.FC = () => {
         },
         { icon: Upload, label: 'Importar Colección', path: '/import', show: !!user },
         { icon: Users, label: 'Atención a Clientes', path: '/admin/customers', show: isAdmin },
+        { icon: Package, label: 'Gestión de Inventario', path: '/admin/inventory', show: isAdmin },
+        { icon: Shield, label: 'Gestión de Accesorios', path: '/admin/accessories', show: isAdmin },
         { icon: Shield, label: 'Admin Dashboard', path: '/admin', show: isAdmin },
     ];
 

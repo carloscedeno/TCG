@@ -3,7 +3,7 @@ import { rarityMap } from '../utils/translations';
 import { CardGrid } from '../components/Card/CardGrid';
 import { CardModal } from '../components/Card/CardModal';
 import type { CardProps } from '../components/Card/Card';
-import { fetchCards, fetchSets, fetchProducts, fetchCart } from '../utils/api';
+import { fetchCards, fetchSets, fetchProducts, fetchCart, fetchAccessories } from '../utils/api';
 import { SearchBar } from '../components/SearchBar/SearchBar';
 import { FiltersPanel } from '../components/Filters/FiltersPanel';
 import type { Filters } from '../components/Filters/FiltersPanel';
@@ -162,6 +162,29 @@ const Home: React.FC = () => {
               updated_at: p.updated_at
             })),
             total_count: productRes.total_count
+          };
+        } else if (activeTab === 'accessories') {
+          const accRes = await fetchAccessories({
+            q: debouncedQuery || undefined,
+            game: debouncedFilters.games && debouncedFilters.games.length > 0 ? debouncedFilters.games[0] : undefined,
+            limit: LIMIT,
+            offset
+          });
+
+          result = {
+            cards: accRes.accessories.map((a: any) => ({
+              card_id: a.id,
+              accessory_id: a.id,
+              name: a.name,
+              set: a.category, // Use category as "set" label
+              price: Number(a.price) || 0,
+              image_url: a.image_url,
+              rarity: 'Common',
+              total_stock: Number(a.stock) || 0,
+              is_accessory: true,
+              updated_at: a.updated_at
+            })),
+            total_count: accRes.total_count
           };
         } else {
           const cardRes = await fetchCards({
@@ -382,7 +405,7 @@ const Home: React.FC = () => {
                 <button
                   onClick={() => handleTabChange('marketplace')}
                   data-testid="inventory-tab"
-                  className={`px-6 py-2 rounded-full text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'marketplace'
+                  className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'marketplace'
                     ? 'ring-2 ring-geeko-cyan/30 bg-geeko-cyan text-black shadow-[0_0_15px_rgba(0,229,255,0.4)]'
                     : 'text-neutral-500 hover:text-neutral-300'
                     }`}
@@ -391,14 +414,25 @@ const Home: React.FC = () => {
                   Stock Geekorium
                 </button>
                 <button
-                  onClick={() => handleTabChange('accessories')}
-                  data-testid="accessories-tab"
-                  className={`px-6 py-2 rounded-full text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'accessories'
-                    ? 'ring-2 ring-geeko-cyan/30 bg-geeko-cyan text-black shadow-[0_0_15px_rgba(0,229,255,0.4)]'
+                  onClick={() => handleTabChange('reference')}
+                  data-testid="reference-tab"
+                  className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'reference'
+                    ? 'ring-2 ring-blue-500/30 bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.4)]'
                     : 'text-neutral-500 hover:text-neutral-300'
                     }`}
                 >
-                  <Sparkles size={16} className={activeTab === 'accessories' ? 'text-black' : 'text-geeko-cyan'} />
+                  <Search size={16} className={activeTab === 'reference' ? 'text-white' : 'text-blue-500'} />
+                  Mercado
+                </button>
+                <button
+                  onClick={() => handleTabChange('accessories')}
+                  data-testid="accessories-tab"
+                  className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'accessories'
+                    ? 'ring-2 ring-purple-500/30 bg-purple-600 text-white shadow-[0_0_15px_rgba(147,51,234,0.4)]'
+                    : 'text-neutral-500 hover:text-neutral-300'
+                    }`}
+                >
+                  <Sparkles size={16} className={activeTab === 'accessories' ? 'text-white' : 'text-purple-400'} />
                   Accesorios
                 </button>
               </div>

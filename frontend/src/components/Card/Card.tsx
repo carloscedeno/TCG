@@ -32,11 +32,13 @@ export interface CardProps {
   is_foil?: boolean;
   isArchive?: boolean;
   showCartButton?: boolean;
+  is_accessory?: boolean;
+  accessory_id?: string;
   updated_at?: string;
   onClick?: () => void;
 }
 
-export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, price, card_id, rarity, type, card_faces, viewMode = 'grid', total_stock, finish, is_foil, isArchive, showCartButton = false, onClick }) => {
+export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, price, card_id, rarity, type, card_faces, viewMode = 'grid', total_stock, finish, is_foil, isArchive, showCartButton = false, is_accessory, accessory_id, onClick }) => {
   const [currentFaceIndex, setCurrentFaceIndex] = useState(0);
   const [addingToCart, setAddingToCart] = useState(false);
 
@@ -66,7 +68,12 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
 
     setAddingToCart(true);
     try {
-      await addToCart(card_id, 1, finish);
+      if (is_accessory || accessory_id) {
+          // If it's an accessory, we use a specialized helper if available or pass flag
+          await addToCart(accessory_id || card_id, 1, finish, true);
+      } else {
+          await addToCart(card_id, 1, finish);
+      }
       // Optional: Show toast
     } catch (err) {
       console.error("Failed to add to cart", err);

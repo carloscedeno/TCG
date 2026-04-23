@@ -246,6 +246,37 @@ export const fetchProducts = async (params: any = {}, signal?: AbortSignal): Pro
 export const fetchCardDetails = async (printingId: string): Promise<any> => {
   try {
     let data: any = null;
+    
+    // Check if it's an accessory UUID first
+    const { data: accData } = await supabase
+      .from('accessories')
+      .select('*')
+      .eq('id', printingId)
+      .maybeSingle();
+      
+    if (accData) {
+        return {
+            id: accData.id,
+            card_id: accData.id,
+            printing_id: accData.id,
+            name: accData.name,
+            set: accData.category,
+            set_code: accData.category,
+            image_url: accData.image_url,
+            price: Number(accData.price),
+            total_stock: accData.stock,
+            is_accessory: true,
+            description: accData.description,
+            all_versions: [{
+                printing_id: accData.id,
+                set_name: accData.category,
+                price: accData.price,
+                stock: accData.stock,
+                finish: 'standard'
+            }]
+        };
+    }
+
     const dbPrintingId = printingId.replace('-foil', '').replace('-nonfoil', '');
 
     // 1. Try fetching from API first
@@ -679,61 +710,96 @@ export const fetchCart = async (): Promise<any> => {
     const guestCart = JSON.parse(localStorage.getItem('guest_cart') || '[]');
     if (guestCart.length === 0) return { items: [] };
 
-    // Group items by base printing ID for batch fetching
-    const guestItemMappings = guestCart.map((item: any) => {
-      const baseId = item.printing_id.replace(/-foil$/, '').replace(/-nonfoil$/, '').replace(/-etched$/, '');
-      const explicitFinish = item.printing_id.includes('-foil') ? 'foil' : (item.printing_id.includes('-etched') ? 'etched' : 'nonfoil');
-      return { ...item, baseId, explicitFinish };
-    });
+    const cardItems = guestCart.filter((i: any) => !i.is_accessory);
+    const accessoryItems = guestCart.filter((i: any) => i.is_accessory);
 
-    const uniqueBaseIds = Array.from(new Set(guestItemMappings.map((m: any) => m.baseId)));
+    let processedItems: any[] = [];
 
-    try {
-      // 1. Batch fetch Card metadata (Name, Image, Sets)
-      const { data: printingsData, error: pError } = await supabase
-        .from('card_printings')
-        .select('*, cards(*), sets(*)')
-        .in('printing_id', uniqueBaseIds);
+    // Process Cards
+    if (cardItems.length > 0) {
+      const guestItemMappings = cardItems.map((item: any) => {
+        const baseId = item.printing_id.replace(/-foil$/, '').replace(/-nonfoil$/, '').replace(/-etched$/, '');
+        const explicitFinish = item.printing_id.includes('-foil') ? 'foil' : (item.printing_id.includes('-etched') ? 'etched' : 'nonfoil');
+        return { ...item, baseId, explicitFinish };
+      });
+      const uniqueBaseIds = Array.from(new Set(guestItemMappings.map((m: any) => m.baseId)));
 
-      if (pError) throw pError;
+      try {
+        const { data: printingsData } = await supabase
+          .from('card_printings')
+          .select('*, cards(*), sets(*)')
+          .in('printing_id', uniqueBaseIds);
 
-      // 2. Batch fetch Product live data (Price, Stock, Actual Product IDs)
-      const { data: productsData, error: prError } = await supabase
-        .rpc('get_products_stock_by_printing_ids', { p_printing_ids: uniqueBaseIds });
+        const { data: productsData } = await supabase
+          .rpc('get_products_stock_by_printing_ids', { p_printing_ids: uniqueBaseIds });
 
-      if (prError) console.warn("Guest cart products fetch failed, using printings fallback", prError);
+        const mappedCards = guestItemMappings.map((itemMapping: any) => {
+          const printing = (printingsData || []).find((p: any) => p.printing_id === itemMapping.baseId);
+          if (!printing) return null;
+          const matches = (productsData || []).filter((p: any) => p.printing_id === itemMapping.baseId);
+          const exactProduct = matches.find((p: any) => (p.finish || 'nonfoil').toLowerCase() === itemMapping.explicitFinish.toLowerCase());
+          const product = exactProduct || matches[0];
+          const priceFallback = (itemMapping.explicitFinish === 'foil' || itemMapping.explicitFinish === 'etched')
+            ? (printing.avg_market_price_foil_usd || 0)
+            : (printing.avg_market_price_usd || 0);
 
-      const items = guestItemMappings.map((itemMapping: any) => {
-        const printing = (printingsData || []).find((p: any) => p.printing_id === itemMapping.baseId);
-        if (!printing) return null;
+          return {
+            id: `guest-${itemMapping.printing_id}`,
+            product_id: product?.id || itemMapping.baseId,
+            quantity: itemMapping.quantity,
+            products: {
+              id: product?.id || itemMapping.baseId,
+              name: printing.cards?.card_name || printing.name || 'Unknown Card',
+              price: Number(product?.price ?? priceFallback),
+              image_url: printing.image_url,
+              set_code: printing.sets?.set_code || '',
+              stock: product?.stock || 0,
+              finish: product?.finish || itemMapping.explicitFinish
+            }
+          };
+        }).filter(Boolean);
+        processedItems = [...processedItems, ...mappedCards];
+      } catch (e) {
+        console.error("Guest card batch fetch failed", e);
+      }
+    }
 
-        // Find matching product by finish
-        const matches = (productsData || []).filter((p: any) => p.printing_id === itemMapping.baseId);
-        const exactProduct = matches.find((p: any) => (p.finish || 'nonfoil').toLowerCase() === itemMapping.explicitFinish.toLowerCase());
-        const fallbackProduct = matches[0]; // If finish doesn't match exactly, take the first one available
-        const product = exactProduct || fallbackProduct;
+    // Process Accessories
+    if (accessoryItems.length > 0) {
+      try {
+        const accIds = accessoryItems.map((i: any) => i.accessory_id);
+        const { data: accData } = await supabase
+          .from('accessories')
+          .select('*')
+          .in('id', accIds);
 
-        const priceFallback = (itemMapping.explicitFinish === 'foil' || itemMapping.explicitFinish === 'etched')
-          ? (printing.avg_market_price_foil_usd || 0)
-          : (printing.avg_market_price_usd || 0);
+        const mappedAccs = accessoryItems.map((item: any) => {
+          const acc = (accData || []).find((a: any) => a.id === item.accessory_id);
+          if (!acc) return null;
+          return {
+            id: `guest-acc-${acc.id}`,
+            product_id: acc.id,
+            quantity: item.quantity,
+            is_accessory: true,
+            products: {
+              id: acc.id,
+              name: acc.name,
+              price: Number(acc.price),
+              image_url: acc.image_url,
+              set_code: acc.category,
+              stock: acc.stock,
+              finish: 'standard'
+            }
+          };
+        }).filter(Boolean);
+        processedItems = [...processedItems, ...mappedAccs];
+      } catch (e) {
+        console.error("Guest accessory batch fetch failed", e);
+      }
+    }
 
-        return {
-          id: `guest-${itemMapping.printing_id}`,
-          product_id: product?.id || itemMapping.baseId,
-          quantity: itemMapping.quantity,
-          products: {
-            id: product?.id || itemMapping.baseId,
-            name: printing.cards?.card_name || printing.name || 'Unknown Card',
-            price: Number(product?.price ?? priceFallback),
-            image_url: printing.image_url,
-            set_code: printing.sets?.set_code || '',
-            stock: product?.stock || 0,
-            finish: product?.finish || itemMapping.explicitFinish
-          }
-        };
-      }).filter(Boolean);
+    return { items: processedItems };
 
-      return { items };
     } catch (batchError) {
       console.error('Batch guest cart fetch failed, falling back to manual loop', batchError);
       // Last resort fallback to original slow logic if batch fetch fails for some reason
@@ -766,12 +832,22 @@ export const fetchCart = async (): Promise<any> => {
   }
 };
 
-export const addToCart = async (printingId: string, quantity: number = 1, finish: string = 'nonfoil'): Promise<any> => {
+export const addToCart = async (printingId: string, quantity: number = 1, finish: string = 'nonfoil', isAccessory: boolean = false): Promise<any> => {
   try {
     const session = await supabase.auth.getSession();
 
-    // If logged in, use Master RPC v2 [v43]
+    // If logged in, use Master RPC
     if (session.data.session?.user) {
+      if (isAccessory) {
+          const { data, error } = await supabase.rpc('add_accessory_to_cart_v1', {
+              p_accessory_id: printingId,
+              p_quantity: quantity
+          });
+          if (error) throw error;
+          window.dispatchEvent(new Event('cart-updated'));
+          return data || { success: true };
+      }
+
       const { data, error } = await supabase.rpc('add_to_cart_v2', {
         p_identifier: printingId, // The master RPC now handles both product_id and printing_id
         p_quantity: quantity,
@@ -797,12 +873,19 @@ export const addToCart = async (printingId: string, quantity: number = 1, finish
 
     // Guest Cart Logic
     const guestCart = JSON.parse(localStorage.getItem('guest_cart') || '[]');
-    const existingItemIndex = guestCart.findIndex((item: any) => item.printing_id === printingId);
+    const existingItemIndex = guestCart.findIndex((item: any) => 
+      item.printing_id === printingId && item.is_accessory === isAccessory
+    );
 
     if (existingItemIndex >= 0) {
       guestCart[existingItemIndex].quantity += quantity;
     } else {
-      guestCart.push({ printing_id: printingId, quantity });
+      guestCart.push({ 
+        printing_id: printingId, 
+        quantity, 
+        is_accessory: isAccessory,
+        accessory_id: isAccessory ? printingId : null
+      });
     }
 
     localStorage.setItem('guest_cart', JSON.stringify(guestCart));
@@ -962,7 +1045,9 @@ export const updateCartItemQuantity = async (cartItemId: string, quantity: numbe
 
     // Guest Cart Logic
     const guestCart = JSON.parse(localStorage.getItem('guest_cart') || '[]');
-    const itemIndex = guestCart.findIndex((item: any) => `guest-${item.printing_id}` === cartItemId);
+    const itemIndex = guestCart.findIndex((item: any) => 
+      (item.is_accessory ? `guest-acc-${item.accessory_id}` : `guest-${item.printing_id}`) === cartItemId
+    );
 
     if (itemIndex >= 0) {
       if (quantity > 0) {
@@ -1001,7 +1086,9 @@ export const removeFromCart = async (cartItemId: string): Promise<any> => {
 
     // Guest Cart Logic
     const guestCart = JSON.parse(localStorage.getItem('guest_cart') || '[]');
-    const filteredCart = guestCart.filter((item: any) => `guest-${item.printing_id}` !== cartItemId);
+    const filteredCart = guestCart.filter((item: any) => 
+      (item.is_accessory ? `guest-acc-${item.accessory_id}` : `guest-${item.printing_id}`) !== cartItemId
+    );
 
     localStorage.setItem('guest_cart', JSON.stringify(filteredCart));
     window.dispatchEvent(new Event('cart-updated'));
@@ -1085,4 +1172,112 @@ export const switchActiveCart = async (cartId: string): Promise<void> => {
     console.error('Error clearing active cart:', error);
     throw error;
   }
+};
+export const fetchAccessories = async (params: {
+  q?: string;
+  game?: string;
+  category?: string;
+  limit?: number;
+  offset?: number;
+}) => {
+  const { q, game, category, limit = 50, offset = 0 } = params;
+  
+  // Game name to ID mapping (Simple for now)
+  let gameId: number | null = null;
+  if (game === 'Magic: The Gathering' || game === 'MTG') gameId = 22;
+  // TODO: Add more mappings or fetch from DB if needed
+  
+  const { data, error, count } = await supabase.rpc('get_accessories_filtered', {
+    p_game_id: gameId,
+    p_category: category || null,
+    p_limit: limit,
+    p_offset: offset
+  });
+
+  if (error) throw error;
+  
+  // Basic search filter in JS if needed (the RPC doesn't have search_query yet)
+  let filteredData = data || [];
+  if (q) {
+      filteredData = filteredData.filter((a: any) => a.name.toLowerCase().includes(q.toLowerCase()));
+  }
+
+  return { 
+    accessories: filteredData, 
+    total_count: count || filteredData.length 
+  };
+};
+
+// --- ACCESSORIES MANAGEMENT [ADMIN] ---
+
+export const fetchAccessoriesAdmin = async (params: {
+  search?: string;
+  game_id?: number;
+  category?: string;
+  limit?: number;
+  offset?: number;
+}) => {
+  const { search, game_id, category, limit = 50, offset = 0 } = params;
+  
+  let query = supabase
+    .from('accessories')
+    .select('*, games(game_name)')
+    .order('created_at', { ascending: false })
+    .range(offset, offset + limit - 1);
+
+  if (search) query = query.ilike('name', `%${search}%`);
+  if (game_id) query = query.eq('game_id', game_id);
+  if (category) query = query.eq('category', category);
+
+  const { data, error, count } = await query;
+  if (error) throw error;
+  return { data, count };
+};
+
+export const createAccessory = async (accessory: any) => {
+  const { data, error } = await supabase
+    .from('accessories')
+    .insert([accessory])
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+};
+
+export const updateAccessory = async (id: string, updates: any) => {
+  const { data, error } = await supabase
+    .from('accessories')
+    .update(updates)
+    .eq('id', id)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+};
+
+export const deleteAccessory = async (id: string) => {
+  const { error } = await supabase
+    .from('accessories')
+    .delete()
+    .eq('id', id);
+  if (error) throw error;
+  return true;
+};
+
+export const uploadAccessoryImage = async (file: File) => {
+  const fileExt = file.name.split('.').pop();
+  const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+  const filePath = `accessories/${fileName}`;
+
+  const { error: uploadError } = await supabase.storage
+    .from('public_assets')
+    .upload(filePath, file);
+
+  if (uploadError) throw uploadError;
+
+  const { data } = supabase.storage
+    .from('public_assets')
+    .getPublicUrl(filePath);
+
+  return data.publicUrl;
 };
