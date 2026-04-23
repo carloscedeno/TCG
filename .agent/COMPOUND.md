@@ -475,33 +475,40 @@ Resolve widespread pricing contamination (foil prices assigned to non-foil versi
 
 *Compounded for Geekorium TCG Ecosystem.*
 
-# 🧠 COMPOUND: Production Checkout Restoration (v53)
+# 🧠 COMPOUND: Production Price Restoration & Sync Optimization (v54)
 
-**Date**: 2026-04-17
+**Date**: 2026-04-22 23:45
 
 ## Objective
 
-Urgently restore the `create_order_atomic` RPC function in production to resolve a critical checkout failure caused by a signature mismatch ("Function not found").
+Restore the integrity of CardKingdom pricing in the production environment. Resolve critical synchronization timeouts and ensure consistency between market data and active store inventory.
 
 ## Knowledge Codification
 
-### 1. Unified Signature with Defaults
-- **Problem**: The frontend started sending `p_cart_id` (6 parameters), but the production database only had a 5-parameter version.
-- **Solution**: Restored the function with a 6-parameter signature including `DEFAULT NULL` for both `p_guest_info` and `p_cart_id`.
-- **Backward Compatibility**: This fix ensures that older calls (4-5 params) from Edge Functions still work while satisfying the new frontend requirements.
+### 1. Mandatory Batching for Denormalization (Law 20)
 
-### 2. Multi-Cart Awareness in Orders
-- **Logic**: The restored RPC now uses the provided `p_cart_id` to clear the correct cart. If null, it falls back to the user's active cart. This prevents users from "purchasing" items from one cart while another remains full.
+- **Problem**: Large `UPDATE` operations (100k+ rows) in Supabase/PostgreSQL trigger `57014` (statement timeout) when propagating prices from history to the catalog.
+- **Solution**: Implemented a "Batched Denormalization" pattern. Updates are chunked into groups of 5,000, ensuring each transaction stays within safe time limits while maintaining high throughput.
+- **Component**: `fix_production_prices.py` provides a robust fallback for mass-repair operations.
 
-### 3. Overload Management Risks
-- **Lesson**: Automated cleanup of "overloaded" functions must be done with extreme caution. The error `42883: function create_order_atomic(...) does not exist` is often a signature mismatch, not a missing function.
+### 2. Store-Market Synchronization Loop
+
+- **Pattern**: Market prices (`card_printings`) must be automatically mirrored to active inventory (`products`) to ensure UI consistency.
+- **Logic**: Implemented a "Safe Mirror" SQL logic that only updates `products.price` if the market source provides a non-null, non-zero value, preventing accidental $0.00 or null price injections.
+- **Rule**: "GK Price" (Store) and "Mercado" (Market) must remain in lockstep to avoid customer confusion and potential revenue loss.
+
+### 3. Environment Awareness & Diagnostics
+
+- **Lesson**: "Dev" projects often lack the deep history and volume of "Production". Validating a sync script against an empty dev project can mask performance issues (like timeouts) that only appear when hitting the 1M+ rows of the production `price_history`.
+- **Practice**: Always perform final verification against the real production project ref (`sxuotvogwvmxuvwbsscv`) when dealing with critical pricing logic.
 
 ## Technical Validation
 
-- **Database Restoration**: ✅ RPC `create_order_atomic` applied to production with 6-param signature.
-- **Backward Compatibility**: ✅ Verified 4-parameter and 6-parameter calls via `scratch/test_order_rpc.py`.
-- **Frontend Build**: ✅ Build successful (`npm run build`).
-- **Site Status**: ✅ Fixed in production.
+- **Production Audit**: ✅ 127,184 prices updated in `card_printings`. 
+- **Inventory Audit**: ✅ 1,089 products synchronized with market prices.
+- **Specific Verification**: ✅ *Emeritus of Woe #80* ($24.99), *Banishing Knack Foil* ($99.99), and *Reflecting Pool Foil* ($74.99) verified correct.
+- **Unit Tests**: ✅ 28 Passed.
+- **Frontend Build**: ✅ Build success.
 
 ---
 
