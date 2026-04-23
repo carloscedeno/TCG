@@ -5,12 +5,16 @@
 BEGIN;
 
 -- 1. CLEANUP: Drop existing overloads to avoid PGRST202 errors
--- We drop all known variations to ensure a clean state
-DROP FUNCTION IF EXISTS public.create_order_atomic(uuid, jsonb, jsonb, numeric);
-DROP FUNCTION IF EXISTS public.create_order_atomic(uuid, jsonb, jsonb, numeric, uuid);
-DROP FUNCTION IF EXISTS public.create_order_atomic(jsonb, jsonb, numeric, uuid);
-DROP FUNCTION IF EXISTS public.create_order_atomic(uuid, jsonb, jsonb, numeric, jsonb);
-DROP FUNCTION IF EXISTS public.create_order_atomic(uuid, jsonb, jsonb, numeric, jsonb, uuid);
+-- We use a DO block to drop all functions named create_order_atomic in public schema
+DO $$ 
+DECLARE 
+    r RECORD;
+BEGIN
+    FOR r IN (SELECT oid::regprocedure as sig FROM pg_proc WHERE proname = 'create_order_atomic' AND pronamespace = 'public'::regnamespace) 
+    LOOP
+        EXECUTE 'DROP FUNCTION ' || r.sig;
+    END LOOP;
+END $$;
 
 -- 2. Enhanced create_order_atomic to support accessories
 CREATE OR REPLACE FUNCTION public.create_order_atomic(
@@ -123,7 +127,7 @@ $$;
 -- 2. Ensure RLS allows the operation
 -- Note: create_order_atomic is SECURITY DEFINER, so it runs as the owner (usually postgres)
 -- But we should ensure permissions are granted.
-GRANT EXECUTE ON FUNCTION public.create_order_atomic(uuid, jsonb, jsonb, numeric, uuid) TO authenticated;
-GRANT EXECUTE ON FUNCTION public.create_order_atomic(uuid, jsonb, jsonb, numeric, uuid) TO anon;
+GRANT EXECUTE ON FUNCTION public.create_order_atomic(uuid, jsonb, jsonb, numeric, jsonb, uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.create_order_atomic(uuid, jsonb, jsonb, numeric, jsonb, uuid) TO anon;
 
 COMMIT;
