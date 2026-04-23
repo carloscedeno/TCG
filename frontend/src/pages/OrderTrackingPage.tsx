@@ -16,10 +16,17 @@ export const OrderTrackingPage = () => {
                 throw new Error("El ID de la orden no es válido");
             }
 
-            // Attempt 1: Full fetch with items mapping
+            // Attempt 1: Full fetch with items and details mapping
             const { data, error } = await supabase
                 .from('orders')
-                .select('*, order_items(*)')
+                .select(`
+                    *,
+                    order_items(
+                        *,
+                        products(name, image_url, set_code, finish),
+                        accessories(name, image_url, category)
+                    )
+                `)
                 .eq('id', orderId)
                 .single();
 
@@ -171,9 +178,16 @@ export const OrderTrackingPage = () => {
                                         <div className="flex flex-col gap-1 min-w-0 flex-1">
                                             <div className="flex items-center gap-2">
                                                 <span className="text-neutral-500 font-mono shrink-0">x{item.quantity}</span>
-                                                <span className="font-bold truncate">{item.product_name || `Card ID: ${item.product_id}`}</span>
+                                                <span className="font-bold truncate">
+                                                    {item.products?.name || item.accessories?.name || item.product_name || `Item ID: ${item.product_id || item.accessory_id}`}
+                                                </span>
                                             </div>
                                             <div className="flex items-center gap-1.5 ml-6">
+                                                {item.accessories?.category && (
+                                                    <span className="text-[9px] px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 font-black uppercase tracking-widest">
+                                                        {item.accessories.category}
+                                                    </span>
+                                                )}
                                                 {(item.finish === 'foil' || item.finish === 'etched') && (
                                                     <span className={`text-[9px] px-1.5 py-0.5 rounded font-black uppercase tracking-widest shadow-sm ${item.finish === 'foil' ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30' : 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'}`}>
                                                         {item.finish}

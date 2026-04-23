@@ -208,4 +208,18 @@ GRANT EXECUTE ON FUNCTION public.create_order_atomic(uuid, jsonb, jsonb, numeric
 GRANT EXECUTE ON FUNCTION public.create_order_atomic(uuid, jsonb, jsonb, numeric, jsonb, uuid) TO anon;
 GRANT EXECUTE ON FUNCTION public.get_user_cart(uuid) TO authenticated;
 
+-- Ensure tracking works for everyone (Guests and Logged in)
+GRANT SELECT ON public.orders TO anon, authenticated;
+GRANT SELECT ON public.order_items TO anon, authenticated;
+
+-- Public read access for orders (needed for tracking by ID)
+ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Public can track orders by ID" ON public.orders;
+CREATE POLICY "Public can track orders by ID" ON public.orders FOR SELECT USING (true);
+
+-- Ensure order items are also readable
+ALTER TABLE public.order_items ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Public can view order items" ON public.order_items;
+CREATE POLICY "Public can view order items" ON public.order_items FOR SELECT USING (true);
+
 COMMIT;
