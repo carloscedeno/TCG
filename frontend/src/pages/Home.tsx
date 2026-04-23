@@ -481,10 +481,10 @@ const Home: React.FC = () => {
 
         {/* Main Content */}
         <main className="max-w-[1600px] w-full mx-auto px-6 py-8 flex-1">
-          {/* Dynamic Hero Section */}
-          <div className="mb-12">
+          {/* Dynamic Hero Section - Temporarily hidden for production */}
+          {/* <div className="mb-12">
             <HeroSection />
-          </div>
+          </div> */}
 
           <div className="flex flex-col lg:flex-row gap-10">
             {/* Sidebar Filters */}
