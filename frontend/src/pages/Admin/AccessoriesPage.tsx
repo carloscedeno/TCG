@@ -1,13 +1,10 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { 
-    Search, Plus, Package, Trash2, Edit2, Save, X, 
-    ArrowUpDown, ChevronLeft, ChevronRight, Check,
-    ShoppingCart
+    Search, Plus, Package, Trash2, Edit2, X, 
+    ChevronLeft, ChevronRight, Check
 } from "lucide-react";
 import { fetchAccessoriesAdmin, updateAccessory, deleteAccessory } from "../../utils/api";
 import { AddAccessoryDrawer } from "../../components/Admin/AddAccessoryDrawer";
-import { useCart } from "../../context/CartContext";
-import { supabase } from "../../utils/supabaseClient";
 
 export default function AccessoriesPage() {
     const [items, setItems] = useState<any[]>([]);

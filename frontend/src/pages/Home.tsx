@@ -11,7 +11,7 @@ import { useAuth } from '../context/AuthContext';
 import { AuthModal } from '../components/Auth/AuthModal';
 import { UserMenu } from '../components/Navigation/UserMenu';
 
-import { LogIn, X, ShoppingCart, Sparkles } from 'lucide-react';
+import { LogIn, X, ShoppingCart, Sparkles, Search } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { CartDrawer } from '../components/Navigation/CartDrawer';
 import { Footer } from '../components/Navigation/Footer';
