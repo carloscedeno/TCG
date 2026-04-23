@@ -779,7 +779,8 @@ export const fetchCart = async (): Promise<any> => {
           if (!acc) return null;
           return {
             id: `guest-acc-${acc.id}`,
-            product_id: acc.id,
+            accessory_id: acc.id,
+            product_id: null,
             quantity: item.quantity,
             is_accessory: true,
             products: {

@@ -79,18 +79,25 @@ export const CheckoutPage = () => {
                 ? cartItems.reduce((acc, item) => acc + (item.products?.price || 0) * item.quantity, 0)
                 : 0;
 
-            const simplifiedItems = cartItems.map(item => ({
-                product_id: item.product_id || null,
-                accessory_id: item.accessory_id || null,
-                printing_id: item.printing_id,
-                quantity: item.quantity,
-                name: item.products?.name,
-                set: item.products?.set_code,
-                price: item.products?.price || 0,
-                foil: item.products?.is_foil || item.products?.finish === 'foil' || false,
-                finish: item.products?.finish || (item.products?.is_foil ? 'foil' : 'nonfoil'),
-                is_on_demand: !item.accessory_id && (item.products?.stock || 0) <= 0
-            }));
+            const simplifiedItems = cartItems.map(item => {
+                // Determine if it's an accessory or a product
+                const isAcc = !!item.accessory_id || !!item.is_accessory;
+                
+                return {
+                    product_id: isAcc ? null : (item.product_id || null),
+                    accessory_id: isAcc ? (item.accessory_id || item.product_id) : null,
+                    printing_id: item.printing_id,
+                    quantity: item.quantity,
+                    name: item.products?.name,
+                    set: item.products?.set_code,
+                    price: item.products?.price || 0,
+                    foil: item.products?.is_foil || item.products?.finish === 'foil' || false,
+                    finish: item.products?.finish || (item.products?.is_foil ? 'foil' : 'nonfoil'),
+                    is_on_demand: !isAcc && (item.products?.stock || 0) <= 0
+                };
+            });
+
+            console.log('Sending simplifiedItems:', simplifiedItems);
 
             const cedula = `${form.cedula_prefix}-${form.cedula_number || '00000000'}`;
 
