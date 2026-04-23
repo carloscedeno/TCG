@@ -100,6 +100,8 @@ DECLARE
     v_cart_id uuid := p_cart_id;
     v_real_price numeric;
     v_current_stock integer;
+    v_target_id uuid;
+    v_acc_id uuid;
 BEGIN
     -- 1. Create the main order
     INSERT INTO public.orders (
@@ -121,52 +123,63 @@ BEGIN
     -- 2. Process each item
     FOR v_item IN SELECT * FROM jsonb_array_elements(p_items)
     LOOP
-        -- A. Handle Cards (Products)
-        IF (v_item->>'product_id') IS NOT NULL THEN
-            -- Validate stock and get real price
+        -- Safe extraction of IDs (handling 'null' strings from some JS clients)
+        v_target_id := NULLIF(v_item->>'product_id', 'null')::uuid;
+        v_acc_id := NULLIF(v_item->>'accessory_id', 'null')::uuid;
+        v_real_price := NULL;
+        v_current_stock := NULL;
+
+        -- A. Try as PRODUCT if product_id is provided
+        IF v_target_id IS NOT NULL THEN
             SELECT stock, price INTO v_current_stock, v_real_price 
             FROM public.products 
-            WHERE id = (v_item->>'product_id')::uuid;
+            WHERE id = v_target_id;
 
-            IF v_current_stock < (v_item->>'quantity')::integer THEN
-                RAISE EXCEPTION 'Stock insuficiente para el producto %', (v_item->>'product_id');
+            -- Fallback: If not found in products, check if it's actually an accessory ID
+            IF v_current_stock IS NULL THEN
+                SELECT stock, price INTO v_current_stock, v_real_price 
+                FROM public.accessories 
+                WHERE id = v_target_id;
+                
+                IF v_current_stock IS NOT NULL THEN
+                    v_acc_id := v_target_id;
+                    v_target_id := NULL;
+                END IF;
             END IF;
+        END IF;
 
-            -- Insert order item
-            INSERT INTO public.order_items (order_id, product_id, quantity, price)
-            VALUES (v_order_id, (v_item->>'product_id')::uuid, (v_item->>'quantity')::integer, COALESCE(v_real_price, (v_item->>'price')::numeric));
-
-            -- Update stock
-            UPDATE public.products 
-            SET stock = stock - (v_item->>'quantity')::integer 
-            WHERE id = (v_item->>'product_id')::uuid;
-
-        -- B. Handle Accessories
-        ELSIF (v_item->>'accessory_id') IS NOT NULL THEN
-            -- Validate stock and get real price
+        -- B. Try as ACCESSORY if accessory_id is provided OR if re-routed from product
+        IF v_target_id IS NULL AND v_acc_id IS NOT NULL THEN
             SELECT stock, price INTO v_current_stock, v_real_price 
             FROM public.accessories 
-            WHERE id = (v_item->>'accessory_id')::uuid;
+            WHERE id = v_acc_id;
+        END IF;
 
-            IF v_current_stock IS NULL THEN
-                RAISE EXCEPTION 'Accesorio no encontrado: %', (v_item->>'accessory_id');
+        -- C. Execute Insertion & Stock Decrement
+        IF v_target_id IS NOT NULL AND v_current_stock IS NOT NULL THEN
+            -- Validate stock
+            IF v_current_stock < (v_item->>'quantity')::integer THEN
+                RAISE EXCEPTION 'Stock insuficiente para el producto %', (v_item->>'name');
             END IF;
 
+            INSERT INTO public.order_items (order_id, product_id, quantity, price)
+            VALUES (v_order_id, v_target_id, (v_item->>'quantity')::integer, COALESCE(v_real_price, (v_item->>'price')::numeric));
+
+            UPDATE public.products SET stock = stock - (v_item->>'quantity')::integer WHERE id = v_target_id;
+
+        ELSIF v_acc_id IS NOT NULL AND v_current_stock IS NOT NULL THEN
+            -- Validate stock
             IF v_current_stock < (v_item->>'quantity')::integer THEN
                 RAISE EXCEPTION 'Stock insuficiente para el accesorio %', (v_item->>'name');
             END IF;
 
-            -- Insert order item
             INSERT INTO public.order_items (order_id, accessory_id, quantity, price)
-            VALUES (v_order_id, (v_item->>'accessory_id')::uuid, (v_item->>'quantity')::integer, COALESCE(v_real_price, (v_item->>'price')::numeric));
+            VALUES (v_order_id, v_acc_id, (v_item->>'quantity')::integer, COALESCE(v_real_price, (v_item->>'price')::numeric));
 
-            -- Update stock
-            UPDATE public.accessories 
-            SET stock = stock - (v_item->>'quantity')::integer 
-            WHERE id = (v_item->>'accessory_id')::uuid;
+            UPDATE public.accessories SET stock = stock - (v_item->>'quantity')::integer WHERE id = v_acc_id;
         
         ELSE
-            RAISE EXCEPTION 'Item de orden inválido: debe tener product_id o accessory_id';
+            RAISE EXCEPTION 'Item de orden inválido o no encontrado: % (P:% , A:%)', (v_item->>'name'), v_target_id, v_acc_id;
         END IF;
     END LOOP;
 
