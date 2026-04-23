@@ -81,8 +81,8 @@ function App() {
                         <Route path="/admin/inventory" element={<AdminRoute><InventoryPage /></AdminRoute>} />
                         <Route path="/admin/orders" element={<AdminRoute><OrdersPage /></AdminRoute>} />
                         <Route path="/admin/customers" element={<AdminRoute><CustomersPage /></AdminRoute>} />
-                        <Route path="/admin/accessories" element={<AdminRoute><AccessoriesManager /></AdminRoute>} />
-                        <Route path="/admin/banners" element={<AdminRoute><BannersManager /></AdminRoute>} />
+                        {/* <Route path="/admin/accessories" element={<AdminRoute><AccessoriesManager /></AdminRoute>} />
+                        <Route path="/admin/banners" element={<AdminRoute><BannersManager /></AdminRoute>} /> */}
                         <Route path="/checkout" element={<CheckoutPage />} />
                         <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
                         <Route path="/order/:orderId" element={<OrderTrackingPage />} />
