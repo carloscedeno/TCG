@@ -81,14 +81,19 @@ export const CheckoutPage = () => {
 
             const simplifiedItems = cartItems.map(item => {
                 // Determine if it's an accessory or a product
-                const isAcc = !!item.accessory_id || !!item.is_accessory;
+                // Support multiple ways of identifying accessories
+                const isAcc = !!item.accessory_id || !!item.is_accessory || item.type === 'accessory' || item.category;
                 
+                // Robust ID extraction
+                const rawProdId = item.product_id || (item.products?.id && !isAcc ? item.products.id : null) || (!isAcc ? item.id : null);
+                const rawAccId = item.accessory_id || (item.is_accessory || isAcc ? item.product_id : null) || (isAcc ? item.id : null);
+
                 return {
-                    product_id: isAcc ? null : (item.product_id || null),
-                    accessory_id: isAcc ? (item.accessory_id || item.product_id) : null,
+                    product_id: isAcc ? null : (rawProdId || null),
+                    accessory_id: isAcc ? (rawAccId || null) : null,
                     printing_id: item.printing_id,
                     quantity: item.quantity,
-                    name: item.products?.name,
+                    name: item.products?.name || item.name,
                     set: item.products?.set_code,
                     price: item.products?.price || 0,
                     foil: item.products?.is_foil || item.products?.finish === 'foil' || false,
