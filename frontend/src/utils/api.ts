@@ -661,6 +661,7 @@ export const fetchCart = async (): Promise<any> => {
         let mappedItem = {
           id: item.cart_item_id || item.id,
           product_id: item.product_id || nested.id,
+          accessory_id: item.accessory_id,
           quantity: Number(item.quantity || 1),
           products: {
             id: item.product_id || nested.id,
