@@ -657,42 +657,60 @@ export const fetchCart = async (): Promise<any> => {
         const extractSetCode = item.set_code || nested.set_code;
         const extractStock = item.stock ?? nested.stock ?? 0;
         const extractFinish = item.finish || nested.finish;
+        const isAcc = !!item.accessory_id || !!item.is_accessory || item.type === 'accessory';
         
         let mappedItem = {
           id: item.cart_item_id || item.id,
-          product_id: item.product_id || nested.id,
-          accessory_id: item.accessory_id,
+          product_id: item.product_id || (isAcc ? null : nested.id),
+          accessory_id: item.accessory_id || (isAcc ? (item.product_id || nested.id) : null),
           quantity: Number(item.quantity || 1),
           products: {
-            id: item.product_id || nested.id,
+            id: item.product_id || item.accessory_id || nested.id,
             name: extractName || '',
             price: Number(extractPrice || 0),
             image_url: extractImageUrl || '',
             set_code: extractSetCode || '',
             stock: extractStock,
-            finish: extractFinish || ''
+            finish: extractFinish || (isAcc ? 'standard' : '')
           }
         };
 
         // If data is still missing (e.g. old RPC version that only returns cart_items columns)
         if (!mappedItem.products.name || !mappedItem.products.image_url) {
             try {
-                const { data: pData } = await supabase
-                    .from('products')
-                    .select('*')
-                    .eq('id', mappedItem.product_id)
-                    .single();
-                    
-                if (pData) {
-                    mappedItem.products.name = pData.name;
-                    mappedItem.products.price = Number(pData.price || pData.store_price || 0);
-                    mappedItem.products.image_url = pData.image_url;
-                    mappedItem.products.set_code = pData.set_code || '';
-                    mappedItem.products.finish = pData.finish || '';
-                    mappedItem.products.stock = pData.stock || 0;
+                if (mappedItem.accessory_id) {
+                    const { data: aData } = await supabase
+                        .from('accessories')
+                        .select('*')
+                        .eq('id', mappedItem.accessory_id)
+                        .single();
+                        
+                    if (aData) {
+                        mappedItem.products.name = aData.name;
+                        mappedItem.products.price = Number(aData.price || 0);
+                        mappedItem.products.image_url = aData.image_url;
+                        mappedItem.products.set_code = aData.category || '';
+                        mappedItem.products.finish = 'standard';
+                        mappedItem.products.stock = aData.stock || 0;
+                    }
+                } else if (mappedItem.product_id) {
+                    const { data: pData } = await supabase
+                        .from('products')
+                        .select('*')
+                        .eq('id', mappedItem.product_id)
+                        .single();
+                        
+                    if (pData) {
+                        mappedItem.products.name = pData.name;
+                        mappedItem.products.price = Number(pData.price || pData.store_price || 0);
+                        mappedItem.products.image_url = pData.image_url;
+                        mappedItem.products.set_code = pData.set_code || '';
+                        mappedItem.products.finish = pData.finish || '';
+                        mappedItem.products.stock = pData.stock || 0;
+                    }
                 }
             } catch (err) {
-                console.error("Fallback product fetch failed for item: ", mappedItem.id, err);
+                console.error("Fallback item fetch failed for item: ", mappedItem.id, err);
             }
         }
 

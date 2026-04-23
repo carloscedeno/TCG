@@ -5,7 +5,8 @@ import { fetchCart, updateCartItemQuantity, removeFromCart } from '../../utils/a
 
 interface CartItem {
     id: string;
-    product_id: string;
+    product_id: string | null;
+    accessory_id?: string | null;
     quantity: number;
     products: {
         id: string;

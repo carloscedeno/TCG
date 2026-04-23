@@ -4,7 +4,8 @@ import { useAuth } from './AuthContext';
 
 interface CartItem {
     id: string;
-    product_id: string;
+    product_id: string | null;
+    accessory_id?: string | null;
     quantity: number;
     price: number;
     name?: string;
@@ -79,6 +80,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     .map((item: any) => ({
                         id: item.id,
                         product_id: item.product_id,
+                        accessory_id: item.accessory_id,
                         quantity: Number(item.quantity || 1),
                         price: Number(item.price || item.products?.price || 0),
                         name: item.name || item.products?.name,
@@ -134,7 +136,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 try {
                     const savedItems: CartItem[] = JSON.parse(snapshot);
                     const hasPriceChange = fetchedItems.some(item => {
-                        const saved = savedItems.find(s => s.product_id === item.product_id);
+                        const itemKey = item.product_id || item.accessory_id;
+                        const saved = savedItems.find(s => (s.product_id || s.accessory_id) === itemKey);
                         return saved && Math.abs(saved.price - item.price) > 0.01;
                     });
                     if (hasPriceChange) {

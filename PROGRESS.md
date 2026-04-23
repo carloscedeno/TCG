@@ -1,6 +1,6 @@
 # 📊 Progress Report - Geekorium Optimization
-**Last Updated**: 2026-04-23 12:51 (Accessories & Polymorphic Checkout Stable)
-**Status**: ✅ Accessories Module | ✅ Polymorphic Checkout | ✅ Public Tracking RLS | ✅ Admin Visibility | ✅ Dev Branch Recreation | ✅ Catalog & Inventory Sync | ✅ Quick Add UX Optimized | ✅ Performance Optimization (Batch Fetch) | ✅ Global 'Nuevo' Feature | ✅ Schema Fallback implemented | ✅ Strixhaven Visibility Fix | ✅ Production Checkout Restored
+**Last Updated**: 2026-04-23 14:24 (Cart Unification & State Preservation Stable)
+**Status**: ✅ Cart Unification | ✅ Accessories Module | ✅ Polymorphic Checkout | ✅ Public Tracking RLS | ✅ Admin Visibility | ✅ Dev Branch Recreation | ✅ Catalog & Inventory Sync | ✅ Quick Add UX Optimized | ✅ Performance Optimization (Batch Fetch) | ✅ Global 'Nuevo' Feature | ✅ Schema Fallback implemented | ✅ Strixhaven Visibility Fix | ✅ Production Checkout Restored
 
 ---
 
@@ -64,6 +64,12 @@ This session focused on reactivating the "Fast Add to Cart" feature with a premi
 - **Guest Tracking RLS**: Implemented public RLS policies allowing tracking of orders via ID without authentication.
 - **Robust ID Recovery**: Updated frontend mapping to extract IDs from multiple cart data sources (Guest/Logged-in/Legacy).
 - **Admin Orders View**: Updated the dashboard to perform polymorphic joins, showing correct names and images for both cards and accessories in order summaries.
+
+### ✅ Full Cart Unification & State Preservation (Compound v53)
+- **Unified Data Model**: Standardized the `CartItem` interface across `CartContext` and `CartDrawer` to explicitly support both `product_id` and `accessory_id`.
+- **API Mapping Fix**: Enhanced `fetchCart` to correctly map accessory data from the database and implemented a robust fallback mechanism that queries the `accessories` table for missing details.
+- **State Preservation**: Resolved a bug where accessories would lose their identification during periodic cart refreshes, ensuring market price tracking and persistence work for all item types.
+- **Mixed Order Reliability**: Simplified the checkout mapping logic to use the unified data structure, ensuring both cards and accessories are correctly identified and processed in the same order.
 
 ---
 
