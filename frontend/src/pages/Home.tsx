@@ -15,7 +15,7 @@ import { LogIn, X, ShoppingCart, Sparkles } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { CartDrawer } from '../components/Navigation/CartDrawer';
 import { Footer } from '../components/Navigation/Footer';
-import { HeroSection } from '../components/Home/HeroSection';
+// import { HeroSection } from '../components/Home/HeroSection';
 
 const mockFilters: Filters = {
   games: ['Magic: The Gathering'],

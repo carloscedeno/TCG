@@ -21,8 +21,8 @@ import LegalPage from './pages/LegalPage';
 import { WhatsAppWidget } from './components/Navigation/WhatsAppWidget';
 import { WelcomeModal } from './components/Navigation/WelcomeModal';
 import CustomersPage from './pages/Admin/CustomersPage';
-import AccessoriesManager from './pages/Admin/AccessoriesManager';
-import BannersManager from './pages/Admin/BannersManager';
+// import AccessoriesManager from './pages/Admin/AccessoriesManager';
+// import BannersManager from './pages/Admin/BannersManager';
 import LoginPage from './pages/Admin/LoginPage';
 import { PosSessionBanner } from './components/Admin/PosSessionBanner';
 
