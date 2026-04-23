@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "../../utils/supabaseClient";
 import { 
     Plus, Search, Trash2, Package, Save, X, 
-    Image as ImageIcon, Check, Loader2, Upload
+    Image as ImageIcon, Loader2, Upload
 } from "lucide-react";
 import { fetchAccessories, upsertAccessory, uploadAsset } from "../../utils/api";
 

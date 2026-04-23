@@ -1,11 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "../../utils/supabaseClient";
 import { 
-    Plus, Search, Trash2, Layout, Save, X, 
-    Image as ImageIcon, Check, Loader2, Upload, ExternalLink,
+    Plus, Trash2, Layout, Save, X, 
+    Image as ImageIcon, Loader2, Upload, ExternalLink,
     ArrowUp, ArrowDown, Eye, EyeOff
 } from "lucide-react";
-import { fetchBanners, uploadAsset } from "../../utils/api";
+import { uploadAsset } from "../../utils/api";
 
 interface Banner {
     id?: string;
