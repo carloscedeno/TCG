@@ -1151,10 +1151,13 @@ export const fetchAccessories = async (params: {
   q?: string;
   game?: string;
   category?: string;
+  price_min?: number;
+  price_max?: number;
+  sort?: string;
   limit?: number;
   offset?: number;
 }) => {
-  const { q, game, category, limit = 50, offset = 0 } = params;
+  const { q, game, category, price_min, price_max, sort = 'created_at_desc', limit = 50, offset = 0 } = params;
   
   // Dynamic game mapping
   let gameId: number | null = null;
@@ -1167,24 +1170,25 @@ export const fetchAccessories = async (params: {
     if (gameData) gameId = gameData.game_id;
   }
   
-  const { data, error, count } = await supabase.rpc('get_accessories_filtered', {
+  const { data, error } = await supabase.rpc('get_accessories_filtered', {
     p_game_id: gameId,
     p_category: category || null,
+    p_search_query: q || null,
+    p_price_min: price_min || null,
+    p_price_max: price_max || null,
+    p_sort: sort,
     p_limit: limit,
     p_offset: offset
   });
 
   if (error) throw error;
   
-  // Basic search filter in JS if needed (the RPC doesn't have search_query yet)
-  let filteredData = data || [];
-  if (q) {
-      filteredData = filteredData.filter((a: any) => a.name.toLowerCase().includes(q.toLowerCase()));
-  }
+  const accessories = data || [];
+  const total_count = accessories.length > 0 ? accessories[0].total_count : 0;
 
   return { 
-    accessories: filteredData, 
-    total_count: count || filteredData.length 
+    accessories, 
+    total_count: Number(total_count)
   };
 };
 

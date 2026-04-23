@@ -17,10 +17,11 @@ import { CartDrawer } from '../components/Navigation/CartDrawer';
 import { Footer } from '../components/Navigation/Footer';
 
 const mockFilters: Filters = {
-  games: ['Magic: The Gathering'],
+  games: ['Magic: The Gathering', 'Pokémon', 'Lorcana', 'One Piece'],
   rarities: ['Common', 'Uncommon', 'Rare', 'Mythic'],
   colors: ['White', 'Blue', 'Black', 'Red', 'Green', 'Colorless', 'Multicolor'],
   types: ['Creature', 'Instant', 'Sorcery', 'Enchantment', 'Artifact', 'Planeswalker', 'Land'],
+  categories: ['Sealed Product', 'Sleeves', 'Deck Boxes', 'Playmats', 'Storage', 'Other'],
   sets: [],
   yearRange: [1993, 2026],
   priceRange: [0, 1000]
@@ -49,6 +50,7 @@ const Home: React.FC = () => {
     }).filter(Boolean) || ['Magic: The Gathering'],
     sets: searchParams.get('set')?.split(',').filter(Boolean) || [],
     rarities: searchParams.get('rarity')?.split(',').filter(Boolean) || [],
+    categories: searchParams.get('category')?.split(',').filter(Boolean) || [],
     yearRange: [
       parseInt(searchParams.get('year_from') || '1993'),
       parseInt(searchParams.get('year_to') || '2026')
@@ -167,6 +169,10 @@ const Home: React.FC = () => {
           const accRes = await fetchAccessories({
             q: debouncedQuery || undefined,
             game: debouncedFilters.games && debouncedFilters.games.length > 0 ? debouncedFilters.games[0] : undefined,
+            category: debouncedFilters.categories && debouncedFilters.categories.length > 0 ? debouncedFilters.categories.join(',') : undefined,
+            price_min: debouncedFilters.priceRange ? debouncedFilters.priceRange[0] : undefined,
+            price_max: debouncedFilters.priceRange ? debouncedFilters.priceRange[1] : undefined,
+            sort: sortBy,
             limit: LIMIT,
             offset
           });
@@ -253,6 +259,9 @@ const Home: React.FC = () => {
     if (debouncedFilters.priceRange && (debouncedFilters.priceRange[0] !== 0 || debouncedFilters.priceRange[1] !== 1000)) {
       newParams.set('price_min', debouncedFilters.priceRange[0].toString());
       newParams.set('price_max', debouncedFilters.priceRange[1].toString());
+    }
+    if (debouncedFilters.categories && debouncedFilters.categories.length > 0) {
+      newParams.set('category', debouncedFilters.categories.join(','));
     }
 
     setSearchParams(newParams, { replace: true });
@@ -520,7 +529,6 @@ const Home: React.FC = () => {
         <main className="max-w-[1600px] w-full mx-auto px-6 py-8 flex-1">
           <div className="flex flex-col lg:flex-row gap-10">
             {/* Sidebar Filters */}
-            {activeTab !== 'accessories' && (
               <aside className="hidden lg:block w-72 flex-shrink-0">
                 <div className="sticky top-[140px] max-h-[calc(100vh-160px)] overflow-y-auto pr-2 custom-scrollbar">
                   <FiltersPanel
@@ -528,10 +536,10 @@ const Home: React.FC = () => {
                     selected={filters}
                     onChange={handleFilterChange}
                     setsOptions={sets}
+                    isAccessoryMode={activeTab === 'accessories'}
                   />
                 </div>
               </aside>
-            )}
 
             {/* Cards Grid */}
             <div className="flex-1">
@@ -603,6 +611,13 @@ const Home: React.FC = () => {
                           {filters.types?.map(t => (
                             <button key={t} onClick={() => handleFilterChange({ ...filters, types: filters.types?.filter(x => x !== t) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600/10 border border-red-500/30 rounded-full text-[10px] font-bold text-red-400 hover:bg-red-600/20 transition-all group">
                               {t}
+                              <X size={10} className="group-hover:rotate-90 transition-transform" />
+                            </button>
+                          ))}
+
+                          {filters.categories?.map(c => (
+                            <button key={c} onClick={() => handleFilterChange({ ...filters, categories: filters.categories?.filter(x => x !== c) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-orange-600/10 border border-orange-500/30 rounded-full text-[10px] font-bold text-orange-400 hover:bg-orange-600/20 transition-all group">
+                              {c}
                               <X size={10} className="group-hover:rotate-90 transition-transform" />
                             </button>
                           ))}
@@ -725,6 +740,7 @@ const Home: React.FC = () => {
                   selected={filters}
                   onChange={handleFilterChange}
                   setsOptions={sets}
+                  isAccessoryMode={activeTab === 'accessories'}
                 />
                 <button
                   onClick={() => setIsMobileFiltersOpen(false)}
