@@ -3,7 +3,7 @@ import {
     Search, Plus, Package, Trash2, Edit2, X, 
     ChevronLeft, ChevronRight, Check
 } from "lucide-react";
-import { fetchAccessoriesAdmin, updateAccessory, deleteAccessory } from "../../utils/api";
+import { fetchAccessoriesAdmin, updateAccessory, deleteAccessory, uploadAccessoryImage } from "../../utils/api";
 import { AddAccessoryDrawer } from "../../components/Admin/AddAccessoryDrawer";
 
 export default function CatalogPage() {
@@ -18,6 +18,20 @@ export default function CatalogPage() {
     const [lastSavedId, setLastSavedId] = useState<string | null>(null);
 
     const pageSize = 20;
+    const categories = [
+        'Accesorios',
+        'Sealed Product',
+        'Consumibles',
+        'Magic',
+        'Pokemon',
+        'Digimon',
+        'One Piece',
+        'Yu-Gi-Oh',
+        'Weiss Schwarz',
+        'Dungeons and Dragons',
+        'Concesión',
+        'Other'
+    ];
 
     const loadAccessories = useCallback(async () => {
         setLoading(true);
@@ -56,6 +70,15 @@ export default function CatalogPage() {
             loadAccessories();
         } catch (err: any) {
             alert("Error al actualizar: " + err.message);
+        }
+    };
+
+    const handleImageChange = async (id: string, file: File) => {
+        try {
+            const url = await uploadAccessoryImage(file);
+            setTempData({ ...tempData, image_url: url });
+        } catch (err: any) {
+            alert("Error al subir imagen: " + err.message);
         }
     };
 
@@ -147,8 +170,19 @@ export default function CatalogPage() {
                                     <tr key={item.id} className="group hover:bg-white/[0.02] transition-all">
                                         <td className="pl-8 py-6">
                                             <div className="flex items-center gap-4">
-                                                <div className="w-16 h-16 bg-black rounded-2xl overflow-hidden border border-white/10 shadow-xl group-hover:scale-105 transition-transform flex-shrink-0">
-                                                    <img src={item.image_url || '/placeholder-accessory.png'} alt={item.name} className="w-full h-full object-cover" />
+                                                <div className="relative group/img w-16 h-16 bg-black rounded-2xl overflow-hidden border border-white/10 shadow-xl group-hover:scale-105 transition-transform flex-shrink-0">
+                                                    <img src={editingId === item.id ? (tempData.image_url || item.image_url) : (item.image_url || '/placeholder-accessory.png')} alt={item.name} className="w-full h-full object-cover" />
+                                                    {editingId === item.id && (
+                                                        <label className="absolute inset-0 bg-black/60 flex items-center justify-center cursor-pointer opacity-0 group-hover/img:opacity-100 transition-opacity">
+                                                            <Plus size={20} className="text-white" />
+                                                            <input
+                                                                type="file"
+                                                                className="hidden"
+                                                                accept="image/*"
+                                                                onChange={(e) => e.target.files?.[0] && handleImageChange(item.id, e.target.files[0])}
+                                                            />
+                                                        </label>
+                                                    )}
                                                 </div>
                                                 <div className="flex-1">
                                                     {editingId === item.id ? (
@@ -169,12 +203,13 @@ export default function CatalogPage() {
                                         </td>
                                         <td className="px-6 py-6 text-center">
                                             {editingId === item.id ? (
-                                                <input
-                                                    type="text"
+                                                <select
                                                     value={tempData.category}
                                                     onChange={(e) => setTempData({...tempData, category: e.target.value})}
-                                                    className="w-full bg-black border border-orange-500/50 rounded-xl px-2 py-2 text-center text-[10px] font-black uppercase text-white"
-                                                />
+                                                    className="w-full bg-black border border-orange-500/50 rounded-xl px-2 py-2 text-center text-[10px] font-black uppercase text-white appearance-none"
+                                                >
+                                                    {categories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                                                </select>
                                             ) : (
                                                 <span className="px-3 py-1 bg-white/5 rounded-full text-[10px] font-black uppercase tracking-widest text-slate-400 border border-white/5">
                                                     {item.category}
@@ -278,7 +313,8 @@ export default function CatalogPage() {
                                                                     unit_type: item.unit_type || 'Unidad',
                                                                     cost: item.cost,
                                                                     price: item.price, 
-                                                                    stock: item.stock 
+                                                                    stock: item.stock,
+                                                                    image_url: item.image_url
                                                                 });
                                                             }}
                                                             className="p-3 bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 rounded-xl transition-all"
