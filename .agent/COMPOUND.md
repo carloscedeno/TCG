@@ -611,3 +611,44 @@ Perform a bulk import of 164+ accessories from a CSV file, update storefront pri
 ---
 
 *Compounded for Geekorium TCG Ecosystem.*
+
+# 🧠 COMPOUND: Accessory Detail — Crash Fix & Clean Product View (v55)
+
+**Fecha**: 2026-04-24
+
+## Objetivo
+
+Resolver crashes de runtime al abrir accesorios en el catálogo y rediseñar su vista de detalle para que sea apropiada para un producto general (no una carta TCG).
+
+## Conocimiento Codificado
+
+### 1. Defensive Optional Chaining (`.?.toUpperCase()`)
+- **Crash**: `TypeError: Cannot read properties of undefined (reading 'toUpperCase')` en `CardModal`, `CardDetail` y `CheckoutPage` al abrir cualquier accesorio.
+- **Causa**: Los accesorios no tienen `set_code` ni `finish`. El componente de carta llamaba `.toUpperCase()` directamente sobre estas propiedades sin verificar.
+- **Fix**: `set_code?.toUpperCase()` y `finish?.toUpperCase()` en todos los sitios. Adicionalmente, enriquecer `fetchCardDetails` en `api.ts` para devolver `set_code`, `collector_number`, y `rarity` sintéticos para accesorios.
+
+### 2. Polymorphic UI — Branch Completo por Tipo
+- **Anti-patrón**: Ocultar secciones individualmente (`{!is_accessory && <Section />}`) produce código frágil y vistas incompletas.
+- **Patrón correcto**: Condicionar el layout **completo** del modal con `details?.is_accessory ? <AccessoryView /> : <CardView />`.
+- **AccessoryView**: Imagen centrada con glow, nombre + categoría, badge de stock prominente, precio limpio ("PRECIO"), botón de carrito grande. Sin: foil toggle, "EDICIÓN/IMPRESIONES", legalidad de formatos, CardKingdom link.
+
+### 3. TSC como Pre-flight Obligatorio en Refactors JSX Grandes
+- **Lección**: En componentes de 800+ líneas, los cambios ternarios complejos producen errores de cierre de tags invisibles.
+- **Proceso correcto**: `npx tsc --noEmit` → resolver errores → `npm run build` → push.
+
+## Archivos Cambiados
+
+- `frontend/src/utils/api.ts` → Enriquecimiento de datos de accesorios
+- `frontend/src/components/Card/CardModal.tsx` → Optional chaining + AccessoryView branch completo
+- `frontend/src/pages/CardDetail.tsx` → Optional chaining + ocultar CK y Legalidad
+- `frontend/src/pages/CheckoutPage.tsx` → Optional chaining en WhatsApp link
+
+## Validación Técnica
+
+- **TSC**: ✅ `npx tsc --noEmit` — 0 errores
+- **Frontend Build**: ✅ `npm run build` — Exit code 0
+- **Commits**: ✅ `dev c4ee794`, `dev 79544f6` — pushed to `origin/dev`
+
+---
+
+*Compounded for Geekorium TCG Ecosystem.*

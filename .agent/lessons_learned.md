@@ -833,3 +833,24 @@ useEffect(() => {
 - **Problema**: Los scripts de importación masiva fallaban con errores de llave foránea (`accessories_game_id_fkey`) al intentar insertar IDs de juegos que no existían en el entorno de destino (ej: ID 6 para Digimon).
 - **Solución**: No usar IDs hardcodeados en scripts de importación. Usar subconsultas dinámicas: `(SELECT game_id FROM games WHERE game_name ILIKE '...' LIMIT 1)`.
 - **Regla Derivada**: Todo script de utilidad de carga masiva debe resolver IDs de tablas de referencia dinámicamente mediante el nombre o código de la entidad.
+
+### 151. Defensive Optional Chaining for Polymorphic Data — 2026-04-24
+- **Problema**: El componente `CardModal` y `CardDetail` crasheaban con `TypeError: Cannot read properties of undefined (reading 'toUpperCase')` al abrir accesorios en el catálogo.
+- **Causa Raíz**: El campo `set_code` no existe para accesorios. El componente asumía que todos los productos son cartas TCG y llamaba `.toUpperCase()` directamente sin verificar null/undefined.
+- **Solución**: Usar optional chaining en todos los `string.toUpperCase()` sobre datos de API: `set_code?.toUpperCase()`. Enriquecer la respuesta de `fetchCardDetails` para accesorios con campos placeholder (`set_code: category`, `collector_number: 'ACC'`).
+- **Regla Derivada**: **Nunca** llamar métodos de string directamente sobre propiedades de datos de API. Siempre usar `?.` o validar con un guard antes. Aplica especialmente cuando la misma vista renderiza tipos de datos polimórficos (cartas, accesorios).
+
+### 152. Polymorphic UI: Separate Layouts for Different Product Types — 2026-04-24
+- **Problema**: El `CardModal`, diseñado para cartas TCG, mostraba información irrelevante (FOIL/NONFOIL toggle, "EDICIÓN / IMPRESIONES", legalidad de formatos, CardKingdom link) cuando se abría un accesorio como una caja de Gundam o snacks.
+- **Causa Raíz**: Reutilizar el mismo layout de carta para todos los tipos de productos es un anti-patrón cuando las entidades tienen características fundamentalmente diferentes.
+- **Solución**: Condicionar el layout completo con `details?.is_accessory`. Cuando es `true`, renderizar un layout alternativo limpio: imagen centrada, nombre, categoría, badge de stock prominente, precio simple ("Precio"), y CTA de carrito. Cuando es `false`, usar el layout original de carta con todas sus secciones.
+- **Regla Derivada**: En plataformas de e-commerce polimórficas (cartas + accesorios), el modal/detalle debe detectar el tipo de producto y renderizar el layout apropiado. No intentar ocultar secciones con condicionales dispersos; mejor separar los branches de rendering completos.
+
+### 153. JSX Fragment Nesting in Ternary Conditionals — 2026-04-24
+- **Problema**: Al refactorizar un componente grande (CardModal) para agregar un branch ternario complejo, múltiples errores de TypeScript surgieron: "JSX element has no corresponding closing tag", "Expected closing tag for JSX fragment".
+- **Causa Raíz**: Al dividir el rendering existente en dos branches de un ternario (accesorio vs carta), es fácil perder el `<>` de apertura del fragment en el branch `else`, y los `</div>` de cierre previos al fragment quedan "huérfanos".
+- **Solución**:
+  1. Usar `tsc --noEmit` para verificar JSX antes de `npm run build`.
+  2. Al agregar un ternario que envuelve múltiples elementos, añadir explícitamente `<>` y `</>` para el branch que lo necesita.
+  3. Verificar que los closing tags inline (`{/* comment */}`) no causen errores de parsing en TypeScript (prefirir líneas separadas).
+- **Regla Derivada**: Ante refactors grandes de JSX en componentes de 500+ líneas, dividir los cambios en pasos verificables con `tsc --noEmit` entre cada uno.
