@@ -116,16 +116,16 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                             displayItems.map((item) => (
                                 <div key={item.id} data-testid="cart-item" className="flex gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-white/10 transition-all group">
                                     <div className="w-20 h-28 bg-neutral-900 rounded-lg overflow-hidden flex-shrink-0 border border-white/10">
-                                        <img src={item.products?.image_url} alt={item.products?.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                        <img src={item.image_url || item.products?.image_url} alt={item.name || item.products?.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                                     </div>
                                     <div className="flex-1 flex flex-col justify-between py-1">
                                         <div>
-                                            <h4 className="text-sm font-bold text-white leading-tight mb-1">{item.products?.name}</h4>
-                                            <p className="text-[10px] font-black uppercase text-neutral-500">{item.products?.set_code}</p>
+                                            <h4 className="text-sm font-bold text-white leading-tight mb-1">{item.name || item.products?.name}</h4>
+                                            <p className="text-[10px] font-black uppercase text-neutral-500">{item.set_code || item.products?.set_code}</p>
 
                                             {/* Finish & stock badges */}
                                             <div className="flex flex-wrap gap-1 mt-1">
-                                                {(item.products?.finish || 'nonfoil').toLowerCase() === 'foil' && (
+                                                {(item.is_foil || (item.products?.finish || '').toLowerCase() === 'foil') && (
                                                     <span className="inline-block px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white">
                                                         ✦ Foil
                                                     </span>
@@ -138,7 +138,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                                             </div>
                                         </div>
                                         <div className="flex items-center justify-between">
-                                            <span className="text-sm font-mono font-black text-geeko-cyan">${(item.products?.price || 0).toFixed(2)}</span>
+                                            <span className="text-sm font-mono font-black text-geeko-cyan">${(item.price || item.products?.price || 0).toFixed(2)}</span>
 
                                             {/* Quantity Controls */}
                                             <div className="flex items-center gap-2">
