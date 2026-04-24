@@ -19,9 +19,13 @@ export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryD
         name: '',
         description: '',
         price: '',
+        cost: '',
+        suggested_price: '',
         stock: '0',
-        category: 'Sealed Product',
-        game_id: ''
+        category: 'Accesorios',
+        game_id: '',
+        unit_type: 'Unidad',
+        language: 'Inglés'
     });
 
     useEffect(() => {
@@ -67,8 +71,10 @@ export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryD
 
             await createAccessory({
                 ...formData,
-                price: parseFloat(formData.price),
-                stock: parseInt(formData.stock),
+                price: parseFloat(formData.price) || 0,
+                cost: parseFloat(formData.cost) || 0,
+                suggested_price: parseFloat(formData.suggested_price) || 0,
+                stock: parseInt(formData.stock) || 0,
                 image_url: imageUrl,
                 game_id: formData.game_id ? parseInt(formData.game_id) : null
             });
@@ -80,9 +86,13 @@ export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryD
                 name: '',
                 description: '',
                 price: '',
+                cost: '',
+                suggested_price: '',
                 stock: '0',
-                category: 'Sealed Product',
-                game_id: ''
+                category: 'Accesorios',
+                game_id: '',
+                unit_type: 'Unidad',
+                language: 'Inglés'
             });
             setImageFile(null);
             setImagePreview(null);
@@ -170,19 +180,44 @@ export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryD
                             />
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-3 gap-4">
                             <div className="space-y-2">
-                                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block ml-1">Precio (USD)</label>
+                                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block ml-1">Costo (USD)</label>
+                                <input
+                                    type="number"
+                                    step="0.01"
+                                    value={formData.cost}
+                                    onChange={(e) => setFormData({...formData, cost: e.target.value})}
+                                    placeholder="0.00"
+                                    className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-sm font-mono text-white focus:outline-none focus:border-orange-500/50 transition-all"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block ml-1">P. Sugerido</label>
+                                <input
+                                    type="number"
+                                    step="0.01"
+                                    value={formData.suggested_price}
+                                    onChange={(e) => setFormData({...formData, suggested_price: e.target.value})}
+                                    placeholder="0.00"
+                                    className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-sm font-mono text-white focus:outline-none focus:border-orange-500/50 transition-all"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black text-orange-500 uppercase tracking-widest block ml-1">Precio Geek</label>
                                 <input
                                     required
                                     type="number"
                                     step="0.01"
                                     value={formData.price}
                                     onChange={(e) => setFormData({...formData, price: e.target.value})}
-                                    placeholder="29.99"
-                                    className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-sm font-mono text-white focus:outline-none focus:border-orange-500/50 transition-all"
+                                    placeholder="0.00"
+                                    className="w-full bg-orange-500/10 border border-orange-500/30 rounded-2xl px-5 py-4 text-sm font-mono text-white focus:outline-none focus:border-orange-500/50 transition-all"
                                 />
                             </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
                                 <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block ml-1">Stock Inicial</label>
                                 <input
@@ -194,9 +229,36 @@ export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryD
                                     className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-sm font-mono text-white focus:outline-none focus:border-orange-500/50 transition-all"
                                 />
                             </div>
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block ml-1">Idioma</label>
+                                <select
+                                    value={formData.language}
+                                    onChange={(e) => setFormData({...formData, language: e.target.value})}
+                                    className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-sm text-white focus:outline-none focus:border-orange-500/50 transition-all appearance-none"
+                                >
+                                    <option value="Español">Español</option>
+                                    <option value="Inglés">Inglés</option>
+                                    <option value="Japonés">Japonés</option>
+                                    <option value="Otros">Otros</option>
+                                    <option value="N/A">N/A</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block ml-1">Tipo de Venta</label>
+                                <select
+                                    value={formData.unit_type}
+                                    onChange={(e) => setFormData({...formData, unit_type: e.target.value})}
+                                    className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-sm text-white focus:outline-none focus:border-orange-500/50 transition-all appearance-none"
+                                >
+                                    <option value="Unidad">Unidad (Sencillo)</option>
+                                    <option value="Sellado">Sellado (Box/Pack)</option>
+                                    <option value="Display">Display</option>
+                                    <option value="Kit">Kit / Bundle</option>
+                                </select>
+                            </div>
                             <div className="space-y-2">
                                 <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block ml-1">Categoría</label>
                                 <select
@@ -207,17 +269,18 @@ export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryD
                                     {categories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
                                 </select>
                             </div>
-                            <div className="space-y-2">
-                                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block ml-1">Juego Asociado</label>
-                                <select
-                                    value={formData.game_id}
-                                    onChange={(e) => setFormData({...formData, game_id: e.target.value})}
-                                    className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-sm text-white focus:outline-none focus:border-orange-500/50 transition-all appearance-none"
-                                >
-                                    <option value="">Ninguno / Genérico</option>
-                                    {games.map(game => <option key={game.game_id} value={game.game_id}>{game.game_name}</option>)}
-                                </select>
-                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block ml-1">Juego Asociado</label>
+                            <select
+                                value={formData.game_id}
+                                onChange={(e) => setFormData({...formData, game_id: e.target.value})}
+                                className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-sm text-white focus:outline-none focus:border-orange-500/50 transition-all appearance-none"
+                            >
+                                <option value="">Ninguno / Genérico</option>
+                                {games.map(game => <option key={game.game_id} value={game.game_id}>{game.game_name}</option>)}
+                            </select>
                         </div>
                     </div>
 

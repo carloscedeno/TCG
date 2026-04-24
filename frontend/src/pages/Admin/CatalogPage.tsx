@@ -113,7 +113,10 @@ export default function CatalogPage() {
                             <tr>
                                 <th className="pl-8 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest">Producto / Item</th>
                                 <th className="px-6 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-center">Categoría</th>
-                                <th className="px-6 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-right">Precio (USD)</th>
+                                <th className="px-4 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-center">Idioma</th>
+                                <th className="px-4 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-center">Venta</th>
+                                <th className="px-4 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-right">Costo</th>
+                                <th className="px-6 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-right">Precio</th>
                                 <th className="px-6 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-center">Stock</th>
                                 <th className="pr-8 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-right">Acciones</th>
                             </tr>
@@ -121,14 +124,14 @@ export default function CatalogPage() {
                         <tbody className="divide-y divide-white/5">
                             {loading && items.length === 0 ? (
                                 <tr>
-                                    <td colSpan={5} className="py-32 text-center">
+                                    <td colSpan={8} className="py-32 text-center">
                                         <div className="w-12 h-12 border-4 border-orange-500/30 border-t-orange-500 rounded-full animate-spin mx-auto mb-4" />
                                         <span className="text-xs font-black uppercase tracking-widest text-slate-500">Sincronizando Base de Datos...</span>
                                     </td>
                                 </tr>
                             ) : items.length === 0 ? (
                                 <tr>
-                                    <td colSpan={5} className="py-32 text-center grayscale opacity-30">
+                                    <td colSpan={8} className="py-32 text-center grayscale opacity-30">
                                         <Package size={48} className="mx-auto mb-4" />
                                         <p className="text-sm font-black uppercase tracking-widest">No se hallaron productos</p>
                                     </td>
@@ -151,6 +154,15 @@ export default function CatalogPage() {
                                             <span className="px-3 py-1 bg-white/5 rounded-full text-[10px] font-black uppercase tracking-widest text-slate-400 border border-white/5">
                                                 {item.category}
                                             </span>
+                                        </td>
+                                        <td className="px-4 py-6 text-center">
+                                            <span className="text-[10px] font-bold text-slate-500 uppercase">{item.language || 'N/A'}</span>
+                                        </td>
+                                        <td className="px-4 py-6 text-center">
+                                            <span className="text-[10px] font-bold text-slate-500 uppercase">{item.unit_type || 'Unidad'}</span>
+                                        </td>
+                                        <td className="px-4 py-6 text-right">
+                                            <span className="text-xs font-mono text-slate-600">${item.cost?.toFixed(2) || '0.00'}</span>
                                         </td>
                                         <td className="px-6 py-6 text-right">
                                             {editingId === item.id ? (
