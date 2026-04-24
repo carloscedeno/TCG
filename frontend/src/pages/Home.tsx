@@ -21,7 +21,7 @@ const mockFilters: Filters = {
   rarities: ['Common', 'Uncommon', 'Rare', 'Mythic'],
   colors: ['White', 'Blue', 'Black', 'Red', 'Green', 'Colorless', 'Multicolor'],
   types: ['Creature', 'Instant', 'Sorcery', 'Enchantment', 'Artifact', 'Planeswalker', 'Land'],
-  categories: ['Sealed Product', 'Sleeves', 'Deck Boxes', 'Playmats', 'Storage', 'Other'],
+  categories: ['Accesorios', 'Sealed Product', 'Consumibles', 'Magic', 'Pokemon', 'Digimon', 'One Piece', 'Yu-Gi-Oh', 'Weiss Schwarz', 'Concesión', 'Other'],
   sets: [],
   yearRange: [1993, 2026],
   priceRange: [0, 1000]
@@ -457,8 +457,8 @@ const Home: React.FC = () => {
                     : 'text-neutral-500 hover:text-neutral-300'
                     }`}
                 >
-                  <Sparkles size={16} className={activeTab === 'accessories' ? 'text-white' : 'text-purple-400'} />
-                  Accesorios
+                  <Package size={16} className={activeTab === 'accessories' ? 'text-white' : 'text-purple-400'} />
+                  Catálogo
                 </button>
               </div>
 

@@ -282,12 +282,12 @@ export const AdminDashboard = () => {
                         </div>
                     </Link>
 
-                    <Link to="/admin/accessories" className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-orange-900/50 to-slate-900 border border-white/10 p-8 hover:border-orange-500/50 transition-all md:col-span-2">
+                    <Link to="/admin/catalog" className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-orange-900/50 to-slate-900 border border-white/10 p-8 hover:border-orange-500/50 transition-all md:col-span-2">
                         <div className="absolute inset-0 bg-orange-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
                         <div className="relative z-10 flex items-center justify-between">
                             <div>
-                                <h3 className="text-2xl font-black italic text-white mb-2">CONSOLA DE ACCESORIOS</h3>
-                                <p className="text-orange-300 text-xs font-bold uppercase tracking-widest">Gestionar Playmats, Micas y Sellado</p>
+                                <h3 className="text-2xl font-black italic text-white mb-2">CATÁLOGO DE TIENDA</h3>
+                                <p className="text-orange-300 text-xs font-bold uppercase tracking-widest">Gestionar Sellado, Accesorios y Otros</p>
                             </div>
                             <div className="w-16 h-16 bg-orange-500/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
                                 <Package className="text-orange-400" size={32} />

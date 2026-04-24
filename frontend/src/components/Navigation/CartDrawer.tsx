@@ -109,7 +109,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                                 </div>
                                 <div>
                                     <p className="text-sm font-bold text-white mb-1">Tu carrito está vacío</p>
-                                    <p className="text-xs text-neutral-500">Agrega algunos productos del Marketplace.</p>
+                                    <p className="text-xs text-neutral-500">Agrega algunos productos del Catálogo.</p>
                                 </div>
                             </div>
                         ) : (

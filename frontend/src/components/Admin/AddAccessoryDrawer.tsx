@@ -33,11 +33,17 @@ export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryD
     }, []);
 
     const categories = [
+        'Accesorios',
         'Sealed Product',
-        'Sleeves',
-        'Deck Boxes',
-        'Playmats',
-        'Storage',
+        'Consumibles',
+        'Magic',
+        'Pokemon',
+        'Digimon',
+        'One Piece',
+        'Yu-Gi-Oh',
+        'Weiss Schwarz',
+        'Dungeons and Dragons',
+        'Concesión',
         'Other'
     ];
 
@@ -99,7 +105,7 @@ export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryD
                         <div className="w-10 h-10 bg-orange-500/20 rounded-xl flex items-center justify-center border border-orange-500/30">
                             <Package className="text-orange-400" size={20} />
                         </div>
-                        <h2 className="text-2xl font-black italic tracking-tighter uppercase">Nuevo Accesorio</h2>
+                        <h2 className="text-2xl font-black italic tracking-tighter uppercase">Nuevo Producto</h2>
                     </div>
                     <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors">
                         <X size={24} className="text-slate-500" />
@@ -229,7 +235,7 @@ export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryD
                             ) : (
                                 <>
                                     <Save size={20} />
-                                    Guardar Accesorio
+                                    Guardar Producto
                                 </>
                             )}
                         </button>

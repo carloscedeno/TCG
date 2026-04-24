@@ -6,7 +6,7 @@ import {
 import { fetchAccessoriesAdmin, updateAccessory, deleteAccessory } from "../../utils/api";
 import { AddAccessoryDrawer } from "../../components/Admin/AddAccessoryDrawer";
 
-export default function AccessoriesPage() {
+export default function CatalogPage() {
     const [items, setItems] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -54,7 +54,7 @@ export default function AccessoriesPage() {
     };
 
     const handleDelete = async (id: string) => {
-        if (!confirm("¿Estás seguro de eliminar este accesorio?")) return;
+        if (!confirm("¿Estás seguro de eliminar este producto?")) return;
         try {
             await deleteAccessory(id);
             loadAccessories();
@@ -75,11 +75,11 @@ export default function AccessoriesPage() {
                                 <Package className="text-black" size={24} />
                             </div>
                             <h1 className="text-4xl font-black italic tracking-tighter uppercase">
-                                Consola de <span className="text-orange-500">Accesorios</span>
+                                Catálogo de <span className="text-orange-500">Tienda</span>
                             </h1>
                         </div>
                         <p className="text-slate-500 text-xs font-black uppercase tracking-[0.2em] ml-1">
-                            Administración CRUD v1.0 • {totalCount} Items Detectados
+                            Administración de Productos v1.1 • {totalCount} Items Detectados
                         </p>
                     </div>
 
@@ -88,7 +88,7 @@ export default function AccessoriesPage() {
                         className="px-8 py-4 bg-white text-black font-black text-xs uppercase tracking-widest rounded-2xl hover:bg-orange-500 transition-all active:scale-95 shadow-2xl flex items-center gap-3"
                     >
                         <Plus size={18} />
-                        Nuevo Accesorio
+                        Nuevo Producto
                     </button>
                 </div>
 
@@ -111,7 +111,7 @@ export default function AccessoriesPage() {
                     <table className="w-full text-left border-collapse">
                         <thead className="bg-black/40 border-b border-white/5">
                             <tr>
-                                <th className="pl-8 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest">Accesorio</th>
+                                <th className="pl-8 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest">Producto / Item</th>
                                 <th className="px-6 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-center">Categoría</th>
                                 <th className="px-6 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-right">Precio (USD)</th>
                                 <th className="px-6 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-center">Stock</th>
@@ -130,7 +130,7 @@ export default function AccessoriesPage() {
                                 <tr>
                                     <td colSpan={5} className="py-32 text-center grayscale opacity-30">
                                         <Package size={48} className="mx-auto mb-4" />
-                                        <p className="text-sm font-black uppercase tracking-widest">No se hallaron accesorios</p>
+                                        <p className="text-sm font-black uppercase tracking-widest">No se hallaron productos</p>
                                     </td>
                                 </tr>
                             ) : (
