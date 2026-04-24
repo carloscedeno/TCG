@@ -854,3 +854,10 @@ useEffect(() => {
   2. Al agregar un ternario que envuelve múltiples elementos, añadir explícitamente `<>` y `</>` para el branch que lo necesita.
   3. Verificar que los closing tags inline (`{/* comment */}`) no causen errores de parsing en TypeScript (prefirir líneas separadas).
 - **Regla Derivada**: Ante refactors grandes de JSX en componentes de 500+ líneas, dividir los cambios en pasos verificables con `tsc --noEmit` entre cada uno.
+
+### 154. CartContext Flattening vs CartDrawer Nested Fields — 2026-04-24
+- **Problema**: Los ítems del carrito mostraban `$0.00` individualmente en `CartDrawer`, aunque el SUBTOTAL total era correcto.
+- **Causa Raíz**: `CartContext.refreshCart()` aplana los datos del RPC `get_user_cart` en campos de primer nivel (`item.price`, `item.name`, `item.image_url`, `item.set_code`). Sin embargo, `CartDrawer` leía la estructura anidada antigua (`item.products?.price`), que no existe en el state aplanado — resultando en `undefined → $0.00`.
+- **Por qué el SUBTOTAL funcionaba**: La lógica del subtotal ya tenía el fallback correcto `(item.products?.price || item.price || 0)`, pero la línea de display por ítem no.
+- **Solución**: Actualizar `CartDrawer` para leer los campos planos primero con el nested como fallback: `item.price || item.products?.price || 0`. Aplicar el mismo patrón a `name`, `image_url`, `set_code` e `is_foil`.
+- **Regla Derivada**: Cuando `CartContext` cambia la forma del state (de nested a flat), TODOS los consumidores (`CartDrawer`, `CheckoutPage`, etc.) deben actualizarse simultáneamente. El patrón seguro es siempre usar `item.price || item.products?.price` para soportar ambas formas durante transiciones.

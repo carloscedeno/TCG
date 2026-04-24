@@ -652,3 +652,44 @@ Resolver crashes de runtime al abrir accesorios en el catálogo y rediseñar su 
 ---
 
 *Compounded for Geekorium TCG Ecosystem.*
+
+# 🧠 COMPOUND: CartDrawer $0.00 Price Display Bug (dev — Multi-Cart)
+
+**Fecha**: 2026-04-24
+
+## Objetivo
+
+Corregir el bug visual donde los ítems del carrito mostraban `$0.00` individualmente en `CartDrawer` después de la implementación del multi-cart (CartContext v18/v25), aunque el SUBTOTAL y el TOTAL eran correctos.
+
+## Conocimiento Codificado
+
+### 1. Desacoplamiento de la Forma del State entre CartContext y CartDrawer
+
+- **Causa Raíz**: `CartContext.refreshCart()` aplana los datos del RPC `get_user_cart` en el estado como campos de primer nivel en el `CartItem` (`item.price`, `item.name`, `item.image_url`, `item.set_code`). `CartDrawer` usaba la forma anidada antigua (`item.products?.price`), que no existía en el state aplanado → `undefined → $0.00`.
+- **Por qué el SUBTOTAL funcionaba**: El cálculo del subtotal ya tenía el fallback dual correcto `(item.products?.price || item.price || 0)`. La línea de precio por ítem no.
+- **Diagnóstico rápido**: Si el total es correcto pero el precio individual es $0.00, buscar discrepancia entre la estructura del state (plana vs anidada) y lo que el componente renderizador está leyendo.
+
+### 2. Patrón de Doble Fallback para Campos de Carrito
+
+- **Patrón robusto**: `item.price || item.products?.price || 0` en todos los campos clave.
+- **Aplica a**: precio, nombre, imagen, set_code, is_foil.
+- **Beneficio**: Soporta tanto la forma plana (CartContext flattened) como la forma anidada (fetchCart directo / guest cart), sin necesidad de refactorizar si la forma del estado vuelve a cambiar.
+
+### 3. Regla de Sincronización Context → Consumers
+
+- **Cuando CartContext cambia la forma del state**, TODOS los consumidores (`CartDrawer`, `CheckoutPage`, `OrderSummary`, etc.) deben auditarse en la misma sesión.
+- El SUBTOTAL funcionando pero el precio individual roto es la "señal" diagnóstica de este tipo de mismatch.
+
+## Archivos Cambiados
+
+- `frontend/src/components/Navigation/CartDrawer.tsx` → Campos de display usan `item.field || item.products?.field`
+
+## Validación Técnica
+
+- **Frontend Build**: ✅ `npm run build` — Exit code 0 (2203 módulos, 15.44s)
+- **Git Push**: ✅ `dev cc2071d` — pushed to `origin/dev`
+- **Lección Registrada**: ✅ `lessons_learned.md` → Lección #154
+
+---
+
+*Compounded for Geekorium TCG Ecosystem.*
