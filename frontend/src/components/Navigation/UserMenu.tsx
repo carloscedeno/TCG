@@ -9,7 +9,8 @@ import {
     Home,
     ChevronDown,
     Package,
-    Users
+    Users,
+    LayoutGrid
 } from 'lucide-react';
 import { QuickStockPanel } from './QuickStockPanel';
 import { useCart } from '../../context/CartContext';
@@ -51,7 +52,7 @@ export const UserMenu: React.FC = () => {
         { icon: Upload, label: 'Importar Colección', path: '/import', show: !!user },
         { icon: Users, label: 'Atención a Clientes', path: '/admin/customers', show: isAdmin },
         { icon: Package, label: 'Gestión de Inventario', path: '/admin/inventory', show: isAdmin },
-        { icon: Shield, label: 'Gestión de Accesorios', path: '/admin/accessories', show: isAdmin },
+        { icon: LayoutGrid, label: 'Gestión de Catálogo', path: '/admin/catalog', show: isAdmin },
         { icon: Shield, label: 'Admin Dashboard', path: '/admin', show: isAdmin },
     ];
 

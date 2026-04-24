@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
 import TournamentHub from './pages/TournamentHub';
@@ -79,6 +79,7 @@ function App() {
                         <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
                         <Route path="/admin/inventory" element={<AdminRoute><InventoryPage /></AdminRoute>} />
                         <Route path="/admin/catalog" element={<AdminRoute><CatalogPage /></AdminRoute>} />
+                        <Route path="/admin/accessories" element={<Navigate to="/admin/catalog" replace />} />
                         <Route path="/admin/orders" element={<AdminRoute><OrdersPage /></AdminRoute>} />
                         <Route path="/admin/customers" element={<AdminRoute><CustomersPage /></AdminRoute>} />
                         <Route path="/checkout" element={<CheckoutPage />} />
