@@ -144,9 +144,11 @@ export default function CatalogPage() {
                                 <th className="px-6 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-center">Categoría</th>
                                 <th className="px-4 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-center">Idioma</th>
                                 <th className="px-4 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-center">Venta</th>
+                                <th className="px-4 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-center">Juego</th>
                                 <th className="px-4 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-right">Costo</th>
                                 <th className="px-6 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-right">Precio</th>
                                 <th className="px-6 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-center">Stock</th>
+                                <th className="px-6 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-center">Estado</th>
                                 <th className="pr-8 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-right">Acciones</th>
                             </tr>
                         </thead>
@@ -248,6 +250,9 @@ export default function CatalogPage() {
                                                 <span className="text-[10px] font-bold text-slate-500 uppercase">{item.unit_type || 'Unidad'}</span>
                                             )}
                                         </td>
+                                        <td className="px-4 py-6 text-center text-[10px] font-bold text-slate-500 uppercase">
+                                            {item.game_id === 1 ? 'MTG' : item.game_id === 2 ? 'PKM' : item.game_id === 3 ? 'LOR' : item.game_id === 4 ? 'OP' : 'GEN'}
+                                        </td>
                                         <td className="px-4 py-6 text-right">
                                             {editingId === item.id ? (
                                                 <input
@@ -285,11 +290,33 @@ export default function CatalogPage() {
                                                     className="w-16 bg-black border border-orange-500/50 rounded-xl px-2 py-2 text-center text-xs font-mono text-white"
                                                 />
                                             ) : (
-                                                <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-xl text-xs font-black ${item.stock > 0 ? 'text-emerald-400 bg-emerald-400/10' : 'text-red-400 bg-red-400/10'}`}>
+                                                <span className={`px-2 py-1 rounded-lg text-[10px] font-black font-mono border ${
+                                                    item.stock > 10 
+                                                    ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' 
+                                                    : item.stock > 0 
+                                                    ? 'bg-orange-500/10 text-orange-500 border-orange-500/20'
+                                                    : 'bg-rose-500/10 text-rose-500 border-rose-500/20'
+                                                }`}>
                                                     {item.stock}
-                                                </div>
+                                                </span>
                                             )}
                                         </td>
+                                        <td className="px-6 py-6 text-center">
+                                            <button 
+                                                onClick={async () => {
+                                                    await updateAccessory(item.id, { is_active: !item.is_active });
+                                                    loadAccessories();
+                                                }}
+                                                className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-tighter border transition-all ${
+                                                    item.is_active 
+                                                    ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' 
+                                                    : 'bg-rose-500/10 text-rose-500 border-rose-500/20'
+                                                }`}
+                                            >
+                                                {item.is_active ? 'Activo' : 'Inactivo'}
+                                            </button>
+                                        </td>
+
                                         <td className="pr-8 py-6 text-right">
                                             <div className="flex items-center justify-end gap-2">
                                                 {editingId === item.id ? (
