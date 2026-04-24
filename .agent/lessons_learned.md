@@ -813,3 +813,23 @@ useEffect(() => {
 - **Causa Raíz**: RLS habilitado sin políticas que permitieran al rol `anon` leer pedidos por ID. PostgREST devuelve 406 si el usuario no tiene permisos de `SELECT` sobre las columnas solicitadas.
 - **Solución**: Conceder `GRANT SELECT` a `anon` y `authenticated` en `orders` y `order_items`, y crear una política pública `FOR SELECT USING (true)` (el acceso se limita de facto por el conocimiento del UUID de la orden).
 - **Regla Derivada**: El flujo de "Guest Checkout" requiere que las tablas de órdenes sean legibles por el rol `anon` mediante políticas de RLS que permitan el acceso por ID.
+
+### 147. PostgREST Schema Cache Latency — 2026-04-24
+- **Problema**: Tras ejecutar migraciones SQL (especialmente `DROP` y `CREATE OR REPLACE FUNCTION`), el frontend sigue recibiendo errores 404 o firmas de función antiguas.
+- **Causa Raíz**: La capa API de Supabase (PostgREST) mantiene un caché del esquema que no siempre se invalida instantáneamente ante cambios DDL directos vía SQL Editor.
+- **Lección**: Al realizar cambios críticos en funciones RPC que el frontend consume, es una buena práctica ejecutar `NOTIFY pgrst, 'reload schema';` o realizar un cambio menor en el esquema (como un comentario `COMMENT ON FUNCTION ...`) para forzar la invalidación del caché.
+
+### 148. Inclusive Filtering for Generic Accessories — 2026-04-24
+- **Problema**: Los accesorios "Genéricos" (como fundas, cajas o dados) desaparecían de la tienda cuando el usuario seleccionaba un juego específico (MTG, PKM), a pesar de ser compatibles con todos.
+- **Causa Raíz**: El filtro SQL `a.game_id = p_game_id` excluía filas donde `game_id` es NULL (productos genéricos).
+- **Solución**: Implementar una lógica de filtrado inclusiva: `WHERE (p_game_id IS NULL OR a.game_id = p_game_id OR a.game_id IS NULL)`. Esto asegura que los productos específicos del juego Y los genéricos aparezcan siempre.
+- **Regla Derivada**: [LEYES_DEL_SISTEMA.md] -> Regla de Negocio 9. Los productos sin ID de juego se consideran universales y deben aparecer en todos los contextos de filtrado de juego.
+
+### 149. Admin UI Alignment & State Sync — 2026-04-24
+- **Problema**: Desalineación visual en tablas administrativas tras añadir nuevas columnas (`is_active`, `game_id`), causando que los datos no coincidan con sus encabezados.
+- **Lección**: Al expandir tablas complejas en React, evitar el uso de índices de array para renderizar columnas. Usar un mapeo explícito de celdas por nombre de propiedad y asegurar que el número de etiquetas `<th/>` sea idéntico al de `<td/>` en cada fila para evitar "drift" visual.
+
+### 150. Dynamic Game Mapping in Bulk Imports — 2026-04-24
+- **Problema**: Los scripts de importación masiva fallaban con errores de llave foránea (`accessories_game_id_fkey`) al intentar insertar IDs de juegos que no existían en el entorno de destino (ej: ID 6 para Digimon).
+- **Solución**: No usar IDs hardcodeados en scripts de importación. Usar subconsultas dinámicas: `(SELECT game_id FROM games WHERE game_name ILIKE '...' LIMIT 1)`.
+- **Regla Derivada**: Todo script de utilidad de carga masiva debe resolver IDs de tablas de referencia dinámicamente mediante el nombre o código de la entidad.

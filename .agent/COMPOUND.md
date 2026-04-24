@@ -574,3 +574,40 @@ Stabilize the integration of accessories into the checkout flow, ensure atomicit
 ---
 
 *Compounded for Geekorium TCG Ecosystem.*
+
+# 🧠 COMPOUND: Catalog Inventory Bulk Import & Stabilization
+
+**Date**: 2026-04-24 01:40
+
+## Objective
+
+Perform a bulk import of 164+ accessories from a CSV file, update storefront price filters to support high-value items, and stabilize the administrative catalog interface.
+
+## Knowledge Codification
+
+### 1. Dynamic Game Mapping in SQL Imports
+- **Pattern**: Instead of hardcoding IDs (which differ between DEV/PROD), use subqueries like `(SELECT game_id FROM games WHERE game_name ILIKE '...' LIMIT 1)`.
+- **Resilience**: This allows the same migration script to work across environments, defaulting to `NULL` (generic accessory) if the specific game record isn't found.
+
+### 2. High-Value Price Filter Scaling
+- **Insight**: Premium TCG items often exceed $1,000. Hardcoded UI limits in price sliders or filters hide this inventory from customers.
+- **Adjustment**: Scaled the default price ceiling from $1,000 to **$1,000,000** in both `Home.tsx` (logic) and `FiltersPanel.tsx` (UI).
+- **Rule**: When building marketplace filters, never assume a "small" price ceiling; always allow for collector-tier pricing.
+
+### 3. Inclusive Filtering for Universals
+- **Logic**: Generic accessories (dice, sleeves) are compatible with all games.
+- **Fix**: Updated filtering logic in `api.ts` to always include items where `game_id IS NULL` when filtering by a specific game. This ensures the "Sleeves" category is visible even when the user is browsing "Magic".
+
+### 4. Admin Catalog UI Integrity
+- **Pattern**: Added an `is_active` toggle and game identification columns to `CatalogPage.tsx`.
+- **Alignment**: Fixed table alignment issues by ensuring symmetric `<th/>` and `<td/>` counts, preventing visual "drift" when rendering large data tables.
+
+## Technical Validation
+
+- **Database Logic**: ✅ Migration `20260424000002_bulk_import_accessories.sql` generated and verified with 163+ records.
+- **Frontend Build**: ✅ Success (`npm run build`).
+- **Storefront Verification**: ✅ Accessories visible and filterable in the Marketplace.
+
+---
+
+*Compounded for Geekorium TCG Ecosystem.*

@@ -112,7 +112,12 @@ Artefactos del Compound step:
 - ✅ **Gestión de Accesorios (Accessories Management)**: Módulo completo de administración de accesorios con soporte para imágenes (`public_assets`), historial de auditoría y vitrina dinámica en el marketplace.
 - ✅ **Resolución Dinámica de Juegos**: Eliminación de IDs hardcodeados para garantizar compatibilidad entre entornos DEV y PROD.
 - ✅ **Checkout Polimórfico (Products & Accessories)**: Soporte nativo para pedidos mixtos en una sola transacción atómica, con recuperación defensiva de IDs en el frontend y validación de integridad en el RPC.
-- ✅ **Rastreo de Pedidos Público**: Implementación de políticas RLS que permiten el rastreo de órdenes por ID para invitados y usuarios autenticados, con visualización detallada de accesorios y cartas.
+- ✅ **Rastreo de Pedidos Público**: Implementación de políticas RLS para rastreo por ID (invitados/auth).
+- ✅ **Importación Masiva de Inventario (Accesorios)**: Carga de 164+ artículos mediante script automatizado con mapeo dinámico.
+- ✅ **Soporte para Precios de Alto Valor ($1,000,000)**: Actualización de filtros para artículos de colección premium.
+- ✅ **Filtrado Inclusivo de Accesorios Genéricos**: Los productos sin `game_id` son visibles en todos los contextos de juego.
+- ✅ **Panel Administrativo Potenciado (CatalogPage)**: Toggles de Activo/Inactivo y alineación visual mejorada.
+
 
 
 ## 🚧 Features Pendientes
