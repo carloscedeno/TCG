@@ -12,6 +12,8 @@ ADD COLUMN IF NOT EXISTS unit_type text DEFAULT 'Unidad', -- 'Unidad', 'Sellado'
 ADD COLUMN IF NOT EXISTS language text; -- 'Español', 'Inglés', 'Japonés', etc.
 
 -- 2. Update get_accessories_filtered RPC to include new fields
+DROP FUNCTION IF EXISTS public.get_accessories_filtered(integer, text, integer, integer);
+
 CREATE OR REPLACE FUNCTION public.get_accessories_filtered(
     p_game_id integer DEFAULT NULL,
     p_category text DEFAULT NULL,
