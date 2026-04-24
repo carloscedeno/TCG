@@ -431,8 +431,112 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                 {/* Desktop close button */}
                 <button onClick={onClose} className="absolute top-6 right-6 z-50 p-2 hover:bg-white/10 rounded-full transition-colors text-neutral-400 hidden md:flex"><X size={24} /></button>
 
-                {/* LEFT: IMAGE & VERSIONS LIST */}
-                <div className={`w-full md:w-[420px] lg:w-[480px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden shrink-0 h-auto ${details?.is_accessory ? 'md:h-fit' : 'md:h-[var(--modal-height,700px)]'} min-h-[500px] md:min-h-0`}>
+                {details?.is_accessory ? (
+                    /* ────────────────────────────────────────
+                       ACCESSORY LAYOUT — clean product view
+                    ──────────────────────────────────────── */
+                    <div className="flex flex-col md:flex-row w-full h-full">
+                        {/* Image */}
+                        <div className="w-full md:w-[380px] bg-[#0c0c0c] flex items-center justify-center p-8 border-r border-white/5 shrink-0 min-h-[300px] md:min-h-0">
+                            {loading ? (
+                                <div className="w-48 h-48 rounded-2xl bg-white/5 animate-pulse" />
+                            ) : (
+                                <div className="relative flex items-center justify-center">
+                                    <div className="absolute inset-0 bg-geeko-cyan/10 blur-[80px] rounded-full pointer-events-none" />
+                                    <img
+                                        src={currentImage}
+                                        alt={details?.name}
+                                        className="max-w-[280px] max-h-[280px] object-contain relative z-10 drop-shadow-[0_20px_60px_rgba(0,0,0,0.8)] hover:scale-105 transition-transform duration-500"
+                                    />
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Info */}
+                        <div className="flex-1 bg-[#050505] p-6 md:p-10 flex flex-col justify-between gap-6 overflow-y-auto custom-scrollbar">
+                            {loading ? (
+                                <div className="space-y-6 animate-pulse">
+                                    <div className="h-10 w-3/4 bg-white/5 rounded-xl" />
+                                    <div className="h-4 w-1/3 bg-white/5 rounded" />
+                                    <div className="h-32 bg-white/5 rounded-2xl" />
+                                    <div className="h-14 bg-white/5 rounded-xl" />
+                                </div>
+                            ) : details ? (
+                                <>
+                                    {/* Name + Category */}
+                                    <div className="space-y-2">
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-geeko-cyan/70">
+                                            {details.set || 'Accesorio'}
+                                        </span>
+                                        <h2 className="text-2xl md:text-4xl font-web-titles font-normal tracking-tight text-white leading-tight capitalize">
+                                            {details.name}
+                                        </h2>
+                                    </div>
+
+                                    {/* Stock badge */}
+                                    <div className="flex items-center gap-3">
+                                        {(activeVersion?.stock ?? details.total_stock ?? 0) > 0 ? (
+                                            <span className="text-xs font-black text-geeko-green bg-geeko-green/10 px-4 py-1.5 rounded-full border border-geeko-green/20 uppercase tracking-widest">
+                                                ✓ En Stock — {activeVersion?.stock ?? details.total_stock} disponibles
+                                            </span>
+                                        ) : (
+                                            <span className="text-xs font-black text-orange-400 bg-orange-500/10 px-4 py-1.5 rounded-full border border-orange-500/20 uppercase tracking-widest">
+                                                Por Encargo
+                                            </span>
+                                        )}
+                                    </div>
+
+                                    {/* Oracle / Description — only if present */}
+                                    {details.oracle_text && (
+                                        <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 text-sm text-neutral-300 leading-relaxed">
+                                            {details.oracle_text}
+                                        </div>
+                                    )}
+
+                                    {/* Price + CTA */}
+                                    <div className="space-y-3">
+                                        <div className="p-5 rounded-2xl bg-gradient-to-br from-geeko-cyan/10 via-transparent to-transparent border border-white/10 flex items-center justify-between">
+                                            <div>
+                                                <div className="text-[10px] font-semibold uppercase text-geeko-cyan tracking-widest mb-1">Precio</div>
+                                                <div className="text-4xl font-titles font-medium text-white tracking-tighter">
+                                                    ${(activeVersion?.price || details.price || 0) > 0
+                                                        ? (activeVersion?.price || details.price).toFixed(2)
+                                                        : '---'}
+                                                </div>
+                                            </div>
+                                            <div className="text-right">
+                                                <div className="text-[10px] text-neutral-600 uppercase tracking-widest">Unidad</div>
+                                                <div className="text-2xl text-neutral-500">×1</div>
+                                            </div>
+                                        </div>
+
+                                        {!isArchive && (
+                                            <button
+                                                onClick={handleAddToCart}
+                                                disabled={isAdding}
+                                                data-testid="add-to-cart-button"
+                                                className={`w-full h-14 rounded-xl font-web-titles font-normal text-sm uppercase tracking-widest flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 ${
+                                                    addedSuccess
+                                                        ? 'bg-geeko-green text-black shadow-[0_0_20px_rgba(0,255,133,0.4)]'
+                                                        : 'bg-geeko-cyan text-black shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_40px_rgba(0,229,255,0.6)]'
+                                                }`}
+                                            >
+                                                {isAdding ? <Loader2 size={18} className="animate-spin" /> : addedSuccess ? '¡Añadido! ✓' : <ShoppingCart size={18} fill="currentColor" />}
+                                                {!isAdding && !addedSuccess && ((activeVersion?.stock || 0) > 0 ? 'Agregar al Carrito' : 'Pedir por Encargo')}
+                                            </button>
+                                        )}
+                                    </div>
+                                </>
+                            ) : null}
+                        </div>
+                    </div>
+                ) : (
+                /* ────────────────────────────────────────
+                   CARD LAYOUT — original view
+                ──────────────────────────────────────── */
+                <>
+                    {/* LEFT: IMAGE & VERSIONS LIST */}
+                    <div className="w-full md:w-[420px] lg:w-[480px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden shrink-0 h-auto md:h-[var(--modal-height,700px)] min-h-[500px] md:min-h-0">
                     <div className="flex-1 min-h-[300px] md:min-h-0 relative flex items-center justify-center p-4 sm:p-6 md:p-10 bg-gradient-to-b from-white/[0.04] to-transparent overflow-hidden">
                         {loading ? (
                             <div className="w-64 aspect-[5/7] rounded-xl bg-white/5 animate-pulse flex items-center justify-center">
@@ -596,10 +700,10 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                             }
                         </div>
                     </div>
-                </div>
+                </div> {/* end card left column */}
 
                 {/* RIGHT: CARD TEXT & ACTIONS */}
-                <div className={`flex-1 h-auto ${details?.is_accessory ? 'md:h-fit' : 'md:h-[var(--modal-height,700px)]'} overflow-y-auto custom-scrollbar bg-[#050505] p-4 sm:p-6 md:p-8 pb-32 md:pb-40 space-y-4 md:space-y-6`}>
+                <div className="flex-1 h-auto md:h-[var(--modal-height,700px)] overflow-y-auto custom-scrollbar bg-[#050505] p-4 sm:p-6 md:p-8 pb-32 md:pb-40 space-y-4 md:space-y-6">
 
                     {loading ? (
                         <div className="space-y-12 animate-pulse">
@@ -813,6 +917,8 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                         </>
                     ) : null}
                 </div>
+                </>
+                )}
             </motion.div>
         </div>
     );
