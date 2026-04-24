@@ -1,26 +1,7 @@
-import psycopg2
-import sys
-import io
+-- Migration: Restore add_to_cart_v2 RPC
+-- Date: 2026-04-23
+-- Description: Restores the missing polymorphic add_to_cart_v2 function.
 
-# Forzar UTF-8 en la salida de consola para evitar errores en Windows con emojis
-if sys.platform == "win32":
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
-
-def final_cart_logic_fix():
-    try:
-        conn = psycopg2.connect(
-            user="postgres.bqfkqnnostzaqueujdms",
-            password="jLta9LqEmpMzCI5r",
-            host="aws-0-us-west-2.pooler.supabase.com",
-            port="6543",
-            dbname="postgres"
-        )
-        cur = conn.cursor()
-        
-        print("🛠️  Aplicando robustez definitiva a add_to_cart_v2...")
-        
-        # SQL logic from migration 04
-        logic = """
 BEGIN;
 
 -- 1. CLEANUP: Drop existing overloads to avoid signature conflicts
@@ -45,7 +26,7 @@ CREATE OR REPLACE FUNCTION public.add_to_cart_v2(
  LANGUAGE plpgsql
  SECURITY DEFINER
  SET search_path = public
- AS $func$
+ AS $$
     DECLARE
       v_user_id uuid;
       v_product_id uuid;
@@ -131,22 +112,10 @@ CREATE OR REPLACE FUNCTION public.add_to_cart_v2(
 
       RETURN jsonb_build_object('success', true, 'cart_id', v_cart_id, 'product_id', v_product_id);
     END;
-$func$;
+$$;
 
 -- 3. Grant Permissions
 GRANT EXECUTE ON FUNCTION public.add_to_cart_v2(text, integer, text, uuid) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.add_to_cart_v2(text, integer, text, uuid) TO anon;
 
 COMMIT;
-"""
-        cur.execute(logic)
-        conn.commit()
-        print("✨ ¡Robusta total aplicada con éxito!")
-        
-        cur.close()
-        conn.close()
-    except Exception as e:
-        print(f"❌ Error final: {e}")
-
-if __name__ == "__main__":
-    final_cart_logic_fix()

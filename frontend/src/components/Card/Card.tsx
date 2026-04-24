@@ -74,9 +74,9 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
       } else {
           await addToCart(card_id, 1, finish);
       }
-      // Optional: Show toast
     } catch (err) {
       console.error("Failed to add to cart", err);
+      alert("Error al añadir al carrito. Por favor, intenta de nuevo.");
     } finally {
       setAddingToCart(false);
     }

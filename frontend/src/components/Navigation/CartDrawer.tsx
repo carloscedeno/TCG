@@ -1,23 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ShoppingCart, X, CreditCard, Loader2, Plus, Minus, Trash2 } from 'lucide-react';
-import { fetchCart, updateCartItemQuantity, removeFromCart } from '../../utils/api';
-
-interface CartItem {
-    id: string;
-    product_id: string | null;
-    accessory_id?: string | null;
-    quantity: number;
-    products: {
-        id: string;
-        name: string;
-        price: number;
-        image_url: string;
-        set_code: string;
-        stock?: number;
-        finish?: string;  // nonfoil | foil | etched
-    }
-}
+import { updateCartItemQuantity, removeFromCart } from '../../utils/api';
+import { useCart } from '../../context/CartContext';
 
 interface CartDrawerProps {
     isOpen: boolean;
@@ -25,37 +10,11 @@ interface CartDrawerProps {
 }
 
 export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
-    const [items, setItems] = useState<CartItem[]>([]);
-    const [loading, setLoading] = useState(false);
+    const { cartItems, isLoading, refreshCart } = useCart();
     const [updating, setUpdating] = useState<string | null>(null);
+    const [optimisticItems, setOptimisticItems] = useState<any[] | null>(null);
 
-    useEffect(() => {
-        const handleCartUpdate = () => {
-            loadCart();
-        };
-
-        window.addEventListener('cart-updated', handleCartUpdate);
-
-        if (isOpen) {
-            loadCart();
-        }
-
-        return () => {
-            window.removeEventListener('cart-updated', handleCartUpdate);
-        };
-    }, [isOpen]);
-
-    const loadCart = async () => {
-        setLoading(true);
-        try {
-            const data = await fetchCart();
-            setItems(data.items || []);
-        } catch (err) {
-            console.error("Failed to load cart", err);
-        } finally {
-            setLoading(false);
-        }
-    };
+    const displayItems = optimisticItems || cartItems;
 
     const handleUpdateQuantity = async (cartItemId: string, newQuantity: number) => {
         if (newQuantity < 1) {
@@ -63,28 +22,40 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
             return;
         }
 
+        // Optimistic Update
+        setOptimisticItems(displayItems.map(item => 
+            item.id === cartItemId ? { ...item, quantity: newQuantity } : item
+        ));
+
         setUpdating(cartItemId);
         try {
             await updateCartItemQuantity(cartItemId, newQuantity);
-            await loadCart(); // Refresh cart
+            // No need to call refreshCart here as api.ts dispatches 'cart-updated'
+            // which CartContext listens to.
         } catch (err) {
             console.error('Failed to update quantity', err);
             alert('Error al actualizar cantidad');
+            refreshCart(); // Rollback to server state
         } finally {
             setUpdating(null);
+            setOptimisticItems(null);
         }
     };
 
     const handleRemoveItem = async (cartItemId: string) => {
+        // Optimistic Remove
+        setOptimisticItems(displayItems.filter(item => item.id !== cartItemId));
+        
         setUpdating(cartItemId);
         try {
             await removeFromCart(cartItemId);
-            await loadCart(); // Refresh cart
         } catch (err) {
             console.error('Failed to remove item', err);
             alert('Error al eliminar item');
+            refreshCart(); // Rollback
         } finally {
             setUpdating(null);
+            setOptimisticItems(null);
         }
     };
 
@@ -95,8 +66,8 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
         navigate('/checkout');
     };
 
-    const subtotal = Array.isArray(items)
-        ? items.reduce((acc, item) => acc + (item.products?.price || 0) * item.quantity, 0)
+    const subtotal = Array.isArray(displayItems)
+        ? displayItems.reduce((acc, item) => acc + (item.products?.price || item.price || 0) * item.quantity, 0)
         : 0;
 
     if (!isOpen) return null;
@@ -126,12 +97,12 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
 
                     {/* Items List */}
                     <div className="flex-1 overflow-y-auto px-6 py-8 space-y-6 custom-scrollbar">
-                        {loading ? (
+                        {isLoading && displayItems.length === 0 ? (
                             <div className="flex flex-col items-center justify-center h-full gap-4">
                                 <Loader2 size={32} className="text-geeko-cyan animate-spin" />
                                 <span className="text-xs font-bold text-neutral-500 uppercase tracking-widest">Cargando Carrito...</span>
                             </div>
-                        ) : items.length === 0 ? (
+                        ) : displayItems.length === 0 ? (
                             <div className="flex flex-col items-center justify-center h-full text-center space-y-6 opacity-50">
                                 <div className="w-20 h-20 bg-neutral-900 rounded-full flex items-center justify-center">
                                     <ShoppingCart size={32} />
@@ -142,7 +113,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                                 </div>
                             </div>
                         ) : (
-                            items.map((item) => (
+                            displayItems.map((item) => (
                                 <div key={item.id} data-testid="cart-item" className="flex gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-white/10 transition-all group">
                                     <div className="w-20 h-28 bg-neutral-900 rounded-lg overflow-hidden flex-shrink-0 border border-white/10">
                                         <img src={item.products?.image_url} alt={item.products?.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
@@ -230,7 +201,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                     </div>
 
                     {/* Footer / Summary */}
-                    {items.length > 0 && (
+                    {displayItems.length > 0 && (
                         <div className="p-8 bg-[#080808] border-t border-white/10 space-y-6">
                             <div className="space-y-3">
                                 <div className="flex justify-between text-xs font-bold text-neutral-500 uppercase tracking-widest">

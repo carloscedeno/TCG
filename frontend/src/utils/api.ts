@@ -247,34 +247,39 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
   try {
     let data: any = null;
     
-    // Check if it's an accessory UUID first
-    const { data: accData } = await supabase
-      .from('accessories')
-      .select('*')
-      .eq('id', printingId)
-      .maybeSingle();
-      
-    if (accData) {
-        return {
-            id: accData.id,
-            card_id: accData.id,
-            printing_id: accData.id,
-            name: accData.name,
-            set: accData.category,
-            set_code: accData.category,
-            image_url: accData.image_url,
-            price: Number(accData.price),
-            total_stock: accData.stock,
-            is_accessory: true,
-            description: accData.description,
-            all_versions: [{
+    // Check if it's an accessory UUID first (sanitize suffix to avoid 400 errors)
+    const sanitizedId = printingId.replace('-foil', '').replace('-nonfoil', '').replace('-etched', '');
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    
+    if (uuidRegex.test(sanitizedId)) {
+        const { data: accData } = await supabase
+          .from('accessories')
+          .select('*')
+          .eq('id', sanitizedId)
+          .maybeSingle();
+          
+        if (accData) {
+            return {
+                id: accData.id,
+                card_id: accData.id,
                 printing_id: accData.id,
-                set_name: accData.category,
-                price: accData.price,
-                stock: accData.stock,
-                finish: 'standard'
-            }]
-        };
+                name: accData.name,
+                set: accData.category,
+                set_code: accData.category,
+                image_url: accData.image_url,
+                price: Number(accData.price),
+                total_stock: accData.stock,
+                is_accessory: true,
+                description: accData.description,
+                all_versions: [{
+                    printing_id: accData.id,
+                    set_name: accData.category,
+                    price: accData.price,
+                    stock: accData.stock,
+                    finish: 'standard'
+                }]
+            };
+        }
     }
 
     const dbPrintingId = printingId.replace('-foil', '').replace('-nonfoil', '');

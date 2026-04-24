@@ -79,6 +79,21 @@ const Home: React.FC = () => {
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
   const LIMIT = 50;
 
+  const [hasAccessoriesExistInDb, setHasAccessoriesExistInDb] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const checkAccessories = async () => {
+      try {
+        const res = await fetchAccessories({ limit: 1 });
+        setHasAccessoriesExistInDb(res.total_count > 0);
+      } catch (err) {
+        console.error("Failed to check if accessories exist", err);
+        setHasAccessoriesExistInDb(false);
+      }
+    };
+    checkAccessories();
+  }, []);
+
   // Cart Count Logic
   useEffect(() => {
     const updateCartCount = async () => {
@@ -105,6 +120,7 @@ const Home: React.FC = () => {
       window.removeEventListener('cart-updated', handleCartUpdate);
     };
   }, [user]); // Re-run when user changes
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedQuery(query);
@@ -568,10 +584,20 @@ const Home: React.FC = () => {
                     <div className="flex flex-col items-center justify-center py-32 text-center">
                       <div className="w-24 h-24 bg-neutral-900/50 rounded-3xl flex items-center justify-center mb-8 border border-white/5 relative group">
                         <div className="absolute inset-0 bg-geeko-cyan/20 blur-2xl rounded-full group-hover:bg-geeko-cyan/30 transition-all" />
-                        <Sparkles size={40} className="text-geeko-cyan relative z-10" />
+                        {hasAccessoriesExistInDb ? (
+                          <Search size={40} className="text-geeko-cyan relative z-10" />
+                        ) : (
+                          <Sparkles size={40} className="text-geeko-cyan relative z-10" />
+                        )}
                       </div>
-                      <h3 className="text-3xl font-black italic uppercase tracking-tighter mb-4 neon-text-cyan">Próximamente</h3>
-                      <p className="text-neutral-500 font-medium max-w-sm">Estamos preparando la mejor selección de accesorios para tu colección. ¡Vuelve pronto!</p>
+                      <h3 className="text-3xl font-black italic uppercase tracking-tighter mb-4 neon-text-cyan">
+                        {hasAccessoriesExistInDb ? 'Sin Resultados' : 'Próximamente'}
+                      </h3>
+                      <p className="text-neutral-500 font-medium max-w-sm">
+                        {hasAccessoriesExistInDb 
+                          ? 'No encontramos accesorios que coincidan con tus filtros. ¡Intenta con otros!' 
+                          : 'Estamos preparando la mejor selección de accesorios para tu colección. ¡Vuelve pronto!'}
+                      </p>
                     </div>
                   ) : (
                     <>
