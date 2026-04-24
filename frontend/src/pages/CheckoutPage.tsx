@@ -139,7 +139,7 @@ export const CheckoutPage = () => {
                 const lineTotal = (unitPrice * qty).toFixed(2);
                 const finish = item.products?.finish || (item.products?.is_foil ? 'foil' : 'nonfoil');
                 const finishLabel = (finish === 'foil' || finish === 'etched') ? ' [FOIL]' : '';
-                const setCode = item.products?.set_code ? ` [${item.products.set_code.toUpperCase()}]` : '';
+                const setCode = item.products?.set_code ? ` [${item.products.set_code?.toUpperCase()}]` : '';
                 return `• ${qty}x ${name}${setCode}${finishLabel} - $${lineTotal}`;
             }).join('\n');
             const overflowNote = items.length > 40 ? `\n_(+${items.length - 40} ítems más — ver correo)_` : '';

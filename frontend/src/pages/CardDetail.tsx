@@ -299,7 +299,7 @@ export const CardDetail: React.FC = () => {
                                                 >
                                                     <div className="flex items-center gap-3 md:gap-4 flex-1">
                                                         <div className="w-8 h-8 rounded bg-neutral-900 flex items-center justify-center text-[10px] font-black group-hover:text-geeko-cyan transition-colors shrink-0">
-                                                            {group.base.set_code.toUpperCase()}
+                                                            {group.base.set_code?.toUpperCase()}
                                                         </div>
                                                         <div className="flex-1 text-left min-w-[120px]">
                                                             <div className={`text-xs font-bold leading-tight truncate ${isGroupActive ? 'text-geeko-cyan' : 'text-neutral-300'}`}>
@@ -398,7 +398,7 @@ export const CardDetail: React.FC = () => {
                                 )}
                                 <div className="pt-4 flex flex-wrap gap-8 text-sm font-bold text-neutral-400 uppercase tracking-widest">
                                     <div>Artist <span className="text-white ml-2">{details.artist}</span></div>
-                                    <div>Set <span className="text-geeko-cyan ml-2">{details.set} ({details.set_code.toUpperCase()})</span></div>
+                                    <div>Set <span className="text-geeko-cyan ml-2">{details.set} ({details.set_code?.toUpperCase()})</span></div>
                                 </div>
                             </div>
 

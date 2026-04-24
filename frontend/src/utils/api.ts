@@ -274,6 +274,10 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                 all_versions: [{
                     printing_id: accData.id,
                     set_name: accData.category,
+                    set_code: accData.category,
+                    collector_number: 'ACC',
+                    rarity: 'Common',
+                    image_url: accData.image_url,
                     price: accData.price,
                     stock: accData.stock,
                     finish: 'standard'

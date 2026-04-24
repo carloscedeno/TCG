@@ -520,7 +520,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                             >
                                                 <div className="flex items-center gap-3 md:gap-4 flex-1">
                                                     <div className="w-8 h-8 rounded bg-neutral-900 flex items-center justify-center text-xs font-web-titles group-hover:text-geeko-cyan transition-colors shrink-0">
-                                                        {group.base.set_code.toUpperCase()}
+                                                        {group.base.set_code?.toUpperCase()}
                                                     </div>
                                                     <div className="flex-1 text-left min-w-[120px] md:min-w-0">
                                                         <div className={`text-[10px] md:text-xs font-semibold leading-tight truncate ${isGroupActive ? 'text-geeko-cyan' : 'text-neutral-300'}`}>
@@ -717,7 +717,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                             ${(activeVersion?.price || details.price || 0) > 0 ? (activeVersion?.price || details.price).toFixed(2) : '---'}
                                                         </div>
                                                         <span className={`text-[10px] px-2 py-0.5 rounded-full font-black tracking-widest shadow-sm ${selectedFinish === 'foil' ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white animate-pulse' : 'bg-white text-black'}`}>
-                                                            {selectedFinish.toUpperCase()}
+                                                            {selectedFinish?.toUpperCase()}
                                                         </span>
                                                     </div>
 
