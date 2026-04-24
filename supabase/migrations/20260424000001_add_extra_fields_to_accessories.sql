@@ -77,4 +77,41 @@ BEGIN
 END;
 $$;
 
+-- 3. Restore list_user_carts RPC (Fixing 404 errors in storefront)
+DROP FUNCTION IF EXISTS public.list_user_carts(boolean);
+CREATE OR REPLACE FUNCTION public.list_user_carts(p_is_pos boolean DEFAULT false)
+RETURNS TABLE (
+    id uuid,
+    name text,
+    is_active boolean,
+    is_pos boolean,
+    item_count bigint,
+    updated_at timestamptz
+) 
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        c.id,
+        c.name,
+        c.is_active,
+        c.is_pos,
+        COALESCE(SUM(ci.quantity), 0)::bigint as item_count,
+        c.updated_at
+    FROM public.carts c
+    LEFT JOIN public.cart_items ci ON c.id = ci.cart_id
+    WHERE c.user_id = auth.uid()
+      AND (p_is_pos = false OR c.is_pos = true)
+    GROUP BY c.id, c.name, c.is_active, c.is_pos, c.updated_at
+    ORDER BY c.is_active DESC, c.updated_at DESC;
+END;
+$$;
+
+-- 4. Grant permissions
+GRANT EXECUTE ON FUNCTION public.get_accessories_filtered(integer, text, text, numeric, numeric, text, integer, integer) TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.list_user_carts(boolean) TO authenticated;
+
 COMMIT;
