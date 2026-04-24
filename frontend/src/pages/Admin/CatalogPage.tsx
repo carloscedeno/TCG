@@ -73,7 +73,7 @@ export default function CatalogPage() {
         }
     };
 
-    const handleImageChange = async (id: string, file: File) => {
+    const handleImageChange = async (file: File) => {
         try {
             const url = await uploadAccessoryImage(file);
             setTempData({ ...tempData, image_url: url });
@@ -179,7 +179,7 @@ export default function CatalogPage() {
                                                                 type="file"
                                                                 className="hidden"
                                                                 accept="image/*"
-                                                                onChange={(e) => e.target.files?.[0] && handleImageChange(item.id, e.target.files[0])}
+                                                                onChange={(e) => e.target.files?.[0] && handleImageChange(e.target.files[0])}
                                                             />
                                                         </label>
                                                     )}
