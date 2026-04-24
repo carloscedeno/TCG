@@ -54,7 +54,7 @@ BEGIN
             a.cost, a.suggested_price, a.unit_type, a.language
         FROM public.accessories a
         WHERE a.is_active = true
-          AND (p_game_id IS NULL OR a.game_id = p_game_id)
+          AND (p_game_id IS NULL OR a.game_id = p_game_id OR a.game_id IS NULL)
           AND (p_category IS NULL OR a.category = p_category)
           AND (p_search_query IS NULL OR a.name ILIKE '%' || p_search_query || '%' OR a.description ILIKE '%' || p_search_query || '%')
           AND (p_price_min IS NULL OR a.price >= p_price_min)
