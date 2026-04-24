@@ -73,6 +73,7 @@ interface CardDetails {
     total_stock: number;
     card_faces?: CardFace[];
     all_versions?: Version[];
+    is_accessory?: boolean;
 }
 
 export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, onAddToCartSuccess, isArchive }) => {
@@ -431,7 +432,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                 <button onClick={onClose} className="absolute top-6 right-6 z-50 p-2 hover:bg-white/10 rounded-full transition-colors text-neutral-400 hidden md:flex"><X size={24} /></button>
 
                 {/* LEFT: IMAGE & VERSIONS LIST */}
-                <div className="w-full md:w-[420px] lg:w-[480px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden shrink-0 h-auto md:h-[var(--modal-height,700px)] min-h-[500px] md:min-h-0">
+                <div className={`w-full md:w-[420px] lg:w-[480px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden shrink-0 h-auto ${details?.is_accessory ? 'md:h-fit' : 'md:h-[var(--modal-height,700px)]'} min-h-[500px] md:min-h-0`}>
                     <div className="flex-1 min-h-[300px] md:min-h-0 relative flex items-center justify-center p-4 sm:p-6 md:p-10 bg-gradient-to-b from-white/[0.04] to-transparent overflow-hidden">
                         {loading ? (
                             <div className="w-64 aspect-[5/7] rounded-xl bg-white/5 animate-pulse flex items-center justify-center">
@@ -598,7 +599,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                 </div>
 
                 {/* RIGHT: CARD TEXT & ACTIONS */}
-                <div className="flex-1 h-auto md:h-[var(--modal-height,700px)] overflow-y-auto custom-scrollbar bg-[#050505] p-4 sm:p-6 md:p-8 pb-32 md:pb-40 space-y-4 md:space-y-6">
+                <div className={`flex-1 h-auto ${details?.is_accessory ? 'md:h-fit' : 'md:h-[var(--modal-height,700px)]'} overflow-y-auto custom-scrollbar bg-[#050505] p-4 sm:p-6 md:p-8 pb-32 md:pb-40 space-y-4 md:space-y-6`}>
 
                     {loading ? (
                         <div className="space-y-12 animate-pulse">
@@ -667,35 +668,37 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                             </div>
 
                             <div className="space-y-6 pt-2">
-                                <div className="space-y-4 pt-2">
-                                    <h3 className="text-xs font-web-titles font-normal uppercase tracking-widest text-neutral-500 flex items-center justify-between">
-                                        Legalidad de Formato
-                                        {details.total_stock > 0 && (
-                                            <span className="text-[10px] text-geeko-cyan bg-geeko-cyan/10 px-3 py-1 rounded-full border border-geeko-cyan/20">
-                                                Existencia Total: {details.total_stock}
-                                            </span>
-                                        )}
-                                    </h3>
-                                    <div className="grid grid-cols-2 xs:grid-cols-3 md:grid-cols-6 gap-2">
-                                        {relevantFormats.map(fmt => {
-                                            const isLegal = details.legalities?.[fmt] === 'legal';
-                                            return (
-                                                <div
-                                                    key={fmt}
-                                                    className={`flex items-center justify-center p-2.5 rounded-lg border transition-all duration-300 ${isLegal
-                                                        ? 'bg-geeko-gold/10 border-geeko-gold/40 text-geeko-gold shadow-[0_0_20px_rgba(249,174,0,0.1)]'
-                                                        : 'bg-neutral-900/40 border-white/5 text-neutral-600 opacity-60'
-                                                        }`}
-                                                >
-                                                    <span className="text-[9px] md:text-[10px] font-web-titles font-normal uppercase tracking-widest">{fmt}</span>
-                                                </div>
-                                            );
-                                        })}
+                                {!details?.is_accessory && (
+                                    <div className="space-y-4 pt-2">
+                                        <h3 className="text-xs font-web-titles font-normal uppercase tracking-widest text-neutral-500 flex items-center justify-between">
+                                            Legalidad de Formato
+                                            {details.total_stock > 0 && (
+                                                <span className="text-[10px] text-geeko-cyan bg-geeko-cyan/10 px-3 py-1 rounded-full border border-geeko-cyan/20">
+                                                    Existencia Total: {details.total_stock}
+                                                </span>
+                                            )}
+                                        </h3>
+                                        <div className="grid grid-cols-2 xs:grid-cols-3 md:grid-cols-6 gap-2">
+                                            {relevantFormats.map(fmt => {
+                                                const isLegal = details.legalities?.[fmt] === 'legal';
+                                                return (
+                                                    <div
+                                                        key={fmt}
+                                                        className={`flex items-center justify-center p-2.5 rounded-lg border transition-all duration-300 ${isLegal
+                                                            ? 'bg-geeko-gold/10 border-geeko-gold/40 text-geeko-gold shadow-[0_0_20px_rgba(249,174,0,0.1)]'
+                                                            : 'bg-neutral-900/40 border-white/5 text-neutral-600 opacity-60'
+                                                            }`}
+                                                    >
+                                                        <span className="text-[9px] md:text-[10px] font-web-titles font-normal uppercase tracking-widest">{fmt}</span>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
                                     </div>
-                                </div>
+                                )}
 
                                 {/* Marketplace Actions - Optimized side-by-side layout */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
+                                <div className={`grid grid-cols-1 ${details?.is_accessory ? '' : 'md:grid-cols-2'} gap-4 items-stretch`}>
                                     {/* Left Column: Local Inventory & Actions */}
                                     <div className="flex flex-col gap-3">
                                         {/* GK Price Box */}
@@ -758,7 +761,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                     </div>
                                                 </div>
 
-                                                {marketPrice > 0 && (activeVersion?.price || details.price || 0) > 0 && (activeVersion?.price || details.price || 0) < marketPrice ? (
+                                                {!details?.is_accessory && marketPrice > 0 && (activeVersion?.price || details.price || 0) > 0 && (activeVersion?.price || details.price || 0) < marketPrice ? (
                                                     <div className="text-sm font-bold text-neutral-600 line-through decoration-red-500/50 mt-1">
                                                         MKT: ${Number(marketPrice).toFixed(2)}
                                                     </div>
@@ -783,26 +786,28 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                     </div>
 
                                     {/* Right Column: External Market */}
-                                    <a
-                                        href={ckUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex flex-col justify-between p-5 md:p-6 rounded-2xl bg-neutral-900 hover:bg-geeko-cyan/10 border border-white/5 hover:border-geeko-cyan transition-all group relative overflow-hidden gap-4"
-                                    >
-                                        <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity" />
-                                        <div className="space-y-1 relative z-10">
-                                            <span className="text-[10px] font-semibold uppercase text-neutral-500 tracking-widest group-hover:text-geeko-cyan transition-colors">Mercado Externo</span>
-                                            <div className="text-base md:text-lg font-web-titles font-normal leading-tight">Comprar @ CardKingdom</div>
-                                        </div>
-                                        <div className="flex items-center justify-between gap-3 w-full relative z-10 mt-auto">
-                                            <span className="text-xl md:text-3xl font-titles font-medium text-white group-hover:text-geeko-cyan transition-colors">
-                                                {marketPrice > 0 ? `$${Number(marketPrice).toFixed(2)}` : 'Ver en Sitio'}
-                                            </span>
-                                            <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-geeko-cyan group-hover:text-black transition-all">
-                                                <ExternalLink size={18} />
+                                    {!details?.is_accessory && (
+                                        <a
+                                            href={ckUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex flex-col justify-between p-5 md:p-6 rounded-2xl bg-neutral-900 hover:bg-geeko-cyan/10 border border-white/5 hover:border-geeko-cyan transition-all group relative overflow-hidden gap-4"
+                                        >
+                                            <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity" />
+                                            <div className="space-y-1 relative z-10">
+                                                <span className="text-[10px] font-semibold uppercase text-neutral-500 tracking-widest group-hover:text-geeko-cyan transition-colors">Mercado Externo</span>
+                                                <div className="text-base md:text-lg font-web-titles font-normal leading-tight">Comprar @ CardKingdom</div>
                                             </div>
-                                        </div>
-                                    </a>
+                                            <div className="flex items-center justify-between gap-3 w-full relative z-10 mt-auto">
+                                                <span className="text-xl md:text-3xl font-titles font-medium text-white group-hover:text-geeko-cyan transition-colors">
+                                                    {marketPrice > 0 ? `$${Number(marketPrice).toFixed(2)}` : 'Ver en Sitio'}
+                                                </span>
+                                                <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-geeko-cyan group-hover:text-black transition-all">
+                                                    <ExternalLink size={18} />
+                                                </div>
+                                            </div>
+                                        </a>
+                                    )}
                                 </div>
                             </div>
                         </>
