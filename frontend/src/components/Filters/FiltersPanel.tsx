@@ -273,7 +273,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
             type="number"
             placeholder="Mín"
             value={selected.priceRange?.[0] || ''}
-            onChange={(e) => onChange({ ...selected, priceRange: [parseFloat(e.target.value) || 0, selected.priceRange?.[1] || 1000] })}
+            onChange={(e) => onChange({ ...selected, priceRange: [parseFloat(e.target.value) || 0, selected.priceRange?.[1] || 1000000] })}
             className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-geeko-gold/50 transition-all font-medium"
           />
           <span className="text-neutral-700 font-bold">→</span>
@@ -281,7 +281,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
             type="number"
             placeholder="Máx"
             value={selected.priceRange?.[1] || ''}
-            onChange={(e) => onChange({ ...selected, priceRange: [selected.priceRange?.[0] || 0, parseFloat(e.target.value) || 1000] })}
+            onChange={(e) => onChange({ ...selected, priceRange: [selected.priceRange?.[0] || 0, parseFloat(e.target.value) || 1000000] })}
             className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-geeko-gold/50 transition-all font-medium"
           />
         </div>

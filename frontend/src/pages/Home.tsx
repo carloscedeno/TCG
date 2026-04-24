@@ -57,7 +57,7 @@ const Home: React.FC = () => {
     ],
     priceRange: [
       parseFloat(searchParams.get('price_min') || '0'),
-      parseFloat(searchParams.get('price_max') || '1000')
+      parseFloat(searchParams.get('price_max') || '1000000')
     ]
   });
   const [sets, setSets] = useState<string[]>([]);
