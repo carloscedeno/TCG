@@ -43,7 +43,13 @@ export default function CatalogPage() {
 
     const handleSave = async (id: string) => {
         try {
-            await updateAccessory(id, tempData);
+            const updates = {
+                ...tempData,
+                price: parseFloat(tempData.price) || 0,
+                cost: parseFloat(tempData.cost) || 0,
+                stock: parseInt(tempData.stock) || 0
+            };
+            await updateAccessory(id, updates);
             setEditingId(null);
             setLastSavedId(id);
             setTimeout(() => setLastSavedId(null), 2000);
@@ -141,28 +147,84 @@ export default function CatalogPage() {
                                     <tr key={item.id} className="group hover:bg-white/[0.02] transition-all">
                                         <td className="pl-8 py-6">
                                             <div className="flex items-center gap-4">
-                                                <div className="w-16 h-16 bg-black rounded-2xl overflow-hidden border border-white/10 shadow-xl group-hover:scale-105 transition-transform">
+                                                <div className="w-16 h-16 bg-black rounded-2xl overflow-hidden border border-white/10 shadow-xl group-hover:scale-105 transition-transform flex-shrink-0">
                                                     <img src={item.image_url || '/placeholder-accessory.png'} alt={item.name} className="w-full h-full object-cover" />
                                                 </div>
-                                                <div>
-                                                    <p className="text-sm font-black italic text-white uppercase">{item.name}</p>
-                                                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-tighter mt-1 line-clamp-1 max-w-xs">{item.description || 'Sin descripción'}</p>
+                                                <div className="flex-1">
+                                                    {editingId === item.id ? (
+                                                        <input
+                                                            type="text"
+                                                            value={tempData.name}
+                                                            onChange={(e) => setTempData({...tempData, name: e.target.value})}
+                                                            className="w-full bg-black border border-orange-500/50 rounded-xl px-3 py-2 text-xs font-black uppercase italic text-white"
+                                                        />
+                                                    ) : (
+                                                        <>
+                                                            <p className="text-sm font-black italic text-white uppercase">{item.name}</p>
+                                                            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-tighter mt-1 line-clamp-1 max-w-xs">{item.description || 'Sin descripción'}</p>
+                                                        </>
+                                                    )}
                                                 </div>
                                             </div>
                                         </td>
                                         <td className="px-6 py-6 text-center">
-                                            <span className="px-3 py-1 bg-white/5 rounded-full text-[10px] font-black uppercase tracking-widest text-slate-400 border border-white/5">
-                                                {item.category}
-                                            </span>
+                                            {editingId === item.id ? (
+                                                <input
+                                                    type="text"
+                                                    value={tempData.category}
+                                                    onChange={(e) => setTempData({...tempData, category: e.target.value})}
+                                                    className="w-full bg-black border border-orange-500/50 rounded-xl px-2 py-2 text-center text-[10px] font-black uppercase text-white"
+                                                />
+                                            ) : (
+                                                <span className="px-3 py-1 bg-white/5 rounded-full text-[10px] font-black uppercase tracking-widest text-slate-400 border border-white/5">
+                                                    {item.category}
+                                                </span>
+                                            )}
                                         </td>
                                         <td className="px-4 py-6 text-center">
-                                            <span className="text-[10px] font-bold text-slate-500 uppercase">{item.language || 'N/A'}</span>
+                                            {editingId === item.id ? (
+                                                <select
+                                                    value={tempData.language}
+                                                    onChange={(e) => setTempData({...tempData, language: e.target.value})}
+                                                    className="w-full bg-black border border-orange-500/50 rounded-xl px-2 py-2 text-center text-[10px] font-bold text-white"
+                                                >
+                                                    <option value="Español">ESP</option>
+                                                    <option value="Inglés">ENG</option>
+                                                    <option value="Japonés">JPN</option>
+                                                    <option value="Otros">OTR</option>
+                                                </select>
+                                            ) : (
+                                                <span className="text-[10px] font-bold text-slate-500 uppercase">{item.language || 'N/A'}</span>
+                                            )}
                                         </td>
                                         <td className="px-4 py-6 text-center">
-                                            <span className="text-[10px] font-bold text-slate-500 uppercase">{item.unit_type || 'Unidad'}</span>
+                                            {editingId === item.id ? (
+                                                <select
+                                                    value={tempData.unit_type}
+                                                    onChange={(e) => setTempData({...tempData, unit_type: e.target.value})}
+                                                    className="w-full bg-black border border-orange-500/50 rounded-xl px-2 py-2 text-center text-[10px] font-bold text-white"
+                                                >
+                                                    <option value="Unidad">Und</option>
+                                                    <option value="Sellado">Sel</option>
+                                                    <option value="Display">Dsp</option>
+                                                    <option value="Kit">Kit</option>
+                                                </select>
+                                            ) : (
+                                                <span className="text-[10px] font-bold text-slate-500 uppercase">{item.unit_type || 'Unidad'}</span>
+                                            )}
                                         </td>
                                         <td className="px-4 py-6 text-right">
-                                            <span className="text-xs font-mono text-slate-600">${item.cost?.toFixed(2) || '0.00'}</span>
+                                            {editingId === item.id ? (
+                                                <input
+                                                    type="number"
+                                                    step="0.01"
+                                                    value={tempData.cost}
+                                                    onChange={(e) => setTempData({...tempData, cost: e.target.value})}
+                                                    className="w-20 bg-black border border-orange-500/50 rounded-xl px-2 py-2 text-right text-xs font-mono text-white"
+                                                />
+                                            ) : (
+                                                <span className="text-xs font-mono text-slate-600">${item.cost?.toFixed(2) || '0.00'}</span>
+                                            )}
                                         </td>
                                         <td className="px-6 py-6 text-right">
                                             {editingId === item.id ? (
@@ -209,7 +271,15 @@ export default function CatalogPage() {
                                                         <button 
                                                             onClick={() => {
                                                                 setEditingId(item.id);
-                                                                setTempData({ price: item.price, stock: item.stock });
+                                                                setTempData({ 
+                                                                    name: item.name,
+                                                                    category: item.category,
+                                                                    language: item.language || 'Inglés',
+                                                                    unit_type: item.unit_type || 'Unidad',
+                                                                    cost: item.cost,
+                                                                    price: item.price, 
+                                                                    stock: item.stock 
+                                                                });
                                                             }}
                                                             className="p-3 bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 rounded-xl transition-all"
                                                         >
