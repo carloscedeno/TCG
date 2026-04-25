@@ -125,9 +125,39 @@ const Home: React.FC = () => {
       setDebouncedQuery(query);
       setDebouncedFilters(filters);
       setPage(0);
-    }, 400); // 400ms is a good sweet spot for sliders
+    }, 400);
     return () => clearTimeout(timer);
   }, [query, filters]);
+
+  // Sync state with URL params (important for Header navigation)
+  useEffect(() => {
+    const tabParam = searchParams.get('tab') as any;
+    if (tabParam && tabParam !== activeTab) {
+        setActiveTab(tabParam);
+    }
+
+    const gameParam = searchParams.get('game');
+    const catParam = searchParams.get('category');
+    
+    if (gameParam || catParam) {
+        const gameMap: Record<string, string> = {
+            'MTG': 'Magic: The Gathering',
+            'PKM': 'Pokémon',
+            'RIFT': 'Riftbound',
+            'OP': 'One Piece',
+            'GUNDAM': 'Gundam',
+            'DIGI': 'Digimon',
+            'FAB': 'Flesh and Blood'
+        };
+
+        const newFilters: Partial<Filters> = { ...filters };
+        if (gameParam) newFilters.games = [gameMap[gameParam] || gameParam];
+        if (catParam) newFilters.categories = [catParam];
+        
+        setFilters(newFilters);
+        setPage(0);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -181,10 +211,22 @@ const Home: React.FC = () => {
             total_count: productRes.total_count
           };
         } else if (activeTab === 'accessories') {
+          // Map game name back to ID or Code if needed for accessories
+          const gameMapInv: Record<string, string> = {
+            'Magic: The Gathering': 'MTG',
+            'Pokémon': 'PKM',
+            'Riftbound': 'RIFT',
+            'One Piece': 'OP',
+            'Gundam': 'GUNDAM',
+            'Digimon': 'DIGI',
+            'Flesh and Blood': 'FAB'
+          };
+          const mappedGame = debouncedFilters.games?.[0] ? gameMapInv[debouncedFilters.games[0]] : undefined;
+
           const accRes = await fetchAccessories({
             q: debouncedQuery || undefined,
-            game: debouncedFilters.games && debouncedFilters.games.length > 0 ? debouncedFilters.games[0] : undefined,
-            category: debouncedFilters.categories && debouncedFilters.categories.length > 0 ? debouncedFilters.categories.join(',') : undefined,
+            game: mappedGame,
+            category_code: searchParams.get('category') || (debouncedFilters.categories && debouncedFilters.categories.length > 0 ? debouncedFilters.categories[0] : undefined),
             price_min: debouncedFilters.priceRange ? debouncedFilters.priceRange[0] : undefined,
             price_max: debouncedFilters.priceRange ? debouncedFilters.priceRange[1] : undefined,
             sort: sortBy,
