@@ -1179,14 +1179,19 @@ export const switchActiveCart = async (cartId: string): Promise<void> => {
 export const fetchAccessories = async (params: {
   q?: string;
   game?: string;
-  category?: string;
+  category?: string;          // legacy free-text filter
+  category_code?: string;     // normalized code filter (e.g. 'BOOSTER_BOX')
+  parent_code?: string;       // parent group filter (e.g. 'SEALED')
   price_min?: number;
   price_max?: number;
   sort?: string;
   limit?: number;
   offset?: number;
 }) => {
-  const { q, game, category, price_min, price_max, sort = 'created_at_desc', limit = 50, offset = 0 } = params;
+  const {
+    q, game, category, category_code, parent_code,
+    price_min, price_max, sort = 'newest', limit = 50, offset = 0
+  } = params;
   
   // Dynamic game mapping
   let gameId: number | null = null;
@@ -1202,6 +1207,8 @@ export const fetchAccessories = async (params: {
   const { data, error } = await supabase.rpc('get_accessories_filtered', {
     p_game_id: gameId,
     p_category: category || null,
+    p_category_code: category_code || null,
+    p_parent_code: parent_code || null,
     p_search_query: q || null,
     p_price_min: price_min || null,
     p_price_max: price_max || null,
@@ -1221,26 +1228,46 @@ export const fetchAccessories = async (params: {
   };
 };
 
+// Fetch the normalized category taxonomy for dropdowns/filters
+export const fetchAccessoryCategories = async (parentCode?: string) => {
+  const { data, error } = await supabase.rpc('get_accessory_categories', {
+    p_parent_code: parentCode || null
+  });
+  if (error) {
+    console.warn('fetchAccessoryCategories failed, falling back to table query', error);
+    const { data: fallback } = await supabase
+      .from('accessory_categories')
+      .select('code, name, parent_code, sort_order, icon')
+      .eq('is_active', true)
+      .order('sort_order');
+    return fallback || [];
+  }
+  return data || [];
+};
+
 // --- ACCESSORIES MANAGEMENT [ADMIN] ---
 
 export const fetchAccessoriesAdmin = async (params: {
   search?: string;
   game_id?: number;
-  category?: string;
+  category?: string;       // legacy
+  category_code?: string; // normalized
+  parent_code?: string;   // group filter
   limit?: number;
   offset?: number;
 }) => {
-  const { search, game_id, category, limit = 50, offset = 0 } = params;
+  const { search, game_id, category, category_code, parent_code, limit = 50, offset = 0 } = params;
   
   let query = supabase
     .from('accessories')
-    .select('*, games(game_name)')
+    .select('*, games(game_name), accessory_categories(code, name, icon, parent_code)', { count: 'exact' })
     .order('created_at', { ascending: false })
     .range(offset, offset + limit - 1);
 
   if (search) query = query.ilike('name', `%${search}%`);
   if (game_id) query = query.eq('game_id', game_id);
-  if (category) query = query.eq('category', category);
+  if (category) query = query.ilike('category', `%${category}%`);
+  if (category_code) query = query.eq('category_code', category_code);
 
   const { data, error, count } = await query;
   if (error) throw error;

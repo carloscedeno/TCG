@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Upload, Save, Loader2, Package } from 'lucide-react';
-import { createAccessory, uploadAccessoryImage } from '../../utils/api';
+import { createAccessory, uploadAccessoryImage, fetchAccessoryCategories } from '../../utils/api';
 import { supabase } from '../../utils/supabaseClient';
 
 interface AddAccessoryDrawerProps {
@@ -12,8 +12,8 @@ interface AddAccessoryDrawerProps {
 export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryDrawerProps) => {
     const [loading, setLoading] = useState(false);
     const [imageFile, setImageFile] = useState<File | null>(null);
-    const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [games, setGames] = useState<any[]>([]);
+    const [categories, setCategories] = useState<any[]>([]);
 
     const [formData, setFormData] = useState({
         name: '',
@@ -22,34 +22,25 @@ export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryD
         cost: '',
         suggested_price: '',
         stock: '0',
-        category: 'Accesorios',
+        category_code: '',
         game_id: '',
         unit_type: 'Unidad',
         language: 'Inglés'
     });
 
     useEffect(() => {
-        const fetchGames = async () => {
-            const { data } = await supabase.from('games').select('game_id, game_name').eq('is_active', true);
-            setGames(data || []);
+        const fetchData = async () => {
+            const [gamesData, catsData] = await Promise.all([
+                supabase.from('games').select('game_id, game_name').eq('is_active', true),
+                fetchAccessoryCategories()
+            ]);
+            setGames(gamesData.data || []);
+            setCategories(catsData || []);
         };
-        fetchGames();
+        fetchData();
     }, []);
 
-    const categories = [
-        'Accesorios',
-        'Sealed Product',
-        'Consumibles',
-        'Magic',
-        'Pokemon',
-        'Digimon',
-        'One Piece',
-        'Yu-Gi-Oh',
-        'Weiss Schwarz',
-        'Dungeons and Dragons',
-        'Concesión',
-        'Other'
-    ];
+
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -89,7 +80,7 @@ export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryD
                 cost: '',
                 suggested_price: '',
                 stock: '0',
-                category: 'Accesorios',
+                category_code: '',
                 game_id: '',
                 unit_type: 'Unidad',
                 language: 'Inglés'
@@ -262,11 +253,27 @@ export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryD
                             <div className="space-y-2">
                                 <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block ml-1">Categoría</label>
                                 <select
-                                    value={formData.category}
-                                    onChange={(e) => setFormData({...formData, category: e.target.value})}
+                                    required
+                                    value={formData.category_code}
+                                    onChange={(e) => setFormData({...formData, category_code: e.target.value})}
                                     className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-sm text-white focus:outline-none focus:border-orange-500/50 transition-all appearance-none"
                                 >
-                                    {categories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                                    <option value="">Seleccionar Categoría...</option>
+                                    <optgroup label="📦 Sellado / TCG">
+                                        {categories.filter(c => c.parent_code === 'SEALED').map(cat => (
+                                            <option key={cat.code} value={cat.code}>{cat.name}</option>
+                                        ))}
+                                    </optgroup>
+                                    <optgroup label="🛡️ Accesorios / Insumos">
+                                        {categories.filter(c => c.parent_code === 'ACCESSORIES').map(cat => (
+                                            <option key={cat.code} value={cat.code}>{cat.name}</option>
+                                        ))}
+                                    </optgroup>
+                                    <optgroup label="Otros">
+                                        {categories.filter(c => !['SEALED', 'ACCESSORIES'].includes(c.parent_code)).map(cat => (
+                                            <option key={cat.code} value={cat.code}>{cat.name}</option>
+                                        ))}
+                                    </optgroup>
                                 </select>
                             </div>
                         </div>

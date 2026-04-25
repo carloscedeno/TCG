@@ -12,9 +12,9 @@ import { AuthModal } from '../components/Auth/AuthModal';
 import { UserMenu } from '../components/Navigation/UserMenu';
 
 import { LogIn, X, ShoppingCart, Sparkles, Search, Package } from 'lucide-react';
-import { Link, useSearchParams } from 'react-router-dom';
 import { CartDrawer } from '../components/Navigation/CartDrawer';
 import { Footer } from '../components/Navigation/Footer';
+import { Header } from '../components/Navigation/Header';
 
 const mockFilters: Filters = {
   games: ['Magic: The Gathering', 'Pokémon', 'Lorcana', 'One Piece'],
@@ -338,88 +338,7 @@ const Home: React.FC = () => {
       <div className="relative z-10 flex-1 flex flex-col">
 
         {/* Header */}
-        <header className="min-h-[70px] bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-white/5 sticky top-0 z-50 shadow-2xl flex items-center">
-          <nav className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 py-3 flex items-center justify-between flex-wrap gap-y-2">
-            <div className="flex items-center gap-4 sm:gap-8">
-              <Link to="/" className="flex items-center gap-4 group relative">
-                <div className="flex items-center justify-center group-hover:scale-105 transition-transform relative">
-                  <img src="/branding/Logo.png" alt="Logo" className="w-32 sm:w-40 object-contain" />
-                  <span className="absolute -top-1 -right-4 bg-red-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded-md tracking-tighter shadow-lg rotate-12">BETA</span>
-                </div>
-              </Link>
-            </div>
-            <div className="flex-1 max-w-xl mx-4 sm:mx-8 hidden lg:block">
-              <SearchBar value={query} onChange={setQuery} placeholder="Buscar por nombre de carta o edición..." />
-            </div>
-            <div className="flex items-center gap-2 sm:gap-3 ml-auto">
-              {/* Mobile Search - shown only on small screens */}
-              <div className="lg:hidden text-black mr-1 sm:mr-2">
-                {/* Only show icon or small bar? For now keep existing but maybe smaller? */}
-                {/* SearchBar component handles its own styles, hopefully it fits. */}
-                {/* Actually, SearchBar might be too wide. Let's hide full bar on very small? */}
-                {/* Current implementation shows it. I'll leave it but ensure container doesn't break it */}
-                <div className="w-32 sm:w-48">
-                  <SearchBar value={query} onChange={setQuery} placeholder="Buscar..." />
-                </div>
-              </div>
-
-              {/* Help Link */}
-              <Link to="/help" className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-neutral-900 border border-white/5 rounded-full text-neutral-400 hover:text-geeko-cyan hover:border-geeko-cyan/30 transition-all group mr-2">
-                <span className="text-[10px] font-black uppercase tracking-widest hidden md:inline">Ayuda</span>
-                <span className="w-5 h-5 flex items-center justify-center rounded-full bg-white/5 group-hover:bg-geeko-cyan/10">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" /><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" /></svg>
-                </span>
-              </Link>
-
-              {/* Social Icons at Top */}
-              <div className="hidden sm:flex items-center gap-1 mr-2 px-3 border-r border-white/10">
-                <a href="https://instagram.com/geekorium/" target="_blank" rel="noopener noreferrer" title="Instagram" className="p-2 text-neutral-400 hover:text-geeko-cyan transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" /></svg>
-                </a>
-                <a href="https://www.tiktok.com/@geekorium" target="_blank" rel="noopener noreferrer" title="TikTok" className="p-2 text-neutral-400 hover:text-geeko-cyan transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="opacity-80">
-                    <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.17-2.89-.6-4.13-1.47V18.77a6.738 6.738 0 01-1.45 4.15c-1.29 1.41-3.14 2.21-5.04 2.1c-1.95.05-3.89-.72-5.18-2.18-1.34-1.52-1.92-3.66-1.58-5.64.3-1.84 1.64-3.47 3.44-4.04 1.02-.34 2.13-.39 3.19-.15V17c-.89-.28-1.93-.11-2.69.49-.66.52-1 1.34-1.02 2.17.02 1.35 1.45 2.18 2.63 1.8 1.07-.32 1.83-1.4 1.81-2.5V3.81c0-1.27-.01-2.53-.01-3.79h-.02z" />
-                  </svg>
-                </a>
-                <a href="https://discord.gg/wmYhWw5Q" target="_blank" rel="noopener noreferrer" title="Discord" className="p-2 text-neutral-400 hover:text-geeko-cyan transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7.5 12c-2 0-3.5 1.5-3.5 3.5v2.5h16v-2.5c0-2-1.5-3.5-3.5-3.5h-9z" /><circle cx="9" cy="9" r="2" /><circle cx="15" cy="9" r="2" /></svg>
-                </a>
-              </div>
-
-              {/* Cart Button - Always Visible */}
-              <button
-                onClick={() => setIsCartOpen(true)}
-                data-testid="cart-button"
-                className="relative p-2.5 bg-neutral-900 border border-white/5 rounded-xl hover:bg-neutral-800 transition-all text-neutral-400 hover:text-geeko-cyan group"
-              >
-                <ShoppingCart size={20} />
-                {cartCount > 0 && (
-                  <div id="cart-badge" className="absolute -top-1 -right-1 bg-geeko-cyan text-black text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border border-[#0a0a0a]">
-                    {cartCount > 99 ? '99+' : cartCount}
-                  </div>
-                )}
-              </button>
-
-              {isCartOpen && (
-                <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
-              )}
-
-              {user ? (
-                <UserMenu />
-              ) : (
-                /* Button hidden per user request to simplify entry and direct people to store only */
-                <div className="hidden">
-                  <button
-                    onClick={() => setIsAuthModalOpen(true)}
-                    className="bg-geeko-cyan hover:bg-geeko-cyan/80 text-black font-black py-2 px-5 rounded-full shadow-lg shadow-geeko-cyan/20 transition-all transform active:scale-95 flex items-center gap-2 text-xs uppercase tracking-widest whitespace-nowrap"
-                  >
-                    <LogIn size={14} /> <span className="hidden sm:inline">Conectarse</span>
-                  </button>
-                </div>
-              )}
-            </div>
-          </nav>
-        </header>
+        <Header onCartOpen={() => setIsCartOpen(true)} cartCount={cartCount} />
 
 
 
