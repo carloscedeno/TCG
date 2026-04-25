@@ -1256,7 +1256,7 @@ export const fetchAccessoriesAdmin = async (params: {
   limit?: number;
   offset?: number;
 }) => {
-  const { search, game_id, category, category_code, parent_code, limit = 50, offset = 0 } = params;
+  const { search, game_id, category, category_code, limit = 50, offset = 0 } = params;
   
   let query = supabase
     .from('accessories')

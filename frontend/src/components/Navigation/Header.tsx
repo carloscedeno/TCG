@@ -4,7 +4,7 @@ import { ShoppingCart, LogIn, Menu, X, ChevronDown, Package, Sparkles } from 'lu
 import { SearchBar } from '../SearchBar/SearchBar';
 import { UserMenu } from './UserMenu';
 import { useAuth } from '../../context/AuthContext';
-import { fetchCart, fetchAccessoryCategories } from '../../utils/api';
+import { fetchAccessoryCategories } from '../../utils/api';
 
 interface HeaderProps {
     onCartOpen: () => void;

@@ -8,7 +8,7 @@ import { FiltersPanel } from '../components/Filters/FiltersPanel';
 import type { Filters } from '../components/Filters/FiltersPanel';
 import { useAuth } from '../context/AuthContext';
 import { AuthModal } from '../components/Auth/AuthModal';
-import { UserMenu } from '../components/Navigation/UserMenu';
+import { X, ShoppingCart, Sparkles, Search, Package } from 'lucide-react';
 
 import { Link, useSearchParams } from 'react-router-dom';
 import { CartDrawer } from '../components/Navigation/CartDrawer';
