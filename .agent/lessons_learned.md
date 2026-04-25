@@ -861,3 +861,14 @@ useEffect(() => {
 - **Por qué el SUBTOTAL funcionaba**: La lógica del subtotal ya tenía el fallback correcto `(item.products?.price || item.price || 0)`, pero la línea de display por ítem no.
 - **Solución**: Actualizar `CartDrawer` para leer los campos planos primero con el nested como fallback: `item.price || item.products?.price || 0`. Aplicar el mismo patrón a `name`, `image_url`, `set_code` e `is_foil`.
 - **Regla Derivada**: Cuando `CartContext` cambia la forma del state (de nested a flat), TODOS los consumidores (`CartDrawer`, `CheckoutPage`, etc.) deben actualizarse simultáneamente. El patrón seguro es siempre usar `item.price || item.products?.price` para soportar ambas formas durante transiciones.
+### 101. Rigor de TypeScript en CI/CD (Variables no usadas) — 2026-04-25
+- **Problema:** El build falló múltiples veces en el servidor de despliegue debido a variables declaradas pero no usadas (`TS6133`).
+- **Causa Raíz:** El entorno local (VS Code/Dev) era más permisivo que el pipeline de producción/dev del servidor.
+- **Solución:** Limpieza quirúrgica de imports y variables no usadas. No asumir que si "funciona en local" pasará el build del servidor.
+- **Regla Derivada:** Realizar un `npm run build` local antes de cada push para detectar errores de tipado estricto.
+
+### 102. Sincronización URL-Estado para Navegación Reactiva — 2026-04-25
+- **Problema:** El menú cambiaba la URL pero el catálogo no se actualizaba ni cambiaba de pestaña.
+- **Causa Raíz:** El componente principal (`Home.tsx`) solo leía los `searchParams` en el montaje inicial.
+- **Solución:** Implementar un `useEffect` que escuche `searchParams` y sincronice el estado local (`activeTab`, `filters`).
+- **Regla Derivada:** Cualquier navegación basada en URL en una SPA requiere sincronización reactiva del estado interno para disparar nuevos fetches de datos.
