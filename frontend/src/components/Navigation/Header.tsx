@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
-import { ShoppingCart, LogIn, Menu, X, ChevronDown, Package, Sparkles } from 'lucide-react';
+import { ShoppingCart, LogIn, Menu as MenuIcon, X, ChevronDown, Package, Sparkles } from 'lucide-react';
 import { SearchBar } from '../SearchBar/SearchBar';
 import { UserMenu } from './UserMenu';
 import { useAuth } from '../../context/AuthContext';
@@ -95,7 +95,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                     )}
 
                     <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="lg:hidden p-2.5 bg-neutral-900 border border-white/5 rounded-xl text-neutral-400">
-                        {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+                        {isMobileMenuOpen ? <X size={20} /> : <MenuIcon size={20} />}
                     </button>
                 </div>
             </div>
