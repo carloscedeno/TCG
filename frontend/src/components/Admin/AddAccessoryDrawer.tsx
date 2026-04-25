@@ -12,6 +12,7 @@ interface AddAccessoryDrawerProps {
 export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryDrawerProps) => {
     const [loading, setLoading] = useState(false);
     const [imageFile, setImageFile] = useState<File | null>(null);
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [games, setGames] = useState<any[]>([]);
     const [categories, setCategories] = useState<any[]>([]);
 

@@ -4,14 +4,13 @@ import { CardGrid } from '../components/Card/CardGrid';
 import { CardModal } from '../components/Card/CardModal';
 import type { CardProps } from '../components/Card/Card';
 import { fetchCards, fetchSets, fetchProducts, fetchCart, fetchAccessories } from '../utils/api';
-import { SearchBar } from '../components/SearchBar/SearchBar';
 import { FiltersPanel } from '../components/Filters/FiltersPanel';
 import type { Filters } from '../components/Filters/FiltersPanel';
 import { useAuth } from '../context/AuthContext';
 import { AuthModal } from '../components/Auth/AuthModal';
 import { UserMenu } from '../components/Navigation/UserMenu';
 
-import { LogIn, X, ShoppingCart, Sparkles, Search, Package } from 'lucide-react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { CartDrawer } from '../components/Navigation/CartDrawer';
 import { Footer } from '../components/Navigation/Footer';
 import { Header } from '../components/Navigation/Header';
@@ -44,7 +43,7 @@ const Home: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState(searchParams.get('q') || '');
   const [filters, setFilters] = useState<Partial<Filters>>({
-    games: searchParams.get('game')?.split(',').map(g => {
+    games: searchParams.get('game')?.split(',').map((g: string) => {
       if (g === 'MTG') return 'Magic: The Gathering';
       return g;
     }).filter(Boolean) || ['Magic: The Gathering'],
