@@ -1271,7 +1271,14 @@ export const fetchAccessoriesAdmin = async (params: {
 
   const { data, error, count } = await query;
   if (error) throw error;
-  return { data, count };
+  
+  // Return both formats for compatibility
+  return { 
+    data, 
+    count, 
+    accessories: data, 
+    total_count: count || 0 
+  };
 };
 
 export const createAccessory = async (accessory: any) => {
@@ -1295,6 +1302,19 @@ export const updateAccessory = async (id: string, updates: any) => {
   return data;
 };
 
+export const upsertAccessory = async (id: string | any, updates?: any) => {
+  // Support both (accessoryObj) and (id, updates) signatures
+  if (typeof id === 'object') {
+    const accessory = id;
+    if (accessory.id) {
+      return await updateAccessory(accessory.id, accessory);
+    }
+    return await createAccessory(accessory);
+  }
+  
+  return await updateAccessory(id as string, updates);
+};
+
 export const deleteAccessory = async (id: string) => {
   const { error } = await supabase
     .from('accessories')
@@ -1308,6 +1328,39 @@ export const uploadAccessoryImage = async (file: File) => {
   const fileExt = file.name.split('.').pop();
   const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
   const filePath = `accessories/${fileName}`;
+
+  const { error: uploadError } = await supabase.storage
+    .from('public_assets')
+    .upload(filePath, file);
+
+  if (uploadError) throw uploadError;
+
+  const { data } = supabase.storage
+    .from('public_assets')
+    .getPublicUrl(filePath);
+
+  return data.publicUrl;
+};
+
+// --- BANNERS & ASSETS COMPATIBILITY ---
+
+export const fetchBanners = async () => {
+  const { data, error } = await supabase
+    .from('banners')
+    .select('*')
+    .eq('is_active', true)
+    .order('sort_order');
+  if (error) {
+    console.warn('fetchBanners failed, returning empty list', error);
+    return [];
+  }
+  return data || [];
+};
+
+export const uploadAsset = async (file: File, folder: string = 'banners') => {
+  const fileExt = file.name.split('.').pop();
+  const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+  const filePath = `${folder}/${fileName}`;
 
   const { error: uploadError } = await supabase.storage
     .from('public_assets')
