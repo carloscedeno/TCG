@@ -704,3 +704,12 @@ Corregir el bug visual donde los 铆tems del carrito mostraban `$0.00` individual
 - rontend/src/components/Navigation/Header.tsx ? Navegaci髇 Omni-TCG.
 **Artefacto creado:** Bloque PL/pgSQL de limpieza de OIDs para RPCs.
 **Regla derivada:** Ley 26 de Estandarizaci髇 de C骴igos (3 letras).
+
+## 2026-04-27 - Filtrado Estricto de Productos por Juego
+
+**Qu茅 pas贸:** Se implement贸 el filtrado estricto en la secci贸n de Productos para evitar que 铆tems gen茅ricos (game_id NULL) contaminen la vista cuando se selecciona un juego espec铆fico (MTG).
+**Lo que cambi贸:**
+- lessons_learned.md -> Lecci贸n #106
+- frontend/src/pages/Home.tsx -> Default game filter cambiado de ['Magic: The Gathering'] a []
+- supabase/migrations/20260427000001_strict_accessory_filtering.sql -> RPC get_accessories_filtered actualizado.
+**Regla derivada:** Los cat谩logos polim贸rficos deben usar filtrado estricto de juego para mantener la relevancia de nicho.

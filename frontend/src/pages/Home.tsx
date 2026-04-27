@@ -66,7 +66,7 @@ const Home: React.FC = () => {
     games: searchParams.get('game')?.split(',').map((g: string) => {
       if (g === 'MTG') return 'Magic: The Gathering';
       return g;
-    }).filter(Boolean) || ['Magic: The Gathering'],
+    }).filter(Boolean) || [],
     sets: searchParams.get('set')?.split(',').filter(Boolean) || [],
     rarities: searchParams.get('rarity')?.split(',').filter(Boolean) || [],
     categories: searchParams.get('category')?.split(',').filter(Boolean) || [],

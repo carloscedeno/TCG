@@ -890,3 +890,9 @@ useEffect(() => {
 - **Causa Ra�z:** Mapeos de c�digos a nombres dispersos y desincronizados entre componentes.
 - **Soluci�n:** Centralizar objetos de mapeo (gameMap, gameMapInv) a nivel global en el componente.
 - **Regla Derivada:** Nunca usar Strings m�gicos para mapeos de negocio; centralizar en constantes unificadas.
+
+### 106. Strict Filtering for Polymorphic Catalogs (MTG vs. Generic) - 2026-04-27
+- **Problema:** Al filtrar productos (accesorios) por un juego específico (ej. MTG), el catálogo mostraba ítems de MTG mezclados con ítems genéricos (forros universales, snacks) que no tenían juego asignado (game_id IS NULL).
+- **Causa Raíz:** La función de base de datos (get_accessories_filtered) usaba una condición 'loose': AND (p_game_id IS NULL OR a.game_id = p_game_id OR a.game_id IS NULL). Esto forzaba la inclusión de genéricos en cada filtro de juego.
+- **Solución:** Implementar filtrado estricto en el RPC eliminando la condición OR a.game_id IS NULL cuando se provee un p_game_id. Adicionalmente, ajustar el frontend para que el botón general de 'Productos' no fuerce un juego por defecto (cambiando el fallback de ['Magic: The Gathering'] a []), permitiendo ver el catálogo completo solo cuando se desea.
+- **Regla Derivada:** En catálogos con productos específicos de nicho y productos genéricos, el filtro de juego debe ser estricto para evitar ruido visual ('contaminación de resultados'). Los productos genéricos deben ser accesibles solo en la vista global sin filtros.
