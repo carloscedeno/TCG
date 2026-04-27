@@ -1383,15 +1383,25 @@ export const uploadAccessoryImage = async (file: File) => {
 
 // --- BANNERS & ASSETS COMPATIBILITY ---
 
-export const fetchBanners = async () => {
+export const fetchBanners = async (category: string = 'main_hero') => {
   const { data, error } = await supabase
-    .from('banners')
+    .from('hero_banners')
     .select('*')
+    .eq('category', category)
     .eq('is_active', true)
-    .order('sort_order');
+    .order('display_order');
   if (error) {
-    console.warn('fetchBanners failed, returning empty list', error);
-    return [];
+    console.warn('fetchBanners failed (hero_banners), trying fallback to banners:', error);
+    const { data: oldData, error: oldError } = await supabase
+      .from('banners')
+      .select('*')
+      .eq('is_active', true)
+      .order('sort_order');
+    if (oldError) {
+      console.warn('fetchBanners fallback failed (banners):', oldError);
+      return [];
+    }
+    return oldData || [];
   }
   return data || [];
 };
