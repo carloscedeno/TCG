@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
-import { ShoppingCart, LogIn, Menu as MenuIcon, X, ChevronDown, Package, Sparkles } from 'lucide-react';
+import { ShoppingCart, LogIn, Menu as MenuIcon, X, ChevronDown } from 'lucide-react';
 import { SearchBar } from '../SearchBar/SearchBar';
 import { UserMenu } from './UserMenu';
 import { useAuth } from '../../context/AuthContext';
-import { fetchAccessoryCategories } from '../../utils/api';
+// import { fetchAccessoryCategories } from '../../utils/api';
 
 interface HeaderProps {
     onCartOpen: () => void;
@@ -16,7 +16,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [query, setQuery] = useState(searchParams.get('q') || '');
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [categories, setCategories] = useState<any[]>([]);
+    // const [categories, setCategories] = useState<any[]>([]);
     const navigate = useNavigate();
 
     const tcgGames = [
@@ -29,6 +29,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
         // { name: 'Flesh and Blood', code: 'FAB', icon: '🩸' }
     ];
 
+    /*
     useEffect(() => {
         const loadCategories = async () => {
             const cats = await fetchAccessoryCategories('ACCESSORIES');
@@ -36,6 +37,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
         };
         loadCategories();
     }, []);
+    */
 
     const handleSearch = (val: string) => {
         setQuery(val);
@@ -51,10 +53,12 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
         setIsMobileMenuOpen(false);
     };
 
+    /*
     const navigateToCategory = (catCode: string) => {
         navigate(`/?tab=accessories&category=${catCode}`);
         setIsMobileMenuOpen(false);
     };
+    */
 
     return (
         <header className="sticky top-0 z-50 w-full bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-white/5 shadow-2xl">
