@@ -725,3 +725,13 @@ Corregir el bug visual donde los ítems del carrito mostraban `$0.00` individual
 - RPC get_products_filtered ?" Ahora soporta mapeo biling�e de c�digos de juego.
 **Artefacto creado:** scripts/sync_cardkingdom_api.py refactorizado para producci�n estable.
 **Regla derivada:** Uso obligatorio de c�digos de 3 letras para todos los TCGs.
+
+## 2026-04-27 — Resolución de Problemas de Visibilidad y Tipos en RPC
+
+**Qué pasó:** Tras el despliegue de la arquitectura de Omni-TCG en Producción, se reportó que los productos recién inyectados de Strixhaven no eran visibles en el catálogo general. Además, se experimentaban errores esporádicos `42804` de tipo de dato en la carga inicial y se perdieron las integraciones del menú al intentar activar el filtro "Nuevo".
+**Lo que cambió:**
+- `lessons_learned.md` → Lección #48: Sensibilidad a mayúsculas y mapeos mixtos en filtros SQL.
+- `supabase/migrations/20260427000002_fix_rpc_case_sensitivity_and_stock.sql` → Actualización del RPC principal para asegurar coincidencia *case-insensitive* y forzar exclusión de productos sin inventario (`stock > 0`). 
+- Corrección del tipo de retorno de `printing_id` en el RPC, forzando explícitamente el casting a `text` para coincidir con la definición tabular esperada por el frontend.
+**Artefacto creado:** Migración SQL unificada para estabilizar la tabla y los filtros del escaparate.
+**Regla derivada:** Toda consulta SQL de tipo búsqueda o filtrado dependiente de entradas del usuario o de URL Parameters debe incluir normalización a mayúsculas/minúsculas y validación activa de inventario si el entorno de ejecución es el escaparate principal.

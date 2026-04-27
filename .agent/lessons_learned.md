@@ -902,3 +902,9 @@ useEffect(() => {
 - **Causa Raiz**: El panel de administracion usaba una funcion (upsert_product_inventory) que guardaba el ID numerico del juego (ej: '23') o nombres largos en la columna game. El buscador esperaba codigos cortos (PKM, OPC).
 - **Solucion**: Estandarizacion de codigos a 3-4 letras (MTG, PKM, OPC) en todos los RPCs de produccion.
 - **Regla Derivada**: Prohibido el uso de IDs numericos o nombres largos para nuevos registros en la columna 'game'.
+
+### 48. Sensibilidad de Mayúsculas y Nombres en Filtros SQL (get_products_filtered) — 2026-04-27
+- **Problema:** Los productos de nuevas expansiones (como Strixhaven) no aparecían en el catálogo al usar los filtros de la tienda a pesar de estar correctamente insertados.
+- **Causa Raíz:** El código de la expansión se guardaba en la base de datos en minúsculas (`sos`), pero el frontend y la lógica del RPC realizaban búsquedas o comparaciones usando mayúsculas o nombres completos (ej. `['Secrets of Strixhaven']` frente a `'sos'`). Como PostgreSQL es estricto en sus comparaciones de texto con `ANY` o `=`, las coincidencias fallaban silenciosamente devolviendo arreglos vacíos.
+- **Solución:** Modificar la consulta SQL dentro del RPC `get_products_filtered` para asegurar que las comparaciones sean case-insensitive, utilizando funciones como `UPPER()` (ej. `UPPER(p.set_code) = ANY(set_filter)`) y permitiendo mapeos tanto de código de set como de nombre (ej. `p.set_name = ANY(set_filter) OR UPPER(p.set_code) = ANY(set_filter)`). Además, se estandarizó la resolución del ID de juego internamente.
+- **Regla Derivada:** LEYES_DEL_SISTEMA.md > Toda consulta de filtrado de texto o códigos provenientes de URLs o interfaces debe ser explícitamente sanitizada y convertida a case-insensitive (`UPPER`, `LOWER` o `ILIKE`) en las funciones de base de datos antes de evaluar un `MATCH`.
