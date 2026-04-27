@@ -529,3 +529,16 @@ Ningún archivo de migración SQL (`supabase/migrations/`) desplegado y registra
 - **Ventana de Novedad**: El estándar de visualización es de **12 días**.
 - **Lógica de Fallback (Graceful Degradation)**: Si el filtro de 12 días no devuelve resultados, los RPCs financieros (`get_products_filtered`, `get_inventory_list`) deben ignorar automáticamente la restricción temporal para mostrar los ítems más recientes disponibles en stock, evitando listas vacías para el usuario.
 - **Desacoplamiento**: El filtro "Nuevo" debe operar siempre como un **toggle independiente**. Nunca debe sobreescribir o bloquear la capacidad del usuario de ordenar los elementos por otras columnas (Precio, Nombre, Stock) mientras el filtro esté activo.
+
+## ??? LEYES DE EXPANSI�N OMNI-TCG (2026)
+
+### Ley 15: Estandarizaci�n de C�digos de Juego
+- **Mandato**: Toda nueva inserci�n en products debe usar c�digos de 3-4 letras: MTG, PKM, OPC, LOR, FAB, YGO, WIX, DGM, GDM, RFB.
+- **Prohibici�n**: No usar IDs num�ricos o nombres largos en la columna game.
+- **Objetivo**: Garantizar visibilidad instant�nea en el buscador de la tienda.
+
+### Ley 16: Protecci�n de Entornos (Dev vs Main)
+- **Verificaci�n**: Antes de scripts de mantenimiento, verificar el Project ID en .env.
+- **Producci�n**: sxuotvogwvmxuvwbsscv (Geekorium Live).
+- **Desarrollo**: bqfkqnnostzaqueujdms (Sandbox).
+- **Acci�n**: Abortar si el entorno no coincide con el objetivo del script.

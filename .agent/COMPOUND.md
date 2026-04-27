@@ -713,3 +713,15 @@ Corregir el bug visual donde los Ã­tems del carrito mostraban `$0.00` individual
 - frontend/src/pages/Home.tsx -> Default game filter cambiado de ['Magic: The Gathering'] a []
 - supabase/migrations/20260427000001_strict_accessory_filtering.sql -> RPC get_accessories_filtered actualizado.
 **Regla derivada:** Los catÃ¡logos polimÃ³rficos deben usar filtrado estricto de juego para mantener la relevancia de nicho.
+
+## 2026-04-27 ?" Unificacin de Cdigos Omni-TCG y Estabilizacin de Produccin
+
+**Qu pasó:** Se detectó una inconsistencia crítica en el guardado de nuevos productos (Pokémon/One Piece) que los hacía invisibles en la tienda. Se estabilizó el motor de precios y se unificaron los códigos de juego en toda la infraestructura de producción.
+**Lo que cambió:**
+- lessons_learned.md ?" Lección #107 (Estandarización de códigos).
+- LEYES_DEL_SISTEMA.md ?" Leyes 15 y 16 (Estándares y Protección de Entornos).
+- AGENTS.md ?" Actualización de tareas implementadas.
+- RPC upsert_product_inventory ?" Ahora mapea automáticamente a códigos cortos (MTG, PKM, OPC).
+- RPC get_products_filtered ?" Ahora soporta mapeo bilingüe de códigos de juego.
+**Artefacto creado:** scripts/sync_cardkingdom_api.py refactorizado para producción estable.
+**Regla derivada:** Uso obligatorio de códigos de 3 letras para todos los TCGs.

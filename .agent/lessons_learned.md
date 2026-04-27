@@ -896,3 +896,9 @@ useEffect(() => {
 - **Causa Raíz:** La función de base de datos (get_accessories_filtered) usaba una condición 'loose': AND (p_game_id IS NULL OR a.game_id = p_game_id OR a.game_id IS NULL). Esto forzaba la inclusión de genéricos en cada filtro de juego.
 - **Solución:** Implementar filtrado estricto en el RPC eliminando la condición OR a.game_id IS NULL cuando se provee un p_game_id. Adicionalmente, ajustar el frontend para que el botón general de 'Productos' no fuerce un juego por defecto (cambiando el fallback de ['Magic: The Gathering'] a []), permitiendo ver el catálogo completo solo cuando se desea.
 - **Regla Derivada:** En catálogos con productos específicos de nicho y productos genéricos, el filtro de juego debe ser estricto para evitar ruido visual ('contaminación de resultados'). Los productos genéricos deben ser accesibles solo en la vista global sin filtros.
+
+### 107. Standardizing Multi-TCG Codes (Database vs. Frontend) - 2026-04-27
+- **Problema**: Los productos de Pokemon y One Piece no aparecian en la tienda despues de ser agregados desde el panel de administracion.
+- **Causa Raiz**: El panel de administracion usaba una funcion (upsert_product_inventory) que guardaba el ID numerico del juego (ej: '23') o nombres largos en la columna game. El buscador esperaba codigos cortos (PKM, OPC).
+- **Solucion**: Estandarizacion de codigos a 3-4 letras (MTG, PKM, OPC) en todos los RPCs de produccion.
+- **Regla Derivada**: Prohibido el uso de IDs numericos o nombres largos para nuevos registros en la columna 'game'.
