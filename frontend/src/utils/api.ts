@@ -247,11 +247,66 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
   try {
     let data: any = null;
     
-    // Check if it's an accessory UUID first (sanitize suffix to avoid 400 errors)
+    // 1. Sanitize the ID
     const sanitizedId = printingId.replace('-foil', '').replace('-nonfoil', '').replace('-etched', '');
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     
-    if (uuidRegex.test(sanitizedId)) {
+    // 2. Try fetching from API/Supabase as a CARD first (This is 99% of requests)
+    const dbPrintingId = sanitizedId;
+
+    try {
+      // Try API first
+      const apiUrl = getApiUrl(`/cards/${dbPrintingId}`);
+      if (apiUrl) {
+        const response = await fetch(apiUrl);
+        if (response.ok) {
+          const json = await response.json();
+          data = json.card || json;
+        }
+      }
+    } catch (e) {
+      console.warn('[API] Detail fetch failed:', e);
+    }
+
+    // 3. If API didn't find it, try Supabase Card Printings
+    if (!data || !data.name) {
+        const { data: sbData } = await supabase
+          .from('card_printings')
+          .select('*, cards(*), sets(*)')
+          .eq('printing_id', dbPrintingId)
+          .maybeSingle();
+          
+        if (sbData) {
+            data = {
+              printing_id: sbData.printing_id,
+              card_id: sbData.card_id,
+              name: sbData.cards?.card_name || sbData.name || 'Unknown Card',
+              mana_cost: sbData.cards?.mana_cost,
+              type: sbData.cards?.type_line,
+              oracle_text: sbData.cards?.oracle_text,
+              flavor_text: sbData.flavor_text || sbData.cards?.flavor_text,
+              artist: sbData.artist,
+              rarity: sbData.rarity,
+              set: sbData.sets?.set_name || '',
+              set_code: sbData.sets?.set_code || '',
+              collector_number: sbData.collector_number,
+              image_url: sbData.image_url,
+              price: 0,
+              finish: sbData.finish || (sbData.is_foil ? 'foil' : 'nonfoil'),
+              is_foil: !!sbData.is_foil || (sbData.finish === 'foil'),
+              total_stock: 0,
+              valuation: { store_price: 0, market_price: 0, valuation_avg: 0 },
+              legalities: sbData.cards?.legalities,
+              colors: sbData.cards?.colors,
+              card_faces: sbData.card_faces || sbData.cards?.card_faces,
+              all_versions: []
+            };
+        }
+    }
+
+    // 4. If STILL not found and it's a UUID, check Accessories (The 1% fallback)
+    if ((!data || !data.name) && uuidRegex.test(sanitizedId)) {
+        console.log('[Catalog] Checking fallback for accessories table:', sanitizedId);
         const { data: accData } = await supabase
           .from('accessories')
           .select('*')
@@ -286,23 +341,7 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
         }
     }
 
-    const dbPrintingId = printingId.replace('-foil', '').replace('-nonfoil', '');
-
-    // 1. Try fetching from API first
-    const apiUrl = getApiUrl(`/cards/${dbPrintingId}`);
-    if (apiUrl) {
-      try {
-        const response = await fetch(apiUrl);
-        if (response.ok) {
-          const json = await response.json();
-          data = json.card || json;
-        }
-      } catch (e) {
-        console.warn('[API] Detail fetch failed:', e);
-      }
-    }
-
-    // 2. If API fails, returns insufficient data, OR all_versions lack foil/finish data (FastAPI shortcut), fallback to Supabase
+    // 5. If it's a card (or we found it), proceed with version enrichment
     const apiVersionsLackFinishData = data?.all_versions?.length > 0 &&
       !data.all_versions[0]?.finishes && !data.all_versions[0]?.avg_market_price_foil_usd;
     if (!data || !data.name || (!data.all_versions || data.all_versions.length === 0) || apiVersionsLackFinishData) {
