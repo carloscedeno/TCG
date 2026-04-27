@@ -22,10 +22,10 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
     const tcgGames = [
         { name: 'Magic: The Gathering', code: 'MTG', icon: '🪄' },
         { name: 'Pokémon', code: 'PKM', icon: '🐹' },
-        { name: 'Riftbound', code: 'RIFT', icon: '⚔️' },
-        { name: 'One Piece', code: 'OP', icon: '🏴‍☠️' },
-        { name: 'Gundam', code: 'GUNDAM', icon: '🤖' },
-        { name: 'Digimon', code: 'DIGI', icon: '👾' },
+        { name: 'Riftbound', code: 'RFB', icon: '⚔️' },
+        { name: 'One Piece', code: 'OPC', icon: '🏴‍☠️' },
+        { name: 'Gundam', code: 'GND', icon: '🤖' },
+        { name: 'Digimon', code: 'DGM', icon: '👾' },
         { name: 'Flesh and Blood', code: 'FAB', icon: '🩸' }
     ];
 

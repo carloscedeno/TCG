@@ -36,6 +36,26 @@ const colorCodeMap: Record<string, string> = {
   'Multicolor': 'M'
 };
 
+const gameMap: Record<string, string> = {
+  'MTG': 'Magic: The Gathering',
+  'PKM': 'Pokémon',
+  'RFB': 'Riftbound',
+  'OPC': 'One Piece',
+  'GND': 'Gundam',
+  'DGM': 'Digimon',
+  'FAB': 'Flesh and Blood'
+};
+
+const gameMapInv: Record<string, string> = {
+  'Magic: The Gathering': 'MTG',
+  'Pokémon': 'PKM',
+  'Riftbound': 'RFB',
+  'One Piece': 'OPC',
+  'Gundam': 'GND',
+  'Digimon': 'DGM',
+  'Flesh and Blood': 'FAB'
+};
+
 const Home: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [cards, setCards] = useState<(CardProps & { card_id: string })[]>([]);
@@ -140,16 +160,6 @@ const Home: React.FC = () => {
     const catParam = searchParams.get('category');
     
     if (gameParam || catParam) {
-        const gameMap: Record<string, string> = {
-            'MTG': 'Magic: The Gathering',
-            'PKM': 'Pokémon',
-            'RIFT': 'Riftbound',
-            'OP': 'One Piece',
-            'GUNDAM': 'Gundam',
-            'DIGI': 'Digimon',
-            'FAB': 'Flesh and Blood'
-        };
-
         const newFilters: Partial<Filters> = { ...filters };
         if (gameParam) newFilters.games = [gameMap[gameParam] || gameParam];
         if (catParam) newFilters.categories = [catParam];
@@ -171,12 +181,9 @@ const Home: React.FC = () => {
         let result: { cards: (CardProps & { card_id: string })[], total_count: number };
 
         if (activeTab === 'marketplace') {
-          // Normalize game names for RPC mapping
-          const mappedGame = debouncedFilters.games?.[0] ? (
-            debouncedFilters.games[0] === 'Magic: The Gathering' ? 'MTG' :
-              debouncedFilters.games[0] === 'Pokémon' ? 'PKM' :
-                debouncedFilters.games[0]
-          ) : undefined;
+          // Normalize game names for RPC mapping using the centralized map
+          const mappedGame = debouncedFilters.games?.[0] ? 
+            (gameMapInv[debouncedFilters.games[0]] || debouncedFilters.games[0]) : undefined;
 
           const productRes = await fetchProducts({
             q: debouncedQuery || undefined,
@@ -211,17 +218,9 @@ const Home: React.FC = () => {
             total_count: productRes.total_count
           };
         } else if (activeTab === 'accessories') {
-          // Map game name back to ID or Code if needed for accessories
-          const gameMapInv: Record<string, string> = {
-            'Magic: The Gathering': 'MTG',
-            'Pokémon': 'PKM',
-            'Riftbound': 'RIFT',
-            'One Piece': 'OP',
-            'Gundam': 'GUNDAM',
-            'Digimon': 'DIGI',
-            'Flesh and Blood': 'FAB'
-          };
-          const mappedGame = debouncedFilters.games?.[0] ? gameMapInv[debouncedFilters.games[0]] : undefined;
+          // Map game name back to ID or Code using the centralized map
+          const mappedGame = debouncedFilters.games?.[0] ? 
+            (gameMapInv[debouncedFilters.games[0]] || debouncedFilters.games[0]) : undefined;
 
           const accRes = await fetchAccessories({
             q: debouncedQuery || undefined,

@@ -693,3 +693,14 @@ Corregir el bug visual donde los Ã­tems del carrito mostraban `$0.00` individual
 ---
 
 *Compounded for Geekorium TCG Ecosystem.*
+
+## 2026-04-26 — Expansión Omni-TCG y Resolución de Ambigüedad
+
+**Qué pasó:** Se implementó la base técnica para soportar múltiples TCGs (Pokémon, One Piece, etc.) con validación dinámica. Se resolvieron errores críticos de duplicación de juegos y ambigüedad de funciones en Supabase.
+**Lo que cambió:**
+- lessons_learned.md ? Lecciones 103, 104, 105.
+- AGENTS.md ? Features v1.0 y reglas de estandarización.
+- rontend/src/pages/Home.tsx ? Mapeos centralizados.
+- rontend/src/components/Navigation/Header.tsx ? Navegación Omni-TCG.
+**Artefacto creado:** Bloque PL/pgSQL de limpieza de OIDs para RPCs.
+**Regla derivada:** Ley 26 de Estandarización de Códigos (3 letras).

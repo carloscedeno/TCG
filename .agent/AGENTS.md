@@ -116,7 +116,10 @@ Artefactos del Compound step:
 - ✅ **Importación Masiva de Inventario (Accesorios)**: Carga de 164+ artículos mediante script automatizado con mapeo dinámico.
 - ✅ **Soporte para Precios de Alto Valor ($1,000,000)**: Actualización de filtros para artículos de colección premium.
 - ✅ **Filtrado Inclusivo de Accesorios Genéricos**: Los productos sin `game_id` son visibles en todos los contextos de juego.
-- ✅ **Panel Administrativo Potenciado (CatalogPage)**: Toggles de Activo/Inactivo y alineación visual mejorada.
+- ✅ **Omni-TCG Architecture (v1.0)**: Soporte nativo para múltiples juegos (Pokémon, One Piece, Digimon, etc.) con validación polimórfica vía JSONB y triggers de integridad.
+- ✅ **Estandarización de Juegos (Ley 26)**: Unificación de códigos de franquicia (`PKM`, `OPC`, `DGM`, `FAB`, `GND`, `RFB`) y eliminación de duplicados en la base de datos.
+- ✅ **RPC Integrity & Overload Cleaning**: Limpieza quirúrgica de funciones Postgres para evitar ambigüedad (`PGRST203`) y asegurar filtrado exacto por TCG.
+- ✅ **Centralized UX Navigation**: Sincronización reactiva de URL y menús para navegación fluida entre Marketplace y Catálogo por juego.
 
 
 
