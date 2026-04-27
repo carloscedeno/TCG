@@ -20,13 +20,13 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
     const navigate = useNavigate();
 
     const tcgGames = [
-        { name: 'Magic: The Gathering', code: 'MTG', icon: '🪄' },
-        { name: 'Pokémon', code: 'PKM', icon: '🐹' },
-        { name: 'Riftbound', code: 'RFB', icon: '⚔️' },
-        { name: 'One Piece', code: 'OPC', icon: '🏴‍☠️' },
-        { name: 'Gundam', code: 'GND', icon: '🤖' },
-        { name: 'Digimon', code: 'DGM', icon: '👾' },
-        { name: 'Flesh and Blood', code: 'FAB', icon: '🩸' }
+        { name: 'Magic: The Gathering', code: 'MTG', icon: '🪄' }
+        // { name: 'Pokémon', code: 'PKM', icon: '🐹' },
+        // { name: 'Riftbound', code: 'RFB', icon: '⚔️' },
+        // { name: 'One Piece', code: 'OPC', icon: '🏴‍☠️' },
+        // { name: 'Gundam', code: 'GND', icon: '🤖' },
+        // { name: 'Digimon', code: 'DGM', icon: '👾' },
+        // { name: 'Flesh and Blood', code: 'FAB', icon: '🩸' }
     ];
 
     useEffect(() => {
@@ -125,7 +125,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                         </div>
                     ))}
 
-                    {/* 8th Category: Productos (Accessories) */}
+                    {/* 8th Category: Productos (Accessories) - HIDDEN
                     <div className="relative group px-1 py-3">
                         <button className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-emerald-400 transition-all hover:bg-emerald-500/20">
                             <Package size={16} />
@@ -156,6 +156,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                             </div>
                         </div>
                     </div>
+                    */}
                 </div>
             </nav>
 

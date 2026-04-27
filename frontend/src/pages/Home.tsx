@@ -397,6 +397,7 @@ const Home: React.FC = () => {
                   <img src="/branding/Emporio.jpg" alt="Icon" className="w-5 h-5 rounded-full" />
                   Stock Geekorium
                 </button>
+                {/* HIDDEN TEMPORARILY
                 <button
                   onClick={() => handleTabChange('reference')}
                   data-testid="reference-tab"
@@ -419,6 +420,7 @@ const Home: React.FC = () => {
                   <Package size={16} className={activeTab === 'accessories' ? 'text-white' : 'text-purple-400'} />
                   Catálogo
                 </button>
+                */}
               </div>
 
               <div className="flex flex-col sm:flex-row items-center gap-4">
