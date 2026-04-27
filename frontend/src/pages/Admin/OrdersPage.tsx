@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'; // v2.2.1 support for accessories
 import { supabase } from '../../utils/supabaseClient';
 import { useAuth } from '../../context/AuthContext';
 import { Package, ChevronDown, X, User, Calendar, AlertCircle, FileDown, Trash2, Loader2, Check } from 'lucide-react';
@@ -13,7 +13,13 @@ interface OrderItem {
         name: string;
         image_url: string;
         set_code: string;
-    };
+    } | null;
+    accessory: {
+        id: string;
+        name: string;
+        image_url: string;
+        category: string;
+    } | null;
     finish?: string;
     is_on_demand?: boolean;
 }
@@ -83,13 +89,11 @@ function generateOrderReceiptHTML(order: Order) {
         const demandBadge = item.is_on_demand
             ? `<span style="background:#d97706;color:#fff;font-size:9px;font-weight:900;padding:2px 5px;border-radius:3px;letter-spacing:1px;margin-left:4px;">ENCARGO</span>`
             : '';
-        const setBadge = item.product?.set_code
-            ? `<span style="background:#4b5563;color:#fff;font-size:9px;font-weight:900;padding:2px 5px;border-radius:3px;letter-spacing:1px;margin-left:6px;">${item.product.set_code.toUpperCase()}</span>`
-            : '';
+        const itemName = item.product?.name || item.accessory?.name || 'Artículo';
         return `<tr>
           <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:14px;color:#374151;">
             <span style="font-family:monospace;color:#6b7280;margin-right:8px;">x${item.quantity}</span>
-            ${item.product?.name || 'Artículo'}${setBadge}${foilBadge}${demandBadge}
+            ${itemName}${foilBadge}${demandBadge}
           </td>
           <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;text-align:right;font-family:monospace;font-weight:700;font-size:14px;color:#00AEB4;">
             $${(item.price_at_purchase * item.quantity).toFixed(2)}
@@ -205,6 +209,12 @@ const OrdersPage = () => {
                             name,
                             image_url,
                             set_code
+                        ),
+                        accessory:accessories (
+                            id,
+                            name,
+                            image_url,
+                            category
                         ),
                         finish,
                         is_on_demand
@@ -563,10 +573,10 @@ const OrdersPage = () => {
                                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                                     {order.order_items.map((item) => (
                                                         <div key={item.id} className="flex gap-4 p-4 bg-white/5 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
-                                                            {item.product.image_url ? (
+                                                            {(item.product?.image_url || item.accessory?.image_url) ? (
                                                                 <img
-                                                                    src={item.product.image_url}
-                                                                    alt={item.product.name}
+                                                                    src={item.product?.image_url || item.accessory?.image_url}
+                                                                    alt={item.product?.name || item.accessory?.name}
                                                                     className="w-16 h-24 object-cover rounded-lg shadow-lg"
                                                                 />
                                                             ) : (
@@ -576,9 +586,11 @@ const OrdersPage = () => {
                                                             )}
                                                             <div className="flex flex-col justify-between py-1">
                                                                 <div>
-                                                                    <h5 className="font-bold text-sm text-white line-clamp-1">{item.product.name}</h5>
+                                                                    <h5 className="font-bold text-sm text-white line-clamp-1">{item.product?.name || item.accessory?.name || 'Cargando...'}</h5>
                                                                     <div className="flex items-center gap-1.5 mt-0.5">
-                                                                        <p className="text-[10px] text-neutral-400 uppercase tracking-wider font-bold">{item.product.set_code}</p>
+                                                                        <p className="text-[10px] text-neutral-400 uppercase tracking-wider font-bold">
+                                                                            {item.product?.set_code || item.accessory?.category || 'Accesorio'}
+                                                                        </p>
                                                                         {(item.finish === 'foil' || item.finish === 'etched') && (
                                                                             <span className={`text-[8px] px-1 py-0.5 rounded font-black uppercase tracking-widest ${item.finish === 'foil' ? 'bg-purple-500/20 text-purple-400 border border-purple-500/20' : 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/20'}`}>
                                                                                 {item.finish}

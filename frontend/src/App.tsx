@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
 import TournamentHub from './pages/TournamentHub';
@@ -20,10 +20,9 @@ import HelpPage from './pages/HelpPage';
 import LegalPage from './pages/LegalPage';
 import { WhatsAppWidget } from './components/Navigation/WhatsAppWidget';
 import { WelcomeModal } from './components/Navigation/WelcomeModal';
-import CustomersPage from './pages/Admin/CustomersPage';
-// import AccessoriesManager from './pages/Admin/AccessoriesManager';
-// import BannersManager from './pages/Admin/BannersManager';
 import LoginPage from './pages/Admin/LoginPage';
+import CustomersPage from './pages/Admin/CustomersPage';
+import CatalogPage from './pages/Admin/CatalogPage';
 import { PosSessionBanner } from './components/Admin/PosSessionBanner';
 
 const isSupabaseConfigured = !!import.meta.env.VITE_SUPABASE_URL && !!import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -79,10 +78,10 @@ function App() {
                         <Route path="/legal" element={<LegalPage />} />
                         <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
                         <Route path="/admin/inventory" element={<AdminRoute><InventoryPage /></AdminRoute>} />
+                        <Route path="/admin/catalog" element={<AdminRoute><CatalogPage /></AdminRoute>} />
+                        <Route path="/admin/accessories" element={<Navigate to="/admin/catalog" replace />} />
                         <Route path="/admin/orders" element={<AdminRoute><OrdersPage /></AdminRoute>} />
                         <Route path="/admin/customers" element={<AdminRoute><CustomersPage /></AdminRoute>} />
-                        {/* <Route path="/admin/accessories" element={<AdminRoute><AccessoriesManager /></AdminRoute>} />
-                        <Route path="/admin/banners" element={<AdminRoute><BannersManager /></AdminRoute>} /> */}
                         <Route path="/checkout" element={<CheckoutPage />} />
                         <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
                         <Route path="/order/:orderId" element={<OrderTrackingPage />} />

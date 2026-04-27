@@ -299,7 +299,7 @@ export const CardDetail: React.FC = () => {
                                                 >
                                                     <div className="flex items-center gap-3 md:gap-4 flex-1">
                                                         <div className="w-8 h-8 rounded bg-neutral-900 flex items-center justify-center text-[10px] font-black group-hover:text-geeko-cyan transition-colors shrink-0">
-                                                            {group.base.set_code.toUpperCase()}
+                                                            {group.base.set_code?.toUpperCase()}
                                                         </div>
                                                         <div className="flex-1 text-left min-w-[120px]">
                                                             <div className={`text-xs font-bold leading-tight truncate ${isGroupActive ? 'text-geeko-cyan' : 'text-neutral-300'}`}>
@@ -398,7 +398,7 @@ export const CardDetail: React.FC = () => {
                                 )}
                                 <div className="pt-4 flex flex-wrap gap-8 text-sm font-bold text-neutral-400 uppercase tracking-widest">
                                     <div>Artist <span className="text-white ml-2">{details.artist}</span></div>
-                                    <div>Set <span className="text-geeko-cyan ml-2">{details.set} ({details.set_code.toUpperCase()})</span></div>
+                                    <div>Set <span className="text-geeko-cyan ml-2">{details.set} ({details.set_code?.toUpperCase()})</span></div>
                                 </div>
                             </div>
 
@@ -467,39 +467,43 @@ export const CardDetail: React.FC = () => {
                                     </div>
                                 </div>
 
-                                <a
-                                    href={ckUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="w-full flex items-center justify-between p-8 rounded-[32px] bg-neutral-900/50 hover:bg-geeko-cyan/10 border border-white/5 hover:border-geeko-cyan transition-all group"
-                                >
-                                    <div className="flex flex-col">
-                                        <span className="text-xs font-black uppercase text-neutral-500 tracking-widest group-hover:text-geeko-cyan transition-colors mb-1">External Market</span>
-                                        <span className="text-2xl font-bold">Standard Price @ CK</span>
-                                    </div>
-                                    <div className="flex items-center gap-6">
-                                        <span className="text-3xl font-mono font-black text-white">$ {details.valuation?.market_price ? Number(details.valuation?.market_price).toFixed(2) : '---'}</span>
-                                        <div className="p-3 rounded-full bg-white/5 group-hover:bg-geeko-cyan group-hover:text-black transition-colors">
-                                            <ExternalLink size={20} />
+                                {!details?.is_accessory && (
+                                    <a
+                                        href={ckUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="w-full flex items-center justify-between p-8 rounded-[32px] bg-neutral-900/50 hover:bg-geeko-cyan/10 border border-white/5 hover:border-geeko-cyan transition-all group"
+                                    >
+                                        <div className="flex flex-col">
+                                            <span className="text-xs font-black uppercase text-neutral-500 tracking-widest group-hover:text-geeko-cyan transition-colors mb-1">External Market</span>
+                                            <span className="text-2xl font-bold">Standard Price @ CK</span>
                                         </div>
-                                    </div>
-                                </a>
+                                        <div className="flex items-center gap-6">
+                                            <span className="text-3xl font-mono font-black text-white">$ {details.valuation?.market_price ? Number(details.valuation?.market_price).toFixed(2) : '---'}</span>
+                                            <div className="p-3 rounded-full bg-white/5 group-hover:bg-geeko-cyan group-hover:text-black transition-colors">
+                                                <ExternalLink size={20} />
+                                            </div>
+                                        </div>
+                                    </a>
+                                )}
                             </div>
 
                             {/* Legality */}
-                            <div className="space-y-6">
-                                <h3 className="text-xs font-black uppercase tracking-widest text-neutral-500 pl-2">Format Legality</h3>
-                                <div className="grid grid-cols-2 gap-4">
-                                    {relevantFormats.map(fmt => (
-                                        <div key={fmt} className="flex items-center justify-between p-5 rounded-2xl bg-neutral-900/50 border border-white/5 hover:border-white/10 transition-colors">
-                                            <span className="text-xs font-bold text-neutral-300 uppercase tracking-widest">{fmt}</span>
-                                            <div className="scale-125">
-                                                {getLegalityIcon(details.legalities?.[fmt] || 'not_legal')}
+                            {!details?.is_accessory && (
+                                <div className="space-y-6">
+                                    <h3 className="text-xs font-black uppercase tracking-widest text-neutral-500 pl-2">Format Legality</h3>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        {relevantFormats.map(fmt => (
+                                            <div key={fmt} className="flex items-center justify-between p-5 rounded-2xl bg-neutral-900/50 border border-white/5 hover:border-white/10 transition-colors">
+                                                <span className="text-xs font-bold text-neutral-300 uppercase tracking-widest">{fmt}</span>
+                                                <div className="scale-125">
+                                                    {getLegalityIcon(details.legalities?.[fmt] || 'not_legal')}
+                                                </div>
                                             </div>
-                                        </div>
-                                    ))}
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
                     </div>
                 ) : null

@@ -948,15 +948,19 @@ async function handleCartEndpoint(supabase: any, path: string, method: string, p
     const { data: cart } = await supabase.from('carts').select('id').eq('user_id', user.id).single()
     if (!cart) throw new Error('No cart found')
 
-    const { data: cartItems } = await supabase.from('cart_items').select('*, products(*)').eq('cart_id', cart.id)
+    const { data: cartItems } = await supabase.from('cart_items').select('*, products(*), accessories(*)').eq('cart_id', cart.id)
     if (!cartItems?.length) throw new Error('Cart is empty')
 
-    const total = cartItems.reduce((sum: number, i: any) => sum + ((i.products?.price || 0) * i.quantity), 0)
+    const total = cartItems.reduce((sum: number, i: any) => {
+      const price = i.products?.price || i.accessories?.price || 0
+      return sum + (price * i.quantity)
+    }, 0)
 
     const simplifiedItems = cartItems.map((item: any) => ({
       product_id: item.product_id,
+      accessory_id: item.accessory_id,
       quantity: item.quantity,
-      price: item.products?.price || 0
+      price: item.products?.price || item.accessories?.price || 0
     }))
 
     // Use the atomic RPC for consistent logic

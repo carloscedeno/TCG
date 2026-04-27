@@ -79,17 +79,24 @@ export const CheckoutPage = () => {
                 ? cartItems.reduce((acc, item) => acc + (item.products?.price || 0) * item.quantity, 0)
                 : 0;
 
-            const simplifiedItems = cartItems.map(item => ({
-                product_id: item.product_id,
-                printing_id: item.printing_id,
-                quantity: item.quantity,
-                name: item.products?.name,
-                set: item.products?.set_code,
-                price: item.products?.price || 0,
-                foil: item.products?.is_foil || item.products?.finish === 'foil' || false,
-                finish: item.products?.finish || (item.products?.is_foil ? 'foil' : 'nonfoil'),
-                is_on_demand: (item.products?.stock || 0) <= 0
-            }));
+            const simplifiedItems = cartItems.map(item => {
+                const isAcc = !!item.accessory_id;
+                
+                return {
+                    product_id: isAcc ? null : item.product_id,
+                    accessory_id: isAcc ? item.accessory_id : null,
+                    printing_id: item.printing_id,
+                    quantity: item.quantity,
+                    name: item.products?.name || item.name,
+                    set: item.products?.set_code,
+                    price: item.products?.price || 0,
+                    foil: item.products?.is_foil || item.products?.finish === 'foil' || false,
+                    finish: item.products?.finish || (item.products?.is_foil ? 'foil' : 'nonfoil'),
+                    is_on_demand: !isAcc && (item.products?.stock || 0) <= 0
+                };
+            });
+
+            console.log('Sending simplifiedItems:', simplifiedItems);
 
             const cedula = `${form.cedula_prefix}-${form.cedula_number || '00000000'}`;
 
@@ -126,13 +133,13 @@ export const CheckoutPage = () => {
 
             // Build per-card detail lines (max 40 items per AGENTS.md lesson #84)
             const itemLines = items.slice(0, 40).map((item) => {
-                const name = item.products?.name || 'Carta';
+                const name = item.products?.name || 'Item';
                 const qty = item.quantity || 1;
                 const unitPrice = (item.products?.price || 0);
                 const lineTotal = (unitPrice * qty).toFixed(2);
                 const finish = item.products?.finish || (item.products?.is_foil ? 'foil' : 'nonfoil');
                 const finishLabel = (finish === 'foil' || finish === 'etched') ? ' [FOIL]' : '';
-                const setCode = item.products?.set_code ? ` [${item.products.set_code.toUpperCase()}]` : '';
+                const setCode = item.products?.set_code ? ` [${item.products.set_code?.toUpperCase()}]` : '';
                 return `• ${qty}x ${name}${setCode}${finishLabel} - $${lineTotal}`;
             }).join('\n');
             const overflowNote = items.length > 40 ? `\n_(+${items.length - 40} ítems más — ver correo)_` : '';
@@ -160,12 +167,7 @@ export const CheckoutPage = () => {
                     order_total: total,
                     items: cartItems.map(item => ({
                         quantity: item.quantity,
-                        products: { 
-                            name: item.products?.name, 
-                            price: item.products?.price, 
-                            finish: item.products?.finish,
-                            set_code: item.products?.set_code
-                        }
+                        products: { name: item.products?.name, price: item.products?.price, finish: item.products?.finish, is_on_demand: !item.accessory_id && (item.products?.stock || 0) <= 0 }
                     })),
                     current_user_id: user?.id || "guest"
                 });
@@ -326,12 +328,7 @@ export const CheckoutPage = () => {
                                     </div>
                                     <div className="flex-1 min-w-0">
                                         <p className="text-xs font-bold text-white line-clamp-2 leading-snug">{item.products?.name}</p>
-                                        <div className="flex gap-2 items-center">
-                                            <p className="text-[9px] text-neutral-500 uppercase font-bold">{item.products?.set_code}</p>
-                                            {(item.products?.finish === 'foil' || item.products?.finish === 'etched') && (
-                                                <span className="text-[8px] bg-purple-500/10 text-purple-400 border border-purple-500/20 px-1 py-0.5 rounded font-black uppercase">FOIL</span>
-                                            )}
-                                        </div>
+                                        <p className="text-[9px] text-neutral-500 uppercase font-bold">{item.products?.set_code}</p>
                                         <div className="flex justify-between items-center mt-1">
                                             <span className="text-[10px] text-neutral-400">x{item.quantity}</span>
                                             <span className="text-[11px] font-mono text-[#00AEB4] font-bold">

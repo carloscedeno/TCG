@@ -4,9 +4,8 @@ import { useAuth } from './AuthContext';
 
 interface CartItem {
     id: string;
-    product_id: string;
-    accessory_id?: string;
-    type: 'product' | 'accessory';
+    product_id: string | null;
+    accessory_id?: string | null;
     quantity: number;
     price: number;
     name?: string;
@@ -82,13 +81,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
                         id: item.id,
                         product_id: item.product_id,
                         accessory_id: item.accessory_id,
-                        type: item.type || 'product',
                         quantity: Number(item.quantity || 1),
-                        price: Number(item.price || 0),
-                        name: item.name,
-                        image_url: item.image_url,
-                        is_foil: item.is_foil || item.finish === 'foil',
-                        set_code: item.set_code,
+                        price: Number(item.price || item.products?.price || 0),
+                        name: item.name || item.products?.name,
+                        image_url: item.image_url || item.products?.image_url,
+                        is_foil: (item.finish || item.products?.finish) === 'foil',
+                        set_code: item.set_code || item.products?.set_code,
                     }));
                 
                 setCartItems(Array.isArray(fetchedItems) ? fetchedItems : []);
@@ -138,7 +136,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 try {
                     const savedItems: CartItem[] = JSON.parse(snapshot);
                     const hasPriceChange = fetchedItems.some(item => {
-                        const saved = savedItems.find(s => s.product_id === item.product_id);
+                        const itemKey = item.product_id || item.accessory_id;
+                        const saved = savedItems.find(s => (s.product_id || s.accessory_id) === itemKey);
                         return saved && Math.abs(saved.price - item.price) > 0.01;
                     });
                     if (hasPriceChange) {

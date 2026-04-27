@@ -120,8 +120,8 @@
   - DB: Proyecto Supabase principal.
 - **Ambiente de Desarrollo (DEV)**:
   - Branch: `dev`
-  - Hosting: Cloudflare Pages (`dev.geekorium.shop`)
-  - DB: Proyecto Supabase de desarrollo (`bqfkqnnostzaqueujdms`).
+  - Hosting: GitHub Pages (`dev.geekorium.shop`)
+  - DB: Branch de Supabase vinculada a la rama `dev`.
 - **Flujo de Trabajo**: Todo cambio DEBE validarse primero en el ambiente `dev` antes de ser integrado a `main`.
 - **Configuración**: La inyección de variables de entorno debe ser específica por cada plataforma de hosting.
 
@@ -530,12 +530,15 @@ Ningún archivo de migración SQL (`supabase/migrations/`) desplegado y registra
 - **Lógica de Fallback (Graceful Degradation)**: Si el filtro de 12 días no devuelve resultados, los RPCs financieros (`get_products_filtered`, `get_inventory_list`) deben ignorar automáticamente la restricción temporal para mostrar los ítems más recientes disponibles en stock, evitando listas vacías para el usuario.
 - **Desacoplamiento**: El filtro "Nuevo" debe operar siempre como un **toggle independiente**. Nunca debe sobreescribir o bloquear la capacidad del usuario de ordenar los elementos por otras columnas (Precio, Nombre, Stock) mientras el filtro esté activo.
 
----
+## ??? LEYES DE EXPANSI�N OMNI-TCG (2026)
 
-### Ley 19: Despliegue de Esquemas y Dependencias de UI
+### Ley 15: Estandarizaci�n de C�digos de Juego
+- **Mandato**: Toda nueva inserci�n en products debe usar c�digos de 3-4 letras: MTG, PKM, OPC, LOR, FAB, YGO, WIX, DGM, GDM, RFB.
+- **Prohibici�n**: No usar IDs num�ricos o nombres largos en la columna game.
+- **Objetivo**: Garantizar visibilidad instant�nea en el buscador de la tienda.
 
-**Siempre** desplegar (o migrar) el esquema de base de datos en Producción **antes** o en conjunto con el código del frontend que dependa de él.
-
-- **Feature Toggles**: Si se hace *merge* a `main` de una característica UI (ej. un banner, un menú de admin) que consulta tablas que aún no existen en el entorno de Producción, dicha característica debe estar oculta o protegida por un *Feature Toggle*.
-- **Prevención de Fallbacks Inesperados**: Componentes que implementan lógicas de *fallback* (como mostrar cartas "trending" cuando falla la lectura de una tabla promocional) se activarán irremediablemente si la base de datos devuelve un error por tabla inexistente.
-- **Regla**: Nunca asumir que Producción tiene el mismo esquema que Desarrollo sin haber ejecutado las migraciones explícitamente.
+### Ley 16: Protecci�n de Entornos (Dev vs Main)
+- **Verificaci�n**: Antes de scripts de mantenimiento, verificar el Project ID en .env.
+- **Producci�n**: sxuotvogwvmxuvwbsscv (Geekorium Live).
+- **Desarrollo**: bqfkqnnostzaqueujdms (Sandbox).
+- **Acci�n**: Abortar si el entorno no coincide con el objetivo del script.

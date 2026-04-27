@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, X, Sliders, Filter, Check } from 'lucide-react';
+import { Search, X, Sliders, Filter, Check, Package } from 'lucide-react';
 import { rarityMap, typeMap, colorMap } from '../../utils/translations';
 
 export interface Filters {
@@ -8,6 +8,7 @@ export interface Filters {
   rarities: string[];
   colors: string[];
   types: string[];
+  categories?: string[];
   yearRange: [number, number];
   priceRange: [number, number];
   only_new?: boolean;
@@ -18,9 +19,10 @@ export interface FiltersPanelProps {
   selected: Partial<Filters>;
   onChange: (selected: Partial<Filters>) => void;
   setsOptions: string[];
+  isAccessoryMode?: boolean;
 }
 
-export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, onChange, setsOptions }) => {
+export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, onChange, setsOptions, isAccessoryMode }) => {
   const [setSearch, setSetSearch] = useState('');
 
   const filteredSets = useMemo(() => {
@@ -88,138 +90,177 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
         </div>
       </section>
 
-      {/* Sets / Ediciones Dinámicas */}
-      <section>
-        <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
-          <div className="w-1.5 h-1.5 bg-geeko-violet-accent rounded-full shadow-[0_0_10px_rgba(55,50,102,0.9)]"></div>
-          Expansión / Set
-        </h3>
-        <div className="relative mb-3">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-600" />
-          <input
-            type="text"
-            placeholder="Buscar sets..."
-            value={setSearch}
-            onChange={(e) => setSetSearch(e.target.value)}
-            className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2.5 pl-9 pr-4 text-xs text-white placeholder:text-neutral-600 focus:outline-none focus:border-purple-500/50 transition-all font-medium"
-          />
-        </div>
-        <div className="max-h-52 overflow-y-auto pr-2 custom-scrollbar space-y-1">
-          {filteredSets.length > 0 ? (
-            filteredSets.map(setName => (
-              <button
-                key={setName}
-                onClick={() => handleCheckbox('sets', setName)}
-                className={`flex items-center justify-between w-full px-3 py-2 rounded-lg text-left text-[11px] font-medium transition-all ${selected.sets?.includes(setName)
-                  ? 'bg-geeko-cyan/10 text-geeko-cyan'
-                  : 'text-neutral-500 hover:bg-white/5 hover:text-neutral-300'
-                  }`}
-              >
-                <span className="truncate pr-4">{setName}</span>
-                {selected.sets?.includes(setName) && <Check size={12} />}
-              </button>
-            ))
-          ) : (
-            <p className="text-[10px] text-neutral-600 italic py-4 text-center">No se encontraron sets para "{setSearch}"</p>
-          )}
-        </div>
-      </section>
+      {/* Sets / Ediciones Dinámicas - Solo para Cartas */}
+      {!isAccessoryMode && (
+        <section>
+          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
+            <div className="w-1.5 h-1.5 bg-geeko-violet-accent rounded-full shadow-[0_0_10px_rgba(55,50,102,0.9)]"></div>
+            Expansión / Set
+          </h3>
+          <div className="relative mb-3">
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-600" />
+            <input
+              type="text"
+              placeholder="Buscar sets..."
+              value={setSearch}
+              onChange={(e) => setSetSearch(e.target.value)}
+              className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2.5 pl-9 pr-4 text-xs text-white placeholder:text-neutral-600 focus:outline-none focus:border-purple-500/50 transition-all font-medium"
+            />
+          </div>
+          <div className="max-h-52 overflow-y-auto pr-2 custom-scrollbar space-y-1">
+            {filteredSets.length > 0 ? (
+              filteredSets.map(setName => (
+                <button
+                  key={setName}
+                  onClick={() => handleCheckbox('sets', setName)}
+                  className={`flex items-center justify-between w-full px-3 py-2 rounded-lg text-left text-[11px] font-medium transition-all ${selected.sets?.includes(setName)
+                    ? 'bg-geeko-cyan/10 text-geeko-cyan'
+                    : 'text-neutral-500 hover:bg-white/5 hover:text-neutral-300'
+                    }`}
+                >
+                  <span className="truncate pr-4">{setName}</span>
+                  {selected.sets?.includes(setName) && <Check size={12} />}
+                </button>
+              ))
+            ) : (
+              <p className="text-[10px] text-neutral-600 italic py-4 text-center">No se encontraron sets para "{setSearch}"</p>
+            )}
+          </div>
+        </section>
+      )}
 
-      {/* Rareza */}
-      <section>
-        <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
-          <div className="w-1.5 h-1.5 bg-geeko-gold rounded-full shadow-[0_0_10px_rgba(255,215,0,0.8)]"></div>
-          Rareza
-        </h3>
-        <div className="grid grid-cols-2 gap-2">
-          {filters.rarities.map(rarity => {
-            const isSelected = selected.rarities?.includes(rarity);
-            return (
-              <button
-                key={rarity}
-                onClick={() => handleCheckbox('rarities', rarity)}
-                className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border transition-all ${isSelected
-                  ? 'bg-geeko-gold/10 border-geeko-gold/40 text-geeko-gold shadow-lg shadow-geeko-gold/5'
-                  : 'bg-neutral-900/50 border-neutral-800 text-neutral-500 hover:border-neutral-700'
-                  }`}
-              >
-                <div className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-geeko-gold animate-pulse' : 'bg-neutral-700'}`} />
-                <span className="text-[10px] font-black uppercase tracking-tight">{rarityMap[rarity] || rarity}</span>
-              </button>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* Colores */}
-      <section>
-        <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
-          <div className="w-1.5 h-1.5 bg-geeko-cyan rounded-full shadow-[0_0_10px_rgba(0,229,255,0.8)]"></div>
-          Esencia de Mana (Colores)
-        </h3>
-        <div className="grid grid-cols-4 gap-2">
-          {filters.colors.map(color => {
-            const isSelected = selected.colors?.includes(color);
-            const colorClassMap: Record<string, string> = {
-              'White': 'bg-[#F8E7B9] shadow-[0_0_10px_#F8E7B9]',       // W - Sol
-              'Blue': 'bg-[#0E68AB] shadow-[0_0_10px_#0E68AB]',        // U - Agua
-              'Black': 'bg-[#150B00] shadow-[0_0_10px_#150B00] border border-white/20', // B - Calavera
-              'Red': 'bg-[#D3202A] shadow-[0_0_10px_#D3202A]',         // R - Fuego
-              'Green': 'bg-[#00733E] shadow-[0_0_10px_#00733E]',       // G - Arbol
-              'Colorless': 'bg-[#D3D3D3] shadow-[0_0_10px_#D3D3D3]',   // C - Incoloro
-              'Multicolor': 'bg-gradient-to-br from-[#F8E7B9] via-[#D3202A] to-[#0E68AB]' // M - Dorado
-            };
-
-            return (
-              <button
-                key={color}
-                onClick={() => handleCheckbox('colors', color)}
-                title={colorMap[color] || color}
-                className={`relative group w-full aspect-square rounded-xl border flex items-center justify-center transition-all ${isSelected
-                  ? 'border-geeko-cyan/50 bg-geeko-cyan/10'
-                  : 'border-neutral-800 bg-neutral-900/50 hover:border-neutral-600'
-                  }`}
-              >
-                <div className={`w-4 h-4 rounded-full ${colorClassMap[color] || 'bg-neutral-500'} ${isSelected ? 'scale-125' : 'opacity-80 group-hover:opacity-100'} transition-all`} />
-                {isSelected && (
-                  <div className="absolute top-1 right-1">
-                    <Check size={8} className="text-geeko-cyan" />
+      {/* Categorías de Accesorios - Solo para Accesorios */}
+      {isAccessoryMode && filters.categories && (
+        <section>
+          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
+            <div className="w-1.5 h-1.5 bg-orange-500 rounded-full shadow-[0_0_10px_rgba(249,115,22,0.8)]"></div>
+            Categoría
+          </h3>
+          <div className="grid grid-cols-1 gap-2">
+            {filters.categories.map(category => {
+              const isSelected = selected.categories?.includes(category);
+              return (
+                <button
+                  key={category}
+                  onClick={() => handleCheckbox('categories' as any, category)}
+                  className={`flex items-center justify-between w-full px-4 py-3 rounded-xl border transition-all ${isSelected
+                    ? 'bg-orange-500/10 border-orange-500/40 text-orange-400 shadow-lg shadow-orange-500/5'
+                    : 'bg-neutral-900/50 border-neutral-800 text-neutral-500 hover:border-neutral-700'
+                    }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <Package size={14} className={isSelected ? 'text-orange-400' : 'text-neutral-600'} />
+                    <span className="text-[10px] font-black uppercase tracking-tight">{category}</span>
                   </div>
-                )}
-              </button>
-            );
-          })}
-        </div>
-      </section>
+                  {isSelected && <Check size={12} />}
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
-      {/* Timeline / Año */}
-      <section>
-        <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
-          <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.8)]"></div>
-          Órbita Temporal (Año)
-        </h3>
-        <div className="flex items-center gap-3">
-          <input
-            type="number"
-            placeholder="Desde"
-            value={selected.yearRange?.[0] || ''}
-            onChange={(e) => onChange({ ...selected, yearRange: [parseInt(e.target.value) || 1993, selected.yearRange?.[1] || 2026] })}
-            className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-emerald-500/50 transition-all"
-          />
-          <span className="text-neutral-700 font-bold">→</span>
-          <input
-            type="number"
-            placeholder="Hasta"
-            value={selected.yearRange?.[1] || ''}
-            onChange={(e) => onChange({ ...selected, yearRange: [selected.yearRange?.[0] || 1993, parseInt(e.target.value) || 2026] })}
-            className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-emerald-500/50 transition-all"
-          />
-        </div>
-        <div className="mt-3 flex justify-between text-[8px] font-black tracking-widest text-neutral-600 uppercase">
-          <span>Orígenes (1993)</span>
-          <span>Presente (2026)</span>
-        </div>
-      </section>
+      {/* Rareza - Solo para Cartas */}
+      {!isAccessoryMode && (
+        <section>
+          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
+            <div className="w-1.5 h-1.5 bg-geeko-gold rounded-full shadow-[0_0_10px_rgba(255,215,0,0.8)]"></div>
+            Rareza
+          </h3>
+          <div className="grid grid-cols-2 gap-2">
+            {filters.rarities.map(rarity => {
+              const isSelected = selected.rarities?.includes(rarity);
+              return (
+                <button
+                  key={rarity}
+                  onClick={() => handleCheckbox('rarities', rarity)}
+                  className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border transition-all ${isSelected
+                    ? 'bg-geeko-gold/10 border-geeko-gold/40 text-geeko-gold shadow-lg shadow-geeko-gold/5'
+                    : 'bg-neutral-900/50 border-neutral-800 text-neutral-500 hover:border-neutral-700'
+                    }`}
+                >
+                  <div className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-geeko-gold animate-pulse' : 'bg-neutral-700'}`} />
+                  <span className="text-[10px] font-black uppercase tracking-tight">{rarityMap[rarity] || rarity}</span>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      {/* Colores - Solo para Cartas */}
+      {!isAccessoryMode && (
+        <section>
+          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
+            <div className="w-1.5 h-1.5 bg-geeko-cyan rounded-full shadow-[0_0_10px_rgba(0,229,255,0.8)]"></div>
+            Esencia de Mana (Colores)
+          </h3>
+          <div className="grid grid-cols-4 gap-2">
+            {filters.colors.map(color => {
+              const isSelected = selected.colors?.includes(color);
+              const colorClassMap: Record<string, string> = {
+                'White': 'bg-[#F8E7B9] shadow-[0_0_10px_#F8E7B9]',       // W - Sol
+                'Blue': 'bg-[#0E68AB] shadow-[0_0_10px_#0E68AB]',        // U - Agua
+                'Black': 'bg-[#150B00] shadow-[0_0_10px_#150B00] border border-white/20', // B - Calavera
+                'Red': 'bg-[#D3202A] shadow-[0_0_10px_#D3202A]',         // R - Fuego
+                'Green': 'bg-[#00733E] shadow-[0_0_10px_#00733E]',       // G - Arbol
+                'Colorless': 'bg-[#D3D3D3] shadow-[0_0_10px_#D3D3D3]',   // C - Incoloro
+                'Multicolor': 'bg-gradient-to-br from-[#F8E7B9] via-[#D3202A] to-[#0E68AB]' // M - Dorado
+              };
+
+              return (
+                <button
+                  key={color}
+                  onClick={() => handleCheckbox('colors', color)}
+                  title={colorMap[color] || color}
+                  className={`relative group w-full aspect-square rounded-xl border flex items-center justify-center transition-all ${isSelected
+                    ? 'border-geeko-cyan/50 bg-geeko-cyan/10'
+                    : 'border-neutral-800 bg-neutral-900/50 hover:border-neutral-600'
+                    }`}
+                >
+                  <div className={`w-4 h-4 rounded-full ${colorClassMap[color] || 'bg-neutral-500'} ${isSelected ? 'scale-125' : 'opacity-80 group-hover:opacity-100'} transition-all`} />
+                  {isSelected && (
+                    <div className="absolute top-1 right-1">
+                      <Check size={8} className="text-geeko-cyan" />
+                    </div>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      {/* Timeline / Año - Solo para Cartas */}
+      {!isAccessoryMode && (
+        <section>
+          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
+            <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.8)]"></div>
+            Órbita Temporal (Año)
+          </h3>
+          <div className="flex items-center gap-3">
+            <input
+              type="number"
+              placeholder="Desde"
+              value={selected.yearRange?.[0] || ''}
+              onChange={(e) => onChange({ ...selected, yearRange: [parseInt(e.target.value) || 1993, selected.yearRange?.[1] || 2026] })}
+              className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-emerald-500/50 transition-all"
+            />
+            <span className="text-neutral-700 font-bold">→</span>
+            <input
+              type="number"
+              placeholder="Hasta"
+              value={selected.yearRange?.[1] || ''}
+              onChange={(e) => onChange({ ...selected, yearRange: [selected.yearRange?.[0] || 1993, parseInt(e.target.value) || 2026] })}
+              className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-emerald-500/50 transition-all"
+            />
+          </div>
+          <div className="mt-3 flex justify-between text-[8px] font-black tracking-widest text-neutral-600 uppercase">
+            <span>Orígenes (1993)</span>
+            <span>Presente (2026)</span>
+          </div>
+        </section>
+      )}
 
       {/* Rango de Precio */}
       <section>
@@ -232,7 +273,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
             type="number"
             placeholder="Mín"
             value={selected.priceRange?.[0] || ''}
-            onChange={(e) => onChange({ ...selected, priceRange: [parseFloat(e.target.value) || 0, selected.priceRange?.[1] || 1000] })}
+            onChange={(e) => onChange({ ...selected, priceRange: [parseFloat(e.target.value) || 0, selected.priceRange?.[1] || 1000000] })}
             className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-geeko-gold/50 transition-all font-medium"
           />
           <span className="text-neutral-700 font-bold">→</span>
@@ -240,7 +281,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
             type="number"
             placeholder="Máx"
             value={selected.priceRange?.[1] || ''}
-            onChange={(e) => onChange({ ...selected, priceRange: [selected.priceRange?.[0] || 0, parseFloat(e.target.value) || 1000] })}
+            onChange={(e) => onChange({ ...selected, priceRange: [selected.priceRange?.[0] || 0, parseFloat(e.target.value) || 1000000] })}
             className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-geeko-gold/50 transition-all font-medium"
           />
         </div>
@@ -249,29 +290,32 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
           <span>Coleccionista</span>
         </div>
       </section>
-      <section>
-        <h3 className="text-[11px] font-black uppercase tracking-widest text-neutral-600 mb-4 flex items-center gap-2">
-          <div className="w-1 h-3 bg-red-600 rounded-full"></div>
-          Esencia de Carta (Tipo)
-        </h3>
-        <div className="flex flex-wrap gap-2">
-          {['Creature', 'Instant', 'Sorcery', 'Enchantment', 'Artifact', 'Planeswalker', 'Land'].map(type => {
-            const isSelected = selected.types?.includes(type);
-            return (
-              <button
-                key={type}
-                onClick={() => handleCheckbox('types', type)}
-                className={`px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all border ${isSelected
-                  ? 'bg-red-600/10 border-red-500/50 text-red-400'
-                  : 'bg-neutral-900/50 border-neutral-800 text-neutral-500 hover:text-neutral-300'
-                  }`}
-              >
-                {typeMap[type] || type}
-              </button>
-            );
-          })}
-        </div>
-      </section>
+      {/* Esencia de Carta (Tipo) - Solo para Cartas */}
+      {!isAccessoryMode && (
+        <section>
+          <h3 className="text-[11px] font-black uppercase tracking-widest text-neutral-600 mb-4 flex items-center gap-2">
+            <div className="w-1 h-3 bg-red-600 rounded-full"></div>
+            Esencia de Carta (Tipo)
+          </h3>
+          <div className="flex flex-wrap gap-2">
+            {['Creature', 'Instant', 'Sorcery', 'Enchantment', 'Artifact', 'Planeswalker', 'Land'].map(type => {
+              const isSelected = selected.types?.includes(type);
+              return (
+                <button
+                  key={type}
+                  onClick={() => handleCheckbox('types', type)}
+                  className={`px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all border ${isSelected
+                    ? 'bg-red-600/10 border-red-500/50 text-red-400'
+                    : 'bg-neutral-900/50 border-neutral-800 text-neutral-500 hover:text-neutral-300'
+                    }`}
+                >
+                  {typeMap[type] || type}
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       <div className="pt-6 mt-10 border-t border-white/5">
         <div className="bg-geeko-cyan/5 rounded-2xl p-5 border border-geeko-cyan/20 relative overflow-hidden group">

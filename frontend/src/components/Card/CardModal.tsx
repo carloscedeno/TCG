@@ -73,6 +73,7 @@ interface CardDetails {
     total_stock: number;
     card_faces?: CardFace[];
     all_versions?: Version[];
+    is_accessory?: boolean;
 }
 
 export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, onAddToCartSuccess, isArchive }) => {
@@ -430,8 +431,112 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                 {/* Desktop close button */}
                 <button onClick={onClose} className="absolute top-6 right-6 z-50 p-2 hover:bg-white/10 rounded-full transition-colors text-neutral-400 hidden md:flex"><X size={24} /></button>
 
-                {/* LEFT: IMAGE & VERSIONS LIST */}
-                <div className="w-full md:w-[420px] lg:w-[480px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden shrink-0 h-auto md:h-[var(--modal-height,700px)] min-h-[500px] md:min-h-0">
+                {details?.is_accessory ? (
+                    /* ────────────────────────────────────────
+                       ACCESSORY LAYOUT — clean product view
+                    ──────────────────────────────────────── */
+                    <div className="flex flex-col md:flex-row w-full h-full">
+                        {/* Image */}
+                        <div className="w-full md:w-[380px] bg-[#0c0c0c] flex items-center justify-center p-8 border-r border-white/5 shrink-0 min-h-[300px] md:min-h-0">
+                            {loading ? (
+                                <div className="w-48 h-48 rounded-2xl bg-white/5 animate-pulse" />
+                            ) : (
+                                <div className="relative flex items-center justify-center">
+                                    <div className="absolute inset-0 bg-geeko-cyan/10 blur-[80px] rounded-full pointer-events-none" />
+                                    <img
+                                        src={currentImage}
+                                        alt={details?.name}
+                                        className="max-w-[280px] max-h-[280px] object-contain relative z-10 drop-shadow-[0_20px_60px_rgba(0,0,0,0.8)] hover:scale-105 transition-transform duration-500"
+                                    />
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Info */}
+                        <div className="flex-1 bg-[#050505] p-6 md:p-10 flex flex-col justify-between gap-6 overflow-y-auto custom-scrollbar">
+                            {loading ? (
+                                <div className="space-y-6 animate-pulse">
+                                    <div className="h-10 w-3/4 bg-white/5 rounded-xl" />
+                                    <div className="h-4 w-1/3 bg-white/5 rounded" />
+                                    <div className="h-32 bg-white/5 rounded-2xl" />
+                                    <div className="h-14 bg-white/5 rounded-xl" />
+                                </div>
+                            ) : details ? (
+                                <>
+                                    {/* Name + Category */}
+                                    <div className="space-y-2">
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-geeko-cyan/70">
+                                            {details.set || 'Accesorio'}
+                                        </span>
+                                        <h2 className="text-2xl md:text-4xl font-web-titles font-normal tracking-tight text-white leading-tight capitalize">
+                                            {details.name}
+                                        </h2>
+                                    </div>
+
+                                    {/* Stock badge */}
+                                    <div className="flex items-center gap-3">
+                                        {(activeVersion?.stock ?? details.total_stock ?? 0) > 0 ? (
+                                            <span className="text-xs font-black text-geeko-green bg-geeko-green/10 px-4 py-1.5 rounded-full border border-geeko-green/20 uppercase tracking-widest">
+                                                ✓ En Stock — {activeVersion?.stock ?? details.total_stock} disponibles
+                                            </span>
+                                        ) : (
+                                            <span className="text-xs font-black text-orange-400 bg-orange-500/10 px-4 py-1.5 rounded-full border border-orange-500/20 uppercase tracking-widest">
+                                                Por Encargo
+                                            </span>
+                                        )}
+                                    </div>
+
+                                    {/* Oracle / Description — only if present */}
+                                    {details.oracle_text && (
+                                        <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 text-sm text-neutral-300 leading-relaxed">
+                                            {details.oracle_text}
+                                        </div>
+                                    )}
+
+                                    {/* Price + CTA */}
+                                    <div className="space-y-3">
+                                        <div className="p-5 rounded-2xl bg-gradient-to-br from-geeko-cyan/10 via-transparent to-transparent border border-white/10 flex items-center justify-between">
+                                            <div>
+                                                <div className="text-[10px] font-semibold uppercase text-geeko-cyan tracking-widest mb-1">Precio</div>
+                                                <div className="text-4xl font-titles font-medium text-white tracking-tighter">
+                                                    ${(activeVersion?.price || details.price || 0) > 0
+                                                        ? (activeVersion?.price || details.price).toFixed(2)
+                                                        : '---'}
+                                                </div>
+                                            </div>
+                                            <div className="text-right">
+                                                <div className="text-[10px] text-neutral-600 uppercase tracking-widest">Unidad</div>
+                                                <div className="text-2xl text-neutral-500">×1</div>
+                                            </div>
+                                        </div>
+
+                                        {!isArchive && (
+                                            <button
+                                                onClick={handleAddToCart}
+                                                disabled={isAdding}
+                                                data-testid="add-to-cart-button"
+                                                className={`w-full h-14 rounded-xl font-web-titles font-normal text-sm uppercase tracking-widest flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 ${
+                                                    addedSuccess
+                                                        ? 'bg-geeko-green text-black shadow-[0_0_20px_rgba(0,255,133,0.4)]'
+                                                        : 'bg-geeko-cyan text-black shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_40px_rgba(0,229,255,0.6)]'
+                                                }`}
+                                            >
+                                                {isAdding ? <Loader2 size={18} className="animate-spin" /> : addedSuccess ? '¡Añadido! ✓' : <ShoppingCart size={18} fill="currentColor" />}
+                                                {!isAdding && !addedSuccess && ((activeVersion?.stock || 0) > 0 ? 'Agregar al Carrito' : 'Pedir por Encargo')}
+                                            </button>
+                                        )}
+                                    </div>
+                                </>
+                            ) : null}
+                        </div>
+                    </div>
+                ) : (
+                /* ────────────────────────────────────────
+                   CARD LAYOUT — original view
+                ──────────────────────────────────────── */
+                <>
+                    {/* LEFT: IMAGE & VERSIONS LIST */}
+                    <div className="w-full md:w-[420px] lg:w-[480px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden shrink-0 h-auto md:h-[var(--modal-height,700px)] min-h-[500px] md:min-h-0">
                     <div className="flex-1 min-h-[300px] md:min-h-0 relative flex items-center justify-center p-4 sm:p-6 md:p-10 bg-gradient-to-b from-white/[0.04] to-transparent overflow-hidden">
                         {loading ? (
                             <div className="w-64 aspect-[5/7] rounded-xl bg-white/5 animate-pulse flex items-center justify-center">
@@ -520,7 +625,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                             >
                                                 <div className="flex items-center gap-3 md:gap-4 flex-1">
                                                     <div className="w-8 h-8 rounded bg-neutral-900 flex items-center justify-center text-xs font-web-titles group-hover:text-geeko-cyan transition-colors shrink-0">
-                                                        {group.base.set_code.toUpperCase()}
+                                                        {group.base.set_code?.toUpperCase()}
                                                     </div>
                                                     <div className="flex-1 text-left min-w-[120px] md:min-w-0">
                                                         <div className={`text-[10px] md:text-xs font-semibold leading-tight truncate ${isGroupActive ? 'text-geeko-cyan' : 'text-neutral-300'}`}>
@@ -595,7 +700,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                             }
                         </div>
                     </div>
-                </div>
+                </div> {/* end card left column */}
 
                 {/* RIGHT: CARD TEXT & ACTIONS */}
                 <div className="flex-1 h-auto md:h-[var(--modal-height,700px)] overflow-y-auto custom-scrollbar bg-[#050505] p-4 sm:p-6 md:p-8 pb-32 md:pb-40 space-y-4 md:space-y-6">
@@ -667,35 +772,37 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                             </div>
 
                             <div className="space-y-6 pt-2">
-                                <div className="space-y-4 pt-2">
-                                    <h3 className="text-xs font-web-titles font-normal uppercase tracking-widest text-neutral-500 flex items-center justify-between">
-                                        Legalidad de Formato
-                                        {details.total_stock > 0 && (
-                                            <span className="text-[10px] text-geeko-cyan bg-geeko-cyan/10 px-3 py-1 rounded-full border border-geeko-cyan/20">
-                                                Existencia Total: {details.total_stock}
-                                            </span>
-                                        )}
-                                    </h3>
-                                    <div className="grid grid-cols-2 xs:grid-cols-3 md:grid-cols-6 gap-2">
-                                        {relevantFormats.map(fmt => {
-                                            const isLegal = details.legalities?.[fmt] === 'legal';
-                                            return (
-                                                <div
-                                                    key={fmt}
-                                                    className={`flex items-center justify-center p-2.5 rounded-lg border transition-all duration-300 ${isLegal
-                                                        ? 'bg-geeko-gold/10 border-geeko-gold/40 text-geeko-gold shadow-[0_0_20px_rgba(249,174,0,0.1)]'
-                                                        : 'bg-neutral-900/40 border-white/5 text-neutral-600 opacity-60'
-                                                        }`}
-                                                >
-                                                    <span className="text-[9px] md:text-[10px] font-web-titles font-normal uppercase tracking-widest">{fmt}</span>
-                                                </div>
-                                            );
-                                        })}
+                                {!details?.is_accessory && (
+                                    <div className="space-y-4 pt-2">
+                                        <h3 className="text-xs font-web-titles font-normal uppercase tracking-widest text-neutral-500 flex items-center justify-between">
+                                            Legalidad de Formato
+                                            {details.total_stock > 0 && (
+                                                <span className="text-[10px] text-geeko-cyan bg-geeko-cyan/10 px-3 py-1 rounded-full border border-geeko-cyan/20">
+                                                    Existencia Total: {details.total_stock}
+                                                </span>
+                                            )}
+                                        </h3>
+                                        <div className="grid grid-cols-2 xs:grid-cols-3 md:grid-cols-6 gap-2">
+                                            {relevantFormats.map(fmt => {
+                                                const isLegal = details.legalities?.[fmt] === 'legal';
+                                                return (
+                                                    <div
+                                                        key={fmt}
+                                                        className={`flex items-center justify-center p-2.5 rounded-lg border transition-all duration-300 ${isLegal
+                                                            ? 'bg-geeko-gold/10 border-geeko-gold/40 text-geeko-gold shadow-[0_0_20px_rgba(249,174,0,0.1)]'
+                                                            : 'bg-neutral-900/40 border-white/5 text-neutral-600 opacity-60'
+                                                            }`}
+                                                    >
+                                                        <span className="text-[9px] md:text-[10px] font-web-titles font-normal uppercase tracking-widest">{fmt}</span>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
                                     </div>
-                                </div>
+                                )}
 
                                 {/* Marketplace Actions - Optimized side-by-side layout */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
+                                <div className={`grid grid-cols-1 ${details?.is_accessory ? '' : 'md:grid-cols-2'} gap-4 items-stretch`}>
                                     {/* Left Column: Local Inventory & Actions */}
                                     <div className="flex flex-col gap-3">
                                         {/* GK Price Box */}
@@ -717,7 +824,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                             ${(activeVersion?.price || details.price || 0) > 0 ? (activeVersion?.price || details.price).toFixed(2) : '---'}
                                                         </div>
                                                         <span className={`text-[10px] px-2 py-0.5 rounded-full font-black tracking-widest shadow-sm ${selectedFinish === 'foil' ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white animate-pulse' : 'bg-white text-black'}`}>
-                                                            {selectedFinish.toUpperCase()}
+                                                            {selectedFinish?.toUpperCase()}
                                                         </span>
                                                     </div>
 
@@ -758,7 +865,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                     </div>
                                                 </div>
 
-                                                {marketPrice > 0 && (activeVersion?.price || details.price || 0) > 0 && (activeVersion?.price || details.price || 0) < marketPrice ? (
+                                                {!details?.is_accessory && marketPrice > 0 && (activeVersion?.price || details.price || 0) > 0 && (activeVersion?.price || details.price || 0) < marketPrice ? (
                                                     <div className="text-sm font-bold text-neutral-600 line-through decoration-red-500/50 mt-1">
                                                         MKT: ${Number(marketPrice).toFixed(2)}
                                                     </div>
@@ -783,31 +890,35 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                     </div>
 
                                     {/* Right Column: External Market */}
-                                    <a
-                                        href={ckUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex flex-col justify-between p-5 md:p-6 rounded-2xl bg-neutral-900 hover:bg-geeko-cyan/10 border border-white/5 hover:border-geeko-cyan transition-all group relative overflow-hidden gap-4"
-                                    >
-                                        <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity" />
-                                        <div className="space-y-1 relative z-10">
-                                            <span className="text-[10px] font-semibold uppercase text-neutral-500 tracking-widest group-hover:text-geeko-cyan transition-colors">Mercado Externo</span>
-                                            <div className="text-base md:text-lg font-web-titles font-normal leading-tight">Comprar @ CardKingdom</div>
-                                        </div>
-                                        <div className="flex items-center justify-between gap-3 w-full relative z-10 mt-auto">
-                                            <span className="text-xl md:text-3xl font-titles font-medium text-white group-hover:text-geeko-cyan transition-colors">
-                                                {marketPrice > 0 ? `$${Number(marketPrice).toFixed(2)}` : 'Ver en Sitio'}
-                                            </span>
-                                            <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-geeko-cyan group-hover:text-black transition-all">
-                                                <ExternalLink size={18} />
+                                    {!details?.is_accessory && (
+                                        <a
+                                            href={ckUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex flex-col justify-between p-5 md:p-6 rounded-2xl bg-neutral-900 hover:bg-geeko-cyan/10 border border-white/5 hover:border-geeko-cyan transition-all group relative overflow-hidden gap-4"
+                                        >
+                                            <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity" />
+                                            <div className="space-y-1 relative z-10">
+                                                <span className="text-[10px] font-semibold uppercase text-neutral-500 tracking-widest group-hover:text-geeko-cyan transition-colors">Mercado Externo</span>
+                                                <div className="text-base md:text-lg font-web-titles font-normal leading-tight">Comprar @ CardKingdom</div>
                                             </div>
-                                        </div>
-                                    </a>
+                                            <div className="flex items-center justify-between gap-3 w-full relative z-10 mt-auto">
+                                                <span className="text-xl md:text-3xl font-titles font-medium text-white group-hover:text-geeko-cyan transition-colors">
+                                                    {marketPrice > 0 ? `$${Number(marketPrice).toFixed(2)}` : 'Ver en Sitio'}
+                                                </span>
+                                                <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-geeko-cyan group-hover:text-black transition-all">
+                                                    <ExternalLink size={18} />
+                                                </div>
+                                            </div>
+                                        </a>
+                                    )}
                                 </div>
                             </div>
                         </>
                     ) : null}
                 </div>
+                </>
+                )}
             </motion.div>
         </div>
     );
