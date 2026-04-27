@@ -121,10 +121,12 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                                     <div className="w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[10px]">Img</div>
                                     SINGLES
                                 </button>
+                                {/* 
                                 <button onClick={() => navigateToGame(game.code, 'products')} className="w-full flex items-center gap-3 px-4 py-3 hover:bg-indigo-600/20 text-xs font-bold transition-colors">
                                     <div className="w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[10px]">Img</div>
                                     PRODUCTOS
                                 </button>
+                                */}
                             </div>
                         </div>
                     ))}
