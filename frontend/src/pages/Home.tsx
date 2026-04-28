@@ -36,15 +36,6 @@ const colorCodeMap: Record<string, string> = {
   'Multicolor': 'M'
 };
 
-const gameMap: Record<string, string> = {
-  'MTG': 'Magic: The Gathering',
-  'PKM': 'Pokémon',
-  'RFB': 'Riftbound',
-  'OPC': 'One Piece',
-  'GND': 'Gundam',
-  'DGM': 'Digimon',
-  'FAB': 'Flesh and Blood'
-};
 
 const gameMapInv: Record<string, string> = {
   'Magic: The Gathering': 'MTG',
