@@ -618,33 +618,52 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
 };
 
 export const fetchSets = async (gameCode?: string): Promise<any[]> => {
+  // En dev, preferimos Supabase para juegos que no sean MTG ya que el API puede estar desactualizado
+  const isDev = import.meta.env.DEV || window.location.hostname.includes('dev') || window.location.hostname.includes('localhost');
+  const shouldPreferSupabase = isDev && gameCode && gameCode !== 'MTG';
+
+  if (!shouldPreferSupabase) {
+    try {
+      const path = gameCode ? `/sets?game_code=${gameCode}` : `/sets`;
+      const apiUrl = getApiUrl(path);
+      if (apiUrl) {
+        const response = await fetch(apiUrl);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.sets && data.sets.length > 0) {
+            return data.sets;
+          }
+        }
+      }
+    } catch (err) {
+      console.warn("API Sets fetch failed, falling back to Supabase", err);
+    }
+  }
+
   try {
-    const path = gameCode ? `/sets?game_code=${gameCode}` : `/sets`;
-    const apiUrl = getApiUrl(path);
-    if (!apiUrl) throw new Error('API_BASE not configured');
-
-    const response = await fetch(apiUrl);
-    if (!response.ok) throw new Error('Failed to fetch sets');
-    const data = await response.json();
-    return data.sets || [];
-  } catch (err) {
-    console.warn("API Sets failed, falling back to Supabase", err);
-
     let query = supabase
       .from('sets')
       .select('set_id, set_name, set_code, release_date');
 
     if (gameCode) {
-      // Game codes are MTG, PKM, etc. linked via games table
-      // We could join, but usually sets dropdown is for the current game
-      // If we don't have game_id easily, we might just fetch all and filter in JS if needed
-      // but let's try a simple join if we know the schema
       const { data: game } = await supabase.from('games').select('game_id').eq('game_code', gameCode).single();
-      if (game) query = query.eq('game_id', game.game_id);
+      if (game) {
+        query = query.eq('game_id', game.game_id);
+      } else {
+        // Fallback for PKM vs POKEMON mismatch in DB if any
+        const altCode = gameCode === 'POKEMON' ? 'PKM' : (gameCode === 'PKM' ? 'POKEMON' : null);
+        if (altCode) {
+          const { data: altGame } = await supabase.from('games').select('game_id').eq('game_code', altCode).single();
+          if (altGame) query = query.eq('game_id', altGame.game_id);
+        }
+      }
     }
 
     const { data } = await query.order('release_date', { ascending: false });
     return data || [];
+  } catch (err) {
+    console.error("Supabase Sets fetch failed", err);
+    return [];
   }
 };
 
