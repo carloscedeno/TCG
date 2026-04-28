@@ -31,6 +31,11 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
 
     /*
     useEffect(() => {
+        const q = searchParams.get('q') || '';
+        if (q !== query) setQuery(q);
+    }, [searchParams]);
+
+    useEffect(() => {
         const loadCategories = async () => {
             const cats = await fetchAccessoryCategories('ACCESSORIES');
             setCategories(cats || []);

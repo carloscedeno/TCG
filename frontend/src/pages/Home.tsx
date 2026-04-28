@@ -149,24 +149,38 @@ const Home: React.FC = () => {
     return () => clearTimeout(timer);
   }, [query, filters]);
 
-  // Sync state with URL params (important for Header navigation)
+  // Sync state with URL params
   useEffect(() => {
-    const tabParam = searchParams.get('tab') as any;
-    if (tabParam && tabParam !== activeTab) {
-        setActiveTab(tabParam);
+    const qParam = searchParams.get('q') || '';
+    if (qParam !== query) setQuery(qParam);
+
+    const gameParam = searchParams.get('game')?.split(',').filter(Boolean) || [];
+    const setParam = searchParams.get('set')?.split(',').filter(Boolean) || [];
+    const rarityParam = searchParams.get('rarity')?.split(',').filter(Boolean) || [];
+    const catParam = searchParams.get('category')?.split(',').filter(Boolean) || [];
+    const tabParam = (searchParams.get('tab') as any) || 'marketplace';
+
+    // Only update if changed to avoid unnecessary re-renders
+    if (JSON.stringify(filters.games) !== JSON.stringify(gameParam) ||
+        JSON.stringify(filters.sets) !== JSON.stringify(setParam) ||
+        JSON.stringify(filters.rarities) !== JSON.stringify(rarityParam) ||
+        JSON.stringify(filters.categories) !== JSON.stringify(catParam)) {
+      setFilters(prev => ({
+        ...prev,
+        games: gameParam,
+        sets: setParam,
+        rarities: rarityParam,
+        categories: catParam
+      }));
     }
 
-    const gameParam = searchParams.get('game');
-    const catParam = searchParams.get('category');
+    if (tabParam !== activeTab) setActiveTab(tabParam);
     
-    if (gameParam || catParam) {
-        const newFilters: Partial<Filters> = { ...filters };
-        if (gameParam) newFilters.games = [gameMap[gameParam] || gameParam];
-        if (catParam) newFilters.categories = [catParam];
-        
-        setFilters(newFilters);
-        setPage(0);
-    }
+    const urlRarity = searchParams.get('rarity') || 'All';
+    if (urlRarity !== activeRarity) setActiveRarity(urlRarity);
+
+    const urlSort = searchParams.get('sort') || 'price_desc';
+    if (urlSort !== sortBy) setSortBy(urlSort);
   }, [searchParams]);
 
   useEffect(() => {
@@ -294,33 +308,37 @@ const Home: React.FC = () => {
 
     fetchData();
 
-    // Update URL Search Params
-    const newParams = new URLSearchParams();
+    // Update URL Search Params - MERGE instead of overwrite
+    const newParams = new URLSearchParams(searchParams);
+    
     if (debouncedQuery) newParams.set('q', debouncedQuery);
+    else newParams.delete('q');
+
     if (debouncedFilters.games && debouncedFilters.games.length > 0) {
-      newParams.set('game', debouncedFilters.games.map(g => {
-        if (g === 'Magic: The Gathering') return 'MTG';
-        return g;
-      }).join(','));
-    }
-    if (debouncedFilters.sets && debouncedFilters.sets.length > 0) newParams.set('set', debouncedFilters.sets.join(','));
-    if (activeRarity !== 'All') newParams.set('rarity', activeRarity);
-    else if (debouncedFilters.rarities && debouncedFilters.rarities.length > 0) newParams.set('rarity', debouncedFilters.rarities.join(','));
-    if (sortBy !== 'release_date') newParams.set('sort', sortBy);
-    if (activeTab !== 'marketplace') newParams.set('tab', activeTab);
-    if (debouncedFilters.yearRange && (debouncedFilters.yearRange[0] !== 1993 || debouncedFilters.yearRange[1] !== 2026)) {
-      newParams.set('year_from', debouncedFilters.yearRange[0].toString());
-      newParams.set('year_to', debouncedFilters.yearRange[1].toString());
-    }
-    if (debouncedFilters.priceRange && (debouncedFilters.priceRange[0] !== 0 || debouncedFilters.priceRange[1] !== 1000)) {
-      newParams.set('price_min', debouncedFilters.priceRange[0].toString());
-      newParams.set('price_max', debouncedFilters.priceRange[1].toString());
-    }
-    if (debouncedFilters.categories && debouncedFilters.categories.length > 0) {
-      newParams.set('category', debouncedFilters.categories.join(','));
+      newParams.set('game', debouncedFilters.games.join(','));
+    } else {
+      newParams.delete('game');
     }
 
-    setSearchParams(newParams, { replace: true });
+    if (debouncedFilters.sets && debouncedFilters.sets.length > 0) {
+      newParams.set('set', debouncedFilters.sets.join(','));
+    } else {
+      newParams.delete('set');
+    }
+
+    if (activeRarity !== 'All') newParams.set('rarity', activeRarity);
+    else newParams.delete('rarity');
+
+    if (sortBy !== 'price_desc') newParams.set('sort', sortBy);
+    else newParams.delete('sort');
+
+    if (activeTab !== 'marketplace') newParams.set('tab', activeTab);
+    else newParams.delete('tab');
+
+    // Only update URL if it actually changed to prevent loops
+    if (newParams.toString() !== searchParams.toString()) {
+      setSearchParams(newParams, { replace: true });
+    }
 
     return () => {
       controller.abort();
