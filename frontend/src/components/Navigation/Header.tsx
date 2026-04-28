@@ -116,28 +116,13 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                         const isActive = searchParams.get('game') === game.code;
                         return (
                         <div key={game.code} className="relative group px-1 py-3">
-                            {game.code === 'MTG' ? (
-                                <>
-                                    <button className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${isActive ? 'bg-white/10 text-indigo-400' : 'hover:bg-white/5 group-hover:text-indigo-400'}`}>
-                                        <span className={`text-lg transition-all ${isActive ? 'grayscale-0' : 'grayscale group-hover:grayscale-0'}`}>{game.icon}</span>
-                                        <span className="text-[10px] font-black uppercase tracking-tighter">{game.name}</span>
-                                        <ChevronDown size={12} className={`opacity-50 transition-transform ${isActive ? 'text-indigo-400' : 'group-hover:rotate-180'}`} />
-                                    </button>
-                                    
-                                    {/* Dropdown Menu */}
-                                    <div className="absolute top-full left-0 w-48 bg-slate-900/95 backdrop-blur-2xl border border-white/10 rounded-xl mt-1 py-2 shadow-2xl opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200 z-50">
-                                        <button onClick={() => navigateToGame(game.code, 'reference')} className="w-full flex items-center gap-3 px-4 py-3 hover:bg-indigo-600/20 text-xs font-bold transition-colors">
-                                            <div className="w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[10px]">🔎</div>
-                                            CATÁLOGO GLOBAL
-                                        </button>
-                                        <button onClick={() => navigateToGame(game.code, 'marketplace')} className="w-full flex items-center gap-3 px-4 py-3 hover:bg-indigo-600/20 text-xs font-bold transition-colors">
-                                            <div className="w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[10px]">💎</div>
-                                            CARTAS EN STOCK
-                                        </button>
-                                    </div>
-                                </>
+                             {game.code === 'MTG' ? (
+                                <button onClick={() => navigateToGame(game.code, 'singles')} className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${isActive ? 'bg-white/10 text-indigo-400' : 'hover:bg-white/5 group-hover:text-indigo-400'}`}>
+                                    <span className={`text-lg transition-all ${isActive ? 'grayscale-0' : 'grayscale group-hover:grayscale-0'}`}>{game.icon}</span>
+                                    <span className="text-[10px] font-black uppercase tracking-tighter">SINGLES</span>
+                                </button>
                             ) : (
-                                <button onClick={() => navigateToGame(game.code, 'marketplace')} className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${isActive ? 'bg-white/10 text-indigo-400' : 'hover:bg-white/5 group-hover:text-indigo-400'}`}>
+                                <button onClick={() => navigateToGame(game.code, 'singles')} className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${isActive ? 'bg-white/10 text-indigo-400' : 'hover:bg-white/5 group-hover:text-indigo-400'}`}>
                                     <span className={`text-lg transition-all ${isActive ? 'grayscale-0' : 'grayscale group-hover:grayscale-0'}`}>{game.icon}</span>
                                     <span className="text-[10px] font-black uppercase tracking-tighter">{game.name}</span>
                                 </button>
@@ -145,36 +130,38 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                         </div>
                     )})}
 
-                    {/* 8th Category: Productos (Accessories) */}
-                    <div className="relative group px-1 py-3">
-                        <button className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-emerald-400 transition-all hover:bg-emerald-500/20">
-                            <span className="text-[10px] font-black uppercase tracking-tighter">PRODUCTOS</span>
-                            <ChevronDown size={12} className="opacity-50 group-hover:rotate-180 transition-transform" />
-                        </button>
-                        
-                        <div className="absolute top-full right-0 w-56 bg-slate-900/95 backdrop-blur-2xl border border-white/10 rounded-xl mt-1 py-3 shadow-2xl opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200 z-50">
-                            <div className="px-4 mb-2">
-                                <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Insumos Generales</span>
-                            </div>
-                            <div className="grid grid-cols-1 gap-1">
-                                {categories.map((cat) => (
-                                    <button 
-                                        key={cat.code} 
-                                        onClick={() => navigateToCategory(cat.code)}
-                                        className="flex items-center gap-3 px-4 py-2.5 hover:bg-emerald-600/20 text-[11px] font-bold transition-colors"
-                                    >
-                                        <span className="text-base">{cat.icon}</span>
-                                        {cat.name.toUpperCase()}
+                    {/* 8th Category: Productos (Accessories) - ONLY IN DEV */}
+                    {isDevEnv && (
+                        <div className="relative group px-1 py-3">
+                            <button className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-emerald-400 transition-all hover:bg-emerald-500/20">
+                                <span className="text-[10px] font-black uppercase tracking-tighter">PRODUCTOS</span>
+                                <ChevronDown size={12} className="opacity-50 group-hover:rotate-180 transition-transform" />
+                            </button>
+                            
+                            <div className="absolute top-full right-0 w-56 bg-slate-900/95 backdrop-blur-2xl border border-white/10 rounded-xl mt-1 py-3 shadow-2xl opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200 z-50">
+                                <div className="px-4 mb-2">
+                                    <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Insumos Generales</span>
+                                </div>
+                                <div className="grid grid-cols-1 gap-1">
+                                    {categories.map((cat) => (
+                                        <button 
+                                            key={cat.code} 
+                                            onClick={() => navigateToCategory(cat.code)}
+                                            className="flex items-center gap-3 px-4 py-2.5 hover:bg-emerald-600/20 text-[11px] font-bold transition-colors"
+                                        >
+                                            <span className="text-base">{cat.icon}</span>
+                                            {cat.name.toUpperCase()}
+                                        </button>
+                                    ))}
+                                </div>
+                                <div className="mt-2 pt-2 border-t border-white/5">
+                                    <button onClick={() => navigateToCategory('OTHER')} className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-slate-800 text-[11px] font-bold text-slate-400">
+                                        OTROS
                                     </button>
-                                ))}
-                            </div>
-                            <div className="mt-2 pt-2 border-t border-white/5">
-                                <button onClick={() => navigateToCategory('OTHER')} className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-slate-800 text-[11px] font-bold text-slate-400">
-                                    OTROS
-                                </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </nav>
 

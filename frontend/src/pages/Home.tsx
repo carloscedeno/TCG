@@ -14,7 +14,6 @@ import { useSearchParams } from 'react-router-dom';
 import { CartDrawer } from '../components/Navigation/CartDrawer';
 import { Footer } from '../components/Navigation/Footer';
 import { Header } from '../components/Navigation/Header';
-import { HeroSection } from '../components/Home/HeroSection';
 
 const mockFilters: Filters = {
   games: ['MTG', 'PKM', 'OPC', 'DGM'],
@@ -381,11 +380,6 @@ const Home: React.FC = () => {
 
         {/* Header */}
         <Header onCartOpen={() => setIsCartOpen(true)} cartCount={cartCount} />
-
-        {/* Hero Section */}
-        <div className="max-w-[1600px] mx-auto px-6 pt-4 mb-2 animate-in fade-in slide-in-from-top-4 duration-1000">
-          <HeroSection />
-        </div>
 
 
 
