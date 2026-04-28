@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { ShoppingCart, LogIn, Menu as MenuIcon, X, ChevronDown } from 'lucide-react';
 import { SearchBar } from '../SearchBar/SearchBar';
