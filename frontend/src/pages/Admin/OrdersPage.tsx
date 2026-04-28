@@ -210,12 +210,6 @@ const OrdersPage = () => {
                             image_url,
                             set_code
                         ),
-                        accessory:accessories (
-                            id,
-                            name,
-                            image_url,
-                            category
-                        ),
                         finish,
                         is_on_demand
                     )
