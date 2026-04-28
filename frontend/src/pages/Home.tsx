@@ -38,7 +38,7 @@ const colorCodeMap: Record<string, string> = {
 
 const gameMap: Record<string, string> = {
   'MTG': 'Magic: The Gathering',
-  'PKM': 'Pokémon',
+  'POKEMON': 'Pokémon',
   'RFB': 'Riftbound',
   'OPC': 'One Piece',
   'GND': 'Gundam',
@@ -48,7 +48,7 @@ const gameMap: Record<string, string> = {
 
 const gameMapInv: Record<string, string> = {
   'Magic: The Gathering': 'MTG',
-  'Pokémon': 'PKM',
+  'Pokémon': 'POKEMON',
   'Riftbound': 'RFB',
   'One Piece': 'OPC',
   'Gundam': 'GND',
