@@ -109,14 +109,16 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
             {/* Navigation Bar: 8 Categories Matrix */}
             <nav className="hidden lg:block bg-black/40 border-t border-white/5">
                 <div className="max-w-[1600px] mx-auto px-4 flex justify-between">
-                    {tcgGames.map((game) => (
+                    {tcgGames.map((game) => {
+                        const isActive = searchParams.get('game') === game.code;
+                        return (
                         <div key={game.code} className="relative group px-1 py-3">
                             {game.code === 'MTG' ? (
                                 <>
-                                    <button className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/5 transition-all group-hover:text-indigo-400">
-                                        <span className="text-lg grayscale group-hover:grayscale-0 transition-all">{game.icon}</span>
+                                    <button className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${isActive ? 'bg-white/10 text-indigo-400' : 'hover:bg-white/5 group-hover:text-indigo-400'}`}>
+                                        <span className={`text-lg transition-all ${isActive ? 'grayscale-0' : 'grayscale group-hover:grayscale-0'}`}>{game.icon}</span>
                                         <span className="text-[10px] font-black uppercase tracking-tighter">{game.name}</span>
-                                        <ChevronDown size={12} className="opacity-50 group-hover:rotate-180 transition-transform" />
+                                        <ChevronDown size={12} className={`opacity-50 transition-transform ${isActive ? 'text-indigo-400' : 'group-hover:rotate-180'}`} />
                                     </button>
                                     
                                     {/* Dropdown Menu */}
@@ -134,13 +136,13 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                                     </div>
                                 </>
                             ) : (
-                                <button onClick={() => navigateToGame(game.code, 'products')} className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/5 transition-all group-hover:text-indigo-400">
-                                    <span className="text-lg grayscale group-hover:grayscale-0 transition-all">{game.icon}</span>
+                                <button onClick={() => navigateToGame(game.code, 'singles')} className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${isActive ? 'bg-white/10 text-indigo-400' : 'hover:bg-white/5 group-hover:text-indigo-400'}`}>
+                                    <span className={`text-lg transition-all ${isActive ? 'grayscale-0' : 'grayscale group-hover:grayscale-0'}`}>{game.icon}</span>
                                     <span className="text-[10px] font-black uppercase tracking-tighter">{game.name}</span>
                                 </button>
                             )}
                         </div>
-                    ))}
+                    )})}
 
                     {/* 8th Category: Productos (Accessories) - ONLY IN DEV */}
                     {isDevEnv && (
