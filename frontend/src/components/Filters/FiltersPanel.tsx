@@ -2,6 +2,15 @@ import React, { useState, useMemo } from 'react';
 import { Search, X, Sliders, Filter, Check, Package } from 'lucide-react';
 import { rarityMap, typeMap, colorMap } from '../../utils/translations';
 
+const gameNameMap: Record<string, string> = {
+  'MTG': 'Magic: The Gathering',
+  'POKEMON': 'Pokémon',
+  'PKM': 'Pokémon',
+  'OPC': 'One Piece',
+  'DGM': 'Digimon',
+  'LOR': 'Lorcana'
+};
+
 export interface Filters {
   games: string[];
   sets: string[];
@@ -83,7 +92,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
                   : 'bg-neutral-900/50 border-neutral-800 text-neutral-500 hover:border-neutral-700 hover:text-neutral-300'
                   }`}
               >
-                {game}
+                {gameNameMap[game] || game}
               </button>
             );
           })}

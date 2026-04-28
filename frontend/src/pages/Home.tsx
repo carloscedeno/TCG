@@ -16,7 +16,7 @@ import { Footer } from '../components/Navigation/Footer';
 import { Header } from '../components/Navigation/Header';
 
 const mockFilters: Filters = {
-  games: ['Magic: The Gathering', 'Pokémon', 'Lorcana', 'One Piece'],
+  games: ['MTG', 'POKEMON', 'OPC', 'DGM'],
   rarities: ['Common', 'Uncommon', 'Rare', 'Mythic'],
   colors: ['White', 'Blue', 'Black', 'Red', 'Green', 'Colorless', 'Multicolor'],
   types: ['Creature', 'Instant', 'Sorcery', 'Enchantment', 'Artifact', 'Planeswalker', 'Land'],
@@ -64,9 +64,7 @@ const Home: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState(searchParams.get('q') || '');
   const [filters, setFilters] = useState<Partial<Filters>>({
-    games: searchParams.get('game')?.split(',').map((g: string) => {
-      return gameMap[g] || g;
-    }).filter(Boolean) || [],
+    games: searchParams.get('game')?.split(',').filter(Boolean) || [],
     sets: searchParams.get('set')?.split(',').filter(Boolean) || [],
     rarities: searchParams.get('rarity')?.split(',').filter(Boolean) || [],
     categories: searchParams.get('category')?.split(',').filter(Boolean) || [],
@@ -161,7 +159,7 @@ const Home: React.FC = () => {
     
     if (gameParam || catParam) {
         const newFilters: Partial<Filters> = { ...filters };
-        if (gameParam) newFilters.games = [gameMap[gameParam] || gameParam];
+        if (gameParam) newFilters.games = [gameParam];
         if (catParam) newFilters.categories = [catParam];
         
         setFilters(newFilters);
@@ -181,9 +179,8 @@ const Home: React.FC = () => {
         let result: { cards: (CardProps & { card_id: string })[], total_count: number };
 
         if (activeTab === 'marketplace') {
-          // Normalize game names for RPC mapping using the centralized map
-          const mappedGame = debouncedFilters.games?.[0] ? 
-            (gameMapInv[debouncedFilters.games[0]] || debouncedFilters.games[0]) : undefined;
+          // Use the game code directly from filters.games
+          const mappedGame = debouncedFilters.games?.[0] || undefined;
 
           const productRes = await fetchProducts({
             q: debouncedQuery || undefined,
@@ -218,9 +215,8 @@ const Home: React.FC = () => {
             total_count: productRes.total_count
           };
         } else if (activeTab === 'accessories') {
-          // Map game name back to ID or Code using the centralized map
-          const mappedGame = debouncedFilters.games?.[0] ? 
-            (gameMapInv[debouncedFilters.games[0]] || debouncedFilters.games[0]) : undefined;
+          // Use the game code directly
+          const mappedGame = debouncedFilters.games?.[0] || undefined;
 
           const accRes = await fetchAccessories({
             q: debouncedQuery || undefined,
@@ -298,9 +294,7 @@ const Home: React.FC = () => {
     const newParams = new URLSearchParams();
     if (debouncedQuery) newParams.set('q', debouncedQuery);
     if (debouncedFilters.games && debouncedFilters.games.length > 0) {
-      newParams.set('game', debouncedFilters.games.map(g => {
-        return gameMapInv[g] || g;
-      }).join(','));
+      newParams.set('game', debouncedFilters.games.join(','));
     }
     if (debouncedFilters.sets && debouncedFilters.sets.length > 0) newParams.set('set', debouncedFilters.sets.join(','));
     if (activeRarity !== 'All') newParams.set('rarity', activeRarity);
@@ -328,8 +322,7 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     // Si no hay juegos seleccionados en filtros, usamos MTG por defecto
-    const activeGameName = filters.games && filters.games.length > 0 ? filters.games[0] : 'Magic: The Gathering';
-    const activeGameCode = gameMapInv[activeGameName] || 'MTG';
+    const activeGameCode = filters.games && filters.games.length > 0 ? filters.games[0] : 'MTG';
 
     fetchSets(activeGameCode)
       .then(realSets => {
@@ -573,7 +566,7 @@ const Home: React.FC = () => {
 
                           {filters.games?.map(g => (
                             <button key={g} data-testid="game-tab" data-active="true" onClick={() => handleFilterChange({ ...filters, games: filters.games?.filter(x => x !== g) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-600/10 border border-purple-500/30 rounded-full text-[10px] font-bold text-purple-400 hover:bg-purple-600/20 transition-all group">
-                              {g}
+                              {gameMap[g] || g}
                               <X size={10} className="group-hover:rotate-90 transition-transform" />
                             </button>
                           ))}
