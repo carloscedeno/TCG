@@ -16,28 +16,32 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [query, setQuery] = useState(searchParams.get('q') || '');
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    // const [categories, setCategories] = useState<any[]>([]);
+    const [categories, setCategories] = useState<any[]>([]);
     const navigate = useNavigate();
 
+    const isDevEnv = import.meta.env.DEV || window.location.hostname.includes('dev') || window.location.hostname.includes('localhost');
+
     const tcgGames = [
-        { name: 'Magic: The Gathering', code: 'MTG', icon: '🪄' }
-        // { name: 'Pokémon', code: 'PKM', icon: '🐹' },
-        // { name: 'Riftbound', code: 'RFB', icon: '⚔️' },
-        // { name: 'One Piece', code: 'OPC', icon: '🏴‍☠️' },
-        // { name: 'Gundam', code: 'GND', icon: '🤖' },
-        // { name: 'Digimon', code: 'DGM', icon: '👾' },
-        // { name: 'Flesh and Blood', code: 'FAB', icon: '🩸' }
+        { name: 'Magic: The Gathering', code: 'MTG', icon: '🪄' },
+        ...(isDevEnv ? [
+            { name: 'Pokémon', code: 'POKEMON', icon: '🐹' },
+            { name: 'Riftbound', code: 'RFB', icon: '⚔️' },
+            { name: 'One Piece', code: 'OPC', icon: '🏴‍☠️' },
+            { name: 'Gundam', code: 'GND', icon: '🤖' },
+            { name: 'Digimon', code: 'DGM', icon: '👾' },
+            { name: 'Flesh and Blood', code: 'FAB', icon: '🩸' }
+        ] : [])
     ];
 
-    /*
     useEffect(() => {
+        if (!isDevEnv) return;
         const loadCategories = async () => {
+            const { fetchAccessoryCategories } = await import('../../utils/api');
             const cats = await fetchAccessoryCategories('ACCESSORIES');
             setCategories(cats || []);
         };
         loadCategories();
-    }, []);
-    */
+    }, [isDevEnv]);
 
     const handleSearch = (val: string) => {
         setQuery(val);
@@ -53,12 +57,10 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
         setIsMobileMenuOpen(false);
     };
 
-    /*
     const navigateToCategory = (catCode: string) => {
         navigate(`/?tab=accessories&category=${catCode}`);
         setIsMobileMenuOpen(false);
     };
-    */
 
     return (
         <header className="sticky top-0 z-50 w-full bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-white/5 shadow-2xl">
@@ -121,48 +123,48 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                                     <div className="w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[10px]">Img</div>
                                     SINGLES
                                 </button>
-                                {/* 
-                                <button onClick={() => navigateToGame(game.code, 'products')} className="w-full flex items-center gap-3 px-4 py-3 hover:bg-indigo-600/20 text-xs font-bold transition-colors">
-                                    <div className="w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[10px]">Img</div>
-                                    PRODUCTOS
-                                </button>
-                                */}
+                                {isDevEnv && (
+                                    <button onClick={() => navigateToGame(game.code, 'products')} className="w-full flex items-center gap-3 px-4 py-3 hover:bg-indigo-600/20 text-xs font-bold transition-colors">
+                                        <div className="w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[10px]">Img</div>
+                                        PRODUCTOS
+                                    </button>
+                                )}
                             </div>
                         </div>
                     ))}
 
-                    {/* 8th Category: Productos (Accessories) - HIDDEN
-                    <div className="relative group px-1 py-3">
-                        <button className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-emerald-400 transition-all hover:bg-emerald-500/20">
-                            <Package size={16} />
-                            <span className="text-[10px] font-black uppercase tracking-tighter">PRODUCTOS</span>
-                            <ChevronDown size={12} className="opacity-50 group-hover:rotate-180 transition-transform" />
-                        </button>
-                        
-                        <div className="absolute top-full right-0 w-56 bg-slate-900/95 backdrop-blur-2xl border border-white/10 rounded-xl mt-1 py-3 shadow-2xl opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200 z-50">
-                            <div className="px-4 mb-2">
-                                <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Insumos Generales</span>
-                            </div>
-                            <div className="grid grid-cols-1 gap-1">
-                                {categories.map((cat) => (
-                                    <button 
-                                        key={cat.code} 
-                                        onClick={() => navigateToCategory(cat.code)}
-                                        className="flex items-center gap-3 px-4 py-2.5 hover:bg-emerald-600/20 text-[11px] font-bold transition-colors"
-                                    >
-                                        <span className="text-base">{cat.icon}</span>
-                                        {cat.name.toUpperCase()}
+                    {/* 8th Category: Productos (Accessories) - ONLY IN DEV */}
+                    {isDevEnv && (
+                        <div className="relative group px-1 py-3">
+                            <button className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-emerald-400 transition-all hover:bg-emerald-500/20">
+                                <span className="text-[10px] font-black uppercase tracking-tighter">PRODUCTOS</span>
+                                <ChevronDown size={12} className="opacity-50 group-hover:rotate-180 transition-transform" />
+                            </button>
+                            
+                            <div className="absolute top-full right-0 w-56 bg-slate-900/95 backdrop-blur-2xl border border-white/10 rounded-xl mt-1 py-3 shadow-2xl opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200 z-50">
+                                <div className="px-4 mb-2">
+                                    <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Insumos Generales</span>
+                                </div>
+                                <div className="grid grid-cols-1 gap-1">
+                                    {categories.map((cat) => (
+                                        <button 
+                                            key={cat.code} 
+                                            onClick={() => navigateToCategory(cat.code)}
+                                            className="flex items-center gap-3 px-4 py-2.5 hover:bg-emerald-600/20 text-[11px] font-bold transition-colors"
+                                        >
+                                            <span className="text-base">{cat.icon}</span>
+                                            {cat.name.toUpperCase()}
+                                        </button>
+                                    ))}
+                                </div>
+                                <div className="mt-2 pt-2 border-t border-white/5">
+                                    <button onClick={() => navigateToCategory('OTHER')} className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-slate-800 text-[11px] font-bold text-slate-400">
+                                        OTROS
                                     </button>
-                                ))}
-                            </div>
-                            <div className="mt-2 pt-2 border-t border-white/5">
-                                <button onClick={() => navigateToCategory('OTHER')} className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-slate-800 text-[11px] font-bold text-slate-400">
-                                    <Sparkles size={14} /> OTROS
-                                </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    */}
+                    )}
                 </div>
             </nav>
 

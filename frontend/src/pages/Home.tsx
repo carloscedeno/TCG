@@ -57,6 +57,7 @@ const gameMapInv: Record<string, string> = {
 };
 
 const Home: React.FC = () => {
+  const isDevEnv = import.meta.env.DEV || window.location.hostname.includes('dev') || window.location.hostname.includes('localhost');
   const [searchParams, setSearchParams] = useSearchParams();
   const [cards, setCards] = useState<(CardProps & { card_id: string })[]>([]);
   const [loading, setLoading] = useState(true);
@@ -397,30 +398,32 @@ const Home: React.FC = () => {
                   <img src="/branding/Emporio.jpg" alt="Icon" className="w-5 h-5 rounded-full" />
                   Stock Geekorium
                 </button>
-                {/* HIDDEN TEMPORARILY
-                <button
-                  onClick={() => handleTabChange('reference')}
-                  data-testid="reference-tab"
-                  className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'reference'
-                    ? 'ring-2 ring-blue-500/30 bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.4)]'
-                    : 'text-neutral-500 hover:text-neutral-300'
-                    }`}
-                >
-                  <Search size={16} className={activeTab === 'reference' ? 'text-white' : 'text-blue-500'} />
-                  Mercado
-                </button>
-                <button
-                  onClick={() => handleTabChange('accessories')}
-                  data-testid="accessories-tab"
-                  className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'accessories'
-                    ? 'ring-2 ring-purple-500/30 bg-purple-600 text-white shadow-[0_0_15px_rgba(147,51,234,0.4)]'
-                    : 'text-neutral-500 hover:text-neutral-300'
-                    }`}
-                >
-                  <Package size={16} className={activeTab === 'accessories' ? 'text-white' : 'text-purple-400'} />
-                  Catálogo
-                </button>
-                */}
+                {isDevEnv && (
+                  <>
+                    <button
+                      onClick={() => handleTabChange('reference')}
+                      data-testid="reference-tab"
+                      className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'reference'
+                        ? 'ring-2 ring-blue-500/30 bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.4)]'
+                        : 'text-neutral-500 hover:text-neutral-300'
+                        }`}
+                    >
+                      <Search size={16} className={activeTab === 'reference' ? 'text-white' : 'text-blue-500'} />
+                      Mercado
+                    </button>
+                    <button
+                      onClick={() => handleTabChange('accessories')}
+                      data-testid="accessories-tab"
+                      className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'accessories'
+                        ? 'ring-2 ring-purple-500/30 bg-purple-600 text-white shadow-[0_0_15px_rgba(147,51,234,0.4)]'
+                        : 'text-neutral-500 hover:text-neutral-300'
+                        }`}
+                    >
+                      <span className="text-purple-400">📦</span>
+                      Catálogo
+                    </button>
+                  </>
+                )}
               </div>
 
               <div className="flex flex-col sm:flex-row items-center gap-4">
