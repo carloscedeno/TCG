@@ -65,8 +65,7 @@ const Home: React.FC = () => {
   const [query, setQuery] = useState(searchParams.get('q') || '');
   const [filters, setFilters] = useState<Partial<Filters>>({
     games: searchParams.get('game')?.split(',').map((g: string) => {
-      if (g === 'MTG') return 'Magic: The Gathering';
-      return g;
+      return gameMap[g] || g;
     }).filter(Boolean) || [],
     sets: searchParams.get('set')?.split(',').filter(Boolean) || [],
     rarities: searchParams.get('rarity')?.split(',').filter(Boolean) || [],
@@ -300,8 +299,7 @@ const Home: React.FC = () => {
     if (debouncedQuery) newParams.set('q', debouncedQuery);
     if (debouncedFilters.games && debouncedFilters.games.length > 0) {
       newParams.set('game', debouncedFilters.games.map(g => {
-        if (g === 'Magic: The Gathering') return 'MTG';
-        return g;
+        return gameMapInv[g] || g;
       }).join(','));
     }
     if (debouncedFilters.sets && debouncedFilters.sets.length > 0) newParams.set('set', debouncedFilters.sets.join(','));
@@ -329,15 +327,11 @@ const Home: React.FC = () => {
   }, [debouncedQuery, debouncedFilters, activeRarity, sortBy, page, activeTab, filters.only_new]);
 
   useEffect(() => {
-    const gameCodeMap: Record<string, string> = {
-      'Magic: The Gathering': 'MTG',
-      'MTG': 'MTG'
-    };
-
     // Si no hay juegos seleccionados en filtros, usamos MTG por defecto
-    const activeGame = filters.games && filters.games.length > 0 ? filters.games[0] : 'MTG';
+    const activeGameName = filters.games && filters.games.length > 0 ? filters.games[0] : 'Magic: The Gathering';
+    const activeGameCode = gameMapInv[activeGameName] || 'MTG';
 
-    fetchSets(gameCodeMap[activeGame] || 'MTG')
+    fetchSets(activeGameCode)
       .then(realSets => {
         const setNames = realSets.map((s: any) => s.set_name);
         setSets(setNames);
