@@ -14,8 +14,15 @@ class SupabaseClient:
         if not self.url or not self.key:
             logging.error("Supabase URL or Key missing")
             self.supabase = None
+        elif not self.url.startswith('https://'):
+            logging.error(f"Invalid Supabase URL format: {self.url}")
+            self.supabase = None
         else:
-            self.supabase: Client = create_client(self.url, self.key)
+            try:
+                self.supabase: Client = create_client(self.url, self.key)
+            except Exception as e:
+                logging.error(f"Failed to create Supabase client: {e}")
+                self.supabase = None
 
     def insert_price_history(self, price_data: list):
         if not self.supabase:

@@ -748,3 +748,4 @@ Corregir el bug visual donde los ítems del carrito mostraban `$0.00` individual
 - scripts/update_rpc.py -> Normalizacion universal de codigos de juego en SQL.
 **Artefacto creado:** scripts/check_dev_api.py (Script de diagnostico de salud via REST API).
 **Regla derivada:** Verificacion obligatoria de IDs de juego en tablas de referencia antes de desplegar filtros de TCGs nuevos.
+$content

@@ -126,6 +126,18 @@ Este documento registra los desafÃƒÆ’Ã‚Â­os tÃƒÆ’Ã‚Â©cnicos 
 - **Problema**: `toFixed()` crasheaba cuando el precio venÃƒÆ’Ã‚Â­a como string o null de la API.
 - **LecciÃƒÆ’Ã‚Â³n**: Siempre convertir: `const price = Number(rawPrice)`. Verificar `isNaN(price)` antes de formatear. Mostrar `S/P` si null/undefined.
 
+### 145. AlineaciÃ³n de ParÃ¡metros RPC y SincronizaciÃ³n de URL (Abril 2026)
+- **Problema**: El buscador y los filtros de la tienda dejaron de funcionar tras una refactorizaciÃ³n de nombres de variables en el frontend.
+- **Causa RaÃz**: 
+  1. Desajuste entre los nombres de parÃ¡metros esperados por la base de datos de producciÃ³n (`game_filter`, `rarity_filter`) y los enviados por el frontend (`game_code`, `rarities`).
+  2. El componente `Home.tsx` no sincronizaba el estado de bÃºsqueda (`q`) desde la URL cuando el usuario navegaba o usaba sugerencias de la cabecera.
+  3. Al aplicar filtros, la URL se sobrescribÃa por completo en lugar de mezclarse con los parÃ¡metros existentes (borrando el tÃ©rmino de bÃºsqueda).
+- **LecciÃ³n**: 
+  - **VerificaciÃ³n de Firma**: Siempre verificar la firma exacta de la funciÃ³n en la base de datos de producciÃ³n antes de cambiar nombres de parÃ¡metros en `api.ts`.
+  - **URL como Source of Truth**: El estado del frontend debe seguir a la URL (One-Way Data Flow). Implementar efectos robustos que lean de `searchParams` y actualicen el estado interno.
+  - **Mezcla de ParÃ¡metros**: Usar `new URLSearchParams(searchParams)` para conservar el estado existente al aplicar nuevos filtros.
+  - **Soporte de UX**: Asegurar que la tecla `Enter` en formularios de bÃºsqueda "confirme" la acciÃ³n y actualice la URL para disparar el fetch.
+
 ---
 
 ## ÃƒÂ°Ã…Â¸Ã…Â½Ã‚Â¨ DiseÃƒÆ’Ã‚Â±o y Branding

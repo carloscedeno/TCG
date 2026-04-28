@@ -34,6 +34,11 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
     ];
 
     useEffect(() => {
+        const q = searchParams.get('q') || '';
+        if (q !== query) setQuery(q);
+    }, [searchParams]);
+
+    useEffect(() => {
         if (!isDevEnv) return;
         const loadCategories = async () => {
             const { fetchAccessoryCategories } = await import('../../utils/api');

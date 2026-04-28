@@ -147,10 +147,11 @@ class TCGScraperManager:
 
     def load_cards_from_supabase(self, limit: int = 100) -> List[Dict[str, Any]]:
         """Cargar cartas de la base de datos que necesitan actualización"""
+        if not self.supabase or not self.supabase.supabase:
+            logger.error("Supabase client not initialized. Cannot load data.")
+            return []
+            
         try:
-            # Esta es una implementación simplificada. 
-            # En un sistema real, buscaríamos cartas cuya última actualización sea antigua.
-            # O cartas marcadas como 'priority' para trackeo.
             query = self.supabase.supabase.table('card_printings').select(
                 'printing_id, image_url, cards(card_name, game_id, games(game_code)), sets(set_name)'
             ).limit(limit).execute()

@@ -198,12 +198,12 @@ export const fetchProducts = async (params: any = {}, signal?: AbortSignal): Pro
       color_filter: params.color ? (Array.isArray(params.color) ? params.color : params.color.split(',')) : null,
       year_from: params.year_from || null,
       year_to: params.year_to || null,
-      sort_by: params.sort || 'newest',
-      limit_count: params.limit || 50,
-      offset_count: params.offset || 0,
       price_min: params.price_min || null,
       price_max: params.price_max || null,
-      p_only_new: params.only_new || false
+      limit_count: params.limit || 50,
+      offset_count: params.offset || 0,
+      p_only_new: params.only_new || false,
+      sort_by: params.sort || 'newest'
     }).abortSignal(signal);
 
     if (error) throw error;
