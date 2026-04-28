@@ -111,25 +111,34 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                 <div className="max-w-[1600px] mx-auto px-4 flex justify-between">
                     {tcgGames.map((game) => (
                         <div key={game.code} className="relative group px-1 py-3">
-                            <button className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/5 transition-all group-hover:text-indigo-400">
-                                <span className="text-lg grayscale group-hover:grayscale-0 transition-all">{game.icon}</span>
-                                <span className="text-[10px] font-black uppercase tracking-tighter">{game.name}</span>
-                                <ChevronDown size={12} className="opacity-50 group-hover:rotate-180 transition-transform" />
-                            </button>
-                            
-                            {/* Dropdown Menu */}
-                            <div className="absolute top-full left-0 w-48 bg-slate-900/95 backdrop-blur-2xl border border-white/10 rounded-xl mt-1 py-2 shadow-2xl opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200 z-50">
-                                <button onClick={() => navigateToGame(game.code, 'singles')} className="w-full flex items-center gap-3 px-4 py-3 hover:bg-indigo-600/20 text-xs font-bold transition-colors">
-                                    <div className="w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[10px]">Img</div>
-                                    SINGLES
-                                </button>
-                                {isDevEnv && (
-                                    <button onClick={() => navigateToGame(game.code, 'products')} className="w-full flex items-center gap-3 px-4 py-3 hover:bg-indigo-600/20 text-xs font-bold transition-colors">
-                                        <div className="w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[10px]">Img</div>
-                                        PRODUCTOS
+                            {game.code === 'MTG' ? (
+                                <>
+                                    <button className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/5 transition-all group-hover:text-indigo-400">
+                                        <span className="text-lg grayscale group-hover:grayscale-0 transition-all">{game.icon}</span>
+                                        <span className="text-[10px] font-black uppercase tracking-tighter">{game.name}</span>
+                                        <ChevronDown size={12} className="opacity-50 group-hover:rotate-180 transition-transform" />
                                     </button>
-                                )}
-                            </div>
+                                    
+                                    {/* Dropdown Menu */}
+                                    <div className="absolute top-full left-0 w-48 bg-slate-900/95 backdrop-blur-2xl border border-white/10 rounded-xl mt-1 py-2 shadow-2xl opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200 z-50">
+                                        <button onClick={() => navigateToGame(game.code, 'singles')} className="w-full flex items-center gap-3 px-4 py-3 hover:bg-indigo-600/20 text-xs font-bold transition-colors">
+                                            <div className="w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[10px]">Img</div>
+                                            SINGLES
+                                        </button>
+                                        {isDevEnv && (
+                                            <button onClick={() => navigateToGame(game.code, 'products')} className="w-full flex items-center gap-3 px-4 py-3 hover:bg-indigo-600/20 text-xs font-bold transition-colors">
+                                                <div className="w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[10px]">Img</div>
+                                                PRODUCTOS
+                                            </button>
+                                        )}
+                                    </div>
+                                </>
+                            ) : (
+                                <button onClick={() => navigateToGame(game.code, 'products')} className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/5 transition-all group-hover:text-indigo-400">
+                                    <span className="text-lg grayscale group-hover:grayscale-0 transition-all">{game.icon}</span>
+                                    <span className="text-[10px] font-black uppercase tracking-tighter">{game.name}</span>
+                                </button>
+                            )}
                         </div>
                     ))}
 
