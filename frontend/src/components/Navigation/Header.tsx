@@ -39,14 +39,13 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
     }, [searchParams]);
 
     useEffect(() => {
-        if (!isDevEnv) return;
         const loadCategories = async () => {
             const { fetchAccessoryCategories } = await import('../../utils/api');
             const cats = await fetchAccessoryCategories('ACCESSORIES');
             setCategories(cats || []);
         };
         loadCategories();
-    }, [isDevEnv]);
+    }, []);
 
     const handleSearch = (val: string) => {
         setQuery(val);
@@ -56,8 +55,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
         setSearchParams(newParams);
     };
 
-    const navigateToGame = (gameCode: string, mode: 'singles' | 'products') => {
-        const tab = mode === 'singles' ? 'marketplace' : 'accessories';
+    const navigateToGame = (gameCode: string, tab: string = 'marketplace') => {
         navigate(`/?game=${gameCode}&tab=${tab}`);
         setIsMobileMenuOpen(false);
     };
@@ -128,20 +126,18 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                                     
                                     {/* Dropdown Menu */}
                                     <div className="absolute top-full left-0 w-48 bg-slate-900/95 backdrop-blur-2xl border border-white/10 rounded-xl mt-1 py-2 shadow-2xl opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200 z-50">
-                                        <button onClick={() => navigateToGame(game.code, 'singles')} className="w-full flex items-center gap-3 px-4 py-3 hover:bg-indigo-600/20 text-xs font-bold transition-colors">
-                                            <div className="w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[10px]">Img</div>
-                                            SINGLES
+                                        <button onClick={() => navigateToGame(game.code, 'reference')} className="w-full flex items-center gap-3 px-4 py-3 hover:bg-indigo-600/20 text-xs font-bold transition-colors">
+                                            <div className="w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[10px]">🔎</div>
+                                            CATÁLOGO GLOBAL
                                         </button>
-                                        {isDevEnv && (
-                                            <button onClick={() => navigateToGame(game.code, 'products')} className="w-full flex items-center gap-3 px-4 py-3 hover:bg-indigo-600/20 text-xs font-bold transition-colors">
-                                                <div className="w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[10px]">Img</div>
-                                                PRODUCTOS
-                                            </button>
-                                        )}
+                                        <button onClick={() => navigateToGame(game.code, 'marketplace')} className="w-full flex items-center gap-3 px-4 py-3 hover:bg-indigo-600/20 text-xs font-bold transition-colors">
+                                            <div className="w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[10px]">💎</div>
+                                            CARTAS EN STOCK
+                                        </button>
                                     </div>
                                 </>
                             ) : (
-                                <button onClick={() => navigateToGame(game.code, 'singles')} className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${isActive ? 'bg-white/10 text-indigo-400' : 'hover:bg-white/5 group-hover:text-indigo-400'}`}>
+                                <button onClick={() => navigateToGame(game.code, 'marketplace')} className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${isActive ? 'bg-white/10 text-indigo-400' : 'hover:bg-white/5 group-hover:text-indigo-400'}`}>
                                     <span className={`text-lg transition-all ${isActive ? 'grayscale-0' : 'grayscale group-hover:grayscale-0'}`}>{game.icon}</span>
                                     <span className="text-[10px] font-black uppercase tracking-tighter">{game.name}</span>
                                 </button>
@@ -149,38 +145,36 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                         </div>
                     )})}
 
-                    {/* 8th Category: Productos (Accessories) - ONLY IN DEV */}
-                    {isDevEnv && (
-                        <div className="relative group px-1 py-3">
-                            <button className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-emerald-400 transition-all hover:bg-emerald-500/20">
-                                <span className="text-[10px] font-black uppercase tracking-tighter">PRODUCTOS</span>
-                                <ChevronDown size={12} className="opacity-50 group-hover:rotate-180 transition-transform" />
-                            </button>
-                            
-                            <div className="absolute top-full right-0 w-56 bg-slate-900/95 backdrop-blur-2xl border border-white/10 rounded-xl mt-1 py-3 shadow-2xl opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200 z-50">
-                                <div className="px-4 mb-2">
-                                    <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Insumos Generales</span>
-                                </div>
-                                <div className="grid grid-cols-1 gap-1">
-                                    {categories.map((cat) => (
-                                        <button 
-                                            key={cat.code} 
-                                            onClick={() => navigateToCategory(cat.code)}
-                                            className="flex items-center gap-3 px-4 py-2.5 hover:bg-emerald-600/20 text-[11px] font-bold transition-colors"
-                                        >
-                                            <span className="text-base">{cat.icon}</span>
-                                            {cat.name.toUpperCase()}
-                                        </button>
-                                    ))}
-                                </div>
-                                <div className="mt-2 pt-2 border-t border-white/5">
-                                    <button onClick={() => navigateToCategory('OTHER')} className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-slate-800 text-[11px] font-bold text-slate-400">
-                                        OTROS
+                    {/* 8th Category: Productos (Accessories) */}
+                    <div className="relative group px-1 py-3">
+                        <button className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-emerald-400 transition-all hover:bg-emerald-500/20">
+                            <span className="text-[10px] font-black uppercase tracking-tighter">PRODUCTOS</span>
+                            <ChevronDown size={12} className="opacity-50 group-hover:rotate-180 transition-transform" />
+                        </button>
+                        
+                        <div className="absolute top-full right-0 w-56 bg-slate-900/95 backdrop-blur-2xl border border-white/10 rounded-xl mt-1 py-3 shadow-2xl opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200 z-50">
+                            <div className="px-4 mb-2">
+                                <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Insumos Generales</span>
+                            </div>
+                            <div className="grid grid-cols-1 gap-1">
+                                {categories.map((cat) => (
+                                    <button 
+                                        key={cat.code} 
+                                        onClick={() => navigateToCategory(cat.code)}
+                                        className="flex items-center gap-3 px-4 py-2.5 hover:bg-emerald-600/20 text-[11px] font-bold transition-colors"
+                                    >
+                                        <span className="text-base">{cat.icon}</span>
+                                        {cat.name.toUpperCase()}
                                     </button>
-                                </div>
+                                ))}
+                            </div>
+                            <div className="mt-2 pt-2 border-t border-white/5">
+                                <button onClick={() => navigateToCategory('OTHER')} className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-slate-800 text-[11px] font-bold text-slate-400">
+                                    OTROS
+                                </button>
                             </div>
                         </div>
-                    )}
+                    </div>
                 </div>
             </nav>
 
@@ -189,7 +183,61 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                 <SearchBar value={query} onChange={handleSearch} placeholder="Buscar..." />
             </div>
 
-            {/* Mobile Menu Overlay... (can be expanded later) */}
+            {/* Mobile Menu Overlay */}
+            {isMobileMenuOpen && (
+                <div className="lg:hidden fixed inset-0 z-[100] bg-[#0a0a0a] overflow-y-auto animate-in fade-in duration-200">
+                    <div className="p-4 border-b border-white/10 flex items-center justify-between">
+                        <img src="/branding/Logo.png" alt="Geekorium" className="w-28 object-contain" />
+                        <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 bg-neutral-900 border border-white/5 rounded-xl text-neutral-400">
+                            <X size={20} />
+                        </button>
+                    </div>
+
+                    <div className="p-6 space-y-8">
+                        {/* TCG Sections */}
+                        <div>
+                            <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">TCG Catalog</h3>
+                            <div className="grid grid-cols-1 gap-3">
+                                {tcgGames.map(game => (
+                                    <div key={game.code} className="space-y-2">
+                                        <div className="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/5">
+                                            <span className="text-xl">{game.icon}</span>
+                                            <span className="font-bold text-sm">{game.name}</span>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-2 pl-2">
+                                            {game.code === 'MTG' ? (
+                                                <>
+                                                    <button onClick={() => navigateToGame(game.code, 'reference')} className="py-2 text-[11px] font-black uppercase text-indigo-400 bg-indigo-500/10 rounded-lg">Catálogo</button>
+                                                    <button onClick={() => navigateToGame(game.code, 'marketplace')} className="py-2 text-[11px] font-black uppercase text-indigo-400 bg-indigo-500/10 rounded-lg">Stock</button>
+                                                </>
+                                            ) : (
+                                                <button onClick={() => navigateToGame(game.code, 'marketplace')} className="col-span-2 py-2 text-[11px] font-black uppercase text-indigo-400 bg-indigo-500/10 rounded-lg text-center">Ver Productos</button>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Accessories */}
+                        <div>
+                            <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">Productos & Accesorios</h3>
+                            <div className="grid grid-cols-2 gap-3">
+                                {categories.map(cat => (
+                                    <button 
+                                        key={cat.code} 
+                                        onClick={() => navigateToCategory(cat.code)}
+                                        className="flex flex-col items-center gap-2 p-4 bg-emerald-500/5 border border-emerald-500/10 rounded-xl hover:bg-emerald-500/10 transition-all"
+                                    >
+                                        <span className="text-2xl">{cat.icon}</span>
+                                        <span className="text-[10px] font-bold text-emerald-400 text-center uppercase tracking-tighter">{cat.name}</span>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </header>
     );
 };
