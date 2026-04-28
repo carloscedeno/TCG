@@ -46,15 +46,7 @@ const gameMap: Record<string, string> = {
   'FAB': 'Flesh and Blood'
 };
 
-const gameMapInv: Record<string, string> = {
-  'Magic: The Gathering': 'MTG',
-  'Pokémon': 'PKM',
-  'Riftbound': 'RFB',
-  'One Piece': 'OPC',
-  'Gundam': 'GND',
-  'Digimon': 'DGM',
-  'Flesh and Blood': 'FAB'
-};
+
 
 const Home: React.FC = () => {
   const isDevEnv = import.meta.env.DEV || window.location.hostname.includes('dev') || window.location.hostname.includes('localhost');
