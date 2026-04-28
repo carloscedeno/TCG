@@ -576,7 +576,7 @@ const Home: React.FC = () => {
 
                           {filters.games?.map(g => (
                             <button key={g} data-testid="game-tab" data-active="true" onClick={() => handleFilterChange({ ...filters, games: filters.games?.filter(x => x !== g) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-600/10 border border-purple-500/30 rounded-full text-[10px] font-bold text-purple-400 hover:bg-purple-600/20 transition-all group">
-                              {gameMap[g] || g}
+                              {g}
                               <X size={10} className="group-hover:rotate-90 transition-transform" />
                             </button>
                           ))}
