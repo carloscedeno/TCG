@@ -16,7 +16,7 @@ import { Footer } from '../components/Navigation/Footer';
 import { Header } from '../components/Navigation/Header';
 
 const mockFilters: Filters = {
-  games: ['MTG', 'POKEMON', 'OPC', 'DGM'],
+  games: ['MTG', 'PKM', 'OPC', 'DGM'],
   rarities: ['Common', 'Uncommon', 'Rare', 'Mythic'],
   colors: ['White', 'Blue', 'Black', 'Red', 'Green', 'Colorless', 'Multicolor'],
   types: ['Creature', 'Instant', 'Sorcery', 'Enchantment', 'Artifact', 'Planeswalker', 'Land'],
@@ -38,7 +38,7 @@ const colorCodeMap: Record<string, string> = {
 
 const gameMap: Record<string, string> = {
   'MTG': 'Magic: The Gathering',
-  'POKEMON': 'Pokémon',
+  'PKM': 'Pokémon',
   'RFB': 'Riftbound',
   'OPC': 'One Piece',
   'GND': 'Gundam',
@@ -48,7 +48,7 @@ const gameMap: Record<string, string> = {
 
 const gameMapInv: Record<string, string> = {
   'Magic: The Gathering': 'MTG',
-  'Pokémon': 'POKEMON',
+  'Pokémon': 'PKM',
   'Riftbound': 'RFB',
   'One Piece': 'OPC',
   'Gundam': 'GND',

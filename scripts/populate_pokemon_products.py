@@ -21,7 +21,7 @@ def populate_pokemon():
         )
         SELECT 
             c.card_name,
-            'POKEMON' as game,
+            'PKM' as game,
             cp.set_code,
             s.set_name,
             COALESCE(cp.avg_market_price_usd, 0) as price_usd,
@@ -38,7 +38,7 @@ def populate_pokemon():
         FROM public.card_printings cp
         JOIN public.sets s ON cp.set_id = s.set_id
         JOIN public.cards c ON cp.card_id = c.card_id
-        WHERE c.game_id = 23
+        WHERE c.game_id = 10
         ON CONFLICT (printing_id, finish, condition) DO UPDATE SET
             price_usd = EXCLUDED.price_usd,
             updated_at = NOW(),
@@ -50,7 +50,7 @@ def populate_pokemon():
         conn.commit()
         
         # Verify
-        cur.execute("SELECT count(*) FROM products WHERE game = 'POKEMON'")
+        cur.execute("SELECT count(*) FROM products WHERE game = 'PKM'")
         count = cur.fetchone()[0]
         print(f"Total Pokémon products now in storefront: {count}")
         

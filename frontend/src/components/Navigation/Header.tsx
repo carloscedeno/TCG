@@ -24,7 +24,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
     const tcgGames = [
         { name: 'Magic: The Gathering', code: 'MTG', icon: '🪄' },
         ...(isDevEnv ? [
-            { name: 'Pokémon', code: 'POKEMON', icon: '🐹' },
+            { name: 'Pokémon', code: 'PKM', icon: '🐹' },
             { name: 'Riftbound', code: 'RFB', icon: '⚔️' },
             { name: 'One Piece', code: 'OPC', icon: '🏴‍☠️' },
             { name: 'Gundam', code: 'GND', icon: '🤖' },
