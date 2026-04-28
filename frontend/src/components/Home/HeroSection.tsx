@@ -35,23 +35,23 @@ export const HeroSection: React.FC = () => {
                             id: 'mock-1',
                             title: 'El Emporio de Geekorium',
                             subtitle: 'Tu destino premium para Singles de Magic: The Gathering. Stock real y actualizado diariamente.',
-                            image_url: 'https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg', // Black Market Connections
+                            image_url: 'https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg',
                             link_url: '/?game=MTG',
                             category: 'main_hero'
                         },
                         {
                             id: 'mock-2',
                             title: 'Outlaws of Thunder Junction',
-                            subtitle: 'Ya disponible el stock completo de la Ãºltima ediciÃ³n. Encuentra los Breaking News aquÃ­.',
-                            image_url: 'https://cards.scryfall.io/art_crop/front/6/7/67f4c93b-080c-4196-b095-6a120a221988.jpg', // Agadeem's Awakening
+                            subtitle: 'Ya disponible el stock completo de la última edición. Encuentra los Breaking News aquí.',
+                            image_url: 'https://cards.scryfall.io/art_crop/front/6/7/67f4c93b-080c-4196-b095-6a120a221988.jpg',
                             link_url: '/?game=MTG&set=OTJ',
                             category: 'main_hero'
                         },
                         {
                             id: 'mock-3',
-                            title: 'Compramos tu ColecciÃ³n',
-                            subtitle: 'Trae tus cartas y obtÃ©n crÃ©dito en tienda o efectivo. El mejor precio del mercado garantizado.',
-                            image_url: 'https://cards.scryfall.io/art_crop/front/a/1/a1d9ae04-3747-4402-8608-8f85f36e479c.jpg', // Treasure map / Token
+                            title: 'Compramos tu Colección',
+                            subtitle: 'Trae tus cartas y obtén crédito en tienda o efectivo. El mejor precio del mercado garantizado.',
+                            image_url: 'https://cards.scryfall.io/art_crop/front/a/1/a1d9ae04-3747-4402-8608-8f85f36e479c.jpg',
                             link_url: '#',
                             category: 'main_hero'
                         }
@@ -123,7 +123,8 @@ export const HeroSection: React.FC = () => {
                         {currentItem.subtitle}
                     </p>
 
-                    <div className="flex items-center gap-4 justify-center md:justify-start">
+                    {/* Explore button hidden as requested */}
+                    {/* <div className="flex items-center gap-4 justify-center md:justify-start">
                         <a 
                             href={currentItem.link_url || '#'} 
                             className="px-8 py-4 bg-white text-black font-black text-xs uppercase tracking-widest rounded-full hover:bg-pink-500 hover:text-white transition-all transform active:scale-95 shadow-xl flex items-center gap-2"
@@ -131,7 +132,7 @@ export const HeroSection: React.FC = () => {
                             Explore Now
                             <ExternalLink size={14} />
                         </a>
-                    </div>
+                    </div> */}
                 </div>
 
                 {/* Showcase */}
