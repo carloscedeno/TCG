@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchCards, fetchBanners } from '../../utils/api';
-import type { CardApi } from '../../utils/api';
+import { fetchBanners } from '../../utils/api';
 import { ChevronLeft, ChevronRight, Zap, ExternalLink } from 'lucide-react';
 
 interface Banner {
@@ -13,7 +12,6 @@ interface Banner {
 }
 
 export const HeroSection: React.FC = () => {
-    const [trendingCards, setTrendingCards] = useState<CardApi[]>([]);
     const [banners, setBanners] = useState<Banner[]>([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [loading, setLoading] = useState(true);
@@ -31,13 +29,34 @@ export const HeroSection: React.FC = () => {
                 if (bannerData && bannerData.length > 0) {
                     setBanners(bannerData);
                 } else {
-                    // 2. Fallback to Trending Cards
-                    const { cards } = await fetchCards({ 
-                      limit: 10, 
-                      sort: 'release_date' 
-                    }).catch(() => ({ cards: [] }));
-                    
-                    setTrendingCards(cards);
+                    // 2. Fallback to Premium Mock Banners for immediate visual impact
+                    const MOCK_BANNERS: Banner[] = [
+                        {
+                            id: 'mock-1',
+                            title: 'El Emporio de Geekorium',
+                            subtitle: 'Tu destino premium para Singles de Magic: The Gathering. Stock real y actualizado diariamente.',
+                            image_url: 'https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg', // Black Market Connections
+                            link_url: '/?game=MTG',
+                            category: 'main_hero'
+                        },
+                        {
+                            id: 'mock-2',
+                            title: 'Outlaws of Thunder Junction',
+                            subtitle: 'Ya disponible el stock completo de la Ãºltima ediciÃ³n. Encuentra los Breaking News aquÃ­.',
+                            image_url: 'https://cards.scryfall.io/art_crop/front/6/7/67f4c93b-080c-4196-b095-6a120a221988.jpg', // Agadeem's Awakening
+                            link_url: '/?game=MTG&set=OTJ',
+                            category: 'main_hero'
+                        },
+                        {
+                            id: 'mock-3',
+                            title: 'Compramos tu ColecciÃ³n',
+                            subtitle: 'Trae tus cartas y obtÃ©n crÃ©dito en tienda o efectivo. El mejor precio del mercado garantizado.',
+                            image_url: 'https://cards.scryfall.io/art_crop/front/a/1/a1d9ae04-3747-4402-8608-8f85f36e479c.jpg', // Treasure map / Token
+                            link_url: '#',
+                            category: 'main_hero'
+                        }
+                    ];
+                    setBanners(MOCK_BANNERS);
                 }
             } catch (err) {
                 console.error("Critical Hero data load error:", err);
@@ -49,13 +68,13 @@ export const HeroSection: React.FC = () => {
     }, []);
 
     const nextSlide = () => {
-        const length = banners.length > 0 ? banners.length : trendingCards.length;
+        const length = banners.length;
         if (length === 0) return;
         setCurrentIndex((prev) => (prev + 1) % length);
     };
 
     const prevSlide = () => {
-        const length = banners.length > 0 ? banners.length : trendingCards.length;
+        const length = banners.length;
         if (length === 0) return;
         setCurrentIndex((prev) => (prev - 1 + length) % length);
     };
@@ -68,8 +87,7 @@ export const HeroSection: React.FC = () => {
         );
     }
 
-    const hasBanners = banners.length > 0;
-    const currentItem = hasBanners ? banners[currentIndex] : (trendingCards[currentIndex] as any);
+    const currentItem = banners[currentIndex];
 
     if (!currentItem) return null;
 
@@ -92,40 +110,27 @@ export const HeroSection: React.FC = () => {
                 {/* Text Content */}
                 <div className="flex-1 text-center md:text-left pt-12 md:pt-0">
                     <div className="flex items-center gap-2 mb-6 justify-center md:justify-start">
-                        <span className={`px-3 py-1 border rounded-full text-[10px] font-black tracking-[0.2em] uppercase flex items-center gap-1.5 ${hasBanners ? 'bg-pink-500/20 border-pink-500/30 text-pink-400' : 'bg-geeko-cyan/20 border-geeko-cyan/30 text-geeko-cyan'}`}>
-                            <Zap size={10} fill="currentColor" /> {hasBanners ? "Featured" : "New Arrival"}
+                        <span className="px-3 py-1 border rounded-full text-[10px] font-black tracking-[0.2em] uppercase flex items-center gap-1.5 bg-pink-500/20 border-pink-500/30 text-pink-400">
+                            <Zap size={10} fill="currentColor" /> Featured
                         </span>
-                        {!hasBanners && <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">{currentItem.set}</span>}
                     </div>
 
                     <h2 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tighter leading-[0.9] italic uppercase mb-4 md:mb-6 drop-shadow-2xl text-balance">
-                        {hasBanners ? currentItem.title : currentItem.name.split('//')[0]}
+                        {currentItem.title}
                     </h2>
 
                     <p className="text-neutral-400 text-sm md:text-base max-w-xl font-medium mb-8 line-clamp-2">
-                        {hasBanners ? currentItem.subtitle : `${currentItem.type} — Explore the latest additions to the ${currentItem.set} collection. Real-time market valuation enabled.`}
+                        {currentItem.subtitle}
                     </p>
 
                     <div className="flex items-center gap-4 justify-center md:justify-start">
-                        {hasBanners ? (
-                            <a 
-                                href={currentItem.link_url || '#'} 
-                                className="px-8 py-4 bg-white text-black font-black text-xs uppercase tracking-widest rounded-full hover:bg-pink-500 hover:text-white transition-all transform active:scale-95 shadow-xl flex items-center gap-2"
-                            >
-                                Explore Now
-                                <ExternalLink size={14} />
-                            </a>
-                        ) : (
-                            <>
-                                <button className="px-8 py-4 bg-white text-black font-black text-xs uppercase tracking-widest rounded-full hover:bg-geeko-cyan hover:text-white transition-all transform active:scale-95 shadow-xl">
-                                    View Details
-                                </button>
-                                <div className="flex flex-col">
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-neutral-600">Market Value</span>
-                                    <span className="text-2xl font-mono font-black text-geeko-cyan italic">${currentItem.price.toFixed(2)}</span>
-                                </div>
-                            </>
-                        )}
+                        <a 
+                            href={currentItem.link_url || '#'} 
+                            className="px-8 py-4 bg-white text-black font-black text-xs uppercase tracking-widest rounded-full hover:bg-pink-500 hover:text-white transition-all transform active:scale-95 shadow-xl flex items-center gap-2"
+                        >
+                            Explore Now
+                            <ExternalLink size={14} />
+                        </a>
                     </div>
                 </div>
 
@@ -137,9 +142,8 @@ export const HeroSection: React.FC = () => {
                             alt=""
                             className="w-full h-full object-cover transition-transform duration-700 group-hover/card:scale-110"
                         />
-                        {!hasBanners && <div className="absolute inset-0 foil-shimmer opacity-30 pointer-events-none" />}
                     </div>
-                    <div className={`absolute -bottom-10 inset-x-10 h-10 blur-[40px] rounded-full ${hasBanners ? 'bg-pink-500/20' : 'bg-geeko-cyan/20'}`} />
+                    <div className="absolute -bottom-10 inset-x-10 h-10 blur-[40px] rounded-full bg-pink-500/20" />
                 </div>
             </div>
 
@@ -161,7 +165,7 @@ export const HeroSection: React.FC = () => {
 
             {/* Indicators */}
             <div className="absolute bottom-10 left-10 md:left-16 flex gap-2 z-20">
-                {(hasBanners ? banners : trendingCards).map((_, i) => (
+                {banners.map((_, i) => (
                     <button
                         key={i}
                         onClick={() => setCurrentIndex(i)}

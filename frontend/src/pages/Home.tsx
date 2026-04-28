@@ -14,9 +14,10 @@ import { useSearchParams } from 'react-router-dom';
 import { CartDrawer } from '../components/Navigation/CartDrawer';
 import { Footer } from '../components/Navigation/Footer';
 import { Header } from '../components/Navigation/Header';
+import { HeroSection } from '../components/Home/HeroSection';
 
 const mockFilters: Filters = {
-  games: ['Magic: The Gathering', 'Pokémon', 'Lorcana', 'One Piece'],
+  games: ['MTG', 'PKM', 'OPC', 'DGM'],
   rarities: ['Common', 'Uncommon', 'Rare', 'Mythic'],
   colors: ['White', 'Blue', 'Black', 'Red', 'Green', 'Colorless', 'Multicolor'],
   types: ['Creature', 'Instant', 'Sorcery', 'Enchantment', 'Artifact', 'Planeswalker', 'Land'],
@@ -37,27 +38,17 @@ const colorCodeMap: Record<string, string> = {
 };
 
 
-const gameMapInv: Record<string, string> = {
-  'Magic: The Gathering': 'MTG',
-  'Pokémon': 'PKM',
-  'Riftbound': 'RFB',
-  'One Piece': 'OPC',
-  'Gundam': 'GND',
-  'Digimon': 'DGM',
-  'Flesh and Blood': 'FAB'
-};
+
 
 const Home: React.FC = () => {
+  const isDevEnv = import.meta.env.DEV || window.location.hostname.includes('dev') || window.location.hostname.includes('localhost');
   const [searchParams, setSearchParams] = useSearchParams();
   const [cards, setCards] = useState<(CardProps & { card_id: string })[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState(searchParams.get('q') || '');
   const [filters, setFilters] = useState<Partial<Filters>>({
-    games: searchParams.get('game')?.split(',').map((g: string) => {
-      if (g === 'MTG') return 'Magic: The Gathering';
-      return g;
-    }).filter(Boolean) || [],
+    games: searchParams.get('game')?.split(',').filter(Boolean) || [],
     sets: searchParams.get('set')?.split(',').filter(Boolean) || [],
     rarities: searchParams.get('rarity')?.split(',').filter(Boolean) || [],
     categories: searchParams.get('category')?.split(',').filter(Boolean) || [],
@@ -186,9 +177,8 @@ const Home: React.FC = () => {
         let result: { cards: (CardProps & { card_id: string })[], total_count: number };
 
         if (activeTab === 'marketplace') {
-          // Normalize game names for RPC mapping using the centralized map
-          const mappedGame = debouncedFilters.games?.[0] ? 
-            (gameMapInv[debouncedFilters.games[0]] || debouncedFilters.games[0]) : undefined;
+          // Use the game code directly from filters.games
+          const mappedGame = debouncedFilters.games?.[0] || undefined;
 
           const productRes = await fetchProducts({
             q: debouncedQuery || undefined,
@@ -223,9 +213,8 @@ const Home: React.FC = () => {
             total_count: productRes.total_count
           };
         } else if (activeTab === 'accessories') {
-          // Map game name back to ID or Code using the centralized map
-          const mappedGame = debouncedFilters.games?.[0] ? 
-            (gameMapInv[debouncedFilters.games[0]] || debouncedFilters.games[0]) : undefined;
+          // Use the game code directly
+          const mappedGame = debouncedFilters.games?.[0] || undefined;
 
           const accRes = await fetchAccessories({
             q: debouncedQuery || undefined,
@@ -337,15 +326,10 @@ const Home: React.FC = () => {
   }, [debouncedQuery, debouncedFilters, activeRarity, sortBy, page, activeTab, filters.only_new]);
 
   useEffect(() => {
-    const gameCodeMap: Record<string, string> = {
-      'Magic: The Gathering': 'MTG',
-      'MTG': 'MTG'
-    };
-
     // Si no hay juegos seleccionados en filtros, usamos MTG por defecto
-    const activeGame = filters.games && filters.games.length > 0 ? filters.games[0] : 'MTG';
+    const activeGameCode = filters.games && filters.games.length > 0 ? filters.games[0] : 'MTG';
 
-    fetchSets(gameCodeMap[activeGame] || 'MTG')
+    fetchSets(activeGameCode)
       .then(realSets => {
         const setNames = realSets.map((s: any) => s.set_name);
         setSets(setNames);
@@ -389,6 +373,11 @@ const Home: React.FC = () => {
         {/* Header */}
         <Header onCartOpen={() => setIsCartOpen(true)} cartCount={cartCount} />
 
+        {/* Hero Section */}
+        <div className="max-w-[1600px] mx-auto px-6 pt-4 mb-2 animate-in fade-in slide-in-from-top-4 duration-1000">
+          <HeroSection />
+        </div>
+
 
 
         {/* Rarity Filter Tabs & Sort */}
@@ -406,30 +395,32 @@ const Home: React.FC = () => {
                   <img src="/branding/Emporio.jpg" alt="Icon" className="w-5 h-5 rounded-full" />
                   Stock Geekorium
                 </button>
-                {/* HIDDEN TEMPORARILY
-                <button
-                  onClick={() => handleTabChange('reference')}
-                  data-testid="reference-tab"
-                  className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'reference'
-                    ? 'ring-2 ring-blue-500/30 bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.4)]'
-                    : 'text-neutral-500 hover:text-neutral-300'
-                    }`}
-                >
-                  <Search size={16} className={activeTab === 'reference' ? 'text-white' : 'text-blue-500'} />
-                  Mercado
-                </button>
-                <button
-                  onClick={() => handleTabChange('accessories')}
-                  data-testid="accessories-tab"
-                  className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'accessories'
-                    ? 'ring-2 ring-purple-500/30 bg-purple-600 text-white shadow-[0_0_15px_rgba(147,51,234,0.4)]'
-                    : 'text-neutral-500 hover:text-neutral-300'
-                    }`}
-                >
-                  <Package size={16} className={activeTab === 'accessories' ? 'text-white' : 'text-purple-400'} />
-                  Catálogo
-                </button>
-                */}
+                {isDevEnv && (
+                  <>
+                    <button
+                      onClick={() => handleTabChange('reference')}
+                      data-testid="reference-tab"
+                      className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'reference'
+                        ? 'ring-2 ring-blue-500/30 bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.4)]'
+                        : 'text-neutral-500 hover:text-neutral-300'
+                        }`}
+                    >
+                      <Search size={16} className={activeTab === 'reference' ? 'text-white' : 'text-blue-500'} />
+                      Mercado
+                    </button>
+                    <button
+                      onClick={() => handleTabChange('accessories')}
+                      data-testid="accessories-tab"
+                      className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'accessories'
+                        ? 'ring-2 ring-purple-500/30 bg-purple-600 text-white shadow-[0_0_15px_rgba(147,51,234,0.4)]'
+                        : 'text-neutral-500 hover:text-neutral-300'
+                        }`}
+                    >
+                      <span className="text-purple-400">📦</span>
+                      Catálogo
+                    </button>
+                  </>
+                )}
               </div>
 
               <div className="flex flex-col sm:flex-row items-center gap-4">
@@ -585,7 +576,7 @@ const Home: React.FC = () => {
 
                           {filters.games?.map(g => (
                             <button key={g} data-testid="game-tab" data-active="true" onClick={() => handleFilterChange({ ...filters, games: filters.games?.filter(x => x !== g) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-600/10 border border-purple-500/30 rounded-full text-[10px] font-bold text-purple-400 hover:bg-purple-600/20 transition-all group">
-                              {g}
+                              {gameMap[g] || g}
                               <X size={10} className="group-hover:rotate-90 transition-transform" />
                             </button>
                           ))}

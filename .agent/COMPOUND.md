@@ -735,3 +735,17 @@ Corregir el bug visual donde los ítems del carrito mostraban `$0.00` individual
 - Corrección del tipo de retorno de `printing_id` en el RPC, forzando explícitamente el casting a `text` para coincidir con la definición tabular esperada por el frontend.
 **Artefacto creado:** Migración SQL unificada para estabilizar la tabla y los filtros del escaparate.
 **Regla derivada:** Toda consulta SQL de tipo búsqueda o filtrado dependiente de entradas del usuario o de URL Parameters debe incluir normalización a mayúsculas/minúsculas y validación activa de inventario si el entorno de ejecución es el escaparate principal.
+
+## 2026-04-28 � Estabilizacion de Pokemon TCG en Sandbox
+
+**Que paso:** Se resolvio el bloqueo en la carga de Pokemon en el entorno de desarrollo. Se identifico una discrepancia critica entre los codigos de juego usados en el frontend (POKEMON) y los estandarizados en la base de datos de Sandbox (PKM). Se audito el proyecto especifico (bqfkqnnostzaqueujdms) para confirmar IDs de juego y ausencia de datos.
+**Lo que cambio:**
+- lessons_learned.md -> Leccion #108: Alineacion de Entornos Cross-Project.
+- LEYES_DEL_SISTEMA.md -> Renumeracion de leyes 18 y 19.
+- PROGRESS.md -> Actualizacion de estado (Compound v54).
+- frontend/src/pages/Home.tsx -> Sincronizacion reactiva con codigos de 3 letras.
+- frontend/src/components/Navigation/Header.tsx -> Navegacion unificada a ?game=PKM.
+- scripts/update_rpc.py -> Normalizacion universal de codigos de juego en SQL.
+**Artefacto creado:** scripts/check_dev_api.py (Script de diagnostico de salud via REST API).
+**Regla derivada:** Verificacion obligatoria de IDs de juego en tablas de referencia antes de desplegar filtros de TCGs nuevos.
+$content
