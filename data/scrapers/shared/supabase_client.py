@@ -8,7 +8,7 @@ load_dotenv()
 
 class SupabaseClient:
     def __init__(self, url: str = None, key: str = None):
-        raw_url = (url or os.getenv("SUPABASE_URL") or "").strip()
+        raw_url = (url or os.getenv("SUPABASE_URL") or "").strip().replace('"', '').replace("'", "")
         
         # URL Normalization: handle project-id only format
         if raw_url and not raw_url.startswith('http'):
@@ -16,7 +16,7 @@ class SupabaseClient:
             self.url = f"https://{raw_url}.supabase.co"
             print(f"⚠️ Normalizing SUPABASE_URL: {raw_url} -> {self.url}")
         else:
-            self.url = raw_url
+            self.url = raw_url.rstrip('/')
             
         self.key = (key or os.getenv("SUPABASE_SERVICE_ROLE_KEY") or os.getenv("SUPABASE_ANON_KEY") or "").strip()
         
