@@ -25,6 +25,7 @@ interface OrderItem {
 }
 
 const ORDER_STATUSES: Record<string, { label: string; color: string; border?: string }> = {
+    pending: { label: 'Pendiente', color: 'bg-orange-500/20 text-orange-400' },
     pending_verification: { label: 'Validando Inventario', color: 'bg-orange-500/20 text-orange-400' },
     awaiting_payment: { label: 'Esperando Pago', color: 'bg-yellow-500/20 text-yellow-400' },
     pending_payment: { label: 'Pendiente Antiguo', color: 'bg-yellow-700/20 text-yellow-600' },
