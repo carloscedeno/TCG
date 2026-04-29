@@ -34,10 +34,16 @@ from urllib3.exceptions import MaxRetryError, ProtocolError
 load_dotenv(os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env'))
 load_dotenv() # También intentar local
 
-SUPABASE_URL = (os.getenv('SUPABASE_URL') or "").strip()
+SUPABASE_URL = (os.getenv('SUPABASE_URL') or "").strip().replace('"', '').replace("'", "")
 # Normalización de URL para soportar solo el ID del proyecto (ej: sxuotvogwv...)
 if SUPABASE_URL and not SUPABASE_URL.startswith('http'):
-    SUPABASE_URL = f"https://{SUPABASE_URL}.supabase.co"
+    if '.supabase.co' in SUPABASE_URL:
+        SUPABASE_URL = f"https://{SUPABASE_URL}"
+    else:
+        SUPABASE_URL = f"https://{SUPABASE_URL}.supabase.co"
+elif SUPABASE_URL:
+    # Asegurar que no hay slashes al final si es una URL completa
+    SUPABASE_URL = SUPABASE_URL.rstrip('/')
 
 # Intentar service_role por seguridad, pero fallback a anon si no existe
 SUPABASE_KEY = (os.getenv('SUPABASE_SERVICE_ROLE_KEY') or os.getenv('SUPABASE_ANON_KEY') or "").strip()
