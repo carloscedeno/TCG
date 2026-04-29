@@ -210,8 +210,12 @@ const OrdersPage = () => {
                             image_url,
                             set_code
                         ),
-                        finish,
-                        is_on_demand
+                        accessory:accessories (
+                            id,
+                            name,
+                            image_url,
+                            category
+                        )
                     )
                 `)
                 .order('created_at', { ascending: false });
