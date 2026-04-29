@@ -209,12 +209,6 @@ const OrdersPage = () => {
                             name,
                             image_url,
                             set_code
-                        ),
-                        accessory:accessories (
-                            id,
-                            name,
-                            image_url,
-                            category
                         )
                     )
                 `)
