@@ -324,7 +324,7 @@ const OrdersPage = () => {
                             </h1>
                         </div>
                         <p className="text-neutral-500 text-xs font-bold uppercase tracking-[0.2em] ml-1">
-                            Terminal del Sistema v2.1 • {filteredOrders.length} Órdenes
+                            Terminal del Sistema v2.2-STABLE • {filteredOrders.length} Órdenes
                         </p>
                     </div>
                     <div className="flex items-center gap-4">
