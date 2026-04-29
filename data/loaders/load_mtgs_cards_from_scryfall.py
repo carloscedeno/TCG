@@ -34,9 +34,13 @@ from urllib3.exceptions import MaxRetryError, ProtocolError
 load_dotenv(os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env'))
 load_dotenv() # También intentar local
 
-SUPABASE_URL = os.getenv('SUPABASE_URL')
+SUPABASE_URL = (os.getenv('SUPABASE_URL') or "").strip()
+# Normalización de URL para soportar solo el ID del proyecto (ej: sxuotvogwv...)
+if SUPABASE_URL and not SUPABASE_URL.startswith('http'):
+    SUPABASE_URL = f"https://{SUPABASE_URL}.supabase.co"
+
 # Intentar service_role por seguridad, pero fallback a anon si no existe
-SUPABASE_KEY = os.getenv('SUPABASE_SERVICE_ROLE_KEY') or os.getenv('SUPABASE_ANON_KEY')
+SUPABASE_KEY = (os.getenv('SUPABASE_SERVICE_ROLE_KEY') or os.getenv('SUPABASE_ANON_KEY') or "").strip()
 GAME_ID = 22  # MTG
 
 if not SUPABASE_URL or not SUPABASE_KEY:
@@ -44,6 +48,7 @@ if not SUPABASE_URL or not SUPABASE_KEY:
     print(f"DEBUG: URL={SUPABASE_URL}, KEY={'Found' if SUPABASE_KEY else 'Missing'}")
     sys.exit(1)
 
+print(f"🔗 Conectando a Supabase: {SUPABASE_URL}")
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 SCRYFALL_CARDS_URL = "https://api.scryfall.com/cards/search?q=e%3A{set_code}&unique=prints"
