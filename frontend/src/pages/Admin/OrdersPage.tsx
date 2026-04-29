@@ -324,7 +324,7 @@ const OrdersPage = () => {
                             </h1>
                         </div>
                         <p className="text-neutral-500 text-xs font-bold uppercase tracking-[0.2em] ml-1">
-                            Terminal del Sistema v2.2-STABLE • {filteredOrders.length} Órdenes
+                            Terminal del Sistema v2.3-RESILIENT • {filteredOrders.length} Órdenes
                         </p>
                     </div>
                     <div className="flex items-center gap-4">
@@ -646,7 +646,7 @@ const OrdersPage = () => {
                                                                             )}
                                                                         </div>
                                                                     </div>
-                                                                    <span className="font-mono text-emerald-400 font-bold">${item.price_at_purchase.toFixed(2)}</span>
+                                                                    <span className="font-mono text-emerald-400 font-bold">${(item.price_at_purchase || 0).toFixed(2)}</span>
                                                                 </div>
                                                             </div>
                                                         </div>
