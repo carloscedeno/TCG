@@ -129,7 +129,6 @@ export const HeroSection: React.FC = () => {
                             className="px-8 py-4 bg-white text-black font-black text-xs uppercase tracking-widest rounded-full hover:bg-pink-500 hover:text-white transition-all transform active:scale-95 shadow-xl flex items-center gap-2"
                         >
                             Explore Now
-                            <ExternalLink size={14} />
                         </a>
                     </div>
                 </div>
