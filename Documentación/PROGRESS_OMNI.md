@@ -24,7 +24,7 @@
 ### 🚀 Fase 3: Orquestación & UI
 - [x] Hotfix: Restauración de Búsqueda y Filtros en Producción
 - [x] Sincronización de URL (Source of Truth) en Home/Header
-- [ ] GitHub Actions Pipelines (Metadata & Prices)
+- [/] GitHub Actions Pipelines (Metadata & Prices) - *Estabilización en curso (Fixes aplicados)*
 - [ ] Validación de Integridad de Assets (WebP / Supabase Storage)
 
 ---

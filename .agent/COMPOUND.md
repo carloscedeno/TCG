@@ -749,3 +749,14 @@ Corregir el bug visual donde los ítems del carrito mostraban `$0.00` individual
 **Artefacto creado:** scripts/check_dev_api.py (Script de diagnostico de salud via REST API).
 **Regla derivada:** Verificacion obligatoria de IDs de juego en tablas de referencia antes de desplegar filtros de TCGs nuevos.
 $content
+
+## 2026-04-29 - Estabilizacin de Infraestructura de Despliegue y Sync
+
+**Qu pas:** Se resolvieron fallos crticos en GitHub Actions que bloqueaban el despliegue del frontend y fallaban las sincronizaciones de catlogo/precios.
+**Lo que cambi:**
+- lessons_learned.md -> Lecciones 146, 147.
+- frontend/src/components/Home/HeroSection.tsx -> Fix de lint (ExternalLink).
+- data/scrapers/shared/scraper_manager.py -> Refactor de carga robusta de Supabase.
+- data/loaders/load_mtgs_sets_from_scryfall.py -> Logging y fallback de constraints.
+**Artefacto creado:** PLAN_FIX_WORKFLOWS.md.
+**Regla derivada:** Validacin defensiva obligatoria en todos los joins de PostgREST en scripts de sincronizacin.

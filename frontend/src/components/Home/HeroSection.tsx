@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { fetchBanners } from '../../utils/api';
-import { ChevronLeft, ChevronRight, Zap, ExternalLink } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Zap } from 'lucide-react';
 
 interface Banner {
     id: string;

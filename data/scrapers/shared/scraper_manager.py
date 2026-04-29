@@ -152,23 +152,47 @@ class TCGScraperManager:
             return []
             
         try:
+            logger.info(f"Ejecutando consulta a 'card_printings' (límite: {limit})...")
+            # Query cards from card_printings with explicit relationship names if needed
+            # Use dot notation for nested objects in the result
             query = self.supabase.supabase.table('card_printings').select(
                 'printing_id, image_url, cards(card_name, game_id, games(game_code)), sets(set_name)'
             ).limit(limit).execute()
             
+            if not query.data:
+                logger.warning("No se encontraron registros en 'card_printings'.")
+                return []
+
             cards_from_db = []
             for item in query.data:
-                cards_from_db.append({
-                    'card_name': item['cards']['card_name'],
-                    'set_name': item['sets']['set_name'],
-                    'game_code': item['cards']['games']['game_code'],
-                    'source': 'cardmarket' if 'cardmarket' in (item.get('image_url') or '') else 'tcgplayer',
-                    'url': item.get('image_url') or '' # Esto es un placeholder, idealmente tendríamos la URL del marketplace
-                })
+                try:
+                    # Validar que los objetos anidados existan antes de acceder
+                    card = item.get('cards')
+                    if not card:
+                        logger.warning(f"Printing {item.get('printing_id')} no tiene 'cards' asociado. Saltando.")
+                        continue
+                        
+                    game = card.get('games')
+                    game_code = game.get('game_code') if game else 'MTG' # Fallback
+                    
+                    set_obj = item.get('sets')
+                    set_name = set_obj.get('set_name') if set_obj else 'Unknown Set'
+                    
+                    cards_from_db.append({
+                        'card_name': card.get('card_name', 'Unknown Card'),
+                        'set_name': set_name,
+                        'game_code': game_code,
+                        'source': 'cardmarket' if 'cardmarket' in (item.get('image_url') or '') else 'cardkingdom',
+                        'url': item.get('image_url') or '' 
+                    })
+                except (KeyError, TypeError) as e:
+                    logger.error(f"Error procesando item {item.get('printing_id')}: {e}")
+                    continue
             
+            logger.info(f"Cargadas {len(cards_from_db)} cartas exitosamente.")
             return cards_from_db
         except Exception as e:
-            logger.error(f"Error cargando cartas de Supabase: {e}")
+            logger.error(f"Error crítico cargando cartas de Supabase: {e}", exc_info=True)
             return []
     
     def detect_game_from_url(self, url: str, source: str) -> str:

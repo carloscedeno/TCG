@@ -138,6 +138,16 @@ Este documento registra los desafÃƒÆ’Ã‚Â­os tÃƒÆ’Ã‚Â©cnicos 
   - **Mezcla de ParÃ¡metros**: Usar `new URLSearchParams(searchParams)` para conservar el estado existente al aplicar nuevos filtros.
   - **Soporte de UX**: Asegurar que la tecla `Enter` en formularios de bÃºsqueda "confirme" la acciÃ³n y actualice la URL para disparar el fetch.
 
+### 146. Linting CrÃ­tico en CI/CD (GitHub Actions)
+- **Problema**: El despliegue de producción fallaba con un error de variable no utilizada, a pesar de funcionar localmente.
+- **Causa**: `npm run build` en entornos CI suele aplicar reglas de linting más estrictas (`no-unused-vars`). Componentes con importaciones comentadas o "fantasmas" bloquean el pipeline.
+- **LecciÃ³n**: Eliminar siempre las importaciones no utilizadas antes de un push. Si una funcionalidad se comenta temporalmente (ej: botón "Explore"), su importación asociada (ej: `ExternalLink`) debe comentarse o eliminarse también.
+
+### 147. Robustez en Consultas Join de Supabase (PostgREST)
+- **Problema**: Scripts de backend fallaban con `NoneType` errors al intentar acceder a datos de joins complejos.
+- **Causa**: PostgREST puede devolver `null` en objetos anidados si la relación no existe o si hay ambigüedad en el esquema. Acceder directamente como `item['cards']['card_name']` sin validación previa es peligroso.
+- **LecciÃ³n**: Usar siempre `.get()` y validación defensiva para datos provenientes de joins complejos en Supabase. Implementar fallbacks razonables (ej: `game_code` por defecto a 'MTG') y logging granular para identificar registros huérfanos.
+
 ---
 
 ## ÃƒÂ°Ã…Â¸Ã…Â½Ã‚Â¨ DiseÃƒÆ’Ã‚Â±o y Branding

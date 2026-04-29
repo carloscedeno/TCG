@@ -58,24 +58,28 @@ def upsert_batch(batch: list, batch_num: int, total_batches: int, max_retries: i
             return
         except Exception as e:
             error_str = str(e)
+            print(f"  ❌ Error en Lote {batch_num}: {error_str}")
+            
             # Schema difference handling: if environment doesn't have UNIQUE(game_id, set_code), fallback to set_code
-            if '42P10' in error_str:
+            if '42P10' in error_str or 'duplicate key' in error_str.lower():
                 try:
+                    print(f"  🔄 Intentando fallback a ON CONFLICT(set_code)...")
                     supabase.table('sets').upsert(
                         batch,
                         on_conflict='set_code'
                     ).execute()
-                    print(f"  ✅ Lote {batch_num}/{total_batches} ({len(batch)} sets) [Fallback: ON CONFLICT(set_code)]")
+                    print(f"  ✅ Lote {batch_num}/{total_batches} ({len(batch)} sets) [Fallback: ON CONFLICT(set_code) exitoso]")
                     return
                 except Exception as fallback_e:
+                    print(f"  ❌ Fallback falló: {fallback_e}")
                     error_str = f"Original error: {error_str} | Fallback error: {fallback_e}"
 
             if attempt < max_retries - 1:
                 wait = 2 ** attempt  # 1s, 2s, 4s
-                print(f"  ⚠️ Lote {batch_num} falló (intento {attempt + 1}), reintentando en {wait}s... [{error_str}]")
+                print(f"  ⚠️ Reintentando lote {batch_num} en {wait}s... (Intento {attempt + 1}/{max_retries})")
                 time.sleep(wait)
             else:
-                print(f"  ❌ Lote {batch_num} falló definitivamente tras {max_retries} intentos.")
+                print(f"  💥 Lote {batch_num} falló definitivamente tras {max_retries} intentos.")
                 raise
 
 
