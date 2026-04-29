@@ -166,8 +166,8 @@ export function AddProductDrawer({ isOpen, onClose, onSuccess, prefillCard }: Ad
                 p_printing_id: selectedCard.id,
                 p_price: numericPrice,
                 p_stock: stock,
-                p_condition: condition,
-                p_finish: finish
+                p_condition: condition
+                // p_finish: finish -- Removed for production stability until schema is updated
             });
 
             if (rpcError) throw rpcError;

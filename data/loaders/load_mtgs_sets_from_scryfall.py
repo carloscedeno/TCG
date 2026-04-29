@@ -19,10 +19,13 @@ from dotenv import load_dotenv
 
 # Cargar variables de entorno
 load_dotenv()
-SUPABASE_URL = os.getenv('SUPABASE_URL')
-# Normalización de URL para soportar solo el ID del proyecto
+SUPABASE_URL = (os.getenv('SUPABASE_URL') or "").strip().replace('"', '').replace("'", "")
+# Normalización de URL para soportar solo el ID del proyecto (ej: sxuotvogwv...)
 if SUPABASE_URL and not SUPABASE_URL.startswith('http'):
     SUPABASE_URL = f"https://{SUPABASE_URL}.supabase.co"
+elif SUPABASE_URL:
+    # Asegurar que no hay slashes al final si es una URL completa
+    SUPABASE_URL = SUPABASE_URL.rstrip('/')
 
 SUPABASE_KEY = os.getenv('SUPABASE_SERVICE_ROLE_KEY') or os.getenv('SUPABASE_ANON_KEY')
 GAME_ID = 22  # MTG

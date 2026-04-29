@@ -425,6 +425,7 @@ export function InventoryPage() {
                     </div>
 
                     <div className="lg:col-span-7 flex flex-wrap items-center gap-3">
+                        {/* 
                         <div className="flex bg-black/40 p-1 rounded-2xl border border-white/5">
                             {['Magic', 'Pokemon', 'One Piece'].map(game => (
                                 <button
@@ -438,7 +439,8 @@ export function InventoryPage() {
                                     {game}
                                 </button>
                             ))}
-                        </div>
+                        </div> 
+                        */}
 
                         <select
                             value={selectedCondition || ""}
