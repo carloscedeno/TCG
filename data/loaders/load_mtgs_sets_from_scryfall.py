@@ -20,13 +20,18 @@ from dotenv import load_dotenv
 # Cargar variables de entorno
 load_dotenv()
 SUPABASE_URL = os.getenv('SUPABASE_URL')
+# Normalización de URL para soportar solo el ID del proyecto
+if SUPABASE_URL and not SUPABASE_URL.startswith('http'):
+    SUPABASE_URL = f"https://{SUPABASE_URL}.supabase.co"
+
 SUPABASE_KEY = os.getenv('SUPABASE_SERVICE_ROLE_KEY') or os.getenv('SUPABASE_ANON_KEY')
 GAME_ID = 22  # MTG
 
 if not SUPABASE_URL or not SUPABASE_KEY:
-    print("❌ Error: Configura SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY en tu entorno/.env")
+    print("❌ Error: SUPABASE_URL o SUPABASE_KEY no configurados.")
     exit(1)
 
+print(f"🔗 Conectando a Supabase: {SUPABASE_URL}")
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 SCRYFALL_SETS_URL = "https://api.scryfall.com/sets"
