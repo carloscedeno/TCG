@@ -12,8 +12,10 @@ class SupabaseClient:
         
         # URL Normalization: handle project-id only format
         if raw_url and not raw_url.startswith('http'):
-            # If it's just the project ID (e.g. 'sxuotvogwv'), format it
-            self.url = f"https://{raw_url}.supabase.co"
+            if '.supabase.co' in raw_url:
+                self.url = f"https://{raw_url}"
+            else:
+                self.url = f"https://{raw_url}.supabase.co"
             print(f"⚠️ Normalizing SUPABASE_URL: {raw_url} -> {self.url}")
         else:
             self.url = raw_url.rstrip('/')

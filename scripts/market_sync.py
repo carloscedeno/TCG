@@ -35,7 +35,10 @@ def run_market_sync():
     # URL Normalization: handle project-id only format
     if supabase_url and not supabase_url.startswith('http'):
         old_url = supabase_url
-        supabase_url = f"https://{supabase_url}.supabase.co"
+        if '.supabase.co' in supabase_url:
+            supabase_url = f"https://{supabase_url}"
+        else:
+            supabase_url = f"https://{supabase_url}.supabase.co"
         logger.info(f"⚠️ Normalizing SUPABASE_URL from environment: {old_url} -> {supabase_url}")
         
     # Basic URL validation

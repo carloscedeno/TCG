@@ -11,7 +11,10 @@ def diag():
     # Try to clean it like the script does
     clean_url = url.strip().replace('"', '').replace("'", "")
     if clean_url and not clean_url.startswith('http'):
-        clean_url = f"https://{clean_url}.supabase.co"
+        if '.supabase.co' in clean_url:
+            clean_url = f"https://{clean_url}"
+        else:
+            clean_url = f"https://{clean_url}.supabase.co"
     
     print(f"DEBUG: Cleaned URL: {clean_url.replace(url[2:-2], '***') if len(url) > 4 else '***'}")
     
