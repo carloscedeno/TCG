@@ -158,12 +158,17 @@ class TCGScraperManager:
             
             cards_from_db = []
             for item in query.data:
+                # Acceso defensivo para evitar errores si el join falla o devuelve null
+                cards_obj = item.get('cards') or {}
+                games_obj = cards_obj.get('games') or {}
+                sets_obj = item.get('sets') or {}
+                
                 cards_from_db.append({
-                    'card_name': item['cards']['card_name'],
-                    'set_name': item['sets']['set_name'],
-                    'game_code': item['cards']['games']['game_code'],
+                    'card_name': cards_obj.get('card_name', 'Unknown Card'),
+                    'set_name': sets_obj.get('set_name', 'Unknown Set'),
+                    'game_code': games_obj.get('game_code', 'MTG'),
                     'source': 'cardmarket' if 'cardmarket' in (item.get('image_url') or '') else 'tcgplayer',
-                    'url': item.get('image_url') or '' # Esto es un placeholder, idealmente tendríamos la URL del marketplace
+                    'url': item.get('image_url') or ''
                 })
             
             return cards_from_db

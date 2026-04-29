@@ -32,9 +32,15 @@ def run_market_sync():
         
     supabase_key = supabase_service_key or supabase_anon_key
         
+    # URL Normalization: handle project-id only format
+    if supabase_url and not supabase_url.startswith('http'):
+        old_url = supabase_url
+        supabase_url = f"https://{supabase_url}.supabase.co"
+        logger.info(f"⚠️ Normalizing SUPABASE_URL from environment: {old_url} -> {supabase_url}")
+        
     # Basic URL validation
     if not supabase_url.startswith('https://') or '.supabase.co' not in supabase_url:
-        logger.error(f"❌ Invalid SUPABASE_URL format: {supabase_url[:10]}...")
+        logger.error(f"❌ Invalid SUPABASE_URL format: {supabase_url}")
         sys.exit(1)
 
     try:
