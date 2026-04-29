@@ -32,6 +32,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Debug DNS
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        run: python scripts/diag_dns.py
+
       - name: Sync MTG Sets
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
