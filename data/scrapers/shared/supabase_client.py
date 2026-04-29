@@ -8,7 +8,7 @@ load_dotenv()
 
 class SupabaseClient:
     def __init__(self, url: str = None, key: str = None):
-        raw_url = url or os.getenv("SUPABASE_URL")
+        raw_url = (url or os.getenv("SUPABASE_URL") or "").strip()
         
         # URL Normalization: handle project-id only format
         if raw_url and not raw_url.startswith('http'):
@@ -18,7 +18,7 @@ class SupabaseClient:
         else:
             self.url = raw_url
             
-        self.key = key or os.getenv("SUPABASE_SERVICE_ROLE_KEY") or os.getenv("SUPABASE_ANON_KEY")
+        self.key = (key or os.getenv("SUPABASE_SERVICE_ROLE_KEY") or os.getenv("SUPABASE_ANON_KEY") or "").strip()
         
         if not self.url or not self.key:
             logging.error("Supabase URL or Key missing")

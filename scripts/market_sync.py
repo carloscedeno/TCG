@@ -17,9 +17,9 @@ logger = logging.getLogger(__name__)
 def run_market_sync():
     load_dotenv()
     
-    supabase_url = os.getenv('SUPABASE_URL')
-    supabase_service_key = os.getenv('SUPABASE_SERVICE_ROLE_KEY')
-    supabase_anon_key = os.getenv('SUPABASE_ANON_KEY')
+    supabase_url = (os.getenv('SUPABASE_URL') or "").strip()
+    supabase_service_key = (os.getenv('SUPABASE_SERVICE_ROLE_KEY') or "").strip()
+    supabase_anon_key = (os.getenv('SUPABASE_ANON_KEY') or "").strip()
     
     # Granular validation
     if not supabase_url:
