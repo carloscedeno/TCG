@@ -13,6 +13,17 @@ Este documento registra los desafÃƒÆ’Ã‚Â­os tÃƒÆ’Ã‚Â©cnicos 
   - Sincronizar la versiÃ³n de Python del runner (3.12) con la local.
   - Usar versionamiento flexible (`>=2.0.0`) en `requirements.txt` para entornos de despliegue.
 
+### 146. NormalizaciÃ³n Inteligente de URLs (GitHub Actions)
+- **Problema**: `ConnectError: [Errno -2] Name or service not known` en GitHub Actions a pesar de tener el ID de proyecto correcto.
+- **Causa RaÃz**: 
+  1. El secreto `SUPABASE_URL` contenÃa el dominio completo (`id.supabase.co`) pero sin protocolo.
+  2. El cÃ³digo de normalizaciÃ³n no detectaba si el dominio ya estaba presente y terminaba generando `https://id.supabase.co.supabase.co`.
+  3. Los secretos de GitHub pueden contener comillas o caracteres invisibles si se copian mal.
+- **LecciÃ³n**: 
+  - **SanitizaciÃ³n Agresiva**: Siempre aplicar `.strip().replace('"', '').replace("'", "")` a variables de entorno críticas.
+  - **DetecciÃ³n de Dominio**: Verificar si el dominio base (`.supabase.co`) ya existe antes de concatenarlo para evitar dobles extensiones.
+  - **Logging DiagnÃ³stico**: En caso de fallo de conexiÃ³n, imprimir la longitud y partes seguras de la URL para depurar sin exponer el secreto.
+
 ### 143. SincronizaciÃ³n SKU-Aware
 - **Problema**: Los scripts de sincronizaciÃ³n con CardKingdom tenÃ­an errores de mapeo en sets modernos.
 - **Causa**: El uso de campos descriptivos ambiguos en lugar de identificadores Ãºnicos.

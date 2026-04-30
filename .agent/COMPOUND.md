@@ -749,3 +749,13 @@ Corregir el bug visual donde los ítems del carrito mostraban `$0.00` individual
 **Artefacto creado:** scripts/check_dev_api.py (Script de diagnostico de salud via REST API).
 **Regla derivada:** Verificacion obligatoria de IDs de juego en tablas de referencia antes de desplegar filtros de TCGs nuevos.
 $content
+
+## $date � Estabilización de Infraestructura y DNS
+
+**Qué pasó:** Se resolvieron fallos críticos de conexión en los runners de GitHub Actions que impedían la sincronización de sets y precios en producción.
+**Lo que cambió:**
+- lessons_learned.md ? Lección #146 (Normalización Inteligente de URLs)
+- PROGRESS_OMNI.md ? Fase 1.5 marcada como completada.
+- supabase_client.py, load_mtgs_sets_from_scryfall.py, market_sync.py, load_mtgs_cards_from_scryfall.py ? Implementación de normalización resiliente.
+**Artefacto creado:** scripts/diag_dns.py (Script de diagnóstico de red y variables de entorno).
+**Regla derivada:** Nunca confiar en el formato de los secretos de GitHub; sanitizar siempre el protocolo y el dominio base antes de instanciar clientes de terceros.
