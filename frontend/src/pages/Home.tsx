@@ -8,7 +8,7 @@ import { FiltersPanel } from '../components/Filters/FiltersPanel';
 import type { Filters } from '../components/Filters/FiltersPanel';
 import { useAuth } from '../context/AuthContext';
 import { AuthModal } from '../components/Auth/AuthModal';
-import { X, Sparkles, Search } from 'lucide-react';
+import { X, Sparkles, Search, ChevronRight } from 'lucide-react';
 
 import { useSearchParams } from 'react-router-dom';
 import { CartDrawer } from '../components/Navigation/CartDrawer';
@@ -384,38 +384,48 @@ const Home: React.FC = () => {
         {/* Header */}
         <Header onCartOpen={() => setIsCartOpen(true)} cartCount={cartCount} />
 
-        {/* --- NEW HERO SECTION --- */}
-        <section className="relative w-full pt-12 pb-20 overflow-hidden">
-          <div className="max-w-[1600px] mx-auto px-6 flex flex-col md:flex-row items-center gap-12">
-            <div className="flex-1 space-y-8 text-center md:text-left z-10">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-geeko-cyan-neon/10 border border-geeko-cyan-neon/20">
-                <Sparkles size={14} className="text-geeko-cyan-neon animate-pulse" />
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-geeko-cyan-neon">Nuevo Inventario Disponible</span>
-              </div>
-              <h1 className="text-6xl md:text-8xl font-web-titles font-black tracking-tighter leading-none uppercase italic">
-                El Emporio <br />
-                <span className="text-gradient-cyan">Mágico</span>
-              </h1>
-              <p className="text-lg md:text-xl text-neutral-400 font-medium max-w-xl leading-relaxed">
-                Descubre la colección más grande de cartas TCG en Latinoamérica. Precios de mercado con el respaldo de <span className="text-white font-bold">Geekorium</span>.
-              </p>
-              <div className="flex flex-wrap items-center justify-center md:justify-start gap-6">
-                <button className="px-10 py-5 bg-geeko-cyan-neon text-black font-black uppercase tracking-widest rounded-xl neon-glow-cyan hover:scale-105 transition-all transform active:scale-95">
-                  Ver Todo el Stock
+        {/* --- PREMIUM BANNER (HERO) --- */}
+        <section className="relative w-full h-[500px] md:h-[600px] overflow-hidden group">
+          {/* Background Image with Overlay */}
+          <div className="absolute inset-0">
+            <img 
+              src="https://images.ctfassets.net/s5n2t79q9icq/6S8xK8vB5i8O4oY8oI6u6u/4e7d9b9a6b6f3c6d5e5e5e5e5e5e5e5e/Strixhaven_Key_Art.jpg" 
+              alt="Secrets of Strixhaven" 
+              className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent" />
+          </div>
+
+          <div className="relative z-10 max-w-[1600px] mx-auto px-10 h-full flex items-center">
+            <div className="max-w-2xl space-y-4">
+              <h2 className="text-5xl md:text-8xl font-black italic tracking-tighter leading-[0.8] uppercase text-outline">
+                SECRETS OF<br />
+                STRIXHAVEN
+              </h2>
+              <h3 className="text-4xl md:text-7xl font-black italic tracking-tighter leading-none uppercase text-white">
+                YA DISPONIBLE
+              </h3>
+              
+              <div className="pt-8 flex items-center gap-6">
+                <button className="flex items-center gap-4 bg-geeko-cyan-neon text-black px-8 py-4 font-black uppercase tracking-widest text-sm rounded-sm hover:bg-white transition-all transform active:scale-95 group/btn">
+                  Consíguelo aquí
+                  <ChevronRight size={20} className="group-hover/btn:translate-x-1 transition-transform" />
                 </button>
-                <div className="flex items-center gap-3 text-neutral-500 font-bold uppercase text-xs tracking-widest">
-                  <span className="w-8 h-px bg-neutral-800" />
-                  Saber Más
-                </div>
               </div>
             </div>
-            <div className="flex-1 relative">
-              <div className="absolute inset-0 bg-geeko-cyan-neon/20 blur-[100px] rounded-full" />
-              <img 
-                src="/branding/Emporio.jpg" 
-                alt="Geekorium Emporio" 
-                className="relative z-10 w-full max-w-lg mx-auto rounded-[3rem] border-4 border-white/5 shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-700"
-              />
+
+            {/* Dots Grid Decoration */}
+            <div className="absolute top-1/4 right-20 hidden lg:grid grid-cols-8 gap-4 opacity-30">
+              {[...Array(32)].map((_, i) => (
+                <div key={i} className="w-1 h-1 bg-white rounded-full" />
+              ))}
+            </div>
+
+            {/* Pagination Dots */}
+            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-3">
+              {[0, 1, 2, 3].map((i) => (
+                <div key={i} className={`w-2.5 h-2.5 rounded-full border-2 border-white/50 transition-all cursor-pointer ${i === 0 ? 'bg-white scale-125 border-white' : 'hover:border-white'}`} />
+              ))}
             </div>
           </div>
         </section>

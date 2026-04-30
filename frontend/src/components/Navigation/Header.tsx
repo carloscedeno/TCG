@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
-import { ShoppingCart, LogIn, Menu as MenuIcon, X, ChevronDown } from 'lucide-react';
+import { ShoppingCart, LogIn, Menu as MenuIcon, X, ChevronDown, Search } from 'lucide-react';
 import { SearchBar } from '../SearchBar/SearchBar';
 import { UserMenu } from './UserMenu';
 import { useAuth } from '../../context/AuthContext';
@@ -71,53 +71,68 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
     };
 
     return (
-        <header className="sticky top-0 z-50 w-full bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-white/5 shadow-2xl">
-            {/* Top Bar: Logo & Search & User */}
-            <div className="max-w-[1600px] mx-auto px-4 h-[70px] flex items-center justify-between gap-4">
-                <Link to="/" className="flex-shrink-0 group relative">
-                    <img src="/branding/Logo.png" alt="Geekorium" className="w-32 sm:w-40 object-contain group-hover:scale-105 transition-transform" />
-                    <span className="absolute -top-1 -right-4 bg-red-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded-md rotate-12 shadow-lg">BETA</span>
+        <header className="sticky top-0 z-50 w-full bg-black border-b border-white/5 shadow-2xl">
+            {/* Top Row: Logo, Utility Nav, Search */}
+            <div className="max-w-[1600px] mx-auto px-6 h-[80px] flex items-center justify-between gap-8">
+                {/* Logo Section */}
+                <Link to="/" className="flex flex-col items-start group">
+                    <span className="text-2xl font-black tracking-[0.2em] text-white leading-none">GEEKORIUM</span>
+                    <span className="text-[10px] font-bold tracking-widest text-geeko-cyan-neon uppercase">Emporio Mágico</span>
                 </Link>
 
-                <div className="flex-1 max-w-xl hidden lg:block">
-                    <SearchBar value={query} onChange={handleSearch} placeholder="Buscar cartas, sobres o accesorios..." />
-                </div>
+                {/* Main Utility Nav */}
+                <nav className="hidden xl:flex items-center gap-10">
+                    {['Home', 'Artilugios', 'Hechizos', 'Misiones', 'Invócanos'].map((item) => (
+                        <Link 
+                            key={item}
+                            to={item === 'Home' ? '/' : `/${item.toLowerCase()}`}
+                            className="text-[13px] font-bold text-neutral-400 hover:text-white transition-all relative group py-2"
+                        >
+                            {item}
+                            {item === 'Home' && (
+                                <div className="absolute bottom-0 left-0 w-1/2 h-0.5 bg-geeko-cyan-neon rounded-full" />
+                            )}
+                            <div className="absolute bottom-0 left-0 w-0 group-hover:w-full h-0.5 bg-geeko-cyan-neon transition-all duration-300 rounded-full" />
+                        </Link>
+                    ))}
+                </nav>
 
-                <div className="flex items-center gap-3">
-                    {/* Socials (Desktop) */}
-                    <div className="hidden xl:flex items-center gap-1 mr-2 px-3 border-r border-white/10">
-                        <a href="https://instagram.com/geekorium/" target="_blank" rel="noopener noreferrer" className="p-2 text-neutral-400 hover:text-geeko-cyan transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" /></svg>
-                        </a>
+                {/* Search & Cart & Auth */}
+                <div className="flex items-center gap-6">
+                    <div className="hidden lg:block w-72">
+                        <div className="relative group">
+                            <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500 group-focus-within:text-geeko-cyan-neon transition-colors" />
+                            <input 
+                                type="text"
+                                value={query}
+                                onChange={(e) => handleSearch(e.target.value)}
+                                placeholder="Busca tus artilugios aquí..."
+                                className="w-full bg-neutral-900/50 border border-white/10 rounded-full py-2.5 pl-11 pr-4 text-xs text-white placeholder:text-neutral-600 focus:outline-none focus:border-geeko-cyan-neon/50 focus:ring-1 focus:ring-geeko-cyan-neon/20 transition-all"
+                            />
+                        </div>
                     </div>
 
-                    <button onClick={onCartOpen} className="relative p-2.5 bg-neutral-900 border border-white/5 rounded-xl hover:bg-neutral-800 transition-all text-neutral-400 hover:text-geeko-cyan group">
-                        <ShoppingCart size={20} />
-                        {cartCount > 0 && (
-                            <div className="absolute -top-1 -right-1 bg-geeko-cyan text-black text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border border-[#0a0a0a]">
-                                {cartCount > 99 ? '99+' : cartCount}
-                            </div>
-                        )}
-                    </button>
-
-                    {user ? <UserMenu /> : (
-                        <div className="hidden sm:block">
-                             <Link to="/geeko-login" className="px-5 py-2.5 bg-geeko-cyan text-black font-black text-[10px] uppercase tracking-widest rounded-full hover:bg-geeko-cyan/80 transition-all transform active:scale-95 shadow-lg shadow-geeko-cyan/20 flex items-center gap-2">
-                                <LogIn size={14} /> Conectarse
-                            </Link>
-                        </div>
-                    )}
-
-                    <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="lg:hidden p-2.5 bg-neutral-900 border border-white/5 rounded-xl text-neutral-400">
-                        {isMobileMenuOpen ? <X size={20} /> : <MenuIcon size={20} />}
-                    </button>
+                    <div className="flex items-center gap-3">
+                        <button onClick={onCartOpen} className="relative p-2 text-neutral-400 hover:text-white transition-all">
+                            <ShoppingCart size={22} />
+                            {cartCount > 0 && (
+                                <div className="absolute -top-1 -right-1 bg-geeko-cyan-neon text-black text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center">
+                                    {cartCount}
+                                </div>
+                            )}
+                        </button>
+                        <UserMenu />
+                        <button className="lg:hidden text-white" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+                            {isMobileMenuOpen ? <X size={24} /> : <MenuIcon size={24} />}
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            {/* Navigation Bar: 8 Categories Matrix */}
-            <nav className="hidden lg:block bg-black/40 border-t border-white/5">
+            {/* Bottom Row: TCG Icons Navigation */}
+            <nav className="bg-[#050505] border-t border-white/5">
                 <div className="max-w-[1600px] mx-auto px-4 flex items-center justify-between">
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 overflow-x-auto no-scrollbar">
                         {tcgGames.map((game) => {
                             const isActive = searchParams.get('game') === game.code;
                             return (
@@ -125,7 +140,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                                     key={game.code}
                                     onClick={() => navigateToGame(game.code)}
                                     title={game.name}
-                                    className={`relative px-4 py-4 transition-all group flex flex-col items-center gap-2 ${isActive ? 'text-geeko-cyan-neon' : 'text-neutral-500 hover:text-white'}`}
+                                    className={`relative px-4 py-4 transition-all group flex flex-col items-center gap-2 min-w-[80px] ${isActive ? 'text-geeko-cyan-neon' : 'text-neutral-500 hover:text-white'}`}
                                 >
                                     <span className={`text-xl transition-all duration-300 group-hover:scale-125 inline-block ${isActive ? 'scale-110' : 'grayscale group-hover:grayscale-0 opacity-60 group-hover:opacity-100'}`}>
                                         {game.icon}
@@ -141,35 +156,29 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                         })}
                     </div>
 
-                    <div className="flex-1" />
-
-                    {/* 8th Category: Productos (Accessories) */}
-                    <div className="relative group px-1 py-3">
-                        <button className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-emerald-400 transition-all hover:bg-emerald-500/20">
-                            <span className="text-[10px] font-black uppercase tracking-tighter">PRODUCTOS</span>
-                            <ChevronDown size={12} className="opacity-50 group-hover:rotate-180 transition-transform" />
-                        </button>
-                        
-                        <div className="absolute top-full right-0 w-56 bg-slate-900/95 backdrop-blur-2xl border border-white/10 rounded-xl mt-1 py-3 shadow-2xl opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200 z-50">
-                            <div className="px-4 mb-2">
-                                <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Insumos Generales</span>
-                            </div>
-                            <div className="grid grid-cols-1 gap-1">
-                                {categories.map((cat) => (
-                                    <button 
-                                        key={cat.code} 
-                                        onClick={() => navigateToCategory(cat.code)}
-                                        className="flex items-center gap-3 px-4 py-2.5 hover:bg-emerald-600/20 text-[11px] font-bold transition-colors"
-                                    >
-                                        <span className="text-base">{cat.icon}</span>
-                                        {cat.name.toUpperCase()}
-                                    </button>
-                                ))}
-                            </div>
-                            <div className="mt-2 pt-2 border-t border-white/5">
-                                <button onClick={() => navigateToCategory('OTHER')} className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-slate-800 text-[11px] font-bold text-slate-400">
-                                    OTROS
-                                </button>
+                    <div className="hidden lg:flex items-center gap-4 border-l border-white/5 pl-4 ml-4">
+                        <div className="relative group">
+                            <button className="flex items-center gap-2 px-4 py-2 bg-neutral-900/50 border border-white/10 rounded-lg text-neutral-400 transition-all hover:bg-neutral-800 hover:text-white">
+                                <span className="text-[10px] font-black uppercase tracking-widest">Productos</span>
+                                <ChevronDown size={12} className="opacity-50 group-hover:rotate-180 transition-transform" />
+                            </button>
+                            
+                            <div className="absolute top-full right-0 w-56 bg-neutral-900/95 backdrop-blur-2xl border border-white/10 rounded-xl mt-1 py-3 shadow-2xl opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200 z-50">
+                                <div className="px-4 mb-2">
+                                    <span className="text-[9px] font-black text-neutral-500 uppercase tracking-widest">Insumos Generales</span>
+                                </div>
+                                <div className="grid grid-cols-1 gap-1">
+                                    {categories.map((cat) => (
+                                        <button 
+                                            key={cat.code} 
+                                            onClick={() => navigateToCategory(cat.code)}
+                                            className="flex items-center gap-3 px-4 py-2.5 hover:bg-geeko-cyan-neon/10 text-[11px] font-bold transition-colors text-neutral-300 hover:text-white"
+                                        >
+                                            <span className="text-base">{cat.icon}</span>
+                                            {cat.name.toUpperCase()}
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </div>

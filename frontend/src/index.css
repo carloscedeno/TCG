@@ -155,9 +155,13 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.05);
   }
 
+  .text-outline {
+    color: transparent;
+    -webkit-text-stroke: 1.5px white;
+  }
 
   .neon-glow-cyan {
-    box-shadow: 0 0 15px rgba(0, 209, 255, 0.4), 0 0 30px rgba(0, 209, 255, 0.2);
+    box-shadow: 0 0 20px rgba(0, 209, 255, 0.4), 0 0 30px rgba(0, 209, 255, 0.2);
   }
 
   .neon-glow-purple {
