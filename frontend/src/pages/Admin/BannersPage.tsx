@@ -180,7 +180,7 @@ export const BannersPage: React.FC = () => {
           <div className="text-center py-20 bg-slate-900/20 border-2 border-dashed border-white/5 rounded-[2.5rem]">
             <ImageIcon className="w-16 h-16 text-slate-700 mx-auto mb-4" />
             <h3 className="text-xl font-bold text-slate-500 uppercase tracking-tighter">No hay banners configurados</h3>
-            <p className="text-slate-600 text-xs mt-2">Crea el primer banner para empezar a promocionar tus productos.</p>
+            <p className="text-slate-400 text-xs mt-2 font-medium">Crea el primer banner para empezar a promocionar tus productos.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">

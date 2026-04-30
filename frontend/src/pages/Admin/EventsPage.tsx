@@ -223,7 +223,7 @@ export const EventsPage: React.FC = () => {
           <div className="text-center py-20 bg-slate-900/20 border-2 border-dashed border-white/5 rounded-[2.5rem]">
             <Calendar className="w-16 h-16 text-slate-700 mx-auto mb-4" />
             <h3 className="text-xl font-bold text-slate-500 uppercase tracking-tighter">No hay eventos programados</h3>
-            <p className="text-slate-600 text-xs mt-2">Registra torneos oficiales para atraer a más jugadores a la tienda.</p>
+            <p className="text-slate-400 text-xs mt-2 font-medium">Registra torneos oficiales para atraer a más jugadores a la tienda.</p>
           </div>
         ) : (
           <div className="space-y-4">
