@@ -164,6 +164,18 @@ body {
     box-shadow: 0 0 20px rgba(0, 209, 255, 0.4), 0 0 30px rgba(0, 209, 255, 0.2);
   }
 
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+
+  .grayscale {
+    filter: grayscale(1) brightness(0.7);
+  }
+
   .neon-glow-purple {
     box-shadow: 0 0 15px rgba(160, 32, 240, 0.4), 0 0 30px rgba(160, 32, 240, 0.2);
   }

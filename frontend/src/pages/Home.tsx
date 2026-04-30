@@ -370,7 +370,7 @@ const Home: React.FC = () => {
         <Header onCartOpen={() => setIsCartOpen(true)} cartCount={cartCount} />
 
         {/* --- PREMIUM BANNER (HERO) --- */}
-        <section className="relative w-full h-[500px] md:h-[600px] overflow-hidden group">
+        <section className="relative w-full h-[350px] sm:h-[500px] md:h-[600px] overflow-hidden group">
           {/* Background Image with Overlay */}
           <div className="absolute inset-0">
             <img 
@@ -378,23 +378,23 @@ const Home: React.FC = () => {
               alt="Secrets of Strixhaven" 
               className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 md:bg-gradient-to-r md:from-black md:via-black/40 to-transparent" />
           </div>
 
-          <div className="relative z-10 max-w-[1600px] mx-auto px-10 h-full flex items-center">
-            <div className="max-w-2xl space-y-4">
-              <h2 className="text-5xl md:text-8xl font-black italic tracking-tighter leading-[0.8] uppercase text-outline">
+          <div className="relative z-10 max-w-[1600px] mx-auto px-6 md:px-10 h-full flex items-center justify-center md:justify-start">
+            <div className="max-w-2xl space-y-2 md:space-y-4 text-center md:text-left">
+              <h2 className="text-3xl sm:text-5xl md:text-8xl font-black italic tracking-tighter leading-[0.8] uppercase text-outline">
                 SECRETS OF<br />
                 STRIXHAVEN
               </h2>
-              <h3 className="text-4xl md:text-7xl font-black italic tracking-tighter leading-none uppercase text-white">
+              <h3 className="text-2xl sm:text-4xl md:text-7xl font-black italic tracking-tighter leading-none uppercase text-white">
                 YA DISPONIBLE
               </h3>
               
-              <div className="pt-8 flex items-center gap-6">
-                <button className="flex items-center gap-4 bg-geeko-cyan-neon text-black px-8 py-4 font-black uppercase tracking-widest text-sm rounded-sm hover:bg-white transition-all transform active:scale-95 group/btn">
+              <div className="pt-4 md:pt-8 flex items-center justify-center md:justify-start gap-6">
+                <button className="flex items-center gap-2 md:gap-4 bg-geeko-cyan-neon text-black px-6 md:px-8 py-3 md:py-4 font-black uppercase tracking-widest text-[10px] md:text-sm rounded-sm hover:bg-white transition-all transform active:scale-95 group/btn">
                   Consíguelo aquí
-                  <ChevronRight size={20} className="group-hover/btn:translate-x-1 transition-transform" />
+                  <ChevronRight size={16} className="md:w-5 md:h-5 group-hover/btn:translate-x-1 transition-transform" />
                 </button>
               </div>
             </div>

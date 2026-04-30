@@ -73,10 +73,10 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
     return (
         <header className="sticky top-0 z-50 w-full bg-black border-b border-white/5 shadow-2xl">
             {/* Top Row: Logo, Utility Nav, Search */}
-            <div className="max-w-[1600px] mx-auto px-6 h-[80px] flex items-center justify-between gap-8">
+            <div className="max-w-[1600px] mx-auto px-4 md:px-6 h-[60px] md:h-[80px] flex items-center justify-between gap-4 md:gap-8">
                 <Link to="/" className="flex-shrink-0 group relative">
-                    <img src="/branding/Logo.png" alt="Geekorium" className="w-32 sm:w-40 object-contain group-hover:scale-105 transition-transform" />
-                    <span className="absolute -top-1 -right-4 bg-red-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded-md rotate-12 shadow-lg">BETA</span>
+                    <img src="/branding/Logo.png" alt="Geekorium" className="w-24 sm:w-32 md:w-40 object-contain transition-transform" />
+                    <span className="absolute -top-1 -right-2 md:-right-4 bg-red-600 text-white text-[7px] md:text-[8px] font-black px-1 md:px-1.5 py-0.5 rounded-sm md:rounded-md rotate-12 shadow-lg">BETA</span>
                 </Link>
 
                 {/* Main Utility Nav */}
@@ -139,12 +139,12 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                                     key={game.code}
                                     onClick={() => navigateToGame(game.code)}
                                     title={game.name}
-                                    className={`relative px-4 py-4 transition-all group flex flex-col items-center gap-2 min-w-[80px] ${isActive ? 'text-geeko-cyan-neon' : 'text-neutral-500 hover:text-white'}`}
+                                    className={`relative px-3 md:px-4 py-3 md:py-4 transition-all group flex flex-col items-center gap-1 md:gap-2 min-w-[70px] md:min-w-[80px] ${isActive ? 'text-geeko-cyan-neon' : 'text-neutral-500 hover:text-white'}`}
                                 >
-                                    <span className={`text-xl transition-all duration-300 group-hover:scale-125 inline-block ${isActive ? 'scale-110' : 'grayscale group-hover:grayscale-0 opacity-60 group-hover:opacity-100'}`}>
+                                    <span className={`text-lg md:text-xl transition-all duration-300 group-hover:scale-110 inline-block ${isActive ? 'scale-105' : 'grayscale group-hover:grayscale-0 opacity-50 group-hover:opacity-100'}`}>
                                         {game.icon}
                                     </span>
-                                    <span className={`text-[10px] font-black uppercase tracking-tighter transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+                                    <span className={`text-[8px] md:text-[10px] font-black uppercase tracking-tighter transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 md:group-hover:opacity-100'}`}>
                                         {game.name}
                                     </span>
                                     {isActive && (
