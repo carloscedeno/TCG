@@ -447,8 +447,10 @@ const Home: React.FC = () => {
         <button 
           key={cat.id}
           onClick={() => {
-            setActiveTab(cat.defaultTab as any);
-            handleFilterChange({ ...filters, games: [cat.id] });
+            const newParams = new URLSearchParams(searchParams);
+            newParams.set('game', cat.id);
+            newParams.set('tab', cat.defaultTab);
+            setSearchParams(newParams);
           }}
           className="group flex flex-col items-center gap-4 transition-all"
         >

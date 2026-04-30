@@ -59,14 +59,14 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
     };
 
     const navigateToGame = (gameCode: string) => {
-        // Solo Magic tiene Stock (marketplace), los demás van directo al Catálogo (reference)
-        const tab = gameCode === 'MTG' ? 'marketplace' : 'reference';
+        // Solo Magic tiene Stock (marketplace), los demás van directo al Catálogo (catalog)
+        const tab = gameCode === 'MTG' ? 'marketplace' : 'catalog';
         navigate(`/?game=${gameCode}&tab=${tab}`);
         setIsMobileMenuOpen(false);
     };
 
     const navigateToCategory = (catCode: string) => {
-        navigate(`/?tab=accessories&category=${catCode}`);
+        navigate(`/?tab=catalog&category=${catCode}`);
         setIsMobileMenuOpen(false);
     };
 
