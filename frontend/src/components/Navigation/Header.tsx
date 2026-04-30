@@ -79,13 +79,13 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                     <span className="absolute -top-1 -right-2 md:-right-4 bg-red-600 text-white text-[7px] md:text-[8px] font-black px-1 md:px-1.5 py-0.5 rounded-sm md:rounded-md rotate-12 shadow-lg">BETA</span>
                 </Link>
 
-                {/* Main Utility Nav - Only show on very large screens */}
-                <nav className="hidden 2xl:flex items-center gap-10">
+                {/* Main Utility Nav - Always show on PC */}
+                <nav className="hidden lg:flex items-center gap-6 xl:gap-10">
                     {['Home', 'Artilugios', 'Hechizos', 'Misiones', 'Invócanos'].map((item) => (
                         <Link 
                             key={item}
                             to={item === 'Home' ? '/' : `/${item.toLowerCase()}`}
-                            className="text-[13px] font-bold text-neutral-400 hover:text-white transition-all relative group py-2"
+                            className="text-[12px] xl:text-[13px] font-bold text-neutral-400 hover:text-white transition-all relative group py-2"
                         >
                             {item}
                             {item === 'Home' && (
@@ -128,61 +128,6 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                 </div>
             </div>
 
-            {/* Bottom Row: TCG Icons Navigation */}
-            <nav className="bg-[#050505] border-t border-white/5">
-                <div className="max-w-[1600px] mx-auto px-4 flex items-center justify-between">
-                    <div className="flex items-center gap-1 overflow-x-auto no-scrollbar">
-                        {tcgGames.map((game) => {
-                            const isActive = searchParams.get('game') === game.code;
-                            return (
-                                <button 
-                                    key={game.code}
-                                    onClick={() => navigateToGame(game.code)}
-                                    title={game.name}
-                                    className={`relative px-3 md:px-4 py-3 md:py-4 transition-all group flex flex-col items-center gap-1 md:gap-2 min-w-[70px] md:min-w-[80px] ${isActive ? 'text-geeko-cyan-neon' : 'text-neutral-500 hover:text-white'}`}
-                                >
-                                    <span className={`text-lg md:text-xl transition-all duration-300 group-hover:scale-110 inline-block ${isActive ? 'scale-105' : 'grayscale group-hover:grayscale-0 opacity-50 group-hover:opacity-100'}`}>
-                                        {game.icon}
-                                    </span>
-                                    <span className={`text-[8px] md:text-[10px] font-black uppercase tracking-tighter transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 lg:opacity-60 group-hover:opacity-100'}`}>
-                                        {game.name}
-                                    </span>
-                                    {isActive && (
-                                        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 bg-geeko-cyan-neon rounded-full neon-glow-cyan" />
-                                    )}
-                                </button>
-                            )
-                        })}
-                    </div>
-
-                    <div className="hidden lg:flex items-center gap-4 border-l border-white/5 pl-4 ml-4">
-                        <div className="relative group">
-                            <button className="flex items-center gap-2 px-4 py-2 bg-neutral-900/50 border border-white/10 rounded-lg text-neutral-400 transition-all hover:bg-neutral-800 hover:text-white">
-                                <span className="text-[10px] font-black uppercase tracking-widest">Productos</span>
-                                <ChevronDown size={12} className="opacity-50 group-hover:rotate-180 transition-transform" />
-                            </button>
-                            
-                            <div className="absolute top-full right-0 w-56 bg-neutral-900/95 backdrop-blur-2xl border border-white/10 rounded-xl mt-1 py-3 shadow-2xl opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200 z-50">
-                                <div className="px-4 mb-2">
-                                    <span className="text-[9px] font-black text-neutral-500 uppercase tracking-widest">Insumos Generales</span>
-                                </div>
-                                <div className="grid grid-cols-1 gap-1">
-                                    {categories.map((cat) => (
-                                        <button 
-                                            key={cat.code} 
-                                            onClick={() => navigateToCategory(cat.code)}
-                                            className="flex items-center gap-3 px-4 py-2.5 hover:bg-geeko-cyan-neon/10 text-[11px] font-bold transition-colors text-neutral-300 hover:text-white"
-                                        >
-                                            <span className="text-base">{cat.icon}</span>
-                                            {cat.name.toUpperCase()}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </nav>
 
             {/* Mobile Search - shown only on small screens */}
             <div className="lg:hidden p-4 border-t border-white/5">

@@ -415,35 +415,40 @@ const Home: React.FC = () => {
           </div>
         </section>
 
-        {/* --- CATEGORY SELECTOR CIRCLES --- */}
-        <section className="w-full pb-16">
-          <div className="max-w-[1600px] mx-auto px-6">
-            <div className="flex items-center justify-center gap-8 md:gap-16 overflow-x-auto py-4 no-scrollbar">
-      {[
-        { id: 'MTG', name: 'Magic', icon: '🔥', defaultTab: 'marketplace' },
-        { id: 'PKM', name: 'Pokémon', icon: '⚡', defaultTab: 'catalog' },
-        { id: 'YGO', name: 'Yu-Gi-Oh!', icon: '🏺', defaultTab: 'catalog' },
-        { id: 'RFB', name: 'Riftbound', icon: '⚔️', defaultTab: 'catalog' },
-        { id: 'OPC', name: 'One Piece', icon: '⚓', defaultTab: 'catalog' },
-        { id: 'DGM', name: 'Digimon', icon: '🦖', defaultTab: 'catalog' },
-        { id: 'GND', name: 'Gundam', icon: '🤖', defaultTab: 'catalog' },
-        { id: 'FAB', name: 'Flesh & Blood', icon: '🩸', defaultTab: 'catalog' },
-      ].map((cat) => (
-        <button 
-          key={cat.id}
-          onClick={() => {
-            updateURL({ game: cat.id, tab: cat.defaultTab });
-          }}
-          className="group flex flex-col items-center gap-4 transition-all"
-        >
-          <div className={`w-20 h-20 md:w-24 md:h-24 rounded-full bg-geeko-black border-2 border-white/5 flex items-center justify-center text-3xl transition-all group-hover:border-geeko-cyan-neon group-hover:neon-glow-cyan ${filters.games?.includes(cat.id) ? 'border-geeko-cyan-neon neon-glow-cyan' : ''}`}>
-            <span className="group-hover:scale-125 transition-transform duration-300">{cat.icon}</span>
-          </div>
-          <span className={`text-[10px] font-black uppercase tracking-widest ${filters.games?.includes(cat.id) ? 'text-geeko-cyan-neon' : 'text-neutral-500 group-hover:text-white'}`}>
-            {cat.name}
-          </span>
-        </button>
-      ))}
+        {/* --- PREMIUM TCG SELECTOR SECTION --- */}
+        <section className="w-full relative overflow-hidden">
+          {/* Cyan to Black Gradient Background */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#00A3C4] via-[#003B46] to-black h-[180px] md:h-[220px]" />
+          
+          <div className="relative z-10 max-w-[1600px] mx-auto px-6 py-12 md:py-16">
+            <div className="flex items-center justify-center gap-4 sm:gap-8 md:gap-12 lg:gap-16 overflow-x-auto no-scrollbar pb-4">
+              {[
+                { id: 'MTG', name: 'MTG', icon: '🔥', defaultTab: 'marketplace' },
+                { id: 'PKM', name: 'POKEMON', icon: '⚡', defaultTab: 'catalog' },
+                { id: 'YGO', name: 'YU-GI-OH!', icon: '🏺', defaultTab: 'catalog' },
+                { id: 'RFB', name: 'RIFTBOUND', icon: '⚔️', defaultTab: 'catalog' },
+                { id: 'OPC', name: 'ONE PIECE', icon: '⚓', defaultTab: 'catalog' },
+                { id: 'DGM', name: 'DIGIMON', icon: '🦖', defaultTab: 'catalog' },
+                { id: 'GND', name: 'GUNDAM', icon: '🤖', defaultTab: 'catalog' },
+                { id: 'FAB', name: 'FLESH & BLOOD', icon: '🩸', defaultTab: 'catalog' },
+              ].map((cat) => (
+                <button 
+                  key={cat.id}
+                  onClick={() => {
+                    updateURL({ game: cat.id, tab: cat.defaultTab });
+                  }}
+                  className="group flex flex-col items-center gap-6 min-w-fit transition-all hover:-translate-y-2 duration-300"
+                >
+                  <div className={`w-20 h-20 sm:w-28 sm:h-28 rounded-full flex items-center justify-center text-4xl sm:text-5xl transition-all shadow-2xl relative overflow-hidden ${filters.games?.includes(cat.id) ? 'bg-white text-black scale-110' : 'bg-neutral-900 text-white hover:bg-white hover:text-black'}`}>
+                    {/* Circle Border Glow */}
+                    <div className={`absolute inset-0 border-2 rounded-full ${filters.games?.includes(cat.id) ? 'border-white animate-pulse' : 'border-white/10'}`} />
+                    <span className="relative z-10">{cat.icon}</span>
+                  </div>
+                  <span className={`text-[10px] sm:text-[11px] font-black italic uppercase tracking-[0.2em] transition-colors ${filters.games?.includes(cat.id) ? 'text-white' : 'text-white/60 group-hover:text-white'}`}>
+                    {cat.name}
+                  </span>
+                </button>
+              ))}
             </div>
           </div>
         </section>
