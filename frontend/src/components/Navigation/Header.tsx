@@ -27,11 +27,9 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
         { name: 'One Piece', code: 'OPC', icon: '⚓' },
         { name: 'Digimon', code: 'DGM', icon: '🦖' },
         { name: 'Lorcana', code: 'LOR', icon: '✨' },
-        ...(isDevEnv ? [
-            { name: 'Riftbound', code: 'RFB', icon: '⚔️' },
-            { name: 'Gundam', code: 'GND', icon: '🤖' },
-            { name: 'Flesh and Blood', code: 'FAB', icon: '🩸' }
-        ] : [])
+        { name: 'Riftbound', code: 'RFB', icon: '⚔️' },
+        { name: 'Gundam', code: 'GND', icon: '🤖' },
+        { name: 'Flesh and Blood', code: 'FAB', icon: '🩸' }
     ];
 
     useEffect(() => {
@@ -119,21 +117,29 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
 
             {/* Navigation Bar: 8 Categories Matrix */}
             <nav className="hidden lg:block bg-black/40 border-t border-white/5">
-                <div className="max-w-[1600px] mx-auto px-4 flex justify-between">
-                    {tcgGames.map((game) => {
-                        const isActive = searchParams.get('game') === game.code;
-                        return (
-                            <div key={game.code} className="relative group px-1 py-3">
+                <div className="max-w-[1600px] mx-auto px-4 flex items-center justify-between">
+                    <div className="flex items-center gap-1">
+                        {tcgGames.map((game) => {
+                            const isActive = searchParams.get('game') === game.code;
+                            return (
                                 <button 
+                                    key={game.code}
                                     onClick={() => navigateToGame(game.code)}
-                                    className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${isActive ? 'bg-white/10 text-geeko-cyan' : 'hover:bg-white/5 group-hover:text-geeko-cyan'}`}
+                                    title={game.name}
+                                    className={`relative px-4 py-4 transition-all group ${isActive ? 'text-geeko-cyan-neon' : 'text-neutral-500 hover:text-white'}`}
                                 >
-                                    <span className={`text-lg transition-all ${isActive ? 'grayscale-0' : 'grayscale group-hover:grayscale-0'}`}>{game.icon}</span>
-                                    <span className="text-[10px] font-black uppercase tracking-tighter">{game.name}</span>
+                                    <span className={`text-xl transition-all duration-300 group-hover:scale-125 inline-block ${isActive ? 'scale-110' : 'grayscale group-hover:grayscale-0 opacity-60 group-hover:opacity-100'}`}>
+                                        {game.icon}
+                                    </span>
+                                    {isActive && (
+                                        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 bg-geeko-cyan-neon rounded-full neon-glow-cyan" />
+                                    )}
                                 </button>
-                            </div>
-                        )
-                    })}
+                            )
+                        })}
+                    </div>
+
+                    <div className="flex-1" />
 
                     {/* 8th Category: Productos (Accessories) */}
                     <div className="relative group px-1 py-3">

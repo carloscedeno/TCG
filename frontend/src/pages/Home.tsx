@@ -420,11 +420,14 @@ const Home: React.FC = () => {
           <div className="max-w-[1600px] mx-auto px-6">
             <div className="flex items-center justify-center gap-8 md:gap-16 overflow-x-auto py-4 no-scrollbar">
       {[
-        { id: 'MTG', name: 'Magic', color: '#ff4444', icon: '🔥', defaultTab: 'marketplace' },
-        { id: 'PKM', name: 'Pokémon', color: '#ffcb05', icon: '⚡', defaultTab: 'reference' },
-        { id: 'OPC', name: 'One Piece', color: '#00D1FF', icon: '⚓', defaultTab: 'reference' },
-        { id: 'DGM', name: 'Digimon', color: '#4ade80', icon: '🦖', defaultTab: 'reference' },
-        { id: 'LOR', name: 'Lorcana', color: '#A020F0', icon: '✨', defaultTab: 'reference' },
+        { id: 'MTG', name: 'Magic', icon: '🔥', defaultTab: 'marketplace' },
+        { id: 'PKM', name: 'Pokémon', icon: '⚡', defaultTab: 'reference' },
+        { id: 'RFB', name: 'Riftbound', icon: '⚔️', defaultTab: 'reference' },
+        { id: 'OPC', name: 'One Piece', icon: '⚓', defaultTab: 'reference' },
+        { id: 'GND', name: 'Gundam', icon: '🤖', defaultTab: 'reference' },
+        { id: 'DGM', name: 'Digimon', icon: '🦖', defaultTab: 'reference' },
+        { id: 'LOR', name: 'Lorcana', icon: '✨', defaultTab: 'reference' },
+        { id: 'FAB', name: 'Flesh & Blood', icon: '🩸', defaultTab: 'reference' },
       ].map((cat) => (
         <button 
           key={cat.id}
