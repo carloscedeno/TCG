@@ -419,26 +419,29 @@ const Home: React.FC = () => {
         <section className="w-full pb-16">
           <div className="max-w-[1600px] mx-auto px-6">
             <div className="flex items-center justify-center gap-8 md:gap-16 overflow-x-auto py-4 no-scrollbar">
-              {[
-                { id: 'MTG', name: 'Magic', color: '#ff4444', icon: '🔥' },
-                { id: 'PKM', name: 'Pokémon', color: '#ffcb05', icon: '⚡' },
-                { id: 'OPC', name: 'One Piece', color: '#0070f3', icon: '⚓' },
-                { id: 'DGM', name: 'Digimon', color: '#ff6b00', icon: '🦖' },
-                { id: 'LOR', name: 'Lorcana', color: '#a020f0', icon: '✨' },
-              ].map((cat) => (
-                <button 
-                  key={cat.id}
-                  onClick={() => handleFilterChange({ ...filters, games: [cat.id] })}
-                  className="group flex flex-col items-center gap-4 transition-all"
-                >
-                  <div className={`w-20 h-20 md:w-24 md:h-24 rounded-full bg-geeko-surface border-2 border-white/5 flex items-center justify-center text-3xl transition-all group-hover:border-geeko-cyan-neon group-hover:neon-glow-cyan ${filters.games?.includes(cat.id) ? 'border-geeko-cyan-neon neon-glow-cyan' : ''}`}>
-                    {cat.icon}
-                  </div>
-                  <span className={`text-[10px] font-black uppercase tracking-widest ${filters.games?.includes(cat.id) ? 'text-geeko-cyan-neon' : 'text-neutral-500 group-hover:text-white'}`}>
-                    {cat.name}
-                  </span>
-                </button>
-              ))}
+      {[
+        { id: 'MTG', name: 'Magic', color: '#ff4444', icon: '🔥', defaultTab: 'marketplace' },
+        { id: 'PKM', name: 'Pokémon', color: '#ffcb05', icon: '⚡', defaultTab: 'reference' },
+        { id: 'OPC', name: 'One Piece', color: '#00D1FF', icon: '⚓', defaultTab: 'reference' },
+        { id: 'DGM', name: 'Digimon', color: '#4ade80', icon: '🦖', defaultTab: 'reference' },
+        { id: 'LOR', name: 'Lorcana', color: '#A020F0', icon: '✨', defaultTab: 'reference' },
+      ].map((cat) => (
+        <button 
+          key={cat.id}
+          onClick={() => {
+            setActiveTab(cat.defaultTab as any);
+            handleFilterChange({ ...filters, games: [cat.id] });
+          }}
+          className="group flex flex-col items-center gap-4 transition-all"
+        >
+          <div className={`w-20 h-20 md:w-24 md:h-24 rounded-full bg-geeko-black border-2 border-white/5 flex items-center justify-center text-3xl transition-all group-hover:border-geeko-cyan-neon group-hover:neon-glow-cyan ${filters.games?.includes(cat.id) ? 'border-geeko-cyan-neon neon-glow-cyan' : ''}`}>
+            <span className="group-hover:scale-125 transition-transform duration-300">{cat.icon}</span>
+          </div>
+          <span className={`text-[10px] font-black uppercase tracking-widest ${filters.games?.includes(cat.id) ? 'text-geeko-cyan-neon' : 'text-neutral-500 group-hover:text-white'}`}>
+            {cat.name}
+          </span>
+        </button>
+      ))}
             </div>
           </div>
         </section>

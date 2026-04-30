@@ -22,13 +22,14 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
     const isDevEnv = import.meta.env.DEV || window.location.hostname.includes('dev') || window.location.hostname.includes('localhost');
 
     const tcgGames = [
-        { name: 'Magic: The Gathering', code: 'MTG', icon: '🪄' },
+        { name: 'Magic', code: 'MTG', icon: '🔥' },
+        { name: 'Pokémon', code: 'PKM', icon: '⚡' },
+        { name: 'One Piece', code: 'OPC', icon: '⚓' },
+        { name: 'Digimon', code: 'DGM', icon: '🦖' },
+        { name: 'Lorcana', code: 'LOR', icon: '✨' },
         ...(isDevEnv ? [
-            { name: 'Pokémon', code: 'PKM', icon: '🐹' },
             { name: 'Riftbound', code: 'RFB', icon: '⚔️' },
-            { name: 'One Piece', code: 'OPC', icon: '🏴‍☠️' },
             { name: 'Gundam', code: 'GND', icon: '🤖' },
-            { name: 'Digimon', code: 'DGM', icon: '👾' },
             { name: 'Flesh and Blood', code: 'FAB', icon: '🩸' }
         ] : [])
     ];
@@ -60,7 +61,9 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
         setSearchParams(newParams);
     };
 
-    const navigateToGame = (gameCode: string, tab: string = 'marketplace') => {
+    const navigateToGame = (gameCode: string) => {
+        // Solo Magic tiene Stock (marketplace), los demás van directo al Catálogo (reference)
+        const tab = gameCode === 'MTG' ? 'marketplace' : 'reference';
         navigate(`/?game=${gameCode}&tab=${tab}`);
         setIsMobileMenuOpen(false);
     };
@@ -120,35 +123,17 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                     {tcgGames.map((game) => {
                         const isActive = searchParams.get('game') === game.code;
                         return (
-                        <div key={game.code} className="relative group px-1 py-3">
-                            {game.code === 'MTG' ? (
-                                <>
-                                    <button className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${isActive ? 'bg-white/10 text-indigo-400' : 'hover:bg-white/5 group-hover:text-indigo-400'}`}>
-                                        <span className={`text-lg transition-all ${isActive ? 'grayscale-0' : 'grayscale group-hover:grayscale-0'}`}>{game.icon}</span>
-                                        <span className="text-[10px] font-black uppercase tracking-tighter">{game.name}</span>
-                                        <ChevronDown size={12} className={`opacity-50 transition-transform ${isActive ? 'text-indigo-400' : 'group-hover:rotate-180'}`} />
-                                    </button>
-                                    
-                                    {/* Dropdown Menu */}
-                                    <div className="absolute top-full left-0 w-48 bg-slate-900/95 backdrop-blur-2xl border border-white/10 rounded-xl mt-1 py-2 shadow-2xl opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200 z-50">
-                                        <button onClick={() => navigateToGame(game.code, 'reference')} className="w-full flex items-center gap-3 px-4 py-3 hover:bg-indigo-600/20 text-xs font-bold transition-colors">
-                                            <div className="w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[10px]">🔎</div>
-                                            CATÁLOGO GLOBAL
-                                        </button>
-                                        <button onClick={() => navigateToGame(game.code, 'marketplace')} className="w-full flex items-center gap-3 px-4 py-3 hover:bg-indigo-600/20 text-xs font-bold transition-colors">
-                                            <div className="w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[10px]">💎</div>
-                                            CARTAS EN STOCK
-                                        </button>
-                                    </div>
-                                </>
-                            ) : (
-                                <button onClick={() => navigateToGame(game.code, 'marketplace')} className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${isActive ? 'bg-white/10 text-indigo-400' : 'hover:bg-white/5 group-hover:text-indigo-400'}`}>
+                            <div key={game.code} className="relative group px-1 py-3">
+                                <button 
+                                    onClick={() => navigateToGame(game.code)}
+                                    className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${isActive ? 'bg-white/10 text-geeko-cyan' : 'hover:bg-white/5 group-hover:text-geeko-cyan'}`}
+                                >
                                     <span className={`text-lg transition-all ${isActive ? 'grayscale-0' : 'grayscale group-hover:grayscale-0'}`}>{game.icon}</span>
                                     <span className="text-[10px] font-black uppercase tracking-tighter">{game.name}</span>
                                 </button>
-                            )}
-                        </div>
-                    )})}
+                            </div>
+                        )
+                    })}
 
                     {/* 8th Category: Productos (Accessories) */}
                     <div className="relative group px-1 py-3">
@@ -204,22 +189,19 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                             <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">TCG Catalog</h3>
                             <div className="grid grid-cols-1 gap-3">
                                 {tcgGames.map(game => (
-                                    <div key={game.code} className="space-y-2">
-                                        <div className="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/5">
-                                            <span className="text-xl">{game.icon}</span>
+                                    <button 
+                                        key={game.code}
+                                        onClick={() => navigateToGame(game.code)}
+                                        className="flex items-center gap-4 p-4 bg-white/5 rounded-xl border border-white/5 text-left transition-all active:scale-95"
+                                    >
+                                        <span className="text-2xl">{game.icon}</span>
+                                        <div className="flex flex-col">
                                             <span className="font-bold text-sm">{game.name}</span>
+                                            <span className="text-[10px] text-neutral-500 uppercase tracking-widest">
+                                                {game.code === 'MTG' ? 'Ver Stock' : 'Ver Catálogo'}
+                                            </span>
                                         </div>
-                                        <div className="grid grid-cols-2 gap-2 pl-2">
-                                            {game.code === 'MTG' ? (
-                                                <>
-                                                    <button onClick={() => navigateToGame(game.code, 'reference')} className="py-2 text-[11px] font-black uppercase text-indigo-400 bg-indigo-500/10 rounded-lg">Catálogo</button>
-                                                    <button onClick={() => navigateToGame(game.code, 'marketplace')} className="py-2 text-[11px] font-black uppercase text-indigo-400 bg-indigo-500/10 rounded-lg">Stock</button>
-                                                </>
-                                            ) : (
-                                                <button onClick={() => navigateToGame(game.code, 'marketplace')} className="col-span-2 py-2 text-[11px] font-black uppercase text-indigo-400 bg-indigo-500/10 rounded-lg text-center">Ver Productos</button>
-                                            )}
-                                        </div>
-                                    </div>
+                                    </button>
                                 ))}
                             </div>
                         </div>
