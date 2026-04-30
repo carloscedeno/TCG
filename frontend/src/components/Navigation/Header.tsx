@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Menu as MenuIcon, X, ChevronDown, Search } from 'lucide-react';
+import { ShoppingCart, Menu as MenuIcon, X, Search } from 'lucide-react';
 import { SearchBar } from '../SearchBar/SearchBar';
 import { UserMenu } from './UserMenu';
 import { useAuth } from '../../context/AuthContext';
