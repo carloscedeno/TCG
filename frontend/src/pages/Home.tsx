@@ -77,6 +77,7 @@ const Home: React.FC = () => {
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
   const [debouncedQuery, setDebouncedQuery] = useState(searchParams.get('q') || '');
   const [debouncedFilters, setDebouncedFilters] = useState<Partial<Filters>>(filters);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [activeTab, setActiveTab] = useState<'marketplace' | 'catalog'>(() => {
     const tabParam = searchParams.get('tab') as 'marketplace' | 'catalog';
     const games = searchParams.get('game')?.split(',').filter(Boolean) || [];
@@ -239,7 +240,7 @@ const Home: React.FC = () => {
           });
 
           result = {
-            cards: accRes.catalog.map((a: any) => ({
+            cards: accRes.accessories.map((a: any) => ({
               card_id: a.id,
               accessory_id: a.id,
               name: a.name,
