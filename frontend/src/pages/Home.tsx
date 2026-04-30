@@ -24,7 +24,7 @@ const gameMap: Record<string, string> = {
 };
 
 const mockFilters: Filters = {
-  games: ['MTG', 'PKM', 'OPC', 'DGM'],
+  games: ['MTG', 'PKM', 'YGO', 'RFB', 'OPC', 'DGM', 'GND', 'FAB'],
   rarities: ['Common', 'Uncommon', 'Rare', 'Mythic'],
   colors: ['White', 'Blue', 'Black', 'Red', 'Green', 'Colorless', 'Multicolor'],
   types: ['Creature', 'Instant', 'Sorcery', 'Enchantment', 'Artifact', 'Planeswalker', 'Land'],
@@ -427,11 +427,11 @@ const Home: React.FC = () => {
       {[
         { id: 'MTG', name: 'Magic', icon: '🔥', defaultTab: 'marketplace' },
         { id: 'PKM', name: 'Pokémon', icon: '⚡', defaultTab: 'catalog' },
+        { id: 'YGO', name: 'Yu-Gi-Oh!', icon: '🏺', defaultTab: 'catalog' },
         { id: 'RFB', name: 'Riftbound', icon: '⚔️', defaultTab: 'catalog' },
         { id: 'OPC', name: 'One Piece', icon: '⚓', defaultTab: 'catalog' },
-        { id: 'GND', name: 'Gundam', icon: '🤖', defaultTab: 'catalog' },
         { id: 'DGM', name: 'Digimon', icon: '🦖', defaultTab: 'catalog' },
-        { id: 'LOR', name: 'Lorcana', icon: '✨', defaultTab: 'catalog' },
+        { id: 'GND', name: 'Gundam', icon: '🤖', defaultTab: 'catalog' },
         { id: 'FAB', name: 'Flesh & Blood', icon: '🩸', defaultTab: 'catalog' },
       ].map((cat) => (
         <button 

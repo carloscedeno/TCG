@@ -23,10 +23,10 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
     const tcgGames = [
         { name: 'Magic', code: 'MTG', icon: '🔥' },
         { name: 'Pokémon', code: 'PKM', icon: '⚡' },
+        { name: 'Yu-Gi-Oh!', code: 'YGO', icon: '🏺' },
+        { name: 'Riftbound', code: 'RFB', icon: '⚔️' },
         { name: 'One Piece', code: 'OPC', icon: '⚓' },
         { name: 'Digimon', code: 'DGM', icon: '🦖' },
-        { name: 'Lorcana', code: 'LOR', icon: '✨' },
-        { name: 'Riftbound', code: 'RFB', icon: '⚔️' },
         { name: 'Gundam', code: 'GND', icon: '🤖' },
         { name: 'Flesh and Blood', code: 'FAB', icon: '🩸' }
     ];
@@ -125,10 +125,13 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                                     key={game.code}
                                     onClick={() => navigateToGame(game.code)}
                                     title={game.name}
-                                    className={`relative px-4 py-4 transition-all group ${isActive ? 'text-geeko-cyan-neon' : 'text-neutral-500 hover:text-white'}`}
+                                    className={`relative px-4 py-4 transition-all group flex flex-col items-center gap-2 ${isActive ? 'text-geeko-cyan-neon' : 'text-neutral-500 hover:text-white'}`}
                                 >
                                     <span className={`text-xl transition-all duration-300 group-hover:scale-125 inline-block ${isActive ? 'scale-110' : 'grayscale group-hover:grayscale-0 opacity-60 group-hover:opacity-100'}`}>
                                         {game.icon}
+                                    </span>
+                                    <span className={`text-[10px] font-black uppercase tracking-tighter transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+                                        {game.name}
                                     </span>
                                     {isActive && (
                                         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 bg-geeko-cyan-neon rounded-full neon-glow-cyan" />
