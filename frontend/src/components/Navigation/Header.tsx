@@ -79,8 +79,8 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                     <span className="absolute -top-1 -right-2 md:-right-4 bg-red-600 text-white text-[7px] md:text-[8px] font-black px-1 md:px-1.5 py-0.5 rounded-sm md:rounded-md rotate-12 shadow-lg">BETA</span>
                 </Link>
 
-                {/* Main Utility Nav */}
-                <nav className="hidden xl:flex items-center gap-10">
+                {/* Main Utility Nav - Only show on very large screens */}
+                <nav className="hidden 2xl:flex items-center gap-10">
                     {['Home', 'Artilugios', 'Hechizos', 'Misiones', 'Invócanos'].map((item) => (
                         <Link 
                             key={item}
@@ -97,16 +97,16 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                 </nav>
 
                 {/* Search & Cart & Auth */}
-                <div className="flex items-center gap-6">
-                    <div className="hidden lg:block w-72">
+                <div className="flex items-center gap-4 md:gap-6">
+                    <div className="hidden lg:block w-48 xl:w-64 2xl:w-80 transition-all duration-500">
                         <div className="relative group">
-                            <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500 group-focus-within:text-geeko-cyan-neon transition-colors" />
+                            <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500 group-focus-within:text-geeko-cyan-neon transition-colors" />
                             <input 
                                 type="text"
                                 value={query}
                                 onChange={(e) => handleSearch(e.target.value)}
-                                placeholder="Busca tus artilugios aquí..."
-                                className="w-full bg-neutral-900/50 border border-white/10 rounded-full py-2.5 pl-11 pr-4 text-xs text-white placeholder:text-neutral-600 focus:outline-none focus:border-geeko-cyan-neon/50 focus:ring-1 focus:ring-geeko-cyan-neon/20 transition-all"
+                                placeholder="Buscar..."
+                                className="w-full bg-neutral-900/50 border border-white/10 rounded-full py-2 pl-10 pr-4 text-[11px] text-white placeholder:text-neutral-600 focus:outline-none focus:border-geeko-cyan-neon/50 focus:ring-1 focus:ring-geeko-cyan-neon/20 transition-all"
                             />
                         </div>
                     </div>
@@ -144,7 +144,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                                     <span className={`text-lg md:text-xl transition-all duration-300 group-hover:scale-110 inline-block ${isActive ? 'scale-105' : 'grayscale group-hover:grayscale-0 opacity-50 group-hover:opacity-100'}`}>
                                         {game.icon}
                                     </span>
-                                    <span className={`text-[8px] md:text-[10px] font-black uppercase tracking-tighter transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 md:group-hover:opacity-100'}`}>
+                                    <span className={`text-[8px] md:text-[10px] font-black uppercase tracking-tighter transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 lg:opacity-60 group-hover:opacity-100'}`}>
                                         {game.name}
                                     </span>
                                     {isActive && (
