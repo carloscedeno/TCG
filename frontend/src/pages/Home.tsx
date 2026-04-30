@@ -421,7 +421,7 @@ const Home: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-[#00A3C4] via-[#003B46] to-black h-[180px] md:h-[220px]" />
           
           <div className="relative z-10 max-w-[1600px] mx-auto px-6 py-12 md:py-16">
-            <div className="flex items-center justify-start md:justify-center gap-6 sm:gap-8 md:gap-12 lg:gap-16 overflow-x-auto no-scrollbar pb-4 px-4">
+            <div className="flex items-center justify-start 2xl:justify-center gap-6 sm:gap-8 md:gap-12 lg:gap-16 overflow-x-auto no-scrollbar pb-4 px-12">
               {[
                 { id: 'MTG', name: 'MTG', icon: '🔥', defaultTab: 'marketplace' },
                 { id: 'PKM', name: 'POKEMON', icon: '⚡', defaultTab: 'catalog' },
