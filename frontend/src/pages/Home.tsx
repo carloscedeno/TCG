@@ -374,11 +374,11 @@ const Home: React.FC = () => {
           {/* Background Image with Overlay */}
           <div className="absolute inset-0">
             <img 
-              src="https://images.ctfassets.net/s5n2t79q9icq/6S8xK8vB5i8O4oY8oI6u6u/4e7d9b9a6b6f3c6d5e5e5e5e5e5e5e5e/Strixhaven_Key_Art.jpg" 
+              src="https://media.magic.wizards.com/image_legacy_migration/images/magic/tcg/products/stx/banner.jpg" 
               alt="Secrets of Strixhaven" 
               className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 md:bg-gradient-to-r md:from-black md:via-black/40 to-transparent" />
+            <div className="absolute inset-0 bg-black/60 md:bg-transparent md:bg-gradient-to-r md:from-black md:via-black/60 md:to-transparent" />
           </div>
 
           <div className="relative z-10 max-w-[1600px] mx-auto px-6 md:px-10 h-full flex items-center justify-center md:justify-start">
@@ -418,10 +418,10 @@ const Home: React.FC = () => {
         {/* --- PREMIUM TCG SELECTOR SECTION --- */}
         <section className="w-full relative overflow-hidden">
           {/* Cyan to Black Gradient Background */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#00A3C4] via-[#003B46] to-black h-[180px] md:h-[220px]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#00A3C4] via-[#003B46] to-black h-[220px] md:h-[260px]" />
           
-          <div className="relative z-10 max-w-[1600px] mx-auto px-6 py-12 md:py-16">
-            <div className="flex items-center justify-start 2xl:justify-center gap-6 sm:gap-8 md:gap-12 lg:gap-16 overflow-x-auto no-scrollbar pb-4 px-12">
+          <div className="relative z-10 w-full py-12 md:py-20">
+            <div className="flex items-center justify-start xl:justify-center gap-8 md:gap-16 lg:gap-24 overflow-x-auto no-scrollbar pb-4 px-[10vw]">
               {[
                 { id: 'MTG', name: 'MTG', icon: '🔥', defaultTab: 'marketplace' },
                 { id: 'PKM', name: 'POKEMON', icon: '⚡', defaultTab: 'catalog' },
@@ -437,14 +437,14 @@ const Home: React.FC = () => {
                   onClick={() => {
                     updateURL({ game: cat.id, tab: cat.defaultTab });
                   }}
-                  className="group flex flex-col items-center gap-6 min-w-fit transition-all hover:-translate-y-2 duration-300"
+                  className="group flex flex-col items-center gap-6 min-w-fit transition-all hover:-translate-y-4 duration-300"
                 >
-                  <div className={`w-20 h-20 sm:w-28 sm:h-28 rounded-full flex items-center justify-center text-4xl sm:text-5xl transition-all shadow-2xl relative ${filters.games?.includes(cat.id) ? 'bg-white text-black scale-110 shadow-[0_0_30px_rgba(255,255,255,0.3)]' : 'bg-neutral-900 text-white hover:bg-white hover:text-black'}`}>
+                  <div className={`w-24 h-24 sm:w-32 sm:h-32 rounded-full flex items-center justify-center text-5xl sm:text-6xl transition-all shadow-2xl relative ${filters.games?.includes(cat.id) ? 'bg-white text-black scale-110 shadow-[0_0_50px_rgba(255,255,255,0.4)]' : 'bg-neutral-900/80 text-white hover:bg-white hover:text-black backdrop-blur-sm'}`}>
                     {/* Circle Border Glow */}
-                    <div className={`absolute inset-0 border-2 rounded-full ${filters.games?.includes(cat.id) ? 'border-white animate-pulse' : 'border-white/10'}`} />
+                    <div className={`absolute inset-0 border-4 rounded-full ${filters.games?.includes(cat.id) ? 'border-white' : 'border-white/5 group-hover:border-white/20'}`} />
                     <span className="relative z-10">{cat.icon}</span>
                   </div>
-                  <span className={`text-[10px] sm:text-[11px] font-black italic uppercase tracking-[0.2em] transition-colors ${filters.games?.includes(cat.id) ? 'text-white' : 'text-white/60 group-hover:text-white'}`}>
+                  <span className={`text-[11px] sm:text-[13px] font-black italic uppercase tracking-[0.3em] transition-all ${filters.games?.includes(cat.id) ? 'text-white translate-y-1' : 'text-white/40 group-hover:text-white'}`}>
                     {cat.name}
                   </span>
                 </button>
