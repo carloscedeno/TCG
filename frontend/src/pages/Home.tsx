@@ -48,7 +48,6 @@ const colorCodeMap: Record<string, string> = {
 
 
 const Home: React.FC = () => {
-  const isDevEnv = import.meta.env.DEV || window.location.hostname.includes('dev') || window.location.hostname.includes('localhost');
   const [searchParams, setSearchParams] = useSearchParams();
   const [cards, setCards] = useState<(CardProps & { card_id: string })[]>([]);
   const [loading, setLoading] = useState(true);
