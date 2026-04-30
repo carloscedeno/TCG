@@ -188,16 +188,14 @@ const TournamentHub: React.FC = () => {
                             <div className="col-span-full py-20 text-center bg-white/5 rounded-3xl border border-dashed border-white/10">
                                 <Calendar className="w-16 h-16 text-slate-700 mx-auto mb-4" />
                                 <h3 className="text-xl font-bold text-slate-500 uppercase tracking-tighter">No events found</h3>
-                                <p className="text-slate-600 text-xs mt-2">Stay tuned for upcoming tournaments.</p>
                             </div>
                         )}
-                    </div>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    );
+    </div>
+);
 };
 
 export default TournamentHub;

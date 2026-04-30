@@ -11,8 +11,6 @@ import {
   EyeOff,
   Trophy,
   Users,
-  Swords,
-  MapPin,
   Clock,
   DollarSign
 } from 'lucide-react';

@@ -9,8 +9,6 @@ import {
   ChevronLeft, 
   Eye, 
   EyeOff,
-  MoveUp,
-  MoveDown,
   Link as LinkIcon
 } from 'lucide-react';
 import { adminFetchBanners, adminSaveBanner, adminDeleteBanner, uploadAsset } from '../../utils/api';
