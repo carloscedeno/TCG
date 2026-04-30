@@ -19,7 +19,6 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
     const [categories, setCategories] = useState<any[]>([]);
     const navigate = useNavigate();
 
-    const isDevEnv = import.meta.env.DEV || window.location.hostname.includes('dev') || window.location.hostname.includes('localhost');
 
     const tcgGames = [
         { name: 'Magic', code: 'MTG', icon: '🔥' },
