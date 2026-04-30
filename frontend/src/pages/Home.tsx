@@ -421,7 +421,7 @@ const Home: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-[#00A3C4] via-[#003B46] to-black h-[180px] md:h-[220px]" />
           
           <div className="relative z-10 max-w-[1600px] mx-auto px-6 py-12 md:py-16">
-            <div className="flex items-center justify-center gap-4 sm:gap-8 md:gap-12 lg:gap-16 overflow-x-auto no-scrollbar pb-4">
+            <div className="flex items-center justify-start md:justify-center gap-6 sm:gap-8 md:gap-12 lg:gap-16 overflow-x-auto no-scrollbar pb-4 px-4">
               {[
                 { id: 'MTG', name: 'MTG', icon: '🔥', defaultTab: 'marketplace' },
                 { id: 'PKM', name: 'POKEMON', icon: '⚡', defaultTab: 'catalog' },
@@ -439,7 +439,7 @@ const Home: React.FC = () => {
                   }}
                   className="group flex flex-col items-center gap-6 min-w-fit transition-all hover:-translate-y-2 duration-300"
                 >
-                  <div className={`w-20 h-20 sm:w-28 sm:h-28 rounded-full flex items-center justify-center text-4xl sm:text-5xl transition-all shadow-2xl relative overflow-hidden ${filters.games?.includes(cat.id) ? 'bg-white text-black scale-110' : 'bg-neutral-900 text-white hover:bg-white hover:text-black'}`}>
+                  <div className={`w-20 h-20 sm:w-28 sm:h-28 rounded-full flex items-center justify-center text-4xl sm:text-5xl transition-all shadow-2xl relative ${filters.games?.includes(cat.id) ? 'bg-white text-black scale-110 shadow-[0_0_30px_rgba(255,255,255,0.3)]' : 'bg-neutral-900 text-white hover:bg-white hover:text-black'}`}>
                     {/* Circle Border Glow */}
                     <div className={`absolute inset-0 border-2 rounded-full ${filters.games?.includes(cat.id) ? 'border-white animate-pulse' : 'border-white/10'}`} />
                     <span className="relative z-10">{cat.icon}</span>
