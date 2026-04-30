@@ -737,7 +737,10 @@ const Home: React.FC = () => {
                           </li>
                         ))}
                       </ul>
-                       <a 
+                    </div>
+                  </div>
+
+                  <a 
                     href="https://wa.me/your-number" 
                     target="_blank" 
                     rel="noopener noreferrer"
