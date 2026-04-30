@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
-import { ShoppingCart, LogIn, Menu as MenuIcon, X, ChevronDown, Search } from 'lucide-react';
+import { ShoppingCart, Menu as MenuIcon, X, ChevronDown, Search } from 'lucide-react';
 import { SearchBar } from '../SearchBar/SearchBar';
 import { UserMenu } from './UserMenu';
 import { useAuth } from '../../context/AuthContext';
@@ -12,7 +12,7 @@ interface HeaderProps {
 }
 
 export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
-    const { user } = useAuth();
+    const { user: _user } = useAuth(); // Ignored if not used for now to pass build
     const [searchParams, setSearchParams] = useSearchParams();
     const [query, setQuery] = useState(searchParams.get('q') || '');
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
