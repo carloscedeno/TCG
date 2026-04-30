@@ -77,13 +77,12 @@ const Home: React.FC = () => {
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
   const [debouncedQuery, setDebouncedQuery] = useState(searchParams.get('q') || '');
   const [debouncedFilters, setDebouncedFilters] = useState<Partial<Filters>>(filters);
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [activeTab, setActiveTab] = useState<'marketplace' | 'reference' | 'accessories'>(() => {
-    const tabParam = searchParams.get('tab') as 'marketplace' | 'reference' | 'accessories';
+  const [activeTab, setActiveTab] = useState<'marketplace' | 'catalog'>(() => {
+    const tabParam = searchParams.get('tab') as 'marketplace' | 'catalog';
     const games = searchParams.get('game')?.split(',').filter(Boolean) || [];
-    // Solo Magic tiene Stock (marketplace). Si no es Magic y el tab es marketplace, por defecto Mercado (reference)
+    // Solo Magic tiene Stock. Si no es Magic, forzamos Catálogo
     if ((!games.includes('MTG') && games.length > 0) && (!tabParam || tabParam === 'marketplace')) {
-      return 'reference';
+      return 'catalog';
     }
     return tabParam || 'marketplace';
   });
@@ -100,7 +99,7 @@ const Home: React.FC = () => {
         const res = await fetchAccessories({ limit: 1 });
         setHasAccessoriesExistInDb(res.total_count > 0);
       } catch (err) {
-        console.error("Failed to check if accessories exist", err);
+        console.error("Failed to check if catalog exist", err);
         setHasAccessoriesExistInDb(false);
       }
     };
@@ -224,7 +223,7 @@ const Home: React.FC = () => {
             })),
             total_count: productRes.total_count
           };
-        } else if (activeTab === 'accessories') {
+        } else if (activeTab === 'catalog') {
           // Use the game code directly
           const mappedGame = debouncedFilters.games?.[0] || undefined;
 
@@ -240,7 +239,7 @@ const Home: React.FC = () => {
           });
 
           result = {
-            cards: accRes.accessories.map((a: any) => ({
+            cards: accRes.catalog.map((a: any) => ({
               card_id: a.id,
               accessory_id: a.id,
               name: a.name,
@@ -362,7 +361,7 @@ const Home: React.FC = () => {
     setPage(0);
   };
 
-  const handleTabChange = (tab: 'marketplace' | 'reference' | 'accessories') => {
+  const handleTabChange = (tab: 'marketplace' | 'catalog') => {
     setActiveTab(tab);
     setPage(0);
   };
@@ -426,13 +425,13 @@ const Home: React.FC = () => {
             <div className="flex items-center justify-center gap-8 md:gap-16 overflow-x-auto py-4 no-scrollbar">
       {[
         { id: 'MTG', name: 'Magic', icon: '🔥', defaultTab: 'marketplace' },
-        { id: 'PKM', name: 'Pokémon', icon: '⚡', defaultTab: 'reference' },
-        { id: 'RFB', name: 'Riftbound', icon: '⚔️', defaultTab: 'reference' },
-        { id: 'OPC', name: 'One Piece', icon: '⚓', defaultTab: 'reference' },
-        { id: 'GND', name: 'Gundam', icon: '🤖', defaultTab: 'reference' },
-        { id: 'DGM', name: 'Digimon', icon: '🦖', defaultTab: 'reference' },
-        { id: 'LOR', name: 'Lorcana', icon: '✨', defaultTab: 'reference' },
-        { id: 'FAB', name: 'Flesh & Blood', icon: '🩸', defaultTab: 'reference' },
+        { id: 'PKM', name: 'Pokémon', icon: '⚡', defaultTab: 'catalog' },
+        { id: 'RFB', name: 'Riftbound', icon: '⚔️', defaultTab: 'catalog' },
+        { id: 'OPC', name: 'One Piece', icon: '⚓', defaultTab: 'catalog' },
+        { id: 'GND', name: 'Gundam', icon: '🤖', defaultTab: 'catalog' },
+        { id: 'DGM', name: 'Digimon', icon: '🦖', defaultTab: 'catalog' },
+        { id: 'LOR', name: 'Lorcana', icon: '✨', defaultTab: 'catalog' },
+        { id: 'FAB', name: 'Flesh & Blood', icon: '🩸', defaultTab: 'catalog' },
       ].map((cat) => (
         <button 
           key={cat.id}
@@ -476,32 +475,20 @@ const Home: React.FC = () => {
                 )}
                 
                 <button
-                  onClick={() => handleTabChange('reference')}
-                  data-testid="reference-tab"
-                  className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'reference'
+                  onClick={() => handleTabChange('catalog')}
+                  data-testid="catalog-tab"
+                  className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'catalog'
                     ? 'ring-2 ring-blue-500/30 bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.4)]'
                     : 'text-neutral-500 hover:text-neutral-300'
                     }`}
                 >
-                  <Search size={16} className={activeTab === 'reference' ? 'text-white' : 'text-blue-500'} />
-                  Mercado
-                </button>
-                <button
-                  onClick={() => handleTabChange('accessories')}
-                  data-testid="accessories-tab"
-                  className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'accessories'
-                    ? 'ring-2 ring-orange-500/30 bg-orange-600 text-white shadow-[0_0_15px_rgba(249,115,22,0.4)]'
-                    : 'text-neutral-500 hover:text-neutral-300'
-                    }`}
-                >
-                  <span className={activeTab === 'accessories' ? 'text-white' : 'text-orange-400'}>📦</span>
+                  <Search size={16} className={activeTab === 'catalog' ? 'text-white' : 'text-blue-500'} />
                   Catálogo
                 </button>
               </div>
 
               <div className="flex flex-col sm:flex-row items-center gap-4">
-                {activeTab !== 'accessories' && (
-                  <div className="flex bg-neutral-900/50 p-1 rounded-full border border-neutral-800">
+                <div className="flex bg-neutral-900/50 p-1 rounded-full border border-neutral-800">
                     {rarities.map(r => (
                       <button
                         key={r}
@@ -515,7 +502,6 @@ const Home: React.FC = () => {
                       </button>
                     ))}
                   </div>
-                )}
               </div>
             <div className="flex items-center gap-2 md:gap-4">
               <button
@@ -589,7 +575,7 @@ const Home: React.FC = () => {
                     selected={filters}
                     onChange={handleFilterChange}
                     setsOptions={sets}
-                    isAccessoryMode={activeTab === 'accessories'}
+                    isAccessoryMode={false}
                   />
                 </div>
               </aside>
@@ -617,7 +603,7 @@ const Home: React.FC = () => {
                 </div>
               ) : (
                 <div className="flex flex-col gap-6">
-                  {activeTab === 'accessories' && cards.length === 0 ? (
+                  {activeTab === 'catalog' && cards.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-32 text-center">
                       <div className="w-24 h-24 bg-neutral-900/50 rounded-3xl flex items-center justify-center mb-8 border border-white/5 relative group">
                         <div className="absolute inset-0 bg-geeko-cyan-neon/20 blur-2xl rounded-full group-hover:bg-geeko-cyan-neon/30 transition-all" />
@@ -691,7 +677,7 @@ const Home: React.FC = () => {
                         </div>
                       )}
 
-                      <CardGrid cards={cards} onCardClick={setSelectedCardId} viewMode={viewMode} isArchive={activeTab === 'reference'} showCartButton={true} />
+                      <CardGrid cards={cards} onCardClick={setSelectedCardId} viewMode={viewMode} isArchive={activeTab === 'catalog'} showCartButton={true} />
                       {cards.length < totalCount && (
                         <div className="flex justify-center pb-20">
                           <button
@@ -781,7 +767,7 @@ const Home: React.FC = () => {
           onClose={() => setSelectedCardId(null)}
           cardId={selectedCardId}
           onRequireAuth={() => setIsAuthModalOpen(true)}
-          isArchive={activeTab === 'reference'}
+          isArchive={activeTab === 'catalog'}
         />
 
         {/* Mobile Filters Drawer */}
@@ -800,7 +786,7 @@ const Home: React.FC = () => {
                 selected={filters}
                 onChange={handleFilterChange}
                 setsOptions={sets}
-                isAccessoryMode={activeTab === 'accessories'}
+                isAccessoryMode={false}
               />
               <button
                 onClick={() => setIsMobileFiltersOpen(false)}
