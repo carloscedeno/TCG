@@ -74,10 +74,9 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
         <header className="sticky top-0 z-50 w-full bg-black border-b border-white/5 shadow-2xl">
             {/* Top Row: Logo, Utility Nav, Search */}
             <div className="max-w-[1600px] mx-auto px-6 h-[80px] flex items-center justify-between gap-8">
-                {/* Logo Section */}
-                <Link to="/" className="flex flex-col items-start group">
-                    <span className="text-2xl font-black tracking-[0.2em] text-white leading-none">GEEKORIUM</span>
-                    <span className="text-[10px] font-bold tracking-widest text-geeko-cyan-neon uppercase">Emporio Mágico</span>
+                <Link to="/" className="flex-shrink-0 group relative">
+                    <img src="/branding/Logo.png" alt="Geekorium" className="w-32 sm:w-40 object-contain group-hover:scale-105 transition-transform" />
+                    <span className="absolute -top-1 -right-4 bg-red-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded-md rotate-12 shadow-lg">BETA</span>
                 </Link>
 
                 {/* Main Utility Nav */}
