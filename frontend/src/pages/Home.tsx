@@ -14,7 +14,14 @@ import { useSearchParams } from 'react-router-dom';
 import { CartDrawer } from '../components/Navigation/CartDrawer';
 import { Footer } from '../components/Navigation/Footer';
 import { Header } from '../components/Navigation/Header';
-import { HeroSection } from '../components/Home/HeroSection';
+
+const gameMap: Record<string, string> = {
+  'MTG': 'Magic: The Gathering',
+  'PKM': 'Pokémon TCG',
+  'OPC': 'One Piece Card Game',
+  'DGM': 'Digimon Card Game',
+  'YGO': 'Yu-Gi-Oh!'
+};
 
 const mockFilters: Filters = {
   games: ['MTG', 'PKM', 'OPC', 'DGM'],
