@@ -358,13 +358,12 @@ const Home: React.FC = () => {
 
 
   return (
-    <div className="min-h-[100dvh] flex flex-col bg-[#050505] text-white font-sans relative selection:bg-cyan-500/30">
+    <div className="min-h-[100dvh] flex flex-col bg-geeko-black text-white font-sans relative selection:bg-geeko-cyan-neon/30">
 
-      {/* Ambient Background Mesh */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-purple-600/10 rounded-full blur-[150px] animate-pulse" style={{ animationDuration: '8s' }} />
-        <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-blue-600/10 rounded-full blur-[150px] animate-pulse" style={{ animationDuration: '10s' }} />
-        <div className="absolute top-[30%] left-[30%] w-[40%] h-[40%] bg-cyan-900/10 rounded-full blur-[120px]" />
+      {/* Background Layer */}
+      <div className="fixed inset-0 z-0 bg-geeko-black">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-geeko-cyan-neon/5 rounded-full blur-[120px]" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-geeko-purple-vibrant/5 rounded-full blur-[100px]" />
       </div>
 
       {/* Content Wrapper */}
@@ -373,10 +372,69 @@ const Home: React.FC = () => {
         {/* Header */}
         <Header onCartOpen={() => setIsCartOpen(true)} cartCount={cartCount} />
 
-        {/* Hero Section */}
-        <div className="max-w-[1600px] mx-auto px-6 pt-4 mb-2 animate-in fade-in slide-in-from-top-4 duration-1000">
-          <HeroSection />
-        </div>
+        {/* --- NEW HERO SECTION --- */}
+        <section className="relative w-full pt-12 pb-20 overflow-hidden">
+          <div className="max-w-[1600px] mx-auto px-6 flex flex-col md:flex-row items-center gap-12">
+            <div className="flex-1 space-y-8 text-center md:text-left z-10">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-geeko-cyan-neon/10 border border-geeko-cyan-neon/20">
+                <Sparkles size={14} className="text-geeko-cyan-neon animate-pulse" />
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-geeko-cyan-neon">Nuevo Inventario Disponible</span>
+              </div>
+              <h1 className="text-6xl md:text-8xl font-web-titles font-black tracking-tighter leading-none uppercase italic">
+                El Emporio <br />
+                <span className="text-gradient-cyan">Mágico</span>
+              </h1>
+              <p className="text-lg md:text-xl text-neutral-400 font-medium max-w-xl leading-relaxed">
+                Descubre la colección más grande de cartas TCG en Latinoamérica. Precios de mercado con el respaldo de <span className="text-white font-bold">Geekorium</span>.
+              </p>
+              <div className="flex flex-wrap items-center justify-center md:justify-start gap-6">
+                <button className="px-10 py-5 bg-geeko-cyan-neon text-black font-black uppercase tracking-widest rounded-xl neon-glow-cyan hover:scale-105 transition-all transform active:scale-95">
+                  Ver Todo el Stock
+                </button>
+                <div className="flex items-center gap-3 text-neutral-500 font-bold uppercase text-xs tracking-widest">
+                  <span className="w-8 h-px bg-neutral-800" />
+                  Saber Más
+                </div>
+              </div>
+            </div>
+            <div className="flex-1 relative">
+              <div className="absolute inset-0 bg-geeko-cyan-neon/20 blur-[100px] rounded-full" />
+              <img 
+                src="/branding/Emporio.jpg" 
+                alt="Geekorium Emporio" 
+                className="relative z-10 w-full max-w-lg mx-auto rounded-[3rem] border-4 border-white/5 shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-700"
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* --- CATEGORY SELECTOR CIRCLES --- */}
+        <section className="w-full pb-16">
+          <div className="max-w-[1600px] mx-auto px-6">
+            <div className="flex items-center justify-center gap-8 md:gap-16 overflow-x-auto py-4 no-scrollbar">
+              {[
+                { id: 'MTG', name: 'Magic', color: '#ff4444', icon: '🔥' },
+                { id: 'PKM', name: 'Pokémon', color: '#ffcb05', icon: '⚡' },
+                { id: 'OPC', name: 'One Piece', color: '#0070f3', icon: '⚓' },
+                { id: 'DGM', name: 'Digimon', color: '#ff6b00', icon: '🦖' },
+                { id: 'LOR', name: 'Lorcana', color: '#a020f0', icon: '✨' },
+              ].map((cat) => (
+                <button 
+                  key={cat.id}
+                  onClick={() => handleFilterChange({ ...filters, games: [cat.id] })}
+                  className="group flex flex-col items-center gap-4 transition-all"
+                >
+                  <div className={`w-20 h-20 md:w-24 md:h-24 rounded-full bg-geeko-surface border-2 border-white/5 flex items-center justify-center text-3xl transition-all group-hover:border-geeko-cyan-neon group-hover:neon-glow-cyan ${filters.games?.includes(cat.id) ? 'border-geeko-cyan-neon neon-glow-cyan' : ''}`}>
+                    {cat.icon}
+                  </div>
+                  <span className={`text-[10px] font-black uppercase tracking-widest ${filters.games?.includes(cat.id) ? 'text-geeko-cyan-neon' : 'text-neutral-500 group-hover:text-white'}`}>
+                    {cat.name}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </section>
 
 
 
@@ -388,7 +446,7 @@ const Home: React.FC = () => {
                   onClick={() => handleTabChange('marketplace')}
                   data-testid="inventory-tab"
                   className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'marketplace'
-                    ? 'ring-2 ring-geeko-cyan/30 bg-geeko-cyan text-black shadow-[0_0_15px_rgba(0,229,255,0.4)]'
+                    ? 'ring-2 ring-geeko-cyan-neon/30 bg-geeko-cyan-neon text-black shadow-[0_0_15px_rgba(0,209,255,0.4)]'
                     : 'text-neutral-500 hover:text-neutral-300'
                     }`}
                 >
@@ -515,10 +573,7 @@ const Home: React.FC = () => {
                     setsOptions={sets}
                     isAccessoryMode={activeTab === 'accessories'}
                   />
-                </div>
-              </aside>
-
-            {/* Cards Grid */}
+                          {/* Cards Grid */}
             <div className="flex-1">
               {loading && page === 0 ? (
                 <div className="flex flex-col items-center justify-center py-32 gap-6">
@@ -544,11 +599,11 @@ const Home: React.FC = () => {
                   {activeTab === 'accessories' && cards.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-32 text-center">
                       <div className="w-24 h-24 bg-neutral-900/50 rounded-3xl flex items-center justify-center mb-8 border border-white/5 relative group">
-                        <div className="absolute inset-0 bg-geeko-cyan/20 blur-2xl rounded-full group-hover:bg-geeko-cyan/30 transition-all" />
+                        <div className="absolute inset-0 bg-geeko-cyan-neon/20 blur-2xl rounded-full group-hover:bg-geeko-cyan-neon/30 transition-all" />
                         {hasAccessoriesExistInDb ? (
-                          <Search size={40} className="text-geeko-cyan relative z-10" />
+                          <Search size={40} className="text-geeko-cyan-neon relative z-10" />
                         ) : (
-                          <Sparkles size={40} className="text-geeko-cyan relative z-10" />
+                          <Sparkles size={40} className="text-geeko-cyan-neon relative z-10" />
                         )}
                       </div>
                       <h3 className="text-3xl font-black italic uppercase tracking-tighter mb-4 neon-text-cyan">
@@ -568,15 +623,15 @@ const Home: React.FC = () => {
                           <span className="text-[10px] font-black uppercase tracking-widest text-neutral-600 mr-2">Activo:</span>
 
                           {debouncedQuery && (
-                            <button onClick={() => { setQuery(''); setPage(0); }} className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600/10 border border-blue-500/30 rounded-full text-[10px] font-bold text-blue-400 hover:bg-blue-600/20 transition-all group">
+                            <button onClick={() => { setQuery(''); setPage(0); }} className="flex items-center gap-1.5 px-3 py-1.5 bg-geeko-cyan-neon/10 border border-geeko-cyan-neon/30 rounded-full text-[10px] font-bold text-geeko-cyan-neon hover:bg-geeko-cyan-neon/20 transition-all group">
                               Búsqueda: {debouncedQuery}
                               <X size={10} className="group-hover:rotate-90 transition-transform" />
                             </button>
                           )}
 
                           {filters.games?.map(g => (
-                            <button key={g} data-testid="game-tab" data-active="true" onClick={() => handleFilterChange({ ...filters, games: filters.games?.filter(x => x !== g) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-600/10 border border-purple-500/30 rounded-full text-[10px] font-bold text-purple-400 hover:bg-purple-600/20 transition-all group">
-                              {g}
+                            <button key={g} data-testid="game-tab" data-active="true" onClick={() => handleFilterChange({ ...filters, games: filters.games?.filter(x => x !== g) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-geeko-purple-vibrant/10 border border-geeko-purple-vibrant/30 rounded-full text-[10px] font-bold text-geeko-purple-vibrant hover:bg-geeko-purple-vibrant/20 transition-all group">
+                              {gameMap[g] || g}
                               <X size={10} className="group-hover:rotate-90 transition-transform" />
                             </button>
                           ))}
@@ -589,7 +644,7 @@ const Home: React.FC = () => {
                           ))}
 
                           {filters.colors?.map(c => (
-                            <button key={c} onClick={() => handleFilterChange({ ...filters, colors: filters.colors?.filter(x => x !== c) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-cyan-600/10 border border-cyan-500/30 rounded-full text-[10px] font-bold text-cyan-400 hover:bg-cyan-600/20 transition-all group">
+                            <button key={c} onClick={() => handleFilterChange({ ...filters, colors: filters.colors?.filter(x => x !== c) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-geeko-cyan-neon/10 border border-geeko-cyan-neon/30 rounded-full text-[10px] font-bold text-geeko-cyan-neon hover:bg-geeko-cyan-neon/20 transition-all group">
                               {c}
                               <X size={10} className="group-hover:rotate-90 transition-transform" />
                             </button>
@@ -621,9 +676,9 @@ const Home: React.FC = () => {
                           <button
                             onClick={() => setPage((p: number) => p + 1)}
                             disabled={loading}
-                            className="group relative overflow-hidden px-12 py-5 bg-neutral-900 border border-neutral-800 rounded-full font-black text-[11px] tracking-[0.2em] uppercase hover:border-blue-500/50 transition-all flex items-center gap-4 disabled:opacity-50 shadow-2xl"
+                            className="group relative overflow-hidden px-12 py-5 bg-neutral-900 border border-neutral-800 rounded-full font-black text-[11px] tracking-[0.2em] uppercase hover:border-geeko-cyan-neon/50 transition-all flex items-center gap-4 disabled:opacity-50 shadow-2xl"
                           >
-                            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/0 via-blue-600/10 to-blue-600/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                            <div className="absolute inset-0 bg-gradient-to-r from-geeko-cyan-neon/0 via-geeko-cyan-neon/10 to-geeko-cyan-neon/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
                             {loading ? (
                               <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
                             ) : (
@@ -638,64 +693,65 @@ const Home: React.FC = () => {
                 </div>
               )}
             </div>
+
+            {/* --- NEW RIGHT SIDEBAR (Misiones) --- */}
+            <aside className="hidden xl:block w-80 flex-shrink-0">
+              <div className="sticky top-[140px] space-y-6">
+                <div className="glass-sidebar rounded-3xl p-6 border border-white/5 space-y-8 neon-glow-cyan/5">
+                  <div className="flex items-center gap-4">
+                    <img src="/branding/Misiones.jpg" alt="Misiones" className="w-12 h-12 rounded-full border-2 border-geeko-cyan-neon/20" />
+                    <div>
+                      <h3 className="text-lg font-web-titles font-black uppercase tracking-tighter italic">Misiones</h3>
+                      <p className="text-[10px] font-bold text-geeko-cyan-neon uppercase tracking-widest">En Progreso</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-6">
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-[10px] font-black uppercase tracking-widest">
+                        <span>Explorar Stock</span>
+                        <span className="text-geeko-cyan-neon">100%</span>
+                      </div>
+                      <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                        <div className="h-full bg-geeko-cyan-neon w-full neon-glow-cyan" />
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      <h4 className="text-xs font-black uppercase tracking-widest text-neutral-400">¿Cómo completar?</h4>
+                      <ul className="space-y-4">
+                        {[
+                          { step: '1', title: 'Selecciona', desc: 'Añade tus cartas al carrito.' },
+                          { step: '2', title: 'Cotiza', desc: 'Verás el Market vs GK Price.' },
+                          { step: '3', title: 'Asesoría', desc: 'Finaliza vía WhatsApp.' },
+                        ].map(item => (
+                          <li key={item.step} className="flex gap-3">
+                            <span className="w-6 h-6 rounded bg-geeko-cyan-neon/10 border border-geeko-cyan-neon/20 flex items-center justify-center text-[10px] font-black text-geeko-cyan-neon shrink-0">{item.step}</span>
+                            <div>
+                              <p className="text-[11px] font-black uppercase tracking-tight">{item.title}</p>
+                              <p className="text-[10px] text-neutral-500 font-medium">{item.desc}</p>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <a 
+                    href="https://wa.me/your-number" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center w-full py-4 bg-white/5 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-geeko-cyan-neon hover:text-black transition-all"
+                  >
+                    Hablar con un Asesor
+                  </a>
+                </div>
+              </div>
+            </aside>
           </div>
         </main>
 
-        {/* How to Buy Section */}
-        <section id="how-to-buy" className="max-w-[1600px] mx-auto px-6 mb-24">
-          <div className="relative overflow-hidden rounded-[2.5rem] bg-geeko-violet-accent p-12 shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/5">
-            {/* Background Texture Overlay */}
-            <div className="absolute inset-0 opacity-10 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/paper.png')]" />
-
-            <div className="relative z-10 flex flex-col md:flex-row gap-16 items-center">
-              <div className="flex-1 text-center md:text-left">
-                <div className="flex flex-col items-center md:items-start mb-6">
-                  <span className="text-geeko-cyan font-bold tracking-[0.2em] uppercase text-[10px] mb-3 animate-pulse">
-                    Bienvenido a
-                  </span>
-                  <div className="w-16 h-1 bg-geeko-cyan rounded-full mb-6 shadow-[0_0_10px_rgba(0,174,180,0.5)]" />
-                </div>
-
-                <h2 className="text-4xl md:text-5xl font-web-titles font-black text-white tracking-tighter mb-8 uppercase flex flex-col md:flex-row items-center gap-4 justify-center md:justify-start">
-                  <img src="/branding/Misiones.jpg" alt="Scroll" className="w-14 h-14 rounded-full border-2 border-white/10 shadow-xl" />
-                  ¿Cómo comprar en Geekorium El Emporio?
-                </h2>
-                <p className="text-white/90 font-medium text-lg leading-relaxed max-w-2xl mb-12">
-                  Nuestra plataforma es un <strong className="text-geeko-cyan">Portafolio Online</strong> diseñado para ofrecerte la mejor experiencia de búsqueda y selección de singles. Sigue estos pasos para completar tu pedido:
-                </p>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-10">
-                  <div className="flex flex-col gap-5 group/step">
-                    <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-2xl font-black text-geeko-cyan italic group-hover/step:scale-110 group-hover/step:bg-geeko-cyan/10 transition-all shadow-lg">1</div>
-                    <div className="font-web-titles font-black text-white uppercase tracking-wider text-sm">Explora el Stock</div>
-                    <p className="text-white/70 text-xs font-medium leading-relaxed">Filtra por TCG, rareza o edición. Encuentra exactamente lo que buscas en nuestro inventario real.</p>
-                  </div>
-                  <div className="flex flex-col gap-5 group/step">
-                    <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-2xl font-black text-geeko-cyan italic group-hover/step:scale-110 group-hover/step:bg-geeko-cyan/10 transition-all shadow-lg">2</div>
-                    <div className="font-web-titles font-black text-white uppercase tracking-wider text-sm">Prepara tu Orden</div>
-                    <p className="text-white/70 text-xs font-medium leading-relaxed">Añade al carrito. Verás el <strong className="text-white">Market Price</strong> y nuestro <strong className="text-geeko-gold">GK Price</strong> especial.</p>
-                  </div>
-                  <div className="flex flex-col gap-5 group/step">
-                    <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-2xl font-black text-geeko-cyan italic group-hover/step:scale-110 group-hover/step:bg-geeko-cyan/10 transition-all shadow-lg">3</div>
-                    <div className="font-web-titles font-black text-white uppercase tracking-wider text-sm">Finaliza con un Asesor</div>
-                    <p className="text-white/70 text-xs font-medium leading-relaxed">Tu pedido llegará a WhatsApp, donde un Geeko-Asesor validará disponibilidad y coordinará el pago.</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="w-full md:w-1/3 flex justify-center">
-                <div className="relative group">
-                  <div className="absolute inset-0 bg-geeko-cyan/20 blur-3xl rounded-full group-hover:bg-geeko-cyan/30 transition-all" />
-                  <img
-                    src="/branding/Emporio.jpg"
-                    alt="Emporio Seal"
-                    className="relative w-48 h-48 rounded-full border-8 border-white/20 shadow-2xl group-hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* Reemplazado por Sidebar */}
 
         {/* Footer */}
         <Footer />
