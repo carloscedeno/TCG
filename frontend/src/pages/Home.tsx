@@ -300,38 +300,6 @@ const Home: React.FC = () => {
 
     fetchData();
 
-    // Update URL Search Params - MERGE instead of overwrite
-    const newParams = new URLSearchParams(searchParams);
-    
-    if (debouncedQuery) newParams.set('q', debouncedQuery);
-    else newParams.delete('q');
-
-    if (debouncedFilters.games && debouncedFilters.games.length > 0) {
-      newParams.set('game', debouncedFilters.games.join(','));
-    } else {
-      newParams.delete('game');
-    }
-
-    if (debouncedFilters.sets && debouncedFilters.sets.length > 0) {
-      newParams.set('set', debouncedFilters.sets.join(','));
-    } else {
-      newParams.delete('set');
-    }
-
-    if (activeRarity !== 'All') newParams.set('rarity', activeRarity);
-    else newParams.delete('rarity');
-
-    if (sortBy !== 'price_desc') newParams.set('sort', sortBy);
-    else newParams.delete('sort');
-
-    if (activeTab !== 'marketplace') newParams.set('tab', activeTab);
-    else newParams.delete('tab');
-
-    // Only update URL if it actually changed to prevent loops
-    if (newParams.toString() !== searchParams.toString()) {
-      setSearchParams(newParams, { replace: true });
-    }
-
     return () => {
       controller.abort();
     };
@@ -351,19 +319,36 @@ const Home: React.FC = () => {
 
   const rarities = ['All', 'Mythic', 'Rare', 'Uncommon', 'Common'];
 
-  // Helper to update filters and reset page
+  // Helper to update filters via URL (Single Source of Truth)
+  const updateURL = (params: Record<string, string | string[] | undefined>) => {
+    const newParams = new URLSearchParams(searchParams);
+    Object.entries(params).forEach(([key, value]) => {
+      if (value === undefined || (Array.isArray(value) && value.length === 0)) {
+        newParams.delete(key);
+      } else {
+        newParams.set(key, Array.isArray(value) ? value.join(',') : value);
+      }
+    });
+    setSearchParams(newParams);
+  };
+
   const handleFilterChange = (newFilters: Partial<Filters>) => {
-    setFilters(newFilters);
+    updateURL({
+      game: newFilters.games,
+      set: newFilters.sets,
+      rarity: newFilters.rarities,
+      category: newFilters.categories
+    });
     setPage(0);
   };
 
   const handleRarityChange = (rarity: string) => {
-    setActiveRarity(rarity);
+    updateURL({ rarity: rarity === 'All' ? undefined : rarity });
     setPage(0);
   };
 
   const handleTabChange = (tab: 'marketplace' | 'catalog') => {
-    setActiveTab(tab);
+    updateURL({ tab });
     setPage(0);
   };
 
@@ -447,10 +432,7 @@ const Home: React.FC = () => {
         <button 
           key={cat.id}
           onClick={() => {
-            const newParams = new URLSearchParams(searchParams);
-            newParams.set('game', cat.id);
-            newParams.set('tab', cat.defaultTab);
-            setSearchParams(newParams);
+            updateURL({ game: cat.id, tab: cat.defaultTab });
           }}
           className="group flex flex-col items-center gap-4 transition-all"
         >
@@ -534,13 +516,13 @@ const Home: React.FC = () => {
                 <span className="text-[11px] font-black uppercase tracking-tighter text-neutral-500 hidden sm:inline">Ordenar:</span>
                 <div className="flex bg-neutral-900/50 p-1 rounded-full border border-neutral-800">
                   <button
-                    onClick={() => setSortBy(sortBy === 'name' ? 'name_desc' : 'name')}
+                    onClick={() => updateURL({ sort: sortBy === 'name' ? 'name_desc' : 'name' })}
                     className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase transition-all ${sortBy.includes('name') ? 'bg-neutral-700 text-white' : 'text-neutral-500 hover:text-neutral-300'}`}
                   >
                     Nombre {sortBy === 'name' ? '↓' : (sortBy === 'name_desc' ? '↑' : '⇅')}
                   </button>
                   <button
-                    onClick={() => setSortBy(sortBy === 'price_asc' ? 'price_desc' : 'price_asc')}
+                    onClick={() => updateURL({ sort: sortBy === 'price_asc' ? 'price_desc' : 'price_asc' })}
                     className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase transition-all ${sortBy.includes('price') ? 'bg-neutral-700 text-white' : 'text-neutral-500 hover:text-neutral-300'}`}
                   >
                     Precio {sortBy === 'price_asc' ? '↑' : (sortBy === 'price_desc' ? '↓' : '⇅')}
