@@ -79,9 +79,15 @@ const Home: React.FC = () => {
   const [debouncedQuery, setDebouncedQuery] = useState(searchParams.get('q') || '');
   const [debouncedFilters, setDebouncedFilters] = useState<Partial<Filters>>(filters);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [activeTab, setActiveTab] = useState<'marketplace' | 'reference' | 'accessories'>(
-    (searchParams.get('tab') as 'marketplace' | 'reference' | 'accessories') || 'marketplace'
-  );
+  const [activeTab, setActiveTab] = useState<'marketplace' | 'reference' | 'accessories'>(() => {
+    const tabParam = searchParams.get('tab') as 'marketplace' | 'reference' | 'accessories';
+    const games = searchParams.get('game')?.split(',').filter(Boolean) || [];
+    // Solo Magic tiene Stock (marketplace). Si no es Magic y el tab es marketplace, por defecto Mercado (reference)
+    if ((!games.includes('MTG') && games.length > 0) && (!tabParam || tabParam === 'marketplace')) {
+      return 'reference';
+    }
+    return tabParam || 'marketplace';
+  });
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0); // Cart count state
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
@@ -455,43 +461,43 @@ const Home: React.FC = () => {
         <div className="bg-[#0a0a0a]/95 border-b border-neutral-800 sticky top-[70px] z-40 backdrop-blur-md">
           <div className="max-w-[1600px] mx-auto px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="flex bg-neutral-900/50 p-1 rounded-full border border-neutral-800">
+                {/* Solo Magic tiene Stock */}
+                {(filters.games?.includes('MTG') || (filters.games?.length === 0)) && (
+                  <button
+                    onClick={() => handleTabChange('marketplace')}
+                    data-testid="inventory-tab"
+                    className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'marketplace'
+                      ? 'ring-2 ring-geeko-cyan-neon/30 bg-geeko-cyan-neon text-black shadow-[0_0_15px_rgba(0,209,255,0.4)]'
+                      : 'text-neutral-500 hover:text-neutral-300'
+                      }`}
+                  >
+                    <img src="/branding/Emporio.jpg" alt="Icon" className="w-5 h-5 rounded-full" />
+                    Stock Geekorium
+                  </button>
+                )}
+                
                 <button
-                  onClick={() => handleTabChange('marketplace')}
-                  data-testid="inventory-tab"
-                  className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'marketplace'
-                    ? 'ring-2 ring-geeko-cyan-neon/30 bg-geeko-cyan-neon text-black shadow-[0_0_15px_rgba(0,209,255,0.4)]'
+                  onClick={() => handleTabChange('reference')}
+                  data-testid="reference-tab"
+                  className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'reference'
+                    ? 'ring-2 ring-blue-500/30 bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.4)]'
                     : 'text-neutral-500 hover:text-neutral-300'
                     }`}
                 >
-                  <img src="/branding/Emporio.jpg" alt="Icon" className="w-5 h-5 rounded-full" />
-                  Stock Geekorium
+                  <Search size={16} className={activeTab === 'reference' ? 'text-white' : 'text-blue-500'} />
+                  Mercado
                 </button>
-                {isDevEnv && (
-                  <>
-                    <button
-                      onClick={() => handleTabChange('reference')}
-                      data-testid="reference-tab"
-                      className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'reference'
-                        ? 'ring-2 ring-blue-500/30 bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.4)]'
-                        : 'text-neutral-500 hover:text-neutral-300'
-                        }`}
-                    >
-                      <Search size={16} className={activeTab === 'reference' ? 'text-white' : 'text-blue-500'} />
-                      Mercado
-                    </button>
-                    <button
-                      onClick={() => handleTabChange('accessories')}
-                      data-testid="accessories-tab"
-                      className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'accessories'
-                        ? 'ring-2 ring-purple-500/30 bg-purple-600 text-white shadow-[0_0_15px_rgba(147,51,234,0.4)]'
-                        : 'text-neutral-500 hover:text-neutral-300'
-                        }`}
-                    >
-                      <span className="text-purple-400">📦</span>
-                      Catálogo
-                    </button>
-                  </>
-                )}
+                <button
+                  onClick={() => handleTabChange('accessories')}
+                  data-testid="accessories-tab"
+                  className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'accessories'
+                    ? 'ring-2 ring-orange-500/30 bg-orange-600 text-white shadow-[0_0_15px_rgba(249,115,22,0.4)]'
+                    : 'text-neutral-500 hover:text-neutral-300'
+                    }`}
+                >
+                  <span className={activeTab === 'accessories' ? 'text-white' : 'text-orange-400'}>📦</span>
+                  Catálogo
+                </button>
               </div>
 
               <div className="flex flex-col sm:flex-row items-center gap-4">
