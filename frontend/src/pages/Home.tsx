@@ -573,7 +573,10 @@ const Home: React.FC = () => {
                     setsOptions={sets}
                     isAccessoryMode={activeTab === 'accessories'}
                   />
-                          {/* Cards Grid */}
+                </div>
+              </aside>
+
+            {/* Cards Grid */}
             <div className="flex-1">
               {loading && page === 0 ? (
                 <div className="flex flex-col items-center justify-center py-32 gap-6">
@@ -734,10 +737,7 @@ const Home: React.FC = () => {
                           </li>
                         ))}
                       </ul>
-                    </div>
-                  </div>
-
-                  <a 
+                       <a 
                     href="https://wa.me/your-number" 
                     target="_blank" 
                     rel="noopener noreferrer"
@@ -751,9 +751,6 @@ const Home: React.FC = () => {
           </div>
         </main>
 
-        {/* Reemplazado por Sidebar */}
-
-        {/* Footer */}
         <Footer />
 
         <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
@@ -767,34 +764,32 @@ const Home: React.FC = () => {
         />
 
         {/* Mobile Filters Drawer */}
-        {
-          isMobileFiltersOpen && (
-            <div className="fixed inset-0 z-[100] lg:hidden">
-              <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setIsMobileFiltersOpen(false)} />
-              <div className="absolute inset-y-0 right-0 w-full max-w-xs bg-[#0a0a0a] border-l border-white/5 p-6 shadow-2xl overflow-y-auto animate-in slide-in-from-right duration-300">
-                <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-xl font-black tracking-tighter">FILTROS</h2>
-                  <button onClick={() => setIsMobileFiltersOpen(false)} className="p-2 bg-white/5 rounded-lg text-neutral-400">
-                    <X size={20} />
-                  </button>
-                </div>
-                <FiltersPanel
-                  filters={{ ...mockFilters, sets }}
-                  selected={filters}
-                  onChange={handleFilterChange}
-                  setsOptions={sets}
-                  isAccessoryMode={activeTab === 'accessories'}
-                />
-                <button
-                  onClick={() => setIsMobileFiltersOpen(false)}
-                  className="w-full mt-8 py-4 bg-geeko-cyan text-black font-black text-xs uppercase tracking-widest rounded-xl"
-                >
-                  Aplicar Filtros
+        {isMobileFiltersOpen && (
+          <div className="fixed inset-0 z-[100] lg:hidden">
+            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setIsMobileFiltersOpen(false)} />
+            <div className="absolute inset-y-0 right-0 w-full max-w-xs bg-[#0a0a0a] border-l border-white/5 p-6 shadow-2xl overflow-y-auto animate-in slide-in-from-right duration-300">
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-xl font-black tracking-tighter">FILTROS</h2>
+                <button onClick={() => setIsMobileFiltersOpen(false)} className="p-2 bg-white/5 rounded-lg text-neutral-400">
+                  <X size={20} />
                 </button>
               </div>
+              <FiltersPanel
+                filters={{ ...mockFilters, sets }}
+                selected={filters}
+                onChange={handleFilterChange}
+                setsOptions={sets}
+                isAccessoryMode={activeTab === 'accessories'}
+              />
+              <button
+                onClick={() => setIsMobileFiltersOpen(false)}
+                className="w-full mt-8 py-4 bg-geeko-cyan-neon text-black font-black text-xs uppercase tracking-widest rounded-xl"
+              >
+                Aplicar Filtros
+              </button>
             </div>
-          )
-        }
+          </div>
+        )}
       </div>
     </div>
   );
