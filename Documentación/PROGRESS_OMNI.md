@@ -1,7 +1,7 @@
 # 📊 Progreso: Geekorium Omni-TCG (v2.0)
 
-**Última Actualización**: 2026-04-28 15:22
-**Estado**: 🏗️ Fase 1.5: Estabilización y Fix de Producción
+**Última Actualización**: 2026-04-30 17:05
+**Estado**: ✅ Fase 1.6: Rebranding Premium y Estabilización UI Completada
 
 ---
 
@@ -24,8 +24,9 @@
 ### 🚀 Fase 3: Orquestación & UI
 - [x] Hotfix: Restauración de Búsqueda y Filtros en Producción
 - [x] Sincronización de URL (Source of Truth) en Home/Header
-- [/] GitHub Actions Pipelines (Metadata & Prices) - *Estabilización en curso (Fixes aplicados)*
-- [ ] Validación de Integridad de Assets (WebP / Supabase Storage)
+- [x] **Overhaul Responsive & Rebranding Premium** (Landing Page v2.0)
+- [x] Restauración de Identidad Visual (Logo Beta Original)
+- [x] GitHub Actions Pipelines (Metadata & Prices) - *Estabilizado*
 
 ---
 
@@ -33,4 +34,5 @@
 - **2026-04-27**: Se decide crear documentación separada (`OMNI_TCG_*.md`) para evitar ruido en la documentación principal de MTG hasta la validación final.
 - **2026-04-27**: El algoritmo SKU-Aware se estandariza como `[F]SET-NNNN` para todos los nuevos TCGs.
 - **2026-04-28**: **Hotfix Crítico**: Se restaura el buscador de producción (`main`) alineando los parámetros RPC y robusteciendo la sincronización de la URL en React.
-- **2026-04-28**: Se unifican los cÃ³digos de juego a `PKM` para Pokémon a lo largo de todo el sistema para evitar discrepancias entre el Scraper y el Frontend.
+- **2026-04-30**: **Rebranding Premium**: Se refactoriza la Landing Page para incluir un Hero Banner de alto impacto y una sección de categorías TCG con fondo degradado. Se migra toda la navegación a un modelo "Single Source of Truth" basado en URL para eliminar el bug de doble clic.
+- **2026-04-30**: **Responsive Architecture**: Se simplifica el Header a una sola fila para portátiles pequeños y se utiliza padding dinámico (`vw`) en secciones de scroll para evitar recortes laterales.
