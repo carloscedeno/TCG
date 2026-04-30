@@ -1409,20 +1409,86 @@ export const fetchBanners = async (category: string = 'main_hero') => {
     .eq('category', category)
     .eq('is_active', true)
     .order('display_order');
+  
   if (error) {
-    console.warn('fetchBanners failed (hero_banners), trying fallback to banners:', error);
-    const { data: oldData, error: oldError } = await supabase
-      .from('banners')
-      .select('*')
-      .eq('is_active', true)
-      .order('sort_order');
-    if (oldError) {
-      console.warn('fetchBanners fallback failed (banners):', oldError);
-      return [];
-    }
-    return oldData || [];
+    console.error('fetchBanners failed:', error);
+    return [];
   }
   return data || [];
+};
+
+export const fetchEvents = async (onlyActive: boolean = true) => {
+  let query = supabase
+    .from('events')
+    .select('*')
+    .order('event_date', { ascending: true });
+  
+  if (onlyActive) {
+    query = query.eq('is_active', true);
+  }
+
+  const { data, error } = await query;
+  if (error) {
+    console.error('fetchEvents failed:', error);
+    return [];
+  }
+  return data || [];
+};
+
+// --- ADMIN CRUD FUNCTIONS ---
+
+export const adminFetchBanners = async () => {
+  const { data, error } = await supabase
+    .from('hero_banners')
+    .select('*')
+    .order('display_order');
+  if (error) throw error;
+  return data;
+};
+
+export const adminSaveBanner = async (banner: any) => {
+  const { data, error } = await supabase
+    .from('hero_banners')
+    .upsert(banner)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+};
+
+export const adminDeleteBanner = async (id: string) => {
+  const { error } = await supabase
+    .from('hero_banners')
+    .delete()
+    .eq('id', id);
+  if (error) throw error;
+};
+
+export const adminFetchEvents = async () => {
+  const { data, error } = await supabase
+    .from('events')
+    .select('*')
+    .order('event_date', { ascending: true });
+  if (error) throw error;
+  return data;
+};
+
+export const adminSaveEvent = async (event: any) => {
+  const { data, error } = await supabase
+    .from('events')
+    .upsert(event)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+};
+
+export const adminDeleteEvent = async (id: string) => {
+  const { error } = await supabase
+    .from('events')
+    .delete()
+    .eq('id', id);
+  if (error) throw error;
 };
 
 export const uploadAsset = async (file: File, folder: string = 'banners') => {

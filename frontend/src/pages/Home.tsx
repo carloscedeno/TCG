@@ -3,7 +3,7 @@ import { rarityMap } from '../utils/translations';
 import { CardGrid } from '../components/Card/CardGrid';
 import { CardModal } from '../components/Card/CardModal';
 import type { CardProps } from '../components/Card/Card';
-import { fetchCards, fetchSets, fetchProducts, fetchCart, fetchAccessories } from '../utils/api';
+import { fetchCards, fetchSets, fetchProducts, fetchCart, fetchAccessories, fetchBanners } from '../utils/api';
 import { FiltersPanel } from '../components/Filters/FiltersPanel';
 import type { Filters } from '../components/Filters/FiltersPanel';
 import { useAuth } from '../context/AuthContext';
@@ -88,7 +88,9 @@ const Home: React.FC = () => {
     return tabParam || 'marketplace';
   });
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [cartCount, setCartCount] = useState(0); // Cart count state
+  const [cartCount, setCartCount] = useState(0);
+  const [banners, setBanners] = useState<any[]>([]);
+  const [activeBannerIndex, setActiveBannerIndex] = useState(0); // Cart count state
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
   const LIMIT = 50;
 
@@ -106,6 +108,24 @@ const Home: React.FC = () => {
     };
     checkAccessories();
   }, []);
+
+  // Banners Logic
+  useEffect(() => {
+    const loadBanners = async () => {
+      const data = await fetchBanners('main_hero');
+      setBanners(data);
+    };
+    loadBanners();
+  }, []);
+
+  // Auto-advance banners
+  useEffect(() => {
+    if (banners.length <= 1) return;
+    const interval = setInterval(() => {
+      setActiveBannerIndex((prev) => (prev + 1) % banners.length);
+    }, 8000);
+    return () => clearInterval(interval);
+  }, [banners.length]);
 
   // Cart Count Logic
   useEffect(() => {
@@ -371,48 +391,64 @@ const Home: React.FC = () => {
 
         {/* --- PREMIUM BANNER (HERO) --- */}
         <section className="relative w-full h-[350px] sm:h-[500px] md:h-[600px] overflow-hidden group">
-          {/* Background Image with Overlay */}
-          <div className="absolute inset-0">
-            <img 
-              src="https://media.magic.wizards.com/image_legacy_migration/images/magic/tcg/products/stx/banner.jpg" 
-              alt="Secrets of Strixhaven" 
-              className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-            />
-            <div className="absolute inset-0 bg-black/60 md:bg-transparent md:bg-gradient-to-r md:from-black md:via-black/60 md:to-transparent" />
-          </div>
+          {banners.length > 0 ? (
+            banners.map((banner, idx) => (
+              <div 
+                key={banner.id || idx}
+                className={`absolute inset-0 transition-opacity duration-1000 ${idx === activeBannerIndex ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+              >
+                {/* Background Image with Overlay */}
+                <div className="absolute inset-0">
+                  <img 
+                    src={banner.image_url} 
+                    alt={banner.title} 
+                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-black/60 md:bg-transparent md:bg-gradient-to-r md:from-black md:via-black/60 md:to-transparent" />
+                </div>
 
-          <div className="relative z-10 max-w-[1600px] mx-auto px-6 md:px-10 h-full flex items-center justify-center md:justify-start">
-            <div className="max-w-2xl space-y-2 md:space-y-4 text-center md:text-left">
-              <h2 className="text-3xl sm:text-5xl md:text-8xl font-black italic tracking-tighter leading-[0.8] uppercase text-outline">
-                SECRETS OF<br />
-                STRIXHAVEN
-              </h2>
-              <h3 className="text-2xl sm:text-4xl md:text-7xl font-black italic tracking-tighter leading-none uppercase text-white">
-                YA DISPONIBLE
-              </h3>
-              
-              <div className="pt-4 md:pt-8 flex items-center justify-center md:justify-start gap-6">
-                <button className="flex items-center gap-2 md:gap-4 bg-geeko-cyan-neon text-black px-6 md:px-8 py-3 md:py-4 font-black uppercase tracking-widest text-[10px] md:text-sm rounded-sm hover:bg-white transition-all transform active:scale-95 group/btn">
-                  Consíguelo aquí
-                  <ChevronRight size={16} className="md:w-5 md:h-5 group-hover/btn:translate-x-1 transition-transform" />
-                </button>
+                <div className="relative z-10 max-w-[1600px] mx-auto px-6 md:px-10 h-full flex items-center justify-center md:justify-start">
+                  <div className="max-w-2xl space-y-2 md:space-y-4 text-center md:text-left">
+                    <h2 className="text-3xl sm:text-5xl md:text-8xl font-black italic tracking-tighter leading-[0.8] uppercase text-outline">
+                      {banner.title.split(' ').slice(0, 2).join(' ')}<br />
+                      {banner.title.split(' ').slice(2).join(' ')}
+                    </h2>
+                    <h3 className="text-2xl sm:text-4xl md:text-7xl font-black italic tracking-tighter leading-none uppercase text-white">
+                      {banner.subtitle}
+                    </h3>
+                    
+                    <div className="pt-4 md:pt-8 flex items-center justify-center md:justify-start gap-6">
+                      <a 
+                        href={banner.link_url || '#'}
+                        className="flex items-center gap-2 md:gap-4 bg-geeko-cyan-neon text-black px-6 md:px-8 py-3 md:py-4 font-black uppercase tracking-widest text-[10px] md:text-sm rounded-sm hover:bg-white transition-all transform active:scale-95 group/btn"
+                      >
+                        Consíguelo aquí
+                        <ChevronRight size={16} className="md:w-5 md:h-5 group-hover/btn:translate-x-1 transition-transform" />
+                      </a>
+                    </div>
+                  </div>
+                </div>
               </div>
+            ))
+          ) : (
+            /* Fallback while loading or no banners */
+            <div className="absolute inset-0 bg-slate-900 animate-pulse flex items-center justify-center">
+              <div className="text-white/10 font-black italic text-8xl uppercase">Geekorium</div>
             </div>
+          )}
 
-            {/* Dots Grid Decoration */}
-            <div className="absolute top-1/4 right-20 hidden lg:grid grid-cols-8 gap-4 opacity-30">
-              {[...Array(32)].map((_, i) => (
-                <div key={i} className="w-1 h-1 bg-white rounded-full" />
+          {/* Banner Navigation Dots */}
+          {banners.length > 1 && (
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 md:left-10 md:translate-x-0 z-20 flex gap-2">
+              {banners.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setActiveBannerIndex(idx)}
+                  className={`w-12 h-1 rounded-full transition-all ${idx === activeBannerIndex ? 'bg-geeko-cyan-neon w-20' : 'bg-white/20'}`}
+                />
               ))}
             </div>
-
-            {/* Pagination Dots */}
-            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-3">
-              {[0, 1, 2, 3].map((i) => (
-                <div key={i} className={`w-2.5 h-2.5 rounded-full border-2 border-white/50 transition-all cursor-pointer ${i === 0 ? 'bg-white scale-125 border-white' : 'hover:border-white'}`} />
-              ))}
-            </div>
-          </div>
+          )}
         </section>
 
         {/* --- PREMIUM TCG SELECTOR SECTION --- */}

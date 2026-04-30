@@ -3,50 +3,42 @@ import { Calendar, Trophy, Users, Swords, MapPin } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { UserMenu } from '../components/Navigation/UserMenu';
 import { useAuth } from '../context/AuthContext';
+import { fetchEvents } from '../utils/api';
+import { useEffect, useState } from 'react';
 
 // Mock data for initial display (until we connect to Supabase real data)
-const UPCOMING_TOURNAMENTS = [
-    {
-        id: '1',
-        name: 'Friday Night Magic: Standard Showdown',
-        game: 'Magic: The Gathering',
-        date: '2026-02-14T18:00:00',
-        format: 'Standard',
-        entryFee: '$10',
-        registered: 12,
-        capacity: 32,
-        color: 'border-geeko-red',
-        iconColor: 'text-geeko-red'
-    },
-    {
-        id: '2',
-        name: 'Pokémon League Challenge',
-        game: 'Pokémon TCG',
-        date: '2026-02-15T15:00:00',
-        format: 'Standard',
-        entryFee: '$15',
-        registered: 28,
-        capacity: 50,
-        color: 'border-geeko-blue',
-        iconColor: 'text-geeko-blue'
-    },
-    {
-        id: '3',
-        name: 'One Piece Store Championship',
-        game: 'One Piece TCG',
-        date: '2026-02-21T14:00:00',
-        format: 'Constructed',
-        entryFee: '$20',
-        registered: 64,
-        capacity: 64,
-        color: 'border-geeko-orange',
-        iconColor: 'text-geeko-orange'
-    }
-];
+// Fallback color mapping based on game code
+const GAME_COLORS: Record<string, { border: string, text: string }> = {
+    'MTG': { border: 'border-geeko-red', text: 'text-geeko-red' },
+    'PKM': { border: 'border-geeko-blue', text: 'text-geeko-blue' },
+    'OPC': { border: 'border-geeko-orange', text: 'text-geeko-orange' },
+    'DGM': { border: 'border-geeko-purple', text: 'text-geeko-purple' },
+    'YGO': { border: 'border-geeko-gold', text: 'text-geeko-gold' },
+    'DEFAULT': { border: 'border-white/10', text: 'text-white' }
+};
 
 const TournamentHub: React.FC = () => {
     const navigate = useNavigate();
     const { user } = useAuth();
+    const [events, setEvents] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const loadEvents = async () => {
+            try {
+                setLoading(true);
+                const data = await fetchEvents();
+                setEvents(data);
+            } catch (error) {
+                console.error('Error loading events:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadEvents();
+    }, []);
+
+    const getGameColors = (code: string) => GAME_COLORS[code] || GAME_COLORS.DEFAULT;
 
     return (
         <div className="min-h-screen bg-[#050505] text-white font-sans relative selection:bg-geeko-gold/30 overflow-hidden">
@@ -128,40 +120,78 @@ const TournamentHub: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="grid gap-4">
-                            {UPCOMING_TOURNAMENTS.map((tourney) => (
-                                <div
-                                    key={tourney.id}
-                                    className={`group relative p-6 rounded-2xl bg-[#121212] border-l-4 ${tourney.color} hover:bg-[#1a1a1a] transition-all cursor-pointer flex flex-col md:flex-row justify-between items-center gap-6`}
-                                >
-                                    <div className="flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
-                                        <div className={`p-4 rounded-2xl bg-white/5 ${tourney.iconColor}`}>
-                                            <Trophy size={24} />
+                    {/* Tournaments Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {loading ? (
+                            [...Array(3)].map((_, i) => (
+                                <div key={i} className="h-[300px] bg-white/5 rounded-3xl animate-pulse" />
+                            ))
+                        ) : events.length > 0 ? (
+                            events.map((tournament) => {
+                                const colors = getGameColors(tournament.game_code);
+                                return (
+                                    <div 
+                                        key={tournament.id} 
+                                        className={`group rounded-3xl overflow-hidden glass-card border ${colors.border}/20 hover:${colors.border}/50 transition-all hover:scale-[1.02] cursor-pointer`}
+                                    >
+                                        <div className="relative h-40 bg-slate-900 overflow-hidden">
+                                            {tournament.image_url ? (
+                                                <img src={tournament.image_url} alt={tournament.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center opacity-20">
+                                                    <Trophy size={64} className={colors.text} />
+                                                </div>
+                                            )}
+                                            <div className="absolute top-4 left-4">
+                                                <span className={`px-4 py-1.5 rounded-full bg-black/60 backdrop-blur-md border ${colors.border}/30 ${colors.text} text-[10px] font-black uppercase tracking-widest`}>
+                                                    {tournament.game_code}
+                                                </span>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <div className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">{tourney.game}</div>
-                                            <h4 className="text-xl font-bold text-white group-hover:text-geeko-gold transition-colors">{tourney.name}</h4>
-                                            <div className="flex gap-4 mt-2 text-xs text-slate-400 font-medium justify-center md:justify-start">
-                                                <span>{new Date(tourney.date).toLocaleDateString()}</span>
-                                                <span>•</span>
-                                                <span>{tourney.format}</span>
-                                                <span>•</span>
-                                                <span>{tourney.entryFee}</span>
+                                        <div className="p-6 space-y-4">
+                                            <div>
+                                                <h3 className="text-xl font-black italic tracking-tighter uppercase line-clamp-1 group-hover:text-geeko-cyan transition-colors">
+                                                    {tournament.name}
+                                                </h3>
+                                                <div className="flex items-center gap-2 text-slate-500 text-[10px] font-bold uppercase tracking-widest mt-1">
+                                                    <Calendar size={12} className="text-geeko-gold" />
+                                                    {new Date(tournament.event_date).toLocaleDateString()} at {new Date(tournament.event_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                </div>
+                                            </div>
+
+                                            <div className="grid grid-cols-2 gap-4 py-4 border-y border-white/5">
+                                                <div className="space-y-1">
+                                                    <div className="text-[10px] text-slate-500 font-bold uppercase tracking-widest flex items-center gap-1">
+                                                        <Swords size={12} /> Format
+                                                    </div>
+                                                    <div className="text-sm font-black text-white">{tournament.format}</div>
+                                                </div>
+                                                <div className="space-y-1">
+                                                    <div className="text-[10px] text-slate-500 font-bold uppercase tracking-widest flex items-center gap-1">
+                                                        <Users size={12} /> Players
+                                                    </div>
+                                                    <div className="text-sm font-black text-white">{tournament.registered} / {tournament.capacity}</div>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex items-center justify-between">
+                                                <div className="text-2xl font-black italic text-geeko-gold">{tournament.entry_fee}</div>
+                                                <button className="bg-white/5 hover:bg-white text-white hover:text-black px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">
+                                                    Register Now
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div className="flex items-center gap-8">
-                                        <div className="text-right hidden md:block">
-                                            <div className="text-2xl font-black text-white italic">{tourney.registered}<span className="text-slate-600 text-lg">/{tourney.capacity}</span></div>
-                                            <div className="text-[10px] uppercase font-bold text-slate-500">Players Registered</div>
-                                        </div>
-                                        <button className="w-full md:w-auto px-6 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold uppercase text-xs transition-colors">
-                                            Details
-                                        </button>
-                                    </div>
-                                </div>
-                            ))}
+                                );
+                            })
+                        ) : (
+                            <div className="col-span-full py-20 text-center bg-white/5 rounded-3xl border border-dashed border-white/10">
+                                <Calendar className="w-16 h-16 text-slate-700 mx-auto mb-4" />
+                                <h3 className="text-xl font-bold text-slate-500 uppercase tracking-tighter">No events found</h3>
+                                <p className="text-slate-600 text-xs mt-2">Stay tuned for upcoming tournaments.</p>
+                            </div>
+                        )}
+                    </div>
                         </div>
                     </div>
                 </div>

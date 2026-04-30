@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Play, Settings, Users, Database, Shield, AlertCircle, Package, ExternalLink } from 'lucide-react';
+import { Play, Settings, Users, Database, Shield, AlertCircle, Package, ExternalLink, Image, Calendar } from 'lucide-react';
 
 import { supabase } from '../../utils/supabaseClient';
 
@@ -291,6 +291,32 @@ export const AdminDashboard = () => {
                             </div>
                             <div className="w-16 h-16 bg-orange-500/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
                                 <Package className="text-orange-400" size={32} />
+                            </div>
+                        </div>
+                    </Link>
+
+                    <Link to="/admin/banners" className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-cyan-900/50 to-slate-900 border border-white/10 p-8 hover:border-cyan-500/50 transition-all">
+                        <div className="absolute inset-0 bg-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="relative z-10 flex items-center justify-between">
+                            <div>
+                                <h3 className="text-2xl font-black italic text-white mb-2">BANNERS</h3>
+                                <p className="text-cyan-300 text-xs font-bold uppercase tracking-widest">Gestionar Carrusel Home</p>
+                            </div>
+                            <div className="w-16 h-16 bg-cyan-500/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <Image className="text-cyan-400" size={32} />
+                            </div>
+                        </div>
+                    </Link>
+
+                    <Link to="/admin/events" className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-rose-900/50 to-slate-900 border border-white/10 p-8 hover:border-rose-500/50 transition-all">
+                        <div className="absolute inset-0 bg-rose-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="relative z-10 flex items-center justify-between">
+                            <div>
+                                <h3 className="text-2xl font-black italic text-white mb-2">EVENTOS</h3>
+                                <p className="text-rose-300 text-xs font-bold uppercase tracking-widest">Calendario y Torneos</p>
+                            </div>
+                            <div className="w-16 h-16 bg-rose-500/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <Calendar className="text-rose-400" size={32} />
                             </div>
                         </div>
                     </Link>

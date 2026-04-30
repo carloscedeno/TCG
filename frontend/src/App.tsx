@@ -23,6 +23,8 @@ import { WelcomeModal } from './components/Navigation/WelcomeModal';
 import LoginPage from './pages/Admin/LoginPage';
 import CustomersPage from './pages/Admin/CustomersPage';
 import CatalogPage from './pages/Admin/CatalogPage';
+import { BannersPage } from './pages/Admin/BannersPage';
+import { EventsPage } from './pages/Admin/EventsPage';
 import { PosSessionBanner } from './components/Admin/PosSessionBanner';
 
 const isSupabaseConfigured = !!import.meta.env.VITE_SUPABASE_URL && !!import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -82,6 +84,8 @@ function App() {
                         <Route path="/admin/accessories" element={<Navigate to="/admin/catalog" replace />} />
                         <Route path="/admin/orders" element={<AdminRoute><OrdersPage /></AdminRoute>} />
                         <Route path="/admin/customers" element={<AdminRoute><CustomersPage /></AdminRoute>} />
+                        <Route path="/admin/banners" element={<AdminRoute><BannersPage /></AdminRoute>} />
+                        <Route path="/admin/events" element={<AdminRoute><EventsPage /></AdminRoute>} />
                         <Route path="/checkout" element={<CheckoutPage />} />
                         <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
                         <Route path="/order/:orderId" element={<OrderTrackingPage />} />
