@@ -765,20 +765,22 @@ const Home: React.FC = () => {
                         const dayName = date.toLocaleDateString('es-ES', { weekday: 'long' }).toUpperCase();
                         const fullDate = date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: '2-digit' });
                         
+                        // Map game codes to emojis matching the top selector
+                        const iconMap: Record<string, string> = {
+                          'MTG': '🔥',
+                          'PKM': '⚡',
+                          'YGO': '🏺',
+                          'OPC': '⚓',
+                        };
+
                         return (
                           <Link 
                             key={event.id}
                             to="/tournaments"
                             className="group flex items-center gap-4 p-3 bg-white/[0.02] border border-white/5 rounded-xl hover:bg-white/[0.05] hover:border-geeko-cyan-neon/30 transition-all"
                           >
-                            <div className="w-10 h-10 rounded-lg bg-neutral-900 border border-white/10 flex items-center justify-center group-hover:border-geeko-cyan-neon/50 transition-colors">
-                              {event.game_code === 'MTG' ? (
-                                <img src="/icons/mtg-icon.png" alt="MTG" className="w-6 h-6 object-contain opacity-70 group-hover:opacity-100" />
-                              ) : event.game_code === 'PKM' ? (
-                                <img src="/icons/pokemon-icon.png" alt="PKM" className="w-6 h-6 object-contain opacity-70 group-hover:opacity-100" />
-                              ) : (
-                                <Sparkles size={20} className="text-geeko-cyan-neon opacity-50 group-hover:opacity-100" />
-                              )}
+                            <div className="w-10 h-10 rounded-lg bg-neutral-900 border border-white/10 flex items-center justify-center group-hover:border-geeko-cyan-neon/50 transition-colors text-xl">
+                              {iconMap[event.game_code] || '⚔️'}
                             </div>
                             <div className="flex-1 min-w-0">
                               <p className="text-[9px] font-black uppercase tracking-widest text-geeko-cyan-neon mb-0.5">
@@ -797,22 +799,6 @@ const Home: React.FC = () => {
                         <p className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest">No hay misiones programadas</p>
                       </div>
                     )}
-                  </div>
-
-                  <div className="mt-8 pt-8 border-t border-white/5">
-                    <div className="bg-geeko-cyan-neon/5 border border-geeko-cyan-neon/10 rounded-xl p-4 space-y-3">
-                      <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest leading-relaxed">
-                        ¿Buscas algo específico o necesitas ayuda con tu misión?
-                      </p>
-                      <a 
-                        href="https://wa.me/584122152636" 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-center w-full py-3 bg-geeko-cyan-neon text-black text-[10px] font-black uppercase tracking-widest rounded-lg hover:bg-white transition-all shadow-lg shadow-geeko-cyan-neon/10"
-                      >
-                        Hablar con un Asesor
-                      </a>
-                    </div>
                   </div>
                 </div>
               </div>
