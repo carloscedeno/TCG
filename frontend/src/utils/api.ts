@@ -1417,6 +1417,19 @@ export const fetchBanners = async (category: string = 'main_hero') => {
   return data || [];
 };
 
+export const registerForEvent = async (registration: { event_id: string, full_name: string, email: string, phone: string }) => {
+  const { data, error } = await supabase
+    .from('event_registrations')
+    .insert([registration])
+    .select();
+  
+  if (error) {
+    console.error('registerForEvent failed:', error);
+    throw error;
+  }
+  return data;
+};
+
 export const fetchEvents = async (onlyActive: boolean = true) => {
   let query = supabase
     .from('events')
