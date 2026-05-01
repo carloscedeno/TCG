@@ -37,5 +37,5 @@
 - **2026-04-28**: **Hotfix Crítico**: Se restaura el buscador de producción (`main`) alineando los parámetros RPC y robusteciendo la sincronización de la URL en React.
 - **2026-04-30**: **Rebranding Premium**: Se refactoriza la Landing Page para incluir un Hero Banner de alto impacto y una sección de categorías TCG con fondo degradado. Se migra toda la navegación a un modelo "Single Source of Truth" basado en URL para eliminar el bug de doble clic.
 - **2026-04-30**: **Responsive Architecture**: Se simplifica el Header a una sola fila para portátiles pequeños y se utiliza padding dinámico (`vw`) en secciones de scroll para evitar recortes laterales.
-- **2026-05-01**: **Arena Manager & Sidebar Integration**: Se integra la gestión de banners y eventos desde el panel Admin. Se activa la pre-inscripción dinámica en el Tournament Hub con base de datos propia. Se estabiliza el Home mediante la corrección de anidamiento JSX y restauración de dependencias.
+- **2026-05-01**: **Estabilización de Motor de Precios y Omni-Sync**: Se unificaron los 3 sistemas de sincronización fragmentados en un solo motor robusto (`omni_sync.py`). Se corrigió el bug de URL en GitHub Actions que mantenía los precios congelados desde el 19 de abril. Se activó la sincronización de precios reales (TCGPlayer Market) para Pokémon y se estandarizó el uso de `price_retail` para MTG.
 

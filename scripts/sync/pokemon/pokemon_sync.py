@@ -203,7 +203,50 @@ def sync_cards_for_set(set_id_code: str):
                                   printing_payload["tcg_specific_printing_attributes"], printing_payload["updated_at"]))
                             printing_id = cur.fetchone()[0]
                         
-                        # 6. External Identifier (Manual UPSERT)
+                        # 6. Pricing Sync (New)
+                        tcgplayer_data = api_card.get("tcgplayer", {})
+                        prices_obj = tcgplayer_data.get("prices", {})
+                        
+                        # Heuristic to find the correct price for the current finish
+                        # Finishes: "holofoil", "reverseholofoil", "normal"
+                        price_val = 0
+                        finish_lower = finish.lower()
+                        
+                        price_source = None
+                        if finish_lower == "holofoil" and "holofoil" in prices_obj:
+                            price_source = prices_obj["holofoil"]
+                        elif finish_lower == "reverseholofoil" and "reverseHolofoil" in prices_obj:
+                            price_source = prices_obj["reverseHolofoil"]
+                        elif "normal" in prices_obj:
+                            price_source = prices_obj["normal"]
+                        elif prices_obj:
+                            # Fallback to any price if only one exists
+                            price_source = next(iter(prices_obj.values()))
+
+                        if price_source:
+                            price_val = price_source.get("market") or price_source.get("mid") or price_source.get("low") or 0
+                        
+                        if price_val > 0:
+                            # Insert into price_history
+                            cur.execute("""
+                                INSERT INTO public.price_history (printing_id, source_id, condition_id, price_usd, is_foil, timestamp, price_type)
+                                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                            """, (printing_id, source_id, 16, price_val, is_foil, datetime.now(timezone.utc), 'market'))
+                            
+                            # Update card_printings denormalized columns
+                            if is_foil:
+                                cur.execute("UPDATE card_printings SET avg_market_price_foil_usd = %s, foil_price = %s WHERE printing_id = %s", (price_val, price_val, printing_id))
+                            else:
+                                cur.execute("UPDATE card_printings SET avg_market_price_usd = %s, non_foil_price = %s WHERE printing_id = %s", (price_val, price_val, printing_id))
+                            
+                            # Update products table
+                            cur.execute("""
+                                UPDATE products 
+                                SET price = %s, price_usd = %s, updated_at = %s 
+                                WHERE printing_id = %s
+                            """, (price_val, price_val, datetime.now(timezone.utc), printing_id))
+
+                        # 7. External Identifier (Manual UPSERT)
                         cur.execute("""
                             SELECT identifier_id FROM external_identifiers 
                             WHERE printing_id = %s AND source_id = %s

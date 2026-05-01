@@ -907,10 +907,20 @@ useEffect(() => {
 - **Regla Derivada:** Siempre incluir DROP FUNCTION IF EXISTS con la firma exacta antes de recrear RPCs.
 
 ### 104. Auditoría de Datos de Referencia (Lookups) — 2026-04-26
-- **Problema:** Duplicidad de registros en la tabla games y fallos en el filtrado.
-- **Causa Raíz:** Insertar nuevos juegos sin verificar existencia de registros previos (ej: PTCG vs PKM).
-- **Solución:** Unificación de registros, actualización de llaves foráneas y estandarización de códigos.
-- **Regla Derivada:** Antes de expandir un catálogo maestro, auditar la tabla actual para mapear IDs existentes.
+- **Solución**: Unificación de registros, actualización de llaves foráneas y estandarización de códigos.
+- **Regla Derivada**: Antes de expandir un catálogo maestro, auditar la tabla actual para mapear IDs existentes.
+
+### 148. Estabilización de Precios Reales y Omni-Sync (Mayo 2026)
+- **Problema**: Desajustes de precios "congelados" en producción (ej: $16.99 vs $14.99) y fallas persistentes en los pipelines de GitHub Actions.
+- **Causa Raíz**: 
+  1. El sistema de sincronización estaba fragmentado en 3 scripts distintos, lo que causaba carreras de datos.
+  2. Un error de formato en la `SUPABASE_URL` (prefijos duplicados) bloqueaba el pipeline desde el 19 de abril.
+  3. Mapeo incorrecto de campos: Se usaba `nm_price` en lugar de `price_retail` de CardKingdom.
+- **Lección**: 
+  - **Unificación de Orquestación**: Utilizar un único script maestro (`omni_sync.py`) para todos los TCGs garantiza coherencia en los logs y el estado de la DB.
+  - **Prioridad de Precios Retail**: Para MTG en CardKingdom, el campo `price_retail` es el único que garantiza el precio de venta real Near Mint.
+  - **Monitoreo de Paridad**: Asegurar que los scripts actualicen tanto `price` como `price_usd` para evitar "precios fantasma" en el frontend.
+  - **Soporte Nativo de Precios TCGPlayer**: Los loaders de metadatos (como el de Pokemon) deben configurarse para extraer también los precios en el mismo paso para evitar productos con stock pero sin valor.
 
 ### 105. Centralización de Mapeos de Negocio en Frontend — 2026-04-26
 - **Problema:** Filtrado inconsistente donde Pokémon mostraba Digimon.
@@ -919,7 +929,6 @@ useEffect(() => {
 - **Regla Derivada:** Nunca usar Strings mágicos para mapeos de negocio; centralizar en constantes unificadas.
 
 ### 106. Strict Filtering for Polymorphic Catalogs (MTG vs. Generic) - 2026-04-27
-- **Problema:** Al filtrar productos (accesorios) por un juego especÃ­fico (ej. MTG), el catÃ¡logo mostraba Ã­tems de MTG mezclados con Ã­tems genÃ©ricos (forros universales, snacks) que no tenÃ­an juego asignado (game_id IS NULL).
 - **Causa RaÃ­z:** La funciÃ³n de base de datos (get_accessories_filtered) usaba una condiciÃ³n 'loose': AND (p_game_id IS NULL OR a.game_id = p_game_id OR a.game_id IS NULL). Esto forzaba la inclusiÃ³n de genÃ©ricos en cada filtro de juego.
 - **SoluciÃ³n:** Implementar filtrado estricto en el RPC eliminando la condiciÃ³n OR a.game_id IS NULL cuando se provee un p_game_id. Adicionalmente, ajustar el frontend para que el botÃ³n general de 'Productos' no fuerce un juego por defecto (cambiando el fallback de ['Magic: The Gathering'] a []), permitiendo ver el catÃ¡logo completo solo cuando se desea.
 - **Regla Derivada:** En catÃ¡logos con productos especÃ­ficos de nicho y productos genÃ©ricos, el filtro de juego debe ser estricto para evitar ruido visual ('contaminaciÃ³n de resultados'). Los productos genÃ©ricos deben ser accesibles solo en la vista global sin filtros.
