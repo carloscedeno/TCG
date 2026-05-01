@@ -92,6 +92,7 @@ const Home: React.FC = () => {
   const [banners, setBanners] = useState<any[]>([]);
   const [activeBannerIndex, setActiveBannerIndex] = useState(0); // Cart count state
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+  const [upcomingEvents, setUpcomingEvents] = useState<any[]>([]);
   const LIMIT = 50;
 
   const [hasAccessoriesExistInDb, setHasAccessoriesExistInDb] = useState<boolean | null>(null);
@@ -106,7 +107,19 @@ const Home: React.FC = () => {
         setHasAccessoriesExistInDb(false);
       }
     };
+    
+    const loadEvents = async () => {
+      try {
+        const { fetchEvents } = await import('../utils/api');
+        const events = await fetchEvents();
+        setUpcomingEvents(events.slice(0, 8)); // Mostrar máximo 8 en el sidebar
+      } catch (err) {
+        console.error("Failed to fetch events for sidebar", err);
+      }
+    };
+
     checkAccessories();
+    loadEvents();
   }, []);
 
   // Banners Logic
@@ -733,61 +746,71 @@ const Home: React.FC = () => {
                       )}
                     </>
                   )}
-                </div>
-              )}
-            </div>
-
-            {/* --- NEW RIGHT SIDEBAR (Misiones) --- */}
+                         {/* --- NEW RIGHT SIDEBAR (Misiones) --- */}
             <aside className="hidden xl:block w-80 flex-shrink-0">
               <div className="sticky top-[140px] space-y-6">
-                <div className="glass-sidebar rounded-3xl p-6 border border-white/5 space-y-8 neon-glow-cyan/5">
-                  <div className="flex items-center gap-4">
-                    <img src="/branding/Misiones.jpg" alt="Misiones" className="w-12 h-12 rounded-full border-2 border-geeko-cyan-neon/20" />
-                    <div>
-                      <h3 className="text-lg font-web-titles font-black uppercase tracking-tighter italic">Misiones</h3>
-                      <p className="text-[10px] font-bold text-geeko-cyan-neon uppercase tracking-widest">En Progreso</p>
-                    </div>
+                <div className="bg-white/5 border border-white/5 rounded-2xl p-6 backdrop-blur-sm">
+                  <div className="flex items-center justify-between mb-8">
+                    <h3 className="text-sm font-black uppercase tracking-widest text-white border-l-2 border-geeko-cyan-neon pl-3">Próximas Misiones</h3>
+                    <Link to="/tournaments" className="text-[10px] font-black uppercase tracking-widest text-neutral-500 hover:text-geeko-cyan-neon transition-colors">Ver Todo</Link>
                   </div>
 
-                  <div className="space-y-6">
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-[10px] font-black uppercase tracking-widest">
-                        <span>Explorar Stock</span>
-                        <span className="text-geeko-cyan-neon">100%</span>
-                      </div>
-                      <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
-                        <div className="h-full bg-geeko-cyan-neon w-full neon-glow-cyan" />
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-4">
-                      <h4 className="text-xs font-black uppercase tracking-widest text-neutral-400">¿Cómo completar?</h4>
-                      <ul className="space-y-4">
-                        {[
-                          { step: '1', title: 'Selecciona', desc: 'Añade tus cartas al carrito.' },
-                          { step: '2', title: 'Cotiza', desc: 'Verás el Market vs GK Price.' },
-                          { step: '3', title: 'Asesoría', desc: 'Finaliza vía WhatsApp.' },
-                        ].map(item => (
-                          <li key={item.step} className="flex gap-3">
-                            <span className="w-6 h-6 rounded bg-geeko-cyan-neon/10 border border-geeko-cyan-neon/20 flex items-center justify-center text-[10px] font-black text-geeko-cyan-neon shrink-0">{item.step}</span>
-                            <div>
-                              <p className="text-[11px] font-black uppercase tracking-tight">{item.title}</p>
-                              <p className="text-[10px] text-neutral-500 font-medium">{item.desc}</p>
+                  <div className="space-y-3">
+                    {upcomingEvents.length > 0 ? (
+                      upcomingEvents.map((event) => {
+                        const date = new Date(event.event_date);
+                        const dayName = date.toLocaleDateString('es-ES', { weekday: 'long' }).toUpperCase();
+                        const fullDate = date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: '2-digit' });
+                        
+                        return (
+                          <Link 
+                            key={event.id}
+                            to="/tournaments"
+                            className="group flex items-center gap-4 p-3 bg-white/[0.02] border border-white/5 rounded-xl hover:bg-white/[0.05] hover:border-geeko-cyan-neon/30 transition-all"
+                          >
+                            <div className="w-10 h-10 rounded-lg bg-neutral-900 border border-white/10 flex items-center justify-center group-hover:border-geeko-cyan-neon/50 transition-colors">
+                              {event.game_code === 'MTG' ? (
+                                <img src="/icons/mtg-icon.png" alt="MTG" className="w-6 h-6 object-contain opacity-70 group-hover:opacity-100" />
+                              ) : event.game_code === 'PKM' ? (
+                                <img src="/icons/pokemon-icon.png" alt="PKM" className="w-6 h-6 object-contain opacity-70 group-hover:opacity-100" />
+                              ) : (
+                                <Sparkles size={20} className="text-geeko-cyan-neon opacity-50 group-hover:opacity-100" />
+                              )}
                             </div>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-[9px] font-black uppercase tracking-widest text-geeko-cyan-neon mb-0.5">
+                                {dayName} {fullDate}
+                              </p>
+                              <h4 className="text-[11px] font-bold text-white uppercase truncate tracking-tight">
+                                {event.name}
+                              </h4>
+                            </div>
+                          </Link>
+                        );
+                      })
+                    ) : (
+                      <div className="py-10 text-center space-y-3">
+                        <Calendar className="w-10 h-10 text-neutral-800 mx-auto" />
+                        <p className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest">No hay misiones programadas</p>
+                      </div>
+                    )}
                   </div>
 
-                  <a 
-                    href="https://wa.me/your-number" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center w-full py-4 bg-white/5 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-geeko-cyan-neon hover:text-black transition-all"
-                  >
-                    Hablar con un Asesor
-                  </a>
+                  <div className="mt-8 pt-8 border-t border-white/5">
+                    <div className="bg-geeko-cyan-neon/5 border border-geeko-cyan-neon/10 rounded-xl p-4 space-y-3">
+                      <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest leading-relaxed">
+                        ¿Buscas algo específico o necesitas ayuda con tu misión?
+                      </p>
+                      <a 
+                        href="https://wa.me/584122152636" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center w-full py-3 bg-geeko-cyan-neon text-black text-[10px] font-black uppercase tracking-widest rounded-lg hover:bg-white transition-all shadow-lg shadow-geeko-cyan-neon/10"
+                      >
+                        Hablar con un Asesor
+                      </a>
+                    </div>
+                  </div>
                 </div>
               </div>
             </aside>
