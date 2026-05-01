@@ -13,17 +13,6 @@ Este documento registra los desafÃƒÆ’Ã‚Â­os tÃƒÆ’Ã‚Â©cnicos 
   - Sincronizar la versiÃ³n de Python del runner (3.12) con la local.
   - Usar versionamiento flexible (`>=2.0.0`) en `requirements.txt` para entornos de despliegue.
 
-### 146. NormalizaciÃ³n Inteligente de URLs (GitHub Actions)
-- **Problema**: `ConnectError: [Errno -2] Name or service not known` en GitHub Actions a pesar de tener el ID de proyecto correcto.
-- **Causa RaÃz**: 
-  1. El secreto `SUPABASE_URL` contenÃa el dominio completo (`id.supabase.co`) pero sin protocolo.
-  2. El cÃ³digo de normalizaciÃ³n no detectaba si el dominio ya estaba presente y terminaba generando `https://id.supabase.co.supabase.co`.
-  3. Los secretos de GitHub pueden contener comillas o caracteres invisibles si se copian mal.
-- **LecciÃ³n**: 
-  - **SanitizaciÃ³n Agresiva**: Siempre aplicar `.strip().replace('"', '').replace("'", "")` a variables de entorno críticas.
-  - **DetecciÃ³n de Dominio**: Verificar si el dominio base (`.supabase.co`) ya existe antes de concatenarlo para evitar dobles extensiones.
-  - **Logging DiagnÃ³stico**: En caso de fallo de conexiÃ³n, imprimir la longitud y partes seguras de la URL para depurar sin exponer el secreto.
-
 ### 143. SincronizaciÃ³n SKU-Aware
 - **Problema**: Los scripts de sincronizaciÃ³n con CardKingdom tenÃ­an errores de mapeo en sets modernos.
 - **Causa**: El uso de campos descriptivos ambiguos en lugar de identificadores Ãºnicos.
@@ -148,6 +137,16 @@ Este documento registra los desafÃƒÆ’Ã‚Â­os tÃƒÆ’Ã‚Â©cnicos 
   - **URL como Source of Truth**: El estado del frontend debe seguir a la URL (One-Way Data Flow). Implementar efectos robustos que lean de `searchParams` y actualicen el estado interno.
   - **Mezcla de ParÃ¡metros**: Usar `new URLSearchParams(searchParams)` para conservar el estado existente al aplicar nuevos filtros.
   - **Soporte de UX**: Asegurar que la tecla `Enter` en formularios de bÃºsqueda "confirme" la acciÃ³n y actualice la URL para disparar el fetch.
+
+### 146. Linting CrÃ­tico en CI/CD (GitHub Actions)
+- **Problema**: El despliegue de producción fallaba con un error de variable no utilizada, a pesar de funcionar localmente.
+- **Causa**: `npm run build` en entornos CI suele aplicar reglas de linting más estrictas (`no-unused-vars`). Componentes con importaciones comentadas o "fantasmas" bloquean el pipeline.
+- **LecciÃ³n**: Eliminar siempre las importaciones no utilizadas antes de un push. Si una funcionalidad se comenta temporalmente (ej: botón "Explore"), su importación asociada (ej: `ExternalLink`) debe comentarse o eliminarse también.
+
+### 147. Robustez en Consultas Join de Supabase (PostgREST)
+- **Problema**: Scripts de backend fallaban con `NoneType` errors al intentar acceder a datos de joins complejos.
+- **Causa**: PostgREST puede devolver `null` en objetos anidados si la relación no existe o si hay ambigüedad en el esquema. Acceder directamente como `item['cards']['card_name']` sin validación previa es peligroso.
+- **LecciÃ³n**: Usar siempre `.get()` y validación defensiva para datos provenientes de joins complejos en Supabase. Implementar fallbacks razonables (ej: `game_code` por defecto a 'MTG') y logging granular para identificar registros huérfanos.
 
 ---
 
@@ -908,10 +907,20 @@ useEffect(() => {
 - **Regla Derivada:** Siempre incluir DROP FUNCTION IF EXISTS con la firma exacta antes de recrear RPCs.
 
 ### 104. Auditoría de Datos de Referencia (Lookups) — 2026-04-26
-- **Problema:** Duplicidad de registros en la tabla games y fallos en el filtrado.
-- **Causa Raíz:** Insertar nuevos juegos sin verificar existencia de registros previos (ej: PTCG vs PKM).
-- **Solución:** Unificación de registros, actualización de llaves foráneas y estandarización de códigos.
-- **Regla Derivada:** Antes de expandir un catálogo maestro, auditar la tabla actual para mapear IDs existentes.
+- **Solución**: Unificación de registros, actualización de llaves foráneas y estandarización de códigos.
+- **Regla Derivada**: Antes de expandir un catálogo maestro, auditar la tabla actual para mapear IDs existentes.
+
+### 148. Estabilización de Precios Reales y Omni-Sync (Mayo 2026)
+- **Problema**: Desajustes de precios "congelados" en producción (ej: $16.99 vs $14.99) y fallas persistentes en los pipelines de GitHub Actions.
+- **Causa Raíz**: 
+  1. El sistema de sincronización estaba fragmentado en 3 scripts distintos, lo que causaba carreras de datos.
+  2. Un error de formato en la `SUPABASE_URL` (prefijos duplicados) bloqueaba el pipeline desde el 19 de abril.
+  3. Mapeo incorrecto de campos: Se usaba `nm_price` en lugar de `price_retail` de CardKingdom.
+- **Lección**: 
+  - **Unificación de Orquestación**: Utilizar un único script maestro (`omni_sync.py`) para todos los TCGs garantiza coherencia en los logs y el estado de la DB.
+  - **Prioridad de Precios Retail**: Para MTG en CardKingdom, el campo `price_retail` es el único que garantiza el precio de venta real Near Mint.
+  - **Monitoreo de Paridad**: Asegurar que los scripts actualicen tanto `price` como `price_usd` para evitar "precios fantasma" en el frontend.
+  - **Soporte Nativo de Precios TCGPlayer**: Los loaders de metadatos (como el de Pokemon) deben configurarse para extraer también los precios en el mismo paso para evitar productos con stock pero sin valor.
 
 ### 105. Centralización de Mapeos de Negocio en Frontend — 2026-04-26
 - **Problema:** Filtrado inconsistente donde Pokémon mostraba Digimon.
@@ -920,7 +929,6 @@ useEffect(() => {
 - **Regla Derivada:** Nunca usar Strings mágicos para mapeos de negocio; centralizar en constantes unificadas.
 
 ### 106. Strict Filtering for Polymorphic Catalogs (MTG vs. Generic) - 2026-04-27
-- **Problema:** Al filtrar productos (accesorios) por un juego especÃ­fico (ej. MTG), el catÃ¡logo mostraba Ã­tems de MTG mezclados con Ã­tems genÃ©ricos (forros universales, snacks) que no tenÃ­an juego asignado (game_id IS NULL).
 - **Causa RaÃ­z:** La funciÃ³n de base de datos (get_accessories_filtered) usaba una condiciÃ³n 'loose': AND (p_game_id IS NULL OR a.game_id = p_game_id OR a.game_id IS NULL). Esto forzaba la inclusiÃ³n de genÃ©ricos en cada filtro de juego.
 - **SoluciÃ³n:** Implementar filtrado estricto en el RPC eliminando la condiciÃ³n OR a.game_id IS NULL cuando se provee un p_game_id. Adicionalmente, ajustar el frontend para que el botÃ³n general de 'Productos' no fuerce un juego por defecto (cambiando el fallback de ['Magic: The Gathering'] a []), permitiendo ver el catÃ¡logo completo solo cuando se desea.
 - **Regla Derivada:** En catÃ¡logos con productos especÃ­ficos de nicho y productos genÃ©ricos, el filtro de juego debe ser estricto para evitar ruido visual ('contaminaciÃ³n de resultados'). Los productos genÃ©ricos deben ser accesibles solo en la vista global sin filtros.
@@ -942,3 +950,17 @@ useEffect(() => {
 - **Causa Raiz**: El entorno de desarrollo (Sandbox: bqfkqnnostzaqueujdms) tenia una tabla de juegos con IDs y codigos diferentes (PKM en lugar de POKEMON, ID 10 en lugar de 23). Ademas, la base de datos estaba vacia para ese juego.
 - **Solucion**: Alinear el frontend y los scripts de poblacion con los estandares del Sandbox (PKM, ID 10) y actualizar los RPCs para normalizar multiples variantes a un unico codigo estandar.
 - **Regla Derivada**: Antes de diagnosticar logica de frontend, verificar la existencia y estructura de datos en el proyecto Supabase especifico mediante la API o scripts de diagnostico.
+### 97. Estabilización de Sidebar Dinámico y Anidamiento JSX (Mayo 2026)
+- **Problema**: El despliegue de producción fallaba con errores de sintaxis tras añadir un sidebar dinámico, a pesar de que el código parecía correcto.
+- **Causa Raíz**: Anidamiento incorrecto de etiquetas `div` (etiquetas de cierre huérfanas o fuera de lugar) al integrar bloques condicionales complejos en `Home.tsx`. TypeScript/React son extremadamente sensibles a la estructura de árbol en componentes grandes.
+- **Lección**: Al integrar componentes laterales (sidebars) en layouts existentes, verificar siempre que el contenedor principal (`flex`) encapsule correctamente tanto el contenido principal como el lateral. Utilizar herramientas de formateo automático y validación de árbol DOM.
+
+### 98. Dependencias de Rutas en Componentes de UI (Mayo 2026)
+- **Problema**: `TS17008: Property 'Link' does not exist` y errores de navegación tras mover lógica de UI.
+- **Causa Raíz**: Falta de importaciones explícitas de `react-router-dom` (`Link`, `useNavigate`) en archivos que antes eran estáticos pero ahora contienen enlaces dinámicos.
+- **Lección**: Todo componente que utilice navegación debe importar explícitamente sus dependencias. No asumir que están disponibles globalmente o a través de props si se están usando componentes de librería directamente.
+
+### 99. Migraciones de Base de Datos y Caché de Schema (Mayo 2026)
+- **Problema**: Error `404: Could not find the table 'public.event_registrations' in the schema cache` tras subir cambios al frontend.
+- **Causa Raíz**: La tabla fue definida en un archivo de migración local, pero no se ejecutó en la base de datos remota de Supabase. PostgREST (la API de Supabase) no detecta cambios en el esquema hasta que se aplican y se refresca el caché.
+- **Lección**: **Migraciones Primero**. Nunca desplegar código de frontend que dependa de nuevas tablas sin antes asegurar que el SQL se ha ejecutado en todos los entornos (Dev/Prod). Usar `NOTIFY pgrst, 'reload schema';` si el cambio no se refleja inmediatamente.

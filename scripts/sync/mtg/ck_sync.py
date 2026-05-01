@@ -224,13 +224,14 @@ def run_ck_sync():
                         })
             
             if price_entries:
-                # Differential update check
-                # (Logic remains same as original script for safety)
-                # ... skipping details for brevitiy in this step ...
-                supabase.table('price_history').insert(price_entries).execute()
-                for de in price_entries:
-                    all_changed_printing_ids.add(de['printing_id'])
-                total_updated += len(price_entries)
+                # Insert price history
+                try:
+                    supabase.table('price_history').insert(price_entries).execute()
+                    for de in price_entries:
+                        all_changed_printing_ids.add(de['printing_id'])
+                    total_updated += len(price_entries)
+                except Exception as ie:
+                    logger.error(f"Failed to insert price history batch: {ie}")
             
             if len(db_cards) < batch_size:
                 break
@@ -239,7 +240,7 @@ def run_ck_sync():
         if all_changed_printing_ids:
             update_denormalized_prices(list(all_changed_printing_ids))
             
-        logger.info("=== MTG SYNC COMPLETE ===")
+        logger.info(f"=== MTG SYNC COMPLETE: {total_updated} prices updated ===")
         
     except Exception as e:
         logger.critical(f"Critical error during sync: {e}", exc_info=True)
