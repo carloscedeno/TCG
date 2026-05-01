@@ -759,3 +759,17 @@ $content
 - supabase_client.py, load_mtgs_sets_from_scryfall.py, market_sync.py, load_mtgs_cards_from_scryfall.py ? Implementación de normalización resiliente.
 **Artefacto creado:** scripts/diag_dns.py (Script de diagnóstico de red y variables de entorno).
 **Regla derivada:** Nunca confiar en el formato de los secretos de GitHub; sanitizar siempre el protocolo y el dominio base antes de instanciar clientes de terceros.
+
+## 2026-05-01 -- Estabilización de Motor de Precios y Omni-Sync (Producción)
+
+**Qué pasó:** Se resolvió el "apagón" de precios en producción que persistía desde el 19 de abril. Se identificó una falla crítica en la configuración de la URL de Supabase en GitHub Actions y una fragmentación ineficiente de los scripts de sincronización. Se implementó el motor unificado Omni-Sync.
+**Lo que cambió:**
+- `lessons_learned.md` --> Lección #148 (Estabilización de Precios Reales y Omni-Sync).
+- `LEYES_DEL_SISTEMA.md` --> Ley 20 (Orquestación Omni-Sync Única) y Regla de Negocio 8.
+- `PROGRESS_OMNI.md` --> Actualización de hitos de estabilización.
+- `.github/workflows/omni-sync.yml` --> Nuevo pipeline unificado para todos los TCGs.
+- `scripts/sync/omni_sync.py` --> Nuevo orquestador maestro.
+- `scripts/sync/mtg/ck_sync.py` --> Actualización a `price_retail` para precisión 1:1 con CardKingdom.
+- `scripts/sync/pokemon/pokemon_sync.py` --> Integración de precios TCGPlayer Market.
+**Artefacto creado:** `scripts/verify_omni_sync.py` (Script de auditoría de precios en vivo para MTG/PKM).
+**Regla derivada:** Los precios Near Mint de MTG deben sincronizarse obligatoriamente con el campo `price_retail` de CardKingdom para garantizar la paridad con la tienda física.

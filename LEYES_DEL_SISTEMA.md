@@ -540,15 +540,18 @@ NingÃºn archivo de migraciÃ³n SQL (`supabase/migrations/`) desplegado y regi
 - **Lógica de Fallback (Graceful Degradation)**: Si el filtro de 12 días no devuelve resultados, los RPCs financieros (`get_products_filtered`, `get_inventory_list`) deben ignorar automáticamente la restricción temporal para mostrar los ítems más recientes disponibles en stock, evitando listas vacías para el usuario.
 - **Desacoplamiento**: El filtro "Nuevo" debe operar siempre como un **toggle independiente**. Nunca debe sobreescribir o bloquear la capacidad del usuario de ordenar los elementos por otras columnas (Precio, Nombre, Stock) mientras el filtro esté activo.
 
-## ??? LEYES DE EXPANSION OMNI-TCG (2026)
+### Ley 20: OrquestaciÃ³n Omni-Sync Ãšnica
+**Siempre** utilizar un Ãºnico motor de orquestaciÃ³n (`omni_sync.py`) para la sincronizaciÃ³n de precios y metadatos de todos los TCGs soportados.
+- **ProhibiciÃ³n**: Queda terminantemente prohibido el uso de scripts fragmentados (`daily_sync.yml`, `market-sync.yml`, etc.) que operen de forma independiente sobre las mismas tablas de producciÃ³n, para evitar colisiones y estados de datos inconsistentes.
+- **DeduplicaciÃ³n**: Todo script de ingesta de precios debe implementar lÃ³gica diferencial (no insertar si el precio no ha variado) para proteger la cuota de almacenamiento de la base de datos.
 
-### Ley 18: Estandarización de Códigos de Juego
-- **Mandato**: Toda nueva inserción en products debe usar códigos de 3-4 letras: MTG, PKM, OPC, LOR, FAB, YGO, WIX, DGM, GDM, RFB.
-- **Prohibición**: No usar IDs numéricos o nombres largos en la columna game.
-- **Objetivo**: Garantizar visibilidad instantánea en el buscador de la tienda.
+### Regla de Negocio 8: Prioridad de Precios Retail (MTG)
+Para el catÃ¡logo de Magic: The Gathering, la fuente de verdad absoluta para la venta al pÃºblico en Geekorium es el campo **`price_retail`** de CardKingdom. 
+- **Mapeo**: No utilizar `nm_price` o promedios de mercado si el valor `price_retail` estÃ¡ disponible.
+- **Paridad de Columnas**: Toda actualizaciÃ³n de precios en la tabla `products` debe sincronizar simultÃ¡neamente las columnas `price` y `price_usd` para garantizar coherencia en todas las vistas del frontend.
 
-### Ley 19: Protección de Entornos (Dev vs Main)
-- **Verificación**: Antes de scripts de mantenimiento, verificar el Project ID en .env.
-- **Producción**: sxuotvogwvmxuvwbsscv (Geekorium Live).
-- **Desarrollo**: bqfkqnnostzaqueujdms (Sandbox).
-- **Acción**: Abortar si el entorno no coincide con el objetivo del script.
+---
+
+### v3.5 (2026-05-01)
+- âœ… Agregada **Ley 20**: OrquestaciÃ³n Omni-Sync Ãšnica.
+- âœ… Agregada **Regla de Negocio 8**: Prioridad de Precios Retail (MTG).

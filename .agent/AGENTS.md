@@ -120,8 +120,7 @@ Artefactos del Compound step:
 - ✅ **Estandarización de Juegos (Ley 26)**: Unificación de códigos de franquicia (`PKM`, `OPC`, `DGM`, `FAB`, `GND`, `RFB`) y eliminación de duplicados en la base de datos.
 - ✅ **RPC Integrity & Overload Cleaning**: Limpieza quirúrgica de funciones Postgres para evitar ambigüedad (`PGRST203`) y asegurar filtrado exacto por TCG.
 - ✅ **Centralized UX Navigation**: Sincronización reactiva de URL y menús para navegación fluida entre Marketplace y Catálogo por juego.
-
-
+- ✅ **Estabilización de Motor de Precios Omni-Sync (Mayo 2026)**: Unificación de scripts fragmentados en un solo orquestador robusto (`omni_sync.py`). Corrección de bug crítico de URL en GitHub Actions. Sincronización de precios `price_retail` para MTG y `market` para Pokémon.
 
 ## 🚧 Features Pendientes
 
@@ -141,6 +140,7 @@ Artefactos del Compound step:
 6. **WhatsApp = Canal Operacional Primario**: El mensaje de WhatsApp en el checkout SIEMPRE debe incluir el detalle por carta (nombre, cantidad, set, finish, subtotal). Nunca simplificar a conteos agregados. (Lección #86)
 7. **Sincronización SKU-Aware**: Los scripts de sincronización con CardKingdom deben priorizar el SKU (`[F]SET-NNNN`) sobre el campo `variation` para sets modernos y tokens para garantizar un mapeo 100% exacto de acabados y coleccionistas.
 8. **RLS de Rastreo**: El acceso de lectura a `orders` y `order_items` debe permitirse para el rol `anon` basado en el conocimiento del UUID de la orden para habilitar el rastreo de invitados.
+9. **Prioridad Retail CardKingdom (MTG)**: Para Magic: The Gathering, el campo `price_retail` de Card Kingdom es el único que garantiza el precio de venta real Near Mint y debe usarse siempre sobre `nm_price` o promedios de mercado.
 
 ---
 
