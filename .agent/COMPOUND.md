@@ -760,3 +760,15 @@ $content
 - data/loaders/load_mtgs_sets_from_scryfall.py -> Logging y fallback de constraints.
 **Artefacto creado:** PLAN_FIX_WORKFLOWS.md.
 **Regla derivada:** Validacin defensiva obligatoria en todos los joins de PostgREST en scripts de sincronizacin.
+
+## 2026-05-01 - Arena Manager: Sidebar Dinmico y Pre-inscripciones
+
+**Qu pas:** Se integr la gestin de eventos (Misiones) en el sidebar del Home y se habilit el sistema de pre-inscripcin en el Tournament Hub con base de datos dedicada.
+**Lo que cambi:**
+- lessons_learned.md -> Lecciones 97, 98, 99.
+- frontend/src/pages/Home.tsx -> Integracin de sidebar dinmico y fix de anidamiento JSX.
+- frontend/src/pages/TournamentHub.tsx -> Overhaul de diseo y modal de registro.
+- frontend/src/components/Modals/PreRegistrationModal.tsx -> Nuevo componente de captura de leads.
+- supabase/migrations/20260501000000_event_registrations.sql -> Tabla de inscripciones.
+**Artefacto creado:** PreRegistrationModal.tsx.
+**Regla derivada:** Las migraciones de base de datos deben preceder al despliegue de frontend para evitar errores de cache de esquema (PostgREST).

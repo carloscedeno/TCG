@@ -941,3 +941,17 @@ useEffect(() => {
 - **Causa Raiz**: El entorno de desarrollo (Sandbox: bqfkqnnostzaqueujdms) tenia una tabla de juegos con IDs y codigos diferentes (PKM en lugar de POKEMON, ID 10 en lugar de 23). Ademas, la base de datos estaba vacia para ese juego.
 - **Solucion**: Alinear el frontend y los scripts de poblacion con los estandares del Sandbox (PKM, ID 10) y actualizar los RPCs para normalizar multiples variantes a un unico codigo estandar.
 - **Regla Derivada**: Antes de diagnosticar logica de frontend, verificar la existencia y estructura de datos en el proyecto Supabase especifico mediante la API o scripts de diagnostico.
+### 97. Estabilización de Sidebar Dinámico y Anidamiento JSX (Mayo 2026)
+- **Problema**: El despliegue de producción fallaba con errores de sintaxis tras añadir un sidebar dinámico, a pesar de que el código parecía correcto.
+- **Causa Raíz**: Anidamiento incorrecto de etiquetas `div` (etiquetas de cierre huérfanas o fuera de lugar) al integrar bloques condicionales complejos en `Home.tsx`. TypeScript/React son extremadamente sensibles a la estructura de árbol en componentes grandes.
+- **Lección**: Al integrar componentes laterales (sidebars) en layouts existentes, verificar siempre que el contenedor principal (`flex`) encapsule correctamente tanto el contenido principal como el lateral. Utilizar herramientas de formateo automático y validación de árbol DOM.
+
+### 98. Dependencias de Rutas en Componentes de UI (Mayo 2026)
+- **Problema**: `TS17008: Property 'Link' does not exist` y errores de navegación tras mover lógica de UI.
+- **Causa Raíz**: Falta de importaciones explícitas de `react-router-dom` (`Link`, `useNavigate`) en archivos que antes eran estáticos pero ahora contienen enlaces dinámicos.
+- **Lección**: Todo componente que utilice navegación debe importar explícitamente sus dependencias. No asumir que están disponibles globalmente o a través de props si se están usando componentes de librería directamente.
+
+### 99. Migraciones de Base de Datos y Caché de Schema (Mayo 2026)
+- **Problema**: Error `404: Could not find the table 'public.event_registrations' in the schema cache` tras subir cambios al frontend.
+- **Causa Raíz**: La tabla fue definida en un archivo de migración local, pero no se ejecutó en la base de datos remota de Supabase. PostgREST (la API de Supabase) no detecta cambios en el esquema hasta que se aplican y se refresca el caché.
+- **Lección**: **Migraciones Primero**. Nunca desplegar código de frontend que dependa de nuevas tablas sin antes asegurar que el SQL se ha ejecutado en todos los entornos (Dev/Prod). Usar `NOTIFY pgrst, 'reload schema';` si el cambio no se refleja inmediatamente.
