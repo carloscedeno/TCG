@@ -92,7 +92,7 @@ export const HeroSection: React.FC = () => {
     if (!currentItem) return null;
 
     return (
-        <div className="relative group rounded-[2.5rem] overflow-hidden border border-white/5 shadow-2xl transition-all duration-700 h-[400px] md:h-[450px] bg-[#050505]">
+        <div className="relative group rounded-[2.5rem] overflow-hidden border border-white/5 shadow-2xl transition-all duration-700 h-[280px] sm:h-[320px] md:h-[380px] bg-[#050505]">
             {/* Background Image with Blur/Gradient */}
             <div className="absolute inset-0 z-0">
                 <img
@@ -108,18 +108,18 @@ export const HeroSection: React.FC = () => {
             <div className="relative z-10 h-full flex flex-col md:flex-row items-center px-6 md:px-16 gap-6 md:gap-12">
 
                 {/* Text Content */}
-                <div className="flex-1 text-center md:text-left pt-12 md:pt-0">
-                    <div className="flex items-center gap-2 mb-6 justify-center md:justify-start">
+                <div className="flex-1 text-center md:text-left pt-8 md:pt-0">
+                    <div className="flex items-center gap-2 mb-4 justify-center md:justify-start">
                         <span className="px-3 py-1 border rounded-full text-[10px] font-black tracking-[0.2em] uppercase flex items-center gap-1.5 bg-pink-500/20 border-pink-500/30 text-pink-400">
                             <Zap size={10} fill="currentColor" /> Featured
                         </span>
                     </div>
 
-                    <h2 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tighter leading-[0.9] italic uppercase mb-4 md:mb-6 drop-shadow-2xl text-balance">
+                    <h2 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-black text-white tracking-tighter leading-[0.9] italic uppercase mb-3 md:mb-4 drop-shadow-2xl text-balance">
                         {currentItem.title}
                     </h2>
 
-                    <p className="text-neutral-400 text-sm md:text-base max-w-xl font-medium mb-8 line-clamp-2">
+                    <p className="text-neutral-400 text-[10px] md:text-sm max-w-xl font-medium mb-6 line-clamp-2">
                         {currentItem.subtitle}
                     </p>
 
@@ -127,7 +127,7 @@ export const HeroSection: React.FC = () => {
                     {/* <div className="flex items-center gap-4 justify-center md:justify-start">
                         <a 
                             href={currentItem.link_url || '#'} 
-                            className="px-8 py-4 bg-white text-black font-black text-xs uppercase tracking-widest rounded-full hover:bg-pink-500 hover:text-white transition-all transform active:scale-95 shadow-xl flex items-center gap-2"
+                            className="px-6 py-3 bg-white text-black font-black text-[10px] uppercase tracking-widest rounded-full hover:bg-pink-500 hover:text-white transition-all transform active:scale-95 shadow-xl flex items-center gap-2"
                         >
                             Explore Now
                         </a>
@@ -135,7 +135,7 @@ export const HeroSection: React.FC = () => {
                 </div>
 
                 {/* Showcase */}
-                <div className="hidden md:block w-72 h-[400px] relative perspective-1000 rotate-y-[-10deg] group-hover:rotate-y-0 transition-transform duration-1000">
+                <div className="hidden md:block w-56 h-[320px] relative perspective-1000 rotate-y-[-10deg] group-hover:rotate-y-0 transition-transform duration-1000">
                     <div className="w-full h-full rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 relative group/card">
                         <img
                             src={currentItem.image_url}
@@ -148,7 +148,7 @@ export const HeroSection: React.FC = () => {
             </div>
 
             {/* Navigation Controls */}
-            <div className="absolute bottom-10 right-10 flex gap-4 z-20">
+            <div className="absolute bottom-6 right-8 flex gap-3 z-20">
                 <button
                     onClick={prevSlide}
                     className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-white/10 hover:border-geeko-cyan transition-all group"
@@ -164,7 +164,7 @@ export const HeroSection: React.FC = () => {
             </div>
 
             {/* Indicators */}
-            <div className="absolute bottom-10 left-10 md:left-16 flex gap-2 z-20">
+            <div className="absolute bottom-6 left-10 md:left-16 flex gap-2 z-20">
                 {banners.map((_, i) => (
                     <button
                         key={i}

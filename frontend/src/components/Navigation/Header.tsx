@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Menu as MenuIcon, X, Search } from 'lucide-react';
+import { ShoppingCart, Menu as MenuIcon, X, Search, ChevronDown } from 'lucide-react';
 import { SearchBar } from '../SearchBar/SearchBar';
 import { UserMenu } from './UserMenu';
 import { useAuth } from '../../context/AuthContext';
-// import { fetchAccessoryCategories } from '../../utils/api';
 
 interface HeaderProps {
     onCartOpen: () => void;
@@ -12,13 +11,14 @@ interface HeaderProps {
 }
 
 export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
-    const { user: _user } = useAuth(); // Ignored if not used for now to pass build
+    const { user: _user } = useAuth();
     const [searchParams, setSearchParams] = useSearchParams();
     const [query, setQuery] = useState(searchParams.get('q') || '');
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [categories, setCategories] = useState<any[]>([]);
     const navigate = useNavigate();
 
+    const isDevEnv = import.meta.env.DEV || window.location.hostname.includes('dev') || window.location.hostname.includes('localhost');
 
     const tcgGames = [
         { name: 'Magic', code: 'MTG', icon: '🔥' },
@@ -30,11 +30,6 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
         { name: 'Gundam', code: 'GND', icon: '🤖' },
         { name: 'Flesh and Blood', code: 'FAB', icon: '🩸' }
     ];
-
-    useEffect(() => {
-        const q = searchParams.get('q') || '';
-        if (q !== query) setQuery(q);
-    }, [searchParams]);
 
     useEffect(() => {
         const q = searchParams.get('q') || '';
@@ -59,7 +54,6 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
     };
 
     const navigateToGame = (gameCode: string) => {
-        // Solo Magic tiene Stock (marketplace), los demás van directo al Catálogo (catalog)
         const tab = gameCode === 'MTG' ? 'marketplace' : 'catalog';
         navigate(`/?game=${gameCode}&tab=${tab}`);
         setIsMobileMenuOpen(false);
@@ -71,12 +65,12 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
     };
 
     return (
-        <header className="sticky top-0 z-50 w-full bg-black border-b border-white/5 shadow-2xl">
-            {/* Top Row: Logo, Utility Nav, Search */}
-            <div className="max-w-[1600px] mx-auto px-4 md:px-6 h-[60px] md:h-[80px] flex items-center justify-between gap-4 md:gap-8">
+        <header className="sticky top-0 z-50 w-full bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-white/5 shadow-2xl">
+            {/* Top Bar: Logo & Search & User */}
+            <div className="max-w-[1600px] mx-auto px-4 h-[60px] flex items-center justify-between gap-4">
                 <Link to="/" className="flex-shrink-0 group relative">
-                    <img src="/branding/Logo.png" alt="Geekorium" className="w-24 sm:w-32 md:w-40 object-contain transition-transform" />
-                    <span className="absolute -top-1 -right-2 md:-right-4 bg-red-600 text-white text-[7px] md:text-[8px] font-black px-1 md:px-1.5 py-0.5 rounded-sm md:rounded-md rotate-12 shadow-lg">BETA</span>
+                    <img src="/branding/Logo.png" alt="Geekorium" className="w-28 sm:w-32 object-contain group-hover:scale-105 transition-transform" />
+                    <span className="absolute -top-1 -right-4 bg-red-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded-md rotate-12 shadow-lg">BETA</span>
                 </Link>
 
                 {/* Main Utility Nav - Always show on PC */}
@@ -128,6 +122,61 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                 </div>
             </div>
 
+            {/* Navigation Bar: 8 Categories Matrix */}
+            <nav className="hidden lg:block bg-black/40 border-t border-white/5">
+                <div className="max-w-[1600px] mx-auto px-4 flex justify-between">
+                    {tcgGames.map((game) => {
+                        const isActive = searchParams.get('game') === game.code;
+                        return (
+                        <div key={game.code} className="relative group px-1 py-1.5">
+                             {game.code === 'MTG' ? (
+                                <button onClick={() => navigateToGame(game.code)} className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${isActive ? 'bg-white/10 text-indigo-400' : 'hover:bg-white/5 group-hover:text-indigo-400'}`}>
+                                    <span className={`text-lg transition-all ${isActive ? 'grayscale-0' : 'grayscale group-hover:grayscale-0'}`}>{game.icon}</span>
+                                    <span className="text-[10px] font-black uppercase tracking-tighter">SINGLES</span>
+                                </button>
+                            ) : (
+                                <button onClick={() => navigateToGame(game.code)} className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${isActive ? 'bg-white/10 text-indigo-400' : 'hover:bg-white/5 group-hover:text-indigo-400'}`}>
+                                    <span className={`text-lg transition-all ${isActive ? 'grayscale-0' : 'grayscale group-hover:grayscale-0'}`}>{game.icon}</span>
+                                    <span className="text-[10px] font-black uppercase tracking-tighter">{game.name}</span>
+                                </button>
+                            )}
+                        </div>
+                    )})}
+
+                    {/* 8th Category: Productos (Accessories) - ONLY IN DEV */}
+                    {isDevEnv && (
+                        <div className="relative group px-1 py-1.5">
+                            <button className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-emerald-400 transition-all hover:bg-emerald-500/20">
+                                <span className="text-[10px] font-black uppercase tracking-tighter">PRODUCTOS</span>
+                                <ChevronDown size={12} className="opacity-50 group-hover:rotate-180 transition-transform" />
+                            </button>
+                            
+                            <div className="absolute top-full right-0 w-56 bg-slate-900/95 backdrop-blur-2xl border border-white/10 rounded-xl mt-1 py-3 shadow-2xl opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200 z-50">
+                                <div className="px-4 mb-2">
+                                    <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Insumos Generales</span>
+                                </div>
+                                <div className="grid grid-cols-1 gap-1">
+                                    {categories.map((cat) => (
+                                        <button 
+                                            key={cat.code} 
+                                            onClick={() => navigateToCategory(cat.code)}
+                                            className="flex items-center gap-3 px-4 py-2.5 hover:bg-emerald-600/20 text-[11px] font-bold transition-colors"
+                                        >
+                                            <span className="text-base">{cat.icon}</span>
+                                            {cat.name.toUpperCase()}
+                                        </button>
+                                    ))}
+                                </div>
+                                <div className="mt-2 pt-2 border-t border-white/5">
+                                    <button onClick={() => navigateToCategory('OTHER')} className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-slate-800 text-[11px] font-bold text-slate-400">
+                                        OTROS
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </nav>
 
             {/* Mobile Search - shown only on small screens */}
             <div className="lg:hidden p-4 border-t border-white/5">

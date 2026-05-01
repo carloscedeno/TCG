@@ -3,17 +3,18 @@ import { rarityMap } from '../utils/translations';
 import { CardGrid } from '../components/Card/CardGrid';
 import { CardModal } from '../components/Card/CardModal';
 import type { CardProps } from '../components/Card/Card';
-import { fetchCards, fetchSets, fetchProducts, fetchCart, fetchAccessories, fetchBanners } from '../utils/api';
+import { fetchCards, fetchSets, fetchProducts, fetchCart, fetchAccessories } from '../utils/api';
 import { FiltersPanel } from '../components/Filters/FiltersPanel';
 import type { Filters } from '../components/Filters/FiltersPanel';
 import { useAuth } from '../context/AuthContext';
 import { AuthModal } from '../components/Auth/AuthModal';
-import { X, Sparkles, Search, ChevronRight, Calendar } from 'lucide-react';
+import { X, Sparkles, Search } from 'lucide-react';
 
 import { useSearchParams, Link } from 'react-router-dom';
 import { CartDrawer } from '../components/Navigation/CartDrawer';
 import { Footer } from '../components/Navigation/Footer';
 import { Header } from '../components/Navigation/Header';
+import { HeroSection } from '../components/Home/HeroSection';
 
 const gameMap: Record<string, string> = {
   'MTG': 'Magic: The Gathering',
@@ -44,9 +45,6 @@ const colorCodeMap: Record<string, string> = {
   'Multicolor': 'M'
 };
 
-
-
-
 const Home: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [cards, setCards] = useState<(CardProps & { card_id: string })[]>([]);
@@ -71,7 +69,7 @@ const Home: React.FC = () => {
   const [sortBy, setSortBy] = useState(searchParams.get('sort') || 'price_desc');
   const [activeRarity, setActiveRarity] = useState(searchParams.get('rarity') || 'All');
   const [totalCount, setTotalCount] = useState(0);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(page => page || 0);
   const { user } = useAuth();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
@@ -81,7 +79,6 @@ const Home: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'marketplace' | 'catalog'>(() => {
     const tabParam = searchParams.get('tab') as 'marketplace' | 'catalog';
     const games = searchParams.get('game')?.split(',').filter(Boolean) || [];
-    // Solo Magic tiene Stock. Si no es Magic, forzamos Catálogo
     if ((!games.includes('MTG') && games.length > 0) && (!tabParam || tabParam === 'marketplace')) {
       return 'catalog';
     }
@@ -89,11 +86,11 @@ const Home: React.FC = () => {
   });
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
-  const [banners, setBanners] = useState<any[]>([]);
-  const [activeBannerIndex, setActiveBannerIndex] = useState(0); // Cart count state
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
   const [upcomingEvents, setUpcomingEvents] = useState<any[]>([]);
   const LIMIT = 50;
+
+  const isDevEnv = import.meta.env.DEV || window.location.hostname.includes('dev') || window.location.hostname.includes('localhost');
 
   const [hasAccessoriesExistInDb, setHasAccessoriesExistInDb] = useState<boolean | null>(null);
 
@@ -103,7 +100,7 @@ const Home: React.FC = () => {
         const res = await fetchAccessories({ limit: 1 });
         setHasAccessoriesExistInDb(res.total_count > 0);
       } catch (err) {
-        console.error("Failed to check if catalog exist", err);
+        console.error("Failed to check if accessories exist", err);
         setHasAccessoriesExistInDb(false);
       }
     };
@@ -112,7 +109,7 @@ const Home: React.FC = () => {
       try {
         const { fetchEvents } = await import('../utils/api');
         const events = await fetchEvents();
-        setUpcomingEvents(events.slice(0, 8)); // Mostrar máximo 8 en el sidebar
+        setUpcomingEvents(events.slice(0, 8)); 
       } catch (err) {
         console.error("Failed to fetch events for sidebar", err);
       }
@@ -121,24 +118,6 @@ const Home: React.FC = () => {
     checkAccessories();
     loadEvents();
   }, []);
-
-  // Banners Logic
-  useEffect(() => {
-    const loadBanners = async () => {
-      const data = await fetchBanners('main_hero');
-      setBanners(data);
-    };
-    loadBanners();
-  }, []);
-
-  // Auto-advance banners
-  useEffect(() => {
-    if (banners.length <= 1) return;
-    const interval = setInterval(() => {
-      setActiveBannerIndex((prev) => (prev + 1) % banners.length);
-    }, 8000);
-    return () => clearInterval(interval);
-  }, [banners.length]);
 
   // Cart Count Logic
   useEffect(() => {
@@ -165,7 +144,7 @@ const Home: React.FC = () => {
     return () => {
       window.removeEventListener('cart-updated', handleCartUpdate);
     };
-  }, [user]); // Re-run when user changes
+  }, [user]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -187,7 +166,6 @@ const Home: React.FC = () => {
     const catParam = searchParams.get('category')?.split(',').filter(Boolean) || [];
     const tabParam = (searchParams.get('tab') as any) || 'marketplace';
 
-    // Only update if changed to avoid unnecessary re-renders
     if (JSON.stringify(filters.games) !== JSON.stringify(gameParam) ||
         JSON.stringify(filters.sets) !== JSON.stringify(setParam) ||
         JSON.stringify(filters.rarities) !== JSON.stringify(rarityParam) ||
@@ -222,7 +200,6 @@ const Home: React.FC = () => {
         let result: { cards: (CardProps & { card_id: string })[], total_count: number };
 
         if (activeTab === 'marketplace') {
-          // Use the game code directly from filters.games
           const mappedGame = debouncedFilters.games?.[0] || undefined;
 
           const productRes = await fetchProducts({
@@ -238,7 +215,6 @@ const Home: React.FC = () => {
             price_max: debouncedFilters.priceRange ? debouncedFilters.priceRange[1] : undefined,
             limit: LIMIT,
             offset,
-            only_new: debouncedFilters.only_new,
             sort: sortBy
           }, controller.signal);
 
@@ -258,7 +234,6 @@ const Home: React.FC = () => {
             total_count: productRes.total_count
           };
         } else if (activeTab === 'catalog') {
-          // Use the game code directly
           const mappedGame = debouncedFilters.games?.[0] || undefined;
 
           const accRes = await fetchAccessories({
@@ -277,7 +252,7 @@ const Home: React.FC = () => {
               card_id: a.id,
               accessory_id: a.id,
               name: a.name,
-              set: a.category, // Use category as "set" label
+              set: a.category, 
               price: Number(a.price) || 0,
               image_url: a.image_url,
               rarity: 'Common',
@@ -336,10 +311,9 @@ const Home: React.FC = () => {
     return () => {
       controller.abort();
     };
-  }, [debouncedQuery, debouncedFilters, activeRarity, sortBy, page, activeTab, filters.only_new]);
+  }, [debouncedQuery, debouncedFilters, activeRarity, sortBy, page, activeTab]);
 
   useEffect(() => {
-    // Si no hay juegos seleccionados en filtros, usamos MTG por defecto
     const activeGameCode = filters.games && filters.games.length > 0 ? filters.games[0] : 'MTG';
 
     fetchSets(activeGameCode)
@@ -352,7 +326,6 @@ const Home: React.FC = () => {
 
   const rarities = ['All', 'Mythic', 'Rare', 'Uncommon', 'Common'];
 
-  // Helper to update filters via URL (Single Source of Truth)
   const updateURL = (params: Record<string, string | string[] | undefined>) => {
     const newParams = new URLSearchParams(searchParams);
     Object.entries(params).forEach(([key, value]) => {
@@ -385,8 +358,6 @@ const Home: React.FC = () => {
     setPage(0);
   };
 
-
-
   return (
     <div className="min-h-[100dvh] flex flex-col bg-geeko-black text-white font-sans relative selection:bg-geeko-cyan-neon/30">
 
@@ -402,113 +373,56 @@ const Home: React.FC = () => {
         {/* Header */}
         <Header onCartOpen={() => setIsCartOpen(true)} cartCount={cartCount} />
 
-        {/* --- PREMIUM BANNER (HERO) --- */}
-        <section className="relative w-full h-[350px] sm:h-[500px] md:h-[600px] overflow-hidden group">
-          {banners.length > 0 ? (
-            banners.map((banner, idx) => (
-              <div 
-                key={banner.id || idx}
-                className={`absolute inset-0 transition-opacity duration-1000 ${idx === activeBannerIndex ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-              >
-                {/* Background Image with Overlay */}
-                <div className="absolute inset-0">
-                  <img 
-                    src={banner.image_url} 
-                    alt={banner.title} 
-                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-black/60 md:bg-transparent md:bg-gradient-to-r md:from-black md:via-black/60 md:to-transparent" />
-                </div>
-
-                <div className="relative z-10 max-w-[1600px] mx-auto px-6 md:px-10 h-full flex items-center justify-center md:justify-start">
-                  <div className="max-w-2xl space-y-2 md:space-y-4 text-center md:text-left">
-                    <h2 className="text-3xl sm:text-5xl md:text-8xl font-black italic tracking-tighter leading-[0.8] uppercase text-outline">
-                      {banner.title.split(' ').slice(0, 2).join(' ')}<br />
-                      {banner.title.split(' ').slice(2).join(' ')}
-                    </h2>
-                    <h3 className="text-2xl sm:text-4xl md:text-7xl font-black italic tracking-tighter leading-none uppercase text-white">
-                      {banner.subtitle}
-                    </h3>
-                    
-                    <div className="pt-4 md:pt-8 flex items-center justify-center md:justify-start gap-6">
-                      <a 
-                        href={banner.link_url || '#'}
-                        className="flex items-center gap-2 md:gap-4 bg-geeko-cyan-neon text-black px-6 md:px-8 py-3 md:py-4 font-black uppercase tracking-widest text-[10px] md:text-sm rounded-sm hover:bg-white transition-all transform active:scale-95 group/btn"
-                      >
-                        Consíguelo aquí
-                        <ChevronRight size={16} className="md:w-5 md:h-5 group-hover/btn:translate-x-1 transition-transform" />
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            /* Fallback while loading or no banners */
-            <div className="absolute inset-0 bg-slate-900 animate-pulse flex items-center justify-center">
-              <div className="text-white/10 font-black italic text-8xl uppercase">Geekorium</div>
-            </div>
-          )}
-
-          {/* Banner Navigation Dots */}
-          {banners.length > 1 && (
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 md:left-10 md:translate-x-0 z-20 flex gap-2">
-              {banners.map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setActiveBannerIndex(idx)}
-                  className={`w-12 h-1 rounded-full transition-all ${idx === activeBannerIndex ? 'bg-geeko-cyan-neon w-20' : 'bg-white/20'}`}
-                />
-              ))}
-            </div>
-          )}
-        </section>
+        {/* Promotional Banner - Only show when not searching */}
+        {!query && (
+          <div className="max-w-[1600px] mx-auto w-full px-6 pt-6 animate-in fade-in slide-in-from-top-4 duration-1000">
+            <HeroSection />
+          </div>
+        )}
 
         {/* --- PREMIUM TCG SELECTOR SECTION --- */}
-        <section className="w-full relative overflow-hidden">
-          {/* Cyan to Black Gradient Background */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#00A3C4] via-[#003B46] to-black h-[220px] md:h-[260px]" />
-          
-          <div className="relative z-10 w-full py-12 md:py-20">
-            <div className="flex items-center justify-start xl:justify-center gap-8 md:gap-16 lg:gap-24 overflow-x-auto no-scrollbar pb-4 px-[10vw]">
-              {[
-                { id: 'MTG', name: 'MTG', icon: '🔥', defaultTab: 'marketplace' },
-                { id: 'PKM', name: 'POKEMON', icon: '⚡', defaultTab: 'catalog' },
-                { id: 'YGO', name: 'YU-GI-OH!', icon: '🏺', defaultTab: 'catalog' },
-                { id: 'RFB', name: 'RIFTBOUND', icon: '⚔️', defaultTab: 'catalog' },
-                { id: 'OPC', name: 'ONE PIECE', icon: '⚓', defaultTab: 'catalog' },
-                { id: 'DGM', name: 'DIGIMON', icon: '🦖', defaultTab: 'catalog' },
-                { id: 'GND', name: 'GUNDAM', icon: '🤖', defaultTab: 'catalog' },
-                { id: 'FAB', name: 'FLESH & BLOOD', icon: '🩸', defaultTab: 'catalog' },
-              ].map((cat) => (
-                <button 
-                  key={cat.id}
-                  onClick={() => {
-                    updateURL({ game: cat.id, tab: cat.defaultTab });
-                  }}
-                  className="group flex flex-col items-center gap-6 min-w-fit transition-all hover:-translate-y-4 duration-300"
-                >
-                  <div className={`w-24 h-24 sm:w-32 sm:h-32 rounded-full flex items-center justify-center text-5xl sm:text-6xl transition-all shadow-2xl relative ${filters.games?.includes(cat.id) ? 'bg-white text-black scale-110 shadow-[0_0_50px_rgba(255,255,255,0.4)]' : 'bg-neutral-900/80 text-white hover:bg-white hover:text-black backdrop-blur-sm'}`}>
-                    {/* Circle Border Glow */}
-                    <div className={`absolute inset-0 border-4 rounded-full ${filters.games?.includes(cat.id) ? 'border-white' : 'border-white/5 group-hover:border-white/20'}`} />
-                    <span className="relative z-10">{cat.icon}</span>
-                  </div>
-                  <span className={`text-[11px] sm:text-[13px] font-black italic uppercase tracking-[0.3em] transition-all ${filters.games?.includes(cat.id) ? 'text-white translate-y-1' : 'text-white/40 group-hover:text-white'}`}>
-                    {cat.name}
-                  </span>
-                </button>
-              ))}
+        {!query && (
+          <section className="w-full relative overflow-hidden">
+            {/* Cyan to Black Gradient Background */}
+            <div className="absolute inset-0 bg-gradient-to-b from-[#00A3C4] via-[#003B46] to-black h-[180px] md:h-[220px]" />
+            
+            <div className="relative z-10 w-full py-8 md:py-12">
+              <div className="flex items-center justify-start xl:justify-center gap-6 md:gap-12 lg:gap-16 overflow-x-auto no-scrollbar pb-4 px-[10vw]">
+                {[
+                  { id: 'MTG', name: 'MTG', icon: '🔥', defaultTab: 'marketplace' },
+                  { id: 'PKM', name: 'POKEMON', icon: '⚡', defaultTab: 'catalog' },
+                  { id: 'YGO', name: 'YU-GI-OH!', icon: '🏺', defaultTab: 'catalog' },
+                  { id: 'RFB', name: 'RIFTBOUND', icon: '⚔️', defaultTab: 'catalog' },
+                  { id: 'OPC', name: 'ONE PIECE', icon: '⚓', defaultTab: 'catalog' },
+                  { id: 'DGM', name: 'DIGIMON', icon: '🦖', defaultTab: 'catalog' },
+                  { id: 'GND', name: 'GUNDAM', icon: '🤖', defaultTab: 'catalog' },
+                  { id: 'FAB', name: 'FLESH & BLOOD', icon: '🩸', defaultTab: 'catalog' },
+                ].map((cat) => (
+                  <button 
+                    key={cat.id}
+                    onClick={() => {
+                      updateURL({ game: cat.id, tab: cat.defaultTab });
+                    }}
+                    className="group flex flex-col items-center gap-4 min-w-fit transition-all hover:-translate-y-2 duration-300"
+                  >
+                    <div className={`w-20 h-20 sm:w-28 sm:h-28 rounded-full flex items-center justify-center text-4xl sm:text-5xl transition-all shadow-2xl relative ${filters.games?.includes(cat.id) ? 'bg-white text-black scale-110 shadow-[0_0_50px_rgba(255,255,255,0.4)]' : 'bg-neutral-900/80 text-white hover:bg-white hover:text-black backdrop-blur-sm'}`}>
+                      <div className={`absolute inset-0 border-4 rounded-full ${filters.games?.includes(cat.id) ? 'border-white' : 'border-white/5 group-hover:border-white/20'}`} />
+                      <span className="relative z-10">{cat.icon}</span>
+                    </div>
+                    <span className={`text-[10px] sm:text-[11px] font-black italic uppercase tracking-[0.2em] transition-all ${filters.games?.includes(cat.id) ? 'text-white translate-y-1' : 'text-white/40 group-hover:text-white'}`}>
+                      {cat.name}
+                    </span>
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
-
-
+          </section>
+        )}
 
         {/* Rarity Filter Tabs & Sort */}
-        <div className="bg-[#0a0a0a]/95 border-b border-neutral-800 sticky top-[70px] z-40 backdrop-blur-md">
+        <div className="bg-[#0a0a0a]/95 border-b border-neutral-800 sticky top-[60px] z-40 backdrop-blur-md">
           <div className="max-w-[1600px] mx-auto px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="flex bg-neutral-900/50 p-1 rounded-full border border-neutral-800">
-                {/* Solo Magic tiene Stock */}
                 {(filters.games?.includes('MTG') || (filters.games?.length === 0)) && (
                   <button
                     onClick={() => handleTabChange('marketplace')}
@@ -581,15 +495,6 @@ const Home: React.FC = () => {
                   >
                     Precio {sortBy === 'price_asc' ? '↑' : (sortBy === 'price_desc' ? '↓' : '⇅')}
                   </button>
-                  <button
-                    onClick={() => {
-                      handleFilterChange({ ...filters, only_new: !filters.only_new });
-                    }}
-                    className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase transition-all flex items-center gap-1.5 ${filters.only_new ? 'bg-purple-600 text-white shadow-[0_0_10px_rgba(147,51,234,0.5)]' : 'text-neutral-500 hover:text-neutral-300'}`}
-                  >
-                    <Sparkles size={12} className={filters.only_new ? 'animate-pulse' : ''} />
-                    Nuevo
-                  </button>
                 </div>
               </div>
 
@@ -618,7 +523,7 @@ const Home: React.FC = () => {
           <div className="flex flex-col lg:flex-row gap-10">
             {/* Sidebar Filters */}
               <aside className="hidden lg:block w-72 flex-shrink-0">
-                <div className="sticky top-[140px] max-h-[calc(100vh-160px)] overflow-y-auto pr-2 custom-scrollbar">
+                <div className="sticky top-[130px] max-h-[calc(100vh-150px)] overflow-y-auto pr-2 custom-scrollbar">
                   <FiltersPanel
                     filters={{ ...mockFilters, sets }}
                     selected={filters}
@@ -673,59 +578,6 @@ const Home: React.FC = () => {
                     </div>
                   ) : (
                     <>
-                      {/* Active Filters Tokens */}
-                      {(Object.values(filters).some(v => v && (typeof v === 'boolean' ? v : (v as any).length > 0)) || activeRarity !== 'All' || debouncedQuery) && (
-                        <div className="flex flex-wrap items-center gap-2 mb-2 animate-in fade-in slide-in-from-left-2 duration-300">
-                          <span className="text-[10px] font-black uppercase tracking-widest text-neutral-600 mr-2">Activo:</span>
-
-                          {debouncedQuery && (
-                            <button onClick={() => { setQuery(''); setPage(0); }} className="flex items-center gap-1.5 px-3 py-1.5 bg-geeko-cyan-neon/10 border border-geeko-cyan-neon/30 rounded-full text-[10px] font-bold text-geeko-cyan-neon hover:bg-geeko-cyan-neon/20 transition-all group">
-                              Búsqueda: {debouncedQuery}
-                              <X size={10} className="group-hover:rotate-90 transition-transform" />
-                            </button>
-                          )}
-
-                          {filters.games?.map(g => (
-                            <button key={g} data-testid="game-tab" data-active="true" onClick={() => handleFilterChange({ ...filters, games: filters.games?.filter(x => x !== g) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-geeko-purple-vibrant/10 border border-geeko-purple-vibrant/30 rounded-full text-[10px] font-bold text-geeko-purple-vibrant hover:bg-geeko-purple-vibrant/20 transition-all group">
-                              {gameMap[g] || g}
-                              <X size={10} className="group-hover:rotate-90 transition-transform" />
-                            </button>
-                          ))}
-
-                          {filters.sets?.map(s => (
-                            <button key={s} onClick={() => handleFilterChange({ ...filters, sets: filters.sets?.filter(x => x !== s) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600/10 border border-emerald-500/30 rounded-full text-[10px] font-bold text-emerald-400 hover:bg-emerald-600/20 transition-all group">
-                              Edición: {s}
-                              <X size={10} className="group-hover:rotate-90 transition-transform" />
-                            </button>
-                          ))}
-
-                          {filters.colors?.map(c => (
-                            <button key={c} onClick={() => handleFilterChange({ ...filters, colors: filters.colors?.filter(x => x !== c) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-geeko-cyan-neon/10 border border-geeko-cyan-neon/30 rounded-full text-[10px] font-bold text-geeko-cyan-neon hover:bg-geeko-cyan-neon/20 transition-all group">
-                              {c}
-                              <X size={10} className="group-hover:rotate-90 transition-transform" />
-                            </button>
-                          ))}
-
-                          {filters.types?.map(t => (
-                            <button key={t} onClick={() => handleFilterChange({ ...filters, types: filters.types?.filter(x => x !== t) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600/10 border border-red-500/30 rounded-full text-[10px] font-bold text-red-400 hover:bg-red-600/20 transition-all group">
-                              {t}
-                              <X size={10} className="group-hover:rotate-90 transition-transform" />
-                            </button>
-                          ))}
-
-                          {filters.categories?.map(c => (
-                            <button key={c} onClick={() => handleFilterChange({ ...filters, categories: filters.categories?.filter(x => x !== c) })} className="flex items-center gap-1.5 px-3 py-1.5 bg-orange-600/10 border border-orange-500/30 rounded-full text-[10px] font-bold text-orange-400 hover:bg-orange-600/20 transition-all group">
-                              {c}
-                              <X size={10} className="group-hover:rotate-90 transition-transform" />
-                            </button>
-                          ))}
-
-                          <button onClick={() => { setFilters({}); setQuery(''); setActiveRarity('All'); setPage(0); }} className="text-[10px] font-black uppercase tracking-widest text-neutral-500 hover:text-white transition-colors ml-2 underline underline-offset-4 decoration-neutral-800">
-                            Limpiar Todo
-                          </button>
-                        </div>
-                      )}
-
                       <CardGrid cards={cards} onCardClick={setSelectedCardId} viewMode={viewMode} isArchive={activeTab === 'catalog'} showCartButton={true} />
                       {cards.length < totalCount && (
                         <div className="flex justify-center pb-20">
@@ -749,9 +601,9 @@ const Home: React.FC = () => {
                 </div>
               )}
             </div>
-                         {/* --- NEW RIGHT SIDEBAR (Misiones) --- */}
+            {/* Sidebar Misiones */}
             <aside className="hidden xl:block w-80 flex-shrink-0">
-              <div className="sticky top-[140px] space-y-6">
+              <div className="sticky top-[130px] space-y-6">
                 <div className="bg-white/5 border border-white/5 rounded-2xl p-6 backdrop-blur-sm">
                   <div className="flex items-center justify-between mb-8">
                     <h3 className="text-sm font-black uppercase tracking-widest text-white border-l-2 border-geeko-cyan-neon pl-3">Próximas Misiones</h3>
@@ -765,7 +617,6 @@ const Home: React.FC = () => {
                         const dayName = date.toLocaleDateString('es-ES', { weekday: 'long' }).toUpperCase();
                         const fullDate = date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: '2-digit' });
                         
-                        // Map game codes to emojis matching the top selector
                         const iconMap: Record<string, string> = {
                           'MTG': '🔥',
                           'PKM': '⚡',
@@ -794,9 +645,8 @@ const Home: React.FC = () => {
                         );
                       })
                     ) : (
-                      <div className="py-10 text-center space-y-3">
-                        <Calendar className="w-10 h-10 text-neutral-800 mx-auto" />
-                        <p className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest">No hay misiones programadas</p>
+                      <div className="py-8 text-center">
+                        <p className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest">No hay eventos próximos</p>
                       </div>
                     )}
                   </div>
@@ -806,6 +656,7 @@ const Home: React.FC = () => {
           </div>
         </main>
 
+        {/* Footer */}
         <Footer />
 
         <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
@@ -819,32 +670,34 @@ const Home: React.FC = () => {
         />
 
         {/* Mobile Filters Drawer */}
-        {isMobileFiltersOpen && (
-          <div className="fixed inset-0 z-[100] lg:hidden">
-            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setIsMobileFiltersOpen(false)} />
-            <div className="absolute inset-y-0 right-0 w-full max-w-xs bg-[#0a0a0a] border-l border-white/5 p-6 shadow-2xl overflow-y-auto animate-in slide-in-from-right duration-300">
-              <div className="flex items-center justify-between mb-8">
-                <h2 className="text-xl font-black tracking-tighter">FILTROS</h2>
-                <button onClick={() => setIsMobileFiltersOpen(false)} className="p-2 bg-white/5 rounded-lg text-neutral-400">
-                  <X size={20} />
+        {
+          isMobileFiltersOpen && (
+            <div className="fixed inset-0 z-[100] lg:hidden">
+              <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setIsMobileFiltersOpen(false)} />
+              <div className="absolute inset-y-0 right-0 w-full max-w-xs bg-[#0a0a0a] border-l border-white/5 p-6 shadow-2xl overflow-y-auto animate-in slide-in-from-right duration-300">
+                <div className="flex items-center justify-between mb-8">
+                  <h2 className="text-xl font-black tracking-tighter">FILTROS</h2>
+                  <button onClick={() => setIsMobileFiltersOpen(false)} className="p-2 bg-white/5 rounded-lg text-neutral-400">
+                    <X size={20} />
+                  </button>
+                </div>
+                <FiltersPanel
+                  filters={{ ...mockFilters, sets }}
+                  selected={filters}
+                  onChange={handleFilterChange}
+                  setsOptions={sets}
+                  isAccessoryMode={activeTab === 'catalog'}
+                />
+                <button
+                  onClick={() => setIsMobileFiltersOpen(false)}
+                  className="w-full mt-8 py-4 bg-geeko-cyan-neon text-black font-black text-xs uppercase tracking-widest rounded-xl"
+                >
+                  Aplicar Filtros
                 </button>
               </div>
-              <FiltersPanel
-                filters={{ ...mockFilters, sets }}
-                selected={filters}
-                onChange={handleFilterChange}
-                setsOptions={sets}
-                isAccessoryMode={false}
-              />
-              <button
-                onClick={() => setIsMobileFiltersOpen(false)}
-                className="w-full mt-8 py-4 bg-geeko-cyan-neon text-black font-black text-xs uppercase tracking-widest rounded-xl"
-              >
-                Aplicar Filtros
-              </button>
             </div>
-          </div>
-        )}
+          )
+        }
       </div>
     </div>
   );
