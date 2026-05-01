@@ -8,9 +8,9 @@ import { FiltersPanel } from '../components/Filters/FiltersPanel';
 import type { Filters } from '../components/Filters/FiltersPanel';
 import { useAuth } from '../context/AuthContext';
 import { AuthModal } from '../components/Auth/AuthModal';
-import { X, Sparkles, Search, ChevronRight } from 'lucide-react';
+import { X, Sparkles, Search, ChevronRight, Calendar } from 'lucide-react';
 
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import { CartDrawer } from '../components/Navigation/CartDrawer';
 import { Footer } from '../components/Navigation/Footer';
 import { Header } from '../components/Navigation/Header';
@@ -746,6 +746,9 @@ const Home: React.FC = () => {
                       )}
                     </>
                   )}
+                </div>
+              )}
+            </div>
                          {/* --- NEW RIGHT SIDEBAR (Misiones) --- */}
             <aside className="hidden xl:block w-80 flex-shrink-0">
               <div className="sticky top-[140px] space-y-6">
