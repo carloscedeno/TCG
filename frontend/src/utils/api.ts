@@ -1430,6 +1430,24 @@ export const registerForEvent = async (registration: { event_id: string, full_na
   return data;
 };
 
+export const adminFetchRegistrations = async (eventId?: string) => {
+  let query = supabase
+    .from('event_registrations')
+    .select('*, events(name)');
+  
+  if (eventId) {
+    query = query.eq('event_id', eventId);
+  }
+  
+  const { data, error } = await query.order('created_at', { ascending: false });
+  
+  if (error) {
+    console.error('adminFetchRegistrations failed:', error);
+    throw error;
+  }
+  return data || [];
+};
+
 export const fetchEvents = async (onlyActive: boolean = true) => {
   let query = supabase
     .from('events')

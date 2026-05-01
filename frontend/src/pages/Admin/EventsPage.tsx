@@ -12,9 +12,11 @@ import {
   Trophy,
   Users,
   Clock,
-  DollarSign
+  DollarSign,
+  ClipboardList
 } from 'lucide-react';
 import { adminFetchEvents, adminSaveEvent, adminDeleteEvent, uploadAsset } from '../../utils/api';
+import { RegistrationsModal } from '../../components/Modals/RegistrationsModal';
 
 interface Event {
   id?: string;
@@ -48,6 +50,7 @@ export const EventsPage: React.FC = () => {
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [selectedEventForReg, setSelectedEventForReg] = useState<Event | null>(null);
 
   useEffect(() => {
     loadEvents();
@@ -283,6 +286,13 @@ export const EventsPage: React.FC = () => {
                     Editar
                   </button>
                   <button 
+                    onClick={() => setSelectedEventForReg(event)}
+                    className="bg-geeko-cyan-neon/10 hover:bg-geeko-cyan-neon/20 border border-geeko-cyan-neon/20 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest text-geeko-cyan-neon transition-all flex items-center gap-2"
+                  >
+                    <ClipboardList size={14} />
+                    Registrados
+                  </button>
+                  <button 
                     onClick={() => event.id && handleDelete(event.id)}
                     className="bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 p-3 rounded-xl text-red-500 transition-all"
                   >
@@ -487,6 +497,12 @@ export const EventsPage: React.FC = () => {
             </div>
           </div>
         )}
+
+        <RegistrationsModal 
+          isOpen={selectedEventForReg !== null}
+          onClose={() => setSelectedEventForReg(null)}
+          event={selectedEventForReg}
+        />
       </div>
     </div>
   );
