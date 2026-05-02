@@ -219,20 +219,9 @@ export const fetchProducts = async (params: any = {}, signal?: AbortSignal): Pro
       : currentOffset + requestedLimit + 1;
 
     const products = (data || []).map((row: any) => {
-      let finalPrice = Number(row.price || row.avg_market_price_usd || row.store_price || 0);
-      let originalPrice = finalPrice;
-      let discountPct = row.discount_percentage || 0;
-
-      if (discountPct > 0 && row.discount_end_date) {
-        const endDate = new Date(row.discount_end_date);
-        if (endDate > new Date()) {
-          originalPrice = finalPrice / (1 - discountPct / 100);
-        } else {
-          discountPct = 0; // Expired
-        }
-      } else {
-        discountPct = 0;
-      }
+      const finalPrice = Number(row.price || 0);
+      const originalPrice = Number(row.original_price || row.price || 0);
+      const discountPct = Number(row.discount_percentage || 0);
 
       return {
         ...row,
@@ -632,12 +621,16 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
             const totalStockForFinish = finishMatches.reduce((acc: number, curr: any) => acc + (curr.stock || 0), 0);
             const exactProd = finishMatches[0];
             const finalPrice = (exactProd?.price && Number(exactProd.price) > 0) ? Number(exactProd.price) : v.price;
+            const originalPrice = (exactProd?.original_price && Number(exactProd.original_price) > 0) ? Number(exactProd.original_price) : finalPrice;
+            const discountPct = Number(exactProd?.discount_percentage || 0);
 
             return {
               ...v,
               product_id: exactProd?.id,
               stock: totalStockForFinish,
-              price: finalPrice
+              price: finalPrice,
+              original_price: originalPrice,
+              discount_percentage: discountPct
             };
           });
         } else {

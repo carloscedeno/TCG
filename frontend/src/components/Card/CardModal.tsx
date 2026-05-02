@@ -641,7 +641,17 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                             <div className="flex items-center gap-2">
                                                                 <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-widest">Normal</span>
                                                                 <span className={`text-[11px] font-black ${group.normal.stock > 0 ? 'text-white' : 'text-neutral-600'}`}>
+                                                                    {group.normal.discount_percentage > 0 && (
+                                                                        <span className="text-[9px] text-neutral-500 line-through mr-1.5 opacity-60">
+                                                                            ${Number(group.normal.original_price).toFixed(2)}
+                                                                        </span>
+                                                                    )}
                                                                     ${group.normal.price.toFixed(2)}
+                                                                    {group.normal.discount_percentage > 0 && (
+                                                                        <span className="ml-1.5 px-1 bg-purple-500/20 text-purple-400 text-[9px] font-black rounded border border-purple-500/20">
+                                                                            -{group.normal.discount_percentage}%
+                                                                        </span>
+                                                                    )}
                                                                     {group.normal.stock <= 0 && <span className="ml-1.5 text-[9px] text-orange-500/80 italic font-medium">(P/E)</span>}
                                                                 </span>
                                                             </div>
@@ -655,8 +665,18 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                                     </svg>
                                                                     Foil
                                                                 </span>
-                                                                <span className={`text-[11px] font-black ${group.foil.stock > 0 ? 'text-geeko-cyan' : 'text-neutral-600'}`}>
+                                                                 <span className={`text-[11px] font-black ${group.foil.stock > 0 ? 'text-geeko-cyan' : 'text-neutral-600'}`}>
+                                                                    {group.foil.discount_percentage > 0 && (
+                                                                        <span className="text-[9px] text-neutral-500 line-through mr-1.5 opacity-60">
+                                                                            ${Number(group.foil.original_price).toFixed(2)}
+                                                                        </span>
+                                                                    )}
                                                                     ${group.foil.price.toFixed(2)}
+                                                                    {group.foil.discount_percentage > 0 && (
+                                                                        <span className="ml-1.5 px-1 bg-purple-500/20 text-purple-400 text-[9px] font-black rounded border border-purple-500/20">
+                                                                            -{group.foil.discount_percentage}%
+                                                                        </span>
+                                                                    )}
                                                                     {group.foil.stock <= 0 && <span className="ml-1.5 text-[9px] text-orange-500/80 italic font-medium">(P/E)</span>}
                                                                 </span>
                                                             </div>
@@ -817,15 +837,25 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                         </span>
                                                     ) : null}
                                                 </div>
-                                                <div className="flex flex-col gap-2">
-                                                    {/* Current Selected Price */}
-                                                    <div className="flex items-center gap-2">
-                                                        <div className="text-3xl md:text-plus font-medium text-white font-titles tracking-tighter">
-                                                            ${(activeVersion?.price || details.price || 0) > 0 ? (activeVersion?.price || details.price).toFixed(2) : '---'}
+                                                    <div className="flex flex-col gap-1">
+                                                        {activeVersion?.discount_percentage > 0 && (
+                                                            <span className="text-sm font-bold text-neutral-500 line-through">
+                                                                ${Number(activeVersion.original_price).toFixed(2)}
+                                                            </span>
+                                                        )}
+                                                        <div className="flex items-center gap-2">
+                                                            <div className="text-3xl md:text-plus font-medium text-white font-titles tracking-tighter">
+                                                                ${(activeVersion?.price || details.price || 0) > 0 ? Number(activeVersion?.price || details.price).toFixed(2) : '---'}
+                                                            </div>
+                                                            {activeVersion?.discount_percentage > 0 && (
+                                                                <div className="px-2 py-1 bg-purple-500/20 text-purple-400 text-[10px] font-black rounded-lg border border-purple-500/30 shadow-[0_0_15px_rgba(168,85,247,0.4)] animate-pulse">
+                                                                    -{activeVersion.discount_percentage}%
+                                                                </div>
+                                                            )}
+                                                            <span className={`text-[10px] px-2 py-0.5 rounded-full font-black tracking-widest shadow-sm ${selectedFinish === 'foil' ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white animate-pulse' : 'bg-white text-black'}`}>
+                                                                {selectedFinish?.toUpperCase()}
+                                                            </span>
                                                         </div>
-                                                        <span className={`text-[10px] px-2 py-0.5 rounded-full font-black tracking-widest shadow-sm ${selectedFinish === 'foil' ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white animate-pulse' : 'bg-white text-black'}`}>
-                                                            {selectedFinish?.toUpperCase()}
-                                                        </span>
                                                     </div>
 
                                                     {/* Finish Toggle Switch */}

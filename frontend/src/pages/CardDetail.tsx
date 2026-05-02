@@ -316,8 +316,18 @@ export const CardDetail: React.FC = () => {
                                                             {group.normal && (
                                                                 <div className="flex items-center gap-2">
                                                                     <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-widest leading-none">Normal</span>
-                                                                    <span className={`text-[11px] font-black ${group.normal.stock > 0 ? 'text-white' : 'text-neutral-600'}`}>
+                                                                     <span className={`text-[11px] font-black ${group.normal.stock > 0 ? 'text-white' : 'text-neutral-600'}`}>
+                                                                        {group.normal.discount_percentage > 0 && (
+                                                                            <span className="text-[9px] text-neutral-500 line-through mr-1.5 opacity-60">
+                                                                                ${Number(group.normal.original_price).toFixed(2)}
+                                                                            </span>
+                                                                        )}
                                                                         ${group.normal.price.toFixed(2)}
+                                                                        {group.normal.discount_percentage > 0 && (
+                                                                            <span className="ml-1.5 px-1.5 py-0.5 bg-purple-500/20 text-purple-400 text-[9px] font-black rounded border border-purple-500/20">
+                                                                                -{group.normal.discount_percentage}%
+                                                                            </span>
+                                                                        )}
                                                                         {group.normal.stock <= 0 && <span className="ml-1.5 text-[9px] text-orange-500/80 italic font-medium">(P/E)</span>}
                                                                     </span>
                                                                 </div>
@@ -332,7 +342,17 @@ export const CardDetail: React.FC = () => {
                                                                         Foil
                                                                     </span>
                                                                     <span className={`text-[11px] font-black ${group.foil.stock > 0 ? 'text-geeko-cyan' : 'text-neutral-600'}`}>
+                                                                        {group.foil.discount_percentage > 0 && (
+                                                                            <span className="text-[9px] text-neutral-500 line-through mr-1.5 opacity-60">
+                                                                                ${Number(group.foil.original_price).toFixed(2)}
+                                                                            </span>
+                                                                        )}
                                                                         ${group.foil.price.toFixed(2)}
+                                                                        {group.foil.discount_percentage > 0 && (
+                                                                            <span className="ml-1.5 px-1.5 py-0.5 bg-purple-500/20 text-purple-400 text-[9px] font-black rounded border border-purple-500/20">
+                                                                                -{group.foil.discount_percentage}%
+                                                                            </span>
+                                                                        )}
                                                                         {group.foil.stock <= 0 && <span className="ml-1.5 text-[9px] text-orange-500/80 italic font-medium">(P/E)</span>}
                                                                     </span>
                                                                 </div>
