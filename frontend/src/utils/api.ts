@@ -218,16 +218,35 @@ export const fetchProducts = async (params: any = {}, signal?: AbortSignal): Pro
       ? currentOffset + returnedCount
       : currentOffset + requestedLimit + 1;
 
-    const products = (data || []).map((row: any) => ({
-      ...row,
-      finish: row.finish || (row.is_foil ? 'foil' : 'nonfoil'),
-      is_foil: !!row.is_foil || (row.finish === 'foil'),
-      price: Number(row.price || row.avg_market_price_usd || row.store_price || 0),
-      valuation: {
-        market_price: row.avg_market_price_usd || row.store_price || 0,
-        store_price: row.store_price || 0
+    const products = (data || []).map((row: any) => {
+      let finalPrice = Number(row.price || row.avg_market_price_usd || row.store_price || 0);
+      let originalPrice = finalPrice;
+      let discountPct = row.discount_percentage || 0;
+
+      if (discountPct > 0 && row.discount_end_date) {
+        const endDate = new Date(row.discount_end_date);
+        if (endDate > new Date()) {
+          originalPrice = finalPrice / (1 - discountPct / 100);
+        } else {
+          discountPct = 0; // Expired
+        }
+      } else {
+        discountPct = 0;
       }
-    }));
+
+      return {
+        ...row,
+        finish: row.finish || (row.is_foil ? 'foil' : 'nonfoil'),
+        is_foil: !!row.is_foil || (row.finish === 'foil'),
+        price: finalPrice,
+        original_price: originalPrice,
+        discount_percentage: discountPct,
+        valuation: {
+          market_price: row.avg_market_price_usd || row.store_price || 0,
+          store_price: row.store_price || 0
+        }
+      };
+    });
 
     return {
       products,
@@ -414,15 +433,24 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
               // Fetch stock for all these printings from products
               const { data: productsData } = await supabase
                 .from('products')
-                .select('printing_id, finish, stock')
+                .select('printing_id, finish, stock, price, discount_percentage, discount_end_date')
                 .in('printing_id', printingIds);
 
               const stockMap = new Map();
+              const productMap = new Map();
               if (productsData) {
                 for (const p of productsData) {
                   const safeFinish = (p.finish || 'nonfoil').toLowerCase();
                   const key = `${p.printing_id}-${safeFinish}`;
                   stockMap.set(key, (stockMap.get(key) || 0) + (p.stock || 0));
+                  
+                  if (!productMap.has(key) && p.price) {
+                      productMap.set(key, { 
+                          price: p.price, 
+                          discount_percentage: p.discount_percentage, 
+                          discount_end_date: p.discount_end_date 
+                      });
+                  }
                 }
               }
 
@@ -452,13 +480,30 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
 
                 if (pushesNonFoil) {
                   const isSynthetic = baseIsFoil && (pushesFoil || pushesEtched);
-                  // Only use CK price (avg_market_price_usd) — no Scryfall fallback
-                  const priceToUse = Number(v.avg_market_price_usd || 0);
+                  const prodDataNormal = productMap.get(`${v.printing_id}-nonfoil`);
+                  let finalPriceNormal = Number(v.avg_market_price_usd || 0);
+                  let originalPriceNormal = finalPriceNormal;
+                  let discountNormal = 0;
+                  
+                  if (prodDataNormal?.price) {
+                      originalPriceNormal = prodDataNormal.price;
+                      finalPriceNormal = prodDataNormal.price;
+                      if (prodDataNormal.discount_percentage && prodDataNormal.discount_end_date) {
+                          const endDate = new Date(prodDataNormal.discount_end_date);
+                          if (endDate > new Date()) {
+                              finalPriceNormal = originalPriceNormal * (1 - prodDataNormal.discount_percentage / 100);
+                              discountNormal = prodDataNormal.discount_percentage;
+                          }
+                      }
+                  }
+
                   expandedVersions.push({
                     ...baseVersion,
                     printing_id: isSynthetic ? `${v.printing_id}-nonfoil` : v.printing_id,
-                    price: priceToUse,
-                    market_price: priceToUse,
+                    price: finalPriceNormal,
+                    original_price: originalPriceNormal,
+                    discount_percentage: discountNormal,
+                    market_price: Number(v.avg_market_price_usd || 0),
                     finish: 'nonfoil',
                     is_foil: false,
                     stock: stockMap.get(`${v.printing_id}-nonfoil`) || 0
@@ -467,16 +512,30 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
 
                 if (pushesFoil) {
                   const isSynthetic = !baseIsFoil && (pushesNonFoil || pushesEtched);
-                  // Only use CK foil price (avg_market_price_foil_usd) — no Scryfall fallback
-                  const priceToUseFoil = Number(v.avg_market_price_foil_usd || 0);
-
-                  console.log(`[Price Trace API] Expanded foil ${v.printing_id} (synthetic=${isSynthetic}): avg_market_price_foil_usd=${v.avg_market_price_foil_usd}, mappedToPrice=${priceToUseFoil}`);
+                  const prodDataFoil = productMap.get(`${v.printing_id}-foil`);
+                  let finalPriceFoil = Number(v.avg_market_price_foil_usd || 0);
+                  let originalPriceFoil = finalPriceFoil;
+                  let discountFoil = 0;
+                  
+                  if (prodDataFoil?.price) {
+                      originalPriceFoil = prodDataFoil.price;
+                      finalPriceFoil = prodDataFoil.price;
+                      if (prodDataFoil.discount_percentage && prodDataFoil.discount_end_date) {
+                          const endDate = new Date(prodDataFoil.discount_end_date);
+                          if (endDate > new Date()) {
+                              finalPriceFoil = originalPriceFoil * (1 - prodDataFoil.discount_percentage / 100);
+                              discountFoil = prodDataFoil.discount_percentage;
+                          }
+                      }
+                  }
 
                   expandedVersions.push({
                     ...baseVersion,
                     printing_id: isSynthetic ? `${v.printing_id}-foil` : v.printing_id,
-                    price: priceToUseFoil,
-                    market_price: priceToUseFoil,
+                    price: finalPriceFoil,
+                    original_price: originalPriceFoil,
+                    discount_percentage: discountFoil,
+                    market_price: Number(v.avg_market_price_foil_usd || 0),
                     finish: 'foil',
                     is_foil: true,
                     stock: stockMap.get(`${v.printing_id}-foil`) || 0
@@ -1539,3 +1598,19 @@ export const uploadAsset = async (file: File, folder: string = 'banners') => {
 
   return data.publicUrl;
 };
+export const manageProductOffer = async (productId: string, discountPercentage: number, endDate: string) => {
+  try {
+    const { error } = await supabase.rpc('manage_product_offer', {
+      p_product_id: productId,
+      p_discount_percentage: discountPercentage,
+      p_end_date: endDate
+    });
+    if (error) throw error;
+    return { success: true };
+  } catch (err: any) {
+    console.error('Error managing product offer:', err);
+    return { success: false, message: err.message };
+  }
+};
+
+

@@ -6,10 +6,11 @@ import {
     ChevronUp, ChevronDown, Check,
     ArrowUpDown,
     FileUp, ArrowDownFromLine,
-    Download, ShoppingCart, Sparkles
+    Download, ShoppingCart, Sparkles, Tag
 } from "lucide-react";
 import { ImportInventoryModal } from "../../components/Admin/ImportInventoryModal";
 import { EgressInventoryModal } from "../../components/Admin/EgressInventoryModal";
+import { OfferManagementModal } from "../../components/Admin/OfferManagementModal";
 import { useCart } from "../../context/CartContext";
 import { addProductToCart } from "../../utils/api";
 
@@ -27,6 +28,8 @@ interface InventoryItem {
     rarity: string;
     updated_at: string;
     total_count: number;
+    discount_percentage?: number;
+    discount_end_date?: string;
 }
 
 type SortField = 'name' | 'price' | 'stock' | 'newest';
@@ -59,6 +62,9 @@ export function InventoryPage() {
     const [tempPrice, setTempPrice] = useState<string>("");
     const [totalItems, setTotalItems] = useState(0);
     const [lastSavedId, setLastSavedId] = useState<string | null>(null);
+
+    // Offer Management State
+    const [selectedOfferProduct, setSelectedOfferProduct] = useState<InventoryItem | null>(null);
 
     // State for Stock Editing
     const [editingStockId, setEditingStockId] = useState<string | null>(null);
@@ -781,6 +787,17 @@ export function InventoryPage() {
                                             <td className="pr-8 py-4 text-right">
                                                 <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                                     <button
+                                                        onClick={() => setSelectedOfferProduct(item)}
+                                                        className={`p-3 rounded-xl transition-all ${
+                                                            item.discount_percentage && item.discount_percentage > 0 
+                                                                ? 'bg-purple-500/20 text-purple-400 hover:bg-purple-500 hover:text-white'
+                                                                : 'bg-white/5 text-neutral-500 hover:bg-white/10 hover:text-white'
+                                                        }`}
+                                                        title="Gestionar Oferta"
+                                                    >
+                                                        <Tag size={16} className={item.discount_percentage && item.discount_percentage > 0 ? "fill-purple-500/20" : ""} />
+                                                    </button>
+                                                    <button
                                                         onClick={() => {
                                                             if (confirm("¿Eliminar este nodo?")) {
                                                                 supabase.from('products').delete().eq('id', item.product_id).then(() => fetchInventory());
@@ -868,6 +885,22 @@ export function InventoryPage() {
                     fetchInventory();
                 }}
             />
+
+            {selectedOfferProduct && (
+                <OfferManagementModal
+                    isOpen={!!selectedOfferProduct}
+                    onClose={() => setSelectedOfferProduct(null)}
+                    productId={selectedOfferProduct.product_id}
+                    productName={selectedOfferProduct.name}
+                    currentPrice={selectedOfferProduct.price}
+                    initialDiscountPercentage={selectedOfferProduct.discount_percentage}
+                    initialDiscountEndDate={selectedOfferProduct.discount_end_date}
+                    onSuccess={() => {
+                        fetchInventory();
+                        setSelectedOfferProduct(null);
+                    }}
+                />
+            )}
         </div>
     );
 }

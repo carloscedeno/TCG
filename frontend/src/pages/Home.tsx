@@ -16,13 +16,7 @@ import { Footer } from '../components/Navigation/Footer';
 import { Header } from '../components/Navigation/Header';
 import { HeroSection } from '../components/Home/HeroSection';
 
-const gameMap: Record<string, string> = {
-  'MTG': 'Magic: The Gathering',
-  'PKM': 'Pokémon TCG',
-  'OPC': 'One Piece Card Game',
-  'DGM': 'Digimon Card Game',
-  'YGO': 'Yu-Gi-Oh!'
-};
+
 
 const mockFilters: Filters = {
   games: ['MTG', 'PKM', 'YGO', 'RFB', 'OPC', 'DGM', 'GND', 'FAB'],
@@ -69,7 +63,7 @@ const Home: React.FC = () => {
   const [sortBy, setSortBy] = useState(searchParams.get('sort') || 'price_desc');
   const [activeRarity, setActiveRarity] = useState(searchParams.get('rarity') || 'All');
   const [totalCount, setTotalCount] = useState(0);
-  const [page, setPage] = useState(page => page || 0);
+  const [page, setPage] = useState(0);
   const { user } = useAuth();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
@@ -90,7 +84,7 @@ const Home: React.FC = () => {
   const [upcomingEvents, setUpcomingEvents] = useState<any[]>([]);
   const LIMIT = 50;
 
-  const isDevEnv = import.meta.env.DEV || window.location.hostname.includes('dev') || window.location.hostname.includes('localhost');
+
 
   const [hasAccessoriesExistInDb, setHasAccessoriesExistInDb] = useState<boolean | null>(null);
 
@@ -229,6 +223,8 @@ const Home: React.FC = () => {
               total_stock: Number(p.stock) || 0,
               finish: p.finish,
               is_foil: p.finish === 'foil' || p.finish === 'etched',
+              original_price: p.original_price,
+              discount_percentage: p.discount_percentage,
               updated_at: p.updated_at
             })),
             total_count: productRes.total_count

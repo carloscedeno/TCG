@@ -413,15 +413,29 @@ export const CardDetail: React.FC = () => {
                                         <div className="flex flex-col gap-2">
                                             {/* Price + Variant Badge (horizontal layout matching CardModal) */}
                                             <div className="flex items-center gap-3">
-                                                <div className="text-6xl font-black text-white font-mono tracking-tighter leading-none">
-                                                    ${(activeVersion?.price || details.price || 0) > 0 ? Number(activeVersion?.price || details.price).toFixed(2) : '---'}
+                                                <div className="flex flex-col">
+                                                    {activeVersion?.discount_percentage > 0 && (
+                                                        <span className="text-sm font-bold text-neutral-500 line-through">
+                                                            ${Number(activeVersion.original_price).toFixed(2)}
+                                                        </span>
+                                                    )}
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="text-6xl font-black text-white font-mono tracking-tighter leading-none">
+                                                            ${(activeVersion?.price || details.price || 0) > 0 ? Number(activeVersion?.price || details.price).toFixed(2) : '---'}
+                                                        </div>
+                                                        {activeVersion?.discount_percentage > 0 && (
+                                                            <div className="px-2 py-1 bg-purple-500/20 text-purple-400 text-xs font-black rounded-lg border border-purple-500/30 shadow-[0_0_15px_rgba(168,85,247,0.4)] animate-pulse">
+                                                                -{activeVersion.discount_percentage}%
+                                                            </div>
+                                                        )}
+                                                    </div>
                                                 </div>
-                                                <span className={`text-[10px] px-2 py-0.5 rounded-full font-black tracking-widest shadow-sm ${activeFinish === 'foil' ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white animate-pulse' : 'bg-white text-black'}`}>
+                                                <span className={`text-[10px] px-2 py-0.5 rounded-full font-black tracking-widest shadow-sm self-start mt-2 ${activeFinish === 'foil' ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white animate-pulse' : 'bg-white text-black'}`}>
                                                     {activeFinish === 'foil' ? 'FOIL' : 'NONFOIL'}
                                                 </span>
                                             </div>
                                             {/* Finish Toggle — only render for available variants */}
-                                            <div className="flex bg-neutral-900/80 p-1 rounded-xl border border-white/5 w-fit">
+                                            <div className="flex bg-neutral-900/80 p-1 rounded-xl border border-white/5 w-fit mt-2">
                                                 {activeGroup?.normal && (
                                                     <button
                                                         onClick={() => {

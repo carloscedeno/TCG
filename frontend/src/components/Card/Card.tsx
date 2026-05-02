@@ -28,6 +28,8 @@ export interface CardProps {
   card_faces?: CardFace[];
   viewMode?: 'grid' | 'list';
   total_stock?: number;
+  original_price?: number;
+  discount_percentage?: number;
   finish?: string;
   is_foil?: boolean;
   isArchive?: boolean;
@@ -38,7 +40,7 @@ export interface CardProps {
   onClick?: () => void;
 }
 
-export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, price, card_id, rarity, type, card_faces, viewMode = 'grid', total_stock, finish, is_foil, isArchive, showCartButton = false, is_accessory, accessory_id, onClick }) => {
+export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, price, original_price, discount_percentage, card_id, rarity, type, card_faces, viewMode = 'grid', total_stock, finish, is_foil, isArchive, showCartButton = false, is_accessory, accessory_id, onClick }) => {
   const [currentFaceIndex, setCurrentFaceIndex] = useState(0);
   const [addingToCart, setAddingToCart] = useState(false);
 
@@ -172,18 +174,30 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
           )}
         </div>
 
-        <div className="text-right flex flex-col items-end min-w-[80px] ml-auto pl-2">
+        <div className="text-right flex flex-col items-end min-w-[80px] ml-auto pl-2 relative">
           <span className="text-[9px] uppercase text-neutral-500 font-bold tracking-wider">Mercado</span>
-          <div className="flex items-center gap-1.5">
-            <span className="text-geeko-cyan font-mono font-bold text-base leading-none">
-              {typeof price === 'number' ? `$${price.toFixed(2)}` : '---'}
-            </span>
-            {isFoil && (
-              <span className="text-[10px] bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white px-1.5 py-0.5 rounded uppercase font-black tracking-tighter" title="Versión Foil">
-                FOIL
-              </span>
-            )}
-          </div>
+          {discount_percentage && discount_percentage > 0 ? (
+              <div className="flex flex-col items-end gap-0.5">
+                  <span className="text-[9px] text-neutral-500 font-bold line-through">${original_price?.toFixed(2)}</span>
+                  <div className="flex items-center gap-1.5">
+                      <span className="text-geeko-cyan font-mono font-bold text-base leading-none">
+                        {typeof price === 'number' ? `$${price.toFixed(2)}` : '---'}
+                      </span>
+                      <span className="text-[8px] bg-purple-500/20 text-purple-400 border border-purple-500/30 px-1 py-0.5 rounded font-black">-{discount_percentage}%</span>
+                  </div>
+              </div>
+          ) : (
+              <div className="flex items-center gap-1.5">
+                <span className="text-geeko-cyan font-mono font-bold text-base leading-none">
+                  {typeof price === 'number' ? `$${price.toFixed(2)}` : '---'}
+                </span>
+                {isFoil && (
+                  <span className="text-[10px] bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white px-1.5 py-0.5 rounded uppercase font-black tracking-tighter" title="Versión Foil">
+                    FOIL
+                  </span>
+                )}
+              </div>
+          )}
         </div>
 
         {showCartButton && !isArchive && (
@@ -321,18 +335,32 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
 
         {/* Price Row */}
         <div className="mt-auto pt-3 flex items-center justify-between border-t border-white/5">
-          <div className="flex flex-col text-right w-full pr-10 relative"> {/* Adjusted for price alignment */}
+          <div className="flex flex-col text-right w-full pr-10 relative">
             <span className="text-[8px] uppercase text-neutral-500 font-bold tracking-wider absolute -top-2 right-10">Mercado</span>
-            <div className="flex items-center justify-end gap-1.5">
-              <span className="text-geeko-cyan font-mono font-bold text-lg leading-none">
-                {price && price > 0 ? `$${price.toFixed(2)}` : 'S/P'}
-              </span>
-              {isFoil && (
-                <span className="text-[10px] bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white px-1.5 py-0.5 rounded uppercase font-black tracking-tighter" title="Versión Foil">
-                  FOIL
-                </span>
-              )}
-            </div>
+            {discount_percentage && discount_percentage > 0 ? (
+                <div className="flex flex-col items-end gap-0.5">
+                    <div className="flex items-center gap-1.5 justify-end">
+                        <span className="text-[9px] text-neutral-500 font-bold line-through">${original_price?.toFixed(2)}</span>
+                        <span className="text-[8px] bg-purple-500/20 text-purple-400 border border-purple-500/30 px-1 rounded font-black">-{discount_percentage}%</span>
+                    </div>
+                    <div className="flex items-center justify-end gap-1.5">
+                      <span className="text-geeko-cyan font-mono font-bold text-lg leading-none">
+                        {price && price > 0 ? `$${price.toFixed(2)}` : 'S/P'}
+                      </span>
+                    </div>
+                </div>
+            ) : (
+                <div className="flex items-center justify-end gap-1.5">
+                  <span className="text-geeko-cyan font-mono font-bold text-lg leading-none">
+                    {price && price > 0 ? `$${price.toFixed(2)}` : 'S/P'}
+                  </span>
+                  {isFoil && (
+                    <span className="text-[10px] bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white px-1.5 py-0.5 rounded uppercase font-black tracking-tighter" title="Versión Foil">
+                      FOIL
+                    </span>
+                  )}
+                </div>
+            )}
           </div>
 
         </div>
