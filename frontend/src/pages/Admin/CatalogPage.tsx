@@ -61,7 +61,9 @@ export default function CatalogPage() {
                 ...tempData,
                 price: parseFloat(tempData.price) || 0,
                 cost: parseFloat(tempData.cost) || 0,
-                stock: parseInt(tempData.stock) || 0
+                stock: parseInt(tempData.stock) || 0,
+                discount_percentage: parseFloat(tempData.discount_percentage) || 0,
+                discount_until: tempData.discount_until || null
             };
             await updateAccessory(id, updates);
             setEditingId(null);
@@ -147,6 +149,8 @@ export default function CatalogPage() {
                                 <th className="px-4 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-center">Juego</th>
                                 <th className="px-4 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-right">Costo</th>
                                 <th className="px-6 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-right">Precio</th>
+                                <th className="px-6 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-center">Descuento %</th>
+                                <th className="px-6 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-center">Oferta Hasta</th>
                                 <th className="px-6 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-center">Stock</th>
                                 <th className="px-6 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-center">Estado</th>
                                 <th className="pr-8 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-right">Acciones</th>
@@ -276,8 +280,51 @@ export default function CatalogPage() {
                                                     autoFocus
                                                 />
                                             ) : (
-                                                <span className="text-lg font-black font-mono tracking-tighter">
-                                                    ${item.price?.toFixed(2)}
+                                                <div className="flex flex-col items-end">
+                                                    {item.discount_percentage > 0 && (
+                                                        <span className="text-[10px] line-through text-slate-600 font-mono">
+                                                            ${item.price?.toFixed(2)}
+                                                        </span>
+                                                    )}
+                                                    <span className="text-lg font-black font-mono tracking-tighter">
+                                                        ${(item.discount_percentage > 0 
+                                                            ? item.price * (1 - item.discount_percentage / 100) 
+                                                            : item.price
+                                                        ).toFixed(2)}
+                                                    </span>
+                                                </div>
+                                            )}
+                                        </td>
+                                        <td className="px-6 py-6 text-center">
+                                            {editingId === item.id ? (
+                                                <input
+                                                    type="number"
+                                                    placeholder="%"
+                                                    value={tempData.discount_percentage}
+                                                    onChange={(e) => setTempData({...tempData, discount_percentage: e.target.value})}
+                                                    className="w-16 bg-black border border-purple-500/50 rounded-xl px-2 py-2 text-center text-xs font-mono text-purple-400 placeholder:text-purple-900"
+                                                />
+                                            ) : (
+                                                item.discount_percentage > 0 ? (
+                                                    <span className="px-2 py-1 bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded-lg text-[10px] font-black font-mono">
+                                                        -{item.discount_percentage}%
+                                                    </span>
+                                                ) : (
+                                                    <span className="text-[10px] font-bold text-slate-700">-</span>
+                                                )
+                                            )}
+                                        </td>
+                                        <td className="px-6 py-6 text-center">
+                                            {editingId === item.id ? (
+                                                <input
+                                                    type="date"
+                                                    value={tempData.discount_until ? tempData.discount_until.split('T')[0] : ''}
+                                                    onChange={(e) => setTempData({...tempData, discount_until: e.target.value})}
+                                                    className="bg-black border border-orange-500/50 rounded-xl px-2 py-2 text-[10px] font-mono text-white"
+                                                />
+                                            ) : (
+                                                <span className="text-[10px] font-mono text-slate-500">
+                                                    {item.discount_until ? new Date(item.discount_until).toLocaleDateString() : '-'}
                                                 </span>
                                             )}
                                         </td>
@@ -341,7 +388,9 @@ export default function CatalogPage() {
                                                                     cost: item.cost,
                                                                     price: item.price, 
                                                                     stock: item.stock,
-                                                                    image_url: item.image_url
+                                                                    image_url: item.image_url,
+                                                                    discount_percentage: item.discount_percentage || 0,
+                                                                    discount_until: item.discount_until || null
                                                                 });
                                                             }}
                                                             className="p-3 bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 rounded-xl transition-all"
