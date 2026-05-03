@@ -820,6 +820,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                         </div>
                                     </div>
                                 )}
+                            </div>
 
                                 {/* Marketplace Actions - Optimized side-by-side layout */}
                                 <div className={`grid grid-cols-1 ${details?.is_accessory ? '' : 'md:grid-cols-2'} gap-4 items-stretch`}>
@@ -901,7 +902,6 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                     </div>
                                                 ) : null}
                                             </div>
-                                        </div>
 
                                         {!isArchive && (
                                             <button
@@ -943,7 +943,6 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                         </a>
                                     )}
                                 </div>
-                            </div>
                         </>
                     ) : null}
                 </div>
