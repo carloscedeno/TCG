@@ -1331,7 +1331,11 @@ export const fetchAccessories = async (params: {
 
   if (error) throw error;
   
-  const accessories = data || [];
+  const accessories = (data || []).map((item: any) => ({
+    ...item,
+    original_price: item.original_price || item.price,
+    discount_percentage: item.discount_percentage || 0
+  }));
   const total_count = accessories.length > 0 ? accessories[0].total_count : 0;
 
   return { 
@@ -1372,7 +1376,7 @@ export const fetchAccessoriesAdmin = async (params: {
   
   let query = supabase
     .from('accessories')
-    .select('*, games(game_name), accessory_categories(code, name, icon, parent_code)', { count: 'exact' })
+    .select('*, discount_percentage, discount_until, games(game_name), accessory_categories(code, name, icon, parent_code)', { count: 'exact' })
     .order('created_at', { ascending: false })
     .range(offset, offset + limit - 1);
 
