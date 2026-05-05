@@ -136,7 +136,8 @@ const Home: React.FC = () => {
 
     const hasOnlyGameFilter = Object.entries(filters).every(([key, val]) => isDefaultFilter(key, val)) && activeRarity === 'All';
     
-    if (!query && hasOnlyGameFilter) {
+    const isDashboardView = !query && hasOnlyGameFilter;
+    if (isDashboardView) {
       const loadDeals = async () => {
         setLoadingDeals(true);
         const [singles, accessories] = await Promise.all([
@@ -456,10 +457,17 @@ const Home: React.FC = () => {
         )}
 
         {/* Rarity Filter Tabs & Sort */}
-        <div className="bg-[#0a0a0a]/95 border-b border-neutral-800 sticky top-[60px] z-40 backdrop-blur-md">
-          <div className="max-w-[1600px] mx-auto px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="flex bg-neutral-900/50 p-1 rounded-full border border-neutral-800">
-                {inventoryPresence.hasSingles && (
+        {!(!query && Object.entries(filters).every(([key, val]) => {
+          if (key === 'games') return true;
+          if (key === 'yearRange') return (val as any)[0] <= 1993 && (val as any)[1] >= 2026;
+          if (key === 'priceRange') return (val as any)[0] <= 0 && (val as any)[1] >= 1000000;
+          if (Array.isArray(val)) return val.length === 0;
+          return !val;
+        }) && activeRarity === 'All') && (
+          <div className="bg-[#0a0a0a]/95 border-b border-neutral-800 sticky top-[60px] z-40 backdrop-blur-md">
+            <div className="max-w-[1600px] mx-auto px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex bg-neutral-900/50 p-1 rounded-full border border-neutral-800">
+                  {inventoryPresence.hasSingles && (
                   <button
                     onClick={() => handleTabChange('marketplace')}
                     data-testid="inventory-tab"
@@ -557,11 +565,19 @@ const Home: React.FC = () => {
             </div>
           </div>
         </div>
+      )}
 
         {/* Main Content */}
         <main className="max-w-[1600px] w-full mx-auto px-6 py-8 flex-1">
           <div className="flex flex-col lg:flex-row gap-10">
             {/* Sidebar Filters */}
+            {!(!query && Object.entries(filters).every(([key, val]) => {
+              if (key === 'games') return true;
+              if (key === 'yearRange') return (val as any)[0] <= 1993 && (val as any)[1] >= 2026;
+              if (key === 'priceRange') return (val as any)[0] <= 0 && (val as any)[1] >= 1000000;
+              if (Array.isArray(val)) return val.length === 0;
+              return !val;
+            }) && activeRarity === 'All') && (
               <aside className="hidden lg:block w-72 flex-shrink-0">
                 <div className="sticky top-[130px] max-h-[calc(100vh-150px)] overflow-y-auto pr-2 custom-scrollbar">
                   <FiltersPanel
@@ -573,6 +589,7 @@ const Home: React.FC = () => {
                   />
                 </div>
               </aside>
+            )}
 
             {/* Cards Grid / Deals Dashboard */}
             <div className="flex-1">
