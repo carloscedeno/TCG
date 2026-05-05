@@ -128,8 +128,8 @@ const Home: React.FC = () => {
     const gameCode = filters.games && filters.games.length > 0 ? filters.games[0] : undefined;
     const isDefaultFilter = (key: string, val: any) => {
       if (key === 'games') return true;
-      if (key === 'yearRange') return val[0] <= 1993 && val[1] >= 2026;
-      if (key === 'priceRange') return val[0] <= 0 && val[1] >= 1000000;
+      if (key === 'yearRange') return (val as any)[0] <= 1993 && (val as any)[1] >= 2026;
+      if (key === 'priceRange') return (val as any)[0] <= 0 && (val as any)[1] >= 1000000;
       if (Array.isArray(val)) return val.length === 0;
       return !val;
     };
@@ -578,8 +578,8 @@ const Home: React.FC = () => {
             <div className="flex-1">
               {!query && Object.entries(filters).every(([key, val]) => {
                 if (key === 'games') return true;
-                if (key === 'yearRange') return val[0] <= 1993 && val[1] >= 2026;
-                if (key === 'priceRange') return val[0] <= 0 && val[1] >= 1000000;
+                if (key === 'yearRange') return (val as any)[0] <= 1993 && (val as any)[1] >= 2026;
+                if (key === 'priceRange') return (val as any)[0] <= 0 && (val as any)[1] >= 1000000;
                 if (Array.isArray(val)) return val.length === 0;
                 return !val;
               }) && activeRarity === 'All' ? (
