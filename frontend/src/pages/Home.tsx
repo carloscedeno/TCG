@@ -126,9 +126,15 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     const gameCode = filters.games && filters.games.length > 0 ? filters.games[0] : undefined;
-    const hasOnlyGameFilter = Object.entries(filters).every(([key, val]) => 
-      key === 'games' ? true : (Array.isArray(val) ? val.length === 0 : !val)
-    );
+    const isDefaultFilter = (key: string, val: any) => {
+      if (key === 'games') return true;
+      if (key === 'yearRange') return val[0] <= 1993 && val[1] >= 2026;
+      if (key === 'priceRange') return val[0] <= 0 && val[1] >= 1000000;
+      if (Array.isArray(val)) return val.length === 0;
+      return !val;
+    };
+
+    const hasOnlyGameFilter = Object.entries(filters).every(([key, val]) => isDefaultFilter(key, val)) && activeRarity === 'All';
     
     if (!query && hasOnlyGameFilter) {
       const loadDeals = async () => {
@@ -570,7 +576,13 @@ const Home: React.FC = () => {
 
             {/* Cards Grid / Deals Dashboard */}
             <div className="flex-1">
-              {!query && Object.entries(filters).every(([key, val]) => key === 'games' ? true : (Array.isArray(val) ? val.length === 0 : !val)) ? (
+              {!query && Object.entries(filters).every(([key, val]) => {
+                if (key === 'games') return true;
+                if (key === 'yearRange') return val[0] <= 1993 && val[1] >= 2026;
+                if (key === 'priceRange') return val[0] <= 0 && val[1] >= 1000000;
+                if (Array.isArray(val)) return val.length === 0;
+                return !val;
+              }) && activeRarity === 'All' ? (
                 // DEALS DASHBOARD
                 <div className="flex flex-col gap-6 w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
                   {loadingDeals ? (
