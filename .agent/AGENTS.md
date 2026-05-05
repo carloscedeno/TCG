@@ -122,6 +122,9 @@ Artefactos del Compound step:
 - ✅ **Centralized UX Navigation**: Sincronización reactiva de URL y menús para navegación fluida entre Marketplace y Catálogo por juego.
 - ✅ **Visibilidad de Ofertas en Inventario (Singles)**: Implementación de columnas de descuento y fechas de expiración en la tabla de inventario administrativo para cartas, con renderizado Null-Safe para evitar crashes durante el ordenamiento.
 - ✅ **Saneamiento Masivo de Credenciales (v55)**: Remediación total de un incidente de seguridad crítico. Eliminación de contraseñas hardcodeadas en más de 60 scripts y parametrización vía `os.getenv`. Actualización de `.gitignore` global y eliminación de archivos de texto con credenciales (`prod_credentials.txt`).
+- ✅ **Estabilización de Precios en Producción (v56)**: Reparación de discrepancias masivas mediante sincronización atómica SQL. Procesamiento de 148,000+ precios y actualización de 38,000+ cartas sin timeouts.
+- ✅ **Hardening de CI/CD (Omni-Sync)**: Inyección de secretos de producción en GitHub Actions y refactorización de `common/db.py` para aislamiento total de entornos.
+- ✅ **Integración de Logos TCG (Premium)**: Sustitución de emojis por assets PNG estandarizados (`color` y `black`) en landing, header y administración. Implementación de leyes de respiración visual para evitar clipping en animaciones de escala.
 
 ## 🚧 Features Pendientes
 

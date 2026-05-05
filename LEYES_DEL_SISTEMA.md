@@ -495,6 +495,15 @@ Antes de iniciar procesos de sincronizaci脙茠脗鲁n pesados o de larga duraci脙茠
 
 ---
 
+### Ley 24: Integridad de Sincronizaci贸n en Producci贸n
+**Siempre** verificar la paridad entre `price_history`, `card_printings` y `products` tras una sincronizaci贸n de mercado masiva.
+
+- **Mandato**: No se considera completada una sincronizaci贸n si el reporte de auditor铆a muestra desajustes (drifts) entre las tablas denormalizadas.
+- **Implementaci贸n**: Utilizar el patr贸n de `MATERIALIZED VIEW` temporal para realizar denormalizaciones at贸micas y evitar desajustes causados por bloqueos parciales o fallas de conexi贸n.
+- **Refresco Obligatorio**: Todo cambio en precios de cat谩logo REQUIERE un `REFRESH MATERIALIZED VIEW CONCURRENTLY mv_unique_cards` para impactar el storefront sin downtime.
+
+---
+
 **Estas leyes son inmutables y deben ser respetadas en todo momento por el agente aut贸nomo.**
 
 ### 13. Sincronizaci脙茠脗鲁n Estricta de Migraciones (CI/CD)
@@ -571,3 +580,11 @@ Ning脙茠脗潞n archivo de migraci脙茠脗鲁n SQL (`supabase/migrations/`) desplegad
 - **C谩lculo de Precio**: El precio de venta final debe calcularse como `original_price * (1 - discount_percentage / 100)`. La UI debe siempre mostrar el ahorro porcentual de forma prominente.
 - **Excepci贸n**: Productos con stock 0 o estado "Por Encargo" pueden omitir el ribbon si el descuento solo aplica a stock f铆sico inmediato, a menos que el admin especifique lo contrario.
 
+
+## LEY 25: RESPIRACI覰 VISUAL PARA ANIMACIONES
+Cualquier componente que utilice transformaciones de escala (scale) o traslaci髇 vertical (-translate-y) **debe** tener un contenedor con suficiente padding o overflow-visible para evitar recortes (clipping) en los bordes.
+
+## LEY 26: IDENTIDAD DE MARCA TCG
+Todos los logos de juegos TCG deben centralizarse en frontend/public/logos/tcg/. 
+- La variante black/ (monocromo) se reserva para sidebars, listas peque馻s y UI de administraci髇.
+- La variante color/ se utiliza para selectores principales y elementos de alta jerarqu韆 visual.

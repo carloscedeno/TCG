@@ -96,4 +96,15 @@ This session focused on reactivating the "Fast Add to Cart" feature with a premi
 - **ParametrizaciÃ³n de Entorno**: TransiciÃ³n de URLs estÃ¡ticas a variables de entorno (`DATABASE_URL_PROD`, `DATABASE_URL_DEV`) siguiendo la nueva Ley de Seguridad 21.
 - **ProtecciÃ³n de Ramas**: Saneamiento de las ramas `dev` y `main`, eliminando secretos del cÃ³digo fuente y asegurando `.gitignore` contra futuras fugas.
 - **AuditorÃ­a de Artefactos**: EliminaciÃ³n de archivos de credenciales huÃ©rfanos (`prod_credentials.txt`) y desactivaciÃ³n de archivos de entorno rastreados.
-$newProgress
+### ✅ Estabilización de Precios en Producción (v56)
+- **Sincronización Atómica**: Ejecutado script SQL optimizado que procesó **148,297 precios** de Card Kingdom.
+- **Denormalización Resiliente**: Actualizados **38,758 card printings** y **2,993 productos** en producción con 0% de error.
+- **Hardening de CI/CD**: Inyectado secreto `DATABASE_URL` en `omni-sync.yml` y refactorizado `common/db.py` para aislamiento total de producción.
+- **Paridad Storefront**: Refrescada la vista `mv_unique_cards`, garantizando que el marketplace refleja fielmente los precios de mercado.
+- **Auditoría Final**: Confirmados **0 mismatches** entre tablas de inventario y catálogo.
+
+### ? Identidad Visual y Logos Premium (Compound v57)
+- **Librer�a de Assets TCG**: Desplegada estructura en public/logos/tcg con soporte para variantes de color (selector) y blanco/negro (sidebar/admin).
+- **UI Anti-Clipping**: Resuelto problema de recorte visual en el selector circular mediante optimizaci�n de padding y eliminaci�n de overflow restrictivo.
+- **Consistencia Administrativa**: Integrados iconos en la gesti�n de eventos para mejorar la precisi�n operativa.
+- **Resizing Global**: Ajustadas dimensiones de iconos en Header y Sidebar para m�xima legibilidad.

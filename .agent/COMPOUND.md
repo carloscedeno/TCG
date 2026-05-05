@@ -819,3 +819,16 @@ $content
 **Regla derivada:** Toda actualización de firma en RPCs debe ir precedida de un DROP FUNCTION ... CASCADE para evitar colisiones PostgREST.
 
 
+
+## 2026-05-05 — Integración de Logos TCG Premium y UI Polishing
+
+**Qué pasó:** Se sustituyeron los emojis genéricos por assets PNG estandarizados en toda la plataforma (Landing, Header y Admin). Se corrigieron problemas de clipping en animaciones y se escalaron los iconos para una UX más premium.
+**Lo que cambió:**
+- lessons_learned.md → Lecciones 103, 104, 105.
+- LEYES_DEL_SISTEMA.md → Leyes 25 y 26.
+- AGENTS.md → Marcada implementación de Logos Premium.
+- PROGRESS.md → Actualizado estado (Compound v57).
+- frontend/src/pages/Home.tsx → Resizing global y fix de clipping.
+- frontend/src/pages/Admin/EventsPage.tsx → Integración de logos en selector.
+**Artefacto creado:** Librería de logos estandarizada en public/logos/tcg/.
+**Regla derivada:** Ley de Respiración Visual y Ley de Identidad de Marca TCG.
