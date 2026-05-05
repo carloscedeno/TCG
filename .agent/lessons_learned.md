@@ -976,3 +976,9 @@ useEffect(() => {
 - **Causa Raíz**: Algunos artículos (especialmente los recién importados o "on-demand") tienen un valor de `price` nulo en la base de datos. Al ordenar, estos nulos suben al principio de la lista, y la lógica de la UI intentaba llamar a `.toFixed(2)` sobre ellos.
 - **Solución**: Implementar una política de "Null-Safe Formatting" en el frontend: `(item.price || 0).toFixed(2)`. Asegurar que los cálculos de descuento también contemplen fallbacks a cero para evitar resultados `NaN`.
 - **Regla Derivada**: `LEYES_DEL_SISTEMA.md` -> Ley 20 (Integridad Visual de Ofertas). Todo renderizado de precios en el Admin debe usar el patrón de fallback `(val || 0)` antes de formatear.
+
+### 152. RPC Overloading & Function Signature Sync — 2026-05-05
+- **Problema**: Error `PGRST203` (múltiples candidatos encontrados) al intentar cargar productos en el Marketplace tras añadir el parámetro `p_only_new`.
+- **Causa Raíz**: Supabase (PostgreSQL) permite la sobrecarga de funciones con el mismo nombre pero diferentes argumentos. `CREATE OR REPLACE FUNCTION` no elimina versiones antiguas con firmas distintas; PostgREST no puede decidir cuál llamar si hay ambigüedad.
+- **Solución**: Implementar una migración de "limpieza dinámica" que use `pg_proc` para identificar y ejecutar `DROP FUNCTION ... CASCADE` sobre todas las versiones sobrecargadas antes de recrear la versión canónica única.
+- **Regla Derivada**: `LEYES_DEL_SISTEMA.md` -> Ley 23 (Sincronización de RPC). Toda modificación de parámetros en un RPC existente debe ir precedida de un borrado total de sobrecargas para evitar conflictos `PGRST203`.

@@ -486,7 +486,16 @@ Antes de iniciar procesos de sincronizaciÃƒÂ³n pesados o de larga duraciÃƒ
 
 ---
 
-**Estas leyes son inmutables y deben ser respetadas en todo momento por el agente autÃƒÂ³nomo.**
+### Ley 23: Sincronización de RPC (Evitar PGRST203)
+**Siempre** incluir un bloque de limpieza dinámica de sobrecargas al modificar la firma de una función RPC en PostgreSQL.
+
+- **Mandato**: Antes de ejecutar `CREATE OR REPLACE FUNCTION`, se debe identificar y eliminar (`DROP FUNCTION ... CASCADE`) cualquier versión anterior de la función con el mismo nombre pero distintos argumentos.
+- **Implementación**: Usar el patrón de búsqueda en `pg_proc` para automatizar el borrado de todas las versiones sobrecargadas en el mismo script de migración.
+- **Propósito**: Garantizar que PostgREST siempre tenga un único candidato válido, evitando errores de ambigüedad `PGRST203` que bloquean la carga de datos en el frontend.
+
+---
+
+**Estas leyes son inmutables y deben ser respetadas en todo momento por el agente autónomo.**
 
 ### 13. SincronizaciÃƒÂ³n Estricta de Migraciones (CI/CD)
 
