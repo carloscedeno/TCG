@@ -446,12 +446,12 @@ const Home: React.FC = () => {
 
         {/* --- PREMIUM TCG SELECTOR SECTION --- */}
         {!query && (
-          <section className="w-full relative overflow-hidden">
+          <section className="w-full relative">
             {/* Cyan to Black Gradient Background */}
             <div className="absolute inset-0 bg-gradient-to-b from-[#00A3C4] via-[#003B46] to-black h-[180px] md:h-[220px]" />
             
-            <div className="relative z-10 w-full py-8 md:py-12">
-              <div className="flex items-center justify-start xl:justify-center gap-6 md:gap-12 lg:gap-16 overflow-x-auto no-scrollbar pb-4 px-[10vw]">
+            <div className="relative z-10 w-full pt-14 pb-8 md:pt-20 md:pb-12">
+              <div className="flex items-center justify-start xl:justify-center gap-6 md:gap-12 lg:gap-16 overflow-x-auto no-scrollbar px-[10vw] pb-6">
                 {[
                   { id: 'MTG', name: 'MTG', icon: '/logos/tcg/MTG.png', defaultTab: 'marketplace' },
                   { id: 'PKM', name: 'POKEMON', icon: '/logos/tcg/PKM.png', defaultTab: 'catalog' },
