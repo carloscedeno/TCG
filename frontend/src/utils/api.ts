@@ -36,6 +36,8 @@ export interface CardApi {
   type: string;
   set: string;
   price: number;
+  original_price?: number;
+  discount_percentage?: number;
   image_url: string;
   rarity: string;
   finish?: string; // Added for Foil handling
@@ -67,6 +69,8 @@ export interface CardDetails extends Card {
     collector_number: string;
     rarity: string;
     price: number;
+    original_price?: number;
+    discount_percentage?: number;
     image_url: string;
   }[];
 }
