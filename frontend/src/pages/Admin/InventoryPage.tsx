@@ -701,20 +701,20 @@ export function InventoryPage() {
                                                     <div className="flex flex-col items-end">
                                                         {item.discount_percentage && item.discount_percentage > 0 && (
                                                             <span className="text-[10px] line-through text-neutral-600 font-mono">
-                                                                ${item.price.toFixed(2)}
+                                                                ${(item.price || 0).toFixed(2)}
                                                             </span>
                                                         )}
                                                         <button
                                                             onClick={() => {
                                                                 setEditingPriceId(item.product_id);
-                                                                setTempPrice(item.price.toString());
+                                                                setTempPrice((item.price || 0).toString());
                                                             }}
-                                                            className={`text-lg font-black font-mono tracking-tighter hover:text-purple-400 transition-colors ${item.price === 0 ? 'text-purple-400' : 'text-white'}`}
+                                                            className={`text-lg font-black font-mono tracking-tighter hover:text-purple-400 transition-colors ${(item.price || 0) === 0 ? 'text-purple-400' : 'text-white'}`}
                                                         >
-                                                            {item.price === 0 ? 'AUTO [CK]' : (
+                                                            {(item.price || 0) === 0 ? 'AUTO [CK]' : (
                                                                 item.discount_percentage && item.discount_percentage > 0 
-                                                                    ? `$${(item.price * (1 - item.discount_percentage / 100)).toFixed(2)}`
-                                                                    : `$${item.price.toFixed(2)}`
+                                                                    ? `$${((item.price || 0) * (1 - item.discount_percentage / 100)).toFixed(2)}`
+                                                                    : `$${(item.price || 0).toFixed(2)}`
                                                             )}
                                                         </button>
                                                         {lastSavedId === item.product_id && (
