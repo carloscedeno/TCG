@@ -468,17 +468,18 @@ const Home: React.FC = () => {
                 )}
                 
                 {inventoryPresence.hasCatalog && (
-                <button
-                  onClick={() => handleTabChange('catalog')}
-                  data-testid="catalog-tab"
-                  className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'catalog'
-                    ? 'ring-2 ring-blue-500/30 bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.4)]'
-                    : 'text-neutral-500 hover:text-neutral-300'
-                    }`}
-                >
-                  <Search size={16} className={activeTab === 'catalog' ? 'text-white' : 'text-blue-500'} />
-                  Catálogo
-                </button>
+                  <button
+                    onClick={() => handleTabChange('catalog')}
+                    data-testid="catalog-tab"
+                    className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'catalog'
+                      ? 'ring-2 ring-blue-500/30 bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.4)]'
+                      : 'text-neutral-500 hover:text-neutral-300'
+                      }`}
+                  >
+                    <Search size={16} className={activeTab === 'catalog' ? 'text-white' : 'text-blue-500'} />
+                    Catálogo
+                  </button>
+                )}
               </div>
 
               {activeTab === 'marketplace' && inventoryPresence.hasSingles && (
