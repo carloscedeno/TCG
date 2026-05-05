@@ -614,6 +614,8 @@ export function InventoryPage() {
                                                 Valoración <ArrowUpDown size={12} className={sortBy === 'price' ? 'text-purple-500' : ''} />
                                             </button>
                                         </th>
+                                        <th className="px-6 py-6 font-black text-[10px] text-neutral-500 uppercase tracking-widest text-center">Descuento %</th>
+                                        <th className="px-6 py-6 font-black text-[10px] text-neutral-500 uppercase tracking-widest text-center">Oferta Hasta</th>
                                         <th className="px-6 py-6 font-black text-[10px] text-neutral-500 uppercase tracking-widest text-center">
                                             <button onClick={() => toggleSort('stock')} className="flex items-center gap-2 justify-center mx-auto hover:text-white transition-colors">
                                                 Nodos de Stock <ArrowUpDown size={12} className={sortBy === 'stock' ? 'text-purple-500' : ''} />
@@ -697,6 +699,11 @@ export function InventoryPage() {
                                                     </div>
                                                 ) : (
                                                     <div className="flex flex-col items-end">
+                                                        {item.discount_percentage && item.discount_percentage > 0 && (
+                                                            <span className="text-[10px] line-through text-neutral-600 font-mono">
+                                                                ${item.price.toFixed(2)}
+                                                            </span>
+                                                        )}
                                                         <button
                                                             onClick={() => {
                                                                 setEditingPriceId(item.product_id);
@@ -704,13 +711,34 @@ export function InventoryPage() {
                                                             }}
                                                             className={`text-lg font-black font-mono tracking-tighter hover:text-purple-400 transition-colors ${item.price === 0 ? 'text-purple-400' : 'text-white'}`}
                                                         >
-                                                            {item.price === 0 ? 'AUTO [CK]' : `$${item.price.toFixed(2)}`}
+                                                            {item.price === 0 ? 'AUTO [CK]' : (
+                                                                item.discount_percentage && item.discount_percentage > 0 
+                                                                    ? `$${(item.price * (1 - item.discount_percentage / 100)).toFixed(2)}`
+                                                                    : `$${item.price.toFixed(2)}`
+                                                            )}
                                                         </button>
                                                         {lastSavedId === item.product_id && (
                                                             <span className="text-[8px] font-black text-emerald-500 uppercase tracking-widest animate-pulse">GUARDADO</span>
                                                         )}
                                                     </div>
                                                 )}
+                                            </td>
+                                            <td className="px-6 py-4 text-center">
+                                                {item.discount_percentage && item.discount_percentage > 0 ? (
+                                                    <button 
+                                                        onClick={() => setSelectedOfferProduct(item)}
+                                                        className="px-2 py-1 bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded-lg text-[10px] font-black font-mono hover:bg-purple-500 hover:text-white transition-all"
+                                                    >
+                                                        -{item.discount_percentage}%
+                                                    </button>
+                                                ) : (
+                                                    <span className="text-[10px] font-bold text-neutral-800">-</span>
+                                                )}
+                                            </td>
+                                            <td className="px-6 py-4 text-center">
+                                                <span className="text-[10px] font-mono text-neutral-600">
+                                                    {item.discount_end_date ? new Date(item.discount_end_date).toLocaleDateString() : '-'}
+                                                </span>
                                             </td>
                                             <td className="px-6 py-4 text-center">
                                                 {editingStockId === item.product_id ? (
