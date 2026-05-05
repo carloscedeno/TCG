@@ -124,6 +124,31 @@ const Home: React.FC = () => {
     loadEvents();
   }, [filters.games]);
 
+  // Sincronizar filtros desde la URL
+  useEffect(() => {
+    const q = searchParams.get('q') || '';
+    const game = searchParams.get('game')?.split(',').filter(Boolean) || [];
+    const set = searchParams.get('set')?.split(',').filter(Boolean) || [];
+    const rarity = searchParams.get('rarity')?.split(',').filter(Boolean) || [];
+    const category = searchParams.get('category')?.split(',').filter(Boolean) || [];
+    const tab = searchParams.get('tab') as 'marketplace' | 'catalog' || 'marketplace';
+    const year_from = parseInt(searchParams.get('year_from') || '1993');
+    const year_to = parseInt(searchParams.get('year_to') || '2026');
+    const price_min = parseFloat(searchParams.get('price_min') || '0');
+    const price_max = parseFloat(searchParams.get('price_max') || '1000000');
+
+    setQuery(q);
+    setActiveTab(tab);
+    setFilters({
+      games: game,
+      sets: set,
+      rarities: rarity,
+      categories: category,
+      yearRange: [year_from, year_to],
+      priceRange: [price_min, price_max]
+    });
+  }, [searchParams]);
+
   const isDefaultFilter = (key: string, val: any) => {
     if (key === 'games') return true;
     if (key === 'yearRange') return (val as any)[0] <= 1993 && (val as any)[1] >= 2026;

@@ -167,7 +167,20 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
             Categoría
           </h3>
           <div className="grid grid-cols-1 gap-2">
-            {filters.categories.map(category => {
+            {filters.categories
+              .filter(cat => {
+                if (!selectedGame) return true;
+                const otherGames = ['Magic', 'Pokemon', 'Digimon', 'One Piece', 'Yu-Gi-Oh', 'Weiss Schwarz'].filter(g => {
+                   if (selectedGame === 'MTG' && g === 'Magic') return false;
+                   if ((selectedGame === 'PKM' || selectedGame === 'POKEMON') && g === 'Pokemon') return false;
+                   if ((selectedGame === 'DGM' || selectedGame === 'DIGIMON') && g === 'Digimon') return false;
+                   if ((selectedGame === 'OPC' || selectedGame === 'ONE PIECE') && g === 'One Piece') return false;
+                   if (selectedGame === 'YGO' && g === 'Yu-Gi-Oh') return false;
+                   return ['Magic', 'Pokemon', 'Digimon', 'One Piece', 'Yu-Gi-Oh', 'Weiss Schwarz'].includes(g);
+                });
+                return !otherGames.includes(cat);
+              })
+              .map(category => {
               const isSelected = selected.categories?.includes(category);
               return (
                 <button
