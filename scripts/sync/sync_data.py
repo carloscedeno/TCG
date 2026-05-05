@@ -1,9 +1,10 @@
+import os
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
 # Config
-PROD_DB = "postgresql://postgres.sxuotvogwvmxuvwbsscv:jLta9LqEmpMzCI5r@aws-0-us-west-2.pooler.supabase.com:6543/postgres"
-DEV_DB = "postgresql://postgres.bqfkqnnostzaqueujdms:jLta9LqEmpMzCI5r@aws-0-us-west-2.pooler.supabase.com:6543/postgres"
+PROD_DB = os.getenv("DATABASE_URL_PROD")
+DEV_DB = os.getenv("DATABASE_URL_DEV")
 
 def test_and_sync():
     print("Connecting to Prod...")
