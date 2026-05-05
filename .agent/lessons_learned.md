@@ -970,3 +970,9 @@ useEffect(() => {
 - **Problema**: Errores de build `TS2339` persistentes tras actualizar interfaces globales en `api.ts`.
 - **Causa Raíz**: Componentes grandes como `CardModal.tsx` redefinen interfaces críticas (`CardDetails`, `Version`) localmente en lugar de importarlas desde la fuente de verdad. Esto genera inconsistencias cuando se añaden campos al modelo de datos.
 - **Lección**: **Unicidad de Tipos**. Evitar redefinir interfaces de datos del dominio dentro de los componentes. Si un componente necesita una interfaz, debe importarla desde `api.ts`. Si se añade un campo a la API, se debe buscar todas las redefiniciones locales (Grep) para asegurar la paridad. Ver `LEYES_DEL_SISTEMA.md` > Ley 21.
+
+### 151. Null-Safe Price Handling in Inventory Rendering — 2026-05-05
+- **Problema**: El panel administrativo de inventario crasheaba con `TypeError: Cannot read properties of null (reading 'toFixed')` al ordenar la tabla de mayor a menor.
+- **Causa Raíz**: Algunos artículos (especialmente los recién importados o "on-demand") tienen un valor de `price` nulo en la base de datos. Al ordenar, estos nulos suben al principio de la lista, y la lógica de la UI intentaba llamar a `.toFixed(2)` sobre ellos.
+- **Solución**: Implementar una política de "Null-Safe Formatting" en el frontend: `(item.price || 0).toFixed(2)`. Asegurar que los cálculos de descuento también contemplen fallbacks a cero para evitar resultados `NaN`.
+- **Regla Derivada**: `LEYES_DEL_SISTEMA.md` -> Ley 20 (Integridad Visual de Ofertas). Todo renderizado de precios en el Admin debe usar el patrón de fallback `(val || 0)` antes de formatear.

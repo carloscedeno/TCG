@@ -1,7 +1,7 @@
-﻿# Ã¢Å¡â€“Ã¯Â¸ LEYES DEL SISTEMA - TCG Application
+# Ã¢Å¡â€“Ã¯Â¸ LEYES DEL SISTEMA - TCG Application
 
-**VersiÃƒÂ³n**: 3.6
-**ÃƒÅ¡ltima ActualizaciÃƒÂ³n**: 2026-05-05 (Type Uniqueness & Security Hardening)
+**Versión**: 3.7
+**Última Actualización**: 2026-05-05 (Null-Safe Pricing & Discount Integrity)
 **PropÃƒÂ³sito**: Definir reglas inmutables para operaciÃƒÂ³n autÃƒÂ³noma del agente
 
 ---
@@ -557,7 +557,8 @@ NingÃƒÂºn archivo de migraciÃƒÂ³n SQL (`supabase/migrations/`) desplegad
 
 ### Ley 20: Integridad Visual de Ofertas (Dynamic Discounts)
 - **Mandato**: Todo producto con descuento activo (`discount_percentage > 0` y `discount_until` no expirado) DEBE mostrar el Ribbon diagonal distintivo y el precio tachado.
-- **Visibilidad**: El Ribbon de descuento debe tener un `z-index` mÃ­nimo de `100` para garantizar que no sea ocultado por overlays de imÃ¡genes o gradientes.
-- **CÃ¡lculo de Precio**: El precio de venta final debe calcularse como `original_price * (1 - discount_percentage / 100)`. La UI debe siempre mostrar el ahorro porcentual de forma prominente.
-- **ExcepciÃ³n**: Productos con stock 0 o estado "Por Encargo" pueden omitir el ribbon si el descuento solo aplica a stock fÃ­sico inmediato, a menos que el admin especifique lo contrario.
+- **Null-Safe Rendering**: Todo renderizado de precios y descuentos en la UI (especialmente en el Admin) DEBE usar el patrón de fallback `(val || 0)` antes de formatear con `.toFixed()`. Esto previene crashes fatales durante el ordenamiento de tablas con datos incompletos.
+- **Visibilidad**: El Ribbon de descuento debe tener un `z-index` mínimo de `100` para garantizar que no sea ocultado por overlays de imágenes o gradientes.
+- **Cálculo de Precio**: El precio de venta final debe calcularse como `original_price * (1 - discount_percentage / 100)`. La UI debe siempre mostrar el ahorro porcentual de forma prominente.
+- **Excepción**: Productos con stock 0 o estado "Por Encargo" pueden omitir el ribbon si el descuento solo aplica a stock físico inmediato, a menos que el admin especifique lo contrario.
 

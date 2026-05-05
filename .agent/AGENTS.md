@@ -120,6 +120,7 @@ Artefactos del Compound step:
 - ✅ **Estandarización de Juegos (Ley 26)**: Unificación de códigos de franquicia (`PKM`, `OPC`, `DGM`, `FAB`, `GND`, `RFB`) y eliminación de duplicados en la base de datos.
 - ✅ **RPC Integrity & Overload Cleaning**: Limpieza quirúrgica de funciones Postgres para evitar ambigüedad (`PGRST203`) y asegurar filtrado exacto por TCG.
 - ✅ **Centralized UX Navigation**: Sincronización reactiva de URL y menús para navegación fluida entre Marketplace y Catálogo por juego.
+- ✅ **Visibilidad de Ofertas en Inventario (Singles)**: Implementación de columnas de descuento y fechas de expiración en la tabla de inventario administrativo para cartas, con renderizado Null-Safe para evitar crashes durante el ordenamiento.
 - ✅ **Saneamiento Masivo de Credenciales (v55)**: Remediación total de un incidente de seguridad crítico. Eliminación de contraseñas hardcodeadas en más de 60 scripts y parametrización vía `os.getenv`. Actualización de `.gitignore` global y eliminación de archivos de texto con credenciales (`prod_credentials.txt`).
 
 
@@ -143,6 +144,7 @@ Artefactos del Compound step:
 7. **Sincronización SKU-Aware**: Los scripts de sincronización con CardKingdom deben priorizar el SKU (`[F]SET-NNNN`) sobre el campo `variation` para sets modernos y tokens para garantizar un mapeo 100% exacto de acabados y coleccionistas.
 8. **RLS de Rastreo**: El acceso de lectura a `orders` y `order_items` debe permitirse para el rol `anon` basado en el conocimiento del UUID de la orden para habilitar el rastreo de invitados.
 9. **Prohibición de Hardcoding de Conexiones**: Nunca escribir URLs `postgresql://` o contraseñas directamente en el código. Toda conexión debe pasar por `os.getenv`. (Ley 21).
+10. **Null-Safe Price Rendering**: Todo renderizado de precios y descuentos en interfaces administrativas DEBE usar fallbacks `(val || 0)` antes de formatear para prevenir fallos fatales por datos incompletos. (Lección #151)
 
 ---
 

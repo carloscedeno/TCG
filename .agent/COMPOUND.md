@@ -806,3 +806,4 @@ $content
 - rontend/src/utils/api.ts -> Soporte de descuentos en etchAccessories y CardDetails.
 - rontend/src/components/Card/CardModal.tsx -> ActualizaciA3n de interfaces locales y layout de precio.
 **Regla derivada:** Las interfaces de datos deben ser centralizadas; la redefiniciA3n local es un anti-patrA3n que genera deuda tAcniva.
+$newEntry

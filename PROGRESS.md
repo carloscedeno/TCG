@@ -96,3 +96,4 @@ This session focused on reactivating the "Fast Add to Cart" feature with a premi
 - **ParametrizaciÃ³n de Entorno**: TransiciÃ³n de URLs estÃ¡ticas a variables de entorno (`DATABASE_URL_PROD`, `DATABASE_URL_DEV`) siguiendo la nueva Ley de Seguridad 21.
 - **ProtecciÃ³n de Ramas**: Saneamiento de las ramas `dev` y `main`, eliminando secretos del cÃ³digo fuente y asegurando `.gitignore` contra futuras fugas.
 - **AuditorÃ­a de Artefactos**: EliminaciÃ³n de archivos de credenciales huÃ©rfanos (`prod_credentials.txt`) y desactivaciÃ³n de archivos de entorno rastreados.
+$newProgress
