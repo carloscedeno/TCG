@@ -498,10 +498,24 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                         <div className="p-5 rounded-2xl bg-gradient-to-br from-geeko-cyan/10 via-transparent to-transparent border border-white/10 flex items-center justify-between">
                                             <div>
                                                 <div className="text-[10px] font-semibold uppercase text-geeko-cyan tracking-widest mb-1">Precio</div>
-                                                <div className="text-4xl font-titles font-medium text-white tracking-tighter">
-                                                    ${(activeVersion?.price || details.price || 0) > 0
-                                                        ? (activeVersion?.price || details.price).toFixed(2)
-                                                        : '---'}
+                                                <div className="flex flex-col gap-1">
+                                                    {(activeVersion?.discount_percentage || details.discount_percentage) > 0 && (
+                                                        <span className="text-sm font-bold text-neutral-500 line-through">
+                                                            ${Number(activeVersion?.original_price || details.original_price).toFixed(2)}
+                                                        </span>
+                                                    )}
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="text-4xl font-titles font-medium text-white tracking-tighter">
+                                                            ${(activeVersion?.price || details.price || 0) > 0
+                                                                ? (activeVersion?.price || details.price).toFixed(2)
+                                                                : '---'}
+                                                        </div>
+                                                        {(activeVersion?.discount_percentage || details.discount_percentage) > 0 && (
+                                                            <div className="px-2 py-1 bg-purple-500/20 text-purple-400 text-xs font-black rounded-lg border border-purple-500/30 shadow-[0_0_15px_rgba(168,85,247,0.4)] animate-pulse">
+                                                                -{(activeVersion?.discount_percentage || details.discount_percentage)}%
+                                                            </div>
+                                                        )}
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div className="text-right">

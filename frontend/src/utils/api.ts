@@ -322,6 +322,19 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
           .maybeSingle();
           
         if (accData) {
+            const originalPrice = Number(accData.price || 0);
+            let finalPrice = originalPrice;
+            let discountPct = Number(accData.discount_percentage || 0);
+
+            if (discountPct > 0 && accData.discount_until) {
+                const endDate = new Date(accData.discount_until);
+                if (endDate > new Date()) {
+                    finalPrice = originalPrice * (1 - discountPct / 100);
+                } else {
+                    discountPct = 0;
+                }
+            }
+
             return {
                 id: accData.id,
                 card_id: accData.id,
@@ -330,7 +343,9 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                 set: accData.category,
                 set_code: accData.category,
                 image_url: accData.image_url,
-                price: Number(accData.price),
+                price: finalPrice,
+                original_price: originalPrice,
+                discount_percentage: discountPct,
                 total_stock: accData.stock,
                 is_accessory: true,
                 description: accData.description,
@@ -341,7 +356,9 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                     collector_number: 'ACC',
                     rarity: 'Common',
                     image_url: accData.image_url,
-                    price: accData.price,
+                    price: finalPrice,
+                    original_price: originalPrice,
+                    discount_percentage: discountPct,
                     stock: accData.stock,
                     finish: 'standard'
                 }]
@@ -1331,11 +1348,27 @@ export const fetchAccessories = async (params: {
 
   if (error) throw error;
   
-  const accessories = (data || []).map((item: any) => ({
-    ...item,
-    original_price: item.original_price || item.price,
-    discount_percentage: item.discount_percentage || 0
-  }));
+  const accessories = (data || []).map((item: any) => {
+    const originalPrice = Number(item.price || 0);
+    let finalPrice = originalPrice;
+    let discountPct = Number(item.discount_percentage || 0);
+
+    if (discountPct > 0 && item.discount_until) {
+      const endDate = new Date(item.discount_until);
+      if (endDate > new Date()) {
+        finalPrice = originalPrice * (1 - discountPct / 100);
+      } else {
+        discountPct = 0;
+      }
+    }
+
+    return {
+      ...item,
+      price: finalPrice,
+      original_price: originalPrice,
+      discount_percentage: discountPct
+    };
+  });
   const total_count = accessories.length > 0 ? accessories[0].total_count : 0;
 
   return { 

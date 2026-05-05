@@ -250,6 +250,8 @@ const Home: React.FC = () => {
               name: a.name,
               set: a.category, 
               price: Number(a.price) || 0,
+              original_price: Number(a.original_price) || Number(a.price) || 0,
+              discount_percentage: Number(a.discount_percentage) || 0,
               image_url: a.image_url,
               rarity: 'Common',
               total_stock: Number(a.stock) || 0,
