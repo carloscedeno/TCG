@@ -3,6 +3,7 @@ export const rarityMap: Record<string, string> = {
     'Uncommon': 'Infrecuente',
     'Rare': 'Rara',
     'Mythic': 'Mítica',
+    'New': 'Nuevo',
     'All': 'Todas'
 };
 

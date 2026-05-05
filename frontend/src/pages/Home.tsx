@@ -263,13 +263,14 @@ const Home: React.FC = () => {
             q: debouncedQuery || undefined,
             game: mappedGame,
             set: debouncedFilters.sets && debouncedFilters.sets.length > 0 ? debouncedFilters.sets.join(',') : undefined,
-            rarity: activeRarity !== 'All' ? activeRarity : (debouncedFilters.rarities && debouncedFilters.rarities.length > 0 ? debouncedFilters.rarities.join(',') : undefined),
+            rarity: (activeRarity !== 'All' && activeRarity !== 'New') ? activeRarity : (debouncedFilters.rarities && debouncedFilters.rarities.length > 0 ? debouncedFilters.rarities.join(',') : undefined),
             color: debouncedFilters.colors && debouncedFilters.colors.length > 0 ? debouncedFilters.colors.map(c => colorCodeMap[c] || c) : undefined,
             type: debouncedFilters.types && debouncedFilters.types.length > 0 ? debouncedFilters.types : undefined,
             year_from: debouncedFilters.yearRange ? debouncedFilters.yearRange[0] : undefined,
             year_to: debouncedFilters.yearRange ? debouncedFilters.yearRange[1] : undefined,
             price_min: debouncedFilters.priceRange ? debouncedFilters.priceRange[0] : undefined,
             price_max: debouncedFilters.priceRange ? debouncedFilters.priceRange[1] : undefined,
+            only_new: activeRarity === 'New',
             limit: LIMIT,
             offset,
             sort: sortBy
@@ -385,7 +386,7 @@ const Home: React.FC = () => {
       .catch(() => setSets([]));
   }, [filters.games]);
 
-  const rarities = ['All', 'Mythic', 'Rare', 'Uncommon', 'Common'];
+  const rarities = ['All', 'New', 'Mythic', 'Rare', 'Uncommon', 'Common'];
 
   const updateURL = (params: Record<string, string | string[] | undefined>) => {
     const newParams = new URLSearchParams(searchParams);
