@@ -124,19 +124,20 @@ const Home: React.FC = () => {
     loadEvents();
   }, [filters.games]);
 
+  const isDefaultFilter = (key: string, val: any) => {
+    if (key === 'games') return true;
+    if (key === 'yearRange') return (val as any)[0] <= 1993 && (val as any)[1] >= 2026;
+    if (key === 'priceRange') return (val as any)[0] <= 0 && (val as any)[1] >= 1000000;
+    if (Array.isArray(val)) return val.length === 0;
+    return !val;
+  };
+
+  const hasOnlyGameFilter = Object.entries(filters).every(([key, val]) => isDefaultFilter(key, val)) && activeRarity === 'All';
+  const isDashboardView = !query && hasOnlyGameFilter;
+
   useEffect(() => {
     const gameCode = filters.games && filters.games.length > 0 ? filters.games[0] : undefined;
-    const isDefaultFilter = (key: string, val: any) => {
-      if (key === 'games') return true;
-      if (key === 'yearRange') return (val as any)[0] <= 1993 && (val as any)[1] >= 2026;
-      if (key === 'priceRange') return (val as any)[0] <= 0 && (val as any)[1] >= 1000000;
-      if (Array.isArray(val)) return val.length === 0;
-      return !val;
-    };
-
-    const hasOnlyGameFilter = Object.entries(filters).every(([key, val]) => isDefaultFilter(key, val)) && activeRarity === 'All';
     
-    const isDashboardView = !query && hasOnlyGameFilter;
     if (isDashboardView) {
       const loadDeals = async () => {
         setLoadingDeals(true);
@@ -150,7 +151,7 @@ const Home: React.FC = () => {
       };
       loadDeals();
     }
-  }, [filters.games, query, filters]);
+  }, [filters.games, query, filters, isDashboardView]);
 
   // Cart Count Logic
   useEffect(() => {
@@ -457,13 +458,7 @@ const Home: React.FC = () => {
         )}
 
         {/* Rarity Filter Tabs & Sort */}
-        {!(!query && Object.entries(filters).every(([key, val]) => {
-          if (key === 'games') return true;
-          if (key === 'yearRange') return (val as any)[0] <= 1993 && (val as any)[1] >= 2026;
-          if (key === 'priceRange') return (val as any)[0] <= 0 && (val as any)[1] >= 1000000;
-          if (Array.isArray(val)) return val.length === 0;
-          return !val;
-        }) && activeRarity === 'All') && (
+        {(!isDashboardView || (filters.games && filters.games.length > 0)) && (
           <div className="bg-[#0a0a0a]/95 border-b border-neutral-800 sticky top-[60px] z-40 backdrop-blur-md">
             <div className="max-w-[1600px] mx-auto px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex bg-neutral-900/50 p-1 rounded-full border border-neutral-800">
@@ -571,13 +566,7 @@ const Home: React.FC = () => {
         <main className="max-w-[1600px] w-full mx-auto px-6 py-8 flex-1">
           <div className="flex flex-col lg:flex-row gap-10">
             {/* Sidebar Filters */}
-            {!(!query && Object.entries(filters).every(([key, val]) => {
-              if (key === 'games') return true;
-              if (key === 'yearRange') return (val as any)[0] <= 1993 && (val as any)[1] >= 2026;
-              if (key === 'priceRange') return (val as any)[0] <= 0 && (val as any)[1] >= 1000000;
-              if (Array.isArray(val)) return val.length === 0;
-              return !val;
-            }) && activeRarity === 'All') && (
+            {(!isDashboardView || (filters.games && filters.games.length > 0)) && (
               <aside className="hidden lg:block w-72 flex-shrink-0">
                 <div className="sticky top-[130px] max-h-[calc(100vh-150px)] overflow-y-auto pr-2 custom-scrollbar">
                   <FiltersPanel
@@ -593,13 +582,7 @@ const Home: React.FC = () => {
 
             {/* Cards Grid / Deals Dashboard */}
             <div className="flex-1">
-              {!query && Object.entries(filters).every(([key, val]) => {
-                if (key === 'games') return true;
-                if (key === 'yearRange') return (val as any)[0] <= 1993 && (val as any)[1] >= 2026;
-                if (key === 'priceRange') return (val as any)[0] <= 0 && (val as any)[1] >= 1000000;
-                if (Array.isArray(val)) return val.length === 0;
-                return !val;
-              }) && activeRarity === 'All' ? (
+              {isDashboardView ? (
                 // DEALS DASHBOARD
                 <div className="flex flex-col gap-6 w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
                   {loadingDeals ? (
