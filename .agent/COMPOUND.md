@@ -796,3 +796,13 @@ $content
 - scripts/ & scratch/ → Más de 60 archivos modificados para usar os.getenv.
 **Artefacto creado:** Script de limpieza automática cleanup_secrets.py (ejecutado y eliminado).
 **Regla derivada:** Ley de Seguridad 21: Prohibición absoluta de URLs de conexión en código fuente.
+
+## 2026-05-05 - Dynamic Discounts & Type Integrity
+
+**QuAc pasA3:** Se corrigiA3 la visibilidad de descuentos en accesorios y se resolviA3 una inconsistencia crA-tica de tipos en el frontend que bloqueaba el build.
+**Lo que cambiA3:**
+- lessons_learned.md -> LecciA3n #150 (Unicidad de Tipos).
+- LEYES_DEL_SISTEMA.md -> Ley 21 (Unicidad de Tipos) y Ley 22 (Hardcoding).
+- rontend/src/utils/api.ts -> Soporte de descuentos en etchAccessories y CardDetails.
+- rontend/src/components/Card/CardModal.tsx -> ActualizaciA3n de interfaces locales y layout de precio.
+**Regla derivada:** Las interfaces de datos deben ser centralizadas; la redefiniciA3n local es un anti-patrA3n que genera deuda tAcniva.

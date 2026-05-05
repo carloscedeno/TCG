@@ -964,4 +964,9 @@ useEffect(() => {
   - **Limpieza Automatizada**: Creación de un script de remediación masiva (`cleanup_secrets.py`) que utiliza regex para reemplazar URLs y contraseñas por llamadas a `os.getenv()`.
   - **Ignorado Estricto**: Actualización de `.gitignore` en todas las ramas (`dev`, `main`) para incluir `.env.dev` y otros archivos de entorno.
   - **Rotación de Credenciales**: Parametrización de los scripts para que dependan de `DATABASE_URL_PROD` y `DATABASE_URL_DEV`, permitiendo rotar las claves en Supabase sin romper el flujo de trabajo.
-- **Regla Derivada**: **PROHIBIDO** hardcodear cualquier URL de conexión que incluya el esquema `postgresql://`. Toda conexión debe pasar por `os.getenv` o un gestor de secretos. Ver `LEYES_DEL_SISTEMA.md` > Ley de Seguridad 21.
+- **Regla Derivada**: **PROHIBIDO** hardcodear cualquier URL de conexión que incluya el esquema `postgresql://`. Toda conexión debe pasar por `os.getenv` o un gestor de secretos. Ver `LEYES_DEL_SISTEMA.md` > Ley de Seguridad 22.
+
+### 150. Redefinición Local de Interfaces en Componentes Grandes (Mayo 2026)
+- **Problema**: Errores de build `TS2339` persistentes tras actualizar interfaces globales en `api.ts`.
+- **Causa Raíz**: Componentes grandes como `CardModal.tsx` redefinen interfaces críticas (`CardDetails`, `Version`) localmente en lugar de importarlas desde la fuente de verdad. Esto genera inconsistencias cuando se añaden campos al modelo de datos.
+- **Lección**: **Unicidad de Tipos**. Evitar redefinir interfaces de datos del dominio dentro de los componentes. Si un componente necesita una interfaz, debe importarla desde `api.ts`. Si se añade un campo a la API, se debe buscar todas las redefiniciones locales (Grep) para asegurar la paridad. Ver `LEYES_DEL_SISTEMA.md` > Ley 21.
