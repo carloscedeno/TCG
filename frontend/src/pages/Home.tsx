@@ -3,7 +3,7 @@ import { rarityMap } from '../utils/translations';
 import { CardGrid } from '../components/Card/CardGrid';
 import { CardModal } from '../components/Card/CardModal';
 import type { CardProps } from '../components/Card/Card';
-import { fetchCards, fetchSets, fetchProducts, fetchCart, fetchAccessories } from '../utils/api';
+import { fetchCards, fetchSets, fetchProducts, fetchCart, fetchAccessories, fetchDiscountedSingles, fetchDiscountedAccessories, checkGameInventoryPresence } from '../utils/api';
 import { FiltersPanel } from '../components/Filters/FiltersPanel';
 import type { Filters } from '../components/Filters/FiltersPanel';
 import { useAuth } from '../context/AuthContext';
@@ -15,7 +15,7 @@ import { CartDrawer } from '../components/Navigation/CartDrawer';
 import { Footer } from '../components/Navigation/Footer';
 import { Header } from '../components/Navigation/Header';
 import { HeroSection } from '../components/Home/HeroSection';
-
+import { DealsCarousel } from '../components/Home/DealsCarousel';
 
 
 const mockFilters: Filters = {
@@ -85,20 +85,32 @@ const Home: React.FC = () => {
   const LIMIT = 50;
 
 
-
-  const [hasAccessoriesExistInDb, setHasAccessoriesExistInDb] = useState<boolean | null>(null);
+  const [inventoryPresence, setInventoryPresence] = useState({ hasSingles: true, hasCatalog: true });
+  const [discountedSingles, setDiscountedSingles] = useState<(CardProps & { card_id: string })[]>([]);
+  const [discountedAccessories, setDiscountedAccessories] = useState<(CardProps & { card_id: string })[]>([]);
+  const [loadingDeals, setLoadingDeals] = useState(false);
 
   useEffect(() => {
-    const checkAccessories = async () => {
-      try {
-        const res = await fetchAccessories({ limit: 1 });
-        setHasAccessoriesExistInDb(res.total_count > 0);
-      } catch (err) {
-        console.error("Failed to check if accessories exist", err);
-        setHasAccessoriesExistInDb(false);
+    const gameCode = filters.games && filters.games.length > 0 ? filters.games[0] : undefined;
+
+    const checkInventory = async () => {
+      const presence = await checkGameInventoryPresence(gameCode);
+      setInventoryPresence(presence);
+      
+      if (!presence.hasSingles && presence.hasCatalog && activeTab === 'marketplace') {
+         setActiveTab('catalog');
+         const params = new URLSearchParams(searchParams);
+         params.set('tab', 'catalog');
+         setSearchParams(params);
+      } else if (presence.hasSingles && !presence.hasCatalog && activeTab === 'catalog') {
+         setActiveTab('marketplace');
+         const params = new URLSearchParams(searchParams);
+         params.set('tab', 'marketplace');
+         setSearchParams(params);
       }
     };
-    
+    checkInventory();
+
     const loadEvents = async () => {
       try {
         const { fetchEvents } = await import('../utils/api');
@@ -109,9 +121,29 @@ const Home: React.FC = () => {
       }
     };
 
-    checkAccessories();
     loadEvents();
-  }, []);
+  }, [filters.games]);
+
+  useEffect(() => {
+    const gameCode = filters.games && filters.games.length > 0 ? filters.games[0] : undefined;
+    const hasOnlyGameFilter = Object.values(filters).every((val, key) => 
+      key === 'games' ? true : (Array.isArray(val) ? val.length === 0 : !val)
+    );
+    
+    if (!query && hasOnlyGameFilter) {
+      const loadDeals = async () => {
+        setLoadingDeals(true);
+        const [singles, accessories] = await Promise.all([
+          fetchDiscountedSingles(gameCode),
+          fetchDiscountedAccessories(gameCode)
+        ]);
+        setDiscountedSingles(singles);
+        setDiscountedAccessories(accessories);
+        setLoadingDeals(false);
+      };
+      loadDeals();
+    }
+  }, [filters.games, query, filters]);
 
   // Cart Count Logic
   useEffect(() => {
@@ -421,7 +453,7 @@ const Home: React.FC = () => {
         <div className="bg-[#0a0a0a]/95 border-b border-neutral-800 sticky top-[60px] z-40 backdrop-blur-md">
           <div className="max-w-[1600px] mx-auto px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="flex bg-neutral-900/50 p-1 rounded-full border border-neutral-800">
-                {(filters.games?.includes('MTG') || (filters.games?.length === 0)) && (
+                {inventoryPresence.hasSingles && (
                   <button
                     onClick={() => handleTabChange('marketplace')}
                     data-testid="inventory-tab"
@@ -435,6 +467,7 @@ const Home: React.FC = () => {
                   </button>
                 )}
                 
+                {inventoryPresence.hasCatalog && (
                 <button
                   onClick={() => handleTabChange('catalog')}
                   data-testid="catalog-tab"
@@ -448,22 +481,24 @@ const Home: React.FC = () => {
                 </button>
               </div>
 
-              <div className="flex flex-col sm:flex-row items-center gap-4">
-                <div className="flex bg-neutral-900/50 p-1 rounded-full border border-neutral-800">
-                    {rarities.map(r => (
-                      <button
-                        key={r}
-                        onClick={() => handleRarityChange(r)}
-                        className={`px-3 md:px-6 py-2 rounded-full text-[9px] md:text-[11px] font-black tracking-widest uppercase transition-all ${activeRarity === r
-                          ? 'bg-neutral-700 text-white shadow-lg'
-                          : 'text-neutral-500 hover:text-neutral-300'
-                          }`}
-                      >
-                        {rarityMap[r] || r}
-                      </button>
-                    ))}
-                  </div>
-              </div>
+              {activeTab === 'marketplace' && inventoryPresence.hasSingles && (
+                <div className="flex flex-col sm:flex-row items-center gap-4">
+                  <div className="flex bg-neutral-900/50 p-1 rounded-full border border-neutral-800">
+                      {rarities.map(r => (
+                        <button
+                          key={r}
+                          onClick={() => handleRarityChange(r)}
+                          className={`px-3 md:px-6 py-2 rounded-full text-[9px] md:text-[11px] font-black tracking-widest uppercase transition-all ${activeRarity === r
+                            ? 'bg-neutral-700 text-white shadow-lg'
+                            : 'text-neutral-500 hover:text-neutral-300'
+                            }`}
+                        >
+                          {rarityMap[r] || r}
+                        </button>
+                      ))}
+                    </div>
+                </div>
+              )}
             <div className="flex items-center gap-2 md:gap-4">
               <button
                 onClick={() => setIsMobileFiltersOpen(true)}
@@ -532,9 +567,41 @@ const Home: React.FC = () => {
                 </div>
               </aside>
 
-            {/* Cards Grid */}
+            {/* Cards Grid / Deals Dashboard */}
             <div className="flex-1">
-              {loading && page === 0 ? (
+              {!query && Object.values(filters).every((val, key) => key === 'games' ? true : (Array.isArray(val) ? val.length === 0 : !val)) ? (
+                // DEALS DASHBOARD
+                <div className="flex flex-col gap-6 w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
+                  {loadingDeals ? (
+                    <div className="flex flex-col items-center justify-center py-32 gap-6">
+                      <div className="w-16 h-16 border-4 border-geeko-cyan-neon/20 border-t-geeko-cyan-neon rounded-full animate-spin"></div>
+                      <p className="text-neutral-500 font-black text-xs tracking-widest uppercase animate-pulse">Buscando Ofertas...</p>
+                    </div>
+                  ) : discountedSingles.length === 0 && discountedAccessories.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-32 text-center">
+                      <div className="w-24 h-24 bg-neutral-900/50 rounded-3xl flex items-center justify-center mb-8 border border-white/5 relative group">
+                        <div className="absolute inset-0 bg-geeko-cyan-neon/20 blur-2xl rounded-full group-hover:bg-geeko-cyan-neon/30 transition-all" />
+                        <Sparkles size={40} className="text-geeko-cyan-neon relative z-10" />
+                      </div>
+                      <h3 className="text-3xl font-black italic uppercase tracking-tighter mb-4 neon-text-cyan">
+                        Pronto Nuevas Ofertas
+                      </h3>
+                      <p className="text-neutral-500 font-medium max-w-sm">
+                        Estamos preparando los mejores descuentos para tu colección. ¡Vuelve pronto!
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      {inventoryPresence.hasSingles && discountedSingles.length > 0 && (
+                        <DealsCarousel title="Hechizos en Descuento" cards={discountedSingles} onCardClick={setSelectedCardId} />
+                      )}
+                      {inventoryPresence.hasCatalog && discountedAccessories.length > 0 && (
+                        <DealsCarousel title="Artilugios en Descuento" cards={discountedAccessories} onCardClick={setSelectedCardId} isArchive={true} />
+                      )}
+                    </>
+                  )}
+                </div>
+              ) : loading && page === 0 ? (
                 <div className="flex flex-col items-center justify-center py-32 gap-6">
                   <div className="w-16 h-16 border-4 border-blue-600/20 border-t-blue-600 rounded-full animate-spin"></div>
                   <p className="text-neutral-500 font-black text-xs tracking-widest uppercase animate-pulse">Invocando Cartas...</p>
@@ -559,17 +626,17 @@ const Home: React.FC = () => {
                     <div className="flex flex-col items-center justify-center py-32 text-center">
                       <div className="w-24 h-24 bg-neutral-900/50 rounded-3xl flex items-center justify-center mb-8 border border-white/5 relative group">
                         <div className="absolute inset-0 bg-geeko-cyan-neon/20 blur-2xl rounded-full group-hover:bg-geeko-cyan-neon/30 transition-all" />
-                        {hasAccessoriesExistInDb ? (
+                        {inventoryPresence.hasCatalog ? (
                           <Search size={40} className="text-geeko-cyan-neon relative z-10" />
                         ) : (
                           <Sparkles size={40} className="text-geeko-cyan-neon relative z-10" />
                         )}
                       </div>
                       <h3 className="text-3xl font-black italic uppercase tracking-tighter mb-4 neon-text-cyan">
-                        {hasAccessoriesExistInDb ? 'Sin Resultados' : 'Próximamente'}
+                        {inventoryPresence.hasCatalog ? 'Sin Resultados' : 'Próximamente'}
                       </h3>
                       <p className="text-neutral-500 font-medium max-w-sm">
-                        {hasAccessoriesExistInDb 
+                        {inventoryPresence.hasCatalog 
                           ? 'No encontramos accesorios que coincidan con tus filtros. ¡Intenta con otros!' 
                           : 'Estamos preparando la mejor selección de accesorios para tu colección. ¡Vuelve pronto!'}
                       </p>

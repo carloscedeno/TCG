@@ -1649,4 +1649,121 @@ export const manageProductOffer = async (productId: string, discountPercentage: 
   }
 };
 
+export const fetchDiscountedSingles = async (gameCode?: string, limit = 10): Promise<any[]> => {
+  try {
+    let query = supabase
+      .from('products')
+      .select('*, discount_percentage, discount_end_date')
+      .gt('stock', 0)
+      .gt('discount_percentage', 0)
+      .order('discount_percentage', { ascending: false })
+      .limit(limit);
+      
+    if (gameCode) {
+      const code = gameCode.startsWith('Poke') || gameCode === 'POKEMON' ? 'PKM' : 
+                   gameCode.startsWith('Magic') ? 'MTG' : 
+                   gameCode.startsWith('One') ? 'OPC' : 
+                   gameCode.startsWith('Digi') ? 'DGM' : gameCode;
+      query = query.eq('game', code);
+    }
+    
+    const { data, error } = await query;
+    if (error) throw error;
+    
+    return (data || []).map((row: any) => {
+      const finalPrice = Number(row.price || 0);
+      const discountPct = Number(row.discount_percentage || 0);
+      
+      return {
+        ...row,
+        card_id: row.printing_id || row.id,
+        finish: row.finish || (row.is_foil ? 'foil' : 'nonfoil'),
+        is_foil: !!row.is_foil || (row.finish === 'foil'),
+        original_price: finalPrice,
+        price: discountPct > 0 ? finalPrice * (1 - discountPct / 100) : finalPrice,
+        discount_percentage: discountPct,
+        total_stock: row.stock || 0
+      };
+    });
+  } catch (error) {
+    console.error('Fetch Discounted Singles Failed:', error);
+    return [];
+  }
+};
+
+export const fetchDiscountedAccessories = async (gameCode?: string, limit = 10): Promise<any[]> => {
+  try {
+    let query = supabase
+      .from('accessories')
+      .select('*')
+      .gt('stock', 0)
+      .gt('discount_percentage', 0)
+      .order('discount_percentage', { ascending: false })
+      .limit(limit);
+
+    if (gameCode) {
+      const code = gameCode === 'POKEMON' ? 'PKM' : gameCode;
+      const { data: gameData } = await supabase.from('games').select('game_id').eq('game_code', code).maybeSingle();
+      if (gameData) {
+        query = query.eq('game_id', gameData.game_id);
+      }
+    }
+    
+    const { data, error } = await query;
+    if (error) throw error;
+    
+    return (data || []).map((row: any) => {
+      const originalPrice = Number(row.price || 0);
+      const discountPct = Number(row.discount_percentage || 0);
+      return {
+        card_id: row.id,
+        name: row.name,
+        set: row.category,
+        price: discountPct > 0 ? originalPrice * (1 - discountPct / 100) : originalPrice,
+        original_price: originalPrice,
+        discount_percentage: discountPct,
+        image_url: row.image_url,
+        rarity: 'Common',
+        total_stock: row.stock || 0,
+        is_accessory: true,
+        updated_at: row.updated_at
+      };
+    });
+  } catch (error) {
+    console.error('Fetch Discounted Accessories Failed:', error);
+    return [];
+  }
+};
+
+export const checkGameInventoryPresence = async (gameCode?: string): Promise<{ hasSingles: boolean, hasCatalog: boolean }> => {
+  try {
+    if (!gameCode) return { hasSingles: true, hasCatalog: true };
+    
+    const code = gameCode.startsWith('Poke') || gameCode === 'POKEMON' ? 'PKM' : 
+                   gameCode.startsWith('Magic') ? 'MTG' : 
+                   gameCode.startsWith('One') ? 'OPC' : 
+                   gameCode.startsWith('Digi') ? 'DGM' : gameCode;
+                   
+    const [{ data: singles }, { data: gameData }] = await Promise.all([
+      supabase.from('products').select('id').eq('game', code).gt('stock', 0).limit(1),
+      supabase.from('games').select('game_id').eq('game_code', code).maybeSingle()
+    ]);
+    
+    let hasCatalog = false;
+    if (gameData) {
+      const { data: catalog } = await supabase.from('accessories').select('id').eq('game_id', gameData.game_id).gt('stock', 0).limit(1);
+      hasCatalog = (catalog && catalog.length > 0) || false;
+    }
+    
+    return {
+      hasSingles: (singles && singles.length > 0) || false,
+      hasCatalog
+    };
+  } catch (error) {
+    console.error('Check Inventory Presence Failed:', error);
+    return { hasSingles: true, hasCatalog: true };
+  }
+};
+
+
 
