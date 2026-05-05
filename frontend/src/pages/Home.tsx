@@ -57,7 +57,8 @@ const Home: React.FC = () => {
     priceRange: [
       parseFloat(searchParams.get('price_min') || '0'),
       parseFloat(searchParams.get('price_max') || '1000000')
-    ]
+    ],
+    only_new: searchParams.get('only_new') === 'true'
   });
   const [sets, setSets] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState(searchParams.get('sort') || 'price_desc');
@@ -145,7 +146,8 @@ const Home: React.FC = () => {
       rarities: rarity,
       categories: category,
       yearRange: [year_from, year_to],
-      priceRange: [price_min, price_max]
+      priceRange: [price_min, price_max],
+      only_new: searchParams.get('only_new') === 'true'
     });
   }, [searchParams]);
 
@@ -263,14 +265,14 @@ const Home: React.FC = () => {
             q: debouncedQuery || undefined,
             game: mappedGame,
             set: debouncedFilters.sets && debouncedFilters.sets.length > 0 ? debouncedFilters.sets.join(',') : undefined,
-            rarity: (activeRarity !== 'All' && activeRarity !== 'New') ? activeRarity : (debouncedFilters.rarities && debouncedFilters.rarities.length > 0 ? debouncedFilters.rarities.join(',') : undefined),
+            rarity: activeRarity !== 'All' ? activeRarity : (debouncedFilters.rarities && debouncedFilters.rarities.length > 0 ? debouncedFilters.rarities.join(',') : undefined),
             color: debouncedFilters.colors && debouncedFilters.colors.length > 0 ? debouncedFilters.colors.map(c => colorCodeMap[c] || c) : undefined,
             type: debouncedFilters.types && debouncedFilters.types.length > 0 ? debouncedFilters.types : undefined,
             year_from: debouncedFilters.yearRange ? debouncedFilters.yearRange[0] : undefined,
             year_to: debouncedFilters.yearRange ? debouncedFilters.yearRange[1] : undefined,
             price_min: debouncedFilters.priceRange ? debouncedFilters.priceRange[0] : undefined,
             price_max: debouncedFilters.priceRange ? debouncedFilters.priceRange[1] : undefined,
-            only_new: activeRarity === 'New',
+            only_new: debouncedFilters.only_new,
             limit: LIMIT,
             offset,
             sort: sortBy
@@ -386,7 +388,7 @@ const Home: React.FC = () => {
       .catch(() => setSets([]));
   }, [filters.games]);
 
-  const rarities = ['All', 'New', 'Mythic', 'Rare', 'Uncommon', 'Common'];
+  const rarities = ['All', 'Mythic', 'Rare', 'Uncommon', 'Common'];
 
   const updateURL = (params: Record<string, string | string[] | undefined>) => {
     const newParams = new URLSearchParams(searchParams);
@@ -563,6 +565,18 @@ const Home: React.FC = () => {
                     Precio {sortBy === 'price_asc' ? '↑' : (sortBy === 'price_desc' ? '↓' : '⇅')}
                   </button>
                 </div>
+                
+                <button
+                  onClick={() => updateURL({ only_new: filters.only_new ? undefined : 'true' })}
+                  className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase transition-all flex items-center gap-2 ${
+                    filters.only_new
+                      ? 'bg-geeko-purple-vibrant text-white shadow-[0_0_15px_rgba(168,85,247,0.4)] ring-2 ring-purple-500/50'
+                      : 'bg-neutral-900/50 text-neutral-500 hover:text-neutral-300 border border-neutral-800'
+                  }`}
+                >
+                  <Sparkles size={12} className={filters.only_new ? 'text-white' : 'text-geeko-purple-vibrant'} />
+                  Nuevo
+                </button>
               </div>
 
               <div className="flex bg-neutral-900/50 p-1 rounded-lg border border-neutral-800">
