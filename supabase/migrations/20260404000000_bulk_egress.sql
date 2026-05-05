@@ -1,6 +1,8 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 -- Create inventory_logs table for auditing stock movements
 CREATE TABLE IF NOT EXISTS public.inventory_logs (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     action_type TEXT NOT NULL CHECK (action_type IN ('IMPORT', 'EGRESS', 'MANUAL_ADJUSTMENT')),
     reason TEXT,
     printing_id UUID REFERENCES public.card_printings(printing_id),

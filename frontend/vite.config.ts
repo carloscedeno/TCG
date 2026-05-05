@@ -12,4 +12,15 @@ export default defineConfig({
   ],
   // Use the root .env file
   envDir: '../',
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-supabase': ['@supabase/supabase-js'],
+          'vendor-ui': ['lucide-react', 'framer-motion'],
+        }
+      }
+    }
+  }
 })

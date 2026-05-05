@@ -298,7 +298,7 @@ BEGIN
     INTO v_cart_id, v_cart_name, v_is_pos
     FROM public.carts
     WHERE user_id = p_user_id AND is_active = true
-    ORDER BY last_accessed_at DESC
+    ORDER BY updated_at DESC
     LIMIT 1;
 
     IF v_cart_id IS NULL THEN
