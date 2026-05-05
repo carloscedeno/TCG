@@ -4,7 +4,7 @@ import psycopg2
 from datetime import datetime, timezone
 
 # PROD DB URL
-PROD_DB = "postgresql://postgres.sxuotvogwvmxuvwbsscv:jLta9LqEmpMzCI5r@aws-0-us-west-2.pooler.supabase.com:6543/postgres"
+PROD_DB = "os.getenv("DATABASE_URL_PROD")"
 
 def emergency_fix():
     print("Connecting to PRODUCTION database...")

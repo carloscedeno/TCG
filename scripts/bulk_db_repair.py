@@ -8,7 +8,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 load_dotenv()
 
-DATABASE_URL = "postgresql://postgres:jLta9LqEmpMzCI5r@db.bqfkqnnostzaqueujdms.supabase.co:5432/postgres?sslmode=require"
+DATABASE_URL = "os.getenv("DATABASE_URL_PROD")"
 
 def apply_sql_file(conn, filepath):
     print(f"Applying {filepath}...")

@@ -6,8 +6,8 @@ load_dotenv()
 try:
     # Try NEW project ref with port 6543
     conn = psycopg2.connect(
-        user="postgres.bqfkqnnostzaqueujdms",
-        password="jLta9LqEmpMzCI5r",
+        user=os.getenv("DB_USER_DEV"),
+        password=os.getenv("DB_PASSWORD"),
         host="aws-0-us-west-2.pooler.supabase.com",
         port="6543",
         dbname="postgres"

@@ -6,7 +6,7 @@ load_dotenv()
 try:
     conn = psycopg2.connect(
         user="postgres",
-        password="jLta9LqEmpMzCI5r",
+        password=os.getenv("DB_PASSWORD"),
         host="db.bqfkqnnostzaqueujdms.supabase.co",
         port="5432",
         dbname="postgres",

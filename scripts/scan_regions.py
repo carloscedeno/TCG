@@ -1,3 +1,4 @@
+import os
 import psycopg2
 import concurrent.futures
 
@@ -9,7 +10,7 @@ regions = [
 ]
 
 project_ref = "bqfkqnnostzaqueujdms"
-password = "jLta9LqEmpMzCI5r"
+password=os.getenv("DB_PASSWORD")
 
 def try_connect(region):
     host = f"aws-0-{region}.pooler.supabase.com"

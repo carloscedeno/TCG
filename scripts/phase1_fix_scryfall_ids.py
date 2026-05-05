@@ -1,3 +1,4 @@
+import os
 """
 FASE 1 — Corrección de Scryfall IDs para Strixhaven (SOA, SOS, SOC, TSOS)
 
@@ -20,8 +21,8 @@ if sys.platform == "win32":
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 DB_PARAMS = dict(
-    user="postgres.sxuotvogwvmxuvwbsscv",
-    password="jLta9LqEmpMzCI5r",
+    user=os.getenv("DB_USER_PROD"),
+    password=os.getenv("DB_PASSWORD"),
     host="aws-0-us-west-2.pooler.supabase.com",
     port="6543",
     dbname="postgres"

@@ -7,7 +7,7 @@ import sys
 DB_HOST = "aws-0-us-west-2.pooler.supabase.com"
 DB_NAME = "postgres"
 # User format for pooler: user.project_ref
-DB_USER = "postgres.sxuotvogwvmxuvwbsscv"
+DB_USER=os.getenv("DB_USER_PROD")
 DB_PASS = "8F-r!6$Q!cQH?qu"
 DB_PORT = "5432"
 

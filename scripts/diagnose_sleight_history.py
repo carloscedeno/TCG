@@ -1,10 +1,11 @@
+import os
 import psycopg2
 
 def check_price_history_for_card(card_name, set_code, collector_number):
     try:
         conn = psycopg2.connect(
-            user="postgres.sxuotvogwvmxuvwbsscv",
-            password="jLta9LqEmpMzCI5r",
+            user=os.getenv("DB_USER_PROD"),
+            password=os.getenv("DB_PASSWORD"),
             host="aws-0-us-west-2.pooler.supabase.com",
             port="6543",
             dbname="postgres"

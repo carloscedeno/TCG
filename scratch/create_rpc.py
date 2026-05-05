@@ -2,7 +2,7 @@ import psycopg2
 import os
 
 # Using the pooler connection string with correct user format
-conn_str = "postgresql://postgres.bqfkqnnostzaqueujdms:jLta9LqEmpMzCI5r@aws-0-us-west-2.pooler.supabase.com:5432/postgres"
+conn_str = "os.getenv("DATABASE_URL_DEV")"
 
 sql = """
 CREATE OR REPLACE FUNCTION public.refresh_mv()

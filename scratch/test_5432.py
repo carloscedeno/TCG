@@ -5,8 +5,8 @@ from dotenv import load_dotenv
 load_dotenv()
 try:
     conn = psycopg2.connect(
-        user="postgres.bqfkqnnostzaqueujdms",
-        password="jLta9LqEmpMzCI5r",
+        user=os.getenv("DB_USER_DEV"),
+        password=os.getenv("DB_PASSWORD"),
         host="aws-0-us-west-2.pooler.supabase.com",
         port="5432",
         dbname="postgres",
