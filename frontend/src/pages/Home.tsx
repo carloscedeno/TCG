@@ -126,7 +126,7 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     const gameCode = filters.games && filters.games.length > 0 ? filters.games[0] : undefined;
-    const hasOnlyGameFilter = Object.values(filters).every((val, key) => 
+    const hasOnlyGameFilter = Object.entries(filters).every(([key, val]) => 
       key === 'games' ? true : (Array.isArray(val) ? val.length === 0 : !val)
     );
     
@@ -570,7 +570,7 @@ const Home: React.FC = () => {
 
             {/* Cards Grid / Deals Dashboard */}
             <div className="flex-1">
-              {!query && Object.values(filters).every((val, key) => key === 'games' ? true : (Array.isArray(val) ? val.length === 0 : !val)) ? (
+              {!query && Object.entries(filters).every(([key, val]) => key === 'games' ? true : (Array.isArray(val) ? val.length === 0 : !val)) ? (
                 // DEALS DASHBOARD
                 <div className="flex flex-col gap-6 w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
                   {loadingDeals ? (
