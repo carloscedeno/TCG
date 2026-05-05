@@ -39,6 +39,8 @@ interface Version {
     collector_number: string;
     rarity: string;
     price: number;
+    original_price?: number;
+    discount_percentage?: number;
     image_url: string;
     stock?: number;
     finish?: string;
@@ -60,6 +62,8 @@ interface CardDetails {
     collector_number: string;
     image_url: string;
     price: number;
+    original_price?: number;
+    discount_percentage?: number;
     finish?: string;
     is_foil?: boolean;
     valuation?: {
