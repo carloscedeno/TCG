@@ -1,3 +1,4 @@
+import os
 import psycopg2
 import sys
 import io
@@ -7,8 +8,8 @@ if sys.platform == "win32":
 
 def list_tables():
     try:
-        DB_USER = "postgres.sxuotvogwvmxuvwbsscv"
-        DB_PASS = "jLta9LqEmpMzCI5r"
+        DB_USER=os.getenv("DB_USER_PROD")
+        DB_PASS=os.getenv("DB_PASSWORD")
         DB_HOST = "aws-0-us-west-2.pooler.supabase.com"
         DB_PORT = "6543"
         DB_NAME = "postgres"

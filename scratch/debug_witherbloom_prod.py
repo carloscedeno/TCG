@@ -4,7 +4,7 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 
 # Using the PROD DB URL found in sync_data.py
-PROD_DB = "postgresql://postgres.sxuotvogwvmxuvwbsscv:jLta9LqEmpMzCI5r@aws-0-us-west-2.pooler.supabase.com:6543/postgres"
+PROD_DB = "os.getenv("DATABASE_URL_PROD")"
 
 def debug_card_price():
     print(f"Connecting to PROD database...")

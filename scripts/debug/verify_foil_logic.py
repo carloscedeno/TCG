@@ -11,7 +11,7 @@ load_dotenv()
 # For testing the RPC, we can also use the supabase-py client which is easier with MCP-like keys.
 DB_HOST = "aws-0-us-west-1.pooler.supabase.com" # Example based on region
 DB_NAME = "postgres"
-DB_USER = "postgres.sxuotvogwvmxuvwbsscv"
+DB_USER=os.getenv("DB_USER_PROD")
 DB_PASS = os.getenv("SUPABASE_DB_PASSWORD") # Provided by user or found in config
 DB_PORT = "6543"
 

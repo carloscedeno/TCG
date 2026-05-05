@@ -1,3 +1,4 @@
+import os
 """
 Diagnóstico rápido: Investigar precios contaminados en sets NO-Strixhaven.
 Compara products.price vs lo que CK tiene en el pricelist para todos los sets.
@@ -12,8 +13,8 @@ PROJECT_ROOT = Path(__file__).parent.parent
 CACHE_FILE = PROJECT_ROOT / "data" / "cache" / "ck_pricelist.json"
 
 DB_PARAMS = dict(
-    user="postgres.sxuotvogwvmxuvwbsscv",
-    password="jLta9LqEmpMzCI5r",
+    user=os.getenv("DB_USER_PROD"),
+    password=os.getenv("DB_PASSWORD"),
     host="aws-0-us-west-2.pooler.supabase.com",
     port="6543",
     dbname="postgres"

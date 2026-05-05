@@ -9,8 +9,8 @@ for region in regions:
     host = f"aws-0-{region}.pooler.supabase.com"
     try:
         conn = psycopg2.connect(
-            user="postgres.bqfkqnnostzaqueujdms",
-            password="jLta9LqEmpMzCI5r",
+            user=os.getenv("DB_USER_DEV"),
+            password=os.getenv("DB_PASSWORD"),
             host=host,
             port="6543",
             dbname="postgres",
