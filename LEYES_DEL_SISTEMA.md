@@ -141,6 +141,18 @@
 
 ---
 
+### Ley 21: Prohibición de Hardcoding de Conexiones (Seguridad de Credenciales)
+
+**Nunca** escribir URLs de conexión `postgresql://` ni contraseñas de base de datos directamente en el código fuente de scripts, herramientas o aplicaciones.
+
+- **Mandato**: Todas las conexiones a bases de datos deben resolverse mediante variables de entorno (`os.getenv`) o archivos `.env` (siempre ignorados por Git).
+- **Patrón Estándar**: Usar `DATABASE_URL_PROD` y `DATABASE_URL_DEV` como nombres de variables estándar en todo el ecosistema de scripts.
+- **Automatización**: Cualquier script de utilidad en `scripts/` o `scratch/` debe importar `os` y validar la existencia de las variables antes de proceder.
+
+**Excepciones**: Ninguna. Detectar una URL hardcodeada bloquea cualquier despliegue a producción.
+
+---
+
 ### Ley 11: Integridad de Branding
 
 **Siempre** mantener sincronizados los activos de marca entre el repositorio de diseÃ±o y el cÃ³digo fuente.

@@ -956,3 +956,12 @@ useEffect(() => {
 - **Problema**: Error `404: Could not find the table 'public.event_registrations' in the schema cache` tras subir cambios al frontend.
 - **Causa Raíz**: La tabla fue definida en un archivo de migración local, pero no se ejecutó en la base de datos remota de Supabase. PostgREST (la API de Supabase) no detecta cambios en el esquema hasta que se aplican y se refresca el caché.
 - **Lección**: **Migraciones Primero**. Nunca desplegar código de frontend que dependa de nuevas tablas sin antes asegurar que el SQL se ha ejecutado en todos los entornos (Dev/Prod). Usar `NOTIFY pgrst, 'reload schema';` si el cambio no se refleja inmediatamente.
+
+### 149. Remediación Masiva de Secretos Hardcodeados (Mayo 2026)
+- **Problema**: Fuga crítica de credenciales de PostgreSQL en `.env.dev` y proliferación de contraseñas hardcodeadas en más de 60 scripts auxiliares del proyecto, detectado por GitGuardian.
+- **Causa Raíz**: Práctica heredada de hardcodear URLs de conexión con credenciales incluidas para agilizar la ejecución de scripts locales y de mantenimiento.
+- **Solución**: 
+  - **Limpieza Automatizada**: Creación de un script de remediación masiva (`cleanup_secrets.py`) que utiliza regex para reemplazar URLs y contraseñas por llamadas a `os.getenv()`.
+  - **Ignorado Estricto**: Actualización de `.gitignore` en todas las ramas (`dev`, `main`) para incluir `.env.dev` y otros archivos de entorno.
+  - **Rotación de Credenciales**: Parametrización de los scripts para que dependan de `DATABASE_URL_PROD` y `DATABASE_URL_DEV`, permitiendo rotar las claves en Supabase sin romper el flujo de trabajo.
+- **Regla Derivada**: **PROHIBIDO** hardcodear cualquier URL de conexión que incluya el esquema `postgresql://`. Toda conexión debe pasar por `os.getenv` o un gestor de secretos. Ver `LEYES_DEL_SISTEMA.md` > Ley de Seguridad 21.

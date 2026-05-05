@@ -1,6 +1,6 @@
 # 📊 Progress Report - Geekorium Optimization
 **Last Updated**: 2026-04-28 03:00 (PokAmon TCG Stabilization & PKM Code Alignment)
-**Status**: ✅ Cart Performance | ✅ Cart Context Unification | ✅ Optimistic UI | ✅ Accessories Module | ✅ Polymorphic Checkout | ✅ Public Tracking RLS | ✅ Admin Visibility | ✅ Dev Branch Recreation | ✅ Catalog & Inventory Sync | ✅ Quick Add UX Optimized | ✅ Performance Optimization (Batch Fetch) | ✅ Global 'Nuevo' Feature | ✅ Schema Fallback implemented | ✅ Strixhaven Visibility Fix | ✅ Production Checkout Restored | ✅ PokAmon PKM Standardization
+**Status**: ✅ Cart Performance | ✅ Cart Context Unification | ✅ Optimistic UI | ✅ Accessories Module | ✅ Polymorphic Checkout | ✅ Public Tracking RLS | ✅ Admin Visibility | ✅ Dev Branch Recreation | ✅ Catalog & Inventory Sync | ✅ Quick Add UX Optimized | ✅ Performance Optimization (Batch Fetch) | ✅ Global 'Nuevo' Feature | ✅ Schema Fallback implemented | ✅ Strixhaven Visibility Fix | ✅ Production Checkout Restored | ✅ PokÃ©mon PKM Standardization | ✅ Security Audit & Cleanup
 
 ---
 
@@ -89,3 +89,10 @@ This session focused on reactivating the "Fast Add to Cart" feature with a premi
 - **Navigation Logic**: Fixed the Pokemon navigation link in the header and the filter state in Home.tsx to ensure reactive updates and correct URL generation.
 - **Universal RPC Normalization**: Updated get_products_filtered to handle multiple game code variants gracefully, mapping them to the internal standard PKM.
 - **Automation Readiness**: Updated populate_pokemon_products.py and diagnostic tools for the Sandbox environment, enabling instant data population.
+- **Security Remediated**: 100% of hardcoded passwords removed from the codebase.
+
+### ✅ Seguridad y Saneamiento de Credenciales (Compound v55)
+- **RemediaciÃ³n Masiva**: EliminaciÃ³n de contraseÃ±as hardcodeadas en mÃ¡s de 60 scripts mediante limpieza automatizada (`cleanup_secrets.py`).
+- **ParametrizaciÃ³n de Entorno**: TransiciÃ³n de URLs estÃ¡ticas a variables de entorno (`DATABASE_URL_PROD`, `DATABASE_URL_DEV`) siguiendo la nueva Ley de Seguridad 21.
+- **ProtecciÃ³n de Ramas**: Saneamiento de las ramas `dev` y `main`, eliminando secretos del cÃ³digo fuente y asegurando `.gitignore` contra futuras fugas.
+- **AuditorÃ­a de Artefactos**: EliminaciÃ³n de archivos de credenciales huÃ©rfanos (`prod_credentials.txt`) y desactivaciÃ³n de archivos de entorno rastreados.

@@ -785,3 +785,14 @@ $content
 **Artefacto creado:** Ribbon de descuento premium.
 **Regla derivada:** Todo producto en oferta debe mostrar ahorro porcentual prominente y precio tachado vlidamente calculado.
 
+
+## 2026-05-05 — Saneamiento Masivo de Credenciales (GitGuardian)
+
+**Qué pasó:** Remediación total de un incidente de seguridad crítico detectado por GitGuardian. Se eliminaron credenciales de PostgreSQL hardcodeadas en más de 60 scripts y se parametrizó la conexión mediante variables de entorno.
+**Lo que cambió:**
+- lessons_learned.md → Lección #149 (Remediación de Secretos)
+- LEYES_DEL_SISTEMA.md → Ley 21 (Prohibición de Hardcoding)
+- .gitignore → Inclusión de .env.dev en ramas dev y main.
+- scripts/ & scratch/ → Más de 60 archivos modificados para usar os.getenv.
+**Artefacto creado:** Script de limpieza automática cleanup_secrets.py (ejecutado y eliminado).
+**Regla derivada:** Ley de Seguridad 21: Prohibición absoluta de URLs de conexión en código fuente.
