@@ -574,7 +574,7 @@ const Home: React.FC = () => {
                     selected={filters}
                     onChange={handleFilterChange}
                     setsOptions={sets}
-                    isAccessoryMode={false}
+                    isAccessoryMode={activeTab === 'catalog'}
                   />
                 </div>
               </aside>

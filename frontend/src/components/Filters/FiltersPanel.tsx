@@ -35,7 +35,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
   const [setSearch, setSetSearch] = useState('');
 
   const filteredSets = useMemo(() => {
-    if (!setSearch) return setsOptions.slice(0, 50); // Muestra solo los primeros 50 por defecto
+    if (!setSearch) return setsOptions.slice(0, 50);
     return setsOptions.filter(s => s.toLowerCase().includes(setSearch.toLowerCase())).slice(0, 50);
   }, [setsOptions, setSearch]);
 
@@ -55,6 +55,26 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
 
   const hasActiveFilters = Object.values(selected).some(v => v && (typeof v === 'boolean' ? v : (v as any).length > 0));
 
+  const selectedGame = selected.games && selected.games.length === 1 ? selected.games[0] : null;
+
+  const getGameSpecificColors = () => {
+    if (selectedGame === 'MTG') return ['White', 'Blue', 'Black', 'Red', 'Green', 'Colorless', 'Multicolor'];
+    if (selectedGame === 'OPC' || selectedGame === 'ONE PIECE') return ['Red', 'Blue', 'Green', 'Purple', 'Black', 'Yellow'];
+    if (selectedGame === 'DGM' || selectedGame === 'DIGIMON') return ['Red', 'Blue', 'Yellow', 'Green', 'Black', 'Purple', 'White'];
+    if (selectedGame === 'PKM' || selectedGame === 'POKEMON') return ['Grass', 'Fire', 'Water', 'Lightning', 'Psychic', 'Fighting', 'Darkness', 'Metal', 'Fairy', 'Dragon', 'Colorless'];
+    return []; // No mostrar colores si no hay juego específico o no aplica
+  };
+
+  const getGameSpecificTypes = () => {
+    if (selectedGame === 'MTG') return ['Creature', 'Instant', 'Sorcery', 'Enchantment', 'Artifact', 'Planeswalker', 'Land'];
+    if (selectedGame === 'PKM' || selectedGame === 'POKEMON') return ['Pokémon', 'Trainer', 'Energy'];
+    if (selectedGame === 'OPC' || selectedGame === 'ONE PIECE') return ['Character', 'Event', 'Stage', 'Leader'];
+    return [];
+  };
+
+  const currentColors = getGameSpecificColors();
+  const currentTypes = getGameSpecificTypes();
+
   return (
     <aside className="w-full glass-panel border border-white/5 p-8 rounded-[32px] shadow-2xl space-y-10">
       <div className="flex items-center justify-between mb-2">
@@ -73,33 +93,34 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
         )}
       </div>
 
-      {/* Juegos */}
-      <section>
-        <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
-          <div className="w-1.5 h-1.5 bg-geeko-cyan rounded-full shadow-[0_0_10px_rgba(0,229,255,0.8)]"></div>
-          Universo de Juegos
-        </h3>
-        <div className="flex flex-wrap gap-2">
-          {filters.games.map(game => {
-            const isSelected = selected.games?.includes(game);
-            return (
-              <button
-                key={game}
-                onClick={() => handleCheckbox('games', game)}
-                data-active={isSelected}
-                className={`px-4 py-2 rounded-xl text-[11px] font-bold transition-all border ${isSelected
-                  ? 'bg-geeko-violet-accent/20 border-geeko-cyan/40 text-geeko-cyan shadow-lg shadow-geeko-cyan/10'
-                  : 'bg-neutral-900/50 border-neutral-800 text-neutral-500 hover:border-neutral-700 hover:text-neutral-300'
-                  }`}
-              >
-                {gameNameMap[game] || game}
-              </button>
-            );
-          })}
-        </div>
-      </section>
+      {/* Juegos - Ocultar si ya hay uno seleccionado */}
+      {!selectedGame && (
+        <section>
+          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
+            <div className="w-1.5 h-1.5 bg-geeko-cyan rounded-full shadow-[0_0_10px_rgba(0,229,255,0.8)]"></div>
+            Universo de Juegos
+          </h3>
+          <div className="flex flex-wrap gap-2">
+            {filters.games.map(game => {
+              const isSelected = selected.games?.includes(game);
+              return (
+                <button
+                  key={game}
+                  onClick={() => handleCheckbox('games', game)}
+                  className={`px-4 py-2 rounded-xl text-[11px] font-bold transition-all border ${isSelected
+                    ? 'bg-geeko-violet-accent/20 border-geeko-cyan/40 text-geeko-cyan shadow-lg shadow-geeko-cyan/10'
+                    : 'bg-neutral-900/50 border-neutral-800 text-neutral-500 hover:border-neutral-700 hover:text-neutral-300'
+                    }`}
+                >
+                  {gameNameMap[game] || game}
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
-      {/* Sets / Ediciones Dinámicas - Solo para Cartas */}
+      {/* Sets - Solo Singles */}
       {!isAccessoryMode && (
         <section>
           <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
@@ -132,13 +153,13 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
                 </button>
               ))
             ) : (
-              <p className="text-[10px] text-neutral-600 italic py-4 text-center">No se encontraron sets para "{setSearch}"</p>
+              <p className="text-[10px] text-neutral-600 italic py-4 text-center">No hay sets.</p>
             )}
           </div>
         </section>
       )}
 
-      {/* Categorías de Accesorios - Solo para Accesorios */}
+      {/* Categorías - Solo Catálogo */}
       {isAccessoryMode && filters.categories && (
         <section>
           <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
@@ -170,7 +191,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
       )}
 
       {/* Rareza - Solo para Cartas */}
-      {!isAccessoryMode && (
+      {!isAccessoryMode && filters.rarities && (
         <section>
           <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
             <div className="w-1.5 h-1.5 bg-geeko-gold rounded-full shadow-[0_0_10px_rgba(255,215,0,0.8)]"></div>
@@ -197,24 +218,28 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
         </section>
       )}
 
-      {/* Colores - Solo para Cartas */}
-      {!isAccessoryMode && (
+      {/* Colores Contextuales */}
+      {!isAccessoryMode && currentColors.length > 0 && (
         <section>
           <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
             <div className="w-1.5 h-1.5 bg-geeko-cyan rounded-full shadow-[0_0_10px_rgba(0,229,255,0.8)]"></div>
-            Esencia de Mana (Colores)
+            {selectedGame === 'MTG' ? 'Esencia de Mana (Colores)' : 'Colores / Atributos'}
           </h3>
           <div className="grid grid-cols-4 gap-2">
-            {filters.colors.map(color => {
+            {currentColors.map(color => {
               const isSelected = selected.colors?.includes(color);
               const colorClassMap: Record<string, string> = {
-                'White': 'bg-[#F8E7B9] shadow-[0_0_10px_#F8E7B9]',       // W - Sol
-                'Blue': 'bg-[#0E68AB] shadow-[0_0_10px_#0E68AB]',        // U - Agua
-                'Black': 'bg-[#150B00] shadow-[0_0_10px_#150B00] border border-white/20', // B - Calavera
-                'Red': 'bg-[#D3202A] shadow-[0_0_10px_#D3202A]',         // R - Fuego
-                'Green': 'bg-[#00733E] shadow-[0_0_10px_#00733E]',       // G - Arbol
-                'Colorless': 'bg-[#D3D3D3] shadow-[0_0_10px_#D3D3D3]',   // C - Incoloro
-                'Multicolor': 'bg-gradient-to-br from-[#F8E7B9] via-[#D3202A] to-[#0E68AB]' // M - Dorado
+                'White': 'bg-[#F8E7B9] shadow-[0_0_10px_#F8E7B9]',
+                'Blue': 'bg-[#0E68AB] shadow-[0_0_10px_#0E68AB]',
+                'Black': 'bg-[#150B00] shadow-[0_0_10px_#150B00] border border-white/20',
+                'Red': 'bg-[#D3202A] shadow-[0_0_10px_#D3202A]',
+                'Green': 'bg-[#00733E] shadow-[0_0_10px_#00733E]',
+                'Colorless': 'bg-[#D3D3D3] shadow-[0_0_10px_#D3D3D3]',
+                'Multicolor': 'bg-gradient-to-br from-[#F8E7B9] via-[#D3202A] to-[#0E68AB]',
+                'Grass': 'bg-[#7db808]', 'Fire': 'bg-[#e3350d]', 'Water': 'bg-[#318bc9]', 'Lightning': 'bg-[#eed535]',
+                'Psychic': 'bg-[#a33ea1]', 'Fighting': 'bg-[#ce4069]', 'Darkness': 'bg-[#707070]', 'Metal': 'bg-[#b7b7ce]',
+                'Fairy': 'bg-[#fdb9e9]', 'Dragon': 'bg-[#53a4cf]',
+                'Purple': 'bg-[#800080]', 'Yellow': 'bg-[#ffff00]',
               };
 
               return (
@@ -228,11 +253,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
                     }`}
                 >
                   <div className={`w-4 h-4 rounded-full ${colorClassMap[color] || 'bg-neutral-500'} ${isSelected ? 'scale-125' : 'opacity-80 group-hover:opacity-100'} transition-all`} />
-                  {isSelected && (
-                    <div className="absolute top-1 right-1">
-                      <Check size={8} className="text-geeko-cyan" />
-                    </div>
-                  )}
+                  {isSelected && <div className="absolute top-1 right-1"><Check size={8} className="text-geeko-cyan" /></div>}
                 </button>
               );
             })}
@@ -240,74 +261,15 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
         </section>
       )}
 
-      {/* Timeline / Año - Solo para Cartas */}
-      {!isAccessoryMode && (
-        <section>
-          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
-            <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.8)]"></div>
-            Órbita Temporal (Año)
-          </h3>
-          <div className="flex items-center gap-3">
-            <input
-              type="number"
-              placeholder="Desde"
-              value={selected.yearRange?.[0] || ''}
-              onChange={(e) => onChange({ ...selected, yearRange: [parseInt(e.target.value) || 1993, selected.yearRange?.[1] || 2026] })}
-              className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-emerald-500/50 transition-all"
-            />
-            <span className="text-neutral-700 font-bold">→</span>
-            <input
-              type="number"
-              placeholder="Hasta"
-              value={selected.yearRange?.[1] || ''}
-              onChange={(e) => onChange({ ...selected, yearRange: [selected.yearRange?.[0] || 1993, parseInt(e.target.value) || 2026] })}
-              className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-emerald-500/50 transition-all"
-            />
-          </div>
-          <div className="mt-3 flex justify-between text-[8px] font-black tracking-widest text-neutral-600 uppercase">
-            <span>Orígenes (1993)</span>
-            <span>Presente (2026)</span>
-          </div>
-        </section>
-      )}
-
-      {/* Rango de Precio */}
-      <section>
-        <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
-          <div className="w-1.5 h-1.5 bg-geeko-gold rounded-full shadow-[0_0_10px_rgba(255,215,0,0.8)]"></div>
-          Rango de Precio (USD)
-        </h3>
-        <div className="flex items-center gap-3">
-          <input
-            type="number"
-            placeholder="Mín"
-            value={selected.priceRange?.[0] || ''}
-            onChange={(e) => onChange({ ...selected, priceRange: [parseFloat(e.target.value) || 0, selected.priceRange?.[1] || 1000000] })}
-            className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-geeko-gold/50 transition-all font-medium"
-          />
-          <span className="text-neutral-700 font-bold">→</span>
-          <input
-            type="number"
-            placeholder="Máx"
-            value={selected.priceRange?.[1] || ''}
-            onChange={(e) => onChange({ ...selected, priceRange: [selected.priceRange?.[0] || 0, parseFloat(e.target.value) || 1000000] })}
-            className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-geeko-gold/50 transition-all font-medium"
-          />
-        </div>
-        <div className="mt-3 flex justify-between text-[8px] font-black tracking-widest text-neutral-600 uppercase">
-          <span>Accesible</span>
-          <span>Coleccionista</span>
-        </div>
-      </section>
-      {/* Esencia de Carta (Tipo) - Solo para Cartas */}
-      {!isAccessoryMode && (
+      {/* Tipos Contextuales */}
+      {!isAccessoryMode && currentTypes.length > 0 && (
         <section>
           <h3 className="text-[11px] font-black uppercase tracking-widest text-neutral-600 mb-4 flex items-center gap-2">
             <div className="w-1 h-3 bg-red-600 rounded-full"></div>
-            Esencia de Carta (Tipo)
+            {selectedGame === 'MTG' ? 'Esencia de Carta (Tipo)' : 'Tipo de Carta'}
           </h3>
           <div className="flex flex-wrap gap-2">
-            {['Creature', 'Instant', 'Sorcery', 'Enchantment', 'Artifact', 'Planeswalker', 'Land'].map(type => {
+            {currentTypes.map(type => {
               const isSelected = selected.types?.includes(type);
               return (
                 <button
@@ -326,11 +288,62 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
         </section>
       )}
 
+      {/* Rango de Precio */}
+      <section>
+        <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
+          <div className="w-1.5 h-1.5 bg-geeko-gold rounded-full shadow-[0_0_10px_rgba(255,215,0,0.8)]"></div>
+          Rango de Precio (USD)
+        </h3>
+        <div className="flex items-center gap-3">
+          <input
+            type="number"
+            placeholder="Mín"
+            value={selected.priceRange?.[0] || ''}
+            onChange={(e) => onChange({ ...selected, priceRange: [parseFloat(e.target.value) || 0, selected.priceRange?.[1] || 1000000] })}
+            className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-geeko-gold/50"
+          />
+          <span className="text-neutral-700">→</span>
+          <input
+            type="number"
+            placeholder="Máx"
+            value={selected.priceRange?.[1] || ''}
+            onChange={(e) => onChange({ ...selected, priceRange: [selected.priceRange?.[0] || 0, parseFloat(e.target.value) || 1000000] })}
+            className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-geeko-gold/50"
+          />
+        </div>
+      </section>
+
+      {/* Timeline / Año */}
+      {!isAccessoryMode && (
+        <section>
+          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
+            <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.8)]"></div>
+            Órbita Temporal (Año)
+          </h3>
+          <div className="flex items-center gap-3">
+            <input
+              type="number"
+              placeholder="Desde"
+              value={selected.yearRange?.[0] || ''}
+              onChange={(e) => onChange({ ...selected, yearRange: [parseInt(e.target.value) || 1993, selected.yearRange?.[1] || 2026] })}
+              className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-emerald-500/50"
+            />
+            <span className="text-neutral-700">→</span>
+            <input
+              type="number"
+              placeholder="Hasta"
+              value={selected.yearRange?.[1] || ''}
+              onChange={(e) => onChange({ ...selected, yearRange: [selected.yearRange?.[0] || 1993, parseInt(e.target.value) || 2026] })}
+              className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-emerald-500/50"
+            />
+          </div>
+        </section>
+      )}
+
       <div className="pt-6 mt-10 border-t border-white/5">
         <div className="bg-geeko-cyan/5 rounded-2xl p-5 border border-geeko-cyan/20 relative overflow-hidden group">
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
           <p className="text-[10px] font-medium text-neutral-400 mb-3 leading-relaxed relative z-10">
-            Sincronización en tiempo real activa vía <span className="text-geeko-cyan">Neural Link</span> con mercados globales.
+            Sincronización en tiempo real activa vía <span className="text-geeko-cyan">Neural Link</span>.
           </p>
           <div className="flex items-center gap-2 text-[10px] font-black text-geeko-cyan uppercase tracking-widest relative z-10">
             <Filter size={12} className="animate-pulse" />
