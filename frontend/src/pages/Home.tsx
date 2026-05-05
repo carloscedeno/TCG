@@ -734,10 +734,14 @@ const Home: React.FC = () => {
                         const fullDate = date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: '2-digit' });
                         
                         const iconMap: Record<string, string> = {
-                          'MTG': '🔥',
-                          'PKM': '⚡',
-                          'YGO': '🏺',
-                          'OPC': '⚓',
+                          'MTG': '/logos/tcg/black/MTG.png',
+                          'PKM': '/logos/tcg/black/PKM.png',
+                          'YGO': '/logos/tcg/black/YGO.png',
+                          'OPC': '/logos/tcg/black/OPC.png',
+                          'DGM': '/logos/tcg/black/DGM.png',
+                          'GND': '/logos/tcg/black/GND.png',
+                          'FAB': '/logos/tcg/black/FAB.png',
+                          'RFB': '/logos/tcg/black/RFB.png',
                         };
 
                         return (
@@ -746,8 +750,12 @@ const Home: React.FC = () => {
                             to="/tournaments"
                             className="group flex items-center gap-4 p-3 bg-white/[0.02] border border-white/5 rounded-xl hover:bg-white/[0.05] hover:border-geeko-cyan-neon/30 transition-all"
                           >
-                            <div className="w-10 h-10 rounded-lg bg-neutral-900 border border-white/10 flex items-center justify-center group-hover:border-geeko-cyan-neon/50 transition-colors text-xl">
-                              {iconMap[event.game_code] || '⚔️'}
+                            <div className="w-10 h-10 rounded-lg bg-neutral-900 border border-white/10 flex items-center justify-center group-hover:border-geeko-cyan-neon/50 transition-colors">
+                              {iconMap[event.game_code] ? (
+                                <img src={iconMap[event.game_code]} alt={event.game_code} className="w-6 h-6 object-contain" />
+                              ) : (
+                                <span className="text-xl">⚔️</span>
+                              )}
                             </div>
                             <div className="flex-1 min-w-0">
                               <p className="text-[9px] font-black uppercase tracking-widest text-geeko-cyan-neon mb-0.5">

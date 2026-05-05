@@ -249,7 +249,8 @@ export const EventsPage: React.FC = () => {
                 {/* Event Info */}
                 <div className="flex-1 min-w-0 text-center md:text-left space-y-2">
                   <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
-                    <span className="px-3 py-0.5 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-500 text-[9px] font-black uppercase tracking-widest">
+                    <span className="flex items-center gap-2 px-3 py-0.5 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-500 text-[9px] font-black uppercase tracking-widest">
+                      <img src={`/logos/tcg/black/${event.game_code}.png`} alt="" className="w-3 h-3 object-contain brightness-200" />
                       {event.game_code}
                     </span>
                     <span className="px-3 py-0.5 rounded-full bg-white/5 border border-white/10 text-slate-400 text-[9px] font-black uppercase tracking-widest">
@@ -370,15 +371,21 @@ export const EventsPage: React.FC = () => {
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Juego</label>
-                        <select 
-                          value={editingEvent.game_code}
-                          onChange={(e) => setEditingEvent({ ...editingEvent, game_code: e.target.value })}
-                          className="w-full bg-slate-900/50 border border-white/5 p-4 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-rose-500/50 transition-all"
-                        >
-                          {GAME_OPTIONS.map(game => (
-                            <option key={game.code} value={game.code}>{game.name}</option>
-                          ))}
-                        </select>
+                        <div className="relative">
+                          <div className="absolute left-4 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center pointer-events-none">
+                            <img src={`/logos/tcg/black/${editingEvent.game_code}.png`} alt="" className="w-5 h-5 object-contain brightness-200" />
+                          </div>
+                          <select 
+                            value={editingEvent.game_code}
+                            onChange={(e) => setEditingEvent({ ...editingEvent, game_code: e.target.value })}
+                            className="w-full bg-slate-900/50 border border-white/5 p-4 pl-12 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-rose-500/50 transition-all appearance-none"
+                          >
+                            {GAME_OPTIONS.map(game => (
+                              <option key={game.code} value={game.code}>{game.name}</option>
+                            ))}
+                          </select>
+                          <ChevronDown size={14} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none" />
+                        </div>
                       </div>
                       <div className="space-y-2">
                         <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Formato</label>
