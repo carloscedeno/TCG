@@ -471,7 +471,7 @@ const Home: React.FC = () => {
                   >
                     <div className={`w-20 h-20 sm:w-28 sm:h-28 rounded-full flex items-center justify-center text-4xl sm:text-5xl transition-all shadow-2xl relative ${filters.games?.includes(cat.id) ? 'bg-white text-black scale-110 shadow-[0_0_50px_rgba(255,255,255,0.4)]' : 'bg-neutral-900/80 text-white hover:bg-white hover:text-black backdrop-blur-sm'}`}>
                       <div className={`absolute inset-0 border-4 rounded-full ${filters.games?.includes(cat.id) ? 'border-white' : 'border-white/5 group-hover:border-white/20'}`} />
-                      <img src={cat.icon} alt={cat.name} className="w-12 h-12 sm:w-16 sm:h-16 object-contain relative z-10 group-hover:scale-110 transition-transform duration-300" />
+                      <img src={cat.icon} alt={cat.name} className="w-14 h-14 sm:w-20 sm:h-20 object-contain relative z-10 group-hover:scale-110 transition-transform duration-300" />
                     </div>
                     <span className={`text-[10px] sm:text-[11px] font-black italic uppercase tracking-[0.2em] transition-all ${filters.games?.includes(cat.id) ? 'text-white translate-y-1' : 'text-white/40 group-hover:text-white'}`}>
                       {cat.name}
@@ -752,7 +752,7 @@ const Home: React.FC = () => {
                           >
                             <div className="w-10 h-10 rounded-lg bg-neutral-900 border border-white/10 flex items-center justify-center group-hover:border-geeko-cyan-neon/50 transition-colors">
                               {iconMap[event.game_code] ? (
-                                <img src={iconMap[event.game_code]} alt={event.game_code} className="w-6 h-6 object-contain" />
+                                <img src={iconMap[event.game_code]} alt={event.game_code} className="w-7 h-7 object-contain" />
                               ) : (
                                 <span className="text-xl">⚔️</span>
                               )}

@@ -131,12 +131,12 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                         <div key={game.code} className="relative group px-1 py-1.5">
                              {game.code === 'MTG' ? (
                                 <button onClick={() => navigateToGame(game.code)} className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${isActive ? 'bg-white/10 text-indigo-400' : 'hover:bg-white/5 group-hover:text-indigo-400'}`}>
-                                    <img src={game.icon} alt={game.name} className={`w-5 h-5 object-contain transition-all ${isActive ? 'grayscale-0' : 'grayscale group-hover:grayscale-0'}`} />
+                                    <img src={game.icon} alt={game.name} className={`w-6 h-6 object-contain transition-all ${isActive ? 'grayscale-0' : 'grayscale group-hover:grayscale-0'}`} />
                                     <span className="text-[10px] font-black uppercase tracking-tighter">SINGLES</span>
                                 </button>
                             ) : (
                                 <button onClick={() => navigateToGame(game.code)} className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${isActive ? 'bg-white/10 text-indigo-400' : 'hover:bg-white/5 group-hover:text-indigo-400'}`}>
-                                    <img src={game.icon} alt={game.name} className={`w-5 h-5 object-contain transition-all ${isActive ? 'grayscale-0' : 'grayscale group-hover:grayscale-0'}`} />
+                                    <img src={game.icon} alt={game.name} className={`w-6 h-6 object-contain transition-all ${isActive ? 'grayscale-0' : 'grayscale group-hover:grayscale-0'}`} />
                                     <span className="text-[10px] font-black uppercase tracking-tighter">{game.name}</span>
                                 </button>
                             )}
@@ -204,7 +204,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                                         onClick={() => navigateToGame(game.code)}
                                         className="flex items-center gap-4 p-4 bg-white/5 rounded-xl border border-white/5 text-left transition-all active:scale-95"
                                     >
-                                        <img src={game.icon} alt={game.name} className="w-8 h-8 object-contain" />
+                                        <img src={game.icon} alt={game.name} className="w-10 h-10 object-contain" />
                                         <div className="flex flex-col">
                                             <span className="font-bold text-sm">{game.name}</span>
                                             <span className="text-[10px] text-neutral-500 uppercase tracking-widest">
