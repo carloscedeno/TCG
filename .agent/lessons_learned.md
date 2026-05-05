@@ -929,19 +929,11 @@ useEffect(() => {
 - **Regla Derivada:** Nunca usar Strings mágicos para mapeos de negocio; centralizar en constantes unificadas.
 
 ### 106. Strict Filtering for Polymorphic Catalogs (MTG vs. Generic) - 2026-04-27
-- **Causa RaÃ­z:** La funciÃ³n de base de datos (get_accessories_filtered) usaba una condiciÃ³n 'loose': AND (p_game_id IS NULL OR a.game_id = p_game_id OR a.game_id IS NULL). Esto forzaba la inclusiÃ³n de genÃ©ricos en cada filtro de juego.
-- **SoluciÃ³n:** Implementar filtrado estricto en el RPC eliminando la condiciÃ³n OR a.game_id IS NULL cuando se provee un p_game_id. Adicionalmente, ajustar el frontend para que el botÃ³n general de 'Productos' no fuerce un juego por defecto (cambiando el fallback de ['Magic: The Gathering'] a []), permitiendo ver el catÃ¡logo completo solo cuando se desea.
-- **Regla Derivada:** En catÃ¡logos con productos especÃ­ficos de nicho y productos genÃ©ricos, el filtro de juego debe ser estricto para evitar ruido visual ('contaminaciÃ³n de resultados'). Los productos genÃ©ricos deben ser accesibles solo en la vista global sin filtros.
+- **Causa Raíz:** La función de base de datos (get_accessories_filtered) usaba una condición 'loose': AND (p_game_id IS NULL OR a.game_id = p_game_id OR a.game_id IS NULL). Esto forzaba la inclusión de genéricos en cada filtro de juego.
+- **Solución:** Implementar filtrado estricto en el RPC eliminando la condición OR a.game_id IS NULL cuando se provee un p_game_id. Adicionalmente, ajustar el frontend para que el botón general de 'Productos' no fuerce un juego por defecto (cambiando el fallback de ['Magic: The Gathering'] a []), permitiendo ver el catálogo completo solo cuando se desea.
+- **Regla Derivada:** En catálogos con productos específicos de nicho y productos genéricos, el filtro de juego debe ser estricto para evitar ruido visual ('contaminación de resultados'). Los productos genéricos deben ser accesibles solo en la vista global sin filtros.
 
 ### 107. Standardizing Multi-TCG Codes (Database vs. Frontend) - 2026-04-27
-- **Problema**: Los productos de Pokemon y One Piece no aparecian en la tienda despues de ser agregados desde el panel de administracion.
-- **Causa Raiz**: El panel de administracion usaba una funcion (upsert_product_inventory) que guardaba el ID numerico del juego (ej: '23') o nombres largos en la columna game. El buscador esperaba codigos cortos (PKM, OPC).
-- **Solucion**: Estandarizacion de codigos a 3-4 letras (MTG, PKM, OPC) en todos los RPCs de produccion.
-- **Regla Derivada**: Prohibido el uso de IDs numericos o nombres largos para nuevos registros en la columna 'game'.
-
-### 48. Sensibilidad de MayÃºsculas y Nombres en Filtros SQL (get_products_filtered) â€” 2026-04-27
-- **Problema:** Los productos de nuevas expansiones (como Strixhaven) no aparecÃ­an en el catÃ¡logo al usar los filtros de la tienda a pesar de estar correctamente insertados.
-- **Causa RaÃ­z:** El cÃ³digo de la expansiÃ³n se guardaba en la base de datos en minÃºsculas (`sos`), pero el frontend y la lÃ³gica del RPC realizaban bÃºsquedas o comparaciones usando mayÃºsculas o nombres completos (ej. `['Secrets of Strixhaven']` frente a `'sos'`). Como PostgreSQL es estricto en sus comparaciones de texto con `ANY` o `=`, las coincidencias fallaban silenciosamente devolviendo arreglos vacÃ­os.
 - **SoluciÃ³n:** Modificar la consulta SQL dentro del RPC `get_products_filtered` para asegurar que las comparaciones sean case-insensitive, utilizando funciones como `UPPER()` (ej. `UPPER(p.set_code) = ANY(set_filter)`) y permitiendo mapeos tanto de cÃ³digo de set como de nombre (ej. `p.set_name = ANY(set_filter) OR UPPER(p.set_code) = ANY(set_filter)`). AdemÃ¡s, se estandarizÃ³ la resoluciÃ³n del ID de juego internamente.
 - **Regla Derivada:** LEYES_DEL_SISTEMA.md > Toda consulta de filtrado de texto o cÃ³digos provenientes de URLs o interfaces debe ser explÃ­citamente sanitizada y convertida a case-insensitive (`UPPER`, `LOWER` o `ILIKE`) en las funciones de base de datos antes de evaluar un `MATCH`.
 

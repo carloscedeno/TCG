@@ -1,7 +1,7 @@
-# âš–ï¸� LEYES DEL SISTEMA - TCG Application
+# âš–ï¸ LEYES DEL SISTEMA - TCG Application
 
-**VersiÃ³n**: 2.8
-**Ãšltima ActualizaciÃ³n**: 2026-04-15 (Filtro Global Nuevo)
+**VersiÃ³n**: 3.5
+**Ãšltima ActualizaciÃ³n**: 2026-05-04 (Dynamic Discounts)
 **PropÃ³sito**: Definir reglas inmutables para operaciÃ³n autÃ³noma del agente
 
 ---
@@ -394,7 +394,7 @@ Antes de iniciar procesos de sincronizaciÃ³n pesados o de larga duraciÃ³n, s
 
 ---
 
-### ðŸ“� CHANGELOG DE LEYES
+### ðŸ“ CHANGELOG DE LEYES
 
 ### v3.4 (2026-04-17)
 
@@ -522,16 +522,6 @@ NingÃºn archivo de migraciÃ³n SQL (`supabase/migrations/`) desplegado y regi
 
 ---
 
-### Ley 17: GestiÃ³n de Novedades (Inventory & Marketplace)
-
-**Siempre** utilizar el campo `updated_at` como fuente de verdad para identificar Ã­tems "Nuevos" (re-stock o subida inicial).
-**Nunca** proponer una solución estructurada ni ejecutar ediciones de código (`replace_file_content` / `write_to_file`) basándose únicamente en la memoria o en el historial de la conversación.
-
-- **Auditoría Previa**: **Siempre** utilizar las herramientas del sistema (como `view_file` o `grep_search`) para leer el estado ACTUAL y completo del archivo o función involucrada antes de hacer o sugerir cualquier modificación.
-- **Seguridad**: Es obligatorio gastar tiempo computacional entendiendo el contexto real antes que romper la lógica de un sistema en funcionamiento por exceso de confianza del agente.
-
----
-
 ### Ley 17: Gestión de Novedades (Inventory & Marketplace)
 
 **Siempre** utilizar el campo `updated_at` como fuente de verdad para identificar ítems "Nuevos" (re-stock o subida inicial).
@@ -552,3 +542,9 @@ NingÃºn archivo de migraciÃ³n SQL (`supabase/migrations/`) desplegado y regi
 - **Producción**: sxuotvogwvmxuvwbsscv (Geekorium Live).
 - **Desarrollo**: bqfkqnnostzaqueujdms (Sandbox).
 - **Acción**: Abortar si el entorno no coincide con el objetivo del script.
+
+### Ley 20: Integridad Visual de Ofertas (Dynamic Discounts)
+- **Mandato**: Todo producto con descuento activo (`discount_percentage > 0` y `discount_until` no expirado) DEBE mostrar el Ribbon diagonal distintivo y el precio tachado.
+- **Visibilidad**: El Ribbon de descuento debe tener un `z-index` mínimo de `100` para garantizar que no sea ocultado por overlays de imágenes o gradientes.
+- **Cálculo de Precio**: El precio de venta final debe calcularse como `original_price * (1 - discount_percentage / 100)`. La UI debe siempre mostrar el ahorro porcentual de forma prominente.
+- **Excepción**: Productos con stock 0 o estado "Por Encargo" pueden omitir el ribbon si el descuento solo aplica a stock físico inmediato, a menos que el admin especifique lo contrario.

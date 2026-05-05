@@ -772,3 +772,16 @@ $content
 - supabase/migrations/20260501000000_event_registrations.sql -> Tabla de inscripciones.
 **Artefacto creado:** PreRegistrationModal.tsx.
 **Regla derivada:** Las migraciones de base de datos deben preceder al despliegue de frontend para evitar errores de cache de esquema (PostgREST).
+
+## 2026-05-04 - Dynamic Product Discounts & Visual Integrity
+
+**Qu pas:** Se implement un sistema de descuentos dinmicos controlable desde el Admin, asegurando que los porcentajes y precios tachados se reflejen en la Landing Page con alta visibilidad.
+**Lo que cambi:**
+- lessons_learned.md -> Leccin 155.
+- LEYES_DEL_SISTEMA.md -> Ley 20 (Integridad Visual de Ofertas).
+- frontend/src/components/Card/Card.tsx -> Implementacin de Ribbon diagonal (z-index 100).
+- frontend/src/pages/admin/CatalogPage.tsx -> Gestin de discount_percentage y discount_until.
+- frontend/src/utils/api.ts -> Mapeo de campos de descuento en accesorios y productos.
+**Artefacto creado:** Ribbon de descuento premium.
+**Regla derivada:** Todo producto en oferta debe mostrar ahorro porcentual prominente y precio tachado vlidamente calculado.
+
