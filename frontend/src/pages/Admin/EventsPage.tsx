@@ -13,7 +13,8 @@ import {
   Users,
   Clock,
   DollarSign,
-  ClipboardList
+  ClipboardList,
+  ChevronDown
 } from 'lucide-react';
 import { adminFetchEvents, adminSaveEvent, adminDeleteEvent, uploadAsset } from '../../utils/api';
 import { RegistrationsModal } from '../../components/Modals/RegistrationsModal';
