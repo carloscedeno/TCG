@@ -453,14 +453,14 @@ const Home: React.FC = () => {
             <div className="relative z-10 w-full py-8 md:py-12">
               <div className="flex items-center justify-start xl:justify-center gap-6 md:gap-12 lg:gap-16 overflow-x-auto no-scrollbar pb-4 px-[10vw]">
                 {[
-                  { id: 'MTG', name: 'MTG', icon: '🔥', defaultTab: 'marketplace' },
-                  { id: 'PKM', name: 'POKEMON', icon: '⚡', defaultTab: 'catalog' },
-                  { id: 'YGO', name: 'YU-GI-OH!', icon: '🏺', defaultTab: 'catalog' },
-                  { id: 'RFB', name: 'RIFTBOUND', icon: '⚔️', defaultTab: 'catalog' },
-                  { id: 'OPC', name: 'ONE PIECE', icon: '⚓', defaultTab: 'catalog' },
-                  { id: 'DGM', name: 'DIGIMON', icon: '🦖', defaultTab: 'catalog' },
-                  { id: 'GND', name: 'GUNDAM', icon: '🤖', defaultTab: 'catalog' },
-                  { id: 'FAB', name: 'FLESH & BLOOD', icon: '🩸', defaultTab: 'catalog' },
+                  { id: 'MTG', name: 'MTG', icon: '/logos/tcg/MTG.png', defaultTab: 'marketplace' },
+                  { id: 'PKM', name: 'POKEMON', icon: '/logos/tcg/PKM.png', defaultTab: 'catalog' },
+                  { id: 'YGO', name: 'YU-GI-OH!', icon: '/logos/tcg/YGO.png', defaultTab: 'catalog' },
+                  { id: 'RFB', name: 'RIFTBOUND', icon: '/logos/tcg/RFB.png', defaultTab: 'catalog' },
+                  { id: 'OPC', name: 'ONE PIECE', icon: '/logos/tcg/OPC.png', defaultTab: 'catalog' },
+                  { id: 'DGM', name: 'DIGIMON', icon: '/logos/tcg/DGM.png', defaultTab: 'catalog' },
+                  { id: 'GND', name: 'GUNDAM', icon: '/logos/tcg/GND.png', defaultTab: 'catalog' },
+                  { id: 'FAB', name: 'FLESH & BLOOD', icon: '/logos/tcg/FAB.png', defaultTab: 'catalog' },
                 ].map((cat) => (
                   <button 
                     key={cat.id}
@@ -471,7 +471,7 @@ const Home: React.FC = () => {
                   >
                     <div className={`w-20 h-20 sm:w-28 sm:h-28 rounded-full flex items-center justify-center text-4xl sm:text-5xl transition-all shadow-2xl relative ${filters.games?.includes(cat.id) ? 'bg-white text-black scale-110 shadow-[0_0_50px_rgba(255,255,255,0.4)]' : 'bg-neutral-900/80 text-white hover:bg-white hover:text-black backdrop-blur-sm'}`}>
                       <div className={`absolute inset-0 border-4 rounded-full ${filters.games?.includes(cat.id) ? 'border-white' : 'border-white/5 group-hover:border-white/20'}`} />
-                      <span className="relative z-10">{cat.icon}</span>
+                      <img src={cat.icon} alt={cat.name} className="w-12 h-12 sm:w-16 sm:h-16 object-contain relative z-10 group-hover:scale-110 transition-transform duration-300" />
                     </div>
                     <span className={`text-[10px] sm:text-[11px] font-black italic uppercase tracking-[0.2em] transition-all ${filters.games?.includes(cat.id) ? 'text-white translate-y-1' : 'text-white/40 group-hover:text-white'}`}>
                       {cat.name}
