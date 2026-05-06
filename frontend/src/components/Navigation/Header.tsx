@@ -83,7 +83,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                         <Link 
                             key={item.name}
                             to={item.path}
-                            className="text-[12px] xl:text-[14px] font-bold text-neutral-400 hover:text-white transition-all relative group py-2"
+                            className="text-sm xl:text-base font-bold text-neutral-400 hover:text-white transition-all relative group py-2"
                         >
                             {item.name}
                             {item.name === 'Home' && !searchParams.get('tab') && (
@@ -137,10 +137,10 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                                 onClick={() => navigateToGame(game.code)}
                                 className="group flex flex-col items-center gap-1 transition-all duration-300"
                             >
-                                <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${isActive ? 'bg-white shadow-[0_0_15px_rgba(255,255,255,0.4)]' : 'bg-neutral-800/80 hover:bg-neutral-700 backdrop-blur-sm'}`}>
-                                    <img src={game.icon} alt={game.name} className={`w-5 h-5 object-contain transition-all ${isActive ? 'grayscale-0 scale-110' : 'grayscale group-hover:grayscale-0 group-hover:scale-110'}`} />
+                                <div className={`w-9 h-9 xl:w-10 xl:h-10 rounded-full flex items-center justify-center transition-all ${isActive ? 'bg-white shadow-[0_0_15px_rgba(255,255,255,0.4)]' : 'bg-neutral-800/80 hover:bg-neutral-700 backdrop-blur-sm'}`}>
+                                    <img src={game.icon} alt={game.name} className={`w-5 h-5 xl:w-6 xl:h-6 object-contain transition-all ${isActive ? 'grayscale-0 scale-110' : 'grayscale group-hover:grayscale-0 group-hover:scale-110'}`} />
                                 </div>
-                                <span className={`text-[8px] font-black italic uppercase tracking-tighter transition-all ${isActive ? 'text-white' : 'text-neutral-500 group-hover:text-neutral-300'}`}>
+                                <span className={`text-[10px] xl:text-[11px] font-black italic uppercase tracking-tighter transition-all ${isActive ? 'text-white' : 'text-neutral-500 group-hover:text-neutral-300'}`}>
                                     {game.code === 'MTG' ? 'SINGLES' : game.name}
                                 </span>
                             </button>
