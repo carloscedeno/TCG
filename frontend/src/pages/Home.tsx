@@ -10,7 +10,7 @@ import { useAuth } from '../context/AuthContext';
 import { AuthModal } from '../components/Auth/AuthModal';
 import { X, Sparkles, Search } from 'lucide-react';
 
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { CartDrawer } from '../components/Navigation/CartDrawer';
 import { Footer } from '../components/Navigation/Footer';
 import { Header } from '../components/Navigation/Header';
@@ -85,7 +85,6 @@ const Home: React.FC = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
-  const [upcomingEvents, setUpcomingEvents] = useState<any[]>([]);
   const LIMIT = 50;
 
 
@@ -114,18 +113,6 @@ const Home: React.FC = () => {
       }
     };
     checkInventory();
-
-    const loadEvents = async () => {
-      try {
-        const { fetchEvents } = await import('../utils/api');
-        const events = await fetchEvents();
-        setUpcomingEvents(events.slice(0, 8)); 
-      } catch (err) {
-        console.error("Failed to fetch events for sidebar", err);
-      }
-    };
-
-    loadEvents();
   }, [filters.games]);
 
   // Sincronizar filtros desde la URL
@@ -662,67 +649,7 @@ const Home: React.FC = () => {
                 </div>
               )}
             </div>
-            {/* Sidebar Misiones */}
-            <aside className="hidden xl:block w-80 flex-shrink-0">
-              <div className="sticky top-[130px] space-y-6">
-                <div className="bg-white/5 border border-white/5 rounded-2xl p-6 backdrop-blur-sm">
-                  <div className="flex items-center justify-between mb-8">
-                    <h3 className="text-sm font-black uppercase tracking-widest text-white border-l-2 border-geeko-cyan-neon pl-3">Próximas Misiones</h3>
-                    <Link to="/tournaments" className="text-[10px] font-black uppercase tracking-widest text-neutral-500 hover:text-geeko-cyan-neon transition-colors">Ver Todo</Link>
-                  </div>
-
-                  <div className="space-y-3">
-                    {upcomingEvents.length > 0 ? (
-                      upcomingEvents.map((event) => {
-                        const date = new Date(event.event_date);
-                        const dayName = date.toLocaleDateString('es-ES', { weekday: 'long' }).toUpperCase();
-                        const fullDate = date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: '2-digit' });
-                        
-                        const iconMap: Record<string, string> = {
-                          'MTG': '/logos/tcg/black/MTG.png',
-                          'PKM': '/logos/tcg/black/PKM.png',
-                          'YGO': '/logos/tcg/black/YGO.png',
-                          'OPC': '/logos/tcg/black/OPC.png',
-                          'DGM': '/logos/tcg/black/DGM.png',
-                          'GND': '/logos/tcg/black/GND.png',
-                          'FAB': '/logos/tcg/black/FAB.png',
-                          'RFB': '/logos/tcg/black/RFB.png',
-                        };
-
-                        return (
-                          <Link 
-                            key={event.id}
-                            to="/tournaments"
-                            className="group flex items-center gap-4 p-3 bg-white/[0.02] border border-white/5 rounded-xl hover:bg-white/[0.05] hover:border-geeko-cyan-neon/30 transition-all"
-                          >
-                            <div className="w-10 h-10 rounded-lg bg-neutral-900 border border-white/10 flex items-center justify-center group-hover:border-geeko-cyan-neon/50 transition-colors">
-                              {iconMap[event.game_code] ? (
-                                <img src={iconMap[event.game_code]} alt={event.game_code} className="w-7 h-7 object-contain" />
-                              ) : (
-                                <span className="text-xl">⚔️</span>
-                              )}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-[9px] font-black uppercase tracking-widest text-geeko-cyan-neon mb-0.5">
-                                {dayName} {fullDate}
-                              </p>
-                              <h4 className="text-[11px] font-bold text-white uppercase truncate tracking-tight">
-                                {event.name}
-                              </h4>
-                            </div>
-                          </Link>
-                        );
-                      })
-                    ) : (
-                      <div className="py-8 text-center">
-                        <p className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest">No hay eventos próximos</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </aside>
-          </div>
+            </div>
         </main>
 
         {/* Footer */}

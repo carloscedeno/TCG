@@ -77,8 +77,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                 <nav className="hidden lg:flex items-center gap-6 xl:gap-10">
                     {[
                         { name: 'Home', path: '/' },
-                        { name: 'Artilugios', path: '/?tab=catalog' },
-                        { name: 'Invócanos', path: '/invócanos' }
+                        { name: 'Artilugios', path: '/?tab=catalog' }
                     ].map((item) => (
                         <Link 
                             key={item.name}
