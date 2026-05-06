@@ -78,7 +78,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
   return (
     <aside className="w-full glass-panel border border-white/5 p-8 rounded-[32px] shadow-2xl space-y-10">
       <div className="flex items-center justify-between mb-2">
-        <h2 className="text-lg font-black italic tracking-tighter text-white flex items-center gap-2">
+        <h2 className="text-sm md:text-lg font-black italic tracking-tighter text-white flex items-center gap-2">
           <Sliders size={18} className="text-geeko-cyan" />
           FILTROS
         </h2>
@@ -96,7 +96,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
       {/* Juegos - Ocultar si ya hay uno seleccionado */}
       {!selectedGame && (
         <section>
-          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
+          <h3 className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
             <div className="w-1.5 h-1.5 bg-geeko-cyan rounded-full shadow-[0_0_10px_rgba(0,229,255,0.8)]"></div>
             Universo de Juegos
           </h3>
@@ -107,7 +107,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
                 <button
                   key={game}
                   onClick={() => handleCheckbox('games', game)}
-                  className={`px-4 py-2 rounded-xl text-[11px] font-bold transition-all border ${isSelected
+                  className={`px-4 py-2 rounded-xl text-[10px] md:text-[11px] font-bold transition-all border ${isSelected
                     ? 'bg-geeko-violet-accent/20 border-geeko-cyan/40 text-geeko-cyan shadow-lg shadow-geeko-cyan/10'
                     : 'bg-neutral-900/50 border-neutral-800 text-neutral-500 hover:border-neutral-700 hover:text-neutral-300'
                     }`}
@@ -143,7 +143,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
                 <button
                   key={setName}
                   onClick={() => handleCheckbox('sets', setName)}
-                  className={`flex items-center justify-between w-full px-3 py-2 rounded-lg text-left text-[11px] font-medium transition-all ${selected.sets?.includes(setName)
+                  className={`flex items-center justify-between w-full px-3 py-2 rounded-lg text-left text-[10px] md:text-[11px] font-medium transition-all ${selected.sets?.includes(setName)
                     ? 'bg-geeko-cyan/10 text-geeko-cyan'
                     : 'text-neutral-500 hover:bg-white/5 hover:text-neutral-300'
                     }`}
@@ -288,7 +288,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
                 <button
                   key={type}
                   onClick={() => handleCheckbox('types', type)}
-                  className={`px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all border ${isSelected
+                  className={`px-3 py-1.5 rounded-lg text-[9px] md:text-[10px] font-bold transition-all border ${isSelected
                     ? 'bg-red-600/10 border-red-500/50 text-red-400'
                     : 'bg-neutral-900/50 border-neutral-800 text-neutral-500 hover:text-neutral-300'
                     }`}
