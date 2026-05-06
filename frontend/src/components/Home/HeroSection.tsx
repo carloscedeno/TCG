@@ -112,16 +112,16 @@ export const HeroSection: React.FC = () => {
                 )}
             </div>
 
-            {/* Banner Image — FULL, no text overlay */}
+            {/* Banner Image — fixed 3.5:1 ratio, image fills the frame */}
             <div className="relative group rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-[#050505]">
                 <a
                     href={currentItem.link_url || '#'}
-                    className="block w-full"
+                    className="block w-full aspect-[3.5/1]"
                 >
                     <img
                         src={currentItem.image_url}
                         alt={currentItem.title || 'Banner'}
-                        className="w-full h-auto object-contain transition-transform duration-700 group-hover:scale-[1.02]"
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
                     />
                 </a>
 
