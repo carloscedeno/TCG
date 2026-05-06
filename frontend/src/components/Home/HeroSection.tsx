@@ -119,7 +119,7 @@ export const HeroSection: React.FC = () => {
                         {currentItem.title}
                     </h2>
 
-                    <p className="text-neutral-400 text-[10px] md:text-sm max-w-xl font-medium mb-6 line-clamp-2">
+                    <p className="text-neutral-400 text-sm md:text-lg max-w-xl font-medium mb-6 line-clamp-2">
                         {currentItem.subtitle}
                     </p>
 

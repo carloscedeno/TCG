@@ -96,7 +96,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
       {/* Juegos - Ocultar si ya hay uno seleccionado */}
       {!selectedGame && (
         <section>
-          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
+          <h3 className="text-[14px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
             <div className="w-1.5 h-1.5 bg-geeko-cyan rounded-full shadow-[0_0_10px_rgba(0,229,255,0.8)]"></div>
             Universo de Juegos
           </h3>
@@ -107,7 +107,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
                 <button
                   key={game}
                   onClick={() => handleCheckbox('games', game)}
-                  className={`px-4 py-2 rounded-xl text-[11px] font-bold transition-all border ${isSelected
+                  className={`px-4 py-2 rounded-xl text-[14px] font-bold transition-all border ${isSelected
                     ? 'bg-geeko-violet-accent/20 border-geeko-cyan/40 text-geeko-cyan shadow-lg shadow-geeko-cyan/10'
                     : 'bg-neutral-900/50 border-neutral-800 text-neutral-500 hover:border-neutral-700 hover:text-neutral-300'
                     }`}
@@ -123,7 +123,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
       {/* Sets - Solo Singles */}
       {!isAccessoryMode && (
         <section>
-          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
+          <h3 className="text-[14px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
             <div className="w-1.5 h-1.5 bg-geeko-violet-accent rounded-full shadow-[0_0_10px_rgba(55,50,102,0.9)]"></div>
             Expansión / Set
           </h3>
@@ -134,7 +134,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
               placeholder="Buscar sets..."
               value={setSearch}
               onChange={(e) => setSetSearch(e.target.value)}
-              className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2.5 pl-9 pr-4 text-xs text-white placeholder:text-neutral-600 focus:outline-none focus:border-purple-500/50 transition-all font-medium"
+              className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2.5 pl-9 pr-4 text-sm text-white placeholder:text-neutral-600 focus:outline-none focus:border-purple-500/50 transition-all font-medium"
             />
           </div>
           <div className="max-h-52 overflow-y-auto pr-2 custom-scrollbar space-y-1">
@@ -143,7 +143,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
                 <button
                   key={setName}
                   onClick={() => handleCheckbox('sets', setName)}
-                  className={`flex items-center justify-between w-full px-3 py-2 rounded-lg text-left text-[11px] font-medium transition-all ${selected.sets?.includes(setName)
+                  className={`flex items-center justify-between w-full px-3 py-2 rounded-lg text-left text-[14px] font-medium transition-all ${selected.sets?.includes(setName)
                     ? 'bg-geeko-cyan/10 text-geeko-cyan'
                     : 'text-neutral-500 hover:bg-white/5 hover:text-neutral-300'
                     }`}
@@ -162,7 +162,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
       {/* Categorías - Solo Catálogo */}
       {isAccessoryMode && filters.categories && (
         <section>
-          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
+          <h3 className="text-[14px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
             <div className="w-1.5 h-1.5 bg-orange-500 rounded-full shadow-[0_0_10px_rgba(249,115,22,0.8)]"></div>
             Categoría
           </h3>
@@ -193,7 +193,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
                 >
                   <div className="flex items-center gap-3">
                     <Package size={14} className={isSelected ? 'text-orange-400' : 'text-neutral-600'} />
-                    <span className="text-[10px] font-black uppercase tracking-tight">{category}</span>
+                    <span className="text-[14px] font-black uppercase tracking-tight">{category}</span>
                   </div>
                   {isSelected && <Check size={12} />}
                 </button>
@@ -206,7 +206,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
       {/* Rareza - Solo para Cartas */}
       {!isAccessoryMode && filters.rarities && (
         <section>
-          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
+          <h3 className="text-[14px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
             <div className="w-1.5 h-1.5 bg-geeko-gold rounded-full shadow-[0_0_10px_rgba(255,215,0,0.8)]"></div>
             Rareza
           </h3>
@@ -223,7 +223,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
                     }`}
                 >
                   <div className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-geeko-gold animate-pulse' : 'bg-neutral-700'}`} />
-                  <span className="text-[10px] font-black uppercase tracking-tight">{rarityMap[rarity] || rarity}</span>
+                  <span className="text-[14px] font-black uppercase tracking-tight">{rarityMap[rarity] || rarity}</span>
                 </button>
               );
             })}
@@ -234,7 +234,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
       {/* Colores Contextuales */}
       {!isAccessoryMode && currentColors.length > 0 && (
         <section>
-          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
+          <h3 className="text-[14px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
             <div className="w-1.5 h-1.5 bg-geeko-cyan rounded-full shadow-[0_0_10px_rgba(0,229,255,0.8)]"></div>
             {selectedGame === 'MTG' ? 'Esencia de Mana (Colores)' : 'Colores / Atributos'}
           </h3>
@@ -277,7 +277,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
       {/* Tipos Contextuales */}
       {!isAccessoryMode && currentTypes.length > 0 && (
         <section>
-          <h3 className="text-[11px] font-black uppercase tracking-widest text-neutral-600 mb-4 flex items-center gap-2">
+          <h3 className="text-[14px] font-black uppercase tracking-widest text-neutral-600 mb-4 flex items-center gap-2">
             <div className="w-1 h-3 bg-red-600 rounded-full"></div>
             {selectedGame === 'MTG' ? 'Esencia de Carta (Tipo)' : 'Tipo de Carta'}
           </h3>
@@ -288,7 +288,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
                 <button
                   key={type}
                   onClick={() => handleCheckbox('types', type)}
-                  className={`px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all border ${isSelected
+                  className={`px-3 py-1.5 rounded-lg text-[14px] font-bold transition-all border ${isSelected
                     ? 'bg-red-600/10 border-red-500/50 text-red-400'
                     : 'bg-neutral-900/50 border-neutral-800 text-neutral-500 hover:text-neutral-300'
                     }`}
@@ -303,7 +303,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
 
       {/* Rango de Precio */}
       <section>
-        <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
+        <h3 className="text-[14px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
           <div className="w-1.5 h-1.5 bg-geeko-gold rounded-full shadow-[0_0_10px_rgba(255,215,0,0.8)]"></div>
           Rango de Precio (USD)
         </h3>
@@ -329,7 +329,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
       {/* Timeline / Año */}
       {!isAccessoryMode && (
         <section>
-          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
+          <h3 className="text-[14px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
             <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.8)]"></div>
             Órbita Temporal (Año)
           </h3>
