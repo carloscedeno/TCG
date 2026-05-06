@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Menu as MenuIcon, X, Search, ChevronDown } from 'lucide-react';
+import { ShoppingCart, Menu as MenuIcon, X, Search } from 'lucide-react';
 import { SearchBar } from '../SearchBar/SearchBar';
 import { UserMenu } from './UserMenu';
 import { useAuth } from '../../context/AuthContext';
@@ -18,7 +18,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
     const [categories, setCategories] = useState<any[]>([]);
     const navigate = useNavigate();
 
-    const isDevEnv = import.meta.env.DEV || window.location.hostname.includes('dev') || window.location.hostname.includes('localhost');
+
 
     const tcgGames = [
         { name: 'Magic', code: 'MTG', icon: '/logos/tcg/MTG.png' },
