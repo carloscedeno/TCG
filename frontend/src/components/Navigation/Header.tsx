@@ -79,7 +79,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                         <Link 
                             key={item}
                             to={item === 'Home' ? '/' : `/${item.toLowerCase()}`}
-                            className="text-[11px] xl:text-xs font-bold text-neutral-400 hover:text-white transition-all relative group py-2"
+                            className="text-[12px] xl:text-[14px] font-bold text-neutral-400 hover:text-white transition-all relative group py-2"
                         >
                             {item}
                             {item === 'Home' && (
@@ -131,13 +131,13 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                         <div key={game.code} className="relative group px-1 py-1.5">
                              {game.code === 'MTG' ? (
                                 <button onClick={() => navigateToGame(game.code)} className={`flex items-center gap-2 px-2 xl:px-3 py-2 rounded-lg transition-all ${isActive ? 'bg-white/10 text-indigo-400' : 'hover:bg-white/5 group-hover:text-indigo-400'}`}>
-                                    <img src={game.icon} alt={game.name} className={`w-5 h-5 xl:w-6 xl:h-6 object-contain transition-all ${isActive ? 'grayscale-0' : 'grayscale group-hover:grayscale-0'}`} />
-                                    <span className="text-[9px] xl:text-[10px] font-black uppercase tracking-tighter">SINGLES</span>
+                                    <img src={game.icon} alt={game.name} className={`w-6 h-6 xl:w-7 xl:h-7 object-contain transition-all ${isActive ? 'grayscale-0' : 'grayscale group-hover:grayscale-0'}`} />
+                                    <span className="text-[11px] xl:text-[12px] font-black uppercase tracking-tighter">SINGLES</span>
                                 </button>
                             ) : (
                                 <button onClick={() => navigateToGame(game.code)} className={`flex items-center gap-2 px-2 xl:px-3 py-2 rounded-lg transition-all ${isActive ? 'bg-white/10 text-indigo-400' : 'hover:bg-white/5 group-hover:text-indigo-400'}`}>
-                                    <img src={game.icon} alt={game.name} className={`w-5 h-5 xl:w-6 xl:h-6 object-contain transition-all ${isActive ? 'grayscale-0' : 'grayscale group-hover:grayscale-0'}`} />
-                                    <span className="text-[9px] xl:text-[10px] font-black uppercase tracking-tighter">{game.name}</span>
+                                    <img src={game.icon} alt={game.name} className={`w-6 h-6 xl:w-7 xl:h-7 object-contain transition-all ${isActive ? 'grayscale-0' : 'grayscale group-hover:grayscale-0'}`} />
+                                    <span className="text-[11px] xl:text-[12px] font-black uppercase tracking-tighter">{game.name}</span>
                                 </button>
                             )}
                         </div>

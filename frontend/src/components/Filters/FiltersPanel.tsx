@@ -107,7 +107,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
                 <button
                   key={game}
                   onClick={() => handleCheckbox('games', game)}
-                  className={`px-4 py-2 rounded-xl text-[10px] md:text-[11px] font-bold transition-all border ${isSelected
+                  className={`px-4 py-2 rounded-xl text-[11px] md:text-[12px] font-bold transition-all border ${isSelected
                     ? 'bg-geeko-violet-accent/20 border-geeko-cyan/40 text-geeko-cyan shadow-lg shadow-geeko-cyan/10'
                     : 'bg-neutral-900/50 border-neutral-800 text-neutral-500 hover:border-neutral-700 hover:text-neutral-300'
                     }`}
@@ -143,7 +143,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
                 <button
                   key={setName}
                   onClick={() => handleCheckbox('sets', setName)}
-                  className={`flex items-center justify-between w-full px-3 py-2 rounded-lg text-left text-[10px] md:text-[11px] font-medium transition-all ${selected.sets?.includes(setName)
+                  className={`flex items-center justify-between w-full px-3 py-2 rounded-lg text-left text-[11px] md:text-[12px] font-medium transition-all ${selected.sets?.includes(setName)
                     ? 'bg-geeko-cyan/10 text-geeko-cyan'
                     : 'text-neutral-500 hover:bg-white/5 hover:text-neutral-300'
                     }`}
@@ -288,7 +288,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
                 <button
                   key={type}
                   onClick={() => handleCheckbox('types', type)}
-                  className={`px-3 py-1.5 rounded-lg text-[9px] md:text-[10px] font-bold transition-all border ${isSelected
+                  className={`px-3 py-1.5 rounded-lg text-[10px] md:text-[11px] font-bold transition-all border ${isSelected
                     ? 'bg-red-600/10 border-red-500/50 text-red-400'
                     : 'bg-neutral-900/50 border-neutral-800 text-neutral-500 hover:text-neutral-300'
                     }`}
