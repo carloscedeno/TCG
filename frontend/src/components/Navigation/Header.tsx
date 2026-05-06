@@ -122,36 +122,36 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                 </div>
             </div>
 
-            {/* Navigation Bar: 8 Categories Matrix */}
-            <nav className="hidden lg:block bg-black/40 border-t border-white/5">
-                <div className="max-w-[1600px] mx-auto px-4 flex justify-between">
+            {/* Navigation Bar: 8 Categories Matrix -> REPLACED WITH CIRCULAR SELECTOR */}
+            <nav className="hidden lg:block bg-black/40 border-t border-white/5 py-1">
+                <div className="max-w-[1600px] mx-auto px-4 flex justify-center items-center gap-6 xl:gap-10 h-14">
                     {tcgGames.map((game) => {
                         const isActive = searchParams.get('game') === game.code;
                         return (
-                        <div key={game.code} className="relative group px-1 py-1.5">
-                             {game.code === 'MTG' ? (
-                                <button onClick={() => navigateToGame(game.code)} className={`flex items-center gap-2 px-2 xl:px-3 py-2 rounded-lg transition-all ${isActive ? 'bg-white/10 text-indigo-400' : 'hover:bg-white/5 group-hover:text-indigo-400'}`}>
-                                    <img src={game.icon} alt={game.name} className={`w-6 h-6 xl:w-7 xl:h-7 object-contain transition-all ${isActive ? 'grayscale-0' : 'grayscale group-hover:grayscale-0'}`} />
-                                    <span className="text-[11px] xl:text-[12px] font-black uppercase tracking-tighter">SINGLES</span>
-                                </button>
-                            ) : (
-                                <button onClick={() => navigateToGame(game.code)} className={`flex items-center gap-2 px-2 xl:px-3 py-2 rounded-lg transition-all ${isActive ? 'bg-white/10 text-indigo-400' : 'hover:bg-white/5 group-hover:text-indigo-400'}`}>
-                                    <img src={game.icon} alt={game.name} className={`w-6 h-6 xl:w-7 xl:h-7 object-contain transition-all ${isActive ? 'grayscale-0' : 'grayscale group-hover:grayscale-0'}`} />
-                                    <span className="text-[11px] xl:text-[12px] font-black uppercase tracking-tighter">{game.name}</span>
-                                </button>
-                            )}
-                        </div>
-                    )})}
-
-                    {/* 8th Category: Productos (Accessories) - ONLY IN DEV */}
-                    {isDevEnv && (
-                        <div className="relative group px-1 py-1.5">
-                            <button className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-emerald-400 transition-all hover:bg-emerald-500/20">
-                                <span className="text-[10px] font-black uppercase tracking-tighter">PRODUCTOS</span>
-                                <ChevronDown size={12} className="opacity-50 group-hover:rotate-180 transition-transform" />
+                            <button 
+                                key={game.code}
+                                onClick={() => navigateToGame(game.code)}
+                                className="group flex flex-col items-center gap-1 transition-all duration-300"
+                            >
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${isActive ? 'bg-white shadow-[0_0_15px_rgba(255,255,255,0.4)]' : 'bg-neutral-800/80 hover:bg-neutral-700 backdrop-blur-sm'}`}>
+                                    <img src={game.icon} alt={game.name} className={`w-5 h-5 object-contain transition-all ${isActive ? 'grayscale-0 scale-110' : 'grayscale group-hover:grayscale-0 group-hover:scale-110'}`} />
+                                </div>
+                                <span className={`text-[8px] font-black italic uppercase tracking-tighter transition-all ${isActive ? 'text-white' : 'text-neutral-500 group-hover:text-neutral-300'}`}>
+                                    {game.code === 'MTG' ? 'SINGLES' : game.name}
+                                </span>
                             </button>
+                        );
+                    })}
+
+                    {/* Integrated Productos Category */}
+                    {isDevEnv && (
+                        <div className="relative group flex flex-col items-center gap-1">
+                            <button className="w-8 h-8 rounded-full flex items-center justify-center bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 transition-all hover:bg-emerald-500/20 shadow-lg shadow-emerald-500/5">
+                                <ChevronDown size={14} className="group-hover:rotate-180 transition-transform" />
+                            </button>
+                            <span className="text-[8px] font-black italic uppercase tracking-tighter text-emerald-500/80 group-hover:text-emerald-400">PRODUCTOS</span>
                             
-                            <div className="absolute top-full right-0 w-56 bg-slate-900/95 backdrop-blur-2xl border border-white/10 rounded-xl mt-1 py-3 shadow-2xl opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200 z-50">
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 w-56 bg-slate-900/95 backdrop-blur-2xl border border-white/10 rounded-xl mt-1 py-3 shadow-2xl opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200 z-50">
                                 <div className="px-4 mb-2">
                                     <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Insumos Generales</span>
                                 </div>

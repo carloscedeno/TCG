@@ -444,44 +444,7 @@ const Home: React.FC = () => {
           </div>
         )}
 
-        {/* --- PREMIUM TCG SELECTOR SECTION --- */}
-        {!query && (
-          <section className="w-full relative">
-            {/* Cyan to Black Gradient Background */}
-            <div className="absolute inset-0 bg-gradient-to-b from-[#00A3C4] via-[#003B46] to-black h-[180px] md:h-[220px]" />
-            
-            <div className="relative z-10 w-full pt-14 pb-8 md:pt-20 md:pb-12">
-              <div className="flex items-center justify-start xl:justify-center gap-6 md:gap-12 lg:gap-16 overflow-x-auto no-scrollbar px-[10vw] pb-6">
-                {[
-                  { id: 'MTG', name: 'MTG', icon: '/logos/tcg/MTG.png', defaultTab: 'marketplace' },
-                  { id: 'PKM', name: 'POKEMON', icon: '/logos/tcg/PKM.png', defaultTab: 'catalog' },
-                  { id: 'YGO', name: 'YU-GI-OH!', icon: '/logos/tcg/YGO.png', defaultTab: 'catalog' },
-                  { id: 'RFB', name: 'RIFTBOUND', icon: '/logos/tcg/RFB.png', defaultTab: 'catalog' },
-                  { id: 'OPC', name: 'ONE PIECE', icon: '/logos/tcg/OPC.png', defaultTab: 'catalog' },
-                  { id: 'DGM', name: 'DIGIMON', icon: '/logos/tcg/DGM.png', defaultTab: 'catalog' },
-                  { id: 'GND', name: 'GUNDAM', icon: '/logos/tcg/GND.png', defaultTab: 'catalog' },
-                  { id: 'FAB', name: 'FLESH & BLOOD', icon: '/logos/tcg/FAB.png', defaultTab: 'catalog' },
-                ].map((cat) => (
-                  <button 
-                    key={cat.id}
-                    onClick={() => {
-                      updateURL({ game: cat.id, tab: cat.defaultTab });
-                    }}
-                    className="group flex flex-col items-center gap-4 min-w-fit transition-all hover:-translate-y-2 duration-300"
-                  >
-                    <div className={`w-20 h-20 sm:w-28 sm:h-28 rounded-full flex items-center justify-center text-4xl sm:text-5xl transition-all shadow-2xl relative ${filters.games?.includes(cat.id) ? 'bg-white text-black scale-110 shadow-[0_0_50px_rgba(255,255,255,0.4)]' : 'bg-neutral-900/80 text-white hover:bg-white hover:text-black backdrop-blur-sm'}`}>
-                      <div className={`absolute inset-0 border-4 rounded-full ${filters.games?.includes(cat.id) ? 'border-white' : 'border-white/5 group-hover:border-white/20'}`} />
-                      <img src={cat.icon} alt={cat.name} className="w-14 h-14 sm:w-20 sm:h-20 object-contain relative z-10 group-hover:scale-110 transition-transform duration-300" />
-                    </div>
-                    <span className={`text-[10px] sm:text-[11px] font-black italic uppercase tracking-[0.2em] transition-all ${filters.games?.includes(cat.id) ? 'text-white translate-y-1' : 'text-white/40 group-hover:text-white'}`}>
-                      {cat.name}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
+
 
         {/* Rarity Filter Tabs & Sort */}
         {(!isDashboardView || (filters.games && filters.games.length > 0)) && (
