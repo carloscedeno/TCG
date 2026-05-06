@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { rarityMap } from '../utils/translations';
+
 import { CardGrid } from '../components/Card/CardGrid';
 import { CardModal } from '../components/Card/CardModal';
 import type { CardProps } from '../components/Card/Card';
@@ -62,7 +62,7 @@ const Home: React.FC = () => {
   });
   const [sets, setSets] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState(searchParams.get('sort') || 'price_desc');
-  const [activeRarity, setActiveRarity] = useState(searchParams.get('rarity') || 'All');
+
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(0);
   const { user } = useAuth();
@@ -161,7 +161,7 @@ const Home: React.FC = () => {
     return !val;
   };
 
-  const isDashboardView = !query && Object.entries(filters).every(([key, val]) => isDefaultFilter(key, val)) && activeRarity === 'All' && (activeTab as string) !== 'catalog';
+  const isDashboardView = !query && Object.entries(filters).every(([key, val]) => isDefaultFilter(key, val)) && (activeTab as string) !== 'catalog';
 
   useEffect(() => {
     const gameCode = filters.games && filters.games.length > 0 ? filters.games[0] : undefined;
@@ -243,8 +243,7 @@ const Home: React.FC = () => {
 
     if (tabParam !== activeTab) setActiveTab(tabParam);
     
-    const urlRarity = searchParams.get('rarity') || 'All';
-    if (urlRarity !== activeRarity) setActiveRarity(urlRarity);
+
 
     const urlSort = searchParams.get('sort') || 'price_desc';
     if (urlSort !== sortBy) setSortBy(urlSort);
@@ -268,7 +267,7 @@ const Home: React.FC = () => {
             q: debouncedQuery || undefined,
             game: mappedGame,
             set: debouncedFilters.sets && debouncedFilters.sets.length > 0 ? debouncedFilters.sets.join(',') : undefined,
-            rarity: activeRarity !== 'All' ? activeRarity : (debouncedFilters.rarities && debouncedFilters.rarities.length > 0 ? debouncedFilters.rarities.join(',') : undefined),
+            rarity: (debouncedFilters.rarities && debouncedFilters.rarities.length > 0 ? debouncedFilters.rarities.join(',') : undefined),
             color: debouncedFilters.colors && debouncedFilters.colors.length > 0 ? debouncedFilters.colors.map(c => colorCodeMap[c] || c) : undefined,
             type: debouncedFilters.types && debouncedFilters.types.length > 0 ? debouncedFilters.types : undefined,
             year_from: debouncedFilters.yearRange ? debouncedFilters.yearRange[0] : undefined,
@@ -332,7 +331,7 @@ const Home: React.FC = () => {
         } else {
           const cardRes = await fetchCards({
             q: debouncedQuery || undefined,
-            rarity: activeRarity !== 'All' ? activeRarity : (debouncedFilters.rarities && debouncedFilters.rarities.length > 0 ? debouncedFilters.rarities.join(',') : undefined),
+            rarity: (debouncedFilters.rarities && debouncedFilters.rarities.length > 0 ? debouncedFilters.rarities.join(',') : undefined),
             game: debouncedFilters.games && debouncedFilters.games.length > 0 ? debouncedFilters.games.join(',') : undefined,
             set: debouncedFilters.sets && debouncedFilters.sets.length > 0 ? debouncedFilters.sets.join(',') : undefined,
             color: debouncedFilters.colors && debouncedFilters.colors.length > 0 ? debouncedFilters.colors.map(c => colorCodeMap[c] || c).join(',') : undefined,
@@ -378,7 +377,7 @@ const Home: React.FC = () => {
     return () => {
       controller.abort();
     };
-  }, [debouncedQuery, debouncedFilters, activeRarity, sortBy, page, activeTab]);
+  }, [debouncedQuery, debouncedFilters, sortBy, page, activeTab]);
 
   useEffect(() => {
     const activeGameCode = filters.games && filters.games.length > 0 ? filters.games[0] : 'MTG';
@@ -391,7 +390,7 @@ const Home: React.FC = () => {
       .catch(() => setSets([]));
   }, [filters.games]);
 
-  const rarities = ['All', 'Mythic', 'Rare', 'Uncommon', 'Common'];
+
 
   const updateURL = (params: Record<string, string | string[] | undefined>) => {
     const newParams = new URLSearchParams(searchParams);
@@ -415,10 +414,7 @@ const Home: React.FC = () => {
     setPage(0);
   };
 
-  const handleRarityChange = (rarity: string) => {
-    updateURL({ rarity: rarity === 'All' ? undefined : rarity });
-    setPage(0);
-  };
+
 
   const handleTabChange = (tab: 'marketplace' | 'catalog') => {
     updateURL({ tab });
@@ -483,24 +479,7 @@ const Home: React.FC = () => {
                 )}
               </div>
 
-              {activeTab === 'marketplace' && inventoryPresence.hasSingles && (
-                <div className="flex flex-col sm:flex-row items-center gap-4">
-                  <div className="flex bg-neutral-900/50 p-1 rounded-full border border-neutral-800">
-                      {rarities.map(r => (
-                        <button
-                          key={r}
-                          onClick={() => handleRarityChange(r)}
-                          className={`px-3 md:px-6 py-2 rounded-full text-[9px] md:text-[11px] font-black tracking-widest uppercase transition-all ${activeRarity === r
-                            ? 'bg-neutral-700 text-white shadow-lg'
-                            : 'text-neutral-500 hover:text-neutral-300'
-                            }`}
-                        >
-                          {rarityMap[r] || r}
-                        </button>
-                      ))}
-                    </div>
-                </div>
-              )}
+
             <div className="flex items-center gap-2 md:gap-4">
               <button
                 onClick={() => setIsMobileFiltersOpen(true)}
