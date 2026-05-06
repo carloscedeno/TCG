@@ -1758,8 +1758,11 @@ export const checkGameInventoryPresence = async (gameCode?: string): Promise<{ h
       hasCatalog = (catalog && catalog.length > 0) || false;
     }
     
+    // [POLICY] Stock Geekorium (Singles) is ONLY available for MTG
+    const hasSingles = code === 'MTG' && singles && singles.length > 0;
+    
     return {
-      hasSingles: (singles && singles.length > 0) || false,
+      hasSingles: !!hasSingles,
       hasCatalog
     };
   } catch (error) {

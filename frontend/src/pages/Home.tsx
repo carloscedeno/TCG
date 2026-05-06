@@ -76,6 +76,7 @@ const Home: React.FC = () => {
     if (tabParam === 'catalog' || tabParam === 'marketplace') return tabParam;
     
     const games = searchParams.get('game')?.split(',').filter(Boolean) || [];
+    // Marketplace (Stock Geekorium) is ONLY for MTG
     if (games.length > 0 && !games.includes('MTG')) {
       return 'catalog';
     }
