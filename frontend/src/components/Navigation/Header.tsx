@@ -75,14 +75,18 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
 
                 {/* Main Utility Nav - Always show on PC */}
                 <nav className="hidden lg:flex items-center gap-6 xl:gap-10">
-                    {['Home', 'Artilugios', 'Hechizos', 'Misiones', 'Invócanos'].map((item) => (
+                    {[
+                        { name: 'Home', path: '/' },
+                        { name: 'Artilugios', path: '/?tab=catalog' },
+                        { name: 'Invócanos', path: '/invócanos' }
+                    ].map((item) => (
                         <Link 
-                            key={item}
-                            to={item === 'Home' ? '/' : `/${item.toLowerCase()}`}
+                            key={item.name}
+                            to={item.path}
                             className="text-[12px] xl:text-[14px] font-bold text-neutral-400 hover:text-white transition-all relative group py-2"
                         >
-                            {item}
-                            {item === 'Home' && (
+                            {item.name}
+                            {item.name === 'Home' && !searchParams.get('tab') && (
                                 <div className="absolute bottom-0 left-0 w-1/2 h-0.5 bg-geeko-cyan-neon rounded-full" />
                             )}
                             <div className="absolute bottom-0 left-0 w-0 group-hover:w-full h-0.5 bg-geeko-cyan-neon transition-all duration-300 rounded-full" />
@@ -143,38 +147,8 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                         );
                     })}
 
-                    {/* Integrated Productos Category */}
-                    {isDevEnv && (
-                        <div className="relative group flex flex-col items-center gap-1">
-                            <button className="w-8 h-8 rounded-full flex items-center justify-center bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 transition-all hover:bg-emerald-500/20 shadow-lg shadow-emerald-500/5">
-                                <ChevronDown size={14} className="group-hover:rotate-180 transition-transform" />
-                            </button>
-                            <span className="text-[8px] font-black italic uppercase tracking-tighter text-emerald-500/80 group-hover:text-emerald-400">PRODUCTOS</span>
-                            
-                            <div className="absolute top-full left-1/2 -translate-x-1/2 w-56 bg-slate-900/95 backdrop-blur-2xl border border-white/10 rounded-xl mt-1 py-3 shadow-2xl opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200 z-50">
-                                <div className="px-4 mb-2">
-                                    <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Insumos Generales</span>
-                                </div>
-                                <div className="grid grid-cols-1 gap-1">
-                                    {categories.map((cat) => (
-                                        <button 
-                                            key={cat.code} 
-                                            onClick={() => navigateToCategory(cat.code)}
-                                            className="flex items-center gap-3 px-4 py-2.5 hover:bg-emerald-600/20 text-[11px] font-bold transition-colors"
-                                        >
-                                            <span className="text-base">{cat.icon}</span>
-                                            {cat.name.toUpperCase()}
-                                        </button>
-                                    ))}
-                                </div>
-                                <div className="mt-2 pt-2 border-t border-white/5">
-                                    <button onClick={() => navigateToCategory('OTHER')} className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-slate-800 text-[11px] font-bold text-slate-400">
-                                        OTROS
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    )}
+                    {/* Integrated Productos Category - REMOVED AS PER REQUEST */}
+
                 </div>
             </nav>
 
