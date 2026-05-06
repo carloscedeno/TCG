@@ -1,4 +1,4 @@
-﻿# ðŸ§  COMPOUND: Bulk Egress & Audit Module
+# ðŸ§  COMPOUND: Bulk Egress & Audit Module
 
 **Date**: 2026-04-04 23:57
 
@@ -841,5 +841,21 @@ $content
 - LEYES_DEL_SISTEMA.md → Ley #27
 - rontend/src/components/Admin/AddAccessoryDrawer.tsx → Soporte multi-upload
 - rontend/src/components/Card/CardModal.tsx → Carousel dinámico
-**Artefacto creado:** Migración SQL 20260505164500_add_multi_image_to_accessories.sql`n**Regla derivada:** Ley 27 (Garantizar imagen canónica fuera del array de galería).
+**Artefacto creado:** Migración SQL 20260505164500_add_multi_image_to_accessories.sql
+**Regla derivada:** Ley 27 (Garantizar imagen canónica fuera del array de galería).
 
+
+**Corrección Post-Build:** Se corrigió un error de TypeScript en CardModal.tsx debido a una redefinición local de la interfaz CardDetails que no incluía el nuevo campo additional_images.
+
+## 2026-05-06 — Fix RLS 403 en hero_banners (admin role)
+
+**Qué pasó:** El admin recibía un 403 Forbidden al guardar banners. La causa raíz era doble: (1) las políticas RLS de `hero_banners` y `events` usaban `profiles.is_admin = true` (columna booleana obsoleta), y (2) la tabla `public.profiles` tenía RLS activado **sin** una política de lectura, lo que hacía que el `EXISTS(...)` interno de la policy siempre retornase `false`.
+
+**Lo que cambió:**
+- `supabase/migrations/20260507000000_fix_admin_rls.sql` → Reemplaza `is_admin = true` por `role = 'admin'` en las policies de `hero_banners` y `events`.
+- SQL ejecutado en consola Supabase → `CREATE POLICY "Users can read own profile" ON public.profiles FOR SELECT USING (id = auth.uid())` para desbloquear la sub-consulta de RLS.
+- `public.profiles` → columna `role` backfilled a `'admin'` para el usuario administrador.
+
+**Artefacto creado:** `supabase/migrations/20260507000000_fix_admin_rls.sql`
+
+**Regla derivada:** Ley 28 — Toda tabla con RLS referenciada en sub-consultas de otras policies DEBE tener una policy de lectura activa. Sin ella, el `EXISTS(...)` siempre retorna `false` bloqueando la operación aunque el rol sea correcto.
