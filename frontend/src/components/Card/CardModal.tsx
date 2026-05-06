@@ -78,6 +78,7 @@ interface CardDetails {
     card_faces?: CardFace[];
     all_versions?: Version[];
     is_accessory?: boolean;
+    additional_images?: string[];
 }
 
 export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, onAddToCartSuccess, isArchive }) => {
