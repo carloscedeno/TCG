@@ -108,3 +108,10 @@ This session focused on reactivating the "Fast Add to Cart" feature with a premi
 - **UI Anti-Clipping**: Resuelto problema de recorte visual en el selector circular mediante optimización de padding y eliminación de overflow restrictivo.
 - **Consistencia Administrativa**: Integrados iconos en la gestión de eventos para mejorar la precisión operativa.
 - **Resizing Global**: Ajustadas dimensiones de iconos en Header y Sidebar para máxima legibilidad.
+
+### ? Soporte Multi-Imagen y Carrusel Premium (Compound v58)
+- **Ampliación de Esquema**: Añadida columna dditional_images (text[]) a accesorios con soporte en RPCs.
+- **Admin UI**: Implementado sistema de carga múltiple con previsualización y selección de imagen principal.
+- **Carousel Dinámico**: Integrado visor premium en CardModal con soporte para swipe, navegación por puntos y transiciones de desenfoque suaves.
+- **Optimización de Datos**: Se mantiene la imagen principal fuera del array para compatibilidad y performance en grids.
+

@@ -8,13 +8,25 @@ import psycopg2
 
 # Load environment variables
 PROJECT_ROOT = Path(__file__).parent.parent.parent.parent
-load_dotenv(PROJECT_ROOT / ".env")
+env_path = PROJECT_ROOT / ".env"
+if env_path.exists():
+    load_dotenv(env_path, override=False)
 
 def get_db_connection():
     """Get a direct psycopg2 connection to the database."""
-    db_url = os.getenv('DATABASE_URL')
+    # Priority: 
+    # 1. DATABASE_URL (explicit)
+    # 2. DATABASE_URL_PROD (if specified)
+    # 3. DATABASE_URL_DEV (if specified)
+    db_url = os.getenv('DATABASE_URL') or os.getenv('DATABASE_URL_PROD') or os.getenv('DATABASE_URL_DEV')
+    
     if not db_url:
-        raise ValueError("DATABASE_URL environment variable is not set.")
+        raise ValueError("No database connection string found (DATABASE_URL, DATABASE_URL_PROD, or DATABASE_URL_DEV).")
+    
+    # Clean URL if it has pooler params that might cause issues with psycopg2
+    if db_url and "?" in db_url:
+        db_url = db_url.split("?")[0]
+        
     return psycopg2.connect(db_url)
 
 def get_supabase():

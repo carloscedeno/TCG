@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { X, ShoppingCart, ExternalLink, RotateCw, Loader2 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { X, ShoppingCart, ExternalLink, RotateCw, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { fetchCardDetails, addToCart } from '../../utils/api';
 import { getCardKingdomUrl } from '../../utils/urlUtils';
 import { ManaText } from '../Mana/ManaText';
@@ -86,6 +86,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
     const [isAdding, setIsAdding] = useState(false);
     const [addedSuccess, setAddedSuccess] = useState(false);
     const [currentFaceIndex, setCurrentFaceIndex] = useState(0);
+    const [carouselIndex, setCarouselIndex] = useState(0);
     const [activePrintingId, setActivePrintingId] = useState<string | null>(null);
     const [selectedFinish, setSelectedFinish] = useState<'nonfoil' | 'foil' | 'etched'>('nonfoil');
 
@@ -371,6 +372,15 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
         return details?.image_url;
     })();
 
+    const allImages = useMemo(() => {
+        const imgs: string[] = [];
+        if (details?.image_url) imgs.push(details.image_url);
+        if (details?.additional_images && Array.isArray(details.additional_images)) {
+            imgs.push(...details.additional_images);
+        }
+        return imgs;
+    }, [details?.image_url, details?.additional_images]);
+
     const hasMultipleFaces = (details?.card_faces && details.card_faces.length > 1) || isDFC;
 
     const ckUrl = useMemo(() => {
@@ -440,18 +450,55 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                        ACCESSORY LAYOUT — clean product view
                     ──────────────────────────────────────── */
                     <div className="flex flex-col md:flex-row w-full h-full">
-                        {/* Image */}
-                        <div className="w-full md:w-[380px] bg-[#0c0c0c] flex items-center justify-center p-8 border-r border-white/5 shrink-0 min-h-[300px] md:min-h-0">
+                        {/* Image / Carousel */}
+                        <div className="w-full md:w-[420px] bg-[#0c0c0c] flex items-center justify-center p-6 md:p-10 border-r border-white/5 shrink-0 min-h-[350px] md:min-h-0 relative overflow-hidden">
                             {loading ? (
                                 <div className="w-48 h-48 rounded-2xl bg-white/5 animate-pulse" />
                             ) : (
-                                <div className="relative flex items-center justify-center">
-                                    <div className="absolute inset-0 bg-geeko-cyan/10 blur-[80px] rounded-full pointer-events-none" />
-                                    <img
-                                        src={currentImage}
-                                        alt={details?.name}
-                                        className="max-w-[280px] max-h-[280px] object-contain relative z-10 drop-shadow-[0_20px_60px_rgba(0,0,0,0.8)] hover:scale-105 transition-transform duration-500"
-                                    />
+                                <div className="relative w-full h-full flex items-center justify-center group/carousel">
+                                    <div className="absolute inset-0 bg-geeko-cyan/10 blur-[100px] rounded-full pointer-events-none opacity-50" />
+                                    
+                                    <AnimatePresence mode="wait">
+                                        <motion.img
+                                            key={allImages[carouselIndex] || 'empty'}
+                                            src={allImages[carouselIndex]}
+                                            alt={details?.name}
+                                            initial={{ opacity: 0, scale: 0.9, filter: 'blur(10px)' }}
+                                            animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                                            exit={{ opacity: 0, scale: 1.1, filter: 'blur(10px)' }}
+                                            transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+                                            className="max-w-full max-h-full object-contain relative z-10 drop-shadow-[0_30px_60px_rgba(0,0,0,0.8)]"
+                                        />
+                                    </AnimatePresence>
+
+                                    {/* Navigation Controls */}
+                                    {allImages.length > 1 && (
+                                        <>
+                                            <button 
+                                                onClick={(e) => { e.stopPropagation(); setCarouselIndex(prev => (prev - 1 + allImages.length) % allImages.length); }}
+                                                className="absolute left-0 top-1/2 -translate-y-1/2 p-3 bg-black/40 hover:bg-geeko-cyan text-white hover:text-black rounded-full border border-white/10 backdrop-blur-md transition-all z-20 opacity-0 group-hover/carousel:opacity-100 -translate-x-4 group-hover/carousel:translate-x-2"
+                                            >
+                                                <ChevronLeft size={20} />
+                                            </button>
+                                            <button 
+                                                onClick={(e) => { e.stopPropagation(); setCarouselIndex(prev => (prev + 1) % allImages.length); }}
+                                                className="absolute right-0 top-1/2 -translate-y-1/2 p-3 bg-black/40 hover:bg-geeko-cyan text-white hover:text-black rounded-full border border-white/10 backdrop-blur-md transition-all z-20 opacity-0 group-hover/carousel:opacity-100 translate-x-4 group-hover/carousel:-translate-x-2"
+                                            >
+                                                <ChevronRight size={20} />
+                                            </button>
+
+                                            {/* Thumbnail Dots */}
+                                            <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-2 pb-2 z-20">
+                                                {allImages.map((_, i) => (
+                                                    <button
+                                                        key={i}
+                                                        onClick={(e) => { e.stopPropagation(); setCarouselIndex(i); }}
+                                                        className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === carouselIndex ? 'bg-geeko-cyan w-6 shadow-[0_0_10px_rgba(0,229,255,0.5)]' : 'bg-white/20 hover:bg-white/40'}`}
+                                                    />
+                                                ))}
+                                            </div>
+                                        </>
+                                    )}
                                 </div>
                             )}
                         </div>

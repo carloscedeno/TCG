@@ -588,3 +588,11 @@ Cualquier componente que utilice transformaciones de escala (scale) o traslación
 Todos los logos de juegos TCG deben centralizarse en frontend/public/logos/tcg/. 
 - La variante black/ (monocromo) se reserva para sidebars, listas pequeñas y UI de administración.
 - La variante color/ se utiliza para selectores principales y elementos de alta jerarquía visual.
+
+## LEY 27: SOPORTE DE GALERÍAS Y PREMIUM UX
+Todo producto (especialmente Accesorios) con capacidad de múltiples vistas debe implementar un sistema de galería robusto.
+- **Imagen Canónica**: El campo image_url en la base de datos debe representar siempre la imagen principal (canónica) para optimizar el renderizado en vistas de lista.
+- **Persistencia**: Las imágenes adicionales deben almacenarse en un array de texto (dditional_images) para evitar múltiples registros innecesarios.
+- **Interacción**: El visor de detalles (CardModal) debe transformar automáticamente la imagen estática en un carousel interactivo solo cuando existan imágenes adicionales, ahorrando recursos de animación en productos simples.
+- **Transiciones**: Es obligatorio el uso de transiciones de opacidad y desenfoque (opacity + blur) para los cambios de imagen, garantizando una experiencia de usuario de alta gama ("Premium Feel").
+

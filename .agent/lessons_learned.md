@@ -1015,3 +1015,14 @@ useEffect(() => {
 - **Causa Raíz:** Falta de una biblioteca de assets estandarizada.
 - **Solución:** Creación de frontend/public/logos/tcg/ con variantes color y black.
 - **Regla Derivada:** Ley de \Identidad de Marca TCG\ en LEYES_DEL_SISTEMA.md.
+
+### 155. Soporte Multi-Imagen y Carruseles Premium (Mayo 2026)
+- **Problema**: Los productos (accesorios) estaban limitados a una sola imagen, lo que dificultaba mostrar diferentes ángulos o detalles.
+- **Causa Raíz**: El esquema de base de datos (image_url) y los componentes de visualización (CardModal) solo soportaban un único string de URL.
+- **Solución**: 
+  - **Ampliación de Esquema**: Añadir dditional_images text[] a la tabla ccessories.
+  - **Sincronización de RPC**: Actualizar las funciones SQL (get_accessories_filtered) para incluir el nuevo array en el retorno, evitando desincronización de tipos en el frontend.
+  - **UX de Admin**: Implementar un sistema de selección de "Imagen Principal" que mantenga la compatibilidad con el campo image_url existente, permitiendo a la vez gestionar una galería.
+  - **Carousel Dinámico**: Integrar AnimatePresence de ramer-motion para transiciones suaves que eleven la percepción de calidad ("premium feel").
+- **Lección**: Al implementar galerías, mantener siempre un campo "primary_image" independiente del array de adicionales para no penalizar el rendimiento de las vistas de lista (grids) que no necesitan cargar todo el array.
+

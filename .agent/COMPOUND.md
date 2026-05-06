@@ -832,3 +832,14 @@ $content
 - frontend/src/pages/Admin/EventsPage.tsx → Integración de logos en selector.
 **Artefacto creado:** Librería de logos estandarizada en public/logos/tcg/.
 **Regla derivada:** Ley de Respiración Visual y Ley de Identidad de Marca TCG.
+
+## 2026-05-05 — Implementación de Carrusel Multi-Imagen
+
+**Qué pasó:** Se habilitó el soporte para múltiples imágenes en accesorios, incluyendo una galería en el panel de administración con selección de imagen principal y un carousel animado premium en el modal de detalles.
+**Lo que cambió:**
+- lessons_learned.md → Lección #155
+- LEYES_DEL_SISTEMA.md → Ley #27
+- rontend/src/components/Admin/AddAccessoryDrawer.tsx → Soporte multi-upload
+- rontend/src/components/Card/CardModal.tsx → Carousel dinámico
+**Artefacto creado:** Migración SQL 20260505164500_add_multi_image_to_accessories.sql`n**Regla derivada:** Ley 27 (Garantizar imagen canónica fuera del array de galería).
+

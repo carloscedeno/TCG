@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Upload, Save, Loader2, Package } from 'lucide-react';
+import { X, Upload, Save, Loader2, Package, Star, Trash2 } from 'lucide-react';
 import { createAccessory, uploadAccessoryImage, fetchAccessoryCategories } from '../../utils/api';
 import { supabase } from '../../utils/supabaseClient';
 
@@ -11,8 +11,8 @@ interface AddAccessoryDrawerProps {
 
 export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryDrawerProps) => {
     const [loading, setLoading] = useState(false);
-    const [imageFile, setImageFile] = useState<File | null>(null);
-    const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const [imageItems, setImageItems] = useState<{file: File, preview: string}[]>([]);
+    const [mainImageIndex, setMainImageIndex] = useState<number>(0);
     const [games, setGames] = useState<any[]>([]);
     const [categories, setCategories] = useState<any[]>([]);
 
@@ -44,11 +44,24 @@ export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryD
 
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            setImageFile(file);
-            setImagePreview(URL.createObjectURL(file));
+        const files = e.target.files;
+        if (files && files.length > 0) {
+            const newItems = Array.from(files).map(file => ({
+                file,
+                preview: URL.createObjectURL(file)
+            }));
+            setImageItems(prev => [...prev, ...newItems]);
         }
+    };
+
+    const removeImage = (index: number) => {
+        setImageItems(prev => {
+            const filtered = prev.filter((_, i) => i !== index);
+            if (mainImageIndex >= filtered.length && filtered.length > 0) {
+                setMainImageIndex(filtered.length - 1);
+            }
+            return filtered;
+        });
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -57,8 +70,12 @@ export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryD
 
         try {
             let imageUrl = '';
-            if (imageFile) {
-                imageUrl = await uploadAccessoryImage(imageFile);
+            let additionalImages: string[] = [];
+
+            if (imageItems.length > 0) {
+                const uploadedUrls = await Promise.all(imageItems.map(item => uploadAccessoryImage(item.file)));
+                imageUrl = uploadedUrls[mainImageIndex];
+                additionalImages = uploadedUrls.filter((_, idx) => idx !== mainImageIndex);
             }
 
             await createAccessory({
@@ -68,6 +85,7 @@ export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryD
                 suggested_price: parseFloat(formData.suggested_price) || 0,
                 stock: parseInt(formData.stock) || 0,
                 image_url: imageUrl,
+                additional_images: additionalImages,
                 game_id: formData.game_id ? parseInt(formData.game_id) : null
             });
 
@@ -86,8 +104,8 @@ export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryD
                 unit_type: 'Unidad',
                 language: 'Inglés'
             });
-            setImageFile(null);
-            setImagePreview(null);
+            setImageItems([]);
+            setMainImageIndex(0);
         } catch (err: any) {
             alert("Error al crear accesorio: " + err.message);
         } finally {
@@ -115,36 +133,66 @@ export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryD
                 </div>
 
                 <form onSubmit={handleSubmit} className="p-8 space-y-8">
-                    {/* Image Upload */}
+                    {/* Image Upload & Gallery */}
                     <div className="space-y-4">
-                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block">Imagen del Producto</label>
-                        <div className="flex flex-col items-center justify-center border-2 border-dashed border-white/10 rounded-[2rem] p-12 bg-white/5 hover:border-orange-500/30 transition-all group relative overflow-hidden">
-                            {imagePreview ? (
-                                <>
-                                    <img src={imagePreview} alt="Preview" className="w-full h-48 object-contain rounded-xl mb-4" />
-                                    <button 
-                                        type="button" 
-                                        onClick={() => { setImageFile(null); setImagePreview(null); }}
-                                        className="absolute top-4 right-4 p-2 bg-red-500 rounded-full text-white shadow-xl"
-                                    >
-                                        <X size={16} />
-                                    </button>
-                                </>
-                            ) : (
-                                <>
-                                    <Upload className="text-slate-700 group-hover:text-orange-500 transition-colors mb-4" size={48} />
-                                    <p className="text-xs text-slate-500 font-bold uppercase tracking-widest text-center">
-                                        Arrastra o haz click para subir
-                                    </p>
-                                    <input 
-                                        type="file" 
-                                        accept="image/*" 
-                                        onChange={handleImageChange}
-                                        className="absolute inset-0 opacity-0 cursor-pointer"
-                                    />
-                                </>
-                            )}
+                        <div className="flex justify-between items-center">
+                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block">Galería de Imágenes</label>
+                            <span className="text-[10px] font-bold text-orange-500/60 uppercase tracking-tighter">Primer imagen es la principal</span>
                         </div>
+                        
+                        <div className="grid grid-cols-3 gap-4">
+                            {imageItems.map((item, index) => (
+                                <div key={index} className={`relative aspect-square rounded-2xl overflow-hidden border-2 transition-all ${index === mainImageIndex ? 'border-orange-500 shadow-[0_0_15px_rgba(249,115,22,0.3)]' : 'border-white/5'}`}>
+                                    <img src={item.preview} alt="Preview" className="w-full h-full object-cover" />
+                                    
+                                    {/* Overlay Controls */}
+                                    <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                        <button 
+                                            type="button"
+                                            onClick={() => setMainImageIndex(index)}
+                                            className={`p-2 rounded-full transition-all ${index === mainImageIndex ? 'bg-orange-500 text-black' : 'bg-white/10 text-white hover:bg-orange-500 hover:text-black'}`}
+                                            title="Establecer como principal"
+                                        >
+                                            <Star size={14} fill={index === mainImageIndex ? "currentColor" : "none"} />
+                                        </button>
+                                        <button 
+                                            type="button"
+                                            onClick={() => removeImage(index)}
+                                            className="p-2 bg-red-500/80 rounded-full text-white hover:bg-red-500 transition-all"
+                                            title="Eliminar"
+                                        >
+                                            <Trash2 size={14} />
+                                        </button>
+                                    </div>
+
+                                    {index === mainImageIndex && (
+                                        <div className="absolute top-2 left-2 bg-orange-500 text-black text-[8px] font-black uppercase px-2 py-0.5 rounded-full shadow-lg">
+                                            Principal
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+
+                            {/* Add More Button */}
+                            <div className="relative aspect-square border-2 border-dashed border-white/10 rounded-2xl bg-white/5 hover:border-orange-500/30 transition-all flex flex-col items-center justify-center group cursor-pointer">
+                                <Upload className="text-slate-700 group-hover:text-orange-500 transition-colors mb-2" size={24} />
+                                <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest text-center px-2">Subir Foto</span>
+                                <input 
+                                    type="file" 
+                                    multiple
+                                    accept="image/*" 
+                                    onChange={handleImageChange}
+                                    className="absolute inset-0 opacity-0 cursor-pointer"
+                                />
+                            </div>
+                        </div>
+
+                        {imageItems.length === 0 && (
+                            <div className="py-12 border-2 border-dashed border-white/5 rounded-2xl flex flex-col items-center justify-center bg-white/2">
+                                <Package size={40} className="text-slate-800 mb-4" />
+                                <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.2em]">No hay imágenes</p>
+                            </div>
+                        )}
                     </div>
 
                     {/* Basic Info */}

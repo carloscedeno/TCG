@@ -349,6 +349,7 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                 set: accData.category,
                 set_code: accData.category,
                 image_url: accData.image_url,
+                additional_images: accData.additional_images || [],
                 price: finalPrice,
                 original_price: originalPrice,
                 discount_percentage: discountPct,

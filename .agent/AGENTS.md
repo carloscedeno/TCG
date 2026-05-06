@@ -152,3 +152,9 @@ Artefactos del Compound step:
 ## ğŸ›¡ï¸ Footer
 
 *Geekorium â€” Geeko-Engineering Division | Limpieza: 2026-03-23*
+
+### ? Soporte Multi-Imagen y Carrusel Premium (Mayo 2026)
+- **Propósito**: Permitir que los administradores suban múltiples fotos por producto y que los usuarios disfruten de una experiencia de visualización inmersiva.
+- **Implementación**: Sistema de galería en Admin + AnimatePresence de Framer Motion en el modal de detalles.
+- **Estatus**: ? Implementado (Compound v58).
+
