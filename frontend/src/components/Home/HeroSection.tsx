@@ -88,7 +88,7 @@ export const HeroSection: React.FC = () => {
         return (
             <div className="space-y-3">
                 <div className="h-6 w-64 bg-neutral-800/50 rounded-lg animate-pulse" />
-                <div className="w-full h-[260px] sm:h-[320px] md:h-[400px] rounded-2xl bg-neutral-900/50 animate-pulse flex items-center justify-center border border-white/5">
+                <div className="w-full aspect-[3.5/1] rounded-2xl bg-neutral-900/50 animate-pulse flex items-center justify-center border border-white/5">
                     <span className="text-neutral-500 font-bold uppercase tracking-[0.3em] text-xs">Cargando...</span>
                 </div>
             </div>
@@ -116,12 +116,12 @@ export const HeroSection: React.FC = () => {
             <div className="relative group rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-[#050505]">
                 <a
                     href={currentItem.link_url || '#'}
-                    className="block w-full h-[260px] sm:h-[320px] md:h-[400px] lg:h-[460px]"
+                    className="block w-full"
                 >
                     <img
                         src={currentItem.image_url}
                         alt={currentItem.title || 'Banner'}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                        className="w-full h-auto object-contain transition-transform duration-700 group-hover:scale-[1.02]"
                     />
                 </a>
 
