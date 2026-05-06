@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, X, Sliders, Filter, Check, Package } from 'lucide-react';
+import { Search, X, Sliders, Filter, Check, Package, ChevronDown, ChevronUp } from 'lucide-react';
 import { rarityMap, typeMap, colorMap } from '../../utils/translations';
 
 const gameNameMap: Record<string, string> = {
@@ -33,6 +33,22 @@ export interface FiltersPanelProps {
 
 export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, onChange, setsOptions, isAccessoryMode }) => {
   const [setSearch, setSetSearch] = useState('');
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>(() => {
+    const initialState: Record<string, boolean> = {};
+    if (selected.games && selected.games.length > 0) initialState.games = true;
+    if (selected.sets && selected.sets.length > 0) initialState.sets = true;
+    if (selected.categories && selected.categories.length > 0) initialState.categories = true;
+    if (selected.rarities && selected.rarities.length > 0) initialState.rarities = true;
+    if (selected.colors && selected.colors.length > 0) initialState.colors = true;
+    if (selected.types && selected.types.length > 0) initialState.types = true;
+    if (selected.priceRange && (selected.priceRange[0] > 0 || selected.priceRange[1] < 1000000)) initialState.price = true;
+    if (selected.yearRange && (selected.yearRange[0] > 1993 || selected.yearRange[1] < 2026)) initialState.year = true;
+    return initialState;
+  });
+
+  const toggleSection = (section: string) => {
+    setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }));
+  };
 
   const filteredSets = useMemo(() => {
     if (!setSearch) return setsOptions.slice(0, 50);
@@ -95,261 +111,335 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
 
       {/* Juegos - Ocultar si ya hay uno seleccionado */}
       {!selectedGame && (
-        <section>
-          <h3 className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
-            <div className="w-1.5 h-1.5 bg-geeko-cyan rounded-full shadow-[0_0_10px_rgba(0,229,255,0.8)]"></div>
-            Universo de Juegos
-          </h3>
-          <div className="flex flex-wrap gap-2">
-            {filters.games.map(game => {
-              const isSelected = selected.games?.includes(game);
-              return (
-                <button
-                  key={game}
-                  onClick={() => handleCheckbox('games', game)}
-                  className={`px-4 py-2 rounded-xl text-[11px] md:text-[12px] font-bold transition-all border ${isSelected
-                    ? 'bg-geeko-violet-accent/20 border-geeko-cyan/40 text-geeko-cyan shadow-lg shadow-geeko-cyan/10'
-                    : 'bg-neutral-900/50 border-neutral-800 text-neutral-500 hover:border-neutral-700 hover:text-neutral-300'
-                    }`}
-                >
-                  {gameNameMap[game] || game}
-                </button>
-              );
-            })}
-          </div>
+        <section className="border-b border-white/5 pb-6">
+          <button 
+            onClick={() => toggleSection('games')}
+            className="w-full flex items-center justify-between text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-2 hover:text-neutral-300 transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 bg-geeko-cyan rounded-full shadow-[0_0_10px_rgba(0,229,255,0.8)]"></div>
+              Universo de Juegos
+            </div>
+            {expandedSections.games ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          </button>
+          
+          {expandedSections.games && (
+            <div className="flex flex-wrap gap-2 pt-3 animate-in fade-in slide-in-from-top-1 duration-200">
+              {filters.games.map(game => {
+                const isSelected = selected.games?.includes(game);
+                return (
+                  <button
+                    key={game}
+                    onClick={() => handleCheckbox('games', game)}
+                    className={`px-4 py-2 rounded-xl text-[11px] md:text-[12px] font-bold transition-all border ${isSelected
+                      ? 'bg-geeko-violet-accent/20 border-geeko-cyan/40 text-geeko-cyan shadow-lg shadow-geeko-cyan/10'
+                      : 'bg-neutral-900/50 border-neutral-800 text-neutral-500 hover:border-neutral-700 hover:text-neutral-300'
+                      }`}
+                  >
+                    {gameNameMap[game] || game}
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </section>
       )}
 
       {/* Sets - Solo Singles */}
       {!isAccessoryMode && (
-        <section>
-          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
-            <div className="w-1.5 h-1.5 bg-geeko-violet-accent rounded-full shadow-[0_0_10px_rgba(55,50,102,0.9)]"></div>
-            Expansión / Set
-          </h3>
-          <div className="relative mb-3">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-600" />
-            <input
-              type="text"
-              placeholder="Buscar sets..."
-              value={setSearch}
-              onChange={(e) => setSetSearch(e.target.value)}
-              className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2.5 pl-9 pr-4 text-xs text-white placeholder:text-neutral-600 focus:outline-none focus:border-purple-500/50 transition-all font-medium"
-            />
-          </div>
-          <div className="max-h-52 overflow-y-auto pr-2 custom-scrollbar space-y-1">
-            {filteredSets.length > 0 ? (
-              filteredSets.map(setName => (
-                <button
-                  key={setName}
-                  onClick={() => handleCheckbox('sets', setName)}
-                  className={`flex items-center justify-between w-full px-3 py-2 rounded-lg text-left text-[11px] md:text-[12px] font-medium transition-all ${selected.sets?.includes(setName)
-                    ? 'bg-geeko-cyan/10 text-geeko-cyan'
-                    : 'text-neutral-500 hover:bg-white/5 hover:text-neutral-300'
-                    }`}
-                >
-                  <span className="truncate pr-4">{setName}</span>
-                  {selected.sets?.includes(setName) && <Check size={12} />}
-                </button>
-              ))
-            ) : (
-              <p className="text-[10px] text-neutral-600 italic py-4 text-center">No hay sets.</p>
-            )}
-          </div>
+        <section className="border-b border-white/5 pb-6">
+          <button 
+            onClick={() => toggleSection('sets')}
+            className="w-full flex items-center justify-between text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-2 hover:text-neutral-300 transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 bg-geeko-violet-accent rounded-full shadow-[0_0_10px_rgba(55,50,102,0.9)]"></div>
+              Expansión / Set
+            </div>
+            {expandedSections.sets ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          </button>
+
+          {expandedSections.sets && (
+            <div className="pt-3 animate-in fade-in slide-in-from-top-1 duration-200">
+              <div className="relative mb-3">
+                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-600" />
+                <input
+                  type="text"
+                  placeholder="Buscar sets..."
+                  value={setSearch}
+                  onChange={(e) => setSetSearch(e.target.value)}
+                  className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2.5 pl-9 pr-4 text-xs text-white placeholder:text-neutral-600 focus:outline-none focus:border-purple-500/50 transition-all font-medium"
+                />
+              </div>
+              <div className="max-h-52 overflow-y-auto pr-2 custom-scrollbar space-y-1">
+                {filteredSets.length > 0 ? (
+                  filteredSets.map(setName => (
+                    <button
+                      key={setName}
+                      onClick={() => handleCheckbox('sets', setName)}
+                      className={`flex items-center justify-between w-full px-3 py-2 rounded-lg text-left text-[11px] md:text-[12px] font-medium transition-all ${selected.sets?.includes(setName)
+                        ? 'bg-geeko-cyan/10 text-geeko-cyan'
+                        : 'text-neutral-500 hover:bg-white/5 hover:text-neutral-300'
+                        }`}
+                    >
+                      <span className="truncate pr-4">{setName}</span>
+                      {selected.sets?.includes(setName) && <Check size={12} />}
+                    </button>
+                  ))
+                ) : (
+                  <p className="text-[10px] text-neutral-600 italic py-4 text-center">No hay sets.</p>
+                )}
+              </div>
+            </div>
+          )}
         </section>
       )}
 
       {/* Categorías - Solo Catálogo */}
       {isAccessoryMode && filters.categories && (
-        <section>
-          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
-            <div className="w-1.5 h-1.5 bg-orange-500 rounded-full shadow-[0_0_10px_rgba(249,115,22,0.8)]"></div>
-            Categoría
-          </h3>
-          <div className="grid grid-cols-1 gap-2">
-            {filters.categories
-              .filter(cat => {
-                if (!selectedGame) return true;
-                const otherGames = ['Magic', 'Pokemon', 'Digimon', 'One Piece', 'Yu-Gi-Oh', 'Weiss Schwarz'].filter(g => {
-                   if (selectedGame === 'MTG' && g === 'Magic') return false;
-                   if ((selectedGame === 'PKM' || selectedGame === 'POKEMON') && g === 'Pokemon') return false;
-                   if ((selectedGame === 'DGM' || selectedGame === 'DIGIMON') && g === 'Digimon') return false;
-                   if ((selectedGame === 'OPC' || selectedGame === 'ONE PIECE') && g === 'One Piece') return false;
-                   if (selectedGame === 'YGO' && g === 'Yu-Gi-Oh') return false;
-                   return ['Magic', 'Pokemon', 'Digimon', 'One Piece', 'Yu-Gi-Oh', 'Weiss Schwarz'].includes(g);
-                });
-                return !otherGames.includes(cat);
-              })
-              .map(category => {
-              const isSelected = selected.categories?.includes(category);
-              return (
-                <button
-                  key={category}
-                  onClick={() => handleCheckbox('categories' as any, category)}
-                  className={`flex items-center justify-between w-full px-4 py-3 rounded-xl border transition-all ${isSelected
-                    ? 'bg-orange-500/10 border-orange-500/40 text-orange-400 shadow-lg shadow-orange-500/5'
-                    : 'bg-neutral-900/50 border-neutral-800 text-neutral-500 hover:border-neutral-700'
-                    }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <Package size={14} className={isSelected ? 'text-orange-400' : 'text-neutral-600'} />
-                    <span className="text-[10px] font-black uppercase tracking-tight">{category}</span>
-                  </div>
-                  {isSelected && <Check size={12} />}
-                </button>
-              );
-            })}
-          </div>
+        <section className="border-b border-white/5 pb-6">
+          <button 
+            onClick={() => toggleSection('categories')}
+            className="w-full flex items-center justify-between text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-2 hover:text-neutral-300 transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 bg-orange-500 rounded-full shadow-[0_0_10px_rgba(249,115,22,0.8)]"></div>
+              Categoría
+            </div>
+            {expandedSections.categories ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          </button>
+
+          {expandedSections.categories && (
+            <div className="grid grid-cols-1 gap-2 pt-3 animate-in fade-in slide-in-from-top-1 duration-200">
+              {filters.categories
+                .filter(cat => {
+                  if (!selectedGame) return true;
+                  const otherGames = ['Magic', 'Pokemon', 'Digimon', 'One Piece', 'Yu-Gi-Oh', 'Weiss Schwarz'].filter(g => {
+                    if (selectedGame === 'MTG' && g === 'Magic') return false;
+                    if ((selectedGame === 'PKM' || selectedGame === 'POKEMON') && g === 'Pokemon') return false;
+                    if ((selectedGame === 'DGM' || selectedGame === 'DIGIMON') && g === 'Digimon') return false;
+                    if ((selectedGame === 'OPC' || selectedGame === 'ONE PIECE') && g === 'One Piece') return false;
+                    if (selectedGame === 'YGO' && g === 'Yu-Gi-Oh') return false;
+                    return ['Magic', 'Pokemon', 'Digimon', 'One Piece', 'Yu-Gi-Oh', 'Weiss Schwarz'].includes(g);
+                  });
+                  return !otherGames.includes(cat);
+                })
+                .map(category => {
+                  const isSelected = selected.categories?.includes(category);
+                  return (
+                    <button
+                      key={category}
+                      onClick={() => handleCheckbox('categories' as any, category)}
+                      className={`flex items-center justify-between w-full px-4 py-3 rounded-xl border transition-all ${isSelected
+                        ? 'bg-orange-500/10 border-orange-500/40 text-orange-400 shadow-lg shadow-orange-500/5'
+                        : 'bg-neutral-900/50 border-neutral-800 text-neutral-500 hover:border-neutral-700'
+                        }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <Package size={14} className={isSelected ? 'text-orange-400' : 'text-neutral-600'} />
+                        <span className="text-[10px] font-black uppercase tracking-tight">{category}</span>
+                      </div>
+                      {isSelected && <Check size={12} />}
+                    </button>
+                  );
+                })}
+            </div>
+          )}
         </section>
       )}
 
       {/* Rareza - Solo para Cartas */}
       {!isAccessoryMode && filters.rarities && (
-        <section>
-          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
-            <div className="w-1.5 h-1.5 bg-geeko-gold rounded-full shadow-[0_0_10px_rgba(255,215,0,0.8)]"></div>
-            Rareza
-          </h3>
-          <div className="grid grid-cols-2 gap-2">
-            {filters.rarities.map(rarity => {
-              const isSelected = selected.rarities?.includes(rarity);
-              return (
-                <button
-                  key={rarity}
-                  onClick={() => handleCheckbox('rarities', rarity)}
-                  className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border transition-all ${isSelected
-                    ? 'bg-geeko-gold/10 border-geeko-gold/40 text-geeko-gold shadow-lg shadow-geeko-gold/5'
-                    : 'bg-neutral-900/50 border-neutral-800 text-neutral-500 hover:border-neutral-700'
-                    }`}
-                >
-                  <div className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-geeko-gold animate-pulse' : 'bg-neutral-700'}`} />
-                  <span className="text-[10px] font-black uppercase tracking-tight">{rarityMap[rarity] || rarity}</span>
-                </button>
-              );
-            })}
-          </div>
+        <section className="border-b border-white/5 pb-6">
+          <button 
+            onClick={() => toggleSection('rarities')}
+            className="w-full flex items-center justify-between text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-2 hover:text-neutral-300 transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 bg-geeko-gold rounded-full shadow-[0_0_10px_rgba(255,215,0,0.8)]"></div>
+              Rareza
+            </div>
+            {expandedSections.rarities ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          </button>
+
+          {expandedSections.rarities && (
+            <div className="grid grid-cols-2 gap-2 pt-3 animate-in fade-in slide-in-from-top-1 duration-200">
+              {filters.rarities.map(rarity => {
+                const isSelected = selected.rarities?.includes(rarity);
+                return (
+                  <button
+                    key={rarity}
+                    onClick={() => handleCheckbox('rarities', rarity)}
+                    className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border transition-all ${isSelected
+                      ? 'bg-geeko-gold/10 border-geeko-gold/40 text-geeko-gold shadow-lg shadow-geeko-gold/5'
+                      : 'bg-neutral-900/50 border-neutral-800 text-neutral-500 hover:border-neutral-700'
+                      }`}
+                  >
+                    <div className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-geeko-gold animate-pulse' : 'bg-neutral-700'}`} />
+                    <span className="text-[10px] font-black uppercase tracking-tight">{rarityMap[rarity] || rarity}</span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </section>
       )}
 
       {/* Colores Contextuales */}
       {!isAccessoryMode && currentColors.length > 0 && (
-        <section>
-          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
-            <div className="w-1.5 h-1.5 bg-geeko-cyan rounded-full shadow-[0_0_10px_rgba(0,229,255,0.8)]"></div>
-            {selectedGame === 'MTG' ? 'Esencia de Mana (Colores)' : 'Colores / Atributos'}
-          </h3>
-          <div className="grid grid-cols-4 gap-2">
-            {currentColors.map(color => {
-              const isSelected = selected.colors?.includes(color);
-              const colorClassMap: Record<string, string> = {
-                'White': 'bg-[#F8E7B9] shadow-[0_0_10px_#F8E7B9]',
-                'Blue': 'bg-[#0E68AB] shadow-[0_0_10px_#0E68AB]',
-                'Black': 'bg-[#150B00] shadow-[0_0_10px_#150B00] border border-white/20',
-                'Red': 'bg-[#D3202A] shadow-[0_0_10px_#D3202A]',
-                'Green': 'bg-[#00733E] shadow-[0_0_10px_#00733E]',
-                'Colorless': 'bg-[#D3D3D3] shadow-[0_0_10px_#D3D3D3]',
-                'Multicolor': 'bg-gradient-to-br from-[#F8E7B9] via-[#D3202A] to-[#0E68AB]',
-                'Grass': 'bg-[#7db808]', 'Fire': 'bg-[#e3350d]', 'Water': 'bg-[#318bc9]', 'Lightning': 'bg-[#eed535]',
-                'Psychic': 'bg-[#a33ea1]', 'Fighting': 'bg-[#ce4069]', 'Darkness': 'bg-[#707070]', 'Metal': 'bg-[#b7b7ce]',
-                'Fairy': 'bg-[#fdb9e9]', 'Dragon': 'bg-[#53a4cf]',
-                'Purple': 'bg-[#800080]', 'Yellow': 'bg-[#ffff00]',
-              };
+        <section className="border-b border-white/5 pb-6">
+          <button 
+            onClick={() => toggleSection('colors')}
+            className="w-full flex items-center justify-between text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-2 hover:text-neutral-300 transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 bg-geeko-cyan rounded-full shadow-[0_0_10px_rgba(0,229,255,0.8)]"></div>
+              {selectedGame === 'MTG' ? 'Mana (Colores)' : 'Colores'}
+            </div>
+            {expandedSections.colors ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          </button>
 
-              return (
-                <button
-                  key={color}
-                  onClick={() => handleCheckbox('colors', color)}
-                  title={colorMap[color] || color}
-                  className={`relative group w-full aspect-square rounded-xl border flex items-center justify-center transition-all ${isSelected
-                    ? 'border-geeko-cyan/50 bg-geeko-cyan/10'
-                    : 'border-neutral-800 bg-neutral-900/50 hover:border-neutral-600'
-                    }`}
-                >
-                  <div className={`w-4 h-4 rounded-full ${colorClassMap[color] || 'bg-neutral-500'} ${isSelected ? 'scale-125' : 'opacity-80 group-hover:opacity-100'} transition-all`} />
-                  {isSelected && <div className="absolute top-1 right-1"><Check size={8} className="text-geeko-cyan" /></div>}
-                </button>
-              );
-            })}
-          </div>
+          {expandedSections.colors && (
+            <div className="grid grid-cols-4 gap-2 pt-3 animate-in fade-in slide-in-from-top-1 duration-200">
+              {currentColors.map(color => {
+                const isSelected = selected.colors?.includes(color);
+                const colorClassMap: Record<string, string> = {
+                  'White': 'bg-[#F8E7B9] shadow-[0_0_10px_#F8E7B9]',
+                  'Blue': 'bg-[#0E68AB] shadow-[0_0_10px_#0E68AB]',
+                  'Black': 'bg-[#150B00] shadow-[0_0_10px_#150B00] border border-white/20',
+                  'Red': 'bg-[#D3202A] shadow-[0_0_10px_#D3202A]',
+                  'Green': 'bg-[#00733E] shadow-[0_0_10px_#00733E]',
+                  'Colorless': 'bg-[#D3D3D3] shadow-[0_0_10px_#D3D3D3]',
+                  'Multicolor': 'bg-gradient-to-br from-[#F8E7B9] via-[#D3202A] to-[#0E68AB]',
+                  'Grass': 'bg-[#7db808]', 'Fire': 'bg-[#e3350d]', 'Water': 'bg-[#318bc9]', 'Lightning': 'bg-[#eed535]',
+                  'Psychic': 'bg-[#a33ea1]', 'Fighting': 'bg-[#ce4069]', 'Darkness': 'bg-[#707070]', 'Metal': 'bg-[#b7b7ce]',
+                  'Fairy': 'bg-[#fdb9e9]', 'Dragon': 'bg-[#53a4cf]',
+                  'Purple': 'bg-[#800080]', 'Yellow': 'bg-[#ffff00]',
+                };
+
+                return (
+                  <button
+                    key={color}
+                    onClick={() => handleCheckbox('colors', color)}
+                    title={colorMap[color] || color}
+                    className={`relative group w-full aspect-square rounded-xl border flex items-center justify-center transition-all ${isSelected
+                      ? 'border-geeko-cyan/50 bg-geeko-cyan/10'
+                      : 'border-neutral-800 bg-neutral-900/50 hover:border-neutral-600'
+                      }`}
+                  >
+                    <div className={`w-4 h-4 rounded-full ${colorClassMap[color] || 'bg-neutral-500'} ${isSelected ? 'scale-125' : 'opacity-80 group-hover:opacity-100'} transition-all`} />
+                    {isSelected && <div className="absolute top-1 right-1"><Check size={8} className="text-geeko-cyan" /></div>}
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </section>
       )}
 
       {/* Tipos Contextuales */}
       {!isAccessoryMode && currentTypes.length > 0 && (
-        <section>
-          <h3 className="text-[11px] font-black uppercase tracking-widest text-neutral-600 mb-4 flex items-center gap-2">
-            <div className="w-1 h-3 bg-red-600 rounded-full"></div>
-            {selectedGame === 'MTG' ? 'Esencia de Carta (Tipo)' : 'Tipo de Carta'}
-          </h3>
-          <div className="flex flex-wrap gap-2">
-            {currentTypes.map(type => {
-              const isSelected = selected.types?.includes(type);
-              return (
-                <button
-                  key={type}
-                  onClick={() => handleCheckbox('types', type)}
-                  className={`px-3 py-1.5 rounded-lg text-[10px] md:text-[11px] font-bold transition-all border ${isSelected
-                    ? 'bg-red-600/10 border-red-500/50 text-red-400'
-                    : 'bg-neutral-900/50 border-neutral-800 text-neutral-500 hover:text-neutral-300'
-                    }`}
-                >
-                  {typeMap[type] || type}
-                </button>
-              );
-            })}
-          </div>
+        <section className="border-b border-white/5 pb-6">
+          <button 
+            onClick={() => toggleSection('types')}
+            className="w-full flex items-center justify-between text-[11px] font-black uppercase tracking-widest text-neutral-600 mb-2 hover:text-neutral-300 transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <div className="w-1 h-3 bg-red-600 rounded-full"></div>
+              {selectedGame === 'MTG' ? 'Tipo de Carta' : 'Tipo'}
+            </div>
+            {expandedSections.types ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          </button>
+
+          {expandedSections.types && (
+            <div className="flex flex-wrap gap-2 pt-3 animate-in fade-in slide-in-from-top-1 duration-200">
+              {currentTypes.map(type => {
+                const isSelected = selected.types?.includes(type);
+                return (
+                  <button
+                    key={type}
+                    onClick={() => handleCheckbox('types', type)}
+                    className={`px-3 py-1.5 rounded-lg text-[10px] md:text-[11px] font-bold transition-all border ${isSelected
+                      ? 'bg-red-600/10 border-red-500/50 text-red-400'
+                      : 'bg-neutral-900/50 border-neutral-800 text-neutral-500 hover:text-neutral-300'
+                      }`}
+                  >
+                    {typeMap[type] || type}
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </section>
       )}
 
       {/* Rango de Precio */}
-      <section>
-        <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
-          <div className="w-1.5 h-1.5 bg-geeko-gold rounded-full shadow-[0_0_10px_rgba(255,215,0,0.8)]"></div>
-          Rango de Precio (USD)
-        </h3>
-        <div className="flex items-center gap-3">
-          <input
-            type="number"
-            placeholder="Mín"
-            value={selected.priceRange?.[0] || ''}
-            onChange={(e) => onChange({ ...selected, priceRange: [parseFloat(e.target.value) || 0, selected.priceRange?.[1] || 1000000] })}
-            className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-geeko-gold/50"
-          />
-          <span className="text-neutral-700">→</span>
-          <input
-            type="number"
-            placeholder="Máx"
-            value={selected.priceRange?.[1] || ''}
-            onChange={(e) => onChange({ ...selected, priceRange: [selected.priceRange?.[0] || 0, parseFloat(e.target.value) || 1000000] })}
-            className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-geeko-gold/50"
-          />
-        </div>
-      </section>
+      <section className="border-b border-white/5 pb-6">
+        <button 
+          onClick={() => toggleSection('price')}
+          className="w-full flex items-center justify-between text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-2 hover:text-neutral-300 transition-colors"
+        >
+          <div className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 bg-geeko-gold rounded-full shadow-[0_0_10px_rgba(255,215,0,0.8)]"></div>
+            Precio (USD)
+          </div>
+          {expandedSections.price ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+        </button>
 
-      {/* Timeline / Año */}
-      {!isAccessoryMode && (
-        <section>
-          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-5 flex items-center gap-2">
-            <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.8)]"></div>
-            Órbita Temporal (Año)
-          </h3>
-          <div className="flex items-center gap-3">
+        {expandedSections.price && (
+          <div className="flex items-center gap-3 pt-3 animate-in fade-in slide-in-from-top-1 duration-200">
             <input
               type="number"
-              placeholder="Desde"
-              value={selected.yearRange?.[0] || ''}
-              onChange={(e) => onChange({ ...selected, yearRange: [parseInt(e.target.value) || 1993, selected.yearRange?.[1] || 2026] })}
-              className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-emerald-500/50"
+              placeholder="Mín"
+              value={selected.priceRange?.[0] || ''}
+              onChange={(e) => onChange({ ...selected, priceRange: [parseFloat(e.target.value) || 0, selected.priceRange?.[1] || 1000000] })}
+              className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-geeko-gold/50"
             />
             <span className="text-neutral-700">→</span>
             <input
               type="number"
-              placeholder="Hasta"
-              value={selected.yearRange?.[1] || ''}
-              onChange={(e) => onChange({ ...selected, yearRange: [selected.yearRange?.[0] || 1993, parseInt(e.target.value) || 2026] })}
-              className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-emerald-500/50"
+              placeholder="Máx"
+              value={selected.priceRange?.[1] || ''}
+              onChange={(e) => onChange({ ...selected, priceRange: [selected.priceRange?.[0] || 0, parseFloat(e.target.value) || 1000000] })}
+              className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-geeko-gold/50"
             />
           </div>
+        )}
+      </section>
+
+      {/* Timeline / Año */}
+      {!isAccessoryMode && (
+        <section className="pb-6">
+          <button 
+            onClick={() => toggleSection('year')}
+            className="w-full flex items-center justify-between text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-2 hover:text-neutral-300 transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.8)]"></div>
+              Año
+            </div>
+            {expandedSections.year ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          </button>
+
+          {expandedSections.year && (
+            <div className="flex items-center gap-3 pt-3 animate-in fade-in slide-in-from-top-1 duration-200">
+              <input
+                type="number"
+                placeholder="Desde"
+                value={selected.yearRange?.[0] || ''}
+                onChange={(e) => onChange({ ...selected, yearRange: [parseInt(e.target.value) || 1993, selected.yearRange?.[1] || 2026] })}
+                className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-emerald-500/50"
+              />
+              <span className="text-neutral-700">→</span>
+              <input
+                type="number"
+                placeholder="Hasta"
+                value={selected.yearRange?.[1] || ''}
+                onChange={(e) => onChange({ ...selected, yearRange: [selected.yearRange?.[0] || 1993, parseInt(e.target.value) || 2026] })}
+                className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-emerald-500/50"
+              />
+            </div>
+          )}
         </section>
       )}
 
