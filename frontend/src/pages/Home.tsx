@@ -72,12 +72,14 @@ const Home: React.FC = () => {
   const [debouncedFilters, setDebouncedFilters] = useState<Partial<Filters>>(filters);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [activeTab, setActiveTab] = useState<'marketplace' | 'catalog'>(() => {
-    const tabParam = searchParams.get('tab') as 'marketplace' | 'catalog';
+    const tabParam = searchParams.get('tab');
+    if (tabParam === 'catalog' || tabParam === 'marketplace') return tabParam;
+    
     const games = searchParams.get('game')?.split(',').filter(Boolean) || [];
-    if ((!games.includes('MTG') && games.length > 0) && (!tabParam || tabParam === 'marketplace')) {
+    if (games.length > 0 && !games.includes('MTG')) {
       return 'catalog';
     }
-    return tabParam || 'marketplace';
+    return 'marketplace';
   });
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
