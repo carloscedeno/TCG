@@ -161,7 +161,7 @@ const Home: React.FC = () => {
     return !val;
   };
 
-  const isDashboardView = !query && Object.entries(filters).every(([key, val]) => isDefaultFilter(key, val)) && activeRarity === 'All' && activeTab !== 'catalog';
+  const isDashboardView = !query && Object.entries(filters).every(([key, val]) => isDefaultFilter(key, val)) && activeRarity === 'All' && (activeTab as string) !== 'catalog';
 
   useEffect(() => {
     const gameCode = filters.games && filters.games.length > 0 ? filters.games[0] : undefined;
@@ -570,7 +570,7 @@ const Home: React.FC = () => {
         <main className="max-w-[1600px] w-full mx-auto px-6 py-8 flex-1">
           <div className="flex flex-col lg:flex-row gap-10">
             {/* Sidebar Filters */}
-            {(!isDashboardView || (filters.games && filters.games.length > 0) || activeTab === 'catalog') && (
+            {(!isDashboardView || (filters.games && filters.games.length > 0) || (activeTab as string) === 'catalog') && (
               <aside className="hidden lg:block w-72 flex-shrink-0">
                 <div className="sticky top-[130px] max-h-[calc(100vh-150px)] overflow-y-auto pr-2 custom-scrollbar">
                   <FiltersPanel
