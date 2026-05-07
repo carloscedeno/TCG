@@ -871,8 +871,8 @@ $content
 **Lo que cambió:**
 - lessons_learned.md → Lección #155
 - LEYES_DEL_SISTEMA.md → Ley #27
-- rontend/src/components/Admin/AddAccessoryDrawer.tsx → Soporte multi-upload
-- rontend/src/components/Card/CardModal.tsx → Carousel dinámico
+- frontend/src/components/Admin/AddAccessoryDrawer.tsx → Soporte multi-upload
+- frontend/src/components/Card/CardModal.tsx → Carousel dinámico
 **Artefacto creado:** Migración SQL 20260505164500_add_multi_image_to_accessories.sql
 **Regla derivada:** Ley 27 (Garantizar imagen canónica fuera del array de galería).
 
@@ -907,3 +907,15 @@ $content
 
 **Regla derivada:** Ley 29 — Paneles laterales de filtrado densos deben ser colapsables por defecto, manteniendo expandidas solo las secciones con filtros activos.
 
+## 2026-05-07 — Remediación Flujo "Por Encargo" (Bypass de Stock)
+
+**Qué pasó:** Se remedió el bloqueo crítico en el checkout que impedía realizar pedidos de productos sin stock físico, habilitando correctamente el flujo "Por Encargo" definido en la Regla de Negocio 4.
+
+**Lo que cambió:**
+- `frontend/src/pages/CheckoutPage.tsx`: Lógica de detección de ítems on-demand y badges visuales cyan. Actualización de mensajes de WhatsApp y Email.
+- `supabase/migrations/20260507120000_allow_on_demand_and_labels.sql`: Actualización del RPC `create_order_atomic` para permitir el bypass de validación de stock y registro en `order_items`.
+- `lessons_learned.md` → Lección #148.
+
+**Artefacto creado:** Migración SQL para checkout on-demand.
+
+**Regla derivada:** Lección #148 — Todo flujo de checkout atómico debe soportar un bypass de validación de stock si el ítem está marcado como "on-demand".
