@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Play, Settings, Users, Database, Shield, AlertCircle, Package, ExternalLink, Image, Calendar } from 'lucide-react';
+import { Play, Settings, Users, Database, Shield, AlertCircle, Package, ExternalLink, Image, Calendar, TrendingUp, Upload } from 'lucide-react';
 
 import { supabase } from '../../utils/supabaseClient';
 
@@ -317,6 +317,32 @@ export const AdminDashboard = () => {
                             </div>
                             <div className="w-16 h-16 bg-rose-500/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
                                 <Calendar className="text-rose-400" size={32} />
+                            </div>
+                        </div>
+                    </Link>
+
+                    <Link to="/admin/presales" className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-900/50 to-slate-900 border border-white/10 p-8 hover:border-emerald-500/50 transition-all">
+                        <div className="absolute inset-0 bg-emerald-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="relative z-10 flex items-center justify-between">
+                            <div>
+                                <h3 className="text-2xl font-black italic text-white mb-2">PREVENTAS</h3>
+                                <p className="text-emerald-300 text-xs font-bold uppercase tracking-widest">Anuncios de Preventa</p>
+                            </div>
+                            <div className="w-16 h-16 bg-emerald-500/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <TrendingUp className="text-emerald-400" size={32} />
+                            </div>
+                        </div>
+                    </Link>
+
+                    <Link to="/import" className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-800 to-slate-900 border border-white/10 p-8 hover:border-white/20 transition-all">
+                        <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="relative z-10 flex items-center justify-between">
+                            <div>
+                                <h3 className="text-2xl font-black italic text-white mb-2">IMPORTAR</h3>
+                                <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">Carga Masiva de Colección</p>
+                            </div>
+                            <div className="w-16 h-16 bg-slate-800 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <Upload className="text-slate-300" size={32} />
                             </div>
                         </div>
                     </Link>

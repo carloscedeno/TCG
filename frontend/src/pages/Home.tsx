@@ -15,6 +15,7 @@ import { CartDrawer } from '../components/Navigation/CartDrawer';
 import { Footer } from '../components/Navigation/Footer';
 import { Header } from '../components/Navigation/Header';
 import { HeroSection } from '../components/Home/HeroSection';
+import { PresaleSection } from '../components/Home/PresaleSection';
 import { DealsCarousel } from '../components/Home/DealsCarousel';
 
 
@@ -423,12 +424,13 @@ const Home: React.FC = () => {
         {/* Header */}
         <Header onCartOpen={() => setIsCartOpen(true)} cartCount={cartCount} />
 
-        {/* Promotional Banner - Only show when in landing (no filters, no search) */}
         {isDashboardView && (
           <div className="max-w-[1600px] mx-auto w-full px-6 pt-2 animate-in fade-in slide-in-from-top-4 duration-1000">
             <HeroSection />
+            <PresaleSection />
           </div>
         )}
+
 
 
 

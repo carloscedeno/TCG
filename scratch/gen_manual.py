@@ -1,0 +1,327 @@
+html = """<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Manual Admin — Geekorium</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,sans-serif;background:#050505;color:#e2e8f0;display:flex;min-height:100vh}
+nav{width:250px;min-height:100vh;background:#0a0a0a;border-right:1px solid rgba(255,255,255,.05);position:fixed;top:0;left:0;overflow-y:auto;padding:1.5rem 1rem}
+.logo{font-size:1.3rem;font-weight:900;font-style:italic;letter-spacing:-1px;padding:.75rem 1rem;margin-bottom:1.5rem;color:#22d3ee}
+.logo span{color:#fff}
+nav ul{list-style:none;display:flex;flex-direction:column;gap:.2rem}
+nav a{display:flex;align-items:center;gap:.6rem;padding:.55rem .85rem;border-radius:.5rem;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#64748b;transition:all .2s;cursor:pointer;text-decoration:none}
+nav a:hover,nav a.active{background:rgba(255,255,255,.05);color:#22d3ee}
+.nav-label{font-size:.62rem;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:#1e293b;padding:.5rem 1rem;margin-top:.5rem}
+main{margin-left:250px;flex:1;padding:3rem 4rem;max-width:900px}
+section{margin-bottom:4rem;scroll-margin-top:2rem}
+h1{font-size:2.8rem;font-weight:900;font-style:italic;letter-spacing:-2px}
+h1 span{color:#22d3ee}
+h2{font-size:1.5rem;font-weight:900;font-style:italic;letter-spacing:-1px;margin-bottom:1.25rem;padding-bottom:.75rem;border-bottom:1px solid rgba(255,255,255,.05)}
+h3{font-size:.85rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:#94a3b8;margin:1.5rem 0 .75rem}
+p{color:#94a3b8;font-size:.875rem;line-height:1.7;margin-bottom:.75rem}
+.subtitle{color:#475569;font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-top:.4rem}
+.badge{display:inline-flex;align-items:center;background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.2);color:#22d3ee;font-size:.65rem;font-weight:900;text-transform:uppercase;letter-spacing:.1em;padding:.25rem .75rem;border-radius:999px;margin-bottom:.75rem}
+.card{background:#0a0a0a;border:1px solid rgba(255,255,255,.05);border-radius:.9rem;padding:1.25rem 1.5rem;margin-bottom:1rem}
+.card:hover{border-color:rgba(34,211,238,.15)}
+table{width:100%;border-collapse:collapse;font-size:.8rem;margin:1rem 0}
+th{text-align:left;padding:.55rem .75rem;font-size:.62rem;font-weight:900;text-transform:uppercase;letter-spacing:.1em;color:#334155;border-bottom:1px solid rgba(255,255,255,.05)}
+td{padding:.65rem .75rem;color:#94a3b8;border-bottom:1px solid rgba(255,255,255,.03);vertical-align:top}
+td:first-child{color:#e2e8f0;font-weight:700;white-space:nowrap}
+.step{display:flex;gap:.9rem;margin-bottom:.65rem;align-items:flex-start}
+.num{min-width:1.6rem;height:1.6rem;border-radius:50%;background:#22d3ee;color:#000;font-size:.72rem;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem}
+.step p{margin:0;font-size:.84rem}
+.note{background:rgba(34,211,238,.06);border-left:3px solid #22d3ee;border-radius:0 .5rem .5rem 0;padding:.75rem 1rem;margin:1rem 0;font-size:.8rem;color:#94a3b8}
+.warn{background:rgba(245,158,11,.06);border-left:3px solid #f59e0b;border-radius:0 .5rem .5rem 0;padding:.75rem 1rem;margin:1rem 0;font-size:.8rem;color:#94a3b8}
+.danger{background:rgba(239,68,68,.06);border-left:3px solid #ef4444;border-radius:0 .5rem .5rem 0;padding:.75rem 1rem;margin:1rem 0;font-size:.8rem;color:#94a3b8}
+code{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08);border-radius:.3rem;padding:.1rem .35rem;font-size:.78rem;font-family:monospace;color:#22d3ee}
+pre{background:#000;border:1px solid rgba(255,255,255,.06);border-radius:.7rem;padding:1.2rem;font-size:.75rem;overflow-x:auto;margin:1rem 0;line-height:1.7;color:#94a3b8;font-family:monospace}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:.9rem;margin:1rem 0}
+.mcard{background:#0a0a0a;border:1px solid rgba(255,255,255,.05);border-radius:.7rem;padding:1rem;display:flex;gap:.75rem;align-items:flex-start;transition:all .2s;cursor:pointer;text-decoration:none;color:inherit}
+.mcard:hover{border-color:rgba(34,211,238,.2);background:rgba(34,211,238,.03)}
+.icon{width:2.25rem;height:2.25rem;border-radius:.5rem;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.mcard h4{font-size:.82rem;font-weight:900;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.2rem}
+.mcard p{font-size:.72rem;color:#475569;margin:0}
+kbd{background:#1e293b;border:1px solid #334155;border-radius:.3rem;padding:.1rem .4rem;font-size:.74rem;font-family:monospace}
+footer{margin-top:4rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,.05);color:#1e293b;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo"><span>Geeko</span>SYSTEM</div>
+  <ul>
+    <li><a href="#inicio">&#127968; Inicio</a></li>
+    <li class="nav-label">Modulos</li>
+    <li><a href="#banners">&#128444; Banners</a></li>
+    <li><a href="#catalogo">&#128230; Catalogo</a></li>
+    <li><a href="#inventario">&#127183; Inventario</a></li>
+    <li><a href="#eventos">&#127942; Eventos</a></li>
+    <li class="nav-label">Referencia</li>
+    <li><a href="#descuentos">&#127991; Descuentos</a></li>
+  </ul>
+</nav>
+
+<main>
+
+<section id="inicio">
+  <div class="badge">Manual de Administracion</div>
+  <h1>GEEKO<span>SYSTEM</span></h1>
+  <p class="subtitle">Panel de Control v2.1 &mdash; Mayo 2026</p>
+  <p style="margin-top:1.5rem">Accede al panel en <code>geekorium.shop/admin</code>. Requiere usuario con rol <code>admin</code>.</p>
+  <div class="grid2" style="margin-top:1.5rem">
+    <a class="mcard" href="#banners">
+      <div class="icon" style="background:rgba(34,211,238,.12);color:#22d3ee">&#128444;</div>
+      <div><h4>Banners</h4><p>Carrusel home (max 5)</p></div>
+    </a>
+    <a class="mcard" href="#catalogo">
+      <div class="icon" style="background:rgba(249,115,22,.12);color:#f97316">&#128230;</div>
+      <div><h4>Catalogo</h4><p>Accesorios y sellados</p></div>
+    </a>
+    <a class="mcard" href="#inventario">
+      <div class="icon" style="background:rgba(168,85,247,.12);color:#a855f7">&#127183;</div>
+      <div><h4>Inventario</h4><p>Cartas singles</p></div>
+    </a>
+    <a class="mcard" href="#eventos">
+      <div class="icon" style="background:rgba(244,63,94,.12);color:#f43f5e">&#127942;</div>
+      <div><h4>Eventos</h4><p>Torneos y pre-inscritos</p></div>
+    </a>
+  </div>
+</section>
+
+<section id="banners">
+  <h2>&#128444; Gestion de Banners</h2>
+  <p>El carrusel soporta <strong style="color:#22d3ee">maximo 5 banners</strong>. Ruta: <code>/admin/banners</code></p>
+
+  <h3>Crear un banner</h3>
+  <div class="card">
+    <div class="step"><div class="num">1</div><p>Clic en <strong>"Nuevo Banner"</strong> (esquina superior derecha).</p></div>
+    <div class="step"><div class="num">2</div><p>Completa el formulario en el modal.</p></div>
+    <div class="step"><div class="num">3</div><p>Clic en <strong>"Guardar Cambios"</strong>.</p></div>
+  </div>
+  <table>
+    <tr><th>Campo</th><th>Descripcion</th><th>Ejemplo</th></tr>
+    <tr><td>Imagen</td><td>Sube el archivo. Recomendado <code>1600x600 px</code>. <strong>Obligatorio.</strong></td><td>banner.jpg</td></tr>
+    <tr><td>Titulo</td><td>Texto principal del banner</td><td>SECRETS OF STRIXHAVEN</td></tr>
+    <tr><td>Subtitulo</td><td>Texto de apoyo secundario</td><td>YA DISPONIBLE</td></tr>
+    <tr><td>URL Destino</td><td>Link al hacer clic en el banner</td><td>/magic</td></tr>
+    <tr><td>Orden</td><td>Posicion en el carrusel. 0 = primero.</td><td>0</td></tr>
+    <tr><td>Estado</td><td>ON = visible en home / OFF = oculto</td><td>ON</td></tr>
+  </table>
+
+  <h3>Editar un banner</h3>
+  <p>Clic en <strong>"Editar"</strong> en la tarjeta. Para cambiar la imagen, pasa el cursor sobre la previa y clic en "Cambiar Imagen".</p>
+
+  <h3>Activar / Desactivar rapido</h3>
+  <p>Clic en el badge <code>ON</code> / <code>OFF</code> en la esquina superior de la tarjeta. Cambia sin abrir el modal.</p>
+
+  <h3>Eliminar un banner</h3>
+  <p>Clic en el icono de papelera &#128465; en la tarjeta y confirma el dialogo.</p>
+
+  <div class="note">&#128161; Si quieres liberar un slot sin perder el banner, desactivalo con OFF en vez de eliminarlo.</div>
+  <div class="warn">&#9888; No puedes crear mas de 5 banners. Elimina uno antes de crear otro.</div>
+</section>
+
+<section id="catalogo">
+  <h2>&#128230; Catalogo de Tienda</h2>
+  <p>Accesorios, sellados, consumibles y otros productos fisicos. Ruta: <code>/admin/catalog</code></p>
+
+  <h3>Agregar un producto</h3>
+  <div class="card">
+    <div class="step"><div class="num">1</div><p>Clic en <strong>"Nuevo Producto"</strong>.</p></div>
+    <div class="step"><div class="num">2</div><p>Completa el panel lateral con los datos.</p></div>
+    <div class="step"><div class="num">3</div><p>Clic en <strong>"Agregar Producto"</strong>.</p></div>
+  </div>
+  <table>
+    <tr><th>Campo</th><th>Descripcion</th></tr>
+    <tr><td>Nombre</td><td>Nombre completo del producto</td></tr>
+    <tr><td>Descripcion</td><td>Descripcion breve visible en tienda</td></tr>
+    <tr><td>Categoria</td><td>Accesorios, Sealed Product, Magic, Pokemon, Digimon, One Piece, Yu-Gi-Oh...</td></tr>
+    <tr><td>Idioma</td><td>Espanol, Ingles, Japones, Otros</td></tr>
+    <tr><td>Tipo venta</td><td>Unidad, Sellado, Display, Kit</td></tr>
+    <tr><td>Costo</td><td>Precio de costo interno (no visible para clientes)</td></tr>
+    <tr><td>Precio</td><td>Precio de venta al publico</td></tr>
+    <tr><td>Stock</td><td>Cantidad disponible</td></tr>
+    <tr><td>Imagen</td><td>Foto del producto</td></tr>
+    <tr><td>Estado</td><td>Activo = visible en tienda / Inactivo = oculto</td></tr>
+  </table>
+
+  <h3>Editar un producto</h3>
+  <p>Clic en &#9999; (lapiz) en la fila. Las celdas se vuelven editables directamente en la tabla. Guarda con &#9989; o cancela con &#10060;.</p>
+
+  <h3>Aplicar descuento a un producto</h3>
+  <p>Mientras editas la fila, rellena <strong>Descuento %</strong> y <strong>Oferta Hasta</strong>. Ver <a href="#descuentos" style="color:#22d3ee">seccion Descuentos</a> para mas detalles.</p>
+
+  <h3>Activar / Desactivar un producto</h3>
+  <p>Clic en el badge <code>Activo</code> / <code>Inactivo</code> en la columna Estado. Cambia sin entrar a modo edicion.</p>
+
+  <div class="danger">&#128465; La eliminacion es permanente. Usa <strong>Inactivo</strong> para ocultar sin borrar el registro.</div>
+</section>
+
+<section id="inventario">
+  <h2>&#127183; Inventario Global &mdash; Singles</h2>
+  <p>Cartas TCG individuales. Ruta: <code>/admin/inventory</code></p>
+
+  <h3>Agregar una carta</h3>
+  <div class="card">
+    <div class="step"><div class="num">1</div><p>Clic en <strong>"Agregar Producto"</strong> (boton blanco).</p></div>
+    <div class="step"><div class="num">2</div><p>Escribe el nombre de la carta (min. 3 caracteres) o un codigo de set (ej: <code>STX</code>).</p></div>
+    <div class="step"><div class="num">3</div><p>Clic en la carta correcta en los resultados de busqueda.</p></div>
+    <div class="step"><div class="num">4</div><p>Completa: <strong>Precio</strong>, <strong>Cantidad</strong>, <strong>Condicion</strong> (NM/LP/MP/HP/DMG) y <strong>Acabado</strong> (Normal/Foil/Etched).</p></div>
+    <div class="step"><div class="num">5</div><p>Clic en <strong>"Agregar al Inventario"</strong>.</p></div>
+  </div>
+  <div class="note">&#128161; Si la carta no esta en tu inventario pero aparece en "Encontrado en Catalogo Global", clic en <strong>"Agregar al Stock"</strong> para pre-llenar el formulario.</div>
+
+  <h3>Editar precio</h3>
+  <p>Clic en el precio de la fila &rarr; se vuelve editable. Presiona <kbd>Enter</kbd> para guardar o <kbd>Esc</kbd> para cancelar.</p>
+
+  <h3>Editar stock</h3>
+  <p>Usa los botones <strong>&minus;</strong> / <strong>+</strong> para ajustes de una unidad, o clic directo en el numero para escribir cualquier valor.</p>
+
+  <h3>Aplicar descuento / oferta a una carta</h3>
+  <div class="card">
+    <div class="step"><div class="num">1</div><p>Localiza la carta. Clic en el badge <code>-20%</code> (si ya tiene) o en el icono de etiqueta en la columna Ops.</p></div>
+    <div class="step"><div class="num">2</div><p>En el modal <strong>"Gestionar Oferta"</strong>, ingresa el porcentaje de descuento.</p></div>
+    <div class="step"><div class="num">3</div><p>Selecciona la <strong>fecha de caducidad</strong> (obligatoria si el % es mayor a 0).</p></div>
+    <div class="step"><div class="num">4</div><p>Verifica la previsualizacion de precio final y clic en <strong>"Aplicar"</strong>.</p></div>
+  </div>
+  <p>Para <strong>quitar el descuento</strong>: abre el modal y clic en <strong>"Quitar Oferta"</strong> (boton rojo).</p>
+
+  <h3>Acciones en lote</h3>
+  <p>Marca los checkboxes de varias filas. Aparece una barra flotante con:</p>
+  <table>
+    <tr><th>Accion</th><th>Que hace</th></tr>
+    <tr><td>+10% Precio</td><td>Sube el precio de todos los seleccionados un 10%</td></tr>
+    <tr><td>-10% Precio</td><td>Baja el precio de todos los seleccionados un 10%</td></tr>
+    <tr><td>Eliminar Seleccion</td><td>Borra permanentemente los articulos marcados</td></tr>
+  </table>
+
+  <h3>Importar inventario (CSV)</h3>
+  <p>Clic en <strong>"Ingreso (Lote)"</strong>. Sube un CSV con el formato:</p>
+  <pre>name,set_code,collector,condition,finish,qty
+Sol Ring,CMM,,NM,nonfoil,4
+Lightning Bolt,M10,,LP,nonfoil,2</pre>
+
+  <h3>Exportar inventario</h3>
+  <p>Clic en el boton verde <strong>"Exportar"</strong>. Descarga un CSV con todo el inventario actual en formato reimportable.</p>
+</section>
+
+<section id="eventos">
+  <h2>&#127942; Eventos y Pre-inscritos</h2>
+  <p>Torneos y calendario de actividades. Ruta: <code>/admin/events</code></p>
+
+  <h3>Crear un evento</h3>
+  <div class="card">
+    <div class="step"><div class="num">1</div><p>Clic en <strong>"Crear Evento"</strong> (boton rojo).</p></div>
+    <div class="step"><div class="num">2</div><p>Completa el formulario en el modal.</p></div>
+    <div class="step"><div class="num">3</div><p>Clic en <strong>"Guardar Evento"</strong>.</p></div>
+  </div>
+  <table>
+    <tr><th>Campo</th><th>Req.</th><th>Descripcion</th><th>Ejemplo</th></tr>
+    <tr><td>Nombre</td><td>&#9989;</td><td>Titulo del torneo</td><td>FNM: Standard Showdown</td></tr>
+    <tr><td>Imagen</td><td>&#10060;</td><td>Foto cuadrada. Si no subes, se usa imagen por defecto del juego.</td><td>torneo.jpg</td></tr>
+    <tr><td>Juego</td><td>&#9989;</td><td>MTG, Pokemon, One Piece, Digimon, YGO, FAB, Riftbound</td><td>Magic: The Gathering</td></tr>
+    <tr><td>Formato</td><td>&#10060;</td><td>Tipo de juego</td><td>Standard, Commander, Draft</td></tr>
+    <tr><td>Fecha y Hora</td><td>&#9989;</td><td>Selector combinado de fecha y hora</td><td>2026-06-07 14:00</td></tr>
+    <tr><td>Costo Entrada</td><td>&#9989;</td><td>Texto libre</td><td>$10 / Gratis</td></tr>
+    <tr><td>Capacidad Max.</td><td>&#10060;</td><td>Numero maximo de jugadores</td><td>32</td></tr>
+    <tr><td>Descripcion</td><td>&#10060;</td><td>Premios, requisitos, detalles</td><td>Top 8 recibe packs...</td></tr>
+    <tr><td>Visibilidad</td><td>&#10060;</td><td>Publicado = visible / Borrador = solo admin</td><td>Publicado</td></tr>
+  </table>
+
+  <h3>Publicar / Despublicar rapido</h3>
+  <p>En la lista, clic en el badge <code>Publicado (ON)</code> o <code>Borrador (OFF)</code> del evento. Cambia sin abrir el modal.</p>
+
+  <h3>Ver lista de pre-inscritos</h3>
+  <div class="card">
+    <div class="step"><div class="num">1</div><p>Clic en el boton <strong>"Registrados"</strong> (icono de clipboard) en la fila del evento.</p></div>
+    <div class="step"><div class="num">2</div><p>Se abre el modal con tarjetas de cada participante: nombre, fecha de registro, email y telefono.</p></div>
+    <div class="step"><div class="num">3</div><p>Clic en el email para abrir tu cliente de correo, o en el telefono para abrir WhatsApp.</p></div>
+  </div>
+
+  <h3>Exportar inscritos a CSV</h3>
+  <p>Dentro del modal de registrados, clic en <strong>"Exportar CSV"</strong>. Descarga <code>registrados_NombreEvento.csv</code> con columnas: Nombre, Email, Telefono, Fecha Registro.</p>
+
+  <div class="danger">&#9888; Al eliminar un evento se pierden todos sus pre-inscritos. Exporta el CSV antes si necesitas conservar la informacion.</div>
+</section>
+
+<section id="descuentos">
+  <h2>&#127991; Como Funcionan los Descuentos</h2>
+  <p>Hay dos tipos segun el producto. <strong style="color:#22d3ee">El precio original nunca se modifica</strong> &mdash; el descuento se calcula dinamicamente.</p>
+
+  <h3>Formula de calculo</h3>
+  <pre>Precio Final = Precio Original x (1 - Descuento% / 100)
+
+Ejemplo con 25% de descuento:
+  Precio original:  $8.00
+  Precio final:     $8.00 x (1 - 0.25) = $6.00</pre>
+
+  <div class="grid2">
+    <div class="card">
+      <h4 style="color:#a855f7;font-size:.8rem;font-weight:900;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.6rem">&#127183; Cartas Singles</h4>
+      <p style="font-size:.8rem">Desde el modal <strong>"Gestionar Oferta"</strong> en <code>/admin/inventory</code>.</p>
+      <p style="font-size:.8rem;margin-top:.4rem">Requiere: porcentaje + fecha de caducidad (obligatoria).</p>
+    </div>
+    <div class="card">
+      <h4 style="color:#f97316;font-size:.8rem;font-weight:900;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.6rem">&#128230; Productos Catalogo</h4>
+      <p style="font-size:.8rem">Editando la fila en <code>/admin/catalog</code>.</p>
+      <p style="font-size:.8rem;margin-top:.4rem">Campos: <code>Descuento %</code> + <code>Oferta Hasta</code>.</p>
+    </div>
+  </div>
+
+  <h3>Visualizacion en la tienda</h3>
+  <pre>Con descuento activo:
+  ~~$8.00~~          <- precio tachado en gris
+  $6.00  [-25%]      <- precio final en verde + ribbon diagonal
+
+Despues de la fecha de caducidad:
+  $8.00              <- precio normal sin badge</pre>
+
+  <h3>Expiracion automatica</h3>
+  <p>Cuando la fecha de caducidad pasa, el descuento deja de mostrarse automaticamente. No se necesita accion manual.</p>
+
+  <div class="note">&#128161; Para revertir un descuento en cualquier momento, pon <code>0</code> en el campo de porcentaje. El precio original siempre queda guardado.</div>
+
+  <h3>Pasos rapidos: agregar oferta a una carta</h3>
+  <div class="card">
+    <div class="step"><div class="num">1</div><p>Ve a <code>/admin/inventory</code> y busca la carta.</p></div>
+    <div class="step"><div class="num">2</div><p>Clic en el icono de etiqueta en la columna <strong>Descuento %</strong>.</p></div>
+    <div class="step"><div class="num">3</div><p>Ingresa el porcentaje (ej: <code>20</code>).</p></div>
+    <div class="step"><div class="num">4</div><p>Selecciona la fecha de caducidad.</p></div>
+    <div class="step"><div class="num">5</div><p>Verifica el preview de precio y clic en <strong>"Aplicar"</strong>.</p></div>
+  </div>
+</section>
+
+<footer>Geekorium Admin Panel v2.1 &nbsp;&middot;&nbsp; Mayo 2026</footer>
+
+</main>
+
+<script>
+const links = document.querySelectorAll('nav a');
+const ids = ['inicio','banners','catalogo','inventario','eventos','descuentos'];
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      links.forEach(l => l.classList.remove('active'));
+      const a = document.querySelector('nav a[href="#' + e.target.id + '"]');
+      if (a) a.classList.add('active');
+    }
+  });
+}, {threshold: 0.3});
+ids.forEach(id => { const el = document.getElementById(id); if(el) obs.observe(el); });
+links.forEach(l => {
+  l.addEventListener('click', e => {
+    e.preventDefault();
+    const id = l.getAttribute('href').slice(1);
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({behavior: 'smooth'});
+  });
+});
+</script>
+</body>
+</html>"""
+
+with open(r'e:/TCG Web App/docs/manual_admin.html', 'w', encoding='utf-8') as f:
+    f.write(html)
+print('OK - manual generado en docs/manual_admin.html')

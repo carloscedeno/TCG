@@ -12,7 +12,8 @@ import {
     Users,
     LayoutGrid,
     Image,
-    Calendar
+    Calendar,
+    TrendingUp
 } from 'lucide-react';
 import { QuickStockPanel } from './QuickStockPanel';
 import { useCart } from '../../context/CartContext';
@@ -57,6 +58,7 @@ export const UserMenu: React.FC = () => {
         { icon: LayoutGrid, label: 'Gestión de Catálogo', path: '/admin/catalog', show: isAdmin },
         { icon: Image, label: 'Gestión de Banners', path: '/admin/banners', show: isAdmin },
         { icon: Calendar, label: 'Calendario de Eventos', path: '/admin/events', show: isAdmin },
+        { icon: TrendingUp, label: 'Gestión de Preventas', path: '/admin/presales', show: isAdmin },
         { icon: Shield, label: 'Admin Dashboard', path: '/admin', show: isAdmin },
     ];
 

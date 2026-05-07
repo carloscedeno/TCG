@@ -1515,6 +1515,21 @@ export const fetchBanners = async (category: string = 'main_hero') => {
   return data || [];
 };
 
+export const fetchPresales = async () => {
+  const { data, error } = await supabase
+    .from('presale_banners')
+    .select('*')
+    .eq('is_active', true)
+    .order('display_order');
+  
+  if (error) {
+    console.error('fetchPresales failed:', error);
+    return [];
+  }
+  return data || [];
+};
+
+
 export const registerForEvent = async (registration: { event_id: string, full_name: string, email: string, phone: string }) => {
   const { data, error } = await supabase
     .from('event_registrations')
@@ -1592,6 +1607,36 @@ export const adminDeleteBanner = async (id: string) => {
     .eq('id', id);
   if (error) throw error;
 };
+
+// --- PRESALE BANNERS MANAGEMENT [ADMIN] ---
+
+export const adminFetchPresales = async () => {
+  const { data, error } = await supabase
+    .from('presale_banners')
+    .select('*')
+    .order('display_order');
+  if (error) throw error;
+  return data;
+};
+
+export const adminSavePresale = async (presale: any) => {
+  const { data, error } = await supabase
+    .from('presale_banners')
+    .upsert(presale)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+};
+
+export const adminDeletePresale = async (id: string) => {
+  const { error } = await supabase
+    .from('presale_banners')
+    .delete()
+    .eq('id', id);
+  if (error) throw error;
+};
+
 
 export const adminFetchEvents = async () => {
   const { data, error } = await supabase
