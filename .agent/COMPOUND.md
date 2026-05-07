@@ -919,3 +919,18 @@ $content
 **Artefacto creado:** Migración SQL para checkout on-demand.
 
 **Regla derivada:** Lección #148 — Todo flujo de checkout atómico debe soportar un bypass de validación de stock si el ítem está marcado como "on-demand".
+
+## 2026-05-07 — Refinamiento Estético y Branding MTG
+
+**Qué pasó:** Modernización del landing page mediante la reducción de espacios vacíos, eliminación de contenedores rígidos en carruseles y estandarización del branding "MTG". Se implementó la visibilidad condicional de la pestaña de stock para evitar ruidos en la vista de accesorios.
+
+**Lo que cambió:**
+- `lessons_learned.md` → Lecciones #160, #161
+- `LEYES_DEL_SISTEMA.md` → Leyes 30 y 31
+- `Home.tsx` → Ajustes de padding y lógica de pestañas.
+- `Header.tsx` → Escalado de iconos y texto MTG.
+- `DealsCarousel.tsx` → UI flotante (sin bordes).
+
+**Artefacto creado:** N/A
+
+**Regla derivada:** Ley 30 (Branding Inmutable) y Ley 31 (Visibilidad Condicional).

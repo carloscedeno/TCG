@@ -607,3 +607,8 @@ Cualquier panel lateral (sidebar) que contenga más de 4 categorías de filtrado
 - **Transiciones**: El despliegue de las secciones debe ser animado para evitar saltos bruscos en el layout.
 
 
+## LEY 30: BRANDING MTG INMUTABLE
+La marca para Magic: The Gathering debe ser siempre "MTG" en toda la interfaz de usuario. PROHIBIDO el uso del término "SINGLES" para referirse al juego en cabeceras o selectores principales.
+
+## LEY 31: VISIBILIDAD DE INVENTARIO CONDICIONAL
+El acceso a la pestaña "Stock Geekorium" (inventario de cartas sueltas) debe estar condicionado a la selección activa del juego "MTG". Si el usuario se encuentra en vistas de accesorios, otros juegos o el catálogo global, esta opción debe permanecer oculta para simplificar la jerarquía visual.

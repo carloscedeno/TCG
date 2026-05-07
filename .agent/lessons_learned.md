@@ -1029,3 +1029,16 @@ useEffect(() => {
 - **Problema**: Fallos de conexión (`FATAL: tenant/user not found`) al intentar ejecutar migraciones SQL remotas desde scripts de utilidad.
 - **Causa Raíz**: El Transaction Pooler de Supabase (puerto 6543) requiere una configuración de usuario/tenant muy específica que puede fallar en entornos restringidos.
 - **Lección**: Para remediaciones críticas en bases de datos remotas donde el acceso directo está limitado, es preferible preparar el archivo de migración en `supabase/migrations/` y delegar la ejecución al pipeline de CI/CD o al comando `supabase db push` si se cuenta con el token de acceso.
+
+### 160. Escalado de UI y Densidad Visual Premium — 2026-05-07
+- **Problema**: El landing page se sentía disperso y los iconos de navegación carecían de impacto visual en resoluciones altas.
+- **Causa Raíz**: Paddings verticales excesivos y escalas de iconos/fuentes conservadoras diseñadas para móviles que no aprovechaban el espacio en escritorio.
+- **Solución**: 
+  - **Reducción de Padding**: Ajuste de `py-12` a `py-4` en contenedores principales y eliminación de `bounding boxes` en carruseles para una estética "flotante".
+  - **Escalado Responsivo**: Uso de clases Tailwind dinámicas (ej. `w-11 sm:w-14`) para iconos de navegación y aumento de la altura del Header a `h-20`.
+- **Lección**: La percepción de "Premium Feel" a menudo depende de la eliminación de marcos sólidos y la maximización del tamaño de los activos de marca, manteniendo una densidad de información alta pero organizada.
+
+### 161. Visibilidad Condicional de Pestañas por Contexto — 2026-05-07
+- **Problema**: La pestaña "Stock Geekorium" aparecía en la sección de accesorios (Artilugios), confundiendo al usuario ya que solo hay stock de cartas para MTG.
+- **Solución**: Implementar una restricción lógica en `Home.tsx` que evalúa `filters.games?.includes('MTG')` antes de renderizar la pestaña de inventario de cartas.
+- **Lección**: Menos es más. Ocultar opciones irrelevantes según el contexto de filtrado actual reduce la carga cognitiva y previene errores de navegación del usuario.
