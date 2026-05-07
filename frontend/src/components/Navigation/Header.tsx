@@ -140,7 +140,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                                     <img src={game.icon} alt={game.name} className={`w-5 h-5 xl:w-6 xl:h-6 object-contain transition-all ${isActive ? 'grayscale-0 scale-110' : 'grayscale group-hover:grayscale-0 group-hover:scale-110'}`} />
                                 </div>
                                 <span className={`text-[10px] xl:text-[11px] font-black italic uppercase tracking-tighter transition-all ${isActive ? 'text-white' : 'text-neutral-500 group-hover:text-neutral-300'}`}>
-                                    {game.code === 'MTG' ? 'SINGLES' : game.name}
+                                    {game.code === 'MTG' ? 'MTG' : game.name}
                                 </span>
                             </button>
                         );

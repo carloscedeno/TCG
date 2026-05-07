@@ -423,8 +423,8 @@ const Home: React.FC = () => {
         {/* Header */}
         <Header onCartOpen={() => setIsCartOpen(true)} cartCount={cartCount} />
 
-        {/* Promotional Banner - Only show when not searching and NOT in catalog tab */}
-        {!query && activeTab !== 'catalog' && (
+        {/* Promotional Banner - Only show when in landing (no filters, no search) */}
+        {isDashboardView && (
           <div className="max-w-[1600px] mx-auto w-full px-6 pt-6 animate-in fade-in slide-in-from-top-4 duration-1000">
             <HeroSection />
           </div>
