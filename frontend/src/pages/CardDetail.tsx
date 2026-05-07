@@ -7,10 +7,8 @@ import {
 import { getCardKingdomUrl } from '../utils/urlUtils';
 import { fetchCardDetails, addToCart } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
-import { SearchBar } from '../components/SearchBar/SearchBar';
-import { UserMenu } from '../components/Navigation/UserMenu';
-import { CartDrawer } from '../components/Navigation/CartDrawer';
-import { AuthModal } from '../components/Auth/AuthModal';
+import { Header } from '../components/Navigation/Header';
+import { useCart } from '../context/CartContext';
 import { ManaText } from '../components/Mana/ManaText';
 import { Footer } from '../components/Navigation/Footer';
 
@@ -27,8 +25,8 @@ export const CardDetail: React.FC = () => {
     const [activePrintingId, setActivePrintingId] = useState<string | undefined>(id);
     const [currentFaceIndex, setCurrentFaceIndex] = useState(0);
     const [isAdding, setIsAdding] = useState(false);
-    const [searchQuery, setSearchQuery] = useState('');
 
+    const { cartCount } = useCart();
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
@@ -170,7 +168,7 @@ export const CardDetail: React.FC = () => {
                 <AlertCircle size={64} className="text-red-500 mb-6" />
                 <h1 className="text-3xl font-black mb-4">Error loading card</h1>
                 <p className="text-neutral-400 max-w-md mb-8">{error}</p>
-                <Link to="/" className="px-8 py-3 bg-blue-600 rounded-full font-bold hover:bg-blue-500 transition-all flex items-center gap-2">
+                <Link to="/" className="px-8 py-3 bg-geeko-cyan rounded-full font-black text-black hover:scale-105 transition-all flex items-center gap-2 shadow-[0_0_20px_rgba(0,209,255,0.3)]">
                     <ArrowLeft size={18} /> Back to Market
                 </Link>
             </div>
@@ -182,53 +180,11 @@ export const CardDetail: React.FC = () => {
             {/* Ambient Background */}
             <div className="fixed inset-0 z-0 pointer-events-none">
                 <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-purple-600/5 rounded-full blur-[150px]" />
-                <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-blue-600/5 rounded-full blur-[150px]" />
+                <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-geeko-cyan/5 rounded-full blur-[150px]" />
             </div>
 
             {/* Header */}
-            <header className="h-[70px] bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-white/5 sticky top-0 z-50 shadow-2xl flex items-center">
-                <nav className="max-w-[1600px] mx-auto px-6 py-3 flex items-center justify-between w-full">
-                    <div className="flex items-center gap-8">
-                        <Link to="/" className="flex items-center gap-4 group relative">
-                            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center font-black text-xl italic shadow-lg shadow-blue-600/20 group-hover:scale-110 transition-transform">T</div>
-                            <h1 className="text-xl font-black tracking-tighter text-white">TCG HUB</h1>
-                            <span className="absolute -top-1 -right-4 bg-red-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded-md tracking-tighter shadow-lg rotate-12">BETA</span>
-                        </Link>
-                        <div className="hidden lg:flex items-center gap-6 text-[13px] font-medium text-neutral-400">
-                            <Link to="/" className="hover:text-white transition-colors flex items-center gap-1">
-                                <ArrowLeft size={14} /> Back to Market
-                            </Link>
-                        </div>
-                    </div>
-
-                    <div className="flex-1 max-w-xl mx-8 hidden lg:block">
-                        <SearchBar value={searchQuery} onChange={setSearchQuery} placeholder="Search another card..." />
-                    </div>
-
-                    <div className="flex items-center gap-4">
-                        {user && (
-                            <button
-                                onClick={() => setIsCartOpen(true)}
-                                className="relative p-2.5 bg-neutral-900 border border-white/5 rounded-xl hover:bg-neutral-800 transition-all text-neutral-400 hover:text-geeko-cyan group"
-                            >
-                                <ShoppingCart size={20} />
-                                <div className="absolute top-0 right-0 w-2 h-2 bg-geeko-cyan rounded-full border-2 border-[#0a0a0a] group-hover:scale-150 transition-transform" />
-                            </button>
-                        )}
-                        {user ? <UserMenu /> : (
-                            /* Hidden per simplification request */
-                            <div className="hidden">
-                                <button
-                                    onClick={() => setIsAuthModalOpen(true)}
-                                    className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-5 rounded-full shadow-lg shadow-blue-600/20 transition-all text-xs"
-                                >
-                                    Login
-                                </button>
-                            </div>
-                        )}
-                    </div>
-                </nav>
-            </header>
+            <Header onCartOpen={() => setIsCartOpen(true)} cartCount={cartCount} />
 
             <main className="relative z-10 w-full max-w-[1600px] mx-auto p-6 lg:p-12 flex-1">
                 {loading ? (

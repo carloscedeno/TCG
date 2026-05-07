@@ -588,7 +588,7 @@ const Home: React.FC = () => {
                 </div>
               ) : loading && page === 0 ? (
                 <div className="flex flex-col items-center justify-center py-32 gap-6">
-                  <div className="w-16 h-16 border-4 border-blue-600/20 border-t-blue-600 rounded-full animate-spin"></div>
+                  <div className="w-16 h-16 border-4 border-geeko-cyan/20 border-t-geeko-cyan rounded-full animate-spin"></div>
                   <p className="text-neutral-500 font-black text-xs tracking-widest uppercase animate-pulse">Invocando Cartas...</p>
                 </div>
               ) : error ? (
