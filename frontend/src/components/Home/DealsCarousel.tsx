@@ -28,8 +28,8 @@ export const DealsCarousel: React.FC<DealsCarouselProps> = ({ title, cards, onCa
   if (cards.length === 0) return null;
 
   return (
-    <div className="relative group mb-16 px-4">
-      <div className="flex flex-col items-center mb-10">
+    <div className="relative group mb-8 px-4">
+      <div className="flex flex-col items-center mb-4">
         <span className="text-[10px] font-black uppercase tracking-[0.4em] text-geeko-cyan-neon mb-2 animate-pulse">
           {isArchive ? 'Coleccionables' : 'Stock Geekorium'}
         </span>

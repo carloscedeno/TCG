@@ -425,7 +425,7 @@ const Home: React.FC = () => {
 
         {/* Promotional Banner - Only show when in landing (no filters, no search) */}
         {isDashboardView && (
-          <div className="max-w-[1600px] mx-auto w-full px-6 pt-6 animate-in fade-in slide-in-from-top-4 duration-1000">
+          <div className="max-w-[1600px] mx-auto w-full px-6 pt-2 animate-in fade-in slide-in-from-top-4 duration-1000">
             <HeroSection />
           </div>
         )}
@@ -533,8 +533,8 @@ const Home: React.FC = () => {
       )}
 
         {/* Main Content */}
-        <main className="max-w-[1600px] w-full mx-auto px-6 py-8 flex-1">
-          <div className="flex flex-col lg:flex-row gap-10">
+        <main className="max-w-[1600px] w-full mx-auto px-6 py-4 flex-1">
+          <div className="flex flex-col lg:flex-row gap-4">
             {/* Sidebar Filters */}
             {(!isDashboardView || (filters.games && filters.games.length > 0) || (activeTab as string) === 'catalog') && (
               <aside className="hidden lg:block w-72 flex-shrink-0">
