@@ -859,3 +859,19 @@ $content
 **Artefacto creado:** `supabase/migrations/20260507000000_fix_admin_rls.sql`
 
 **Regla derivada:** Ley 28 — Toda tabla con RLS referenciada en sub-consultas de otras policies DEBE tener una policy de lectura activa. Sin ella, el `EXISTS(...)` siempre retorna `false` bloqueando la operación aunque el rol sea correcto.
+
+## 2026-05-06 — Remediación Visual y Optimización UX Storefront
+
+**Qué pasó:** Se completó una fase de remediación visual para estabilizar el diseño del storefront, corregir regresiones tipográficas y optimizar la experiencia de filtrado. También se ejecutó una limpieza de secciones por rebranding.
+
+**Lo que cambió:**
+- `frontend/src/components/Home/HeroSection.tsx`: Rediseño a full-bleed con ratio fijo 3.5:1.
+- `frontend/src/components/Filters/FiltersPanel.tsx`: Implementación de secciones colapsables (MercadoLibre style) y actualización de mensaje de sincronización (CardKingdom).
+- `frontend/src/pages/Home.tsx`: Eliminación de filtros de rareza redundantes y sección de "Próximas Misiones".
+- `frontend/src/components/Navigation/Header.tsx`: Estandarización de tipografía y eliminación de botón "Invócanos".
+- `lessons_learned.md`: Lecciones #156 y #157.
+
+**Artefacto creado:** Filtros Colapsables con persistencia de estado de apertura.
+
+**Regla derivada:** Ley 29 — Paneles laterales de filtrado densos deben ser colapsables por defecto, manteniendo expandidas solo las secciones con filtros activos.
+
