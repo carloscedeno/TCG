@@ -28,35 +28,41 @@ export const DealsCarousel: React.FC<DealsCarouselProps> = ({ title, cards, onCa
   if (cards.length === 0) return null;
 
   return (
-    <div className="bg-neutral-900/40 rounded-3xl p-6 border border-white/5 relative group mb-8">
-      <h2 className="text-xl font-black uppercase tracking-tighter text-white mb-6 drop-shadow-md">
-        {title}
-      </h2>
+    <div className="relative group mb-16 px-4">
+      <div className="flex flex-col items-center mb-10">
+        <span className="text-[10px] font-black uppercase tracking-[0.4em] text-geeko-cyan-neon mb-2 animate-pulse">
+          {isArchive ? 'Coleccionables' : 'Stock Geekorium'}
+        </span>
+        <h2 className="text-3xl md:text-4xl font-black italic uppercase tracking-tighter text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">
+          {title}
+        </h2>
+        <div className="w-24 h-1 bg-gradient-to-r from-transparent via-geeko-cyan-neon to-transparent mt-4"></div>
+      </div>
       
       {/* Carrusel container */}
       <div className="relative">
-        {/* Navigation Buttons */}
+        {/* Navigation Buttons - Adjusted for floating look */}
         <button
           onClick={scrollLeft}
-          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-20 w-10 h-10 rounded-full bg-black/80 border border-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-white hover:text-black transition-all shadow-xl"
+          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-8 z-30 w-12 h-12 rounded-full bg-black/60 backdrop-blur-md border border-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-geeko-cyan-neon hover:text-black transition-all shadow-[0_0_20px_rgba(0,0,0,0.5)]"
         >
-          <ChevronLeft size={20} />
+          <ChevronLeft size={24} />
         </button>
         
         <button
           onClick={scrollRight}
-          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-20 w-10 h-10 rounded-full bg-black/80 border border-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-white hover:text-black transition-all shadow-xl"
+          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-8 z-30 w-12 h-12 rounded-full bg-black/60 backdrop-blur-md border border-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-geeko-cyan-neon hover:text-black transition-all shadow-[0_0_20px_rgba(0,0,0,0.5)]"
         >
-          <ChevronRight size={20} />
+          <ChevronRight size={24} />
         </button>
 
         {/* Scrollable Area */}
         <div 
           ref={scrollContainerRef}
-          className="flex overflow-x-auto gap-4 pb-4 no-scrollbar scroll-smooth snap-x"
+          className="flex overflow-x-auto gap-6 pb-8 no-scrollbar scroll-smooth snap-x"
         >
           {cards.map((card) => (
-            <div key={card.card_id} className="min-w-[180px] w-[180px] md:min-w-[200px] md:w-[200px] flex-shrink-0 snap-start">
+            <div key={card.card_id} className="min-w-[200px] w-[200px] md:min-w-[240px] md:w-[240px] flex-shrink-0 snap-start">
               <Card
                 {...card}
                 viewMode="grid"
