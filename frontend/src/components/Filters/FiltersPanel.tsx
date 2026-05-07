@@ -444,13 +444,13 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
       )}
 
       <div className="pt-6 mt-10 border-t border-white/5">
-        <div className="bg-geeko-cyan/5 rounded-2xl p-5 border border-geeko-cyan/20 relative overflow-hidden group">
-          <p className="text-[10px] font-medium text-neutral-400 mb-3 leading-relaxed relative z-10">
-            Sincronización en tiempo real activa vía <span className="text-geeko-cyan">Neural Link</span>.
+        <div className="bg-neutral-900/50 rounded-2xl p-5 border border-white/5 relative overflow-hidden group">
+          <p className="text-[10px] font-bold text-neutral-500 mb-2 leading-relaxed relative z-10 uppercase tracking-tight">
+            Sincronizador de precios con CardKingdom
           </p>
-          <div className="flex items-center gap-2 text-[10px] font-black text-geeko-cyan uppercase tracking-widest relative z-10">
-            <Filter size={12} className="animate-pulse" />
-            Sincro Cuántica: ON
+          <div className="flex items-center gap-2 text-[9px] font-medium text-neutral-600 relative z-10">
+            <Filter size={10} />
+            Precios referenciales, puede haber varianza de precios
           </div>
         </div>
       </div>
