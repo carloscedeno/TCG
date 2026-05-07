@@ -126,20 +126,20 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
             </div>
 
             {/* Navigation Bar: 8 Categories Matrix -> REPLACED WITH CIRCULAR SELECTOR */}
-            <nav className="hidden lg:block bg-black/40 border-t border-white/5 py-1">
-                <div className="max-w-[1600px] mx-auto px-4 flex justify-center items-center gap-6 xl:gap-10 h-14">
+            <nav className="hidden lg:block bg-black/40 border-t border-white/5 py-2">
+                <div className="max-w-[1600px] mx-auto px-4 flex justify-center items-center gap-8 xl:gap-14 h-20">
                     {tcgGames.map((game) => {
                         const isActive = searchParams.get('game') === game.code;
                         return (
                             <button 
                                 key={game.code}
                                 onClick={() => navigateToGame(game.code)}
-                                className="group flex flex-col items-center gap-1 transition-all duration-300"
+                                className="group flex flex-col items-center gap-2 transition-all duration-300"
                             >
-                                <div className={`w-9 h-9 xl:w-10 xl:h-10 rounded-full flex items-center justify-center transition-all ${isActive ? 'bg-white shadow-[0_0_15px_rgba(255,255,255,0.4)]' : 'bg-neutral-800/80 hover:bg-neutral-700 backdrop-blur-sm'}`}>
-                                    <img src={game.icon} alt={game.name} className={`w-5 h-5 xl:w-6 xl:h-6 object-contain transition-all ${isActive ? 'grayscale-0 scale-110' : 'grayscale group-hover:grayscale-0 group-hover:scale-110'}`} />
+                                <div className={`w-11 h-11 xl:w-14 xl:h-14 rounded-full flex items-center justify-center transition-all ${isActive ? 'bg-white shadow-[0_0_20px_rgba(255,255,255,0.4)]' : 'bg-neutral-800/80 hover:bg-neutral-700 backdrop-blur-sm'}`}>
+                                    <img src={game.icon} alt={game.name} className={`w-6 h-6 xl:w-9 xl:h-9 object-contain transition-all ${isActive ? 'grayscale-0 scale-110' : 'grayscale group-hover:grayscale-0 group-hover:scale-110'}`} />
                                 </div>
-                                <span className={`text-[10px] xl:text-[11px] font-black italic uppercase tracking-tighter transition-all ${isActive ? 'text-white' : 'text-neutral-500 group-hover:text-neutral-300'}`}>
+                                <span className={`text-[11px] xl:text-[14px] font-black italic uppercase tracking-tighter transition-all ${isActive ? 'text-white' : 'text-neutral-500 group-hover:text-neutral-300'}`}>
                                     {game.code === 'MTG' ? 'MTG' : game.name}
                                 </span>
                             </button>
