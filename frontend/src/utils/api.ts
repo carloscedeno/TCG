@@ -1403,39 +1403,7 @@ export const fetchAccessoryCategories = async (parentCode?: string) => {
 
 // --- ACCESSORIES MANAGEMENT [ADMIN] ---
 
-export const fetchAccessoriesAdmin = async (params: {
-  search?: string;
-  game_id?: number;
-  category?: string;       // legacy
-  category_code?: string; // normalized
-  parent_code?: string;   // group filter
-  limit?: number;
-  offset?: number;
-}) => {
-  const { search, game_id, category, category_code, limit = 50, offset = 0 } = params;
-  
-  let query = supabase
-    .from('accessories')
-    .select('*, discount_percentage, discount_until, games(game_name), accessory_categories(code, name, icon, parent_code)', { count: 'exact' })
-    .order('created_at', { ascending: false })
-    .range(offset, offset + limit - 1);
 
-  if (search) query = query.ilike('name', `%${search}%`);
-  if (game_id) query = query.eq('game_id', game_id);
-  if (category) query = query.ilike('category', `%${category}%`);
-  if (category_code) query = query.eq('category_code', category_code);
-
-  const { data, error, count } = await query;
-  if (error) throw error;
-  
-  // Return both formats for compatibility
-  return { 
-    data, 
-    count, 
-    accessories: data, 
-    total_count: count || 0 
-  };
-};
 
 export const createAccessory = async (accessory: any) => {
   const { data, error } = await supabase
@@ -1818,3 +1786,25 @@ export const checkGameInventoryPresence = async (gameCode?: string): Promise<{ h
 
 
 
+
+export const fetchInventoryList = async (page = 0, pageSize = 50, search = '', game = null, condition = null) => {
+  const { data, error } = await supabase.rpc('get_inventory_list', {
+    p_page: page,
+    p_page_size: pageSize,
+    p_search: search || null,
+    p_game: game || null,
+    p_condition: condition || null,
+    p_sort_by: 'name',
+    p_sort_order: 'asc'
+  });
+  if (error) throw error;
+  return { data: data || [] };
+};
+
+export const fetchAccessoriesAdmin = async (params: { search?: string, limit?: number }) => {
+  const { accessories } = await fetchAccessories({ 
+    q: params.search, 
+    limit: params.limit || 10 
+  });
+  return { data: accessories || [] };
+};

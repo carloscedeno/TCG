@@ -10,8 +10,7 @@ import {
   Eye, 
   EyeOff,
   Link as LinkIcon,
-  Search,
-  Package
+  Search
 } from 'lucide-react';
 import { 
   adminFetchPresales, 
