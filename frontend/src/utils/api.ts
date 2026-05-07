@@ -1801,10 +1801,23 @@ export const fetchInventoryList = async (page = 0, pageSize = 50, search = '', g
   return { data: data || [] };
 };
 
-export const fetchAccessoriesAdmin = async (params: { search?: string, limit?: number }) => {
-  const { accessories } = await fetchAccessories({ 
-    q: params.search, 
-    limit: params.limit || 10 
+export const fetchAccessoriesAdmin = async (params: { 
+  search?: string, 
+  limit?: number,
+  offset?: number,
+  game_id?: number,
+  category_code?: string,
+  [key: string]: any
+}) => {
+  const { accessories, total_count } = await fetchAccessories({ 
+    ...params,
+    q: params.search || params.q
   });
-  return { data: accessories || [] };
+  return { 
+    data: accessories || [], 
+    count: total_count || 0,
+    accessories: accessories || [], 
+    total_count: total_count || 0 
+  };
 };
+
