@@ -1,4 +1,36 @@
-# ðŸ§  COMPOUND: Bulk Egress & Audit Module
+# 🧠 COMPOUND: E2E Checkout Remediation & "Por Encargo" Workflow
+
+**Date**: 2026-05-07 00:10
+
+## Objective
+
+Remediate the E2E checkout process by implementing "Por Encargo" logic to bypass strict stock validation and provide clear UI feedback.
+
+## Knowledge Codification
+
+### 1. The "On-Demand" Bypass Pattern
+
+- **Pattern**: Instead of blocking orders with `RAISE EXCEPTION` when stock is low, the system now accepts the order and flags `order_items.is_on_demand = true`.
+- **Rule**: Stock can be decremented to 0 (floor) or allowed to go negative depending on the specific product type tracking needs.
+
+### 2. Contextual UI Feedback
+
+- **UI**: Cyan badges (`geeko-cyan`) with black text are used for "POR ENCARGO" labels to ensure high visibility against the dark theme.
+- **Badge logic**: `quantity > stock` is the definitive trigger for the "On-Demand" state in the UI.
+
+### 3. Operational WhatsApp Flow
+
+- **Rule**: Every WhatsApp order message MUST identify if it contains on-demand items via a header and per-item markers to alert the sales team of needed sourcing.
+
+## Technical Validation
+
+- **Frontend Build**: ✅ Success
+- **Unit Tests**: ✅ 28 Passed
+- **Database**: 📂 Migration 20260507120000 prepared for remote deployment.
+
+---
+
+# 🧠 COMPOUND: Bulk Egress & Audit Module
 
 **Date**: 2026-04-04 23:57
 

@@ -81,6 +81,8 @@ export const CheckoutPage = () => {
 
             const simplifiedItems = cartItems.map(item => {
                 const isAcc = !!item.accessory_id;
+                const stock = item.products?.stock || 0;
+                const isOnDemand = !isAcc && (item.quantity > stock);
                 
                 return {
                     product_id: isAcc ? null : item.product_id,
@@ -92,7 +94,7 @@ export const CheckoutPage = () => {
                     price: item.products?.price || 0,
                     foil: item.products?.is_foil || item.products?.finish === 'foil' || false,
                     finish: item.products?.finish || (item.products?.is_foil ? 'foil' : 'nonfoil'),
-                    is_on_demand: !isAcc && (item.products?.stock || 0) <= 0
+                    is_on_demand: isOnDemand
                 };
             });
 
@@ -140,11 +142,19 @@ export const CheckoutPage = () => {
                 const finish = item.products?.finish || (item.products?.is_foil ? 'foil' : 'nonfoil');
                 const finishLabel = (finish === 'foil' || finish === 'etched') ? ' [FOIL]' : '';
                 const setCode = item.products?.set_code ? ` [${item.products.set_code?.toUpperCase()}]` : '';
-                return `• ${qty}x ${name}${setCode}${finishLabel} - $${lineTotal}`;
+                
+                const stock = item.products?.stock || 0;
+                const isOnDemand = !item.accessory_id && (item.quantity > stock);
+                const onDemandLabel = isOnDemand ? ' *(POR ENCARGO)*' : '';
+                
+                return `• ${qty}x ${name}${setCode}${finishLabel}${onDemandLabel} - $${lineTotal}`;
             }).join('\n');
             const overflowNote = items.length > 40 ? `\n_(+${items.length - 40} ítems más — ver correo)_` : '';
 
+            const hasOnDemand = items.some(item => !item.accessory_id && (item.quantity > (item.products?.stock || 0)));
+
             const waMessage = [
+                hasOnDemand ? `*--- ORDEN POR ENCARGO ---*` : '',
                 `¡Hola Geeko-Asesor! Quiero concretar esta orden:`,
                 `*Cliente:* ${form.full_name}`,
                 `*WhatsApp:* ${form.whatsapp}`,
@@ -155,7 +165,7 @@ export const CheckoutPage = () => {
                 itemLines + overflowNote,
                 ``,
                 `*Orden ID:* ${orderIdForMsg}`,
-            ].join('\n');
+            ].filter(line => line !== '').join('\n');
 
             window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(waMessage)}`, '_blank');
 
@@ -167,7 +177,12 @@ export const CheckoutPage = () => {
                     order_total: total,
                     items: cartItems.map(item => ({
                         quantity: item.quantity,
-                        products: { name: item.products?.name, price: item.products?.price, finish: item.products?.finish, is_on_demand: !item.accessory_id && (item.products?.stock || 0) <= 0 }
+                        products: { 
+                            name: item.products?.name, 
+                            price: item.products?.price, 
+                            finish: item.products?.finish, 
+                            is_on_demand: !item.accessory_id && (item.quantity > (item.products?.stock || 0)) 
+                        }
                     })),
                     current_user_id: user?.id || "guest"
                 });
@@ -321,23 +336,39 @@ export const CheckoutPage = () => {
                         <h3 className="text-base font-black uppercase tracking-tight mb-4 border-b border-white/5 pb-4">Resumen de Orden</h3>
 
                         <div className="space-y-3 max-h-[300px] overflow-y-auto custom-scrollbar mb-6">
-                            {cartItems.map((item) => (
-                                <div key={item.id} className="flex gap-3 items-center">
-                                    <div className="w-10 h-14 bg-black/50 rounded border border-white/10 overflow-hidden flex-shrink-0">
-                                        <img src={item.products?.image_url} className="w-full h-full object-cover" alt={item.products?.name} />
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                        <p className="text-xs font-bold text-white line-clamp-2 leading-snug">{item.products?.name}</p>
-                                        <p className="text-[9px] text-neutral-500 uppercase font-bold">{item.products?.set_code}</p>
-                                        <div className="flex justify-between items-center mt-1">
-                                            <span className="text-[10px] text-neutral-400">x{item.quantity}</span>
-                                            <span className="text-[11px] font-mono text-[#00AEB4] font-bold">
-                                                ${((item.products?.price || 0) * item.quantity).toFixed(2)}
-                                            </span>
+                            {cartItems.map((item) => {
+                                const isAcc = !!item.accessory_id;
+                                const stock = item.products?.stock || 0;
+                                const isOnDemand = !isAcc && (item.quantity > stock);
+
+                                return (
+                                    <div key={item.id} className="flex gap-3 items-center">
+                                        <div className="w-10 h-14 bg-black/50 rounded border border-white/10 overflow-hidden flex-shrink-0 relative">
+                                            <img src={item.products?.image_url} className="w-full h-full object-cover" alt={item.products?.name} />
+                                            {isOnDemand && (
+                                                <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                                                    <span className="text-[6px] font-black bg-geeko-cyan text-black px-0.5 rounded-sm rotate-12">POR ENCARGO</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex items-start justify-between gap-2">
+                                                <p className="text-xs font-bold text-white line-clamp-1 leading-snug">{item.products?.name}</p>
+                                                {isOnDemand && (
+                                                    <span className="text-[7px] font-black text-geeko-cyan border border-geeko-cyan/30 px-1 rounded flex-shrink-0">POR ENCARGO</span>
+                                                )}
+                                            </div>
+                                            <p className="text-[9px] text-neutral-500 uppercase font-bold">{item.products?.set_code}</p>
+                                            <div className="flex justify-between items-center mt-1">
+                                                <span className="text-[10px] text-neutral-400">x{item.quantity}</span>
+                                                <span className="text-[11px] font-mono text-[#00AEB4] font-bold">
+                                                    ${((item.products?.price || 0) * item.quantity).toFixed(2)}
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
 
                         <div className="space-y-2 border-t border-white/5 pt-4">

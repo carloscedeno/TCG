@@ -944,19 +944,6 @@ useEffect(() => {
 - **Regla Derivada**: Antes de diagnosticar logica de frontend, verificar la existencia y estructura de datos en el proyecto Supabase especifico mediante la API o scripts de diagnostico.
 ### 97. EstabilizaciÃ³n de Sidebar DinÃ¡mico y Anidamiento JSX (Mayo 2026)
 - **Problema**: El despliegue de producciÃ³n fallaba con errores de sintaxis tras aÃ±adir un sidebar dinÃ¡mico, a pesar de que el cÃ³digo parecÃ­a correcto.
-- **Causa RaÃ­z**: Anidamiento incorrecto de etiquetas `div` (etiquetas de cierre huÃ©rfanas o fuera de lugar) al integrar bloques condicionales complejos en `Home.tsx`. TypeScript/React son extremadamente sensibles a la estructura de Ã¡rbol en componentes grandes.
-- **LecciÃ³n**: Al integrar componentes laterales (sidebars) en layouts existentes, verificar siempre que el contenedor principal (`flex`) encapsule correctamente tanto el contenido principal como el lateral. Utilizar herramientas de formateo automÃ¡tico y validaciÃ³n de Ã¡rbol DOM.
-
-### 98. Dependencias de Rutas en Componentes de UI (Mayo 2026)
-- **Problema**: `TS17008: Property 'Link' does not exist` y errores de navegaciÃ³n tras mover lÃ³gica de UI.
-- **Causa RaÃ­z**: Falta de importaciones explÃ­citas de `react-router-dom` (`Link`, `useNavigate`) en archivos que antes eran estÃ¡ticos pero ahora contienen enlaces dinÃ¡micos.
-- **LecciÃ³n**: Todo componente que utilice navegaciÃ³n debe importar explÃ­citamente sus dependencias. No asumir que estÃ¡n disponibles globalmente o a travÃ©s de props si se estÃ¡n usando componentes de librerÃ­a directamente.
-
-### 99. Migraciones de Base de Datos y CachÃ© de Schema (Mayo 2026)
-- **Problema**: Error `404: Could not find the table 'public.event_registrations' in the schema cache` tras subir cambios al frontend.
-- **Causa RaÃ­z**: La tabla fue definida en un archivo de migraciÃ³n local, pero no se ejecutÃ³ en la base de datos remota de Supabase. PostgREST (la API de Supabase) no detecta cambios en el esquema hasta que se aplican y se refresca el cachÃ©.
-- **LecciÃ³n**: **Migraciones Primero**. Nunca desplegar cÃ³digo de frontend que dependa de nuevas tablas sin antes asegurar que el SQL se ha ejecutado en todos los entornos (Dev/Prod). Usar `NOTIFY pgrst, 'reload schema';` si el cambio no se refleja inmediatamente.
-
 ### 149. RemediaciÃ³n Masiva de Secretos Hardcodeados (Mayo 2026)
 - **Problema**: Fuga crÃ­tica de credenciales de PostgreSQL en `.env.dev` y proliferaciÃ³n de contraseÃ±as hardcodeadas en mÃ¡s de 60 scripts auxiliares del proyecto, detectado por GitGuardian.
 - **Causa RaÃ­z**: PrÃ¡ctica heredada de hardcodear URLs de conexiÃ³n con credenciales incluidas para agilizar la ejecuciÃ³n de scripts locales y de mantenimiento.
@@ -1038,3 +1025,13 @@ useEffect(() => {
 - **Impacto**: Reducción del 70% en el uso del espacio vertical inicial, mejorando drásticamente la tasa de interacción en dispositivos con viewports limitados.
 - **Regla Derivada**: (Ley 29) Todo panel lateral con más de 4 categorías de filtrado DEBE ser colapsable.
 
+### 158. Flujo de Checkout "Por Encargo" (Bypass de Stock) — 2026-05-07
+- **Problema**: El RPC `create_order_atomic` bloqueaba pedidos si el stock era insuficiente, impidiendo la venta de ítems "Por Encargo" (Regla de Negocio 4).
+- **Causa Raíz**: Validación estricta en el backend (`RAISE EXCEPTION`) sin considerar el flag `is_on_demand`.
+- **Solución**: Refactorización del RPC para permitir stock negativo o bypass de error cuando el ítem se marca como bajo demanda, y actualización de la UI para mostrar badges de "POR ENCARGO" basados en `cantidad > stock`.
+- **Lección**: Las reglas de negocio de disponibilidad deben estar sincronizadas entre la validación de base de datos y el estado visual del carrito para evitar fricción en el checkout.
+
+### 159. Restricciones de Conexión Directa a DB (Entorno Remoto) — 2026-05-07
+- **Problema**: Fallos de conexión (`FATAL: tenant/user not found`) al intentar ejecutar migraciones SQL remotas desde scripts de utilidad.
+- **Causa Raíz**: El Transaction Pooler de Supabase (puerto 6543) requiere una configuración de usuario/tenant muy específica que puede fallar en entornos restringidos.
+- **Lección**: Para remediaciones críticas en bases de datos remotas donde el acceso directo está limitado, es preferible preparar el archivo de migración en `supabase/migrations/` y delegar la ejecución al pipeline de CI/CD o al comando `supabase db push` si se cuenta con el token de acceso.
