@@ -958,6 +958,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                     </div>
                                                 ) : null}
                                             </div>
+                                        </div>
 
                                         {!isArchive && (
                                             <button
