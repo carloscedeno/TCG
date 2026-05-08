@@ -360,6 +360,7 @@ export const CardDetail: React.FC = () => {
                                     {details.mana_cost && <span className="opacity-30">•</span>}
                                     <span className="text-white/80">{details.type}</span>
                                     <span className="text-neutral-700">/</span>
+                                    <span className="text-geeko-gold uppercase text-[10px] font-black tracking-[0.2em]">{details.rarity}</span>
                                 </div>
                             </div>
 
@@ -375,6 +376,8 @@ export const CardDetail: React.FC = () => {
                                 )}
                                 <div className="pt-2 flex flex-wrap gap-8 text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em]">
                                     <div>Artist <span className="text-white ml-2">{details.artist}</span></div>
+                                    <div>Set <span className="text-geeko-cyan ml-2">{details.set} ({details.set_code?.toUpperCase()})</span></div>
+                                </div>
                             </div>
 
                             <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 items-start">
@@ -499,8 +502,7 @@ export const CardDetail: React.FC = () => {
                             </div>
                         </div>
                     </div>
-                ) : null
-                }
+                ) : null}
             </main>
 
             <Footer />
