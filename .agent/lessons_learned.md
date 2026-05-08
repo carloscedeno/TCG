@@ -1060,3 +1060,20 @@ useEffect(() => {
 - **Solución**: Mover el efecto `foil-shimmer` a una capa (div) independiente sobre la imagen con `opacity-30` y `pointer-events-none`. Condicionar la aplicación del efecto y de la clase `holo-effect` estrictamente al estado `isFoil`.
 - **Lección**: Nunca aplicar modos de mezcla destructivos (`overlay`, `multiply`) directamente sobre el activo visual principal si se busca un efecto de brillo. Usar siempre capas superpuestas con opacidad controlada para preservar la legibilidad del arte original.
 
+### 164. Inconsistencia de Códigos de Juego y Normalización — 2026-05-08
+- **Problema**: Los banners de Pokémon no aparecían a pesar de estar guardados en la base de datos.
+- **Causa Raíz**: El sistema tenía duplicidad de códigos para el mismo juego (ej: `PKM` usado en el frontend vs `POKEMON` usado en la base de datos de banners). Al fallar la coincidencia exacta, el sistema no encontraba los activos.
+- **Solución**: Implementar una capa de normalización en `utils/api.ts` dentro de `fetchBanners` que mapea alias comunes (`PKM` -> `POKEMON`, `YGO` -> `YUGIOH`) antes de realizar la consulta a Supabase. Además, se estandarizaron los registros existentes en la tabla `hero_banners`.
+- **Lección**: Cuando se trabaja con sistemas heredados o integraciones de terceros, siempre se debe asumir que los códigos de referencia pueden variar. Una capa de normalización centralizada es vital para la integridad de los datos visuales.
+
+### 165. Desacoplamiento de Vistas de Dashboard y Secciones de TCG — 2026-05-08
+- **Problema**: Al intentar mostrar banners en las secciones de cada TCG, el listado de cartas (singles) era reemplazado por la vista de "Dashboard" (ofertas), arruinando la experiencia de navegación.
+- **Causa Raíz**: La variable `isDashboardView` controlaba tanto la visibilidad del banner como el tipo de contenido principal (Ofertas vs Parrilla). 
+- **Solución**: Desacoplar las condiciones. Se introdujo `showHeroSection` para controlar la visibilidad del banner en cualquier sección "limpia", mientras que `isDashboardView` se mantuvo restringido a la página de inicio global para controlar la renderización del carrusel de ofertas.
+- **Lección**: No usar un único flag de estado para controlar múltiples comportamientos de UI estructurales. Cada componente mayor (Banner, Ofertas, Parrilla) debe tener su propia lógica de visibilidad basada en el contexto del router y los filtros.
+
+### 166. Integridad de Tablas de Metadatos y RLS — 2026-05-08
+- **Problema**: Tablas críticas como `conditions`, `sources` y `games` estaban expuestas sin Row Level Security (RLS) activo.
+- **Solución**: Habilitar RLS en todas las tablas de metadatos y aplicar políticas granulares: acceso público de solo lectura (`SELECT`) y acceso administrativo total (`ALL`) validado mediante el rol del usuario en la tabla `profiles`.
+- **Regla Derivada**: `LEYES_DEL_SISTEMA.md` -> Ley 10 (RLS Prioritario). Ninguna tabla nueva debe crearse en el esquema `public` sin una política de RLS explícitamente definida y verificada.
+

@@ -612,3 +612,11 @@ La marca para Magic: The Gathering debe ser siempre "MTG" en toda la interfaz de
 
 ## LEY 31: VISIBILIDAD DE INVENTARIO CONDICIONAL
 El acceso a la pestaña "Stock Geekorium" (inventario de cartas sueltas) debe estar condicionado a la selección activa del juego "MTG". Si el usuario se encuentra en vistas de accesorios, otros juegos o el catálogo global, esta opción debe permanecer oculta para simplificar la jerarquía visual.
+
+## LEY 32: NORMALIZACIÓN DE CÓDIGOS TCG
+Toda consulta o guardado de datos relacionado con juegos específicos (Banners, Filtros, Productos) DEBE pasar por una capa de normalización para resolver discrepancias entre códigos de frontend (ej: PKM, YGO) y códigos canónicos de base de datos (ej: POKEMON, YUGIOH). La fuente de verdad para el mapeo se encuentra en `utils/api.ts`.
+
+## LEY 33: INDEPENDENCIA DE BANNER Y DASHBOARD
+La renderización del Banner Hero (`HeroSection`) debe ser lógica y técnicamente independiente de la renderización del Dashboard de Ofertas.
+- El banner puede aparecer en cualquier sección del TCG si existen activos configurados.
+- El Dashboard de Ofertas (Presale/Deals) se reserva exclusivamente para la Home Global o vistas de "Ofertas" específicas para no desplazar la parrilla de productos en las navegaciones por juego.

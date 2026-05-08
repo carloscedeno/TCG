@@ -127,6 +127,7 @@ Artefactos del Compound step:
 - ✅ **Integración de Logos TCG (Premium)**: Sustitución de emojis por assets PNG estandarizados (`color` y `black`) en landing, header y administración. Implementación de leyes de respiración visual para evitar clipping en animaciones de escala.
 - ✅ **Estandarización de Pantone y Color (Mayo 2026)**: Eliminación masiva de clases `neutral-XXX` de Tailwind y reemplazo por tokens `#B7B7B7` (`text-low`) y `#FFFFFF` (`text-high`) para asegurar paridad visual con el PRD en todos los entornos.
 - ✅ **Optimización de Efectos Foil (v59)**: Refactorización de `CardDetail.tsx` para evitar el oscurecimiento de imágenes. El efecto shimmer ahora usa una capa independiente con opacidad controlada (30%) y solo se activa en versiones Foil.
+- ✅ **Banners TCG e Independencia de UI (v60)**: Restauración de banners específicos (Pokémon/Yu-Gi-Oh!) mediante normalización de códigos y desacoplamiento de la vista de dashboard, preservando la parrilla de singles en navegaciones por juego.
 
 
 ## ðŸš§ Features Pendientes

@@ -130,3 +130,10 @@ This session focused on reactivating the "Fast Add to Cart" feature with a premi
 - **Carousel Dinámico**: Integrado visor premium en CardModal con soporte para swipe, navegación por puntos y transiciones de desenfoque suaves.
 - **Optimización de Datos**: Se mantiene la imagen principal fuera del array para compatibilidad y performance en grids.
 
+### ✅ Estabilización de Banners TCG y Desacoplamiento de UI (v60) — 2026-05-08
+- **Independencia de Banners**: Desacoplada la lógica de `HeroSection` de la vista de dashboard de ofertas, restaurando la parrilla de productos en las navegaciones por TCG.
+- **Normalización de Códigos**: Implementada capa de mapeo de alias (`PKM -> POKEMON`, `YGO -> YUGIOH`) para garantizar que los banners se encuentren independientemente del código enviado por el frontend.
+- **Limpieza Administrativa**: Filtrado el panel de banners para mostrar solo los 8 TCGs destacados del menú, eliminando ruidos y duplicados de la base de datos.
+- **Seguridad RLS**: Habilitado RLS y aplicadas políticas de lectura pública en las tablas de metadatos (`games`, `conditions`, `sources`).
+- **Integridad de Datos**: Estandarizados los registros de `hero_banners` y activados los juegos faltantes (`RFB`, `DGM`, `GND`) en la base de datos.
+

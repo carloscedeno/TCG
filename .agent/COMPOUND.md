@@ -950,5 +950,22 @@ $content
 
 **Artefacto creado:** Capa de brillo independiente para efectos Foil.
 
+
 **Regla derivada:** Lección #163 — Nunca aplicar modos de mezcla destructivos directamente sobre el activo visual principal. Usar siempre capas superpuestas con opacidad controlada.
+
+---
+
+## 2026-05-08 — Estabilización de Banners TCG y Desacoplamiento de UI
+
+**Qué pasó:** Se resolvió la desaparición de banners específicos de TCG (Pokémon/Yu-Gi-Oh!) y se corrigió la regresión visual que reemplazaba la parrilla de productos por el dashboard de ofertas al navegar por juegos. Se estandarizaron los códigos de juego en toda la cadena de datos y se aseguraron las tablas de metadatos con RLS.
+**Lo que cambió:**
+- `lessons_learned.md` → Lecciones #164, #165, #166.
+- `LEYES_DEL_SISTEMA.md` → Leyes 32 (Normalización) y 33 (Independencia de Banners).
+- `utils/api.ts` → Capa de normalización en `fetchBanners`.
+- `pages/Home.tsx` → Desacoplamiento de `isDashboardView` y `showHeroSection`.
+- `HeroSection.tsx` → Eliminación de fallbacks globales que contaminaban secciones específicas.
+- `TcgBannersPage.tsx` → Filtrado de administración para mostrar solo los 8 TCGs del menú principal.
+- Base de Datos → Migración de códigos `PKM/YGO/OPC` a canónicos en `hero_banners` y activación de juegos (`is_active = true`).
+**Artefacto creado:** SQL de remediación de RLS para tablas de metadatos (`conditions`, `sources`, `games`).
+**Regla derivada:** Los banners de TCG deben ser independientes del dashboard global de ofertas para no interrumpir el flujo de compra de singles.
 
