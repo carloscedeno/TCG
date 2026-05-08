@@ -1486,7 +1486,12 @@ export const fetchBanners = async (category: string = 'main_hero', gameCode?: st
     .eq('is_active', true);
 
   if (gameCode) {
-    query = query.eq('game_code', gameCode);
+    // Normalize codes to match DB aliases if necessary
+    const normalized = gameCode === 'PKM' ? 'POKEMON' : 
+                       gameCode === 'YGO' ? 'YUGIOH' : 
+                       gameCode === 'OPC' ? 'ONEPIECE' : gameCode;
+                       
+    query = query.eq('game_code', normalized);
   } else {
     query = query.is('game_code', null);
   }
