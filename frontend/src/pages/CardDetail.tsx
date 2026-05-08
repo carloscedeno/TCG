@@ -195,9 +195,9 @@ export const CardDetail: React.FC = () => {
                         <p className="text-neutral-500 font-bold tracking-widest uppercase text-xs">Loading Card Data...</p>
                     </div>
                 ) : details ? (
-                    <div className="glass-panel rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0,209,255,0.15)] flex flex-col md:flex-row overflow-hidden min-h-[80vh]">
+                    <div className="glass-panel rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0,209,255,0.15)] flex flex-col lg:flex-row overflow-hidden min-h-[85vh] max-h-[90vh]">
                         {/* LEFT: IMAGE & VERSIONS LIST */}
-                        <div className="w-full md:w-[520px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden h-full">
+                        <div className="w-full lg:w-[420px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden h-full">
                             <div className="flex-1 min-h-[450px] md:min-h-[600px] flex items-center justify-center p-6 sm:p-8 md:p-10 relative bg-gradient-to-b from-white/[0.04] to-transparent overflow-hidden">
                                 <div className="relative group w-full h-full flex items-center justify-center">
                                     <div className="absolute inset-0 bg-geeko-cyan/25 blur-[120px] rounded-full opacity-40 group-hover:opacity-60 transition-opacity duration-700 animate-pulse pointer-events-none" />
@@ -342,8 +342,8 @@ export const CardDetail: React.FC = () => {
                         </div>
 
                         {/* RIGHT: CARD TEXT & ACTIONS */}
-                        <div className="flex-1 overflow-y-auto custom-scrollbar bg-[#050505] p-10 lg:p-16 space-y-12">
-                            <div className="space-y-6">
+                        <div className="flex-1 overflow-y-auto custom-scrollbar bg-[#050505] p-8 lg:p-12 space-y-10">
+                            <div className="space-y-4">
                                 <a
                                     href={`card/${activePrintingId}`}
                                     onClick={(e) => {
@@ -351,151 +351,153 @@ export const CardDetail: React.FC = () => {
                                     }}
                                     className="block group/title"
                                 >
-                                    <h2 className="text-6xl lg:text-8xl font-web-titles font-normal tracking-tight text-white group-hover/title:text-geeko-cyan transition-colors text-gradient-cyan capitalize">
+                                    <h2 className="text-4xl lg:text-6xl font-web-titles font-normal tracking-tight text-white group-hover/title:text-geeko-cyan transition-colors text-gradient-cyan capitalize">
                                         {details.name}
                                     </h2>
                                 </a>
-                                <div className="flex flex-wrap items-center gap-4 text-xl lg:text-2xl font-medium text-neutral-400">
+                                <div className="flex flex-wrap items-center gap-4 text-lg lg:text-xl font-medium text-neutral-400">
                                     <span><ManaText text={details.mana_cost || ''} /></span>
-                                    {details.mana_cost && <span>•</span>}
-                                    <span>{details.type}</span>
+                                    {details.mana_cost && <span className="opacity-30">•</span>}
+                                    <span className="text-white/80">{details.type}</span>
                                     <span className="text-neutral-700">/</span>
-                                    <span className="text-geeko-gold uppercase text-sm tracking-widest">{details.rarity}</span>
+                                    <span className="text-geeko-gold uppercase text-[10px] font-black tracking-[0.2em]">{details.rarity}</span>
                                 </div>
-                            </div>
-
-                            <div className="p-10 rounded-[40px] bg-white/5 border border-white/10 space-y-8 relative overflow-hidden group">
+                            </                             <div className="p-8 rounded-[32px] bg-white/5 border border-white/10 space-y-6 relative overflow-hidden group">
                                 <div className="absolute -top-24 -right-24 w-64 h-64 bg-geeko-cyan/5 rounded-full blur-[100px] group-hover:bg-geeko-cyan/10 transition-colors" />
-                                <div className="text-xl lg:text-2xl leading-relaxed text-neutral-200 font-medium relative z-10">
-                                    {details.oracle_text?.split('\n').map((line: string, i: number) => <p key={i} className="mb-4"><ManaText text={line} /></p>)}
+                                <div className="text-lg lg:text-xl leading-relaxed text-neutral-200 font-medium relative z-10">
+                                    {details.oracle_text?.split('\n').map((line: string, i: number) => <p key={i} className="mb-3"><ManaText text={line} /></p>)}
                                 </div>
                                 {details.flavor_text && (
-                                    <p className="text-lg italic text-neutral-500 font-serif border-t border-white/10 pt-8 relative z-10">
+                                    <p className="text-md italic text-neutral-500 font-serif border-t border-white/10 pt-6 relative z-10">
                                         "{details.flavor_text}"
                                     </p>
                                 )}
-                                <div className="pt-4 flex flex-wrap gap-8 text-sm font-bold text-neutral-400 uppercase tracking-widest">
+                                <div className="pt-2 flex flex-wrap gap-8 text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em]">
                                     <div>Artist <span className="text-white ml-2">{details.artist}</span></div>
                                     <div>Set <span className="text-geeko-cyan ml-2">{details.set} ({details.set_code?.toUpperCase()})</span></div>
                                 </div>
                             </div>
-
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+</                            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 items-start">
                                 {/* Marketplace */}
                                 <div className="space-y-6">
-                                    <h3 className="text-xs font-black uppercase tracking-widest text-neutral-500 pl-2">Trading Hub</h3>
+                                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-500 pl-2">Trading Hub</h3>
 
-                                    <div className="p-10 rounded-[40px] bg-gradient-to-br from-geeko-cyan/10 via-transparent to-transparent border border-white/10 group relative overflow-hidden hover:border-geeko-cyan/30 transition-colors">
+                                    <div className="p-8 rounded-[32px] bg-gradient-to-br from-geeko-cyan/10 via-transparent to-transparent border border-white/10 group relative overflow-hidden hover:border-geeko-cyan/30 transition-colors">
                                         <div className="absolute top-0 right-0 w-40 h-40 bg-geeko-cyan/5 rounded-full blur-[50px]" />
-                                        <div className="text-xs font-black uppercase text-geeko-cyan tracking-widest mb-2">Internal Store Price</div>
-                                        <div className="flex flex-col gap-2">
+                                        <div className="text-[9px] font-black uppercase text-geeko-cyan tracking-[0.2em] mb-4">Internal Store Price</div>
+                                        <div className="flex flex-col gap-6">
                                             {/* Price + Variant Badge (horizontal layout matching CardModal) */}
-                                            <div className="flex items-center gap-3">
+                                            <div className="flex items-center justify-between">
                                                 <div className="flex flex-col">
                                                     {activeVersion?.discount_percentage > 0 && (
-                                                        <span className="text-sm font-bold text-neutral-500 line-through">
+                                                        <span className="text-xs font-bold text-neutral-500 line-through">
                                                             ${Number(activeVersion.original_price).toFixed(2)}
                                                         </span>
                                                     )}
                                                     <div className="flex items-center gap-2">
-                                                        <div className="text-6xl font-black text-white font-mono tracking-tighter leading-none">
+                                                        <div className="text-5xl font-black text-white font-mono tracking-tighter leading-none">
                                                             ${(activeVersion?.price || details.price || 0) > 0 ? Number(activeVersion?.price || details.price).toFixed(2) : '---'}
                                                         </div>
                                                         {activeVersion?.discount_percentage > 0 && (
-                                                            <div className="px-2 py-1 bg-purple-500/20 text-purple-400 text-xs font-black rounded-lg border border-purple-500/30 shadow-[0_0_15px_rgba(168,85,247,0.4)] animate-pulse">
+                                                            <div className="px-2 py-1 bg-purple-500/20 text-purple-400 text-[10px] font-black rounded-lg border border-purple-500/30 shadow-[0_0_15px_rgba(168,85,247,0.4)] animate-pulse">
                                                                 -{activeVersion.discount_percentage}%
                                                             </div>
                                                         )}
                                                     </div>
                                                 </div>
-                                                <span className={`text-[10px] px-2 py-0.5 rounded-full font-black tracking-widest shadow-sm self-start mt-2 ${activeFinish === 'foil' ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white animate-pulse' : 'bg-white text-black'}`}>
+                                                <span className={`text-[9px] px-3 py-1 rounded-full font-black tracking-[0.2em] shadow-sm ${activeFinish === 'foil' ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white animate-pulse' : 'bg-white text-black'}`}>
                                                     {activeFinish === 'foil' ? 'FOIL' : 'NONFOIL'}
                                                 </span>
                                             </div>
-                                            {/* Finish Toggle — only render for available variants */}
-                                            <div className="flex bg-neutral-900/80 p-1 rounded-xl border border-white/5 w-fit mt-2">
-                                                {activeGroup?.normal && (
-                                                    <button
-                                                        onClick={() => {
-                                                            const targetId = activeGroup?.normal?.printing_id;
-                                                            if (targetId) handleVersionClick(targetId, 'nonfoil');
-                                                        }}
-                                                        className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-1 ${activeFinish !== 'foil'
-                                                            ? 'bg-white text-black shadow-lg scale-[1.05]'
-                                                            : (activeGroup.normal?.stock || 0) === 0
-                                                                ? 'text-neutral-500 opacity-60'
-                                                                : 'text-neutral-500 hover:text-white'
-                                                            }`}
-                                                    >
-                                                        Normal {(activeGroup.normal?.stock || 0) <= 0 && <span className="text-[8px] opacity-70 tracking-tighter">(P/E)</span>}
-                                                    </button>
-                                                )}
-                                                {activeGroup?.foil && (
-                                                    <button
-                                                        onClick={() => {
-                                                            const targetId = activeGroup?.foil?.printing_id;
-                                                            if (targetId) handleVersionClick(targetId, 'foil');
-                                                        }}
-                                                        className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-1 ${activeFinish === 'foil'
-                                                            ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 border-transparent text-white shadow-[0_0_15px_rgba(236,72,153,0.3)] scale-[1.05]'
-                                                            : (activeGroup.foil?.stock || 0) === 0
-                                                                ? 'text-neutral-500 opacity-60'
-                                                                : 'text-neutral-500 hover:text-white'
-                                                            }`}
-                                                    >
-                                                        Foil {(activeGroup.foil?.stock || 0) <= 0 && <span className="text-[8px] opacity-70 tracking-tighter">(P/E)</span>}
-                                                    </button>
-                                                )}
+                                            
+                                            <div className="flex items-center justify-between gap-4">
+                                                {/* Finish Toggle */}
+                                                <div className="flex bg-neutral-900/80 p-1 rounded-xl border border-white/5 w-fit">
+                                                    {activeGroup?.normal && (
+                                                        <button
+                                                            onClick={() => {
+                                                                const targetId = activeGroup?.normal?.printing_id;
+                                                                if (targetId) handleVersionClick(targetId, 'nonfoil');
+                                                            }}
+                                                            className={`px-3 py-2 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all flex items-center gap-1 ${activeFinish !== 'foil'
+                                                                ? 'bg-white text-black shadow-lg scale-[1.05]'
+                                                                : (activeGroup.normal?.stock || 0) === 0
+                                                                    ? 'text-neutral-500 opacity-60'
+                                                                    : 'text-neutral-500 hover:text-white'
+                                                                }`}
+                                                        >
+                                                            Normal
+                                                        </button>
+                                                    )}
+                                                    {activeGroup?.foil && (
+                                                        <button
+                                                            onClick={() => {
+                                                                const targetId = activeGroup?.foil?.printing_id;
+                                                                if (targetId) handleVersionClick(targetId, 'foil');
+                                                            }}
+                                                            className={`px-3 py-2 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all flex items-center gap-1 ${activeFinish === 'foil'
+                                                                ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 border-transparent text-white shadow-[0_0_15px_rgba(236,72,153,0.3)] scale-[1.05]'
+                                                                : (activeGroup.foil?.stock || 0) === 0
+                                                                    ? 'text-neutral-500 opacity-60'
+                                                                    : 'text-neutral-500 hover:text-white'
+                                                                }`}
+                                                        >
+                                                            Foil
+                                                        </button>
+                                                    )}
+                                                </div>
+
+                                                <button
+                                                    onClick={handleAddToCart}
+                                                    disabled={isAdding}
+                                                    className="flex-1 h-12 rounded-xl bg-geeko-cyan text-black font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0,229,255,0.3)] hover:shadow-[0_0_30px_rgba(0,229,255,0.5)] hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
+                                                >
+                                                    {isAdding ? <Loader2 size={16} className="animate-spin" /> : <ShoppingCart size={16} fill="currentColor" />}
+                                                    {isAdding ? '...' : ((activeVersion?.stock || 0) > 0 ? 'Agregar' : 'Encargo')}
+                                                </button>
                                             </div>
                                         </div>
-                                        <button
-                                            onClick={handleAddToCart}
-                                            disabled={isAdding}
-                                            className="h-16 px-10 rounded-2xl bg-geeko-cyan text-black font-black text-sm uppercase tracking-widest flex items-center gap-3 shadow-[0_0_30px_rgba(0,229,255,0.4)] hover:shadow-[0_0_50px_rgba(0,229,255,0.6)] hover:scale-105 active:scale-95 transition-all disabled:opacity-50"
-                                        >
-                                            {isAdding ? <Loader2 size={24} className="animate-spin" /> : <ShoppingCart size={24} fill="currentColor" />}
-                                            {isAdding ? 'Procesando...' : ((activeVersion?.stock || 0) > 0 ? 'Agregar al Carrito' : 'Por encargo')}
-                                        </button>
                                     </div>
-                                </div>
 
-                                {!details?.is_accessory && (
-                                    <a
-                                        href={ckUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="w-full flex items-center justify-between p-8 rounded-[32px] bg-neutral-900/50 hover:bg-geeko-cyan/10 border border-white/5 hover:border-geeko-cyan transition-all group"
-                                    >
-                                        <div className="flex flex-col">
-                                            <span className="text-xs font-black uppercase text-neutral-500 tracking-widest group-hover:text-geeko-cyan transition-colors mb-1">External Market</span>
-                                            <span className="text-2xl font-bold">Standard Price @ CK</span>
-                                        </div>
-                                        <div className="flex items-center gap-6">
-                                            <span className="text-3xl font-mono font-black text-white">$ {details.valuation?.market_price ? Number(details.valuation?.market_price).toFixed(2) : '---'}</span>
-                                            <div className="p-3 rounded-full bg-white/5 group-hover:bg-geeko-cyan group-hover:text-black transition-colors">
-                                                <ExternalLink size={20} />
+                                    {!details?.is_accessory && (
+                                        <a
+                                            href={ckUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="w-full flex items-center justify-between p-6 rounded-2xl bg-neutral-900/30 hover:bg-geeko-cyan/5 border border-white/5 hover:border-geeko-cyan/30 transition-all group"
+                                        >
+                                            <div className="flex flex-col">
+                                                <span className="text-[9px] font-black uppercase text-neutral-500 tracking-[0.2em] mb-1">Market Price</span>
+                                                <span className="text-lg font-bold">Standard @ CK</span>
                                             </div>
-                                        </div>
-                                    </a>
-                                )}
-                            </div>
-
-                            {/* Legality */}
-                            {!details?.is_accessory && (
-                                <div className="space-y-6">
-                                    <h3 className="text-xs font-black uppercase tracking-widest text-neutral-500 pl-2">Format Legality</h3>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        {relevantFormats.map(fmt => (
-                                            <div key={fmt} className="flex items-center justify-between p-5 rounded-2xl bg-neutral-900/50 border border-white/5 hover:border-white/10 transition-colors">
-                                                <span className="text-xs font-bold text-neutral-300 uppercase tracking-widest">{fmt}</span>
-                                                <div className="scale-125">
-                                                    {getLegalityIcon(details.legalities?.[fmt] || 'not_legal')}
+                                            <div className="flex items-center gap-4">
+                                                <span className="text-2xl font-mono font-black text-white">$ {details.valuation?.market_price ? Number(details.valuation?.market_price).toFixed(2) : '---'}</span>
+                                                <div className="p-2 rounded-full bg-white/5 group-hover:bg-geeko-cyan group-hover:text-black transition-colors">
+                                                    <ExternalLink size={14} />
                                                 </div>
                                             </div>
-                                        ))}
-                                    </div>
+                                        </a>
+                                    )}
                                 </div>
-                            )}
+
+                                {/* Legality */}
+                                {!details?.is_accessory && (
+                                    <div className="space-y-6">
+                                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-500 pl-2">Format Legality</h3>
+                                        <div className="grid grid-cols-2 gap-3">
+                                            {relevantFormats.map(fmt => (
+                                                <div key={fmt} className="flex items-center justify-between p-4 rounded-xl bg-neutral-900/30 border border-white/5 hover:border-white/10 transition-colors">
+                                                    <span className="text-[9px] font-black text-neutral-400 uppercase tracking-widest">{fmt}</span>
+                                                    <div className="scale-110">
+                                                        {getLegalityIcon(details.legalities?.[fmt] || 'not_legal')}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+      )}
                         </div>
                     </div>
                 ) : null
