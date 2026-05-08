@@ -149,12 +149,13 @@ const Home: React.FC = () => {
     return !val;
   };
 
-  const isDashboardView = !query && 
+  const showHeroSection = !query && 
     Object.entries(filters).every(([key, val]) => {
       if (key === 'games') return Array.isArray(val) && val.length <= 1;
       return isDefaultFilter(key, val);
-    }) && 
-    (activeTab as string) !== 'catalog';
+    });
+
+  const isDashboardView = !query && Object.entries(filters).every(([key, val]) => isDefaultFilter(key, val)) && (activeTab as string) !== 'catalog';
 
   useEffect(() => {
     const gameCode = filters.games && filters.games.length > 0 ? filters.games[0] : undefined;
@@ -429,10 +430,10 @@ const Home: React.FC = () => {
         {/* Header */}
         <Header onCartOpen={() => setIsCartOpen(true)} cartCount={cartCount} />
 
-        {isDashboardView && (
+        {showHeroSection && (
           <div className="max-w-[1600px] mx-auto w-full px-6 pt-2 animate-in fade-in slide-in-from-top-4 duration-1000">
             <HeroSection gameCode={filters.games && filters.games.length === 1 ? filters.games[0] : undefined} />
-            {(!filters.games || filters.games.length === 0) && <PresaleSection />}
+            {isDashboardView && <PresaleSection />}
           </div>
         )}
 
