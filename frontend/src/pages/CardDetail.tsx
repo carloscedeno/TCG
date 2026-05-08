@@ -156,11 +156,12 @@ export const CardDetail: React.FC = () => {
         return activeGroup.normal || activeGroup.foil || activeGroup.etched || activeGroup.base;
     }, [activeGroup, activeFinish]);
 
+    const isFoil = activeVersion ? (activeVersion.is_foil || activeVersion.finish === 'foil') : !!(details.is_foil || details.finish === 'foil');
+
     const ckUrl = useMemo(() => {
         if (!details) return '#';
-        const isFoil = activeVersion ? (activeVersion.is_foil || activeVersion.finish === 'foil') : !!(details.is_foil || details.finish === 'foil');
         return getCardKingdomUrl(details.name, isFoil);
-    }, [details?.name, activeVersion]);
+    }, [details?.name, isFoil]);
 
     const hasMultipleFaces = details?.card_faces && details.card_faces.length > 1;
 
@@ -199,12 +200,15 @@ export const CardDetail: React.FC = () => {
                         {/* LEFT: IMAGE & VERSIONS LIST */}
                         <div className="w-full lg:w-[420px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden h-full">
                             <div className="flex-1 min-h-[450px] md:min-h-[600px] flex items-center justify-center p-6 sm:p-8 md:p-10 relative bg-gradient-to-b from-white/[0.04] to-transparent overflow-hidden">
-                                <div className="relative group w-full h-full flex items-center justify-center">
+                                <div className={`relative group w-full h-full flex items-center justify-center ${isFoil ? 'holo-effect' : ''}`}>
                                     <div className="absolute inset-0 bg-geeko-cyan/25 blur-[120px] rounded-full opacity-40 group-hover:opacity-60 transition-opacity duration-700 animate-pulse pointer-events-none" />
+                                    {isFoil && (
+                                        <div className="absolute inset-0 z-20 foil-shimmer opacity-30 mix-blend-overlay pointer-events-none rounded-[10%] scale-[0.95]" />
+                                    )}
                                     <img
                                         src={currentImage}
                                         alt={details.name}
-                                        className="w-full h-full object-contain drop-shadow-[0_45px_100px_rgba(0,0,0,0.95)] z-10 hover:scale-[1.03] transition-all duration-700 foil-shimmer"
+                                        className="w-full h-full object-contain drop-shadow-[0_45px_100px_rgba(0,0,0,0.95)] z-10 hover:scale-[1.03] transition-all duration-700"
                                         style={{
                                             imageRendering: 'auto',
                                         }}
