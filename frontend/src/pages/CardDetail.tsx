@@ -156,7 +156,7 @@ export const CardDetail: React.FC = () => {
         return activeGroup.normal || activeGroup.foil || activeGroup.etched || activeGroup.base;
     }, [activeGroup, activeFinish]);
 
-    const isFoil = activeVersion ? (activeVersion.is_foil || activeVersion.finish === 'foil') : !!(details.is_foil || details.finish === 'foil');
+    const isFoil = activeVersion ? (activeVersion.is_foil || activeVersion.finish === 'foil') : !!(details?.is_foil || details?.finish === 'foil');
 
     const ckUrl = useMemo(() => {
         if (!details) return '#';
