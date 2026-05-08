@@ -35,7 +35,7 @@ function generateReceiptHTML({
             ${item.name}
             ${setBadge}${finishBadge}${demandBadge}
           </td>
-          <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;text-align:right;font-family:monospace;font-weight:700;font-size:14px;color:#00AEB4;">
+          <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;text-align:right;font-family:monospace;font-weight:700;font-size:14px;color:#0099FF;">
             $${(item.price * item.quantity).toFixed(2)}
           </td>
         </tr>`;
@@ -89,7 +89,7 @@ function generateReceiptHTML({
       font-size: 26px; font-weight: 900; letter-spacing: -1px; color: #111827;
     }
     .logo-sub { font-size: 12px; color: #9ca3af; margin-top: 2px; letter-spacing: 3px; text-transform: uppercase; }
-    .cyan-bar { width: 48px; height: 4px; background: #00AEB4; border-radius: 2px; margin: 12px auto 0; }
+    .cyan-bar { width: 48px; height: 4px; background: #0099FF; border-radius: 2px; margin: 12px auto 0; }
     .order-box {
       background: #f0fdfd;
       border: 1px solid #99f6e4;
@@ -220,8 +220,8 @@ export const CheckoutSuccessPage = () => {
     return (
         <div className="min-h-[100dvh] bg-[#080808] flex items-center justify-center p-4 py-12">
             <div className="max-w-lg w-full bg-neutral-900 border border-white/10 rounded-[2.5rem] p-8 md:p-12 text-center animate-in zoom-in duration-500 shadow-2xl">
-                <div className="w-20 h-20 bg-geeko-green/10 rounded-full flex items-center justify-center mx-auto mb-8 animate-bounce">
-                    <CheckCircle className="text-geeko-green" size={40} />
+                <div className="w-20 h-20 bg-geeko-cyan/10 rounded-full flex items-center justify-center mx-auto mb-8 animate-bounce">
+                    <CheckCircle className="text-geeko-cyan" size={40} />
                 </div>
 
                 <h1 className="text-3xl font-black text-white mb-4 uppercase tracking-tight">¡Orden Recibida!</h1>
@@ -259,7 +259,7 @@ export const CheckoutSuccessPage = () => {
                 {items && items.length > 0 && (
                     <button
                         onClick={handleDownloadPDF}
-                        className="w-full py-3.5 mb-6 bg-[#00AEB4]/10 border border-[#00AEB4]/30 text-[#00AEB4] hover:bg-[#00AEB4]/20 hover:border-[#00AEB4]/60 rounded-xl font-black uppercase text-xs tracking-widest transition-all flex items-center justify-center gap-2"
+                        className="w-full py-3.5 mb-6 bg-[#0099FF]/10 border border-[#0099FF]/30 text-[#0099FF] hover:bg-[#0099FF]/20 hover:border-[#0099FF]/60 rounded-xl font-black uppercase text-xs tracking-widest transition-all flex items-center justify-center gap-2"
                     >
                         <FileDown size={16} />
                         Descargar Comprobante (PDF)

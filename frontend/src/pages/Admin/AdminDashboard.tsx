@@ -226,12 +226,12 @@ export const AdminDashboard = () => {
                 </div>
 
                 <div className="mb-12">
-                    <Link to="/admin/customers" className="group block relative overflow-hidden rounded-[2.5rem] bg-gradient-to-r from-emerald-900/40 via-slate-900 to-slate-900 border border-emerald-500/20 p-10 hover:border-emerald-500/50 transition-all shadow-2xl">
-                        <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-[100px] group-hover:bg-emerald-500/20 transition-all" />
+                    <Link to="/admin/customers" className="group block relative overflow-hidden rounded-[2.5rem] bg-gradient-to-r from-emerald-900/40 via-slate-900 to-slate-900 border border-geeko-cyan/20 p-10 hover:border-geeko-cyan/50 transition-all shadow-2xl">
+                        <div className="absolute top-0 right-0 w-96 h-96 bg-geeko-cyan/10 rounded-full blur-[100px] group-hover:bg-geeko-cyan/20 transition-all" />
                         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
                             <div className="flex-1 text-center md:text-left">
                                 <div className="flex items-center justify-center md:justify-start gap-3 mb-4">
-                                    <div className="w-12 h-12 bg-emerald-500/20 rounded-2xl flex items-center justify-center border border-emerald-500/30">
+                                    <div className="w-12 h-12 bg-geeko-cyan/20 rounded-2xl flex items-center justify-center border border-geeko-cyan/30">
                                         <Users className="text-emerald-400" size={24} />
                                     </div>
                                     <span className="text-emerald-400 font-black text-xs tracking-[0.3em] uppercase">Módulo de Punto de Venta</span>
@@ -242,12 +242,12 @@ export const AdminDashboard = () => {
                             <div className="flex items-center gap-6">
                                 <div className="hidden lg:flex flex-col items-end">
                                     <span className="text-[10px] text-slate-500 font-black uppercase tracking-widest mb-1">Estado del Sistema</span>
-                                    <div className="flex items-center gap-2 px-3 py-1 bg-emerald-500/10 rounded-full border border-emerald-500/20">
-                                        <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                                    <div className="flex items-center gap-2 px-3 py-1 bg-geeko-cyan/10 rounded-full border border-geeko-cyan/20">
+                                        <div className="w-1.5 h-1.5 bg-geeko-cyan rounded-full animate-pulse" />
                                         <span className="text-[10px] font-black text-emerald-400 uppercase tracking-tighter">Terminal Operativa</span>
                                     </div>
                                 </div>
-                                <div className="w-20 h-20 bg-emerald-500 rounded-[2rem] flex items-center justify-center shadow-[0_0_40px_rgba(16,185,129,0.3)] group-hover:scale-110 transition-transform group-hover:rotate-6">
+                                <div className="w-20 h-20 bg-geeko-cyan rounded-[2rem] flex items-center justify-center shadow-[0_0_40px_rgba(16,185,129,0.3)] group-hover:scale-110 transition-transform group-hover:rotate-6">
                                     <ExternalLink size={32} className="text-black" />
                                 </div>
                             </div>
@@ -321,14 +321,14 @@ export const AdminDashboard = () => {
                         </div>
                     </Link>
 
-                    <Link to="/admin/presales" className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-900/50 to-slate-900 border border-white/10 p-8 hover:border-emerald-500/50 transition-all">
-                        <div className="absolute inset-0 bg-emerald-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <Link to="/admin/presales" className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-900/50 to-slate-900 border border-white/10 p-8 hover:border-geeko-cyan/50 transition-all">
+                        <div className="absolute inset-0 bg-geeko-cyan/10 opacity-0 group-hover:opacity-100 transition-opacity" />
                         <div className="relative z-10 flex items-center justify-between">
                             <div>
                                 <h3 className="text-2xl font-black italic text-white mb-2">PREVENTAS</h3>
                                 <p className="text-emerald-300 text-xs font-bold uppercase tracking-widest">Anuncios de Preventa</p>
                             </div>
-                            <div className="w-16 h-16 bg-emerald-500/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <div className="w-16 h-16 bg-geeko-cyan/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
                                 <TrendingUp className="text-emerald-400" size={32} />
                             </div>
                         </div>
@@ -423,7 +423,7 @@ export const AdminDashboard = () => {
                                                 <span className="font-black text-xs text-slate-300 uppercase tracking-widest">{task.game_code} Ejecutor de Tareas</span>
                                                 <div className="flex items-center gap-2">
                                                     <button onClick={() => fetchTaskLogs(task.id)} className="text-[10px] font-black uppercase text-geeko-cyan hover:underline">Ver Logs</button>
-                                                    <span className={`text-[10px] px-2 py-0.5 rounded font-black uppercase ${task.status === 'running' ? 'bg-geeko-cyan/20 text-geeko-cyan' : 'bg-emerald-500/20 text-emerald-400'}`}>
+                                                    <span className={`text-[10px] px-2 py-0.5 rounded font-black uppercase ${task.status === 'running' ? 'bg-geeko-cyan/20 text-geeko-cyan' : 'bg-geeko-cyan/20 text-emerald-400'}`}>
                                                         {task.status}
                                                     </span>
                                                 </div>
@@ -551,7 +551,7 @@ const StatCard = ({ title, value, change, icon }: { title: string, value: string
             <div className="w-12 h-12 bg-black/40 rounded-2xl flex items-center justify-center border border-white/5 group-hover:bg-geeko-cyan/10 transition-colors">
                 {icon}
             </div>
-            <span className="text-emerald-500 text-[10px] font-black uppercase tracking-[0.2em] bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">{change}</span>
+            <span className="text-geeko-cyan text-[10px] font-black uppercase tracking-[0.2em] bg-geeko-cyan/10 px-3 py-1 rounded-full border border-geeko-cyan/20">{change}</span>
         </div>
         <h3 className="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">{title}</h3>
         <p className="text-4xl font-black text-white italic tracking-tighter">{value}</p>

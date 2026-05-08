@@ -578,8 +578,8 @@ const handleImport = async () => {
 
             {step === 3 && (
                 <GlassCard className="p-16 text-center space-y-8 animate-in zoom-in-95">
-                    <div className="w-24 h-24 bg-emerald-500/20 rounded-full flex items-center justify-center border border-emerald-500/30 mx-auto">
-                        <CheckCircle2 className="text-emerald-500 w-12 h-12" />
+                    <div className="w-24 h-24 bg-geeko-cyan/20 rounded-full flex items-center justify-center border border-geeko-cyan/30 mx-auto">
+                        <CheckCircle2 className="text-geeko-cyan w-12 h-12" />
                     </div>
                     <div>
                         <h2 className="text-4xl font-black italic uppercase tracking-tighter mb-2">¡Sincronización Finalizada!</h2>

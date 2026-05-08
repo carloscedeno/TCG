@@ -74,7 +74,7 @@ export const OrderTrackingPage = () => {
 
     if (loading) return (
         <div className="min-h-[100dvh] bg-[#1F182D] flex items-center justify-center text-white">
-            <Loader2 className="animate-spin text-[#00AEB4]" size={40} />
+            <Loader2 className="animate-spin text-[#0099FF]" size={40} />
         </div>
     );
 
@@ -84,7 +84,7 @@ export const OrderTrackingPage = () => {
                 <AlertCircle className="mx-auto text-red-500 mb-4" size={48} />
                 <h1 className="text-2xl font-black mb-2">Orden no encontrada</h1>
                 <p className="text-neutral-400 mb-6">{error}</p>
-                <Link to="/" className="inline-block px-6 py-3 bg-[#00AEB4] text-black font-black uppercase rounded-xl hover:bg-[#00c5cc] transition-colors">
+                <Link to="/" className="inline-block px-6 py-3 bg-[#0099FF] text-black font-black uppercase rounded-xl hover:bg-[#00c5cc] transition-colors">
                     Volver al Inicio
                 </Link>
             </div>
@@ -97,7 +97,7 @@ export const OrderTrackingPage = () => {
             case 'payment_uploaded': return { text: 'Pago en Revisión', color: 'text-yellow-400', bg: 'bg-yellow-400/10', icon: ShieldCheck, desc: 'Estamos verificando tu pago con el banco.' };
             case 'paid': return { text: 'Pago Confirmado', color: 'text-green-400', bg: 'bg-green-400/10', icon: CheckCircle, desc: 'Tu orden está pagada.' };
             case 'processing': return { text: 'Preparando Empaque', color: 'text-geeko-cyan', bg: 'bg-geeko-cyan/10', icon: Package, desc: 'Estamos preparando tu envío.' };
-            case 'ready_for_pickup': return { text: 'Listo para Pick Up', color: 'text-[#00AEB4]', bg: 'bg-[#00AEB4]/10', icon: CheckCircle, desc: 'Te esperamos en la tienda física.' };
+            case 'ready_for_pickup': return { text: 'Listo para Pick Up', color: 'text-[#0099FF]', bg: 'bg-[#0099FF]/10', icon: CheckCircle, desc: 'Te esperamos en la tienda física.' };
             case 'shipped': return { text: 'Enviado', color: 'text-purple-400', bg: 'bg-purple-400/10', icon: Truck, desc: 'Tu orden ya va en camino.' };
             case 'delivered': return { text: 'Entregado', color: 'text-gray-400', bg: 'bg-gray-400/10', icon: CheckCircle, desc: 'Esperamos lo disfrutes.' };
             case 'cancelled': return { text: 'Cancelado / Expirado', color: 'text-red-400', bg: 'bg-red-400/10', icon: AlertCircle, desc: 'La orden fue anulada por falta de pago o manualmente.' };
@@ -142,7 +142,7 @@ export const OrderTrackingPage = () => {
                             {/* 
                             {isPaymentRequired && (
                                 <div className="mt-8 pt-8 border-t border-white/10">
-                                    <h3 className="font-black uppercase tracking-widest text-sm mb-4 text-[#00AEB4]">Adjuntar Comprobante</h3>
+                                    <h3 className="font-black uppercase tracking-widest text-sm mb-4 text-[#0099FF]">Adjuntar Comprobante</h3>
                                     ...
                                 </div>
                             )} 
@@ -150,7 +150,7 @@ export const OrderTrackingPage = () => {
 
                             {order.payment_proof_url && !isPaymentRequired && (
                                 <div className="mt-6 pt-6 border-t border-white/10">
-                                    <a href={order.payment_proof_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-xs font-bold text-[#00AEB4] hover:text-white transition-colors">
+                                    <a href={order.payment_proof_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-xs font-bold text-[#0099FF] hover:text-white transition-colors">
                                         <ShieldCheck size={16} /> Ver comprobante adjunto
                                     </a>
                                 </div>
@@ -199,7 +199,7 @@ export const OrderTrackingPage = () => {
                                                 )}
                                             </div>
                                         </div>
-                                        <span className="font-mono text-[#00AEB4] font-bold shrink-0 ml-4">${(item.price_at_purchase * item.quantity).toFixed(2)}</span>
+                                        <span className="font-mono text-[#0099FF] font-bold shrink-0 ml-4">${(item.price_at_purchase * item.quantity).toFixed(2)}</span>
                                     </div>
                                 ))}
                             </div>

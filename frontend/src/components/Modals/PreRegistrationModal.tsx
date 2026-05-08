@@ -50,8 +50,8 @@ export const PreRegistrationModal: React.FC<PreRegistrationModalProps> = ({ isOp
 
                 {success ? (
                     <div className="p-10 text-center space-y-6">
-                        <div className="w-20 h-20 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mx-auto">
-                            <CheckCircle size={40} className="text-emerald-500" />
+                        <div className="w-20 h-20 bg-geeko-cyan/10 border border-geeko-cyan/20 rounded-full flex items-center justify-center mx-auto">
+                            <CheckCircle size={40} className="text-geeko-cyan" />
                         </div>
                         <div className="space-y-2">
                             <h3 className="text-2xl font-black italic uppercase tracking-tighter">¡Pre-inscripción Exitosa!</h3>
@@ -62,7 +62,7 @@ export const PreRegistrationModal: React.FC<PreRegistrationModalProps> = ({ isOp
                         </div>
                         <button 
                             onClick={onClose}
-                            className="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-black uppercase tracking-widest rounded-xl transition-all"
+                            className="w-full py-4 bg-emerald-600 hover:bg-geeko-cyan text-white font-black uppercase tracking-widest rounded-xl transition-all"
                         >
                             Cerrar
                         </button>

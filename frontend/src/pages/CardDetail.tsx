@@ -96,7 +96,7 @@ export const CardDetail: React.FC = () => {
 
     const getLegalityIcon = (status: string) => {
         switch (status) {
-            case 'legal': return <CheckCircle2 size={16} className="text-emerald-500" />;
+            case 'legal': return <CheckCircle2 size={16} className="text-geeko-cyan" />;
             case 'not_legal': return <X size={16} className="text-neutral-700" />;
             case 'restricted': return <AlertCircle size={16} className="text-amber-500" />;
             case 'banned': return <AlertCircle size={16} className="text-red-500" />;
@@ -170,7 +170,7 @@ export const CardDetail: React.FC = () => {
                 <AlertCircle size={64} className="text-red-500 mb-6" />
                 <h1 className="text-3xl font-black mb-4">Error loading card</h1>
                 <p className="text-neutral-400 max-w-md mb-8">{error}</p>
-                <Link to="/" className="px-8 py-3 bg-geeko-cyan rounded-full font-black text-black hover:scale-105 transition-all flex items-center gap-2 shadow-[0_0_20px_rgba(0,209,255,0.3)]">
+                <Link to="/" className="px-8 py-3 bg-geeko-cyan rounded-full font-black text-black hover:scale-105 transition-all flex items-center gap-2 shadow-[0_0_20px_rgba(0, 153, 255,0.3)]">
                     <ArrowLeft size={18} /> Back to Market
                 </Link>
             </div>
@@ -195,7 +195,7 @@ export const CardDetail: React.FC = () => {
                         <p className="text-neutral-500 font-bold tracking-widest uppercase text-xs">Loading Card Data...</p>
                     </div>
                 ) : details ? (
-                    <div className="glass-panel rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0,209,255,0.15)] flex flex-col lg:flex-row overflow-hidden min-h-[85vh] max-h-[90vh]">
+                    <div className="glass-panel rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0, 153, 255,0.15)] flex flex-col lg:flex-row overflow-hidden min-h-[85vh] max-h-[90vh]">
                         {/* LEFT: IMAGE & VERSIONS LIST */}
                         <div className="w-full lg:w-[420px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden h-full">
                             <div className="flex-1 min-h-[450px] md:min-h-[600px] flex items-center justify-center p-6 sm:p-8 md:p-10 relative bg-gradient-to-b from-white/[0.04] to-transparent overflow-hidden">
@@ -319,7 +319,7 @@ export const CardDetail: React.FC = () => {
 
                                                         <div className="flex items-center gap-4">
                                                             {rowActiveVersion?.stock > 0 ? (
-                                                                <span className="text-[9px] font-black text-geeko-green bg-geeko-green/10 px-2 py-0.5 rounded-full border border-geeko-green/20 uppercase tracking-tight">
+                                                                <span className="text-[9px] font-black text-geeko-cyan bg-geeko-cyan/10 px-2 py-0.5 rounded-full border border-geeko-cyan/20 uppercase tracking-tight">
                                                                     En Stock
                                                                 </span>
                                                             ) : (

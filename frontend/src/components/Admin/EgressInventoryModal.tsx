@@ -307,7 +307,7 @@ export function EgressInventoryModal({ isOpen, onClose, onSuccess }: EgressInven
                                                         <td className="p-3 text-center">
                                                             {row.status === 'error_not_found' && <span className="text-red-500 font-black uppercase tracking-wider">No Encontrado</span>}
                                                             {row.status === 'error_insufficient_stock' && <span className="text-orange-500 font-black uppercase tracking-wider">Stock Insuficiente</span>}
-                                                            {row.status === 'ok' && <span className="text-emerald-500 font-black uppercase tracking-wider">OK</span>}
+                                                            {row.status === 'ok' && <span className="text-geeko-cyan font-black uppercase tracking-wider">OK</span>}
                                                         </td>
                                                         <td className="p-3 text-center border-l border-white/5 text-xl font-mono font-black text-white/60">
                                                             {row.current_stock || 0}
@@ -341,13 +341,13 @@ export function EgressInventoryModal({ isOpen, onClose, onSuccess }: EgressInven
 
                     {step === 3 && (
                         <GlassCard className="p-16 text-center space-y-8 animate-in zoom-in-95">
-                            <div className="w-24 h-24 bg-emerald-500/20 rounded-full flex items-center justify-center border border-emerald-500/30 mx-auto">
-                                <CheckCircle2 className="text-emerald-500 w-12 h-12" />
+                            <div className="w-24 h-24 bg-geeko-cyan/20 rounded-full flex items-center justify-center border border-geeko-cyan/30 mx-auto">
+                                <CheckCircle2 className="text-geeko-cyan w-12 h-12" />
                             </div>
                             <div>
                                 <h2 className="text-4xl font-black italic uppercase tracking-tighter mb-2">¡Inventario Descargado!</h2>
                                 <p className="text-slate-400 font-bold">
-                                    Se egresaron <span className="text-emerald-500">{result?.egress_count || 0}</span> nodos de cartas. 
+                                    Se egresaron <span className="text-geeko-cyan">{result?.egress_count || 0}</span> nodos de cartas. 
                                 </p>
                                 <p className="text-xs text-slate-500 mt-2 font-mono uppercase tracking-widest">
                                     Identificador Operativo: EGRESS_LOGGED

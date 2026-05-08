@@ -261,7 +261,7 @@ export const EventsPage: React.FC = () => {
                       onClick={() => toggleActive(event)}
                       className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all shadow-lg ${
                         event.is_active 
-                          ? 'bg-emerald-500 text-black border-emerald-400 shadow-emerald-500/20' 
+                          ? 'bg-geeko-cyan text-black border-emerald-400 shadow-emerald-500/20' 
                           : 'bg-slate-800 text-slate-400 border-white/10 shadow-black'
                       }`}
                     >
@@ -455,7 +455,7 @@ export const EventsPage: React.FC = () => {
                       onClick={() => setEditingEvent({ ...editingEvent, is_active: !editingEvent.is_active })}
                       className={`w-full p-4 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all flex items-center justify-center gap-3 ${
                         editingEvent.is_active 
-                          ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' 
+                          ? 'bg-geeko-cyan/10 border-geeko-cyan/20 text-emerald-400' 
                           : 'bg-slate-900/50 border-white/5 text-slate-500'
                       }`}
                     >

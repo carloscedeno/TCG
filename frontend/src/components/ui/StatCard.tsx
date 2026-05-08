@@ -16,7 +16,7 @@ export const StatCard: React.FC<StatCardProps> = ({ title, value, change, icon, 
                 {icon}
             </div>
             {change && (
-                <span className="text-emerald-500 text-[10px] font-black uppercase tracking-[0.2em] bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
+                <span className="text-geeko-cyan text-[10px] font-black uppercase tracking-[0.2em] bg-geeko-cyan/10 px-3 py-1 rounded-full border border-geeko-cyan/20">
                     {change}
                 </span>
             )}

@@ -362,7 +362,7 @@ export function AddProductDrawer({ isOpen, onClose, onSuccess, prefillCard }: Ad
                                     </div>
                                 )}
                                 {successMsg && (
-                                    <div className="p-4 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl flex items-center gap-3 text-emerald-500 text-xs font-bold animate-in fade-in slide-in-from-top-2 duration-300">
+                                    <div className="p-4 bg-geeko-cyan/5 border border-geeko-cyan/10 rounded-2xl flex items-center gap-3 text-geeko-cyan text-xs font-bold animate-in fade-in slide-in-from-top-2 duration-300">
                                         <CheckCircle size={18} />
                                         {successMsg}
                                     </div>

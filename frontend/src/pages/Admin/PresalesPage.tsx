@@ -438,7 +438,7 @@ export const PresalesPage: React.FC = () => {
                       onClick={() => setEditingPresale({ ...editingPresale, is_active: !editingPresale.is_active })}
                       className={`w-full p-4 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all flex items-center justify-center gap-3 ${
                         editingPresale.is_active 
-                          ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' 
+                          ? 'bg-geeko-cyan/10 border-geeko-cyan/20 text-emerald-400' 
                           : 'bg-slate-900/50 border-white/5 text-slate-500'
                       }`}
                     >

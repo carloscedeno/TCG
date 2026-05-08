@@ -197,7 +197,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                                     <button 
                                         key={cat.code} 
                                         onClick={() => navigateToCategory(cat.code)}
-                                        className="flex flex-col items-center gap-2 p-4 bg-emerald-500/5 border border-emerald-500/10 rounded-xl hover:bg-emerald-500/10 transition-all"
+                                        className="flex flex-col items-center gap-2 p-4 bg-geeko-cyan/5 border border-geeko-cyan/10 rounded-xl hover:bg-geeko-cyan/10 transition-all"
                                     >
                                         <span className="text-2xl">{cat.icon}</span>
                                         <span className="text-[10px] font-bold text-emerald-400 text-center uppercase tracking-tighter">{cat.name}</span>

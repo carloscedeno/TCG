@@ -92,7 +92,7 @@ export const UserMenu: React.FC = () => {
                             </div>
                             {activeCartName && (
                                 <div className="text-[9px] font-bold text-emerald-400 mt-0.5 animate-pulse flex items-center gap-1">
-                                    <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_5px_rgba(52,211,153,0.5)]"></div>
+                                    <div className="w-1.5 h-1.5 bg-geeko-cyan rounded-full shadow-[0_0_5px_rgba(52,211,153,0.5)]"></div>
                                     {activeCartName}
                                 </div>
                             )}
@@ -131,8 +131,8 @@ export const UserMenu: React.FC = () => {
                                             ⭐ Administrator
                                         </div>
                                         {activeCartName && (
-                                            <div className="text-[9px] font-bold text-emerald-400 mt-1 flex items-center gap-1.5 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 w-fit">
-                                                <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
+                                            <div className="text-[9px] font-bold text-emerald-400 mt-1 flex items-center gap-1.5 bg-geeko-cyan/10 px-2 py-0.5 rounded-full border border-geeko-cyan/20 w-fit">
+                                                <div className="w-1.5 h-1.5 bg-geeko-cyan rounded-full"></div>
                                                 Atendiendo a: {activeCartName}
                                             </div>
                                         )}

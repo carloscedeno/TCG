@@ -45,15 +45,15 @@
   /* Core Palette Mapped to Geekorium Identity (Premium Canva Style) */
   --color-geeko-black: #000000;
   --color-geeko-surface: #0B0E11;
-  --color-geeko-cyan: #00D1FF;
+  --color-geeko-cyan: #0099FF;
   --color-geeko-gold: #FFD700;
-  --color-geeko-cyan-neon: #00D1FF;
+  --color-geeko-cyan-neon: #0099FF;
   --color-geeko-purple-vibrant: #A020F0;
   --color-geeko-gold-premium: #FFD700;
   
   /* Legacy/Support Colors */
   --color-geeko-violet-dark: #000000; /* Overridden to black */
-  --color-geeko-turquoise: #00D1FF;
+  --color-geeko-turquoise: #0099FF;
   --color-geeko-violet-medium: #0B0E11;
   --color-geeko-violet-accent: #1A1A1A;
   
@@ -62,7 +62,7 @@
   --color-geeko-purple: #A020F0;
   --color-geeko-orange: #F77737;
   --color-geeko-yellow: #FFD700;
-  --color-geeko-green: #00FF85;
+  --color-geeko-cyan: #00FF85;
 
   --color-neutral-white: #FFFFFF;
   --color-neutral-black: #000000;
@@ -163,7 +163,7 @@ body {
   }
 
   .neon-glow-cyan {
-    box-shadow: 0 0 20px rgba(0, 209, 255, 0.4), 0 0 30px rgba(0, 209, 255, 0.2);
+    box-shadow: 0 0 20px rgba(0, 153, 255, 0.4), 0 0 30px rgba(0, 153, 255, 0.2);
   }
 
   .no-scrollbar::-webkit-scrollbar {
@@ -183,8 +183,8 @@ body {
   }
 
   .neon-border-cyan {
-    box-shadow: 0 0 10px rgba(0, 209, 255, 0.3);
-    border: 1px solid rgba(0, 209, 255, 0.5);
+    box-shadow: 0 0 10px rgba(0, 153, 255, 0.3);
+    border: 1px solid rgba(0, 153, 255, 0.5);
   }
 
   .neon-border-gold {
@@ -199,7 +199,7 @@ body {
   }
 
   .text-gradient-cyan {
-    background: linear-gradient(135deg, #00D1FF 0%, #0066FF 100%);
+    background: linear-gradient(135deg, #00B2FF 0%, #0066FF 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }

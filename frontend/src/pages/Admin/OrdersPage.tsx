@@ -29,11 +29,11 @@ const ORDER_STATUSES: Record<string, { label: string; color: string; border?: st
     awaiting_payment: { label: 'Esperando Pago', color: 'bg-yellow-500/20 text-yellow-400' },
     pending_payment: { label: 'Pendiente Antiguo', color: 'bg-yellow-700/20 text-yellow-600' },
     payment_uploaded: { label: 'Pago en Revisión', color: 'bg-lime-500/20 text-lime-400' },
-    paid: { label: 'Pagado', color: 'bg-emerald-500/20 text-emerald-400' },
+    paid: { label: 'Pagado', color: 'bg-geeko-cyan/20 text-emerald-400' },
     processing: { label: 'Procesando', color: 'bg-indigo-500/20 text-indigo-400' },
     ready_for_pickup: { label: 'Listo para Recoger', color: 'bg-purple-500/20 text-purple-400' },
     shipped: { label: 'Enviado', color: 'bg-cyan-500/20 text-cyan-400' },
-    delivered: { label: 'Entregado', color: 'bg-emerald-500/20 text-emerald-400' },
+    delivered: { label: 'Entregado', color: 'bg-geeko-cyan/20 text-emerald-400' },
     cancelled: { label: 'Cancelado', color: 'bg-red-500/20 text-red-400' },
     returned: { label: 'Devuelto', color: 'bg-orange-500/20 text-orange-400' },
     refunded: { label: 'Reembolsado', color: 'bg-pink-500/20 text-pink-400' },
@@ -95,7 +95,7 @@ function generateOrderReceiptHTML(order: Order) {
             <span style="font-family:monospace;color:#6b7280;margin-right:8px;">x${item.quantity}</span>
             ${itemName}${foilBadge}${demandBadge}
           </td>
-          <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;text-align:right;font-family:monospace;font-weight:700;font-size:14px;color:#00AEB4;">
+          <td style="padding:10px 0;border-bottom:1px solid #f0f0f0;text-align:right;font-family:monospace;font-weight:700;font-size:14px;color:#0099FF;">
             $${(item.price_at_purchase * item.quantity).toFixed(2)}
           </td>
         </tr>`;
@@ -114,7 +114,7 @@ function generateOrderReceiptHTML(order: Order) {
     .header { text-align:center; margin-bottom:28px; }
     .logo { font-size:26px; font-weight:900; letter-spacing:-1px; color:#111827; }
     .sub { font-size:12px; color:#9ca3af; letter-spacing:3px; text-transform:uppercase; margin-top:2px; }
-    .bar { width:48px; height:4px; background:#00AEB4; border-radius:2px; margin:10px auto 0; }
+    .bar { width:48px; height:4px; background:#0099FF; border-radius:2px; margin:10px auto 0; }
     .order-box { background:#f0fdfd; border:1px solid #99f6e4; border-radius:10px; padding:14px 18px; margin-bottom:24px; display:flex; justify-content:space-between; align-items:center; }
     .order-box .lbl { font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:2px; color:#0d9488; }
     .order-box .val { font-family:monospace; font-size:13px; font-weight:700; color:#111827; }
@@ -371,7 +371,7 @@ const OrdersPage = () => {
                                     onClick={() => toggleExpand(order.id)}
                                 >
                                     <div className="flex items-center gap-6 pointer-events-none w-full md:w-auto">
-                                        <div className={`p-3 rounded-xl flex-shrink-0 ${order.status === 'cancelled' ? 'bg-red-500/10 text-red-500' : 'bg-emerald-500/10 text-emerald-500'}`}>
+                                        <div className={`p-3 rounded-xl flex-shrink-0 ${order.status === 'cancelled' ? 'bg-red-500/10 text-red-500' : 'bg-geeko-cyan/10 text-geeko-cyan'}`}>
                                             {order.status === 'cancelled' ? <X size={24} /> : <Package size={24} />}
                                         </div>
                                         <div className="flex-1 min-w-0">
@@ -419,7 +419,7 @@ const OrdersPage = () => {
                                                     <button
                                                         onClick={(e) => { e.stopPropagation(); handleStatusChange(order.id, 'awaiting_payment'); }}
                                                         disabled={updatingId === order.id}
-                                                        className="px-3 py-1.5 bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 rounded-lg text-[10px] font-black uppercase tracking-widest transition-colors"
+                                                        className="px-3 py-1.5 bg-geeko-cyan/20 text-emerald-400 hover:bg-geeko-cyan/30 rounded-lg text-[10px] font-black uppercase tracking-widest transition-colors"
                                                     >
                                                         ✅ OK Stock
                                                     </button>
@@ -558,7 +558,7 @@ const OrdersPage = () => {
                                                         const win = window.open('', '_blank');
                                                         if (win) { win.document.write(html); win.document.close(); }
                                                     }}
-                                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#00AEB4]/10 border border-[#00AEB4]/30 text-[#00AEB4] hover:bg-[#00AEB4]/20 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all"
+                                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#0099FF]/10 border border-[#0099FF]/30 text-[#0099FF] hover:bg-[#0099FF]/20 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all"
                                                 >
                                                     <FileDown size={12} /> Comprobante PDF
                                                 </button>

@@ -528,7 +528,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                     {/* Stock badge */}
                                     <div className="flex items-center gap-3">
                                         {(activeVersion?.stock ?? details.total_stock ?? 0) > 0 ? (
-                                            <span className="text-xs font-black text-geeko-green bg-geeko-green/10 px-4 py-1.5 rounded-full border border-geeko-green/20 uppercase tracking-widest">
+                                            <span className="text-xs font-black text-geeko-cyan bg-geeko-cyan/10 px-4 py-1.5 rounded-full border border-geeko-cyan/20 uppercase tracking-widest">
                                                 ✓ En Stock — {activeVersion?.stock ?? details.total_stock} disponibles
                                             </span>
                                         ) : (
@@ -583,7 +583,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                 data-testid="add-to-cart-button"
                                                 className={`w-full h-14 rounded-xl font-web-titles font-normal text-sm uppercase tracking-widest flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 ${
                                                     addedSuccess
-                                                        ? 'bg-geeko-green text-black shadow-[0_0_20px_rgba(0,255,133,0.4)]'
+                                                        ? 'bg-geeko-cyan text-black shadow-[0_0_20px_rgba(0,255,133,0.4)]'
                                                         : 'bg-geeko-cyan text-black shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_40px_rgba(0,229,255,0.6)]'
                                                 }`}
                                             >
@@ -752,7 +752,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                     <div className="flex items-center gap-3">
                                                         {/* Stock Label */}
                                                         {(rowActiveVersion?.stock ?? 0) > 0 ? (
-                                                            <span className="text-[9px] font-black text-geeko-green bg-geeko-green/10 px-2 py-0.5 rounded-full border border-geeko-green/20 uppercase tracking-tight whitespace-nowrap">
+                                                            <span className="text-[9px] font-black text-geeko-cyan bg-geeko-cyan/10 px-2 py-0.5 rounded-full border border-geeko-cyan/20 uppercase tracking-tight whitespace-nowrap">
                                                                 En Stock
                                                             </span>
                                                         ) : (
@@ -899,7 +899,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                 <div className="text-[10px] font-semibold uppercase text-geeko-cyan tracking-widest flex items-center justify-between">
                                                     <span>GK Price</span>
                                                     {marketPrice > 0 && (activeVersion?.price || details.price || 0) > 0 && (activeVersion?.price || details.price || 0) < marketPrice ? (
-                                                        <span className="text-[9px] text-geeko-green bg-geeko-green/10 px-2 py-0.5 rounded-full border border-geeko-green/20">
+                                                        <span className="text-[9px] text-geeko-cyan bg-geeko-cyan/10 px-2 py-0.5 rounded-full border border-geeko-cyan/20">
                                                             Ahorro: ${(marketPrice - (activeVersion?.price || details.price || 0)).toFixed(2)}
                                                         </span>
                                                     ) : null}
@@ -975,7 +975,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                 disabled={isAdding}
                                                 data-testid="add-to-cart-button"
                                                 className={`w-full h-12 rounded-xl font-web-titles font-normal text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 shrink-0 relative z-10 ${addedSuccess
-                                                    ? 'bg-geeko-green text-black shadow-[0_0_20px_rgba(0,255,133,0.4)]'
+                                                    ? 'bg-geeko-cyan text-black shadow-[0_0_20px_rgba(0,255,133,0.4)]'
                                                     : 'bg-geeko-cyan text-black shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_40px_rgba(0,229,255,0.6)]'
                                                     }`}
                                             >

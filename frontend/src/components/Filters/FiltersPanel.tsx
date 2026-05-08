@@ -414,30 +414,30 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
             onClick={() => toggleSection('year')}
             className="w-full flex items-center justify-between text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-2 hover:text-neutral-300 transition-colors"
           >
-            <div className="flex items-center gap-2">
-              <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.8)]"></div>
-              Año
-            </div>
-            {expandedSections.year ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-          </button>
+          <div className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 bg-geeko-cyan rounded-full shadow-[0_0_10px_rgba(0, 153, 255,0.8)]"></div>
+            Año
+          </div>
+          {expandedSections.year ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+        </button>
 
-          {expandedSections.year && (
-            <div className="flex items-center gap-3 pt-3 animate-in fade-in slide-in-from-top-1 duration-200">
-              <input
-                type="number"
-                placeholder="Desde"
-                value={selected.yearRange?.[0] || ''}
-                onChange={(e) => onChange({ ...selected, yearRange: [parseInt(e.target.value) || 1993, selected.yearRange?.[1] || 2026] })}
-                className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-emerald-500/50"
-              />
-              <span className="text-neutral-700">→</span>
-              <input
-                type="number"
-                placeholder="Hasta"
-                value={selected.yearRange?.[1] || ''}
-                onChange={(e) => onChange({ ...selected, yearRange: [selected.yearRange?.[0] || 1993, parseInt(e.target.value) || 2026] })}
-                className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-emerald-500/50"
-              />
+        {expandedSections.year && (
+          <div className="flex items-center gap-3 pt-3 animate-in fade-in slide-in-from-top-1 duration-200">
+            <input
+              type="number"
+              placeholder="Desde"
+              value={selected.yearRange?.[0] || ''}
+              onChange={(e) => onChange({ ...selected, yearRange: [parseInt(e.target.value) || 1993, selected.yearRange?.[1] || 2026] })}
+              className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-geeko-cyan/50"
+            />
+            <span className="text-neutral-700">→</span>
+            <input
+              type="number"
+              placeholder="Hasta"
+              value={selected.yearRange?.[1] || ''}
+              onChange={(e) => onChange({ ...selected, yearRange: [selected.yearRange?.[0] || 1993, parseInt(e.target.value) || 2026] })}
+              className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-geeko-cyan/50"
+            />
             </div>
           )}
         </section>

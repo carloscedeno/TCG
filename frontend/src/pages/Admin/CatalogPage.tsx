@@ -339,7 +339,7 @@ export default function CatalogPage() {
                                             ) : (
                                                 <span className={`px-2 py-1 rounded-lg text-[10px] font-black font-mono border ${
                                                     item.stock > 10 
-                                                    ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' 
+                                                    ? 'bg-geeko-cyan/10 text-geeko-cyan border-geeko-cyan/20' 
                                                     : item.stock > 0 
                                                     ? 'bg-orange-500/10 text-orange-500 border-orange-500/20'
                                                     : 'bg-rose-500/10 text-rose-500 border-rose-500/20'
@@ -356,7 +356,7 @@ export default function CatalogPage() {
                                                 }}
                                                 className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-tighter border transition-all ${
                                                     item.is_active 
-                                                    ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' 
+                                                    ? 'bg-geeko-cyan/10 text-geeko-cyan border-geeko-cyan/20' 
                                                     : 'bg-rose-500/10 text-rose-500 border-rose-500/20'
                                                 }`}
                                             >
@@ -368,7 +368,7 @@ export default function CatalogPage() {
                                             <div className="flex items-center justify-end gap-2">
                                                 {editingId === item.id ? (
                                                     <>
-                                                        <button onClick={() => handleSave(item.id)} className="p-3 bg-emerald-500 text-black rounded-xl hover:scale-105 transition-all">
+                                                        <button onClick={() => handleSave(item.id)} className="p-3 bg-geeko-cyan text-black rounded-xl hover:scale-105 transition-all">
                                                             <Check size={16} />
                                                         </button>
                                                         <button onClick={() => setEditingId(null)} className="p-3 bg-white/10 text-white rounded-xl hover:bg-white/20 transition-all">
@@ -406,7 +406,7 @@ export default function CatalogPage() {
                                                     </>
                                                 )}
                                             </div>
-                                            {lastSavedId === item.id && <p className="text-[8px] font-black text-emerald-500 uppercase mt-1 animate-pulse">Guardado</p>}
+                                            {lastSavedId === item.id && <p className="text-[8px] font-black text-geeko-cyan uppercase mt-1 animate-pulse">Guardado</p>}
                                         </td>
                                     </tr>
                                 ))

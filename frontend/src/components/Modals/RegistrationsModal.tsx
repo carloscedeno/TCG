@@ -105,7 +105,7 @@ export const RegistrationsModal: React.FC<RegistrationsModalProps> = ({ isOpen, 
                                             <Mail size={12} className="text-geeko-cyan-neon" /> {reg.email}
                                         </a>
                                         <a href={`https://wa.me/${reg.phone.replace(/\+/g, '')}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-neutral-400 hover:text-white transition-colors">
-                                            <Phone size={12} className="text-emerald-500" /> {reg.phone}
+                                            <Phone size={12} className="text-geeko-cyan" /> {reg.phone}
                                         </a>
                                     </div>
                                 </div>

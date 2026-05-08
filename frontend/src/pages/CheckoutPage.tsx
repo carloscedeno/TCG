@@ -217,7 +217,7 @@ export const CheckoutPage = () => {
 
     if (loading) return (
         <div className="min-h-[100dvh] bg-[#1F182D] flex items-center justify-center text-white">
-            <div className="w-10 h-10 border-4 border-t-[#00AEB4] border-white/10 rounded-full animate-spin" />
+            <div className="w-10 h-10 border-4 border-t-[#0099FF] border-white/10 rounded-full animate-spin" />
         </div>
     );
 
@@ -241,7 +241,7 @@ export const CheckoutPage = () => {
                 {/* LEFT COLUMN - FORM */}
                 <div className="lg:col-span-8 space-y-6">
                     <div className="flex items-center gap-3 mb-6">
-                        <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-[#00AEB4] text-[#00AEB4] bg-[#00AEB4]/10 text-xs font-black uppercase tracking-widest transition-all">
+                        <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-[#0099FF] text-[#0099FF] bg-[#0099FF]/10 text-xs font-black uppercase tracking-widest transition-all">
                             <Truck size={14} />
                             Finalizar Compra (WhatsApp)
                         </div>
@@ -263,7 +263,7 @@ export const CheckoutPage = () => {
                                 <input
                                     id="full_name"
                                     placeholder="Ej: Juan Pérez"
-                                    className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-[#00AEB4] outline-none transition-colors text-white placeholder:text-neutral-600"
+                                    className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-[#0099FF] outline-none transition-colors text-white placeholder:text-neutral-600"
                                     value={form.full_name}
                                     onChange={(e) => setForm({ ...form, full_name: e.target.value })}
                                 />
@@ -275,7 +275,7 @@ export const CheckoutPage = () => {
                                     id="whatsapp"
                                     placeholder="Ej: 04141234567"
                                     type="tel"
-                                    className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-[#00AEB4] outline-none transition-colors text-white placeholder:text-neutral-600 font-mono"
+                                    className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-[#0099FF] outline-none transition-colors text-white placeholder:text-neutral-600 font-mono"
                                     value={form.whatsapp}
                                     onChange={(e) => setForm({ ...form, whatsapp: e.target.value.replace(/\D/g, '') })}
                                 />
@@ -288,7 +288,7 @@ export const CheckoutPage = () => {
                                     id="email"
                                     type="email"
                                     placeholder="ejemplo@correo.com"
-                                    className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-[#00AEB4] outline-none transition-colors text-white placeholder:text-neutral-600"
+                                    className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-[#0099FF] outline-none transition-colors text-white placeholder:text-neutral-600"
                                     value={form.email}
                                     onChange={(e) => setForm({ ...form, email: e.target.value })}
                                 />
@@ -361,7 +361,7 @@ export const CheckoutPage = () => {
                                             <p className="text-[9px] text-neutral-500 uppercase font-bold">{item.products?.set_code}</p>
                                             <div className="flex justify-between items-center mt-1">
                                                 <span className="text-[10px] text-neutral-400">x{item.quantity}</span>
-                                                <span className="text-[11px] font-mono text-[#00AEB4] font-bold">
+                                                <span className="text-[11px] font-mono text-[#0099FF] font-bold">
                                                     ${((item.products?.price || 0) * item.quantity).toFixed(2)}
                                                 </span>
                                             </div>

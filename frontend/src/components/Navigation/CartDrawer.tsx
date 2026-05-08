@@ -210,7 +210,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                                 </div>
                                 <div className="flex justify-between text-xs font-bold text-neutral-500 uppercase tracking-widest">
                                     <span>Envío</span>
-                                    <span className="text-geeko-green">Gratis</span>
+                                    <span className="text-geeko-cyan">Gratis</span>
                                 </div>
                                 <div className="h-px bg-white/5 my-4" />
                                 <div className="flex justify-between items-end">

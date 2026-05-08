@@ -71,7 +71,7 @@ export const PortfolioStats: React.FC<PortfolioStatsProps> = ({ collection = [] 
 
                 <GlassCard className="p-6">
                     <div className="flex justify-between items-start mb-4">
-                        <div className="p-3 rounded-xl bg-emerald-500/10">
+                        <div className="p-3 rounded-xl bg-geeko-cyan/10">
                             <Globe className="text-emerald-400 w-6 h-6" />
                         </div>
                         <span className="text-[10px] font-black uppercase tracking-widest text-emerald-400">Market Value</span>
@@ -112,7 +112,7 @@ export const PortfolioStats: React.FC<PortfolioStatsProps> = ({ collection = [] 
                                         <div className="text-emerald-400 font-black font-mono">
                                             +{formatCurrency(item.gain)}
                                         </div>
-                                        <div className="text-[10px] text-emerald-500/80 font-bold">
+                                        <div className="text-[10px] text-geeko-cyan/80 font-bold">
                                             {item.gainPercent.toFixed(1)}%
                                         </div>
                                     </div>

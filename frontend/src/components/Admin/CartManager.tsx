@@ -39,7 +39,7 @@ export const CartManager: React.FC = () => {
                             <span className="text-[10px] text-geeko-cyan font-black uppercase tracking-widest bg-geeko-cyan/10 px-2 py-0.5 rounded border border-geeko-cyan/20">
                                 Terminal v20 • POS Session Logic
                             </span>
-                            <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
+                            <div className="w-1.5 h-1.5 bg-geeko-cyan rounded-full animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
                         </div>
                     </div>
                 </div>
