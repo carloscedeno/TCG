@@ -432,7 +432,7 @@ const Home: React.FC = () => {
         {isDashboardView && (
           <div className="max-w-[1600px] mx-auto w-full px-6 pt-2 animate-in fade-in slide-in-from-top-4 duration-1000">
             <HeroSection gameCode={filters.games && filters.games.length === 1 ? filters.games[0] : undefined} />
-            <PresaleSection />
+            {(!filters.games || filters.games.length === 0) && <PresaleSection />}
           </div>
         )}
 
