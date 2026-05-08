@@ -777,7 +777,6 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                             }
                         </div>
                     </div>
-                </div> {/* end card left column */}
 
                 {/* RIGHT: CARD TEXT & ACTIONS */}
                 <div className="flex-1 h-auto md:h-[var(--modal-height,700px)] overflow-y-auto custom-scrollbar bg-[#050505] p-4 sm:p-6 md:p-8 pb-32 md:pb-40 space-y-4 md:space-y-6">
@@ -906,11 +905,11 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                                 ${(activeVersion?.price || details.price || 0) > 0 ? Number(activeVersion?.price || details.price).toFixed(2) : '---'}
                                                             </div>
                                                             {activeVersion?.discount_percentage > 0 && (
-                                                                <div className="px-2 py-1 bg-purple-500/20 text-purple-400 text-[10px] font-black rounded-lg border border-purple-500/30 shadow-[0_0_15px_rgba(168,85,247,0.4)] animate-pulse">
+                                                                <div className="px-2 py-1 bg-purple-500/20 text-purple-400 text-[10px] font-black rounded-lg border border-purple-500/30">
                                                                     -{activeVersion.discount_percentage}%
                                                                 </div>
                                                             )}
-                                                            <span className={`text-[10px] px-2 py-0.5 rounded-full font-black tracking-widest shadow-sm ${selectedFinish === 'foil' ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white animate-pulse' : 'bg-white text-black'}`}>
+                                                            <span className={`text-[10px] px-2 py-0.5 rounded-full font-black tracking-widest shadow-sm ${selectedFinish === 'foil' ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white' : 'bg-white text-black'}`}>
                                                                 {selectedFinish?.toUpperCase()}
                                                             </span>
                                                         </div>
@@ -966,8 +965,8 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                 disabled={isAdding}
                                                 data-testid="add-to-cart-button"
                                                 className={`w-full h-12 rounded-xl font-web-titles font-normal text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 shrink-0 relative z-10 ${addedSuccess
-                                                    ? 'bg-geeko-cyan text-black shadow-[0_0_20px_rgba(0,255,133,0.4)]'
-                                                    : 'bg-geeko-cyan text-black shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_40px_rgba(0,229,255,0.6)]'
+                                                    ? 'bg-white text-black shadow-lg'
+                                                    : 'bg-white text-black hover:bg-white/90 shadow-md'
                                                     }`}
                                             >
                                                 {isAdding ? <Loader2 size={16} className="animate-spin" /> : addedSuccess ? '¡Añadido! ✓' : <ShoppingCart size={16} fill="currentColor" />}
@@ -982,25 +981,24 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                             href={ckUrl}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex flex-col justify-between p-5 md:p-6 rounded-2xl bg-neutral-900 hover:bg-geeko-cyan/10 border border-white/5 hover:border-geeko-cyan transition-all group relative overflow-hidden gap-4"
+                                            className="flex flex-col justify-between p-5 md:p-6 rounded-2xl bg-neutral-900 hover:bg-white/5 border border-white/5 hover:border-white/20 transition-all group relative overflow-hidden gap-4"
                                         >
                                             <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity" />
                                             <div className="space-y-1 relative z-10">
-                                                <span className="text-[10px] font-semibold uppercase text-neutral-500 tracking-widest group-hover:text-geeko-cyan transition-colors">Mercado Externo</span>
+                                                <span className="text-[10px] font-semibold uppercase text-neutral-500 tracking-widest">Mercado Externo</span>
                                                 <div className="text-base md:text-lg font-web-titles font-normal leading-tight">Comprar @ CardKingdom</div>
                                             </div>
                                             <div className="flex items-center justify-between gap-3 w-full relative z-10 mt-auto">
-                                                <span className="text-xl md:text-3xl font-titles font-medium text-white group-hover:text-geeko-cyan transition-colors">
+                                                <span className="text-xl md:text-3xl font-titles font-medium text-white transition-colors">
                                                     {marketPrice > 0 ? `$${Number(marketPrice).toFixed(2)}` : 'Ver en Sitio'}
                                                 </span>
-                                                <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-geeko-cyan group-hover:text-black transition-all">
+                                                <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-all">
                                                     <ExternalLink size={18} />
                                                 </div>
                                             </div>
                                         </a>
                                     )}
                                 </div>
-                            </div>
                         </>
                     )}
                 </motion.div>
