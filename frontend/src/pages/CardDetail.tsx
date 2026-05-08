@@ -360,9 +360,10 @@ export const CardDetail: React.FC = () => {
                                     {details.mana_cost && <span className="opacity-30">•</span>}
                                     <span className="text-white/80">{details.type}</span>
                                     <span className="text-neutral-700">/</span>
-                                    <span className="text-geeko-gold uppercase text-[10px] font-black tracking-[0.2em]">{details.rarity}</span>
                                 </div>
-                            </                             <div className="p-8 rounded-[32px] bg-white/5 border border-white/10 space-y-6 relative overflow-hidden group">
+                            </div>
+
+                            <div className="p-8 rounded-[32px] bg-white/5 border border-white/10 space-y-6 relative overflow-hidden group">
                                 <div className="absolute -top-24 -right-24 w-64 h-64 bg-geeko-cyan/5 rounded-full blur-[100px] group-hover:bg-geeko-cyan/10 transition-colors" />
                                 <div className="text-lg lg:text-xl leading-relaxed text-neutral-200 font-medium relative z-10">
                                     {details.oracle_text?.split('\n').map((line: string, i: number) => <p key={i} className="mb-3"><ManaText text={line} /></p>)}
@@ -374,10 +375,9 @@ export const CardDetail: React.FC = () => {
                                 )}
                                 <div className="pt-2 flex flex-wrap gap-8 text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em]">
                                     <div>Artist <span className="text-white ml-2">{details.artist}</span></div>
-                                    <div>Set <span className="text-geeko-cyan ml-2">{details.set} ({details.set_code?.toUpperCase()})</span></div>
-                                </div>
                             </div>
-</                            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 items-start">
+
+                            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 items-start">
                                 {/* Marketplace */}
                                 <div className="space-y-6">
                                     <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-500 pl-2">Trading Hub</h3>
@@ -497,7 +497,6 @@ export const CardDetail: React.FC = () => {
                                     </div>
                                 )}
                             </div>
-      )}
                         </div>
                     </div>
                 ) : null
