@@ -150,6 +150,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                                                                transition-all group/btn disabled:opacity-50 disabled:cursor-not-allowed"
                                                     disabled={item.quantity <= 1 || updating === item.id}
                                                 >
+                                                    {updating === item.id ? (
                                                         <Loader2 size={14} className="text-text-low animate-spin" />
                                                     ) : (
                                                         <Minus size={14} className="text-text-low group-hover/btn:text-red-500" />
