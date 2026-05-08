@@ -410,7 +410,7 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[100dvh] flex flex-col bg-geeko-black text-white font-sans relative selection:bg-white/30">
+    <div className="min-h-[100dvh] flex flex-col bg-geeko-black text-text-high font-sans relative selection:bg-white/30">
 
       {/* Background Layer */}
       <div className="fixed inset-0 z-0 bg-geeko-black">
@@ -438,7 +438,7 @@ const Home: React.FC = () => {
         {activeTab === 'marketplace' && filters.games?.includes('MTG') && (
           <div className="max-w-[1600px] mx-auto px-6 pt-6 flex items-center gap-2">
             <Sparkles size={18} className="text-geeko-cyan fill-current" />
-            <span className="text-xs font-black uppercase tracking-[0.2em] text-white">SINGLES</span>
+            <span className="text-xs font-black uppercase tracking-[0.2em] text-text-high">SINGLES</span>
           </div>
         )}
 
@@ -453,7 +453,7 @@ const Home: React.FC = () => {
                     data-testid="inventory-tab"
                     className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'marketplace'
                       ? 'ring-2 ring-geeko-cyan/30 bg-geeko-cyan text-black shadow-[0_0_15px_rgba(0,209,255,0.4)]'
-                      : 'text-neutral-500 hover:text-neutral-300'
+                      : 'text-text-low hover:text-neutral-300'
                       }`}
                   >
                     <img src="/branding/Emporio.jpg" alt="Icon" className="w-5 h-5 rounded-full" />
@@ -467,7 +467,7 @@ const Home: React.FC = () => {
                     data-testid="catalog-tab"
                     className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'catalog'
                       ? 'ring-2 ring-geeko-cyan/30 bg-geeko-cyan text-black shadow-[0_0_15px_rgba(0,209,255,0.4)]'
-                      : 'text-neutral-500 hover:text-neutral-300'
+                      : 'text-text-low hover:text-neutral-300'
                       }`}
                   >
                     <Search size={16} className={activeTab === 'catalog' ? 'text-black' : 'text-geeko-cyan'} />
@@ -480,7 +480,7 @@ const Home: React.FC = () => {
             <div className="flex items-center gap-2 md:gap-4">
               <button
                 onClick={() => setIsMobileFiltersOpen(true)}
-                className="lg:hidden p-2.5 bg-neutral-900 border border-white/5 rounded-xl hover:bg-neutral-800 transition-all text-neutral-400 flex items-center gap-2"
+                className="lg:hidden p-2.5 bg-neutral-900 border border-white/5 rounded-xl hover:bg-neutral-800 transition-all text-text-low flex items-center gap-2"
               >
                 <div className="relative">
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" /></svg>
@@ -492,17 +492,17 @@ const Home: React.FC = () => {
               </button>
 
               <div className="flex items-center gap-2">
-                <span className="text-[11px] font-black uppercase tracking-tighter text-neutral-500 hidden sm:inline">Ordenar:</span>
+                <span className="text-[11px] font-black uppercase tracking-tighter text-text-low hidden sm:inline">Ordenar:</span>
                 <div className="flex bg-neutral-900/50 p-1 rounded-full border border-neutral-800">
                   <button
                     onClick={() => updateURL({ sort: sortBy === 'name' ? 'name_desc' : 'name' })}
-                    className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase transition-all ${sortBy.includes('name') ? 'bg-neutral-700 text-white' : 'text-neutral-500 hover:text-neutral-300'}`}
+                    className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase transition-all ${sortBy.includes('name') ? 'bg-neutral-700 text-text-high' : 'text-text-low hover:text-neutral-300'}`}
                   >
                     Nombre {sortBy === 'name' ? '↓' : (sortBy === 'name_desc' ? '↑' : '⇅')}
                   </button>
                   <button
                     onClick={() => updateURL({ sort: sortBy === 'price_asc' ? 'price_desc' : 'price_asc' })}
-                    className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase transition-all ${sortBy.includes('price') ? 'bg-neutral-700 text-white' : 'text-neutral-500 hover:text-neutral-300'}`}
+                    className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase transition-all ${sortBy.includes('price') ? 'bg-neutral-700 text-text-high' : 'text-text-low hover:text-neutral-300'}`}
                   >
                     Precio {sortBy === 'price_asc' ? '↑' : (sortBy === 'price_desc' ? '↓' : '⇅')}
                   </button>
@@ -513,7 +513,7 @@ const Home: React.FC = () => {
                   className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase transition-all flex items-center gap-2 ${
                     filters.only_new
                       ? 'bg-geeko-purple-vibrant text-white shadow-[0_0_15px_rgba(168,85,247,0.4)] ring-2 ring-purple-500/50'
-                      : 'bg-neutral-900/50 text-neutral-500 hover:text-neutral-300 border border-neutral-800'
+                      : 'bg-neutral-900/50 text-text-low hover:text-neutral-300 border border-neutral-800'
                   }`}
                 >
                   <Sparkles size={12} className={filters.only_new ? 'text-white' : 'text-geeko-purple-vibrant'} />
@@ -524,14 +524,14 @@ const Home: React.FC = () => {
               <div className="flex bg-neutral-900/50 p-1 rounded-lg border border-neutral-800">
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={`p-2 rounded-md transition-all ${viewMode === 'grid' ? 'bg-neutral-800 text-white shadow-inner' : 'text-neutral-500 hover:text-neutral-300'}`}
+                  className={`p-2 rounded-md transition-all ${viewMode === 'grid' ? 'bg-neutral-800 text-text-high shadow-inner' : 'text-text-low hover:text-neutral-300'}`}
                   title="Grid View"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" /></svg>
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
-                  className={`p-2 rounded-md transition-all ${viewMode === 'list' ? 'bg-neutral-800 text-white shadow-inner' : 'text-neutral-500 hover:text-neutral-300'}`}
+                  className={`p-2 rounded-md transition-all ${viewMode === 'list' ? 'bg-neutral-800 text-text-high shadow-inner' : 'text-text-low hover:text-neutral-300'}`}
                   title="List View"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" /><line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" /></svg>
@@ -568,7 +568,7 @@ const Home: React.FC = () => {
                   {loadingDeals ? (
                     <div className="flex flex-col items-center justify-center py-32 gap-6">
                       <div className="w-16 h-16 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
-                      <p className="text-neutral-500 font-black text-xs tracking-widest uppercase animate-pulse">Buscando Ofertas...</p>
+                      <p className="text-text-low font-black text-xs tracking-widest uppercase animate-pulse">Buscando Ofertas...</p>
                     </div>
                   ) : discountedSingles.length === 0 && discountedAccessories.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-32 text-center">
@@ -579,7 +579,7 @@ const Home: React.FC = () => {
                       <h3 className="text-3xl font-black italic uppercase tracking-tighter mb-4 text-white">
                         Pronto Nuevas Ofertas
                       </h3>
-                      <p className="text-neutral-500 font-medium max-w-sm">
+                      <p className="text-text-low font-medium max-w-sm">
                         Estamos preparando los mejores descuentos para tu colección. ¡Vuelve pronto!
                       </p>
                     </div>
@@ -597,7 +597,7 @@ const Home: React.FC = () => {
               ) : loading && page === 0 ? (
                 <div className="flex flex-col items-center justify-center py-32 gap-6">
                   <div className="w-16 h-16 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
-                  <p className="text-neutral-500 font-black text-xs tracking-widest uppercase animate-pulse">Invocando Cartas...</p>
+                  <p className="text-text-low font-black text-xs tracking-widest uppercase animate-pulse">Invocando Cartas...</p>
                 </div>
               ) : error ? (
                 <div className="text-center py-20 bg-red-900/5 border border-red-900/10 rounded-3xl">
@@ -605,7 +605,7 @@ const Home: React.FC = () => {
                     <div className="text-2xl text-red-500">!</div>
                   </div>
                   <h3 className="text-xl font-bold text-red-500 mb-2">Error de Conexión</h3>
-                  <p className="text-neutral-500 text-sm max-w-md mx-auto">{error}</p>
+                  <p className="text-text-low text-sm max-w-md mx-auto">{error}</p>
                   <button
                     onClick={() => window.location.reload()}
                     className="mt-8 px-8 py-3 bg-red-600 text-white rounded-full font-bold text-sm hover:bg-red-500 transition-all shadow-lg shadow-red-600/20"
@@ -628,7 +628,7 @@ const Home: React.FC = () => {
                       <h3 className="text-3xl font-black italic uppercase tracking-tighter mb-4 text-white">
                         {inventoryPresence.hasCatalog ? 'Sin Resultados' : 'Próximamente'}
                       </h3>
-                      <p className="text-neutral-500 font-medium max-w-sm">
+                      <p className="text-text-low font-medium max-w-sm">
                         {inventoryPresence.hasCatalog 
                           ? 'No encontramos accesorios que coincidan con tus filtros. ¡Intenta con otros!' 
                           : 'Estamos preparando la mejor selección de accesorios para tu colección. ¡Vuelve pronto!'}
@@ -650,7 +650,7 @@ const Home: React.FC = () => {
                             ) : (
                               'Cargar Más Cartas'
                             )}
-                            {!loading && <span className="text-neutral-600 bg-neutral-800 px-2 py-0.5 rounded-md">[{totalCount - cards.length}]</span>}
+                            {!loading && <span className="text-text-low bg-neutral-800 px-2 py-0.5 rounded-md">[{totalCount - cards.length}]</span>}
                           </button>
                         </div>
                       )}

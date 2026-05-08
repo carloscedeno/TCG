@@ -142,10 +142,10 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
             )}
           </h3>
           <div className="flex items-center gap-2 mt-0.5">
-            <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider px-1.5 py-0.5 bg-white/5 rounded">{set}</span>
+            <span className="text-[10px] text-text-low font-bold uppercase tracking-wider px-1.5 py-0.5 bg-white/5 rounded">{set}</span>
             {rarity && (
               <span className={`text-[9px] font-black uppercase tracking-widest ${rarity.toLowerCase() === 'mythic' ? 'text-orange-400' :
-                rarity.toLowerCase() === 'rare' ? 'text-geeko-gold' : 'text-neutral-500'
+                rarity.toLowerCase() === 'rare' ? 'text-geeko-gold' : 'text-text-low'
                 }`}>
                 {rarity}
               </span>
@@ -170,15 +170,15 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
               DISP: {total_stock}
             </span>
           ) : (
-            <span className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest">Por Encargo</span>
+            <span className="text-[10px] font-bold text-text-low uppercase tracking-widest">Por Encargo</span>
           )}
         </div>
 
         <div className="text-right flex flex-col items-end min-w-[80px] ml-auto pl-2 relative">
-          <span className="text-[9px] uppercase text-neutral-500 font-bold tracking-wider">Mercado</span>
+          <span className="text-[9px] uppercase text-text-low font-bold tracking-wider">Mercado</span>
           {discount_percentage && discount_percentage > 0 ? (
               <div className="flex flex-col items-end gap-0.5">
-                  <span className="text-[9px] text-neutral-500 font-bold line-through">${original_price?.toFixed(2)}</span>
+                  <span className="text-[9px] text-text-low font-bold line-through">${original_price?.toFixed(2)}</span>
                   <div className="flex items-center gap-1.5">
                       <span className="text-geeko-cyan font-mono font-bold text-base leading-none">
                         {typeof price === 'number' ? `$${price.toFixed(2)}` : '---'}
@@ -203,7 +203,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         {showCartButton && !isArchive && (
           <button
             onClick={handleQuickAdd}
-            className={`ml-4 w-9 h-9 rounded-full flex items-center justify-center transition-all border border-white/5 ${addingToCart ? 'bg-geeko-cyan text-black' : 'bg-white/5 text-neutral-400 hover:bg-geeko-cyan hover:text-black hover:scale-110'}`}
+            className={`ml-4 w-9 h-9 rounded-full flex items-center justify-center transition-all border border-white/5 ${addingToCart ? 'bg-geeko-cyan text-black' : 'bg-white/5 text-text-low hover:bg-geeko-cyan hover:text-black hover:scale-110'}`}
             title={(total_stock || 0) > 0 ? "Agregar al Carrito Rápido" : "Por encargo"}
           >
             {addingToCart ? <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /> : <Plus size={20} strokeWidth={3} />}
@@ -273,7 +273,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
             data-testid="product-image"
           />
         ) : (
-          <div className="flex flex-col items-center justify-center w-full h-full text-neutral-600 p-4">
+          <div className="flex flex-col items-center justify-center w-full h-full text-text-low p-4">
             <Shield size={40} className="mb-2 opacity-20" />
             <span className="text-[10px] uppercase tracking-widest font-bold opacity-50 text-center">Imagen No Disponible</span>
           </div>
@@ -290,7 +290,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         {rarity && (
           <div className={`absolute top-2 right-2 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider backdrop-blur-md border border-white/10 z-20 ${rarity.toLowerCase() === 'mythic' ? 'bg-orange-500/20 text-orange-400 border-orange-500/30' :
             rarity.toLowerCase() === 'rare' ? 'bg-geeko-gold/20 text-geeko-gold border-geeko-gold/30' :
-              'bg-black/60 text-neutral-400'
+              'bg-black/60 text-text-low'
             }`}>
             {rarity}
           </div>
@@ -337,7 +337,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
           {currentName}
         </h3>
 
-        <div className="flex items-center justify-between text-[10px] text-neutral-400 font-medium">
+        <div className="flex items-center justify-between text-[10px] text-text-low font-medium">
           <span className="truncate max-w-[65%] opacity-70 italic" title={set}>{set}</span>
           {currentType && <span className="truncate max-w-[30%] opacity-50 text-right">{currentType.split('—')[0].trim()}</span>}
         </div>
@@ -345,11 +345,11 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         {/* Price Row */}
         <div className="mt-auto pt-3 flex items-center justify-between border-t border-white/5">
           <div className="flex flex-col text-right w-full pr-10 relative">
-            <span className="text-[8px] uppercase text-neutral-500 font-bold tracking-wider absolute -top-2 right-10">Mercado</span>
+            <span className="text-[8px] uppercase text-text-low font-bold tracking-wider absolute -top-2 right-10">Mercado</span>
             {discount_percentage && discount_percentage > 0 ? (
                 <div className="flex flex-col items-end gap-0.5">
                     <div className="flex items-center gap-1.5 justify-end">
-                        <span className="text-[9px] text-neutral-500 font-bold line-through">${original_price?.toFixed(2)}</span>
+                        <span className="text-[9px] text-text-low font-bold line-through">${original_price?.toFixed(2)}</span>
                         <span className="text-[8px] bg-purple-500/20 text-purple-400 border border-purple-500/30 px-1 rounded font-black">-{discount_percentage}%</span>
                     </div>
                     <div className="flex items-center justify-end gap-1.5">

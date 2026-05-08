@@ -14,7 +14,7 @@ export const CardGrid: React.FC<CardGridProps> = ({ cards, onCardClick, viewMode
   return (
     <section className="w-full">
       {cards.length === 0 ? (
-        <div className="text-center text-neutral-500 dark:text-neutral-400 py-12 text-lg">
+        <div className="text-center text-text-low py-12 text-lg">
           No se encontraron cartas.
         </div>
       ) : (

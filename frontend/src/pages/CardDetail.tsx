@@ -169,7 +169,7 @@ export const CardDetail: React.FC = () => {
             <div className="min-h-screen bg-[#050505] text-white flex flex-col items-center justify-center p-6 text-center">
                 <AlertCircle size={64} className="text-red-500 mb-6" />
                 <h1 className="text-3xl font-black mb-4">Error loading card</h1>
-                <p className="text-neutral-400 max-w-md mb-8">{error}</p>
+                <p className="text-text-low max-w-md mb-8">{error}</p>
                 <Link to="/" className="px-8 py-3 bg-geeko-cyan rounded-full font-black text-black hover:scale-105 transition-all flex items-center gap-2 shadow-[0_0_20px_rgba(0, 209, 255, 0.3)]">
                     <ArrowLeft size={18} /> Back to Market
                 </Link>
@@ -192,7 +192,7 @@ export const CardDetail: React.FC = () => {
                 {loading ? (
                     <div className="flex flex-col items-center justify-center h-[60vh]">
                         <Loader2 size={48} className="text-geeko-cyan animate-spin mb-4" />
-                        <p className="text-neutral-500 font-bold tracking-widest uppercase text-xs">Loading Card Data...</p>
+                        <p className="text-text-low font-bold tracking-widest uppercase text-xs">Loading Card Data...</p>
                     </div>
                 ) : details ? (
                     <div className="glass-panel rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0, 209, 255, 0.15)] flex flex-col lg:flex-row overflow-hidden min-h-[85vh] max-h-[90vh]">
@@ -223,8 +223,8 @@ export const CardDetail: React.FC = () => {
                             {/* MOXFIELD-STYLE VERSIONS LIST */}
                             <div className="h-[200px] md:h-[250px] border-t border-white/5 bg-[#080808] flex flex-col shrink-0">
                                 <div className="px-6 py-4 flex items-center justify-between border-b border-white/5">
-                                    <h3 className="text-xs font-black uppercase tracking-widest text-neutral-500">Edition / Printings</h3>
-                                    <span className="text-[10px] text-neutral-600 font-bold">{details.all_versions?.length || 0} Versions</span>
+                                    <h3 className="text-xs font-black uppercase tracking-widest text-text-low">Edition / Printings</h3>
+                                    <span className="text-[10px] text-text-low font-bold">{details.all_versions?.length || 0} Versions</span>
                                 </div>
                                 <div className="flex-1 overflow-y-auto custom-scrollbar">
                                     {versionGroups.length > 0 ? (
@@ -260,10 +260,10 @@ export const CardDetail: React.FC = () => {
                                                             {group.base.set_code?.toUpperCase()}
                                                         </div>
                                                         <div className="flex-1 text-left min-w-[120px]">
-                                                            <div className={`text-xs font-bold font-web-titles tracking-tight leading-tight truncate ${isGroupActive ? 'text-geeko-cyan' : 'text-neutral-300'}`}>
+                                                            <div className={`text-xs font-bold font-web-titles tracking-tight leading-tight truncate ${isGroupActive ? 'text-geeko-cyan' : 'text-text-low'}`}>
                                                                 {group.base.set_name}
                                                             </div>
-                                                            <div className="text-[10px] text-neutral-600 font-bold flex items-center gap-2">
+                                                            <div className="text-[10px] text-text-low font-bold flex items-center gap-2">
                                                                 <span>#{group.base.collector_number} • {group.base.rarity}</span>
                                                             </div>
                                                         </div>
@@ -273,10 +273,10 @@ export const CardDetail: React.FC = () => {
                                                         <div className="flex flex-col items-end gap-1">
                                                             {group.normal && (
                                                                 <div className="flex items-center gap-2">
-                                                                    <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-widest leading-none">Normal</span>
+                                                                    <span className="text-[10px] text-text-low font-bold uppercase tracking-widest leading-none">Normal</span>
                                                                      <span className={`text-[11px] font-black ${group.normal.stock > 0 ? 'text-white' : 'text-neutral-600'}`}>
                                                                         {group.normal.discount_percentage > 0 && (
-                                                                            <span className="text-[9px] text-neutral-500 line-through mr-1.5 opacity-60">
+                                                                            <span className="text-[9px] text-text-low line-through mr-1.5 opacity-60">
                                                                                 ${Number(group.normal.original_price).toFixed(2)}
                                                                             </span>
                                                                         )}
@@ -301,7 +301,7 @@ export const CardDetail: React.FC = () => {
                                                                     </span>
                                                                     <span className={`text-[11px] font-black ${group.foil.stock > 0 ? 'text-geeko-cyan' : 'text-neutral-600'}`}>
                                                                         {group.foil.discount_percentage > 0 && (
-                                                                            <span className="text-[9px] text-neutral-500 line-through mr-1.5 opacity-60">
+                                                                            <span className="text-[9px] text-text-low line-through mr-1.5 opacity-60">
                                                                                 ${Number(group.foil.original_price).toFixed(2)}
                                                                             </span>
                                                                         )}
@@ -323,7 +323,7 @@ export const CardDetail: React.FC = () => {
                                                                     En Stock
                                                                 </span>
                                                             ) : (
-                                                                <span className="text-[9px] font-bold text-neutral-600 bg-neutral-900 px-2 py-0.5 rounded-full border border-white/5 uppercase tracking-tight">
+                                                                <span className="text-[9px] font-bold text-text-low bg-neutral-900 px-2 py-0.5 rounded-full border border-white/5 uppercase tracking-tight">
                                                                     Por Encargo
                                                                 </span>
                                                             )}
@@ -334,7 +334,7 @@ export const CardDetail: React.FC = () => {
                                         })
                                     ) : (
                                         <div className="px-6 py-8 text-center">
-                                            <p className="text-sm text-neutral-500 font-bold">⚠️ No hay versiones disponibles en inventario</p>
+                                            <p className="text-sm text-text-low font-bold">⚠️ No hay versiones disponibles en inventario</p>
                                         </div>
                                     )}
                                 </div>
@@ -355,7 +355,7 @@ export const CardDetail: React.FC = () => {
                                         {details.name}
                                     </h2>
                                 </a>
-                                <div className="flex flex-wrap items-center gap-4 text-lg lg:text-xl font-medium text-neutral-400">
+                                <div className="flex flex-wrap items-center gap-4 text-lg lg:text-xl font-medium text-text-low">
                                     <span><ManaText text={details.mana_cost || ''} /></span>
                                     {details.mana_cost && <span className="opacity-30">•</span>}
                                     <span className="text-white/80">{details.type}</span>
@@ -370,11 +370,11 @@ export const CardDetail: React.FC = () => {
                                     {details.oracle_text?.split('\n').map((line: string, i: number) => <p key={i} className="mb-3"><ManaText text={line} /></p>)}
                                 </div>
                                 {details.flavor_text && (
-                                    <p className="text-md italic text-neutral-500 font-serif border-t border-white/10 pt-6 relative z-10">
+                                    <p className="text-md italic text-text-low font-serif border-t border-white/10 pt-6 relative z-10">
                                         "{details.flavor_text}"
                                     </p>
                                 )}
-                                <div className="pt-2 flex flex-wrap gap-8 text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em]">
+                                <div className="pt-2 flex flex-wrap gap-8 text-[10px] font-black text-text-low uppercase tracking-[0.2em]">
                                     <div>Artist <span className="text-white ml-2">{details.artist}</span></div>
                                     <div>Set <span className="text-geeko-cyan ml-2">{details.set} ({details.set_code?.toUpperCase()})</span></div>
                                 </div>
@@ -383,7 +383,7 @@ export const CardDetail: React.FC = () => {
                             <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 items-start">
                                 {/* Marketplace */}
                                 <div className="space-y-6">
-                                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-500 pl-2">Trading Hub</h3>
+                                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-text-low pl-2">Trading Hub</h3>
 
                                     <div className="p-8 rounded-[32px] bg-gradient-to-br from-geeko-cyan/10 via-transparent to-transparent border border-white/10 group relative overflow-hidden hover:border-geeko-cyan/30 transition-colors">
                                         <div className="absolute top-0 right-0 w-40 h-40 bg-geeko-cyan/5 rounded-full blur-[50px]" />
@@ -393,7 +393,7 @@ export const CardDetail: React.FC = () => {
                                             <div className="flex items-center justify-between">
                                                 <div className="flex flex-col">
                                                     {activeVersion?.discount_percentage > 0 && (
-                                                        <span className="text-xs font-bold text-neutral-500 line-through">
+                                                        <span className="text-xs font-bold text-text-low line-through">
                                                             ${Number(activeVersion.original_price).toFixed(2)}
                                                         </span>
                                                     )}
@@ -425,8 +425,8 @@ export const CardDetail: React.FC = () => {
                                                             className={`px-3 py-2 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all flex items-center gap-1 ${activeFinish !== 'foil'
                                                                 ? 'bg-white text-black shadow-lg scale-[1.05]'
                                                                 : (activeGroup.normal?.stock || 0) === 0
-                                                                    ? 'text-neutral-500 opacity-60'
-                                                                    : 'text-neutral-500 hover:text-white'
+                                                                    ? 'text-text-low opacity-60'
+                                                                    : 'text-text-low hover:text-white'
                                                                 }`}
                                                         >
                                                             Normal
@@ -441,8 +441,8 @@ export const CardDetail: React.FC = () => {
                                                             className={`px-3 py-2 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all flex items-center gap-1 ${activeFinish === 'foil'
                                                                 ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 border-transparent text-white shadow-[0_0_15px_rgba(236,72,153,0.3)] scale-[1.05]'
                                                                 : (activeGroup.foil?.stock || 0) === 0
-                                                                    ? 'text-neutral-500 opacity-60'
-                                                                    : 'text-neutral-500 hover:text-white'
+                                                                    ? 'text-text-low opacity-60'
+                                                                    : 'text-text-low hover:text-white'
                                                                 }`}
                                                         >
                                                             Foil
@@ -470,7 +470,7 @@ export const CardDetail: React.FC = () => {
                                             className="w-full flex items-center justify-between p-6 rounded-2xl bg-neutral-900/30 hover:bg-geeko-cyan/5 border border-white/5 hover:border-geeko-cyan/30 transition-all group"
                                         >
                                             <div className="flex flex-col">
-                                                <span className="text-[9px] font-black uppercase text-neutral-500 tracking-[0.2em] mb-1">Market Price</span>
+                                                <span className="text-[9px] font-black uppercase text-text-low tracking-[0.2em] mb-1">Market Price</span>
                                                 <span className="text-lg font-bold">Standard @ CK</span>
                                             </div>
                                             <div className="flex items-center gap-4">
@@ -486,11 +486,11 @@ export const CardDetail: React.FC = () => {
                                 {/* Legality */}
                                 {!details?.is_accessory && (
                                     <div className="space-y-6">
-                                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-500 pl-2">Format Legality</h3>
+                                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-text-low pl-2">Format Legality</h3>
                                         <div className="grid grid-cols-2 gap-3">
                                             {relevantFormats.map(fmt => (
                                                 <div key={fmt} className="flex items-center justify-between p-4 rounded-xl bg-neutral-900/30 border border-white/5 hover:border-white/10 transition-colors">
-                                                    <span className="text-[9px] font-black text-neutral-400 uppercase tracking-widest">{fmt}</span>
+                                                    <span className="text-[9px] font-black text-text-low uppercase tracking-widest">{fmt}</span>
                                                     <div className="scale-110">
                                                         {getLegalityIcon(details.legalities?.[fmt] || 'not_legal')}
                                                     </div>

@@ -436,7 +436,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                     <h2 className="text-sm font-web-titles font-normal text-white truncate pr-4">{details?.name || 'Cargando...'}</h2>
                     <button
                         onClick={onClose}
-                        className="flex-shrink-0 w-11 h-11 flex items-center justify-center bg-white/10 hover:bg-white/20 rounded-full transition-colors text-neutral-400 hover:text-white"
+                        className="flex-shrink-0 w-11 h-11 flex items-center justify-center bg-white/10 hover:bg-white/20 rounded-full transition-colors text-text-low hover:text-text-high"
                         aria-label="Cerrar"
                     >
                         <X size={20} />
@@ -444,7 +444,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                 </div>
 
                 {/* Desktop close button */}
-                <button onClick={onClose} className="absolute top-6 right-6 z-50 p-2 hover:bg-white/10 rounded-full transition-colors text-neutral-400 hidden md:flex"><X size={24} /></button>
+                <button onClick={onClose} className="absolute top-6 right-6 z-50 p-2 hover:bg-white/10 rounded-full transition-colors text-text-low hidden md:flex"><X size={24} /></button>
 
                 {details?.is_accessory ? (
                     /* ────────────────────────────────────────
@@ -540,7 +540,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
 
                                     {/* Oracle / Description — only if present */}
                                     {details.oracle_text && (
-                                        <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 text-sm text-neutral-300 leading-relaxed">
+                                        <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 text-sm text-text-low leading-relaxed">
                                             {details.oracle_text}
                                         </div>
                                     )}
@@ -552,7 +552,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                 <div className="text-[10px] font-semibold uppercase text-geeko-cyan tracking-widest mb-1">Precio</div>
                                                 <div className="flex flex-col gap-1">
                                                     {(activeVersion?.discount_percentage || details.discount_percentage) > 0 && (
-                                                        <span className="text-sm font-bold text-neutral-500 line-through">
+                                                        <span className="text-sm font-bold text-text-low line-through">
                                                             ${Number(activeVersion?.original_price || details.original_price).toFixed(2)}
                                                         </span>
                                                     )}
@@ -571,8 +571,8 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                 </div>
                                             </div>
                                             <div className="text-right">
-                                                <div className="text-[10px] text-neutral-600 uppercase tracking-widest">Unidad</div>
-                                                <div className="text-2xl text-neutral-500">×1</div>
+                                                <div className="text-[10px] text-text-low uppercase tracking-widest">Unidad</div>
+                                                <div className="text-2xl text-text-low">×1</div>
                                             </div>
                                         </div>
 
@@ -641,8 +641,8 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                     {/* VERSIONS LIST */}
                     <div className="h-auto md:flex-[0_0_35%] md:min-h-[200px] border-t border-white/5 bg-[#080808] flex flex-col shrink-0">
                         <div className="px-6 py-3 flex items-center justify-between border-b border-white/5 bg-[#0a0a0a]/50">
-                            <h3 className="text-[10px] font-web-titles font-normal uppercase tracking-widest text-neutral-500">Edición / Impresiones</h3>
-                            <span className="text-[10px] text-neutral-600 font-normal">{versionGroups.length} {versionGroups.length === 1 ? 'Versión' : 'Versiones'}</span>
+                            <h3 className="text-[10px] font-web-titles font-normal uppercase tracking-widest text-text-low">Edición / Impresiones</h3>
+                            <span className="text-[10px] text-text-low font-normal">{versionGroups.length} {versionGroups.length === 1 ? 'Versión' : 'Versiones'}</span>
                         </div>
                         <div
                             data-testid="versions-list-container"
@@ -694,10 +694,10 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                         {group.base.set_code?.toUpperCase()}
                                                     </div>
                                                     <div className="flex-1 text-left min-w-[120px] md:min-w-0">
-                                                        <div className={`text-[10px] md:text-xs font-semibold leading-tight truncate ${isGroupActive ? 'text-geeko-cyan' : 'text-neutral-300'}`}>
+                                                        <div className={`text-[10px] md:text-xs font-semibold leading-tight truncate ${isGroupActive ? 'text-geeko-cyan' : 'text-text-high'}`}>
                                                             {group.base.set_name}
                                                         </div>
-                                                        <div className="text-[9px] md:text-[10px] text-neutral-600 font-normal">#{group.base.collector_number} • {group.base.rarity}</div>
+                                                        <div className="text-[9px] md:text-[10px] text-text-low font-normal">#{group.base.collector_number} • {group.base.rarity}</div>
                                                     </div>
                                                 </div>
 
@@ -705,10 +705,10 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                     <div className="flex flex-col items-end gap-1">
                                                         {group.normal && (
                                                             <div className="flex items-center gap-2">
-                                                                <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-widest">Normal</span>
-                                                                <span className={`text-[11px] font-black ${group.normal.stock > 0 ? 'text-white' : 'text-neutral-600'}`}>
+                                                                <span className="text-[10px] text-text-low font-bold uppercase tracking-widest">Normal</span>
+                                                                <span className={`text-[11px] font-black ${group.normal.stock > 0 ? 'text-white' : 'text-text-low'}`}>
                                                                     {group.normal.discount_percentage > 0 && (
-                                                                        <span className="text-[9px] text-neutral-500 line-through mr-1.5 opacity-60">
+                                                                        <span className="text-[9px] text-text-low line-through mr-1.5 opacity-60">
                                                                             ${Number(group.normal.original_price).toFixed(2)}
                                                                         </span>
                                                                     )}
@@ -731,9 +731,9 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                                     </svg>
                                                                     Foil
                                                                 </span>
-                                                                 <span className={`text-[11px] font-black ${group.foil.stock > 0 ? 'text-geeko-cyan' : 'text-neutral-600'}`}>
+                                                                 <span className={`text-[11px] font-black ${group.foil.stock > 0 ? 'text-geeko-cyan' : 'text-text-low'}`}>
                                                                     {group.foil.discount_percentage > 0 && (
-                                                                        <span className="text-[9px] text-neutral-500 line-through mr-1.5 opacity-60">
+                                                                        <span className="text-[9px] text-text-low line-through mr-1.5 opacity-60">
                                                                             ${Number(group.foil.original_price).toFixed(2)}
                                                                         </span>
                                                                     )}
@@ -756,7 +756,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                                 En Stock
                                                             </span>
                                                         ) : (
-                                                            <span className="text-[9px] font-bold text-neutral-600 bg-neutral-900 px-2 py-0.5 rounded-full border border-white/5 uppercase tracking-tight whitespace-nowrap">
+                                                            <span className="text-[9px] font-bold text-text-low bg-neutral-900 px-2 py-0.5 rounded-full border border-white/5 uppercase tracking-tight whitespace-nowrap">
                                                                 Por Encargo
                                                             </span>
                                                         )}
@@ -769,7 +769,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                                 }}
                                                                 className={`p-2 rounded-lg transition-all shrink-0 ${!rowActiveVersion?.stock || rowActiveVersion.stock === 0
                                                                     ? 'text-neutral-800 cursor-not-allowed'
-                                                                    : 'text-neutral-500 hover:text-geeko-cyan hover:bg-geeko-cyan/10'
+                                                                    : 'text-text-low hover:text-geeko-cyan hover:bg-geeko-cyan/10'
                                                                     }`}
                                                             >
                                                                 <ShoppingCart size={14} />
@@ -815,7 +815,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" x2="12" y1="8" y2="12" /><line x1="12" x2="12.01" y1="16" y2="16" /></svg>
                             </div>
                             <h3 className="text-xl font-black text-red-500 uppercase tracking-widest">Error Loading Card</h3>
-                            <p className="text-sm text-neutral-400 font-medium max-max-w-xs mx-auto">{error}</p>
+                            <p className="text-sm text-text-low font-medium max-max-w-xs mx-auto">{error}</p>
                             <button
                                 onClick={() => activePrintingId && loadCardDetails(activePrintingId)}
                                 className="px-6 py-2 bg-white/5 hover:bg-white/10 rounded-full text-white font-bold text-xs uppercase tracking-widest transition-all border border-white/5 hover:border-white/20 mt-4"
@@ -839,7 +839,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                         {details.name}
                                     </h2>
                                 </a>
-                                <div className="flex flex-wrap items-center gap-2 text-sm md:text-base font-semibold text-neutral-400">
+                                <div className="flex flex-wrap items-center gap-2 text-sm md:text-base font-semibold text-text-low">
                                     <span className="text-white/80"><ManaText text={details.mana_cost || ''} /></span>
                                     {details.mana_cost && <span className="opacity-30">•</span>}
                                     <span>{details.type}</span>
@@ -847,11 +847,11 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                             </div>
 
                             <div className="p-4 md:p-6 rounded-2xl bg-white/[0.03] border border-white/5 space-y-3">
-                                <div className="text-sm md:text-base leading-relaxed text-neutral-300 whitespace-pre-wrap">
+                                <div className="text-sm md:text-base leading-relaxed text-text-low whitespace-pre-wrap">
                                     <ManaText text={details.oracle_text} />
                                 </div>
                                 {details.flavor_text && (
-                                    <p className="text-xs italic text-neutral-500 border-t border-white/10 pt-3">
+                                    <p className="text-xs italic text-text-low border-t border-white/10 pt-3">
                                         "{details.flavor_text}"
                                     </p>
                                 )}
@@ -860,7 +860,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                             <div className="space-y-6 pt-2">
                                 {!details?.is_accessory && (
                                     <div className="space-y-4 pt-2">
-                                        <h3 className="text-xs font-web-titles font-normal uppercase tracking-widest text-neutral-500 flex items-center justify-between">
+                                        <h3 className="text-xs font-web-titles font-normal uppercase tracking-widest text-text-low flex items-center justify-between">
                                             Legalidad de Formato
                                             {details.total_stock > 0 && (
                                                 <span className="text-[10px] text-geeko-cyan bg-geeko-cyan/10 px-3 py-1 rounded-full border border-geeko-cyan/20">
@@ -876,7 +876,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                         key={fmt}
                                                         className={`flex items-center justify-center p-2.5 rounded-lg border transition-all duration-300 ${isLegal
                                                             ? 'bg-geeko-gold/10 border-geeko-gold/40 text-geeko-gold shadow-[0_0_20px_rgba(249,174,0,0.1)]'
-                                                            : 'bg-neutral-900/40 border-white/5 text-neutral-600 opacity-60'
+                                                            : 'bg-neutral-900/40 border-white/5 text-text-low opacity-60'
                                                             }`}
                                                     >
                                                         <span className="text-[9px] md:text-[10px] font-web-titles font-normal uppercase tracking-widest">{fmt}</span>
@@ -906,7 +906,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                 </div>
                                                     <div className="flex flex-col gap-1">
                                                         {activeVersion?.discount_percentage > 0 && (
-                                                            <span className="text-sm font-bold text-neutral-500 line-through">
+                                                            <span className="text-sm font-bold text-text-low line-through">
                                                                 ${Number(activeVersion.original_price).toFixed(2)}
                                                             </span>
                                                         )}
@@ -936,8 +936,8 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                                 className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-1 ${selectedFinish === 'nonfoil'
                                                                     ? 'bg-white text-black shadow-lg scale-[1.05]'
                                                                     : (activeGroup.normal?.stock || 0) === 0
-                                                                        ? 'text-neutral-500 opacity-60'
-                                                                        : 'text-neutral-500 hover:text-white'
+                                                                        ? 'text-text-low opacity-60'
+                                                                        : 'text-text-low hover:text-white'
                                                                     }`}
                                                             >
                                                                 Normal {(activeGroup.normal?.stock || 0) <= 0 && <span className="text-[8px] opacity-70 tracking-tighter">(P/E)</span>}
@@ -952,8 +952,8 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                                 className={`px-3 py-1 rounded text-[8px] font-black uppercase tracking-widest transition-all flex items-center gap-1 ${selectedFinish === 'foil'
                                                                     ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 border-transparent text-white shadow-lg'
                                                                     : (activeGroup.foil?.stock || 0) === 0
-                                                                        ? 'text-neutral-500 opacity-60'
-                                                                        : 'text-neutral-500 hover:text-white'
+                                                                        ? 'text-text-low opacity-60'
+                                                                        : 'text-text-low hover:text-white'
                                                                     }`}
                                                             >
                                                                 Foil {(activeGroup.foil?.stock || 0) <= 0 && <span className="text-[8px] opacity-70 tracking-tighter">(P/E)</span>}
@@ -963,7 +963,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                 </div>
 
                                                 {!details?.is_accessory && marketPrice > 0 && (activeVersion?.price || details.price || 0) > 0 && (activeVersion?.price || details.price || 0) < marketPrice ? (
-                                                    <div className="text-sm font-bold text-neutral-600 line-through decoration-red-500/50 mt-1">
+                                                    <div className="text-sm font-bold text-text-low line-through decoration-red-500/50 mt-1">
                                                         MKT: ${Number(marketPrice).toFixed(2)}
                                                     </div>
                                                 ) : null}
@@ -995,7 +995,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                         >
                                             <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity" />
                                             <div className="space-y-1 relative z-10">
-                                                <span className="text-[10px] font-semibold uppercase text-neutral-500 tracking-widest group-hover:text-geeko-cyan transition-colors">Mercado Externo</span>
+                                                <span className="text-[10px] font-semibold uppercase text-text-low tracking-widest group-hover:text-geeko-cyan transition-colors">Mercado Externo</span>
                                                 <div className="text-base md:text-lg font-web-titles font-normal leading-tight">Comprar @ CardKingdom</div>
                                             </div>
                                             <div className="flex items-center justify-between gap-3 w-full relative z-10 mt-auto">

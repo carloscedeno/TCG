@@ -46,10 +46,10 @@
   --color-geeko-black: #000000;
   --color-geeko-surface: #0B0E11;
   --color-geeko-cyan: #00D1FF;
-  --color-geeko-gold: #FFD700;
+  --color-geeko-gold: #F9AE00;
   --color-geeko-cyan-neon: #00D1FF;
   --color-geeko-purple-vibrant: #A020F0;
-  --color-geeko-gold-premium: #FFD700;
+  --color-geeko-gold-premium: #F9AE00;
   
   /* Legacy/Support Colors */
   --color-geeko-violet-dark: #000000;
@@ -61,7 +61,7 @@
   --color-geeko-blue: #405DE6;
   --color-geeko-purple: #A020F0;
   --color-geeko-orange: #F77737;
-  --color-geeko-yellow: #FFD700;
+  --color-geeko-yellow: #F9AE00;
   --color-geeko-green: #00FF85;
 
   --color-neutral-white: #FFFFFF;
@@ -69,7 +69,7 @@
 
   /* UI Tokens */
   --color-text-high: #FFFFFF;
-  --color-text-low: #A0A0A0;
+  --color-text-low: #B7B7B7;
   --color-geeko-glass: rgba(11, 14, 17, 0.6);
 
   /* Fonts */
@@ -100,7 +100,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background-color: var(--color-geeko-violet-dark);
-  color: #ffffff;
+  color: var(--color-text-high);
   font-family: var(--font-body);
 }
 

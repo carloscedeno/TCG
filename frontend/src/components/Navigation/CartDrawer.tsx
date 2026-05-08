@@ -90,7 +90,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                             </div>
                             <h2 className="text-lg font-black tracking-tight uppercase">Tu Carrito</h2>
                         </div>
-                        <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors text-neutral-400">
+                        <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors text-text-low">
                             <X size={20} />
                         </button>
                     </div>
@@ -100,7 +100,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                         {isLoading && displayItems.length === 0 ? (
                             <div className="flex flex-col items-center justify-center h-full gap-4">
                                 <Loader2 size={32} className="text-geeko-cyan animate-spin" />
-                                <span className="text-xs font-bold text-neutral-500 uppercase tracking-widest">Cargando Carrito...</span>
+                                <span className="text-xs font-bold text-text-low uppercase tracking-widest">Cargando Carrito...</span>
                             </div>
                         ) : displayItems.length === 0 ? (
                             <div className="flex flex-col items-center justify-center h-full text-center space-y-6 opacity-50">
@@ -109,7 +109,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                                 </div>
                                 <div>
                                     <p className="text-sm font-bold text-white mb-1">Tu carrito está vacío</p>
-                                    <p className="text-xs text-neutral-500">Agrega algunos productos del Catálogo.</p>
+                                    <p className="text-xs text-text-low">Agrega algunos productos del Catálogo.</p>
                                 </div>
                             </div>
                         ) : (
@@ -121,7 +121,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                                     <div className="flex-1 flex flex-col justify-between py-1">
                                         <div>
                                             <h4 className="text-sm font-bold text-white leading-tight mb-1">{item.name || item.products?.name}</h4>
-                                            <p className="text-[10px] font-black uppercase text-neutral-500">{item.set_code || item.products?.set_code}</p>
+                                            <p className="text-[10px] font-black uppercase text-text-low">{item.set_code || item.products?.set_code}</p>
 
                                             {/* Finish & stock badges */}
                                             <div className="flex flex-wrap gap-1 mt-1">
@@ -150,10 +150,9 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                                                                transition-all group/btn disabled:opacity-50 disabled:cursor-not-allowed"
                                                     disabled={item.quantity <= 1 || updating === item.id}
                                                 >
-                                                    {updating === item.id ? (
-                                                        <Loader2 size={14} className="text-neutral-400 animate-spin" />
+                                                        <Loader2 size={14} className="text-text-low animate-spin" />
                                                     ) : (
-                                                        <Minus size={14} className="text-neutral-400 group-hover/btn:text-red-500" />
+                                                        <Minus size={14} className="text-text-low group-hover/btn:text-red-500" />
                                                     )}
                                                 </button>
 
@@ -172,9 +171,9 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                                                     disabled={updating === item.id || item.quantity >= (item.products?.stock ?? 99)}
                                                 >
                                                     {updating === item.id ? (
-                                                        <Loader2 size={14} className="text-neutral-400 animate-spin" />
+                                                        <Loader2 size={14} className="text-text-low animate-spin" />
                                                     ) : (
-                                                        <Plus size={14} className="text-neutral-400 group-hover/btn:text-geeko-cyan" />
+                                                        <Plus size={14} className="text-text-low group-hover/btn:text-geeko-cyan" />
                                                     )}
                                                 </button>
 
@@ -187,9 +186,9 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                                                     disabled={updating === item.id}
                                                 >
                                                     {updating === item.id ? (
-                                                        <Loader2 size={14} className="text-neutral-400 animate-spin" />
+                                                        <Loader2 size={14} className="text-text-low animate-spin" />
                                                     ) : (
-                                                        <Trash2 size={14} className="text-neutral-400 group-hover/btn:text-red-500" />
+                                                        <Trash2 size={14} className="text-text-low group-hover/btn:text-red-500" />
                                                     )}
                                                 </button>
                                             </div>
@@ -204,11 +203,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                     {displayItems.length > 0 && (
                         <div className="p-8 bg-[#080808] border-t border-white/10 space-y-6">
                             <div className="space-y-3">
-                                <div className="flex justify-between text-xs font-bold text-neutral-500 uppercase tracking-widest">
+                                <div className="flex justify-between text-xs font-bold text-text-low uppercase tracking-widest">
                                     <span>Subtotal</span>
                                     <span>${subtotal.toFixed(2)}</span>
                                 </div>
-                                <div className="flex justify-between text-xs font-bold text-neutral-500 uppercase tracking-widest">
+                                <div className="flex justify-between text-xs font-bold text-text-low uppercase tracking-widest">
                                     <span>Envío</span>
                                     <span className="text-geeko-cyan">Gratis</span>
                                 </div>
@@ -228,7 +227,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                                 Finalizar Compra
                             </button>
 
-                            <p className="text-[10px] text-center text-neutral-600 font-medium">
+                            <p className="text-[10px] text-center text-text-low font-medium">
                                 Pago seguro procesado por Geekorium Engine.
                             </p>
                         </div>

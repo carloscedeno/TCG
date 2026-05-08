@@ -82,7 +82,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                         <Link 
                             key={item.name}
                             to={item.path}
-                            className="text-sm xl:text-base font-bold text-neutral-400 hover:text-white transition-all relative group py-2"
+                            className="text-sm xl:text-base font-bold text-text-low hover:text-text-high transition-all relative group py-2"
                         >
                             {item.name}
                             {item.name === 'Home' && !searchParams.get('tab') && (
@@ -96,7 +96,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                 {/* Search & Cart & Auth */}
                 <div className="flex-1 max-w-2xl hidden lg:block mx-auto transition-all duration-500">
                     <div className="relative group">
-                        <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500 group-focus-within:text-geeko-cyan transition-colors" />
+                        <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-text-low group-focus-within:text-geeko-cyan transition-colors" />
                         <input 
                             type="text"
                             value={query}
@@ -109,7 +109,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
 
                 <div className="flex items-center gap-4 md:gap-6">
                     <div className="flex items-center gap-3">
-                        <button onClick={onCartOpen} className="relative p-2 text-neutral-400 hover:text-white transition-all">
+                        <button onClick={onCartOpen} className="relative p-2 text-text-low hover:text-text-high transition-all">
                             <ShoppingCart size={22} />
                             {cartCount > 0 && (
                                 <div className="absolute -top-1 -right-1 bg-white text-black text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center">
@@ -139,7 +139,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                                 <div className={`w-11 h-11 xl:w-14 xl:h-14 rounded-full flex items-center justify-center transition-all ${isActive ? 'bg-white shadow-[0_0_20px_rgba(255,255,255,0.4)]' : 'bg-neutral-800/80 hover:bg-neutral-700 backdrop-blur-sm'}`}>
                                     <img src={game.icon} alt={game.name} className={`w-6 h-6 xl:w-9 xl:h-9 object-contain transition-all ${isActive ? 'grayscale-0 scale-110' : 'grayscale group-hover:grayscale-0 group-hover:scale-110'}`} />
                                 </div>
-                                <span className={`text-[11px] xl:text-[14px] font-black italic uppercase tracking-tighter transition-all ${isActive ? 'text-white' : 'text-neutral-500 group-hover:text-neutral-300'}`}>
+                                <span className={`text-[11px] xl:text-[14px] font-black italic uppercase tracking-tighter transition-all ${isActive ? 'text-text-high' : 'text-text-low group-hover:text-neutral-300'}`}>
                                     {game.code === 'MTG' ? 'MTG' : game.name}
                                 </span>
                             </button>
@@ -161,7 +161,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                 <div className="lg:hidden fixed inset-0 z-[100] bg-[#0a0a0a] overflow-y-auto animate-in fade-in duration-200">
                     <div className="p-4 border-b border-white/10 flex items-center justify-between">
                         <img src="/branding/Logo.png" alt="Geekorium" className="w-28 object-contain" />
-                        <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 bg-neutral-900 border border-white/5 rounded-xl text-neutral-400">
+                        <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 bg-neutral-900 border border-white/5 rounded-xl text-text-low">
                             <X size={20} />
                         </button>
                     </div>
@@ -169,7 +169,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                     <div className="p-6 space-y-8">
                         {/* TCG Sections */}
                         <div>
-                            <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">TCG Catalog</h3>
+                            <h3 className="text-[10px] font-black text-text-low uppercase tracking-[0.2em] mb-4">TCG Catalog</h3>
                             <div className="grid grid-cols-1 gap-3">
                                 {tcgGames.map(game => (
                                     <button 
@@ -180,7 +180,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                                         <img src={game.icon} alt={game.name} className="w-10 h-10 object-contain" />
                                         <div className="flex flex-col">
                                             <span className="font-bold text-sm">{game.name}</span>
-                                            <span className="text-[10px] text-neutral-500 uppercase tracking-widest">
+                                            <span className="text-[10px] text-text-low uppercase tracking-widest">
                                                 {game.code === 'MTG' ? 'Ver Stock' : 'Ver Catálogo'}
                                             </span>
                                         </div>
@@ -191,7 +191,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
 
                         {/* Accessories */}
                         <div>
-                            <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">Productos & Accesorios</h3>
+                            <h3 className="text-[10px] font-black text-text-low uppercase tracking-[0.2em] mb-4">Productos & Accesorios</h3>
                             <div className="grid grid-cols-2 gap-3">
                                 {categories.map(cat => (
                                     <button 
