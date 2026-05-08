@@ -498,16 +498,15 @@ export const CardDetail: React.FC = () => {
                                 )}
                             </div>
                         </div>
-                    </div>
-                ) : null
+                    ) : null
                 }
-            </main >
+            </main>
 
             <Footer />
 
             <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
             <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
-        </div >
+        </div>
     );
 };
 
