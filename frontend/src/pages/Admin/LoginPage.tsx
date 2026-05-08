@@ -63,11 +63,11 @@ export const LoginPage = () => {
 
                 <div className="bg-neutral-900/80 backdrop-blur-2xl border border-white/5 rounded-[2.5rem] overflow-hidden shadow-2xl p-8 sm:p-10">
                     <div className="flex flex-col items-center mb-10 text-center">
-                        <div className="w-20 h-20 bg-geeko-cyan/10 rounded-3xl flex items-center justify-center mb-6 border border-geeko-cyan/20 ring-4 ring-geeko-cyan/5">
-                            <Shield className="text-geeko-cyan w-10 h-10" />
+                        <div className="w-20 h-20 bg-white/10 rounded-3xl flex items-center justify-center mb-6 border border-white/20 ring-4 ring-white/5">
+                            <Shield className="text-white w-10 h-10" />
                         </div>
                         <h1 className="text-4xl font-black text-white italic tracking-tighter uppercase leading-tight">
-                            Acceso <span className="text-geeko-cyan">Geekorium</span>
+                            Acceso <span className="text-white">Geekorium</span>
                         </h1>
                         <p className="text-neutral-500 mt-3 text-sm font-medium">
                             {mode === 'login' ? 'Panel de Administración y Control' :
@@ -80,12 +80,12 @@ export const LoginPage = () => {
                         <div className="space-y-2">
                             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400 ml-1">Email</label>
                             <div className="relative group">
-                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-600 group-focus-within:text-geeko-cyan transition-colors" size={18} />
+                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-600 group-focus-within:text-white transition-colors" size={18} />
                                 <input
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full bg-black/40 border border-white/5 rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-neutral-700 focus:outline-none focus:ring-2 focus:ring-geeko-cyan/30 focus:border-geeko-cyan/40 transition-all font-medium"
+                                    className="w-full bg-black/40 border border-white/5 rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-neutral-700 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white/40 transition-all font-medium"
                                     placeholder="tu@email.com"
                                     required
                                 />
@@ -96,12 +96,12 @@ export const LoginPage = () => {
                             <div className="space-y-2">
                                 <label className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400 ml-1">Contraseña</label>
                                 <div className="relative group">
-                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-600 group-focus-within:text-geeko-cyan transition-colors" size={18} />
+                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-600 group-focus-within:text-white transition-colors" size={18} />
                                     <input
                                         type="password"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        className="w-full bg-black/40 border border-white/5 rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-neutral-700 focus:outline-none focus:ring-2 focus:ring-geeko-cyan/30 focus:border-geeko-cyan/40 transition-all font-medium"
+                                        className="w-full bg-black/40 border border-white/5 rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-neutral-700 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white/40 transition-all font-medium"
                                         placeholder="••••••••"
                                         required
                                     />
@@ -137,7 +137,7 @@ export const LoginPage = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-white text-black hover:bg-geeko-cyan hover:text-white font-black py-4 rounded-2xl shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed transform active:scale-[0.98] uppercase text-xs tracking-[0.2em]"
+                            className="w-full bg-white text-black hover:bg-white hover:text-white font-black py-4 rounded-2xl shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed transform active:scale-[0.98] uppercase text-xs tracking-[0.2em]"
                         >
                             {loading ? 'Procesando...' :
                                 mode === 'login' ? 'Identificarse' :
@@ -153,7 +153,7 @@ export const LoginPage = () => {
                                     ¿Necesitas una cuenta?
                                     <button
                                         onClick={() => setMode('register')}
-                                        className="text-white ml-2 hover:text-geeko-cyan transition-colors"
+                                        className="text-white ml-2 hover:text-white transition-colors"
                                     >
                                         Registrarse
                                     </button>
@@ -161,7 +161,7 @@ export const LoginPage = () => {
                             ) : (
                                 <button
                                     onClick={() => setMode('login')}
-                                    className="text-white hover:text-geeko-cyan transition-colors"
+                                    className="text-white hover:text-white transition-colors"
                                 >
                                     Ir al Inicio de Sesión
                                 </button>

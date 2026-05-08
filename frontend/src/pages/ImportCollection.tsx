@@ -14,10 +14,10 @@ const ImportCollection: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#050505] text-white font-sans relative selection:bg-cyan-500/30 overflow-hidden">
+        <div className="min-h-screen bg-[#050505] text-white font-sans relative selection:bg-white/30 overflow-hidden">
             {/* Ambient Background Mesh */}
             <div className="fixed inset-0 z-0 pointer-events-none">
-                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-geeko-cyan/5 rounded-full blur-[150px] animate-pulse" />
+                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-white/5 rounded-full blur-[150px] animate-pulse" />
                 <div className="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-purple-900/10 rounded-full blur-[150px]" />
             </div>
 
@@ -27,7 +27,7 @@ const ImportCollection: React.FC = () => {
                     <div className="flex items-center gap-8">
                         <Link to="/" className="flex items-center gap-4 hover:opacity-80 transition-opacity">
                             <div className="flex items-center justify-center font-black text-xl italic text-white shadow-lg shadow-blue-600/20">
-                                <span className="text-geeko-cyan">El</span>&nbsp;Emporio
+                                <span className="text-white">El</span>&nbsp;Emporio
                             </div>
                         </Link>
                     </div>
@@ -43,14 +43,14 @@ const ImportCollection: React.FC = () => {
                         <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> Volver al Perfil
                     </Link>
                     <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full">
-                        <Shield size={14} className="text-geeko-cyan" />
+                        <Shield size={14} className="text-white" />
                         <span className="text-[10px] font-black uppercase tracking-widest text-slate-300">Secure Import Terminal</span>
                     </div>
                 </div>
 
                 <div className="text-center mb-16 space-y-4">
                     <h1 className="text-6xl font-black italic tracking-tighter uppercase">
-                        Sincronizar <span className="text-geeko-cyan">Inventario</span>
+                        Sincronizar <span className="text-white">Inventario</span>
                     </h1>
                     <p className="text-slate-500 font-bold max-w-xl mx-auto">
                         Carga tus listas de precios de <span className="text-white">Geekorium</span> o tus colecciones personales desde archivos CSV estructurados.
@@ -64,15 +64,15 @@ const ImportCollection: React.FC = () => {
 
                 <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div className="p-8 rounded-3xl bg-white/5 border border-white/5">
-                        <h4 className="text-geeko-cyan font-black text-xs uppercase tracking-widest mb-4">Formatos Soportados</h4>
+                        <h4 className="text-white font-black text-xs uppercase tracking-widest mb-4">Formatos Soportados</h4>
                         <p className="text-slate-500 text-xs leading-relaxed font-bold">Aceptamos exports estándar de TCGPlayer, Cardmarket y listas personalizadas en .csv y .txt.</p>
                     </div>
                     <div className="p-8 rounded-3xl bg-white/5 border border-white/5">
-                        <h4 className="text-geeko-cyan font-black text-xs uppercase tracking-widest mb-4">Mapeo Inteligente</h4>
+                        <h4 className="text-white font-black text-xs uppercase tracking-widest mb-4">Mapeo Inteligente</h4>
                         <p className="text-slate-500 text-xs leading-relaxed font-bold">Nuestro sistema detecta automáticamente los nombres de las cartas y busca la versión más reciente en el mercado.</p>
                     </div>
                     <div className="p-8 rounded-3xl bg-white/5 border border-white/5">
-                        <h4 className="text-geeko-cyan font-black text-xs uppercase tracking-widest mb-4">Seguridad de Datos</h4>
+                        <h4 className="text-white font-black text-xs uppercase tracking-widest mb-4">Seguridad de Datos</h4>
                         <p className="text-slate-500 text-xs leading-relaxed font-bold">Tus datos están protegidos y solo se sincronizan con tu perfil verificado de Geekorium.</p>
                     </div>
                 </div>

@@ -70,7 +70,7 @@ export const QuickStockPanel: React.FC = () => {
                     onKeyDown={(e) => e.stopPropagation()}
                     onClick={(e) => e.stopPropagation()}
                     data-testid="quick-stock-search"
-                    className="w-full bg-white/5 border border-white/10 rounded-lg pl-9 pr-3 py-2 text-xs text-white focus:outline-none focus:border-geeko-cyan/50 transition-colors"
+                    className="w-full bg-white/5 border border-white/10 rounded-lg pl-9 pr-3 py-2 text-xs text-white focus:outline-none focus:border-white/50 transition-colors"
                 />
             </div>
 
@@ -78,7 +78,7 @@ export const QuickStockPanel: React.FC = () => {
             <div className="space-y-2 max-h-60 overflow-y-auto custom-scrollbar" data-testid="quick-stock-results">
                 {loading ? (
                     <div className="flex items-center justify-center py-4">
-                        <Loader2 size={16} className="text-geeko-cyan animate-spin" />
+                        <Loader2 size={16} className="text-white animate-spin" />
                     </div>
                 ) : items.length > 0 ? (
                     items.map((item) => (

@@ -48,7 +48,7 @@ export const PresaleSection: React.FC = () => {
           <a
             key={item.id}
             href={item.link_url || '#'}
-            className="group relative aspect-[3.5/1] rounded-2xl overflow-hidden border border-white/10 bg-[#050505] transition-all hover:border-geeko-cyan/50 hover:shadow-[0_0_30px_rgba(34,211,238,0.15)]"
+            className="group relative aspect-[3.5/1] rounded-2xl overflow-hidden border border-white/10 bg-[#050505] transition-all hover:border-white/50 hover:shadow-[0_0_30px_rgba(34,211,238,0.15)]"
           >
             {/* Background Image */}
             <img
@@ -59,7 +59,7 @@ export const PresaleSection: React.FC = () => {
             
             {/* Overlay Gradient */}
             <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent flex flex-col justify-center px-6">
-              <h3 className="text-sm font-black text-white italic uppercase tracking-tighter leading-tight group-hover:text-geeko-cyan transition-colors">
+              <h3 className="text-sm font-black text-white italic uppercase tracking-tighter leading-tight group-hover:text-white transition-colors">
                 {item.title}
               </h3>
               {item.subtitle && (
@@ -70,7 +70,7 @@ export const PresaleSection: React.FC = () => {
             </div>
 
             {/* Hover Indicator */}
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-geeko-cyan text-black flex items-center justify-center opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 shadow-lg">
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white text-black flex items-center justify-center opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 shadow-lg">
               <ArrowRight size={16} strokeWidth={3} />
             </div>
           </a>

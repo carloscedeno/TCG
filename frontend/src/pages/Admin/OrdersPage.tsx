@@ -29,11 +29,11 @@ const ORDER_STATUSES: Record<string, { label: string; color: string; border?: st
     awaiting_payment: { label: 'Esperando Pago', color: 'bg-yellow-500/20 text-yellow-400' },
     pending_payment: { label: 'Pendiente Antiguo', color: 'bg-yellow-700/20 text-yellow-600' },
     payment_uploaded: { label: 'Pago en Revisión', color: 'bg-lime-500/20 text-lime-400' },
-    paid: { label: 'Pagado', color: 'bg-geeko-cyan/20 text-geeko-cyan' },
+    paid: { label: 'Pagado', color: 'bg-white/20 text-white' },
     processing: { label: 'Procesando', color: 'bg-indigo-500/20 text-indigo-400' },
     ready_for_pickup: { label: 'Listo para Recoger', color: 'bg-purple-500/20 text-purple-400' },
-    shipped: { label: 'Enviado', color: 'bg-cyan-500/20 text-cyan-400' },
-    delivered: { label: 'Entregado', color: 'bg-geeko-cyan/20 text-geeko-cyan' },
+    shipped: { label: 'Enviado', color: 'bg-white/20 text-white' },
+    delivered: { label: 'Entregado', color: 'bg-white/20 text-white' },
     cancelled: { label: 'Cancelado', color: 'bg-red-500/20 text-red-400' },
     returned: { label: 'Devuelto', color: 'bg-orange-500/20 text-orange-400' },
     refunded: { label: 'Reembolsado', color: 'bg-pink-500/20 text-pink-400' },
@@ -310,18 +310,18 @@ const OrdersPage = () => {
     if (!isAdmin) return <div className="p-8 text-white">Acceso Denegado</div>;
 
     return (
-        <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-geeko-cyan/30">
+        <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-white/30">
             <div className="max-w-[1600px] mx-auto p-4 md:p-8 space-y-8">
 
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div className="space-y-2">
                         <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 bg-gradient-to-br from-geeko-cyan to-cyan-600 rounded-2xl flex items-center justify-center shadow-lg shadow-geeko-cyan/20">
+                            <div className="w-12 h-12 bg-gradient-to-br from-white to-cyan-600 rounded-2xl flex items-center justify-center shadow-lg shadow-white/20">
                                 <Package className="text-white" size={24} />
                             </div>
                             <h1 className="text-4xl font-black italic tracking-tighter uppercase">
-                                Gestión de <span className="text-geeko-cyan">Órdenes</span>
+                                Gestión de <span className="text-white">Órdenes</span>
                             </h1>
                         </div>
                         <p className="text-neutral-500 text-xs font-bold uppercase tracking-[0.2em] ml-1">
@@ -343,7 +343,7 @@ const OrdersPage = () => {
                         <select
                             value={filterStatus}
                             onChange={(e) => setFilterStatus(e.target.value)}
-                            className="bg-neutral-900 text-white text-xs font-bold uppercase tracking-widest px-4 py-3 rounded-xl border border-white/10 outline-none focus:border-geeko-cyan/50 transition-all hover:bg-white/5 cursor-pointer appearance-none"
+                            className="bg-neutral-900 text-white text-xs font-bold uppercase tracking-widest px-4 py-3 rounded-xl border border-white/10 outline-none focus:border-white/50 transition-all hover:bg-white/5 cursor-pointer appearance-none"
                         >
                             <option value="all">TODOS LOS ESTADOS</option>
                             {Object.entries(ORDER_STATUSES).map(([key, config]) => (
@@ -371,7 +371,7 @@ const OrdersPage = () => {
                                     onClick={() => toggleExpand(order.id)}
                                 >
                                     <div className="flex items-center gap-6 pointer-events-none w-full md:w-auto">
-                                        <div className={`p-3 rounded-xl flex-shrink-0 ${order.status === 'cancelled' ? 'bg-red-500/10 text-red-500' : 'bg-geeko-cyan/10 text-geeko-cyan'}`}>
+                                        <div className={`p-3 rounded-xl flex-shrink-0 ${order.status === 'cancelled' ? 'bg-red-500/10 text-red-500' : 'bg-white/10 text-white'}`}>
                                             {order.status === 'cancelled' ? <X size={24} /> : <Package size={24} />}
                                         </div>
                                         <div className="flex-1 min-w-0">
@@ -419,7 +419,7 @@ const OrdersPage = () => {
                                                     <button
                                                         onClick={(e) => { e.stopPropagation(); handleStatusChange(order.id, 'awaiting_payment'); }}
                                                         disabled={updatingId === order.id}
-                                                        className="px-3 py-1.5 bg-geeko-cyan/20 text-geeko-cyan hover:bg-geeko-cyan/30 rounded-lg text-[10px] font-black uppercase tracking-widest transition-colors"
+                                                        className="px-3 py-1.5 bg-white/20 text-white hover:bg-white/30 rounded-lg text-[10px] font-black uppercase tracking-widest transition-colors"
                                                     >
                                                         ✅ OK Stock
                                                     </button>
@@ -498,7 +498,7 @@ const OrdersPage = () => {
                                                     </div>
                                                     <div>
                                                         <p className="text-[10px] uppercase font-black text-neutral-500 tracking-widest mb-1">Correo Electrónico</p>
-                                                        <p className="text-sm font-bold text-geeko-cyan">
+                                                        <p className="text-sm font-bold text-white">
                                                             {order.guest_info?.email || order.shipping_address?.email || 'N/A'}
                                                         </p>
                                                     </div>
@@ -507,7 +507,7 @@ const OrdersPage = () => {
 
                                             {/* Shipping Details */}
                                             <div className="space-y-4">
-                                                <h4 className="text-sm font-black uppercase tracking-widest text-cyan-400 flex items-center gap-2">
+                                                <h4 className="text-sm font-black uppercase tracking-widest text-white flex items-center gap-2">
                                                     <Package size={14} /> Detalles de Envío
                                                 </h4>
                                                 <div className="bg-white/5 rounded-2xl p-5 border border-white/5 space-y-4">
@@ -524,7 +524,7 @@ const OrdersPage = () => {
                                                     <div className="pt-2 border-t border-white/5 flex items-center justify-between">
                                                         <div>
                                                             <p className="text-[10px] uppercase font-black text-neutral-500 tracking-widest mb-0.5">Método</p>
-                                                            <span className="text-[10px] font-black uppercase px-2 py-0.5 bg-cyan-500/20 text-cyan-400 rounded-md border border-cyan-500/20">
+                                                            <span className="text-[10px] font-black uppercase px-2 py-0.5 bg-white/20 text-white rounded-md border border-cyan-500/20">
                                                                 {order.shipping_address?.shipping_method || 'Envío Standard'}
                                                             </span>
                                                         </div>
@@ -586,7 +586,7 @@ const OrdersPage = () => {
                                                                             {item.product?.set_code || item.accessory?.category || 'Accesorio'}
                                                                         </p>
                                                                         {(item.finish === 'foil' || item.finish === 'etched') && (
-                                                                            <span className={`text-[8px] px-1 py-0.5 rounded font-black uppercase tracking-widest ${item.finish === 'foil' ? 'bg-purple-500/20 text-purple-400 border border-purple-500/20' : 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/20'}`}>
+                                                                            <span className={`text-[8px] px-1 py-0.5 rounded font-black uppercase tracking-widest ${item.finish === 'foil' ? 'bg-purple-500/20 text-purple-400 border border-purple-500/20' : 'bg-white/20 text-white border border-cyan-500/20'}`}>
                                                                                 {item.finish}
                                                                             </span>
                                                                         )}
@@ -647,7 +647,7 @@ const OrdersPage = () => {
                                                                             )}
                                                                         </div>
                                                                     </div>
-                                                                    <span className="font-mono text-geeko-cyan font-bold">${item.price_at_purchase.toFixed(2)}</span>
+                                                                    <span className="font-mono text-white font-bold">${item.price_at_purchase.toFixed(2)}</span>
                                                                 </div>
                                                             </div>
                                                         </div>

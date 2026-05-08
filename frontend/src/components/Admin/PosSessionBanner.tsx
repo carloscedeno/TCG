@@ -13,7 +13,7 @@ export const PosSessionBanner: React.FC = () => {
     if (!isAdmin || !currentIsPos || !activeCartName) return null;
 
     return (
-        <div className="relative z-[9999] bg-geeko-cyan text-black px-4 py-2 shadow-[0_4px_20px_rgba(31,235,219,0.3)] animate-in slide-in-from-top duration-500 border-b border-black/10">
+        <div className="relative z-[9999] bg-white text-black px-4 py-2 shadow-[0_4px_20px_rgba(31,235,219,0.3)] animate-in slide-in-from-top duration-500 border-b border-black/10">
             <div className="max-w-[1600px] mx-auto flex items-center justify-between">
                 <div className="flex items-center gap-3">
                     <div className="bg-black/10 p-1.5 rounded-lg">
@@ -39,7 +39,7 @@ export const PosSessionBanner: React.FC = () => {
                             await clearActiveCart();
                             navigate('/admin/customers');
                         }}
-                        className="flex items-center gap-1.5 px-3 py-1.5 bg-black text-geeko-cyan rounded-full text-[10px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-lg"
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-black text-white rounded-full text-[10px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-lg"
                     >
                         <CheckCircle size={14} />
                         <span className="hidden sm:inline">Finalizar</span>

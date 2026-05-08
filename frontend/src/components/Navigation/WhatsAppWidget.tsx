@@ -9,7 +9,7 @@ export const WhatsAppWidget: React.FC = () => {
             name: 'Atención Principal',
             number: '584128042832',
             description: 'Consultas generales y envíos',
-            color: 'bg-geeko-cyan'
+            color: 'bg-white'
         },
         {
             name: 'Venta de Singles',
@@ -30,7 +30,7 @@ export const WhatsAppWidget: React.FC = () => {
             {isOpen && (
                 <div className="w-72 bg-[#121212]/95 backdrop-blur-xl border border-white/10 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
                     {/* Header */}
-                    <div className="bg-gradient-to-r from-geeko-cyan/20 to-geeko-purple/20 p-6 border-b border-white/10">
+                    <div className="bg-gradient-to-r from-white/20 to-geeko-purple/20 p-6 border-b border-white/10">
                         <h3 className="text-xl font-black tracking-tighter text-white uppercase">
                             Atención por WhatsApp
                         </h3>
@@ -51,14 +51,14 @@ export const WhatsAppWidget: React.FC = () => {
                                     <Phone size={18} />
                                 </div>
                                 <div className="flex-1">
-                                    <div className="text-sm font-bold text-white group-hover:text-geeko-cyan transition-colors">
+                                    <div className="text-sm font-bold text-white group-hover:text-white transition-colors">
                                         {channel.name}
                                     </div>
                                     <div className="text-[10px] text-neutral-500 font-medium">
                                         {channel.description}
                                     </div>
                                 </div>
-                                <Send size={14} className="text-neutral-600 group-hover:text-geeko-cyan transition-colors" />
+                                <Send size={14} className="text-neutral-600 group-hover:text-white transition-colors" />
                             </a>
                         ))}
                     </div>
@@ -77,13 +77,13 @@ export const WhatsAppWidget: React.FC = () => {
                 onClick={() => setIsOpen(!isOpen)}
                 className={`w-16 h-16 rounded-full flex items-center justify-center shadow-2xl transition-all transform active:scale-90 group relative ${isOpen
                     ? 'bg-neutral-800 text-white rotate-90'
-                    : 'bg-geeko-cyan text-black hover:scale-110'
+                    : 'bg-white text-black hover:scale-110'
                     }`}
                 title="Contactar por WhatsApp"
             >
                 {/* Pulse Effect when closed */}
                 {!isOpen && (
-                    <span className="absolute inset-0 rounded-full bg-geeko-cyan animate-ping opacity-20 pointer-events-none" />
+                    <span className="absolute inset-0 rounded-full bg-white animate-ping opacity-20 pointer-events-none" />
                 )}
 
                 {isOpen ? (

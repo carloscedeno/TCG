@@ -13,7 +13,7 @@ const HelpPage: React.FC = () => {
                 <div className="max-w-[1600px] mx-auto flex items-center justify-between">
                     <a href="/" className="flex items-center gap-3 group">
                         <img src="/branding/Logo.png" alt="Logo" className="w-32 object-contain" />
-                        <span className="text-xl font-black tracking-tighter text-white uppercase group-hover:text-geeko-cyan transition-colors">
+                        <span className="text-xl font-black tracking-tighter text-white uppercase group-hover:text-white transition-colors">
                             Volver al Emporio
                         </span>
                     </a>
@@ -29,7 +29,7 @@ const HelpPage: React.FC = () => {
                 <div className="max-w-4xl mx-auto px-6 text-center">
                     <h3 className="text-3xl font-web-titles font-black text-white uppercase tracking-tighter mb-6">¿Aún tienes dudas?</h3>
                     <div className="flex justify-center gap-4">
-                        <a href="https://wa.me/584128042832" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-6 py-3 bg-geeko-cyan hover:bg-[#009297] text-white font-bold rounded-full transition-colors shadow-lg">
+                        <a href="https://wa.me/584128042832" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-6 py-3 bg-white hover:bg-[#009297] text-white font-bold rounded-full transition-colors shadow-lg">
                             <Phone size={18} /> Contactar Soporte
                         </a>
                     </div>

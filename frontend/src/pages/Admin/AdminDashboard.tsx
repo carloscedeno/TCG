@@ -191,7 +191,7 @@ export const AdminDashboard = () => {
     }
 
     const scrapers = [
-        { id: 'cardkingdom', name: 'CardKingdom', description: 'Referencia de Mercado (USD)', icon: <Database className="text-geeko-cyan" /> },
+        { id: 'cardkingdom', name: 'CardKingdom', description: 'Referencia de Mercado (USD)', icon: <Database className="text-white" /> },
         { id: 'cardmarket', name: 'Cardmarket', description: 'Precios UE (EUR)', icon: <Database className="text-orange-400" /> },
         { id: 'tcgplayer', name: 'TCGPlayer', description: 'Precios EE.UU. (USD)', icon: <Database className="text-blue-400" /> },
     ];
@@ -206,10 +206,10 @@ export const AdminDashboard = () => {
                 <div className="flex items-center justify-between mb-12">
                     <div>
                         <div className="flex items-center gap-2 mb-2">
-                            <Shield className="text-geeko-cyan w-5 h-5" />
-                            <span className="text-geeko-cyan font-black text-xs tracking-widest uppercase">Admin Terminal v1.0</span>
+                            <Shield className="text-white w-5 h-5" />
+                            <span className="text-white font-black text-xs tracking-widest uppercase">Admin Terminal v1.0</span>
                         </div>
-                        <h1 className="text-5xl font-black text-white tracking-tighter italic">GEEKO<span className="text-geeko-cyan">SYSTEM</span></h1>
+                        <h1 className="text-5xl font-black text-white tracking-tighter italic">GEEKO<span className="text-white">SYSTEM</span></h1>
                     </div>
                     <div className="flex items-center gap-4">
                         <div className="bg-slate-900 border border-slate-800 px-4 py-2 rounded-xl flex items-center gap-3 shadow-lg">
@@ -222,32 +222,32 @@ export const AdminDashboard = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                     <StatCard title="Usuarios Registrados" value={stats.total_users} change="En Línea" icon={<Users className="text-blue-400" />} />
                     <StatCard title="Índice de Cartas" value={stats.total_cards} change="Cartas" icon={<Database className="text-purple-400" />} />
-                    <StatCard title="Actualizaciones de Precios" value={stats.total_updates} change="Operaciones" icon={<Settings className="text-geeko-cyan" />} />
+                    <StatCard title="Actualizaciones de Precios" value={stats.total_updates} change="Operaciones" icon={<Settings className="text-white" />} />
                 </div>
 
                 <div className="mb-12">
-                    <Link to="/admin/customers" className="group block relative overflow-hidden rounded-[2.5rem] bg-gradient-to-r from-emerald-900/40 via-slate-900 to-slate-900 border border-geeko-cyan/20 p-10 hover:border-geeko-cyan/50 transition-all shadow-2xl">
-                        <div className="absolute top-0 right-0 w-96 h-96 bg-geeko-cyan/10 rounded-full blur-[100px] group-hover:bg-geeko-cyan/20 transition-all" />
+                    <Link to="/admin/customers" className="group block relative overflow-hidden rounded-[2.5rem] bg-gradient-to-r from-emerald-900/40 via-slate-900 to-slate-900 border border-white/20 p-10 hover:border-white/50 transition-all shadow-2xl">
+                        <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-[100px] group-hover:bg-white/20 transition-all" />
                         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
                             <div className="flex-1 text-center md:text-left">
                                 <div className="flex items-center justify-center md:justify-start gap-3 mb-4">
-                                    <div className="w-12 h-12 bg-geeko-cyan/20 rounded-2xl flex items-center justify-center border border-geeko-cyan/30">
-                                        <Users className="text-geeko-cyan" size={24} />
+                                    <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center border border-white/30">
+                                        <Users className="text-white" size={24} />
                                     </div>
-                                    <span className="text-geeko-cyan font-black text-xs tracking-[0.3em] uppercase">Módulo de Punto de Venta</span>
+                                    <span className="text-white font-black text-xs tracking-[0.3em] uppercase">Módulo de Punto de Venta</span>
                                 </div>
-                                <h2 className="text-4xl font-black italic text-white tracking-tighter mb-4 leading-none">PORTAL DE <span className="text-geeko-cyan">ATENCIÓN A CLIENTES</span></h2>
+                                <h2 className="text-4xl font-black italic text-white tracking-tighter mb-4 leading-none">PORTAL DE <span className="text-white">ATENCIÓN A CLIENTES</span></h2>
                                 <p className="text-slate-400 text-sm font-bold uppercase tracking-widest max-w-xl">Gestiona carritos múltiples, atiende clientes en tienda y procesa ventas rápidas de forma centralizada.</p>
                             </div>
                             <div className="flex items-center gap-6">
                                 <div className="hidden lg:flex flex-col items-end">
                                     <span className="text-[10px] text-slate-500 font-black uppercase tracking-widest mb-1">Estado del Sistema</span>
-                                    <div className="flex items-center gap-2 px-3 py-1 bg-geeko-cyan/10 rounded-full border border-geeko-cyan/20">
-                                        <div className="w-1.5 h-1.5 bg-geeko-cyan rounded-full animate-pulse" />
-                                        <span className="text-[10px] font-black text-geeko-cyan uppercase tracking-tighter">Terminal Operativa</span>
+                                    <div className="flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full border border-white/20">
+                                        <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
+                                        <span className="text-[10px] font-black text-white uppercase tracking-tighter">Terminal Operativa</span>
                                     </div>
                                 </div>
-                                <div className="w-20 h-20 bg-geeko-cyan rounded-[2rem] flex items-center justify-center shadow-[0_0_40px_rgba(16,185,129,0.3)] group-hover:scale-110 transition-transform group-hover:rotate-6">
+                                <div className="w-20 h-20 bg-white rounded-[2rem] flex items-center justify-center shadow-[0_0_40px_rgba(16,185,129,0.3)] group-hover:scale-110 transition-transform group-hover:rotate-6">
                                     <ExternalLink size={32} className="text-black" />
                                 </div>
                             </div>
@@ -269,15 +269,15 @@ export const AdminDashboard = () => {
                         </div>
                     </Link>
 
-                    <Link to="/admin/orders" className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-geeko-cyan/30 to-slate-900 border border-white/10 p-8 hover:border-geeko-cyan/50 transition-all">
-                        <div className="absolute inset-0 bg-geeko-cyan/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <Link to="/admin/orders" className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/30 to-slate-900 border border-white/10 p-8 hover:border-white/50 transition-all">
+                        <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
                         <div className="relative z-10 flex items-center justify-between">
                             <div>
                                 <h3 className="text-2xl font-black italic text-white mb-2">TERMINAL DE ÓRDENES</h3>
-                                <p className="text-geeko-cyan/70 text-xs font-bold uppercase tracking-widest">Procesar y Cancelar Órdenes</p>
+                                <p className="text-white/70 text-xs font-bold uppercase tracking-widest">Procesar y Cancelar Órdenes</p>
                             </div>
-                            <div className="w-16 h-16 bg-geeko-cyan/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                                <Package className="text-geeko-cyan" size={32} />
+                            <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <Package className="text-white" size={32} />
                             </div>
                         </div>
                     </Link>
@@ -296,14 +296,14 @@ export const AdminDashboard = () => {
                     </Link>
 
                     <Link to="/admin/banners" className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-cyan-900/50 to-slate-900 border border-white/10 p-8 hover:border-cyan-500/50 transition-all">
-                        <div className="absolute inset-0 bg-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
                         <div className="relative z-10 flex items-center justify-between">
                             <div>
                                 <h3 className="text-2xl font-black italic text-white mb-2">BANNERS</h3>
                                 <p className="text-cyan-300 text-xs font-bold uppercase tracking-widest">Gestionar Carrusel Home</p>
                             </div>
-                            <div className="w-16 h-16 bg-cyan-500/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                                <Image className="text-cyan-400" size={32} />
+                            <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <Image className="text-white" size={32} />
                             </div>
                         </div>
                     </Link>
@@ -321,15 +321,15 @@ export const AdminDashboard = () => {
                         </div>
                     </Link>
 
-                    <Link to="/admin/presales" className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-900/50 to-slate-900 border border-white/10 p-8 hover:border-geeko-cyan/50 transition-all">
-                        <div className="absolute inset-0 bg-geeko-cyan/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <Link to="/admin/presales" className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-900/50 to-slate-900 border border-white/10 p-8 hover:border-white/50 transition-all">
+                        <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
                         <div className="relative z-10 flex items-center justify-between">
                             <div>
                                 <h3 className="text-2xl font-black italic text-white mb-2">PREVENTAS</h3>
                                 <p className="text-emerald-300 text-xs font-bold uppercase tracking-widest">Anuncios de Preventa</p>
                             </div>
-                            <div className="w-16 h-16 bg-geeko-cyan/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                                <TrendingUp className="text-geeko-cyan" size={32} />
+                            <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <TrendingUp className="text-white" size={32} />
                             </div>
                         </div>
                     </Link>
@@ -352,14 +352,14 @@ export const AdminDashboard = () => {
                     <div className="space-y-8">
                         <div className="glass-card rounded-3xl p-8 border border-white/5 bg-slate-900/50">
                             <h2 className="text-2xl font-black mb-6 flex items-center gap-3 italic">
-                                <Play className="text-geeko-cyan fill-geeko-cyan" />
+                                <Play className="text-white fill-white" />
                                 EJECUTAR SCRAPERS
                             </h2>
                             <div className="space-y-4">
                                 {scrapers.map((scraper) => (
                                     <div key={scraper.id} className="bg-slate-800/20 border border-white/5 rounded-2xl p-6 flex items-center justify-between hover:bg-white/5 transition-all group">
                                         <div className="flex items-center gap-4">
-                                            <div className="w-12 h-12 bg-black/40 rounded-xl flex items-center justify-center border border-white/5 group-hover:border-geeko-cyan/30">
+                                            <div className="w-12 h-12 bg-black/40 rounded-xl flex items-center justify-center border border-white/5 group-hover:border-white/30">
                                                 {scraper.icon}
                                             </div>
                                             <div>
@@ -370,7 +370,7 @@ export const AdminDashboard = () => {
                                         <button
                                             onClick={() => runScraper(scraper.id)}
                                             disabled={running[scraper.id]}
-                                            className="bg-geeko-cyan/20 border border-geeko-cyan/50 hover:bg-geeko-cyan/40 text-geeko-cyan px-6 py-2 rounded-xl font-black text-xs uppercase tracking-widest transition-all"
+                                            className="bg-white/20 border border-white/50 hover:bg-white/40 text-white px-6 py-2 rounded-xl font-black text-xs uppercase tracking-widest transition-all"
                                         >
                                             {running[scraper.id] ? 'Ejecutando...' : 'Desplegar'}
                                         </button>
@@ -412,7 +412,7 @@ export const AdminDashboard = () => {
                     <div className="space-y-8">
                         <div className="glass-card rounded-3xl p-8 border border-white/5 bg-slate-900/50">
                             <h2 className="text-2xl font-black mb-6 flex items-center gap-3 italic">
-                                <Shield className="text-geeko-cyan" />
+                                <Shield className="text-white" />
                                 CONTROL DE MISIÓN
                             </h2>
                             <div className="space-y-4 mb-6">
@@ -422,15 +422,15 @@ export const AdminDashboard = () => {
                                             <div className="flex items-center justify-between mb-2">
                                                 <span className="font-black text-xs text-slate-300 uppercase tracking-widest">{task.game_code} Ejecutor de Tareas</span>
                                                 <div className="flex items-center gap-2">
-                                                    <button onClick={() => fetchTaskLogs(task.id)} className="text-[10px] font-black uppercase text-geeko-cyan hover:underline">Ver Logs</button>
-                                                    <span className={`text-[10px] px-2 py-0.5 rounded font-black uppercase ${task.status === 'running' ? 'bg-geeko-cyan/20 text-geeko-cyan' : 'bg-geeko-cyan/20 text-geeko-cyan'}`}>
+                                                    <button onClick={() => fetchTaskLogs(task.id)} className="text-[10px] font-black uppercase text-white hover:underline">Ver Logs</button>
+                                                    <span className={`text-[10px] px-2 py-0.5 rounded font-black uppercase ${task.status === 'running' ? 'bg-white/20 text-white' : 'bg-white/20 text-white'}`}>
                                                         {task.status}
                                                     </span>
                                                 </div>
                                             </div>
                                             {task.status === 'running' && (
                                                 <div className="w-full bg-black h-1 mt-2 rounded-full overflow-hidden">
-                                                    <div className="bg-geeko-cyan h-full animate-pulse" style={{ width: '100%' }}></div>
+                                                    <div className="bg-white h-full animate-pulse" style={{ width: '100%' }}></div>
                                                 </div>
                                             )}
                                         </div>
@@ -445,8 +445,8 @@ export const AdminDashboard = () => {
                                 {Object.entries(results).map(([source, result], idx) => (
                                     <div key={idx} className="flex gap-2">
                                         <span className="text-slate-600">[{new Date().toLocaleTimeString()}]</span>
-                                        <span className="text-geeko-cyan">{source.toUpperCase()}:</span>
-                                        <span className={result.error ? 'text-red-400' : 'text-geeko-cyan'}>
+                                        <span className="text-white">{source.toUpperCase()}:</span>
+                                        <span className={result.error ? 'text-red-400' : 'text-white'}>
                                             {result.error || result.message || 'OK'}
                                         </span>
                                     </div>
@@ -458,7 +458,7 @@ export const AdminDashboard = () => {
                         {/* Section: Webhooks & Automation */}
                         <div className="glass-card rounded-3xl p-8 border border-white/10 bg-black/40 border-dashed">
                             <h2 className="text-2xl font-black mb-4 flex items-center gap-3 italic">
-                                <Settings className="text-geeko-cyan" />
+                                <Settings className="text-white" />
                                 AUTOMATIZACIÓN GITHUB
                             </h2>
                             <p className="text-slate-500 text-xs font-bold mb-6 italic">
@@ -474,7 +474,7 @@ export const AdminDashboard = () => {
                                             value={githubToken}
                                             onChange={(e) => saveGithubToken(e.target.value)}
                                             placeholder="ghp_xxxxxxxxxxxx"
-                                            className="bg-black/60 p-3 rounded-xl text-geeko-cyan text-[10px] flex-grow border border-white/5 focus:outline-none focus:border-geeko-cyan/50"
+                                            className="bg-black/60 p-3 rounded-xl text-white text-[10px] flex-grow border border-white/5 focus:outline-none focus:border-white/50"
                                         />
                                     </div>
                                     <button
@@ -489,7 +489,7 @@ export const AdminDashboard = () => {
                                             </>
                                         ) : (
                                             <>
-                                                <Shield size={14} className="text-geeko-cyan" />
+                                                <Shield size={14} className="text-white" />
                                                 Activar Sincronización Manual (Actions)
                                             </>
                                         )}
@@ -506,7 +506,7 @@ export const AdminDashboard = () => {
                 <div className="mt-12 flex justify-center">
                     <button
                         onClick={() => window.location.href = './'}
-                        className="text-slate-500 hover:text-geeko-cyan transition-all text-xs font-black uppercase tracking-[0.3em] flex items-center gap-3 group"
+                        className="text-slate-500 hover:text-white transition-all text-xs font-black uppercase tracking-[0.3em] flex items-center gap-3 group"
                     >
                         <span className="group-hover:-translate-x-1 transition-transform">←</span> Volver a la Plataforma
                     </button>
@@ -518,7 +518,7 @@ export const AdminDashboard = () => {
                     <div className="glass-card border border-white/10 w-full max-w-4xl max-h-[85vh] rounded-[2rem] overflow-hidden flex flex-col shadow-[0_0_50px_rgba(0,0,0,0.5)]">
                         <div className="p-6 border-b border-white/5 flex items-center justify-between bg-white/5">
                             <h3 className="text-xl font-black italic tracking-tighter flex items-center gap-3 uppercase">
-                                <Shield className="text-geeko-cyan w-6 h-6" />
+                                <Shield className="text-white w-6 h-6" />
                                 Registros // {selectedTaskLog?.id}
                             </h3>
                             <button onClick={() => setShowLogModal(false)} className="text-slate-500 hover:text-white transition-colors bg-white/5 p-2 rounded-full">
@@ -533,7 +533,7 @@ export const AdminDashboard = () => {
                             <button
                                 onClick={() => selectedTaskLog && fetchTaskLogs(selectedTaskLog.id)}
                                 disabled={isRefreshingLogs}
-                                className="bg-geeko-cyan text-black px-8 py-3 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_20px_rgba(34,211,238,0.3)]"
+                                className="bg-white text-black px-8 py-3 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_20px_rgba(34,211,238,0.3)]"
                             >
                                 {isRefreshingLogs ? 'Actualizando...' : 'Actualizar Registros'}
                             </button>
@@ -546,12 +546,12 @@ export const AdminDashboard = () => {
 };
 
 const StatCard = ({ title, value, change, icon }: { title: string, value: string, change: string, icon: React.ReactNode }) => (
-    <div className="glass-card p-6 rounded-[2rem] border border-white/5 bg-slate-900/50 hover:border-geeko-cyan/30 transition-all group">
+    <div className="glass-card p-6 rounded-[2rem] border border-white/5 bg-slate-900/50 hover:border-white/30 transition-all group">
         <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-black/40 rounded-2xl flex items-center justify-center border border-white/5 group-hover:bg-geeko-cyan/10 transition-colors">
+            <div className="w-12 h-12 bg-black/40 rounded-2xl flex items-center justify-center border border-white/5 group-hover:bg-white/10 transition-colors">
                 {icon}
             </div>
-            <span className="text-geeko-cyan text-[10px] font-black uppercase tracking-[0.2em] bg-geeko-cyan/10 px-3 py-1 rounded-full border border-geeko-cyan/20">{change}</span>
+            <span className="text-white text-[10px] font-black uppercase tracking-[0.2em] bg-white/10 px-3 py-1 rounded-full border border-white/20">{change}</span>
         </div>
         <h3 className="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">{title}</h3>
         <p className="text-4xl font-black text-white italic tracking-tighter">{value}</p>

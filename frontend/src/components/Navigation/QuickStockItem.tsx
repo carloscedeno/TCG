@@ -95,7 +95,7 @@ export const QuickStockItem: React.FC<QuickStockItemProps> = ({ item }) => {
             {/* Stock */}
             <div className="text-right px-2 border-l border-white/5">
                 <div className="text-[8px] text-slate-500 font-black uppercase">Stock</div>
-                <div className={`text-xs font-black ${item.stock > 0 ? 'text-geeko-cyan' : 'text-red-500'}`}>
+                <div className={`text-xs font-black ${item.stock > 0 ? 'text-white' : 'text-red-500'}`}>
                     {item.stock}
                 </div>
             </div>
@@ -112,7 +112,7 @@ export const QuickStockItem: React.FC<QuickStockItemProps> = ({ item }) => {
                             onChange={(e) => setTempPrice(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleSave(e)}
                             onClick={(e) => e.stopPropagation()}
-                            className="w-12 bg-black/50 border border-geeko-cyan/50 rounded px-1 py-0.5 text-[10px] text-right text-white focus:outline-none"
+                            className="w-12 bg-black/50 border border-white/50 rounded px-1 py-0.5 text-[10px] text-right text-white focus:outline-none"
                         />
                         <button
                             onClick={handleSave}
@@ -149,7 +149,7 @@ export const QuickStockItem: React.FC<QuickStockItemProps> = ({ item }) => {
                     disabled={isAddingToCart || item.stock <= 0}
                     className={`p-2 rounded-lg transition-all ${
                         item.stock > 0 
-                        ? 'bg-geeko-cyan/10 text-geeko-cyan hover:bg-geeko-cyan hover:text-black' 
+                        ? 'bg-white/10 text-white hover:bg-white hover:text-black' 
                         : 'bg-slate-800 text-slate-600 cursor-not-allowed opacity-50'
                     }`}
                     title={item.stock > 0 ? "Añadir al carrito activo" : "Sin stock"}

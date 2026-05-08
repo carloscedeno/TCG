@@ -143,19 +143,19 @@ export const BannersPage: React.FC = () => {
           <div className="space-y-2">
             <button 
               onClick={() => navigate('/admin')}
-              className="flex items-center gap-2 text-slate-500 hover:text-geeko-cyan transition-colors text-xs font-black uppercase tracking-widest group"
+              className="flex items-center gap-2 text-slate-500 hover:text-white transition-colors text-xs font-black uppercase tracking-widest group"
             >
               <ChevronLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
               Volver al Panel
             </button>
             <h1 className="text-4xl md:text-5xl font-black italic tracking-tighter uppercase">
-              Gestión de <span className="text-geeko-cyan">Banners</span>
+              Gestión de <span className="text-white">Banners</span>
             </h1>
             <div className="flex items-center gap-2">
               <p className="text-slate-500 text-xs font-bold uppercase tracking-[0.2em]">Carrusel Promocional ({banners.length}/5)</p>
               <div className="flex gap-1">
                 {[...Array(5)].map((_, i) => (
-                  <div key={i} className={`w-3 h-1.5 rounded-full transition-colors ${i < banners.length ? 'bg-geeko-cyan' : 'bg-white/10'}`} />
+                  <div key={i} className={`w-3 h-1.5 rounded-full transition-colors ${i < banners.length ? 'bg-white' : 'bg-white/10'}`} />
                 ))}
               </div>
             </div>
@@ -163,7 +163,7 @@ export const BannersPage: React.FC = () => {
           
           <button 
             onClick={handleCreate}
-            className="flex items-center justify-center gap-3 bg-geeko-cyan text-black px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_30px_rgba(34,211,238,0.3)]"
+            className="flex items-center justify-center gap-3 bg-white text-black px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_30px_rgba(34,211,238,0.3)]"
           >
             <Plus size={18} />
             Nuevo Banner
@@ -173,7 +173,7 @@ export const BannersPage: React.FC = () => {
         {/* Content */}
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20 gap-4">
-            <div className="w-12 h-12 border-4 border-geeko-cyan/20 border-t-geeko-cyan rounded-full animate-spin"></div>
+            <div className="w-12 h-12 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
             <p className="text-slate-500 font-black text-[10px] uppercase tracking-widest animate-pulse">Sincronizando Banners...</p>
           </div>
         ) : banners.length === 0 ? (
@@ -187,7 +187,7 @@ export const BannersPage: React.FC = () => {
             {banners.map((banner) => (
               <div 
                 key={banner.id} 
-                className="group relative bg-slate-900/40 border border-white/5 rounded-[2rem] overflow-hidden hover:border-geeko-cyan/30 transition-all flex flex-col"
+                className="group relative bg-slate-900/40 border border-white/5 rounded-[2rem] overflow-hidden hover:border-white/30 transition-all flex flex-col"
               >
                 {/* Preview Image */}
                 <div className="aspect-video w-full relative overflow-hidden bg-black">
@@ -204,7 +204,7 @@ export const BannersPage: React.FC = () => {
                       onClick={() => toggleActive(banner)}
                       className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all shadow-lg ${
                         banner.is_active 
-                          ? 'bg-geeko-cyan text-black border-cyan-400 shadow-cyan-500/20' 
+                          ? 'bg-white text-black border-cyan-400 shadow-cyan-500/20' 
                           : 'bg-slate-800 text-slate-400 border-white/10 shadow-black'
                       }`}
                     >
@@ -218,7 +218,7 @@ export const BannersPage: React.FC = () => {
 
                   {/* Order Controls */}
                   <div className="absolute bottom-4 left-4 flex gap-2">
-                    <div className="bg-black/60 backdrop-blur-md border border-white/10 px-3 py-1 rounded-lg text-[10px] font-black text-geeko-cyan">
+                    <div className="bg-black/60 backdrop-blur-md border border-white/10 px-3 py-1 rounded-lg text-[10px] font-black text-white">
                       # {banner.display_order}
                     </div>
                   </div>
@@ -232,7 +232,7 @@ export const BannersPage: React.FC = () => {
                     
                     {banner.link_url && (
                       <div className="flex items-center gap-2 text-[9px] text-slate-400 font-bold uppercase tracking-widest">
-                        <LinkIcon size={12} className="text-geeko-cyan" />
+                        <LinkIcon size={12} className="text-white" />
                         <span className="truncate">{banner.link_url}</span>
                       </div>
                     )}
@@ -265,7 +265,7 @@ export const BannersPage: React.FC = () => {
               
               <div className="p-8 border-b border-white/5 flex items-center justify-between">
                 <h3 className="text-2xl font-black italic uppercase tracking-tighter">
-                  {editingBanner.id ? 'Editar' : 'Nuevo'} <span className="text-geeko-cyan">Banner</span>
+                  {editingBanner.id ? 'Editar' : 'Nuevo'} <span className="text-white">Banner</span>
                 </h3>
                 <button onClick={() => setIsModalOpen(false)} className="text-slate-500 hover:text-white transition-colors bg-white/5 p-2 rounded-full">
                   <X size={20} />
@@ -291,7 +291,7 @@ export const BannersPage: React.FC = () => {
                     ) : (
                       <>
                         {uploading ? (
-                          <div className="w-8 h-8 border-2 border-geeko-cyan/20 border-t-geeko-cyan rounded-full animate-spin"></div>
+                          <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
                         ) : (
                           <>
                             <ImageIcon className="text-slate-700" size={40} />
@@ -313,7 +313,7 @@ export const BannersPage: React.FC = () => {
                       type="text" 
                       value={editingBanner.title}
                       onChange={(e) => setEditingBanner({ ...editingBanner, title: e.target.value })}
-                      className="w-full bg-slate-900/50 border border-white/5 p-4 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-geeko-cyan/50 transition-all"
+                      className="w-full bg-slate-900/50 border border-white/5 p-4 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-white/50 transition-all"
                       placeholder="Ej: SECRETS OF STRIXHAVEN"
                     />
                   </div>
@@ -323,7 +323,7 @@ export const BannersPage: React.FC = () => {
                       type="text" 
                       value={editingBanner.subtitle}
                       onChange={(e) => setEditingBanner({ ...editingBanner, subtitle: e.target.value })}
-                      className="w-full bg-slate-900/50 border border-white/5 p-4 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-geeko-cyan/50 transition-all"
+                      className="w-full bg-slate-900/50 border border-white/5 p-4 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-white/50 transition-all"
                       placeholder="Ej: YA DISPONIBLE"
                     />
                   </div>
@@ -337,7 +337,7 @@ export const BannersPage: React.FC = () => {
                       type="text" 
                       value={editingBanner.link_url}
                       onChange={(e) => setEditingBanner({ ...editingBanner, link_url: e.target.value })}
-                      className="w-full bg-slate-900/50 border border-white/5 p-4 pl-12 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-geeko-cyan/50 transition-all"
+                      className="w-full bg-slate-900/50 border border-white/5 p-4 pl-12 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-white/50 transition-all"
                       placeholder="https://geekorium.shop/..."
                     />
                   </div>
@@ -350,7 +350,7 @@ export const BannersPage: React.FC = () => {
                       type="number" 
                       value={editingBanner.display_order}
                       onChange={(e) => setEditingBanner({ ...editingBanner, display_order: parseInt(e.target.value) || 0 })}
-                      className="w-full bg-slate-900/50 border border-white/5 p-4 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-geeko-cyan/50 transition-all"
+                      className="w-full bg-slate-900/50 border border-white/5 p-4 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-white/50 transition-all"
                     />
                   </div>
                   <div className="space-y-2">
@@ -359,7 +359,7 @@ export const BannersPage: React.FC = () => {
                       onClick={() => setEditingBanner({ ...editingBanner, is_active: !editingBanner.is_active })}
                       className={`w-full p-4 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all flex items-center justify-center gap-3 ${
                         editingBanner.is_active 
-                          ? 'bg-geeko-cyan/10 border-geeko-cyan/20 text-geeko-cyan' 
+                          ? 'bg-white/10 border-white/20 text-white' 
                           : 'bg-slate-900/50 border-white/5 text-slate-500'
                       }`}
                     >
@@ -380,7 +380,7 @@ export const BannersPage: React.FC = () => {
                 <button 
                   onClick={handleSave}
                   disabled={saving || uploading}
-                  className="flex items-center gap-3 bg-geeko-cyan text-black px-10 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_20px_rgba(34,211,238,0.3)] disabled:opacity-50"
+                  className="flex items-center gap-3 bg-white text-black px-10 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_20px_rgba(34,211,238,0.3)] disabled:opacity-50"
                 >
                   {saving ? (
                     <>

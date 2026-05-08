@@ -37,7 +37,7 @@ export const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
                     <div className="space-y-3">
                         <button 
                             onClick={() => window.location.href = '/geeko-login'}
-                            className="block w-full py-4 bg-white text-black font-black text-[10px] uppercase tracking-[0.2em] rounded-xl hover:bg-geeko-cyan hover:text-white transition-all transform active:scale-95 shadow-xl"
+                            className="block w-full py-4 bg-white text-black font-black text-[10px] uppercase tracking-[0.2em] rounded-xl hover:bg-white hover:text-white transition-all transform active:scale-95 shadow-xl"
                         >
                             Ingresar al Sistema
                         </button>

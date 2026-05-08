@@ -39,12 +39,12 @@ export const PortfolioStats: React.FC<PortfolioStatsProps> = ({ collection = [] 
         <div className="w-full max-w-6xl mx-auto space-y-8">
             {/* Value Widgets */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <GlassCard className="p-6 border-geeko-cyan/30 bg-geeko-cyan/5">
+                <GlassCard className="p-6 border-white/30 bg-white/5">
                     <div className="flex justify-between items-start mb-4">
-                        <div className="p-3 rounded-xl bg-geeko-cyan/10">
-                            <TrendingUp className="text-geeko-cyan w-6 h-6" />
+                        <div className="p-3 rounded-xl bg-white/10">
+                            <TrendingUp className="text-white w-6 h-6" />
                         </div>
-                        <span className="text-[10px] font-black uppercase tracking-widest text-geeko-cyan">Portfolio Value</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-white">Portfolio Value</span>
                     </div>
                     <div className="space-y-1">
                         <h3 className="text-4xl font-black italic tracking-tighter text-white">
@@ -71,10 +71,10 @@ export const PortfolioStats: React.FC<PortfolioStatsProps> = ({ collection = [] 
 
                 <GlassCard className="p-6">
                     <div className="flex justify-between items-start mb-4">
-                        <div className="p-3 rounded-xl bg-geeko-cyan/10">
-                            <Globe className="text-geeko-cyan w-6 h-6" />
+                        <div className="p-3 rounded-xl bg-white/10">
+                            <Globe className="text-white w-6 h-6" />
                         </div>
-                        <span className="text-[10px] font-black uppercase tracking-widest text-geeko-cyan">Market Value</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-white">Market Value</span>
                     </div>
                     <div className="space-y-1">
                         <h3 className="text-3xl font-black italic tracking-tighter text-white">
@@ -109,10 +109,10 @@ export const PortfolioStats: React.FC<PortfolioStatsProps> = ({ collection = [] 
                                         </div>
                                     </div>
                                     <div className="text-right">
-                                        <div className="text-geeko-cyan font-black font-mono">
+                                        <div className="text-white font-black font-mono">
                                             +{formatCurrency(item.gain)}
                                         </div>
-                                        <div className="text-[10px] text-geeko-cyan/80 font-bold">
+                                        <div className="text-[10px] text-white/80 font-bold">
                                             {item.gainPercent.toFixed(1)}%
                                         </div>
                                     </div>

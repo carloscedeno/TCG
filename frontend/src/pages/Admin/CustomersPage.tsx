@@ -9,10 +9,10 @@ const CustomersPage: React.FC = () => {
                 <div className="flex items-center justify-between mb-12">
                     <div>
                         <div className="flex items-center gap-2 mb-2">
-                            <Shield className="text-geeko-cyan w-5 h-5" />
-                            <span className="text-geeko-cyan font-black text-xs tracking-widest uppercase">Sistema de Atención</span>
+                            <Shield className="text-white w-5 h-5" />
+                            <span className="text-white font-black text-xs tracking-widest uppercase">Sistema de Atención</span>
                         </div>
-                        <h1 className="text-5xl font-black text-white tracking-tighter italic">GESTIÓN DE <span className="text-geeko-cyan">CLIENTES</span></h1>
+                        <h1 className="text-5xl font-black text-white tracking-tighter italic">GESTIÓN DE <span className="text-white">CLIENTES</span></h1>
                         <p className="text-slate-500 text-sm font-bold mt-2 uppercase tracking-widest">Multi-Cart Terminal v1.0</p>
                     </div>
                 </div>

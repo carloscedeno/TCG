@@ -59,7 +59,7 @@ export const RegistrationsModal: React.FC<RegistrationsModalProps> = ({ isOpen, 
             <div className="relative w-full max-w-4xl bg-[#0a0a0a] border border-white/10 rounded-3xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]">
                 <div className="p-6 border-b border-white/5 flex items-center justify-between bg-neutral-900/50">
                     <div className="space-y-1">
-                        <h3 className="text-[10px] font-black text-geeko-cyan-neon uppercase tracking-[0.3em]">Gestión de Participantes</h3>
+                        <h3 className="text-[10px] font-black text-white uppercase tracking-[0.3em]">Gestión de Participantes</h3>
                         <h2 className="text-2xl font-black italic uppercase tracking-tighter">{event?.name}</h2>
                     </div>
                     <div className="flex items-center gap-3">
@@ -79,7 +79,7 @@ export const RegistrationsModal: React.FC<RegistrationsModalProps> = ({ isOpen, 
                 <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
                     {loading ? (
                         <div className="flex flex-col items-center justify-center py-20 gap-4">
-                            <div className="w-10 h-10 border-4 border-geeko-cyan-neon/20 border-t-geeko-cyan-neon rounded-full animate-spin"></div>
+                            <div className="w-10 h-10 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
                             <p className="text-[10px] font-black uppercase tracking-widest text-neutral-500">Cargando lista...</p>
                         </div>
                     ) : registrations.length > 0 ? (
@@ -88,11 +88,11 @@ export const RegistrationsModal: React.FC<RegistrationsModalProps> = ({ isOpen, 
                                 <div key={reg.id} className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl space-y-3 hover:border-white/10 transition-colors group">
                                     <div className="flex items-start justify-between">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-xl bg-neutral-900 border border-white/5 flex items-center justify-center text-geeko-cyan-neon">
+                                            <div className="w-10 h-10 rounded-xl bg-neutral-900 border border-white/5 flex items-center justify-center text-white">
                                                 <User size={20} />
                                             </div>
                                             <div>
-                                                <h4 className="font-bold text-white uppercase text-sm tracking-tight group-hover:text-geeko-cyan-neon transition-colors">{reg.full_name}</h4>
+                                                <h4 className="font-bold text-white uppercase text-sm tracking-tight group-hover:text-white transition-colors">{reg.full_name}</h4>
                                                 <div className="flex items-center gap-2 text-[10px] text-neutral-600 font-bold uppercase tracking-widest">
                                                     <CalendarIcon size={10} /> {new Date(reg.created_at).toLocaleDateString()}
                                                 </div>
@@ -102,10 +102,10 @@ export const RegistrationsModal: React.FC<RegistrationsModalProps> = ({ isOpen, 
                                     
                                     <div className="grid grid-cols-1 gap-2 pt-3 border-t border-white/5">
                                         <a href={`mailto:${reg.email}`} className="flex items-center gap-2 text-xs text-neutral-400 hover:text-white transition-colors">
-                                            <Mail size={12} className="text-geeko-cyan-neon" /> {reg.email}
+                                            <Mail size={12} className="text-white" /> {reg.email}
                                         </a>
                                         <a href={`https://wa.me/${reg.phone.replace(/\+/g, '')}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-neutral-400 hover:text-white transition-colors">
-                                            <Phone size={12} className="text-geeko-cyan" /> {reg.phone}
+                                            <Phone size={12} className="text-white" /> {reg.phone}
                                         </a>
                                     </div>
                                 </div>
@@ -121,7 +121,7 @@ export const RegistrationsModal: React.FC<RegistrationsModalProps> = ({ isOpen, 
                 
                 <div className="p-4 bg-neutral-900/50 border-t border-white/5 text-center">
                     <p className="text-[10px] font-black text-neutral-600 uppercase tracking-widest">
-                        Total: <span className="text-geeko-cyan-neon">{registrations.length}</span> Participantes
+                        Total: <span className="text-white">{registrations.length}</span> Participantes
                     </p>
                 </div>
             </div>

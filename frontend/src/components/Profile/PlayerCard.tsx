@@ -65,7 +65,7 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
                         </p>
                         <div className="flex gap-2 mt-4 justify-center md:justify-start">
                             {[1, 2, 3].map(i => (
-                                <div key={i} className="w-10 h-10 rounded-lg flex items-center justify-center bg-white/5 border border-white/10 text-geeko-cyan">
+                                <div key={i} className="w-10 h-10 rounded-lg flex items-center justify-center bg-white/5 border border-white/10 text-white">
                                     <Medal size={20} />
                                 </div>
                             ))}
@@ -86,13 +86,13 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
                             </div>
 
                             <div className="space-y-1">
-                                <div className="text-3xl font-black neon-text-cyan flex items-baseline gap-1">
+                                <div className="text-3xl font-black text-white flex items-baseline gap-1">
                                     {stat.elo}
                                     <span className="text-xs font-medium text-slate-500 uppercase italic">ELO</span>
                                 </div>
                                 <div className="flex justify-between text-[10px] uppercase font-bold tracking-wider text-slate-400">
                                     <span>{stat.tier} TIER</span>
-                                    <span className="neon-text-cyan">{stat.progress}%</span>
+                                    <span className="text-white">{stat.progress}%</span>
                                 </div>
                                 <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
                                     <div
@@ -137,7 +137,7 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
                         </div>
                         <div className="h-3 w-full bg-geeko-black/50 rounded-full border border-white/10 p-0.5">
                             <div
-                                className="h-full bg-gradient-to-r from-geeko-red via-geeko-purple to-geeko-cyan rounded-full shadow-[0_0_10px_rgba(225,48,108,0.5)]"
+                                className="h-full bg-gradient-to-r from-geeko-red via-geeko-purple to-white rounded-full shadow-[0_0_10px_rgba(225,48,108,0.5)]"
                                 style={{ width: `${(dndStats.xp / dndStats.nextLevelXp) * 100}%` }}
                             ></div>
                         </div>
@@ -146,7 +146,7 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
                     <div className="flex flex-wrap gap-4 pt-2">
                         {dndStats.achievements.map((ach) => (
                             <div key={ach} className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold text-slate-300 uppercase italic transition-colors hover:bg-white/10">
-                                <BookOpen size={12} className="text-geeko-cyan" />
+                                <BookOpen size={12} className="text-white" />
                                 {ach}
                             </div>
                         ))}

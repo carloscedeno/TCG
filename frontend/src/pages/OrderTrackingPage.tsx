@@ -96,7 +96,7 @@ export const OrderTrackingPage = () => {
             case 'pending_payment': return { text: 'Esperando Pago', color: 'text-orange-400', bg: 'bg-orange-400/10', icon: Clock, desc: 'Las cartas están separadas. Por favor adjunta tu pago.' };
             case 'payment_uploaded': return { text: 'Pago en Revisión', color: 'text-yellow-400', bg: 'bg-yellow-400/10', icon: ShieldCheck, desc: 'Estamos verificando tu pago con el banco.' };
             case 'paid': return { text: 'Pago Confirmado', color: 'text-green-400', bg: 'bg-green-400/10', icon: CheckCircle, desc: 'Tu orden está pagada.' };
-            case 'processing': return { text: 'Preparando Empaque', color: 'text-geeko-cyan', bg: 'bg-geeko-cyan/10', icon: Package, desc: 'Estamos preparando tu envío.' };
+            case 'processing': return { text: 'Preparando Empaque', color: 'text-white', bg: 'bg-white/10', icon: Package, desc: 'Estamos preparando tu envío.' };
             case 'ready_for_pickup': return { text: 'Listo para Pick Up', color: 'text-[#0066FF]', bg: 'bg-[#0066FF]/10', icon: CheckCircle, desc: 'Te esperamos en la tienda física.' };
             case 'shipped': return { text: 'Enviado', color: 'text-purple-400', bg: 'bg-purple-400/10', icon: Truck, desc: 'Tu orden ya va en camino.' };
             case 'delivered': return { text: 'Entregado', color: 'text-gray-400', bg: 'bg-gray-400/10', icon: CheckCircle, desc: 'Esperamos lo disfrutes.' };
@@ -183,12 +183,12 @@ export const OrderTrackingPage = () => {
                                             </div>
                                             <div className="flex items-center gap-1.5 ml-6">
                                                 {item.accessories?.category && (
-                                                    <span className="text-[9px] px-1.5 py-0.5 rounded bg-geeko-cyan/10 text-geeko-cyan border border-geeko-cyan/20 font-black uppercase tracking-widest">
+                                                    <span className="text-[9px] px-1.5 py-0.5 rounded bg-white/10 text-white border border-white/20 font-black uppercase tracking-widest">
                                                         {item.accessories.category}
                                                     </span>
                                                 )}
                                                 {(item.finish === 'foil' || item.finish === 'etched') && (
-                                                    <span className={`text-[9px] px-1.5 py-0.5 rounded font-black uppercase tracking-widest shadow-sm ${item.finish === 'foil' ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30' : 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'}`}>
+                                                    <span className={`text-[9px] px-1.5 py-0.5 rounded font-black uppercase tracking-widest shadow-sm ${item.finish === 'foil' ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30' : 'bg-white/20 text-white border border-cyan-500/30'}`}>
                                                         {item.finish}
                                                     </span>
                                                 )}

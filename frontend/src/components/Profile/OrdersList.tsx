@@ -16,7 +16,7 @@ const ORDER_STATUS_CONFIG: Record<string, { label: string; icon: any; color: str
     payment_uploaded: { label: 'Pago en Revisión', icon: Clock, color: 'text-yellow-400', bg: 'bg-yellow-400/10' },
     paid: { label: 'Pagado', icon: CheckCircle, color: 'text-green-400', bg: 'bg-green-400/10' },
     processing: { label: 'Procesando', icon: Package, color: 'text-blue-400', bg: 'bg-blue-400/10' },
-    ready_for_pickup: { label: 'Listo para Pick Up', icon: CheckCircle, color: 'text-cyan-400', bg: 'bg-cyan-400/10' },
+    ready_for_pickup: { label: 'Listo para Pick Up', icon: CheckCircle, color: 'text-white', bg: 'bg-cyan-400/10' },
     shipped: { label: 'Enviado', icon: Truck, color: 'text-purple-400', bg: 'bg-purple-400/10' },
     delivered: { label: 'Entregado', icon: CheckCircle, color: 'text-gray-400', bg: 'bg-gray-400/10' },
     cancelled: { label: 'Cancelado', icon: AlertCircle, color: 'text-red-400', bg: 'bg-red-400/10' },

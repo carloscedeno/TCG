@@ -10,7 +10,7 @@ const LegalPage: React.FC = () => {
     }, []);
 
     return (
-        <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-cyan-500/30">
+        <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-white/30">
             {/* Ambient Background Mesh */}
             <div className="fixed inset-0 z-0 pointer-events-none">
                 <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-purple-600/5 rounded-full blur-[150px]" />
@@ -64,7 +64,7 @@ const LegalPage: React.FC = () => {
                                 Esta plataforma no está afiliada, respaldada, patrocinada ni aprobada específicamente por Wizards of the Coast LLC ni por Hasbro, Inc. Magic: The Gathering (MTG), incluyendo de manera enunciativa pero no limitativa: sus logotipos, nombres de cartas, símbolos de maná, símbolos de expansión, textos de ambientación (flavor text), reglas de juego, mecánicas originales, arte de las cartas, ilustraciones, diseños de marcos, nombres de personajes y de planos de existencia, son marcas registradas y material protegido por derechos de autor propiedad de Wizards of the Coast LLC, una subsidiaria de Hasbro, Inc. © 1993-2026 Wizards of the Coast LLC. Todos los derechos reservados.
                             </p>
                             <p className="text-sm opacity-80">
-                                El uso de estos activos en esta Aplicación se realiza bajo la doctrina del Uso Nominativo y el principio de Agotamiento Internacional de Derechos de Marca, conforme al Artículo 158 de la <a href="http://www.sice.oas.org/trade/junac/decisiones/dec486s5.asp" target="_blank" rel="noopener noreferrer" className="text-geeko-cyan hover:underline">Decisión 486</a> y la Ley de Propiedad Industrial de Venezuela. Dicho uso tiene fines estrictamente informativos, referenciales y de identificación de productos originales dentro del tráfico mercantil legítimo.
+                                El uso de estos activos en esta Aplicación se realiza bajo la doctrina del Uso Nominativo y el principio de Agotamiento Internacional de Derechos de Marca, conforme al Artículo 158 de la <a href="http://www.sice.oas.org/trade/junac/decisiones/dec486s5.asp" target="_blank" rel="noopener noreferrer" className="text-white hover:underline">Decisión 486</a> y la Ley de Propiedad Industrial de Venezuela. Dicho uso tiene fines estrictamente informativos, referenciales y de identificación de productos originales dentro del tráfico mercantil legítimo.
                             </p>
                         </div>
 
@@ -77,14 +77,14 @@ const LegalPage: React.FC = () => {
                                 <div>
                                     <h3 className="font-bold text-white mb-2 uppercase text-xs tracking-widest">Scryfall</h3>
                                     <p className="text-sm opacity-80">
-                                        Toda la información literal y gráfica de las cartas visualizada en esta plataforma es proporcionada por la API de Scryfall LLC. Card data provided by Scryfall. Este contenido se utiliza conforme a la <a href="https://company.wizards.com/en/legal/fancontentpolicy" className="text-geeko-cyan hover:underline">Fan Content Policy</a> y las <a href="https://scryfall.com/docs/api" className="text-geeko-cyan hover:underline">Guías de API de Scryfall</a>. El acceso a estos datos es gratuito para el usuario final y Geekorium no impone muros de pago para la consulta de dicha información.
+                                        Toda la información literal y gráfica de las cartas visualizada en esta plataforma es proporcionada por la API de Scryfall LLC. Card data provided by Scryfall. Este contenido se utiliza conforme a la <a href="https://company.wizards.com/en/legal/fancontentpolicy" className="text-white hover:underline">Fan Content Policy</a> y las <a href="https://scryfall.com/docs/api" className="text-white hover:underline">Guías de API de Scryfall</a>. El acceso a estos datos es gratuito para el usuario final y Geekorium no impone muros de pago para la consulta de dicha información.
                                     </p>
                                 </div>
                                 <div className="h-px bg-white/10" />
                                 <div>
                                     <h3 className="font-bold text-white mb-2 uppercase text-xs tracking-widest">CardKingdom & Precios</h3>
                                     <p className="text-sm opacity-80">
-                                        Los valores monetarios mostrados como "Precio de Referencia" o "Market Price" se derivan de datos públicos de mercado de CardKingdom. Estos precios son exclusivamente referenciales y orientativos, proporcionados para facilitar la valoración equitativa en transacciones entre particulares (Peer-to-Peer). CardKingdom no garantiza la exactitud ni la disponibilidad de productos en esta Aplicación, y Geekorium se desvincula de cualquier discrepancia de precios conforme a los <a href="https://www.cardkingdom.com/static/tos" className="text-geeko-cyan hover:underline">Términos de CardKingdom</a>.
+                                        Los valores monetarios mostrados como "Precio de Referencia" o "Market Price" se derivan de datos públicos de mercado de CardKingdom. Estos precios son exclusivamente referenciales y orientativos, proporcionados para facilitar la valoración equitativa en transacciones entre particulares (Peer-to-Peer). CardKingdom no garantiza la exactitud ni la disponibilidad de productos en esta Aplicación, y Geekorium se desvincula de cualquier discrepancia de precios conforme a los <a href="https://www.cardkingdom.com/static/tos" className="text-white hover:underline">Términos de CardKingdom</a>.
                                     </p>
                                 </div>
                             </div>
@@ -99,7 +99,7 @@ const LegalPage: React.FC = () => {
                                 <ul className="text-xs opacity-70 list-disc list-inside space-y-2">
                                     <li>Precios establecidos libremente por el vendedor.</li>
                                     <li>Geekorium no garantiza precios referenciales externos.</li>
-                                    <li>Operaciones en divisas según tasa oficial <a href="https://www.bcv.org.ve/" className="text-geeko-cyan hover:underline">BCV</a>.</li>
+                                    <li>Operaciones en divisas según tasa oficial <a href="https://www.bcv.org.ve/" className="text-white hover:underline">BCV</a>.</li>
                                 </ul>
                             </div>
 
@@ -154,7 +154,7 @@ const LegalPage: React.FC = () => {
                         <div>
                             <h3 className="font-bold text-white mb-2 uppercase text-xs tracking-widest">4. Commercial Transparency & Regional Compliance</h3>
                             <p>
-                                Pursuant to Venezuelan Fair Price Laws and SUNDDE regulations, users are informed that final sales prices are determined independently by sellers. All local transactions involving foreign currency must comply with the official exchange rates published by the <a href="https://www.bcv.org.ve/" className="text-geeko-cyan hover:underline">BCV</a> on the date of the transaction.
+                                Pursuant to Venezuelan Fair Price Laws and SUNDDE regulations, users are informed that final sales prices are determined independently by sellers. All local transactions involving foreign currency must comply with the official exchange rates published by the <a href="https://www.bcv.org.ve/" className="text-white hover:underline">BCV</a> on the date of the transaction.
                             </p>
                         </div>
 

@@ -12,11 +12,11 @@ interface StatCardProps {
 export const StatCard: React.FC<StatCardProps> = ({ title, value, change, icon, className = "" }) => (
     <GlassCard className={`p-6 group ${className}`}>
         <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-black/40 rounded-2xl flex items-center justify-center border border-white/5 group-hover:bg-geeko-cyan/10 transition-colors">
+            <div className="w-12 h-12 bg-black/40 rounded-2xl flex items-center justify-center border border-white/5 group-hover:bg-white/10 transition-colors">
                 {icon}
             </div>
             {change && (
-                <span className="text-geeko-cyan text-[10px] font-black uppercase tracking-[0.2em] bg-geeko-cyan/10 px-3 py-1 rounded-full border border-geeko-cyan/20">
+                <span className="text-white text-[10px] font-black uppercase tracking-[0.2em] bg-white/10 px-3 py-1 rounded-full border border-white/20">
                     {change}
                 </span>
             )}

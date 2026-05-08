@@ -58,8 +58,8 @@ export const UpdatePassword = () => {
         <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
             <div className="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl overflow-hidden shadow-2xl p-8">
                 <div className="flex flex-col items-center mb-8">
-                    <div className="w-16 h-16 bg-geeko-cyan/20 rounded-2xl flex items-center justify-center mb-4 border border-geeko-cyan/30">
-                        <Lock className="text-geeko-cyan w-8 h-8" />
+                    <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-4 border border-white/30">
+                        <Lock className="text-white w-8 h-8" />
                     </div>
                     <h2 className="text-3xl font-bold text-white">Nueva Contraseña</h2>
                     <p className="text-slate-400 mt-2 text-center">
@@ -76,7 +76,7 @@ export const UpdatePassword = () => {
                                 type="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full bg-slate-800/50 border border-slate-700 rounded-xl py-3 pl-11 pr-4 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-geeko-cyan/50 focus:border-geeko-cyan/50 transition-all"
+                                className="w-full bg-slate-800/50 border border-slate-700 rounded-xl py-3 pl-11 pr-4 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white/50 transition-all"
                                 placeholder="••••••••"
                                 required
                                 minLength={6}
@@ -93,7 +93,7 @@ export const UpdatePassword = () => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-geeko-cyan hover:bg-cyan-400 text-black font-black uppercase tracking-widest py-3 rounded-xl shadow-lg shadow-geeko-cyan/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed transform active:scale-[0.98]"
+                        className="w-full bg-white hover:bg-cyan-400 text-black font-black uppercase tracking-widest py-3 rounded-xl shadow-lg shadow-white/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed transform active:scale-[0.98]"
                     >
                         {loading ? 'Actualizando...' : 'Actualizar Contraseña'}
                     </button>

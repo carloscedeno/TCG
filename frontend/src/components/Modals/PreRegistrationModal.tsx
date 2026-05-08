@@ -50,8 +50,8 @@ export const PreRegistrationModal: React.FC<PreRegistrationModalProps> = ({ isOp
 
                 {success ? (
                     <div className="p-10 text-center space-y-6">
-                        <div className="w-20 h-20 bg-geeko-cyan/10 border border-geeko-cyan/20 rounded-full flex items-center justify-center mx-auto">
-                            <CheckCircle size={40} className="text-geeko-cyan" />
+                        <div className="w-20 h-20 bg-white/10 border border-white/20 rounded-full flex items-center justify-center mx-auto">
+                            <CheckCircle size={40} className="text-white" />
                         </div>
                         <div className="space-y-2">
                             <h3 className="text-2xl font-black italic uppercase tracking-tighter">¡Pre-inscripción Exitosa!</h3>
@@ -62,7 +62,7 @@ export const PreRegistrationModal: React.FC<PreRegistrationModalProps> = ({ isOp
                         </div>
                         <button 
                             onClick={onClose}
-                            className="w-full py-4 bg-emerald-600 hover:bg-geeko-cyan text-white font-black uppercase tracking-widest rounded-xl transition-all"
+                            className="w-full py-4 bg-emerald-600 hover:bg-white text-white font-black uppercase tracking-widest rounded-xl transition-all"
                         >
                             Cerrar
                         </button>
@@ -70,7 +70,7 @@ export const PreRegistrationModal: React.FC<PreRegistrationModalProps> = ({ isOp
                 ) : (
                     <div className="p-8">
                         <div className="mb-8">
-                            <h3 className="text-[10px] font-black text-geeko-cyan-neon uppercase tracking-[0.3em] mb-1">Inscripción a Misión</h3>
+                            <h3 className="text-[10px] font-black text-white uppercase tracking-[0.3em] mb-1">Inscripción a Misión</h3>
                             <h2 className="text-3xl font-black italic uppercase tracking-tighter leading-tight">{event.name}</h2>
                         </div>
 
@@ -83,7 +83,7 @@ export const PreRegistrationModal: React.FC<PreRegistrationModalProps> = ({ isOp
                                     value={formData.full_name}
                                     onChange={(e) => setFormData({...formData, full_name: e.target.value})}
                                     placeholder="Ej: Carlos Cedeño"
-                                    className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-sm text-white placeholder:text-neutral-700 focus:outline-none focus:border-geeko-cyan-neon/50 transition-all"
+                                    className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-sm text-white placeholder:text-neutral-700 focus:outline-none focus:border-white/50 transition-all"
                                 />
                             </div>
 
@@ -95,7 +95,7 @@ export const PreRegistrationModal: React.FC<PreRegistrationModalProps> = ({ isOp
                                     value={formData.email}
                                     onChange={(e) => setFormData({...formData, email: e.target.value})}
                                     placeholder="tu@email.com"
-                                    className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-sm text-white placeholder:text-neutral-700 focus:outline-none focus:border-geeko-cyan-neon/50 transition-all"
+                                    className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-sm text-white placeholder:text-neutral-700 focus:outline-none focus:border-white/50 transition-all"
                                 />
                             </div>
 
@@ -107,7 +107,7 @@ export const PreRegistrationModal: React.FC<PreRegistrationModalProps> = ({ isOp
                                     value={formData.phone}
                                     onChange={(e) => setFormData({...formData, phone: e.target.value})}
                                     placeholder="+58 412 0000000"
-                                    className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-sm text-white placeholder:text-neutral-700 focus:outline-none focus:border-geeko-cyan-neon/50 transition-all"
+                                    className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-sm text-white placeholder:text-neutral-700 focus:outline-none focus:border-white/50 transition-all"
                                 />
                             </div>
 
@@ -118,7 +118,7 @@ export const PreRegistrationModal: React.FC<PreRegistrationModalProps> = ({ isOp
                             <button 
                                 type="submit"
                                 disabled={loading}
-                                className="w-full py-4 bg-geeko-cyan-neon text-black font-black uppercase tracking-widest rounded-xl hover:bg-white transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+                                className="w-full py-4 bg-white text-black font-black uppercase tracking-widest rounded-xl hover:bg-white transition-all flex items-center justify-center gap-3 disabled:opacity-50"
                             >
                                 {loading ? (
                                     <Loader2 size={20} className="animate-spin" />

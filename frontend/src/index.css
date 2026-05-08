@@ -45,9 +45,9 @@
   /* Core Palette Mapped to Geekorium Identity (Premium Canva Style) */
   --color-geeko-black: #000000;
   --color-geeko-surface: #0B0E11;
-  --color-geeko-cyan: #FFFFFF;
+  --color-white: #FFFFFF;
   --color-geeko-gold: #FFD700;
-  --color-geeko-cyan-neon: #FFFFFF;
+  --color-white: #FFFFFF;
   --color-geeko-purple-vibrant: #A020F0;
   --color-geeko-gold-premium: #FFD700;
   
@@ -62,7 +62,7 @@
   --color-geeko-purple: #A020F0;
   --color-geeko-orange: #F77737;
   --color-geeko-yellow: #FFD700;
-  --color-geeko-cyan: #00FF85;
+  --color-white: #00FF85;
 
   --color-neutral-white: #FFFFFF;
   --color-neutral-black: #000000;
@@ -342,9 +342,9 @@ body {
   color: var(--color-geeko-gold);
 }
 
-.neon-text-cyan {
+.text-white {
   text-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
-  color: var(--color-geeko-cyan);
+  color: var(--color-white);
 }
 
 @layer utilities {

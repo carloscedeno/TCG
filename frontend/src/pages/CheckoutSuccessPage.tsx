@@ -220,8 +220,8 @@ export const CheckoutSuccessPage = () => {
     return (
         <div className="min-h-[100dvh] bg-[#080808] flex items-center justify-center p-4 py-12">
             <div className="max-w-lg w-full bg-neutral-900 border border-white/10 rounded-[2.5rem] p-8 md:p-12 text-center animate-in zoom-in duration-500 shadow-2xl">
-                <div className="w-20 h-20 bg-geeko-cyan/10 rounded-full flex items-center justify-center mx-auto mb-8 animate-bounce">
-                    <CheckCircle className="text-geeko-cyan" size={40} />
+                <div className="w-20 h-20 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-8 animate-bounce">
+                    <CheckCircle className="text-white" size={40} />
                 </div>
 
                 <h1 className="text-3xl font-black text-white mb-4 uppercase tracking-tight">¡Orden Recibida!</h1>
@@ -244,7 +244,7 @@ export const CheckoutSuccessPage = () => {
                                         {item.foil && <span className="text-[10px] bg-purple-500/10 text-purple-400 border border-purple-500/20 px-1.5 py-0.5 rounded font-black uppercase">Foil</span>}
                                         {item.is_on_demand && <span className="text-[10px] bg-orange-500/10 text-orange-400 border border-orange-500/20 px-1.5 py-0.5 rounded font-black uppercase italic">Por Encargo</span>}
                                     </div>
-                                    <span className="text-geeko-cyan font-mono font-bold ml-2">${(item.price * item.quantity).toFixed(2)}</span>
+                                    <span className="text-white font-mono font-bold ml-2">${(item.price * item.quantity).toFixed(2)}</span>
                                 </div>
                             ))}
                         </div>
@@ -285,7 +285,7 @@ export const CheckoutSuccessPage = () => {
                     {isRealOrder ? (
                         <Link
                             to={`/order/${orderId}`}
-                            className="w-full py-4 bg-transparent border border-geeko-cyan/30 text-geeko-cyan font-black uppercase text-xs tracking-[0.2em] rounded-xl hover:bg-geeko-cyan/10 transition-all flex items-center justify-center gap-2"
+                            className="w-full py-4 bg-transparent border border-white/30 text-white font-black uppercase text-xs tracking-[0.2em] rounded-xl hover:bg-white/10 transition-all flex items-center justify-center gap-2"
                         >
                             <ShoppingBag size={18} /> Rastrear Pedido
                         </Link>

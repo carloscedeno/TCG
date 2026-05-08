@@ -20,7 +20,7 @@ export const GlassCard: React.FC<GlassCardProps> = ({
     hoverEffect = true
 }) => {
     const baseStyles = "glass-card rounded-[2rem] border border-white/5 bg-slate-900/50 transition-all duration-300";
-    const hoverStyles = hoverEffect ? "hover:border-geeko-cyan/30 hover:scale-[1.02]" : "";
+    const hoverStyles = hoverEffect ? "hover:border-white/30 hover:scale-[1.02]" : "";
 
     return (
         <div

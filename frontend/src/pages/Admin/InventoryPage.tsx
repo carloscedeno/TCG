@@ -396,11 +396,11 @@ export function InventoryPage() {
 
                         <button
                             onClick={handleExportInventory}
-                            className="group relative px-6 py-4 bg-black border border-white/10 text-geeko-cyan font-black text-xs uppercase tracking-[0.2em] rounded-2xl overflow-hidden active:scale-95 transition-all w-full md:w-auto hover:border-geeko-cyan/50"
+                            className="group relative px-6 py-4 bg-black border border-white/10 text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl overflow-hidden active:scale-95 transition-all w-full md:w-auto hover:border-white/50"
                             title="Descargar inventario actual"
                         >
                             <span className="relative z-10 flex items-center gap-3">
-                                <Download size={18} className="text-geeko-cyan/70 group-hover:text-geeko-cyan transition-colors" />
+                                <Download size={18} className="text-white/70 group-hover:text-white transition-colors" />
                                 Exportar
                             </span>
                         </button>
@@ -660,7 +660,7 @@ export function InventoryPage() {
                                                             </span>
                                                             {item.finish && item.finish !== 'nonfoil' && (
                                                                 <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md ${
-                                                                    item.finish === 'foil' ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20' : 'bg-cyan-500/10 text-cyan-500 border border-cyan-500/20'
+                                                                    item.finish === 'foil' ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20' : 'bg-white/10 text-cyan-500 border border-cyan-500/20'
                                                                 }`}>
                                                                     {item.finish}
                                                                 </span>
@@ -670,7 +670,7 @@ export function InventoryPage() {
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4 text-center">
-                                                <div className={`mx-auto w-12 py-1 rounded-lg text-[10px] font-black border tracking-tighter ${item.condition === 'NM' ? 'bg-geeko-cyan/10 border-geeko-cyan/20 text-geeko-cyan' :
+                                                <div className={`mx-auto w-12 py-1 rounded-lg text-[10px] font-black border tracking-tighter ${item.condition === 'NM' ? 'bg-white/10 border-white/20 text-white' :
                                                     item.condition === 'LP' ? 'bg-blue-500/10 border-blue-500/20 text-blue-500' :
                                                         item.condition === 'MP' ? 'bg-yellow-500/10 border-yellow-500/20 text-yellow-500' :
                                                             'bg-red-500/10 border-red-500/20 text-red-500'
@@ -718,7 +718,7 @@ export function InventoryPage() {
                                                             )}
                                                         </button>
                                                         {lastSavedId === item.product_id && (
-                                                            <span className="text-[8px] font-black text-geeko-cyan uppercase tracking-widest animate-pulse">GUARDADO</span>
+                                                            <span className="text-[8px] font-black text-white uppercase tracking-widest animate-pulse">GUARDADO</span>
                                                         )}
                                                     </div>
                                                 )}

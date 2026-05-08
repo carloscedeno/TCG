@@ -51,7 +51,7 @@ export const HelpSection: React.FC = () => {
             title: 'El Descubrimiento',
             desc: 'Usa los filtros de Mana Essence para encontrar cartas específicas.',
             icon: DiscoveryIcon,
-            color: 'text-geeko-cyan'
+            color: 'text-white'
         },
         {
             title: 'La Selección',
@@ -103,10 +103,10 @@ export const HelpSection: React.FC = () => {
             <div className="max-w-[1400px] mx-auto px-6 relative z-10">
                 <div className="text-center mb-20">
                     <div className="flex flex-col items-center mb-6">
-                        <span className="text-geeko-cyan font-bold tracking-[0.2em] uppercase text-sm mb-4 animate-pulse">
+                        <span className="text-white font-bold tracking-[0.2em] uppercase text-sm mb-4 animate-pulse">
                             Bienvenido a
                         </span>
-                        <div className="w-24 h-1 bg-geeko-cyan rounded-full mb-8 shadow-[0_0_10px_rgba(0, 102, 255,0.5)]" />
+                        <div className="w-24 h-1 bg-white rounded-full mb-8 shadow-[0_0_10px_rgba(0, 102, 255,0.5)]" />
                     </div>
 
                     <h2 className="text-5xl md:text-6xl font-web-titles font-black text-white italic tracking-tighter uppercase mb-6 drop-shadow-md">
@@ -138,7 +138,7 @@ export const HelpSection: React.FC = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
                     {/* Video Player Mockup with FAKE CONTENT AND INTERACTIVITY */}
                     <div className="relative group perspective-1000">
-                        <div className="absolute -inset-4 bg-gradient-to-br from-geeko-cyan/20 to-geeko-violet-accent/20 blur-2xl opacity-50 rounded-[4rem] group-hover:opacity-75 transition-opacity duration-500" />
+                        <div className="absolute -inset-4 bg-gradient-to-br from-white/20 to-geeko-violet-accent/20 blur-2xl opacity-50 rounded-[4rem] group-hover:opacity-75 transition-opacity duration-500" />
                         <div
                             onClick={() => setIsVideoOpen(true)}
                             className="relative aspect-video bg-neutral-900 rounded-[2.5rem] border-[12px] border-[#2a2a2a] shadow-2xl overflow-hidden flex items-center justify-center cursor-pointer transform transition-transform duration-500 group-hover:rotate-x-2 group-hover:scale-[1.02]"
@@ -148,7 +148,7 @@ export const HelpSection: React.FC = () => {
 
                             {/* Overlay Play Button */}
                             <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-all flex items-center justify-center">
-                                <button className="w-24 h-24 rounded-full bg-geeko-cyan/90 backdrop-blur text-black flex items-center justify-center shadow-[0_0_40px_rgba(0, 102, 255,0.6)] group-hover:scale-110 transition-transform duration-300 border-4 border-white/20">
+                                <button className="w-24 h-24 rounded-full bg-white/90 backdrop-blur text-black flex items-center justify-center shadow-[0_0_40px_rgba(0, 102, 255,0.6)] group-hover:scale-110 transition-transform duration-300 border-4 border-white/20">
                                     <Play size={40} fill="currentColor" className="ml-2" />
                                 </button>
                             </div>
@@ -163,7 +163,7 @@ export const HelpSection: React.FC = () => {
                         {faqs.map((group) => (
                             <div key={group.id} className="bg-geeko-violet-medium/60 backdrop-blur-sm border border-white/5 rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
                                 <div className="p-6 bg-gradient-to-r from-white/5 to-transparent border-b border-white/5 flex items-center gap-4">
-                                    <div className="p-3 rounded-xl bg-geeko-cyan/10 text-geeko-cyan">
+                                    <div className="p-3 rounded-xl bg-white/10 text-white">
                                         <group.icon size={24} />
                                     </div>
                                     <h3 className="text-lg font-black text-white italic uppercase tracking-tight">{group.category}</h3>
@@ -175,12 +175,12 @@ export const HelpSection: React.FC = () => {
                                                 onClick={() => setActiveFaq(activeFaq === q.q ? null : q.q)}
                                                 className="w-full p-4 flex items-center justify-between text-left group"
                                             >
-                                                <span className="text-sm font-bold text-white/80 group-hover:text-geeko-cyan transition-colors">{q.q}</span>
-                                                <ChevronDown size={18} className={`text-white/40 transition-transform duration-300 ${activeFaq === q.q ? 'rotate-180 text-geeko-cyan' : ''}`} />
+                                                <span className="text-sm font-bold text-white/80 group-hover:text-white transition-colors">{q.q}</span>
+                                                <ChevronDown size={18} className={`text-white/40 transition-transform duration-300 ${activeFaq === q.q ? 'rotate-180 text-white' : ''}`} />
                                             </button>
                                             <div className={`grid transition-[grid-template-rows] duration-300 ease-out ${activeFaq === q.q ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
                                                 <div className="overflow-hidden">
-                                                    <p className="text-sm text-white font-medium leading-relaxed px-4 pb-4 pl-8 border-l-2 border-geeko-cyan/20 ml-4 mb-2 opacity-90">
+                                                    <p className="text-sm text-white font-medium leading-relaxed px-4 pb-4 pl-8 border-l-2 border-white/20 ml-4 mb-2 opacity-90">
                                                         {q.a}
                                                     </p>
                                                 </div>

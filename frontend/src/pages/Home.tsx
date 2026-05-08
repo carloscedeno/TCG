@@ -410,11 +410,11 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[100dvh] flex flex-col bg-geeko-black text-white font-sans relative selection:bg-geeko-cyan-neon/30">
+    <div className="min-h-[100dvh] flex flex-col bg-geeko-black text-white font-sans relative selection:bg-white/30">
 
       {/* Background Layer */}
       <div className="fixed inset-0 z-0 bg-geeko-black">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-geeko-cyan-neon/5 rounded-full blur-[120px]" />
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-white/5 rounded-full blur-[120px]" />
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-geeko-purple-vibrant/5 rounded-full blur-[100px]" />
       </div>
 
@@ -444,7 +444,7 @@ const Home: React.FC = () => {
                     onClick={() => handleTabChange('marketplace')}
                     data-testid="inventory-tab"
                     className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'marketplace'
-                      ? 'ring-2 ring-geeko-cyan-neon/30 bg-geeko-cyan-neon text-black shadow-[0_0_15px_rgba(0, 102, 255,0.4)]'
+                      ? 'ring-2 ring-white/30 bg-white text-black shadow-[0_0_15px_rgba(0, 102, 255,0.4)]'
                       : 'text-neutral-500 hover:text-neutral-300'
                       }`}
                   >
@@ -458,11 +458,11 @@ const Home: React.FC = () => {
                     onClick={() => handleTabChange('catalog')}
                     data-testid="catalog-tab"
                     className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'catalog'
-                      ? 'ring-2 ring-geeko-cyan-neon/30 bg-geeko-cyan-neon text-black shadow-[0_0_15px_rgba(0, 102, 255,0.4)]'
+                      ? 'ring-2 ring-white/30 bg-white text-black shadow-[0_0_15px_rgba(0, 102, 255,0.4)]'
                       : 'text-neutral-500 hover:text-neutral-300'
                       }`}
                   >
-                    <Search size={16} className={activeTab === 'catalog' ? 'text-black' : 'text-geeko-cyan-neon'} />
+                    <Search size={16} className={activeTab === 'catalog' ? 'text-black' : 'text-white'} />
                     Catálogo
                   </button>
                 )}
@@ -477,7 +477,7 @@ const Home: React.FC = () => {
                 <div className="relative">
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" /></svg>
                   {Object.values(filters).some(v => v && (typeof v === 'boolean' ? v : (v as any).length > 0)) && (
-                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-geeko-cyan-neon rounded-full" />
+                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-white rounded-full" />
                   )}
                 </div>
                 <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Filtros</span>
@@ -516,14 +516,14 @@ const Home: React.FC = () => {
               <div className="flex bg-neutral-900/50 p-1 rounded-lg border border-neutral-800">
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={`p-2 rounded-md transition-all ${viewMode === 'grid' ? 'bg-neutral-800 text-geeko-cyan shadow-inner' : 'text-neutral-500 hover:text-neutral-300'}`}
+                  className={`p-2 rounded-md transition-all ${viewMode === 'grid' ? 'bg-neutral-800 text-white shadow-inner' : 'text-neutral-500 hover:text-neutral-300'}`}
                   title="Grid View"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" /></svg>
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
-                  className={`p-2 rounded-md transition-all ${viewMode === 'list' ? 'bg-neutral-800 text-geeko-cyan shadow-inner' : 'text-neutral-500 hover:text-neutral-300'}`}
+                  className={`p-2 rounded-md transition-all ${viewMode === 'list' ? 'bg-neutral-800 text-white shadow-inner' : 'text-neutral-500 hover:text-neutral-300'}`}
                   title="List View"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" /><line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" /></svg>
@@ -559,16 +559,16 @@ const Home: React.FC = () => {
                 <div className="flex flex-col gap-6 w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
                   {loadingDeals ? (
                     <div className="flex flex-col items-center justify-center py-32 gap-6">
-                      <div className="w-16 h-16 border-4 border-geeko-cyan-neon/20 border-t-geeko-cyan-neon rounded-full animate-spin"></div>
+                      <div className="w-16 h-16 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
                       <p className="text-neutral-500 font-black text-xs tracking-widest uppercase animate-pulse">Buscando Ofertas...</p>
                     </div>
                   ) : discountedSingles.length === 0 && discountedAccessories.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-32 text-center">
                       <div className="w-24 h-24 bg-neutral-900/50 rounded-3xl flex items-center justify-center mb-8 border border-white/5 relative group">
-                        <div className="absolute inset-0 bg-geeko-cyan-neon/20 blur-2xl rounded-full group-hover:bg-geeko-cyan-neon/30 transition-all" />
-                        <Sparkles size={40} className="text-geeko-cyan-neon relative z-10" />
+                        <div className="absolute inset-0 bg-white/20 blur-2xl rounded-full group-hover:bg-white/30 transition-all" />
+                        <Sparkles size={40} className="text-white relative z-10" />
                       </div>
-                      <h3 className="text-3xl font-black italic uppercase tracking-tighter mb-4 neon-text-cyan">
+                      <h3 className="text-3xl font-black italic uppercase tracking-tighter mb-4 text-white">
                         Pronto Nuevas Ofertas
                       </h3>
                       <p className="text-neutral-500 font-medium max-w-sm">
@@ -588,7 +588,7 @@ const Home: React.FC = () => {
                 </div>
               ) : loading && page === 0 ? (
                 <div className="flex flex-col items-center justify-center py-32 gap-6">
-                  <div className="w-16 h-16 border-4 border-geeko-cyan/20 border-t-geeko-cyan rounded-full animate-spin"></div>
+                  <div className="w-16 h-16 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
                   <p className="text-neutral-500 font-black text-xs tracking-widest uppercase animate-pulse">Invocando Cartas...</p>
                 </div>
               ) : error ? (
@@ -610,14 +610,14 @@ const Home: React.FC = () => {
                   {activeTab === 'catalog' && cards.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-32 text-center">
                       <div className="w-24 h-24 bg-neutral-900/50 rounded-3xl flex items-center justify-center mb-8 border border-white/5 relative group">
-                        <div className="absolute inset-0 bg-geeko-cyan-neon/20 blur-2xl rounded-full group-hover:bg-geeko-cyan-neon/30 transition-all" />
+                        <div className="absolute inset-0 bg-white/20 blur-2xl rounded-full group-hover:bg-white/30 transition-all" />
                         {inventoryPresence.hasCatalog ? (
-                          <Search size={40} className="text-geeko-cyan-neon relative z-10" />
+                          <Search size={40} className="text-white relative z-10" />
                         ) : (
-                          <Sparkles size={40} className="text-geeko-cyan-neon relative z-10" />
+                          <Sparkles size={40} className="text-white relative z-10" />
                         )}
                       </div>
-                      <h3 className="text-3xl font-black italic uppercase tracking-tighter mb-4 neon-text-cyan">
+                      <h3 className="text-3xl font-black italic uppercase tracking-tighter mb-4 text-white">
                         {inventoryPresence.hasCatalog ? 'Sin Resultados' : 'Próximamente'}
                       </h3>
                       <p className="text-neutral-500 font-medium max-w-sm">
@@ -634,9 +634,9 @@ const Home: React.FC = () => {
                           <button
                             onClick={() => setPage((p: number) => p + 1)}
                             disabled={loading}
-                            className="group relative overflow-hidden px-12 py-5 bg-neutral-900 border border-neutral-800 rounded-full font-black text-[11px] tracking-[0.2em] uppercase hover:border-geeko-cyan-neon/50 transition-all flex items-center gap-4 disabled:opacity-50 shadow-2xl"
+                            className="group relative overflow-hidden px-12 py-5 bg-neutral-900 border border-neutral-800 rounded-full font-black text-[11px] tracking-[0.2em] uppercase hover:border-white/50 transition-all flex items-center gap-4 disabled:opacity-50 shadow-2xl"
                           >
-                            <div className="absolute inset-0 bg-gradient-to-r from-geeko-cyan-neon/0 via-geeko-cyan-neon/10 to-geeko-cyan-neon/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
                             {loading ? (
                               <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
                             ) : (
@@ -688,7 +688,7 @@ const Home: React.FC = () => {
                 />
                 <button
                   onClick={() => setIsMobileFiltersOpen(false)}
-                  className="w-full mt-8 py-4 bg-geeko-cyan-neon text-black font-black text-xs uppercase tracking-widest rounded-xl"
+                  className="w-full mt-8 py-4 bg-white text-black font-black text-xs uppercase tracking-widest rounded-xl"
                 >
                   Aplicar Filtros
                 </button>

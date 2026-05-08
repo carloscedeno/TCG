@@ -30,16 +30,16 @@ export const CartManager: React.FC = () => {
         <div className="cart-manager-container bg-opacity-10 bg-white backdrop-blur-md rounded-2xl p-6 border border-white border-opacity-20 shadow-2xl transition-all duration-300 hover:shadow-rose-500/10 mb-8">
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
-                    <div className="p-2 bg-gradient-to-br from-geeko-cyan to-blue-600 rounded-lg shadow-lg">
+                    <div className="p-2 bg-gradient-to-br from-white to-blue-600 rounded-lg shadow-lg">
                         <Users size={20} className="text-black" />
                     </div>
                     <div>
                         <h3 className="text-xl font-bold text-white tracking-tight">Terminal de Atención</h3>
                         <div className="flex items-center gap-2 mt-1">
-                            <span className="text-[10px] text-geeko-cyan font-black uppercase tracking-widest bg-geeko-cyan/10 px-2 py-0.5 rounded border border-geeko-cyan/20">
+                            <span className="text-[10px] text-white font-black uppercase tracking-widest bg-white/10 px-2 py-0.5 rounded border border-white/20">
                                 Terminal v20 • POS Session Logic
                             </span>
-                            <div className="w-1.5 h-1.5 bg-geeko-cyan rounded-full animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
+                            <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
                         </div>
                     </div>
                 </div>
@@ -56,7 +56,7 @@ export const CartManager: React.FC = () => {
                     {!isCreating && (
                         <button 
                             onClick={() => setIsCreating(true)}
-                            className="flex items-center gap-2 px-4 py-2 bg-geeko-cyan hover:bg-geeko-cyan/80 text-black rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg shadow-geeko-cyan/20"
+                            className="flex items-center gap-2 px-4 py-2 bg-white hover:bg-white/80 text-black rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg shadow-white/20"
                         >
                             <UserPlus size={16} />
                             <span className="text-sm font-semibold">Nuevo Cliente</span>
@@ -79,7 +79,7 @@ export const CartManager: React.FC = () => {
                         <button 
                             type="submit"
                             disabled={isLoading}
-                            className="bg-geeko-cyan hover:bg-geeko-cyan/80 text-black px-4 py-2 rounded-xl text-sm font-bold shadow-lg shadow-geeko-cyan/20 disabled:opacity-50"
+                            className="bg-white hover:bg-white/80 text-black px-4 py-2 rounded-xl text-sm font-bold shadow-lg shadow-white/20 disabled:opacity-50"
                         >
                             Listo
                         </button>
@@ -104,16 +104,16 @@ export const CartManager: React.FC = () => {
                         }}
                         className={`relative group flex items-start justify-between p-4 rounded-xl border transition-all duration-300 ${
                             cart.is_active 
-                            ? 'bg-geeko-cyan bg-opacity-10 border-geeko-cyan shadow-[inset_0_0_20px_rgba(31,235,219,0.1)]' 
+                            ? 'bg-white bg-opacity-10 border-white shadow-[inset_0_0_20px_rgba(31,235,219,0.1)]' 
                             : 'bg-slate-800 bg-opacity-40 border-slate-700 hover:border-slate-500 hover:bg-opacity-60'
                         }`}
                     >
                         <div className="flex flex-col items-start gap-1">
-                            <span className={`text-sm font-bold ${cart.is_active ? 'text-geeko-cyan' : 'text-slate-200'}`}>
+                            <span className={`text-sm font-bold ${cart.is_active ? 'text-white' : 'text-slate-200'}`}>
                                 {cart.name || 'Sin nombre'}
                             </span>
                             <div className="flex items-center gap-2">
-                                <ShoppingCart size={12} className={cart.is_active ? 'text-geeko-cyan' : 'text-slate-500'} />
+                                <ShoppingCart size={12} className={cart.is_active ? 'text-white' : 'text-slate-500'} />
                                 <span className="text-xs text-slate-400 font-medium">
                                     {cart.item_count} {cart.item_count === 1 ? 'item' : 'items'}
                                 </span>
@@ -122,7 +122,7 @@ export const CartManager: React.FC = () => {
                         
                         <div className="flex items-center gap-2">
                             {cart.is_active ? (
-                                <div className="flex items-center gap-1 bg-geeko-cyan text-black text-[10px] uppercase font-black px-2 py-0.5 rounded-full shadow-lg animate-pulse">
+                                <div className="flex items-center gap-1 bg-white text-black text-[10px] uppercase font-black px-2 py-0.5 rounded-full shadow-lg animate-pulse">
                                     Activo
                                 </div>
                             ) : (
@@ -142,7 +142,7 @@ export const CartManager: React.FC = () => {
                         </div>
 
                         {cart.is_active && (
-                            <div className="absolute -inset-0.5 bg-gradient-to-r from-geeko-cyan to-blue-500 rounded-xl blur opacity-10 group-hover:opacity-20 transition duration-1000 group-hover:duration-200"></div>
+                            <div className="absolute -inset-0.5 bg-gradient-to-r from-white to-blue-500 rounded-xl blur opacity-10 group-hover:opacity-20 transition duration-1000 group-hover:duration-200"></div>
                         )}
                     </button>
                 ))}

@@ -42,14 +42,14 @@ function App() {
                         <img src="/logo-emporio.png" alt="Geekorium El Emporio" className="h-8 object-contain" />
                     </div>
                     <p className="text-neutral-400 text-sm font-medium mb-8 leading-relaxed">
-                        Supabase environment variables are missing. Please configure <code className="text-geeko-cyan bg-geeko-cyan/10 px-1.5 py-0.5 rounded">VITE_SUPABASE_URL</code> and <code className="text-geeko-cyan bg-geeko-cyan/10 px-1.5 py-0.5 rounded">VITE_SUPABASE_ANON_KEY</code> in your deployment environment.
+                        Supabase environment variables are missing. Please configure <code className="text-white bg-white/10 px-1.5 py-0.5 rounded">VITE_SUPABASE_URL</code> and <code className="text-white bg-white/10 px-1.5 py-0.5 rounded">VITE_SUPABASE_ANON_KEY</code> in your deployment environment.
                     </p>
                     <div className="space-y-3">
                         <a
                             href="https://github.com/carloscedeno/TCG/settings/secrets/actions"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="block w-full py-4 bg-white text-black font-black text-xs uppercase tracking-widest rounded-full hover:bg-geeko-cyan hover:text-white transition-all transform active:scale-95 shadow-xl"
+                            className="block w-full py-4 bg-white text-black font-black text-xs uppercase tracking-widest rounded-full hover:bg-white hover:text-white transition-all transform active:scale-95 shadow-xl"
                         >
                             Configure GitHub Secrets
                         </a>

@@ -135,7 +135,7 @@ export const VideoPlaceholder = () => (
         {/* Fake Content Area (Glassmorphism + Card Grid) */}
         <div className="flex-1 p-6 grid grid-cols-4 gap-4 opacity-40 scale-100 transition-transform duration-700 hover:scale-105 z-10">
             {/* Hero Section */}
-            <div className="col-span-4 h-28 bg-gradient-to-r from-geeko-cyan/10 via-geeko-purple/10 to-transparent rounded-2xl border border-white/5 p-4 flex flex-col justify-center gap-2">
+            <div className="col-span-4 h-28 bg-gradient-to-r from-white/10 via-geeko-purple/10 to-transparent rounded-2xl border border-white/5 p-4 flex flex-col justify-center gap-2">
                 <div className="w-32 h-3 bg-white/20 rounded-full" />
                 <div className="w-48 h-2 bg-white/10 rounded-full" />
             </div>

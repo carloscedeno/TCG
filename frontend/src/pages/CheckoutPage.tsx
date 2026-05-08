@@ -347,7 +347,7 @@ export const CheckoutPage = () => {
                                             <img src={item.products?.image_url} className="w-full h-full object-cover" alt={item.products?.name} />
                                             {isOnDemand && (
                                                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                                                    <span className="text-[6px] font-black bg-geeko-cyan text-black px-0.5 rounded-sm rotate-12">POR ENCARGO</span>
+                                                    <span className="text-[6px] font-black bg-white text-black px-0.5 rounded-sm rotate-12">POR ENCARGO</span>
                                                 </div>
                                             )}
                                         </div>
@@ -355,7 +355,7 @@ export const CheckoutPage = () => {
                                             <div className="flex items-start justify-between gap-2">
                                                 <p className="text-xs font-bold text-white line-clamp-1 leading-snug">{item.products?.name}</p>
                                                 {isOnDemand && (
-                                                    <span className="text-[7px] font-black text-geeko-cyan border border-geeko-cyan/30 px-1 rounded flex-shrink-0">POR ENCARGO</span>
+                                                    <span className="text-[7px] font-black text-white border border-white/30 px-1 rounded flex-shrink-0">POR ENCARGO</span>
                                                 )}
                                             </div>
                                             <p className="text-[9px] text-neutral-500 uppercase font-bold">{item.products?.set_code}</p>
@@ -378,7 +378,7 @@ export const CheckoutPage = () => {
                             </div>
                             <div className="flex justify-between text-xs text-neutral-400">
                                 <span>Envío</span>
-                                <span className="text-geeko-cyan font-bold italic underline">A coordinar por WhatsApp</span>
+                                <span className="text-white font-bold italic underline">A coordinar por WhatsApp</span>
                             </div>
                         </div>
 

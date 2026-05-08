@@ -116,7 +116,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
           }
         }}
         onMouseEnter={handlePreFetch}
-        className="flex items-center gap-4 px-4 py-3 bg-black/40 hover:bg-neutral-900 border border-white/5 hover:border-geeko-cyan/30 rounded-xl transition-all cursor-pointer group"
+        className="flex items-center gap-4 px-4 py-3 bg-black/40 hover:bg-neutral-900 border border-white/5 hover:border-white/30 rounded-xl transition-all cursor-pointer group"
       >
         <div className="w-12 h-16 bg-[#1a1a1a] rounded-md overflow-hidden flex-shrink-0 relative">
           {imgSrc ? (
@@ -135,7 +135,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         </div>
 
         <div className="flex-1 min-w-0">
-          <h3 className="text-white font-bold text-sm group-hover:text-geeko-cyan transition-colors break-words whitespace-normal leading-snug flex items-center gap-2">
+          <h3 className="text-white font-bold text-sm group-hover:text-white transition-colors break-words whitespace-normal leading-snug flex items-center gap-2">
             {currentName}
             {['sos', 'soa', 'soc', 'tsos'].includes(set?.toLowerCase()) && (
               <span className="px-1.5 py-0.5 bg-purple-600 text-[7px] font-black uppercase rounded shadow-lg shadow-purple-500/20 animate-pulse">Nuevo</span>
@@ -166,7 +166,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         {/* Stock Indicator List View */}
         <div className="hidden sm:flex flex-col items-center justify-center px-4">
           {total_stock !== undefined && total_stock > 0 ? (
-            <span className="text-[10px] font-black uppercase tracking-widest text-geeko-cyan bg-geeko-cyan/10 px-2 py-1 rounded-md">
+            <span className="text-[10px] font-black uppercase tracking-widest text-white bg-white/10 px-2 py-1 rounded-md">
               DISP: {total_stock}
             </span>
           ) : (
@@ -180,7 +180,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
               <div className="flex flex-col items-end gap-0.5">
                   <span className="text-[9px] text-neutral-500 font-bold line-through">${original_price?.toFixed(2)}</span>
                   <div className="flex items-center gap-1.5">
-                      <span className="text-geeko-cyan font-mono font-bold text-base leading-none">
+                      <span className="text-white font-mono font-bold text-base leading-none">
                         {typeof price === 'number' ? `$${price.toFixed(2)}` : '---'}
                       </span>
                       <span className="text-[8px] bg-purple-500/20 text-purple-400 border border-purple-500/30 px-1 py-0.5 rounded font-black">-{discount_percentage}%</span>
@@ -188,7 +188,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
               </div>
           ) : (
               <div className="flex items-center gap-1.5">
-                <span className="text-geeko-cyan font-mono font-bold text-base leading-none">
+                <span className="text-white font-mono font-bold text-base leading-none">
                   {typeof price === 'number' ? `$${price.toFixed(2)}` : '---'}
                 </span>
                 {isFoil && (
@@ -203,7 +203,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         {showCartButton && !isArchive && (
           <button
             onClick={handleQuickAdd}
-            className={`ml-4 w-9 h-9 rounded-full flex items-center justify-center transition-all border border-white/5 ${addingToCart ? 'bg-geeko-cyan text-black' : 'bg-white/5 text-neutral-400 hover:bg-geeko-cyan hover:text-black hover:scale-110'}`}
+            className={`ml-4 w-9 h-9 rounded-full flex items-center justify-center transition-all border border-white/5 ${addingToCart ? 'bg-white text-black' : 'bg-white/5 text-neutral-400 hover:bg-white hover:text-black hover:scale-110'}`}
             title={(total_stock || 0) > 0 ? "Agregar al Carrito Rápido" : "Por encargo"}
           >
             {addingToCart ? <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /> : <Plus size={20} strokeWidth={3} />}
@@ -231,7 +231,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
       {hasMultipleFaces && (
         <button
           onClick={handleFlip}
-          className="absolute top-2 left-2 z-30 p-1.5 bg-black/60 hover:bg-geeko-cyan text-white rounded-full border border-white/10 transition-colors"
+          className="absolute top-2 left-2 z-30 p-1.5 bg-black/60 hover:bg-white text-white rounded-full border border-white/10 transition-colors"
         >
           <RotateCw size={14} className="group-hover:rotate-180 transition-transform duration-500" />
         </button>
@@ -313,7 +313,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
             className={`absolute bottom-3 right-3 h-10 rounded-full flex items-center justify-center transition-all duration-300 shadow-2xl z-40 group/addbtn ${
               addingToCart 
                 ? 'w-10 bg-white text-black scale-100 opacity-100' 
-                : 'w-10 hover:w-[140px] bg-geeko-cyan text-black border border-white/20 shadow-[0_0_15px_rgba(0, 102, 255,0.4)] opacity-100 translate-y-0 scale-100'
+                : 'w-10 hover:w-[140px] bg-white text-black border border-white/20 shadow-[0_0_15px_rgba(0, 102, 255,0.4)] opacity-100 translate-y-0 scale-100'
             }`}
           >
             <div className="flex items-center gap-2 whitespace-nowrap overflow-hidden px-1">
@@ -333,7 +333,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
       {/* Card Info */}
       <div className="p-4 flex flex-col gap-1 z-20 bg-[#0a0a0a]/90 backdrop-blur-md border-t border-white/5 flex-grow">
         {/* Fix text overlap: Truncate + Title */}
-        <h3 className="text-white text-sm font-bold truncate leading-snug group-hover:text-geeko-cyan transition-colors" title={currentName}>
+        <h3 className="text-white text-sm font-bold truncate leading-snug group-hover:text-white transition-colors" title={currentName}>
           {currentName}
         </h3>
 
@@ -353,14 +353,14 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
                         <span className="text-[8px] bg-purple-500/20 text-purple-400 border border-purple-500/30 px-1 rounded font-black">-{discount_percentage}%</span>
                     </div>
                     <div className="flex items-center justify-end gap-1.5">
-                      <span className="text-geeko-cyan font-mono font-bold text-lg leading-none">
+                      <span className="text-white font-mono font-bold text-lg leading-none">
                         {price && price > 0 ? `$${price.toFixed(2)}` : 'S/P'}
                       </span>
                     </div>
                 </div>
             ) : (
                 <div className="flex items-center justify-end gap-1.5">
-                  <span className="text-geeko-cyan font-mono font-bold text-lg leading-none">
+                  <span className="text-white font-mono font-bold text-lg leading-none">
                     {price && price > 0 ? `$${price.toFixed(2)}` : 'S/P'}
                   </span>
                   {isFoil && (

@@ -197,7 +197,7 @@ export const EventsPage: React.FC = () => {
           <div className="space-y-2">
             <button 
               onClick={() => navigate('/admin')}
-              className="flex items-center gap-2 text-slate-500 hover:text-geeko-cyan transition-colors text-xs font-black uppercase tracking-widest group"
+              className="flex items-center gap-2 text-slate-500 hover:text-white transition-colors text-xs font-black uppercase tracking-widest group"
             >
               <ChevronLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
               Volver al Panel
@@ -261,7 +261,7 @@ export const EventsPage: React.FC = () => {
                       onClick={() => toggleActive(event)}
                       className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all shadow-lg ${
                         event.is_active 
-                          ? 'bg-geeko-cyan text-black border-emerald-400 shadow-emerald-500/20' 
+                          ? 'bg-white text-black border-emerald-400 shadow-emerald-500/20' 
                           : 'bg-slate-800 text-slate-400 border-white/10 shadow-black'
                       }`}
                     >
@@ -289,7 +289,7 @@ export const EventsPage: React.FC = () => {
                   </button>
                   <button 
                     onClick={() => setSelectedEventForReg(event)}
-                    className="bg-geeko-cyan-neon/10 hover:bg-geeko-cyan-neon/20 border border-geeko-cyan-neon/20 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest text-geeko-cyan-neon transition-all flex items-center gap-2"
+                    className="bg-white/10 hover:bg-white/20 border border-white/20 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest text-white transition-all flex items-center gap-2"
                   >
                     <ClipboardList size={14} />
                     Registrados
@@ -455,7 +455,7 @@ export const EventsPage: React.FC = () => {
                       onClick={() => setEditingEvent({ ...editingEvent, is_active: !editingEvent.is_active })}
                       className={`w-full p-4 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all flex items-center justify-center gap-3 ${
                         editingEvent.is_active 
-                          ? 'bg-geeko-cyan/10 border-geeko-cyan/20 text-geeko-cyan' 
+                          ? 'bg-white/10 border-white/20 text-white' 
                           : 'bg-slate-900/50 border-white/5 text-slate-500'
                       }`}
                     >

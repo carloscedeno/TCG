@@ -86,9 +86,9 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                         >
                             {item.name}
                             {item.name === 'Home' && !searchParams.get('tab') && (
-                                <div className="absolute bottom-0 left-0 w-1/2 h-0.5 bg-geeko-cyan-neon rounded-full" />
+                                <div className="absolute bottom-0 left-0 w-1/2 h-0.5 bg-white rounded-full" />
                             )}
-                            <div className="absolute bottom-0 left-0 w-0 group-hover:w-full h-0.5 bg-geeko-cyan-neon transition-all duration-300 rounded-full" />
+                            <div className="absolute bottom-0 left-0 w-0 group-hover:w-full h-0.5 bg-white transition-all duration-300 rounded-full" />
                         </Link>
                     ))}
                 </nav>
@@ -97,13 +97,13 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                 <div className="flex items-center gap-4 md:gap-6">
                     <div className="hidden lg:block w-48 xl:w-64 2xl:w-80 transition-all duration-500">
                         <div className="relative group">
-                            <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500 group-focus-within:text-geeko-cyan-neon transition-colors" />
+                            <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500 group-focus-within:text-white transition-colors" />
                             <input 
                                 type="text"
                                 value={query}
                                 onChange={(e) => handleSearch(e.target.value)}
                                 placeholder="Buscar..."
-                                className="w-full bg-neutral-900/50 border border-white/10 rounded-full py-2 pl-10 pr-4 text-[11px] text-white placeholder:text-neutral-600 focus:outline-none focus:border-geeko-cyan-neon/50 focus:ring-1 focus:ring-geeko-cyan-neon/20 transition-all"
+                                className="w-full bg-neutral-900/50 border border-white/10 rounded-full py-2 pl-10 pr-4 text-[11px] text-white placeholder:text-neutral-600 focus:outline-none focus:border-white/50 focus:ring-1 focus:ring-white/20 transition-all"
                             />
                         </div>
                     </div>
@@ -112,7 +112,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                         <button onClick={onCartOpen} className="relative p-2 text-neutral-400 hover:text-white transition-all">
                             <ShoppingCart size={22} />
                             {cartCount > 0 && (
-                                <div className="absolute -top-1 -right-1 bg-geeko-cyan-neon text-black text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center">
+                                <div className="absolute -top-1 -right-1 bg-white text-black text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center">
                                     {cartCount}
                                 </div>
                             )}
@@ -197,10 +197,10 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                                     <button 
                                         key={cat.code} 
                                         onClick={() => navigateToCategory(cat.code)}
-                                        className="flex flex-col items-center gap-2 p-4 bg-geeko-cyan/5 border border-geeko-cyan/10 rounded-xl hover:bg-geeko-cyan/10 transition-all"
+                                        className="flex flex-col items-center gap-2 p-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all"
                                     >
                                         <span className="text-2xl">{cat.icon}</span>
-                                        <span className="text-[10px] font-bold text-geeko-cyan text-center uppercase tracking-tighter">{cat.name}</span>
+                                        <span className="text-[10px] font-bold text-white text-center uppercase tracking-tighter">{cat.name}</span>
                                     </button>
                                 ))}
                             </div>

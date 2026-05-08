@@ -69,7 +69,7 @@ const ProfilePage: React.FC = () => {
                     <div className="flex items-center gap-8">
                         <Link to="/" className="flex items-center gap-4 hover:opacity-80 transition-opacity">
                             <div className="flex items-center justify-center font-black text-xl italic text-white shadow-lg shadow-blue-600/20">
-                                <span className="text-geeko-cyan">El</span>&nbsp;Emporio
+                                <span className="text-white">El</span>&nbsp;Emporio
                             </div>
                         </Link>
                     </div>
@@ -84,9 +84,9 @@ const ProfilePage: React.FC = () => {
                     <header className="text-center space-y-4">
                         <h2 className="text-sm font-black text-geeko-gold uppercase tracking-[0.3em]">Comunidad Geekorium</h2>
                         <h1 className="text-5xl font-black text-white italic tracking-tighter uppercase">
-                            Perfil de <span className="neon-text-cyan">Vanguardia</span>
+                            Perfil de <span className="text-white">Vanguardia</span>
                         </h1>
-                        <div className="w-24 h-1 bg-gradient-to-r from-geeko-red to-geeko-cyan mx-auto rounded-full"></div>
+                        <div className="w-24 h-1 bg-gradient-to-r from-geeko-red to-white mx-auto rounded-full"></div>
                     </header>
 
                     <section>
@@ -114,14 +114,14 @@ const ProfilePage: React.FC = () => {
                     <section className="animate-in slide-in-from-bottom-8 duration-700">
                         <div className="flex items-center gap-4 mb-8">
                             <h2 className="text-3xl font-black italic uppercase tracking-tighter">
-                                Financial <span className="text-geeko-cyan">Intelligence</span>
+                                Financial <span className="text-white">Intelligence</span>
                             </h2>
                             <div className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent"></div>
                         </div>
 
                         {loading ? (
                             <div className="h-64 flex items-center justify-center">
-                                <Loader2 className="w-12 h-12 text-geeko-cyan animate-spin" />
+                                <Loader2 className="w-12 h-12 text-white animate-spin" />
                             </div>
                         ) : (
                             <PortfolioStats collection={collection} />

@@ -190,20 +190,20 @@ export const PresalesPage: React.FC = () => {
           <div className="space-y-2">
             <button 
               onClick={() => navigate('/admin')}
-              className="flex items-center gap-2 text-slate-500 hover:text-geeko-cyan transition-colors text-xs font-black uppercase tracking-widest group"
+              className="flex items-center gap-2 text-slate-500 hover:text-white transition-colors text-xs font-black uppercase tracking-widest group"
             >
               <ChevronLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
               Volver al Panel
             </button>
             <h1 className="text-4xl md:text-5xl font-black italic tracking-tighter uppercase">
-              Gestión de <span className="text-geeko-cyan">Preventas</span>
+              Gestión de <span className="text-white">Preventas</span>
             </h1>
             <p className="text-slate-500 text-xs font-bold uppercase tracking-[0.2em]">Banners secundarios de anuncios</p>
           </div>
           
           <button 
             onClick={handleCreate}
-            className="flex items-center justify-center gap-3 bg-geeko-cyan text-black px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_30px_rgba(34,211,238,0.3)]"
+            className="flex items-center justify-center gap-3 bg-white text-black px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_30px_rgba(34,211,238,0.3)]"
           >
             <Plus size={18} />
             Nueva Preventa
@@ -213,7 +213,7 @@ export const PresalesPage: React.FC = () => {
         {/* Content */}
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20 gap-4">
-            <div className="w-12 h-12 border-4 border-geeko-cyan/20 border-t-geeko-cyan rounded-full animate-spin"></div>
+            <div className="w-12 h-12 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
             <p className="text-slate-500 font-black text-[10px] uppercase tracking-widest animate-pulse">Sincronizando Preventas...</p>
           </div>
         ) : presales.length === 0 ? (
@@ -227,7 +227,7 @@ export const PresalesPage: React.FC = () => {
             {presales.map((presale) => (
               <div 
                 key={presale.id} 
-                className="group relative bg-slate-900/40 border border-white/5 rounded-[2rem] overflow-hidden hover:border-geeko-cyan/30 transition-all flex flex-col"
+                className="group relative bg-slate-900/40 border border-white/5 rounded-[2rem] overflow-hidden hover:border-white/30 transition-all flex flex-col"
               >
                 {/* Preview Image */}
                 <div className="aspect-[3.5/1] w-full relative overflow-hidden bg-black">
@@ -244,7 +244,7 @@ export const PresalesPage: React.FC = () => {
                       onClick={() => toggleActive(presale)}
                       className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all shadow-lg ${
                         presale.is_active 
-                          ? 'bg-geeko-cyan text-black border-cyan-400 shadow-cyan-500/20' 
+                          ? 'bg-white text-black border-cyan-400 shadow-cyan-500/20' 
                           : 'bg-slate-800 text-slate-400 border-white/10 shadow-black'
                       }`}
                     >
@@ -265,7 +265,7 @@ export const PresalesPage: React.FC = () => {
                     
                     {presale.link_url && (
                       <div className="flex items-center gap-2 text-[9px] text-slate-400 font-bold uppercase tracking-widest">
-                        <LinkIcon size={12} className="text-geeko-cyan" />
+                        <LinkIcon size={12} className="text-white" />
                         <span className="truncate">{presale.link_url}</span>
                       </div>
                     )}
@@ -298,7 +298,7 @@ export const PresalesPage: React.FC = () => {
               
               <div className="p-8 border-b border-white/5 flex items-center justify-between">
                 <h3 className="text-2xl font-black italic uppercase tracking-tighter">
-                  {editingPresale.id ? 'Editar' : 'Nueva'} <span className="text-geeko-cyan">Preventa</span>
+                  {editingPresale.id ? 'Editar' : 'Nueva'} <span className="text-white">Preventa</span>
                 </h3>
                 <button onClick={() => setIsModalOpen(false)} className="text-slate-500 hover:text-white transition-colors bg-white/5 p-2 rounded-full">
                   <X size={20} />
@@ -324,7 +324,7 @@ export const PresalesPage: React.FC = () => {
                     ) : (
                       <>
                         {uploading ? (
-                          <div className="w-8 h-8 border-2 border-geeko-cyan/20 border-t-geeko-cyan rounded-full animate-spin"></div>
+                          <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
                         ) : (
                           <>
                             <ImageIcon className="text-slate-700" size={40} />
@@ -342,8 +342,8 @@ export const PresalesPage: React.FC = () => {
                 {/* Product Search Tool */}
                 <div className="p-6 bg-slate-900/50 border border-white/5 rounded-3xl space-y-4">
                   <div className="flex items-center gap-2 mb-2">
-                    <Search size={14} className="text-geeko-cyan" />
-                    <label className="text-[10px] font-black text-geeko-cyan uppercase tracking-widest">Vinculación Rápida con Producto</label>
+                    <Search size={14} className="text-white" />
+                    <label className="text-[10px] font-black text-white uppercase tracking-widest">Vinculación Rápida con Producto</label>
                   </div>
                   <div className="flex gap-2">
                     <input 
@@ -352,7 +352,7 @@ export const PresalesPage: React.FC = () => {
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onKeyDown={(e) => e.key === 'Enter' && handleSearchProducts()}
                       placeholder="Buscar producto o carta..."
-                      className="flex-1 bg-black border border-white/10 p-3 rounded-xl text-xs font-bold focus:border-geeko-cyan transition-all"
+                      className="flex-1 bg-black border border-white/10 p-3 rounded-xl text-xs font-bold focus:border-white transition-all"
                     />
                     <button 
                       onClick={handleSearchProducts}
@@ -369,7 +369,7 @@ export const PresalesPage: React.FC = () => {
                         <button 
                           key={i}
                           onClick={() => selectProduct(p)}
-                          className="w-full flex items-center gap-3 p-3 bg-black hover:bg-geeko-cyan hover:text-black rounded-xl border border-white/5 transition-all text-left group"
+                          className="w-full flex items-center gap-3 p-3 bg-black hover:bg-white hover:text-black rounded-xl border border-white/5 transition-all text-left group"
                         >
                           <div className="w-10 h-10 rounded-lg overflow-hidden bg-slate-800 shrink-0">
                             <img src={p.image_url} alt="" className="w-full h-full object-cover" />
@@ -392,7 +392,7 @@ export const PresalesPage: React.FC = () => {
                       type="text" 
                       value={editingPresale.title}
                       onChange={(e) => setEditingPresale({ ...editingPresale, title: e.target.value })}
-                      className="w-full bg-slate-900/50 border border-white/5 p-4 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-geeko-cyan/50 transition-all"
+                      className="w-full bg-slate-900/50 border border-white/5 p-4 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-white/50 transition-all"
                       placeholder="Ej: NUEVO LANZAMIENTO"
                     />
                   </div>
@@ -402,7 +402,7 @@ export const PresalesPage: React.FC = () => {
                       type="text" 
                       value={editingPresale.subtitle}
                       onChange={(e) => setEditingPresale({ ...editingPresale, subtitle: e.target.value })}
-                      className="w-full bg-slate-900/50 border border-white/5 p-4 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-geeko-cyan/50 transition-all"
+                      className="w-full bg-slate-900/50 border border-white/5 p-4 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-white/50 transition-all"
                       placeholder="Ej: DISPONIBLE PRÓXIMAMENTE"
                     />
                   </div>
@@ -416,7 +416,7 @@ export const PresalesPage: React.FC = () => {
                       type="text" 
                       value={editingPresale.link_url}
                       onChange={(e) => setEditingPresale({ ...editingPresale, link_url: e.target.value })}
-                      className="w-full bg-slate-900/50 border border-white/5 p-4 pl-12 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-geeko-cyan/50 transition-all"
+                      className="w-full bg-slate-900/50 border border-white/5 p-4 pl-12 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-white/50 transition-all"
                       placeholder="/card/abc-123"
                     />
                   </div>
@@ -429,7 +429,7 @@ export const PresalesPage: React.FC = () => {
                       type="number" 
                       value={editingPresale.display_order}
                       onChange={(e) => setEditingPresale({ ...editingPresale, display_order: parseInt(e.target.value) || 0 })}
-                      className="w-full bg-slate-900/50 border border-white/5 p-4 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-geeko-cyan/50 transition-all"
+                      className="w-full bg-slate-900/50 border border-white/5 p-4 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-white/50 transition-all"
                     />
                   </div>
                   <div className="space-y-2">
@@ -438,7 +438,7 @@ export const PresalesPage: React.FC = () => {
                       onClick={() => setEditingPresale({ ...editingPresale, is_active: !editingPresale.is_active })}
                       className={`w-full p-4 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all flex items-center justify-center gap-3 ${
                         editingPresale.is_active 
-                          ? 'bg-geeko-cyan/10 border-geeko-cyan/20 text-geeko-cyan' 
+                          ? 'bg-white/10 border-white/20 text-white' 
                           : 'bg-slate-900/50 border-white/5 text-slate-500'
                       }`}
                     >
@@ -459,7 +459,7 @@ export const PresalesPage: React.FC = () => {
                 <button 
                   onClick={handleSave}
                   disabled={saving || uploading}
-                  className="flex items-center gap-3 bg-geeko-cyan text-black px-10 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_20px_rgba(34,211,238,0.3)] disabled:opacity-50"
+                  className="flex items-center gap-3 bg-white text-black px-10 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_20px_rgba(34,211,238,0.3)] disabled:opacity-50"
                 >
                   {saving ? (
                     <>
