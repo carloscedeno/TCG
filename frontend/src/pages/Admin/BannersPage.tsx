@@ -25,11 +25,6 @@ interface Banner {
   game_code?: string | null;
 }
 
-interface Game {
-  game_id: number;
-  game_name: string;
-  game_code: string;
-}
 
 export const BannersPage: React.FC = () => {
   const navigate = useNavigate();
