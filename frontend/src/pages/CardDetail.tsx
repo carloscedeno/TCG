@@ -404,7 +404,7 @@ export const CardDetail: React.FC = () => {
                                                         )}
                                                     </div>
                                                 </div>
-                                                <span className={`text-[9px] px-3 py-1 rounded-full font-black tracking-[0.2em] shadow-sm ${activeFinish === 'foil' ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white animate-pulse' : 'bg-white text-black'}`}>
+                                                <span className={`text-[9px] px-3 py-1 rounded-full font-black tracking-[0.2em] shadow-sm ${activeFinish === 'foil' ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-white text-white animate-pulse' : 'bg-white text-black'}`}>
                                                     {activeFinish === 'foil' ? 'FOIL' : 'NONFOIL'}
                                                 </span>
                                             </div>
@@ -435,7 +435,7 @@ export const CardDetail: React.FC = () => {
                                                                 if (targetId) handleVersionClick(targetId, 'foil');
                                                             }}
                                                             className={`px-3 py-2 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all flex items-center gap-1 ${activeFinish === 'foil'
-                                                                ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 border-transparent text-white shadow-[0_0_15px_rgba(236,72,153,0.3)] scale-[1.05]'
+                                                                ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-white border-transparent text-white shadow-[0_0_15px_rgba(236,72,153,0.3)] scale-[1.05]'
                                                                 : (activeGroup.foil?.stock || 0) === 0
                                                                     ? 'text-neutral-500 opacity-60'
                                                                     : 'text-neutral-500 hover:text-white'
@@ -449,7 +449,7 @@ export const CardDetail: React.FC = () => {
                                                 <button
                                                     onClick={handleAddToCart}
                                                     disabled={isAdding}
-                                                    className="flex-1 h-12 rounded-xl bg-white text-black font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0,229,255,0.3)] hover:shadow-[0_0_30px_rgba(0,229,255,0.5)] hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
+                                                    className="flex-1 h-12 rounded-xl bg-white text-black font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255, 255, 255, 0.1)] hover:shadow-[0_0_30px_rgba(255, 255, 255, 0.1)] hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
                                                 >
                                                     {isAdding ? <Loader2 size={16} className="animate-spin" /> : <ShoppingCart size={16} fill="currentColor" />}
                                                     {isAdding ? '...' : ((activeVersion?.stock || 0) > 0 ? 'Agregar' : 'Encargo')}

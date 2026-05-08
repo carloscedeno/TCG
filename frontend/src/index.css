@@ -46,25 +46,10 @@
   --color-geeko-black: #000000;
   --color-geeko-surface: #0B0E11;
   --color-white: #FFFFFF;
-  --color-geeko-gold: #FFD700;
-  --color-white: #FFFFFF;
-  --color-geeko-purple-vibrant: #A020F0;
-  --color-geeko-gold-premium: #FFD700;
-  
-  /* Legacy/Support Colors */
-  --color-geeko-violet-dark: #000000; /* Overridden to black */
-  --color-geeko-turquoise: #0066FF;
-  --color-geeko-violet-medium: #0B0E11;
-  --color-geeko-violet-accent: #1A1A1A;
-  
-  --color-geeko-red: #E1306C;
-  --color-geeko-blue: #405DE6;
-  --color-geeko-purple: #A020F0;
-  --color-geeko-orange: #F77737;
-  --color-geeko-yellow: #FFD700;
-  --color-white: #00FF85;
-
   --color-neutral-white: #FFFFFF;
+  --color-white: #FFFFFF;
+  --color-white: #FFFFFF;
+  --color-white: #FFFFFF;
   --color-neutral-black: #000000;
 
   /* UI Tokens */
@@ -243,16 +228,8 @@ body {
     inset: 0;
     pointer-events: none;
     z-index: 25;
-    background: linear-gradient(115deg,
-        transparent 10%,
-        rgba(0, 229, 255, 0.15) 25%,
-        rgba(255, 0, 128, 0.15) 45%,
-        rgba(255, 255, 255, 0.2) 50%,
-        rgba(128, 0, 255, 0.15) 55%,
-        rgba(0, 255, 128, 0.15) 75%,
-        transparent 90%);
-    background-size: 300% 300%;
-    mix-blend-mode: color-dodge;
+    background: transparent;
+    mix-blend-mode: normal;
     animation: holo-slide 12s ease-in-out infinite;
     opacity: 0.6;
   }
@@ -343,13 +320,12 @@ body {
 }
 
 .text-white {
-  text-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
   color: var(--color-white);
 }
 
 @layer utilities {
   .text-shadow-glow {
-    text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+    text-shadow: none;
   }
 
   .animate-bounce-slow {

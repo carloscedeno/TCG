@@ -528,7 +528,7 @@ const handleImport = async () => {
                                 <div className="h-4 bg-white/5 rounded-full overflow-hidden border border-white/10 p-[3px] backdrop-blur-md">
                                     {/* Fill */}
                                     <div
-                                        className="h-full bg-white rounded-full shadow-[0_0_25px_rgba(0,229,255,0.7)] transition-all duration-700 ease-out relative overflow-hidden"
+                                        className="h-full bg-white rounded-full shadow-[0_0_25px_rgba(255, 255, 255, 0.1)] transition-all duration-700 ease-out relative overflow-hidden"
                                         style={{ width: `${(progress.current / progress.total) * 100}%` }}
                                     >
                                         {/* Shimmer effect */}
@@ -568,7 +568,7 @@ const handleImport = async () => {
                         <button
                             onClick={handleImport}
                             disabled={loading}
-                            className="w-full bg-white text-black py-4 rounded-2xl font-black uppercase tracking-widest text-sm hover:scale-[1.02] active:scale-95 transition-all shadow-[0_0_30px_rgba(0,229,255,0.2)] flex items-center justify-center gap-2 disabled:opacity-50"
+                            className="w-full bg-white text-black py-4 rounded-2xl font-black uppercase tracking-widest text-sm hover:scale-[1.02] active:scale-95 transition-all shadow-[0_0_30px_rgba(255, 255, 255, 0.1)] flex items-center justify-center gap-2 disabled:opacity-50"
                         >
                             Confirmar Importación <ArrowRight size={18} />
                         </button>

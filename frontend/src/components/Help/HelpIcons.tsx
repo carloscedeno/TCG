@@ -119,7 +119,7 @@ export const VideoPlaceholder = () => (
         {/* Animated Background Mesh */}
         <div className="absolute inset-0 z-0">
             <div className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] bg-[radial-gradient(circle_at_center,_rgba(109,40,217,0.15),_transparent_70%)] animate-[spin_20s_linear_infinite]" />
-            <div className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] bg-[radial-gradient(circle_at_center,_rgba(0,229,255,0.1),_transparent_60%)] animate-[spin_15s_linear_infinite_reverse]" />
+            <div className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] bg-[radial-gradient(circle_at_center,_rgba(255, 255, 255, 0.1),_transparent_60%)] animate-[spin_15s_linear_infinite_reverse]" />
         </div>
 
         {/* Fake UI Header (More Pro) */}

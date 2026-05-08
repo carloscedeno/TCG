@@ -494,7 +494,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                     <button
                                                         key={i}
                                                         onClick={(e) => { e.stopPropagation(); setCarouselIndex(i); }}
-                                                        className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === carouselIndex ? 'bg-white w-6 shadow-[0_0_10px_rgba(0,229,255,0.5)]' : 'bg-white/20 hover:bg-white/40'}`}
+                                                        className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === carouselIndex ? 'bg-white w-6 shadow-[0_0_10px_rgba(255, 255, 255, 0.1)]' : 'bg-white/20 hover:bg-white/40'}`}
                                                     />
                                                 ))}
                                             </div>
@@ -583,8 +583,8 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                 data-testid="add-to-cart-button"
                                                 className={`w-full h-14 rounded-xl font-web-titles font-normal text-sm uppercase tracking-widest flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 ${
                                                     addedSuccess
-                                                        ? 'bg-white text-black shadow-[0_0_20px_rgba(0,255,133,0.4)]'
-                                                        : 'bg-white text-black shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_40px_rgba(0,229,255,0.6)]'
+                                                        ? 'bg-white text-black shadow-[0_0_20px_rgba(255, 255, 255, 0.1)]'
+                                                        : 'bg-white text-black shadow-[0_0_20px_rgba(255, 255, 255, 0.1)] hover:shadow-[0_0_40px_rgba(255, 255, 255, 0.1)]'
                                                 }`}
                                             >
                                                 {isAdding ? <Loader2 size={18} className="animate-spin" /> : addedSuccess ? '¡Añadido! ✓' : <ShoppingCart size={18} fill="currentColor" />}
@@ -919,7 +919,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                                     -{activeVersion.discount_percentage}%
                                                                 </div>
                                                             )}
-                                                            <span className={`text-[10px] px-2 py-0.5 rounded-full font-black tracking-widest shadow-sm ${selectedFinish === 'foil' ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white animate-pulse' : 'bg-white text-black'}`}>
+                                                            <span className={`text-[10px] px-2 py-0.5 rounded-full font-black tracking-widest shadow-sm ${selectedFinish === 'foil' ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-white text-white animate-pulse' : 'bg-white text-black'}`}>
                                                                 {selectedFinish?.toUpperCase()}
                                                             </span>
                                                         </div>
@@ -950,7 +950,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                                     if (targetId) handleVersionClick(targetId, 'foil');
                                                                 }}
                                                                 className={`px-3 py-1 rounded text-[8px] font-black uppercase tracking-widest transition-all flex items-center gap-1 ${selectedFinish === 'foil'
-                                                                    ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 border-transparent text-white shadow-lg'
+                                                                    ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-white border-transparent text-white shadow-lg'
                                                                     : (activeGroup.foil?.stock || 0) === 0
                                                                         ? 'text-neutral-500 opacity-60'
                                                                         : 'text-neutral-500 hover:text-white'
@@ -975,8 +975,8 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                 disabled={isAdding}
                                                 data-testid="add-to-cart-button"
                                                 className={`w-full h-12 rounded-xl font-web-titles font-normal text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 shrink-0 relative z-10 ${addedSuccess
-                                                    ? 'bg-white text-black shadow-[0_0_20px_rgba(0,255,133,0.4)]'
-                                                    : 'bg-white text-black shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_40px_rgba(0,229,255,0.6)]'
+                                                    ? 'bg-white text-black shadow-[0_0_20px_rgba(255, 255, 255, 0.1)]'
+                                                    : 'bg-white text-black shadow-[0_0_20px_rgba(255, 255, 255, 0.1)] hover:shadow-[0_0_40px_rgba(255, 255, 255, 0.1)]'
                                                     }`}
                                             >
                                                 {isAdding ? <Loader2 size={16} className="animate-spin" /> : addedSuccess ? '¡Añadido! ✓' : <ShoppingCart size={16} fill="currentColor" />}

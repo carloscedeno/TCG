@@ -151,7 +151,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
               </span>
             )}
             {isFoil && (
-              <span className="flex items-center gap-1 text-[8px] bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white px-1.5 py-0.5 rounded uppercase font-bold tracking-wider animate-pulse">
+              <span className="flex items-center gap-1 text-[8px] bg-gradient-to-r from-pink-500 via-purple-500 to-white text-white px-1.5 py-0.5 rounded uppercase font-bold tracking-wider animate-pulse">
                 <svg width="8" height="10" viewBox="0 0 10 12" fill="none" className="drop-shadow-sm">
                   <rect x="0.5" y="0.5" width="9" height="11" rx="1.5" stroke="currentColor" strokeWidth="1" />
                   <path d="M2 3 L8 3 M2 5 L6 5" stroke="currentColor" strokeWidth="1" />
@@ -192,7 +192,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
                   {typeof price === 'number' ? `$${price.toFixed(2)}` : '---'}
                 </span>
                 {isFoil && (
-                  <span className="text-[10px] bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white px-1.5 py-0.5 rounded uppercase font-black tracking-tighter" title="Versión Foil">
+                  <span className="text-[10px] bg-gradient-to-r from-pink-500 via-purple-500 to-white text-white px-1.5 py-0.5 rounded uppercase font-black tracking-tighter" title="Versión Foil">
                     FOIL
                   </span>
                 )}
@@ -297,7 +297,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         )}
 
         {isFoil && (
-          <div className="absolute top-8 right-2 px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider bg-gradient-to-r from-pink-500/80 via-purple-600/80 to-cyan-500/80 text-white border border-white/20 z-20 shadow-lg flex items-center gap-1 animate-pulse">
+          <div className="absolute top-8 right-2 px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider bg-gradient-to-r from-pink-500/80 via-purple-600/80 to-white/80 text-white border border-white/20 z-20 shadow-lg flex items-center gap-1 animate-pulse">
             <svg width="8" height="10" viewBox="0 0 10 12" fill="none">
               <rect x="0.5" y="0.5" width="9" height="11" rx="1.5" stroke="currentColor" strokeWidth="1" />
               <path d="M2 3 L8 3 M2 5 L6 5" stroke="currentColor" strokeWidth="1" />
@@ -364,7 +364,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
                     {price && price > 0 ? `$${price.toFixed(2)}` : 'S/P'}
                   </span>
                   {isFoil && (
-                    <span className="text-[10px] bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white px-1.5 py-0.5 rounded uppercase font-black tracking-tighter" title="Versión Foil">
+                    <span className="text-[10px] bg-gradient-to-r from-pink-500 via-purple-500 to-white text-white px-1.5 py-0.5 rounded uppercase font-black tracking-tighter" title="Versión Foil">
                       FOIL
                     </span>
                   )}

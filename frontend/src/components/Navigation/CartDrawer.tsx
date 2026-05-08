@@ -126,7 +126,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                                             {/* Finish & stock badges */}
                                             <div className="flex flex-wrap gap-1 mt-1">
                                                 {(item.is_foil || (item.products?.finish || '').toLowerCase() === 'foil') && (
-                                                    <span className="inline-block px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white">
+                                                    <span className="inline-block px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest bg-gradient-to-r from-pink-500 via-purple-500 to-white text-white">
                                                         ✦ Foil
                                                     </span>
                                                 )}
@@ -222,7 +222,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                             <button
                                 onClick={handleCheckout}
                                 data-testid="checkout-button"
-                                className="w-full h-14 bg-white hover:bg-cyan-400 text-black font-black uppercase tracking-widest text-xs rounded-2xl flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(0,229,255,0.2)] hover:shadow-[0_0_50px_rgba(0,229,255,0.4)] transition-all transform active:scale-[0.98]"
+                                className="w-full h-14 bg-white hover:bg-cyan-400 text-black font-black uppercase tracking-widest text-xs rounded-2xl flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(255, 255, 255, 0.1)] hover:shadow-[0_0_50px_rgba(255, 255, 255, 0.1)] transition-all transform active:scale-[0.98]"
                             >
                                 <CreditCard size={18} />
                                 Finalizar Compra
