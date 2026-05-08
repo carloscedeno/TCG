@@ -96,7 +96,7 @@ export const CardDetail: React.FC = () => {
 
     const getLegalityIcon = (status: string) => {
         switch (status) {
-            case 'legal': return <CheckCircle2 size={16} className="text-geeko-cyan" />;
+            case 'legal': return <CheckCircle2 size={16} className="text-white" />;
             case 'not_legal': return <X size={16} className="text-neutral-700" />;
             case 'restricted': return <AlertCircle size={16} className="text-amber-500" />;
             case 'banned': return <AlertCircle size={16} className="text-red-500" />;
@@ -260,7 +260,7 @@ export const CardDetail: React.FC = () => {
                                                             {group.base.set_code?.toUpperCase()}
                                                         </div>
                                                         <div className="flex-1 text-left min-w-[120px]">
-                                                            <div className={`text-xs font-bold font-web-titles tracking-tight leading-tight truncate ${isGroupActive ? 'text-geeko-cyan' : 'text-neutral-300'}`}>
+                                                            <div className={`text-xs font-bold font-web-titles tracking-tight leading-tight truncate ${isGroupActive ? 'text-white' : 'text-neutral-300'}`}>
                                                                 {group.base.set_name}
                                                             </div>
                                                             <div className="text-[10px] text-neutral-600 font-bold flex items-center gap-2">
@@ -299,7 +299,7 @@ export const CardDetail: React.FC = () => {
                                                                         </svg>
                                                                         Foil
                                                                     </span>
-                                                                    <span className={`text-[11px] font-black ${group.foil.stock > 0 ? 'text-geeko-cyan' : 'text-neutral-600'}`}>
+                                                                    <span className={`text-[11px] font-black ${group.foil.stock > 0 ? 'text-white' : 'text-neutral-600'}`}>
                                                                         {group.foil.discount_percentage > 0 && (
                                                                             <span className="text-[9px] text-neutral-500 line-through mr-1.5 opacity-60">
                                                                                 ${Number(group.foil.original_price).toFixed(2)}
@@ -319,7 +319,7 @@ export const CardDetail: React.FC = () => {
 
                                                         <div className="flex items-center gap-4">
                                                             {rowActiveVersion?.stock > 0 ? (
-                                                                <span className="text-[9px] font-black text-geeko-cyan bg-geeko-cyan/10 px-2 py-0.5 rounded-full border border-geeko-cyan/20 uppercase tracking-tight">
+                                                                <span className="text-[9px] font-black text-white bg-white/5 px-2 py-0.5 rounded-full border border-white/10 uppercase tracking-tight">
                                                                     En Stock
                                                                 </span>
                                                             ) : (
@@ -351,7 +351,7 @@ export const CardDetail: React.FC = () => {
                                     }}
                                     className="block group/title"
                                 >
-                                    <h2 className="text-4xl lg:text-6xl font-web-titles font-normal tracking-tight text-white group-hover/title:text-geeko-cyan transition-colors text-gradient-cyan capitalize">
+                                    <h2 className="text-4xl lg:text-6xl font-web-titles font-normal tracking-tight text-white transition-colors capitalize">
                                         {details.name}
                                     </h2>
                                 </a>
@@ -376,7 +376,7 @@ export const CardDetail: React.FC = () => {
                                 )}
                                 <div className="pt-2 flex flex-wrap gap-8 text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em]">
                                     <div>Artist <span className="text-white ml-2">{details.artist}</span></div>
-                                    <div>Set <span className="text-geeko-cyan ml-2">{details.set} ({details.set_code?.toUpperCase()})</span></div>
+                                    <div>Set <span className="text-white ml-2">{details.set} ({details.set_code?.toUpperCase()})</span></div>
                                 </div>
                             </div>
 
@@ -387,7 +387,7 @@ export const CardDetail: React.FC = () => {
 
                                     <div className="p-8 rounded-[32px] bg-gradient-to-br from-geeko-cyan/10 via-transparent to-transparent border border-white/10 group relative overflow-hidden hover:border-geeko-cyan/30 transition-colors">
                                         <div className="absolute top-0 right-0 w-40 h-40 bg-geeko-cyan/5 rounded-full blur-[50px]" />
-                                        <div className="text-[9px] font-black uppercase text-geeko-cyan tracking-[0.2em] mb-4">Internal Store Price</div>
+                                        <div className="text-[9px] font-black uppercase text-neutral-500 tracking-[0.2em] mb-4">Internal Store Price</div>
                                         <div className="flex flex-col gap-6">
                                             {/* Price + Variant Badge (horizontal layout matching CardModal) */}
                                             <div className="flex items-center justify-between">
