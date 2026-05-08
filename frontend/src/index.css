@@ -47,10 +47,23 @@
   --color-geeko-surface: #0B0E11;
   --color-white: #FFFFFF;
   --color-neutral-white: #FFFFFF;
-  --color-white: #FFFFFF;
-  --color-white: #FFFFFF;
-  --color-white: #FFFFFF;
   --color-neutral-black: #000000;
+  
+  /* Monochrome Mapping of Brand Colors */
+  --color-white: #FFFFFF;
+  --color-white: #FFFFFF;
+  --color-white: #FFFFFF;
+  --color-geeko-gold: #FFFFFF;
+  --color-geeko-gold-premium: #FFFFFF;
+  --color-geeko-red: #FFFFFF;
+  --color-geeko-blue: #FFFFFF;
+  --color-geeko-purple: #FFFFFF;
+  --color-geeko-orange: #FFFFFF;
+  --color-geeko-yellow: #FFFFFF;
+  --color-geeko-turquoise: #FFFFFF;
+  --color-geeko-violet-dark: #000000;
+  --color-geeko-violet-medium: #0B0E11;
+  --color-geeko-violet-accent: #1A1A1A;
 
   /* UI Tokens */
   --color-text-high: #FFFFFF;
