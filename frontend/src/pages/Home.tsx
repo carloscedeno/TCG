@@ -434,6 +434,14 @@ const Home: React.FC = () => {
 
 
 
+        {/* SINGLES Header (Production Style) */}
+        {activeTab === 'marketplace' && filters.games?.includes('MTG') && (
+          <div className="max-w-[1600px] mx-auto px-6 pt-6 flex items-center gap-2">
+            <Sparkles size={18} className="text-geeko-cyan fill-current" />
+            <span className="text-xs font-black uppercase tracking-[0.2em] text-white">SINGLES</span>
+          </div>
+        )}
+
         {/* Rarity Filter Tabs & Sort */}
         {(!isDashboardView || (filters.games && filters.games.length > 0)) && (
           <div className="bg-[#0a0a0a]/95 border-b border-neutral-800 sticky top-[60px] z-40 backdrop-blur-md">
@@ -444,7 +452,7 @@ const Home: React.FC = () => {
                     onClick={() => handleTabChange('marketplace')}
                     data-testid="inventory-tab"
                     className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'marketplace'
-                      ? 'ring-2 ring-white/30 bg-white text-black shadow-[0_0_15px_rgba(0, 102, 255,0.4)]'
+                      ? 'ring-2 ring-geeko-cyan/30 bg-geeko-cyan text-black shadow-[0_0_15px_rgba(0,209,255,0.4)]'
                       : 'text-neutral-500 hover:text-neutral-300'
                       }`}
                   >
@@ -458,11 +466,11 @@ const Home: React.FC = () => {
                     onClick={() => handleTabChange('catalog')}
                     data-testid="catalog-tab"
                     className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'catalog'
-                      ? 'ring-2 ring-white/30 bg-white text-black shadow-[0_0_15px_rgba(0, 102, 255,0.4)]'
+                      ? 'ring-2 ring-geeko-cyan/30 bg-geeko-cyan text-black shadow-[0_0_15px_rgba(0,209,255,0.4)]'
                       : 'text-neutral-500 hover:text-neutral-300'
                       }`}
                   >
-                    <Search size={16} className={activeTab === 'catalog' ? 'text-black' : 'text-white'} />
+                    <Search size={16} className={activeTab === 'catalog' ? 'text-black' : 'text-geeko-cyan'} />
                     Catálogo
                   </button>
                 )}

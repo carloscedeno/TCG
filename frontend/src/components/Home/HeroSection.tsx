@@ -151,7 +151,7 @@ export const HeroSection: React.FC = () => {
                                 key={i}
                                 onClick={(e) => { e.preventDefault(); setCurrentIndex(i); }}
                                 className={`h-1.5 rounded-full transition-all duration-500 ${i === currentIndex
-                                    ? 'w-8 bg-geeko-cyan shadow-[0_0_8px_rgba(0, 153, 255, 0.6)]'
+                                    ? 'w-8 bg-geeko-cyan shadow-[0_0_8px_rgba(0, 209, 255, 0.6)]'
                                     : 'w-3 bg-white/30 hover:bg-white/50'
                                 }`}
                             />

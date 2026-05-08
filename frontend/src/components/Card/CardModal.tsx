@@ -494,7 +494,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                     <button
                                                         key={i}
                                                         onClick={(e) => { e.stopPropagation(); setCarouselIndex(i); }}
-                                                        className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === carouselIndex ? 'bg-geeko-cyan w-6 shadow-[0_0_10px_rgba(0, 153, 255, 0.5)]' : 'bg-white/20 hover:bg-white/40'}`}
+                                                        className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === carouselIndex ? 'bg-geeko-cyan w-6 shadow-[0_0_10px_rgba(0, 209, 255, 0.5)]' : 'bg-white/20 hover:bg-white/40'}`}
                                                     />
                                                 ))}
                                             </div>
@@ -584,7 +584,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                 className={`w-full h-14 rounded-xl font-web-titles font-normal text-sm uppercase tracking-widest flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 ${
                                                     addedSuccess
                                                         ? 'bg-geeko-cyan text-black shadow-[0_0_20px_rgba(0,255,133,0.4)]'
-                                                        : 'bg-geeko-cyan text-black shadow-[0_0_20px_rgba(0, 153, 255, 0.4)] hover:shadow-[0_0_40px_rgba(0, 153, 255, 0.6)]'
+                                                        : 'bg-geeko-cyan text-black shadow-[0_0_20px_rgba(0, 209, 255, 0.4)] hover:shadow-[0_0_40px_rgba(0, 209, 255, 0.6)]'
                                                 }`}
                                             >
                                                 {isAdding ? <Loader2 size={18} className="animate-spin" /> : addedSuccess ? '¡Añadido! ✓' : <ShoppingCart size={18} fill="currentColor" />}
@@ -976,7 +976,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                 data-testid="add-to-cart-button"
                                                 className={`w-full h-12 rounded-xl font-web-titles font-normal text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 shrink-0 relative z-10 ${addedSuccess
                                                     ? 'bg-geeko-cyan text-black shadow-[0_0_20px_rgba(0,255,133,0.4)]'
-                                                    : 'bg-geeko-cyan text-black shadow-[0_0_20px_rgba(0, 153, 255, 0.4)] hover:shadow-[0_0_40px_rgba(0, 153, 255, 0.6)]'
+                                                    : 'bg-geeko-cyan text-black shadow-[0_0_20px_rgba(0, 209, 255, 0.4)] hover:shadow-[0_0_40px_rgba(0, 209, 255, 0.6)]'
                                                     }`}
                                             >
                                                 {isAdding ? <Loader2 size={16} className="animate-spin" /> : addedSuccess ? '¡Añadido! ✓' : <ShoppingCart size={16} fill="currentColor" />}

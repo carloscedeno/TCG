@@ -222,7 +222,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                             <button
                                 onClick={handleCheckout}
                                 data-testid="checkout-button"
-                                className="w-full h-14 bg-geeko-cyan hover:bg-cyan-400 text-black font-black uppercase tracking-widest text-xs rounded-2xl flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(0, 153, 255, 0.2)] hover:shadow-[0_0_50px_rgba(0, 153, 255, 0.4)] transition-all transform active:scale-[0.98]"
+                                className="w-full h-14 bg-geeko-cyan hover:bg-cyan-400 text-black font-black uppercase tracking-widest text-xs rounded-2xl flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(0, 209, 255, 0.2)] hover:shadow-[0_0_50px_rgba(0, 209, 255, 0.4)] transition-all transform active:scale-[0.98]"
                             >
                                 <CreditCard size={18} />
                                 Finalizar Compra

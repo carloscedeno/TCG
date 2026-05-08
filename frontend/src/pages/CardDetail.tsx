@@ -170,7 +170,7 @@ export const CardDetail: React.FC = () => {
                 <AlertCircle size={64} className="text-red-500 mb-6" />
                 <h1 className="text-3xl font-black mb-4">Error loading card</h1>
                 <p className="text-neutral-400 max-w-md mb-8">{error}</p>
-                <Link to="/" className="px-8 py-3 bg-geeko-cyan rounded-full font-black text-black hover:scale-105 transition-all flex items-center gap-2 shadow-[0_0_20px_rgba(0, 153, 255,0.3)]">
+                <Link to="/" className="px-8 py-3 bg-geeko-cyan rounded-full font-black text-black hover:scale-105 transition-all flex items-center gap-2 shadow-[0_0_20px_rgba(0, 209, 255, 0.3)]">
                     <ArrowLeft size={18} /> Back to Market
                 </Link>
             </div>
@@ -195,7 +195,7 @@ export const CardDetail: React.FC = () => {
                         <p className="text-neutral-500 font-bold tracking-widest uppercase text-xs">Loading Card Data...</p>
                     </div>
                 ) : details ? (
-                    <div className="glass-panel rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0, 153, 255,0.15)] flex flex-col lg:flex-row overflow-hidden min-h-[85vh] max-h-[90vh]">
+                    <div className="glass-panel rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0, 209, 255, 0.15)] flex flex-col lg:flex-row overflow-hidden min-h-[85vh] max-h-[90vh]">
                         {/* LEFT: IMAGE & VERSIONS LIST */}
                         <div className="w-full lg:w-[420px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden h-full">
                             <div className="flex-1 min-h-[450px] md:min-h-[600px] flex items-center justify-center p-6 sm:p-8 md:p-10 relative bg-gradient-to-b from-white/[0.04] to-transparent overflow-hidden">
@@ -453,7 +453,7 @@ export const CardDetail: React.FC = () => {
                                                 <button
                                                     onClick={handleAddToCart}
                                                     disabled={isAdding}
-                                                    className="flex-1 h-12 rounded-xl bg-geeko-cyan text-black font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0, 153, 255, 0.3)] hover:shadow-[0_0_30px_rgba(0, 153, 255, 0.5)] hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
+                                                    className="flex-1 h-12 rounded-xl bg-geeko-cyan text-black font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0, 209, 255, 0.3)] hover:shadow-[0_0_30px_rgba(0, 209, 255, 0.5)] hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
                                                 >
                                                     {isAdding ? <Loader2 size={16} className="animate-spin" /> : <ShoppingCart size={16} fill="currentColor" />}
                                                     {isAdding ? '...' : ((activeVersion?.stock || 0) > 0 ? 'Agregar' : 'Encargo')}
