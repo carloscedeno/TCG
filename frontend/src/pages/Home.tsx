@@ -444,7 +444,7 @@ const Home: React.FC = () => {
                     onClick={() => handleTabChange('marketplace')}
                     data-testid="inventory-tab"
                     className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'marketplace'
-                      ? 'ring-2 ring-geeko-cyan-neon/30 bg-geeko-cyan-neon text-black shadow-[0_0_15px_rgba(0, 153, 255,0.4)]'
+                      ? 'ring-2 ring-geeko-cyan-neon/30 bg-geeko-cyan-neon text-black shadow-[0_0_15px_rgba(0, 102, 255,0.4)]'
                       : 'text-neutral-500 hover:text-neutral-300'
                       }`}
                   >
@@ -458,7 +458,7 @@ const Home: React.FC = () => {
                     onClick={() => handleTabChange('catalog')}
                     data-testid="catalog-tab"
                     className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'catalog'
-                      ? 'ring-2 ring-geeko-cyan-neon/30 bg-geeko-cyan-neon text-black shadow-[0_0_15px_rgba(0, 153, 255,0.4)]'
+                      ? 'ring-2 ring-geeko-cyan-neon/30 bg-geeko-cyan-neon text-black shadow-[0_0_15px_rgba(0, 102, 255,0.4)]'
                       : 'text-neutral-500 hover:text-neutral-300'
                       }`}
                   >

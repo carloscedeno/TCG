@@ -400,7 +400,7 @@ export function InventoryPage() {
                             title="Descargar inventario actual"
                         >
                             <span className="relative z-10 flex items-center gap-3">
-                                <Download size={18} className="text-geeko-cyan/70 group-hover:text-emerald-400 transition-colors" />
+                                <Download size={18} className="text-geeko-cyan/70 group-hover:text-geeko-cyan transition-colors" />
                                 Exportar
                             </span>
                         </button>

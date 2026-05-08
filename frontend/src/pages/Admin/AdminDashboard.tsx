@@ -191,7 +191,7 @@ export const AdminDashboard = () => {
     }
 
     const scrapers = [
-        { id: 'cardkingdom', name: 'CardKingdom', description: 'Referencia de Mercado (USD)', icon: <Database className="text-emerald-400" /> },
+        { id: 'cardkingdom', name: 'CardKingdom', description: 'Referencia de Mercado (USD)', icon: <Database className="text-geeko-cyan" /> },
         { id: 'cardmarket', name: 'Cardmarket', description: 'Precios UE (EUR)', icon: <Database className="text-orange-400" /> },
         { id: 'tcgplayer', name: 'TCGPlayer', description: 'Precios EE.UU. (USD)', icon: <Database className="text-blue-400" /> },
     ];
@@ -222,7 +222,7 @@ export const AdminDashboard = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                     <StatCard title="Usuarios Registrados" value={stats.total_users} change="En Línea" icon={<Users className="text-blue-400" />} />
                     <StatCard title="Índice de Cartas" value={stats.total_cards} change="Cartas" icon={<Database className="text-purple-400" />} />
-                    <StatCard title="Actualizaciones de Precios" value={stats.total_updates} change="Operaciones" icon={<Settings className="text-emerald-400" />} />
+                    <StatCard title="Actualizaciones de Precios" value={stats.total_updates} change="Operaciones" icon={<Settings className="text-geeko-cyan" />} />
                 </div>
 
                 <div className="mb-12">
@@ -232,11 +232,11 @@ export const AdminDashboard = () => {
                             <div className="flex-1 text-center md:text-left">
                                 <div className="flex items-center justify-center md:justify-start gap-3 mb-4">
                                     <div className="w-12 h-12 bg-geeko-cyan/20 rounded-2xl flex items-center justify-center border border-geeko-cyan/30">
-                                        <Users className="text-emerald-400" size={24} />
+                                        <Users className="text-geeko-cyan" size={24} />
                                     </div>
-                                    <span className="text-emerald-400 font-black text-xs tracking-[0.3em] uppercase">Módulo de Punto de Venta</span>
+                                    <span className="text-geeko-cyan font-black text-xs tracking-[0.3em] uppercase">Módulo de Punto de Venta</span>
                                 </div>
-                                <h2 className="text-4xl font-black italic text-white tracking-tighter mb-4 leading-none">PORTAL DE <span className="text-emerald-400">ATENCIÓN A CLIENTES</span></h2>
+                                <h2 className="text-4xl font-black italic text-white tracking-tighter mb-4 leading-none">PORTAL DE <span className="text-geeko-cyan">ATENCIÓN A CLIENTES</span></h2>
                                 <p className="text-slate-400 text-sm font-bold uppercase tracking-widest max-w-xl">Gestiona carritos múltiples, atiende clientes en tienda y procesa ventas rápidas de forma centralizada.</p>
                             </div>
                             <div className="flex items-center gap-6">
@@ -244,7 +244,7 @@ export const AdminDashboard = () => {
                                     <span className="text-[10px] text-slate-500 font-black uppercase tracking-widest mb-1">Estado del Sistema</span>
                                     <div className="flex items-center gap-2 px-3 py-1 bg-geeko-cyan/10 rounded-full border border-geeko-cyan/20">
                                         <div className="w-1.5 h-1.5 bg-geeko-cyan rounded-full animate-pulse" />
-                                        <span className="text-[10px] font-black text-emerald-400 uppercase tracking-tighter">Terminal Operativa</span>
+                                        <span className="text-[10px] font-black text-geeko-cyan uppercase tracking-tighter">Terminal Operativa</span>
                                     </div>
                                 </div>
                                 <div className="w-20 h-20 bg-geeko-cyan rounded-[2rem] flex items-center justify-center shadow-[0_0_40px_rgba(16,185,129,0.3)] group-hover:scale-110 transition-transform group-hover:rotate-6">
@@ -329,7 +329,7 @@ export const AdminDashboard = () => {
                                 <p className="text-emerald-300 text-xs font-bold uppercase tracking-widest">Anuncios de Preventa</p>
                             </div>
                             <div className="w-16 h-16 bg-geeko-cyan/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                                <TrendingUp className="text-emerald-400" size={32} />
+                                <TrendingUp className="text-geeko-cyan" size={32} />
                             </div>
                         </div>
                     </Link>
@@ -412,7 +412,7 @@ export const AdminDashboard = () => {
                     <div className="space-y-8">
                         <div className="glass-card rounded-3xl p-8 border border-white/5 bg-slate-900/50">
                             <h2 className="text-2xl font-black mb-6 flex items-center gap-3 italic">
-                                <Shield className="text-emerald-400" />
+                                <Shield className="text-geeko-cyan" />
                                 CONTROL DE MISIÓN
                             </h2>
                             <div className="space-y-4 mb-6">
@@ -423,7 +423,7 @@ export const AdminDashboard = () => {
                                                 <span className="font-black text-xs text-slate-300 uppercase tracking-widest">{task.game_code} Ejecutor de Tareas</span>
                                                 <div className="flex items-center gap-2">
                                                     <button onClick={() => fetchTaskLogs(task.id)} className="text-[10px] font-black uppercase text-geeko-cyan hover:underline">Ver Logs</button>
-                                                    <span className={`text-[10px] px-2 py-0.5 rounded font-black uppercase ${task.status === 'running' ? 'bg-geeko-cyan/20 text-geeko-cyan' : 'bg-geeko-cyan/20 text-emerald-400'}`}>
+                                                    <span className={`text-[10px] px-2 py-0.5 rounded font-black uppercase ${task.status === 'running' ? 'bg-geeko-cyan/20 text-geeko-cyan' : 'bg-geeko-cyan/20 text-geeko-cyan'}`}>
                                                         {task.status}
                                                     </span>
                                                 </div>
@@ -446,7 +446,7 @@ export const AdminDashboard = () => {
                                     <div key={idx} className="flex gap-2">
                                         <span className="text-slate-600">[{new Date().toLocaleTimeString()}]</span>
                                         <span className="text-geeko-cyan">{source.toUpperCase()}:</span>
-                                        <span className={result.error ? 'text-red-400' : 'text-emerald-400'}>
+                                        <span className={result.error ? 'text-red-400' : 'text-geeko-cyan'}>
                                             {result.error || result.message || 'OK'}
                                         </span>
                                     </div>

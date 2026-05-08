@@ -200,7 +200,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                                         className="flex flex-col items-center gap-2 p-4 bg-geeko-cyan/5 border border-geeko-cyan/10 rounded-xl hover:bg-geeko-cyan/10 transition-all"
                                     >
                                         <span className="text-2xl">{cat.icon}</span>
-                                        <span className="text-[10px] font-bold text-emerald-400 text-center uppercase tracking-tighter">{cat.name}</span>
+                                        <span className="text-[10px] font-bold text-geeko-cyan text-center uppercase tracking-tighter">{cat.name}</span>
                                     </button>
                                 ))}
                             </div>

@@ -143,8 +143,8 @@ export function OfferManagementModal({
                             <p className="text-sm font-bold text-neutral-500 line-through">${currentPrice.toFixed(2)}</p>
                         </div>
                         <div className="text-right">
-                            <p className="text-[10px] font-black uppercase tracking-widest text-emerald-400/70">Precio Final</p>
-                            <p className="text-2xl font-black italic text-emerald-400">${finalPrice.toFixed(2)}</p>
+                            <p className="text-[10px] font-black uppercase tracking-widest text-geeko-cyan/70">Precio Final</p>
+                            <p className="text-2xl font-black italic text-geeko-cyan">${finalPrice.toFixed(2)}</p>
                         </div>
                     </div>
                 </div>

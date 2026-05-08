@@ -2,16 +2,20 @@ import os
 import re
 
 patterns = {
-    r'#00AEB4': '#0099FF',
-    r'#00D1FF': '#0099FF',
-    r'rgba\(0, 174, 180': 'rgba(0, 153, 255',
-    r'rgba\(0,174,180': 'rgba(0, 153, 255',
-    r'rgba\(0, 209, 255': 'rgba(0, 153, 255',
-    r'rgba\(0,209,255': 'rgba(0, 153, 255',
+    r'#00AEB4': '#0066FF',
+    r'#00D1FF': '#0066FF',
+    r'#0099FF': '#0066FF',
+    r'rgba\(0, 174, 180': 'rgba(0, 102, 255',
+    r'rgba\(0,174,180': 'rgba(0, 102, 255',
+    r'rgba\(0, 209, 255': 'rgba(0, 102, 255',
+    r'rgba\(0,209,255': 'rgba(0, 102, 255',
+    r'rgba\(0, 153, 255': 'rgba(0, 102, 255',
+    r'rgba\(0,153,255': 'rgba(0, 102, 255',
     r'geeko-green': 'geeko-cyan',
     r'text-emerald-500': 'text-geeko-cyan',
     r'bg-emerald-500': 'bg-geeko-cyan',
     r'border-emerald-500': 'border-geeko-cyan',
+    r'text-emerald-400': 'text-geeko-cyan',
 }
 
 def replace_in_file(file_path):

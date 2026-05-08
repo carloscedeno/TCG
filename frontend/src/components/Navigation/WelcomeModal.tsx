@@ -57,7 +57,7 @@ export const WelcomeModal: React.FC = () => {
             />
 
             {/* Modal Container */}
-            <div className="relative w-full max-w-2xl bg-[#373266] rounded-[2.5rem] shadow-[0_30px_100px_rgba(0,0,0,0.8)] overflow-hidden animate-in zoom-in-95 duration-500 border-[4px] border-[#0099FF]/30">
+            <div className="relative w-full max-w-2xl bg-[#373266] rounded-[2.5rem] shadow-[0_30px_100px_rgba(0,0,0,0.8)] overflow-hidden animate-in zoom-in-95 duration-500 border-[4px] border-[#0066FF]/30">
 
                 {/* Close Button */}
                 <button
@@ -71,13 +71,13 @@ export const WelcomeModal: React.FC = () => {
 
                     {/* Visual Side */}
                     <div className="md:w-2/5 relative bg-[#1F182D] flex items-center justify-center p-8 overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-br from-[#0099FF]/20 to-[#373266]/30 opacity-50" />
-                        <div className="absolute -top-24 -left-24 w-64 h-64 bg-[#0099FF]/10 rounded-full blur-[80px]" />
+                        <div className="absolute inset-0 bg-gradient-to-br from-[#0066FF]/20 to-[#373266]/30 opacity-50" />
+                        <div className="absolute -top-24 -left-24 w-64 h-64 bg-[#0066FF]/10 rounded-full blur-[80px]" />
                         <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-purple-600/10 rounded-full blur-[80px]" />
 
                         <div className="relative z-10 text-center group">
                             <div className="relative">
-                                <div className="absolute inset-0 bg-[#0099FF] rounded-full blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-1000" />
+                                <div className="absolute inset-0 bg-[#0066FF] rounded-full blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-1000" />
                                 <img
                                     src="/branding/Logo.png"
                                     alt="El Emporio"
@@ -85,10 +85,10 @@ export const WelcomeModal: React.FC = () => {
                                 />
                             </div>
                             {/* Est. 2025 — Rubik SemiBold */}
-                            <div className="flex items-center justify-center gap-1 text-[#0099FF]">
+                            <div className="flex items-center justify-center gap-1 text-[#0066FF]">
                                 <Sparkles size={14} className="animate-pulse" />
                                 <span
-                                    className="text-[10px] uppercase tracking-[0.3em] italic text-[#0099FF]"
+                                    className="text-[10px] uppercase tracking-[0.3em] italic text-[#0066FF]"
                                     style={{ fontFamily: 'var(--font-body)', fontWeight: 600 }}
                                 >Est. 2025</span>
                             </div>
@@ -98,11 +98,11 @@ export const WelcomeModal: React.FC = () => {
                     {/* Content Side */}
                     <div className="md:w-3/5 p-8 md:p-10 flex flex-col justify-center relative">
                         {/* Decorative line top */}
-                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#0099FF]/20 to-transparent" />
+                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#0066FF]/20 to-transparent" />
 
                         {/* "bienvenido al" — Rubik SemiBold */}
                         <span
-                            className="block text-sm not-italic tracking-normal mb-2 text-[#0099FF]"
+                            className="block text-sm not-italic tracking-normal mb-2 text-[#0066FF]"
                             style={{ fontFamily: 'var(--font-body)', fontWeight: 600 }}
                         >bienvenido al</span>
 
@@ -113,7 +113,7 @@ export const WelcomeModal: React.FC = () => {
                             className="w-32 object-contain object-left mb-4"
                         />
 
-                        <div className="h-1 w-20 bg-[#0099FF] mb-5 rounded-full shadow-[0_0_10px_#0099FF]" />
+                        <div className="h-1 w-20 bg-[#0066FF] mb-5 rounded-full shadow-[0_0_10px_#0066FF]" />
 
                         {/* Body text — Rubik Regular */}
                         <p
@@ -130,7 +130,7 @@ export const WelcomeModal: React.FC = () => {
                                     key={title}
                                     className="flex items-start gap-2 p-3 rounded-2xl bg-black/20 border border-white/5 hover:bg-black/30 transition-colors"
                                 >
-                                    <div className="w-8 h-8 rounded-lg bg-[#0099FF]/10 flex items-center justify-center text-[#0099FF] shrink-0 border border-[#0099FF]/20">
+                                    <div className="w-8 h-8 rounded-lg bg-[#0066FF]/10 flex items-center justify-center text-[#0066FF] shrink-0 border border-[#0066FF]/20">
                                         <Icon size={16} />
                                     </div>
                                     <div>
@@ -152,7 +152,7 @@ export const WelcomeModal: React.FC = () => {
                         {/* CTA — DAITO */}
                         <button
                             onClick={closeMirror}
-                            className="w-full py-4 bg-[#0099FF] text-[#1F182D] font-black text-xs uppercase tracking-[0.2em] rounded-2xl hover:bg-[#0099FF]/90 hover:scale-[1.02] transition-all flex items-center justify-center gap-2 group shadow-[0_0_20px_rgba(0, 153, 255,0.3)]"
+                            className="w-full py-4 bg-[#0066FF] text-[#1F182D] font-black text-xs uppercase tracking-[0.2em] rounded-2xl hover:bg-[#0066FF]/90 hover:scale-[1.02] transition-all flex items-center justify-center gap-2 group shadow-[0_0_20px_rgba(0, 102, 255,0.3)]"
                             style={{ fontFamily: 'var(--font-logo)' }}
                         >
                             Comenzar Misión <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />

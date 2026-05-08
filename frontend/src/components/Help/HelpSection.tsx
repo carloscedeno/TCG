@@ -106,7 +106,7 @@ export const HelpSection: React.FC = () => {
                         <span className="text-geeko-cyan font-bold tracking-[0.2em] uppercase text-sm mb-4 animate-pulse">
                             Bienvenido a
                         </span>
-                        <div className="w-24 h-1 bg-geeko-cyan rounded-full mb-8 shadow-[0_0_10px_rgba(0, 153, 255,0.5)]" />
+                        <div className="w-24 h-1 bg-geeko-cyan rounded-full mb-8 shadow-[0_0_10px_rgba(0, 102, 255,0.5)]" />
                     </div>
 
                     <h2 className="text-5xl md:text-6xl font-web-titles font-black text-white italic tracking-tighter uppercase mb-6 drop-shadow-md">
@@ -148,7 +148,7 @@ export const HelpSection: React.FC = () => {
 
                             {/* Overlay Play Button */}
                             <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-all flex items-center justify-center">
-                                <button className="w-24 h-24 rounded-full bg-geeko-cyan/90 backdrop-blur text-black flex items-center justify-center shadow-[0_0_40px_rgba(0, 153, 255,0.6)] group-hover:scale-110 transition-transform duration-300 border-4 border-white/20">
+                                <button className="w-24 h-24 rounded-full bg-geeko-cyan/90 backdrop-blur text-black flex items-center justify-center shadow-[0_0_40px_rgba(0, 102, 255,0.6)] group-hover:scale-110 transition-transform duration-300 border-4 border-white/20">
                                     <Play size={40} fill="currentColor" className="ml-2" />
                                 </button>
                             </div>

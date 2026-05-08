@@ -415,7 +415,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
             className="w-full flex items-center justify-between text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-2 hover:text-neutral-300 transition-colors"
           >
           <div className="flex items-center gap-2">
-            <div className="w-1.5 h-1.5 bg-geeko-cyan rounded-full shadow-[0_0_10px_rgba(0, 153, 255,0.8)]"></div>
+            <div className="w-1.5 h-1.5 bg-geeko-cyan rounded-full shadow-[0_0_10px_rgba(0, 102, 255,0.8)]"></div>
             Año
           </div>
           {expandedSections.year ? <ChevronUp size={14} /> : <ChevronDown size={14} />}

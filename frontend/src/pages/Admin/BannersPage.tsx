@@ -359,7 +359,7 @@ export const BannersPage: React.FC = () => {
                       onClick={() => setEditingBanner({ ...editingBanner, is_active: !editingBanner.is_active })}
                       className={`w-full p-4 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all flex items-center justify-center gap-3 ${
                         editingBanner.is_active 
-                          ? 'bg-geeko-cyan/10 border-geeko-cyan/20 text-emerald-400' 
+                          ? 'bg-geeko-cyan/10 border-geeko-cyan/20 text-geeko-cyan' 
                           : 'bg-slate-900/50 border-white/5 text-slate-500'
                       }`}
                     >
