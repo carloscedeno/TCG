@@ -29,7 +29,7 @@ const ORDER_STATUSES: Record<string, { label: string; color: string; border?: st
     awaiting_payment: { label: 'Esperando Pago', color: 'bg-yellow-500/20 text-yellow-400' },
     pending_payment: { label: 'Pendiente Antiguo', color: 'bg-yellow-700/20 text-yellow-600' },
     payment_uploaded: { label: 'Pago en Revisión', color: 'bg-lime-500/20 text-lime-400' },
-    paid: { label: 'Pagado', color: 'bg-blue-500/20 text-blue-400' },
+    paid: { label: 'Pagado', color: 'bg-emerald-500/20 text-emerald-400' },
     processing: { label: 'Procesando', color: 'bg-indigo-500/20 text-indigo-400' },
     ready_for_pickup: { label: 'Listo para Recoger', color: 'bg-purple-500/20 text-purple-400' },
     shipped: { label: 'Enviado', color: 'bg-cyan-500/20 text-cyan-400' },
@@ -310,18 +310,18 @@ const OrdersPage = () => {
     if (!isAdmin) return <div className="p-8 text-white">Acceso Denegado</div>;
 
     return (
-        <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-purple-500/30">
+        <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-geeko-cyan/30">
             <div className="max-w-[1600px] mx-auto p-4 md:p-8 space-y-8">
 
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div className="space-y-2">
                         <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20">
+                            <div className="w-12 h-12 bg-gradient-to-br from-geeko-cyan to-cyan-600 rounded-2xl flex items-center justify-center shadow-lg shadow-geeko-cyan/20">
                                 <Package className="text-white" size={24} />
                             </div>
                             <h1 className="text-4xl font-black italic tracking-tighter uppercase">
-                                Gestión de <span className="text-blue-500">Órdenes</span>
+                                Gestión de <span className="text-geeko-cyan">Órdenes</span>
                             </h1>
                         </div>
                         <p className="text-neutral-500 text-xs font-bold uppercase tracking-[0.2em] ml-1">
@@ -343,7 +343,7 @@ const OrdersPage = () => {
                         <select
                             value={filterStatus}
                             onChange={(e) => setFilterStatus(e.target.value)}
-                            className="bg-neutral-900 text-white text-xs font-bold uppercase tracking-widest px-4 py-3 rounded-xl border border-white/10 outline-none focus:border-blue-500/50 transition-all hover:bg-white/5 cursor-pointer appearance-none"
+                            className="bg-neutral-900 text-white text-xs font-bold uppercase tracking-widest px-4 py-3 rounded-xl border border-white/10 outline-none focus:border-geeko-cyan/50 transition-all hover:bg-white/5 cursor-pointer appearance-none"
                         >
                             <option value="all">TODOS LOS ESTADOS</option>
                             {Object.entries(ORDER_STATUSES).map(([key, config]) => (
@@ -498,7 +498,7 @@ const OrdersPage = () => {
                                                     </div>
                                                     <div>
                                                         <p className="text-[10px] uppercase font-black text-neutral-500 tracking-widest mb-1">Correo Electrónico</p>
-                                                        <p className="text-sm font-bold text-blue-400">
+                                                        <p className="text-sm font-bold text-geeko-cyan">
                                                             {order.guest_info?.email || order.shipping_address?.email || 'N/A'}
                                                         </p>
                                                     </div>

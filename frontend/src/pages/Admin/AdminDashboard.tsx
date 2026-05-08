@@ -269,15 +269,15 @@ export const AdminDashboard = () => {
                         </div>
                     </Link>
 
-                    <Link to="/admin/orders" className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-900/50 to-slate-900 border border-white/10 p-8 hover:border-blue-500/50 transition-all">
-                        <div className="absolute inset-0 bg-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <Link to="/admin/orders" className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-geeko-cyan/30 to-slate-900 border border-white/10 p-8 hover:border-geeko-cyan/50 transition-all">
+                        <div className="absolute inset-0 bg-geeko-cyan/10 opacity-0 group-hover:opacity-100 transition-opacity" />
                         <div className="relative z-10 flex items-center justify-between">
                             <div>
                                 <h3 className="text-2xl font-black italic text-white mb-2">TERMINAL DE ÓRDENES</h3>
-                                <p className="text-blue-300 text-xs font-bold uppercase tracking-widest">Procesar y Cancelar Órdenes</p>
+                                <p className="text-geeko-cyan/70 text-xs font-bold uppercase tracking-widest">Procesar y Cancelar Órdenes</p>
                             </div>
-                            <div className="w-16 h-16 bg-blue-500/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                                <Package className="text-blue-400" size={32} />
+                            <div className="w-16 h-16 bg-geeko-cyan/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <Package className="text-geeko-cyan" size={32} />
                             </div>
                         </div>
                     </Link>
@@ -380,15 +380,15 @@ export const AdminDashboard = () => {
                         </div>
 
                         <div className="glass-card rounded-3xl p-8 border border-white/5 bg-slate-900/50">
-                            <h2 className="text-2xl font-black mb-6 flex items-center gap-3 italic text-purple-400">
-                                <Database className="text-purple-400" />
+                            <h2 className="text-2xl font-black mb-6 flex items-center gap-3 italic text-geeko-purple">
+                                <Database className="text-geeko-purple" />
                                 SINCRONIZACIÓN DE CATÁLOGO
                             </h2>
                             <div className="space-y-4">
                                 {syncServices.map((service) => (
                                     <div key={service.id} className="bg-slate-800/20 border border-white/5 rounded-2xl p-6 flex items-center justify-between hover:bg-white/5 transition-all group">
                                         <div className="flex items-center gap-4">
-                                            <div className="w-12 h-12 bg-black/40 rounded-xl flex items-center justify-center border border-white/5 group-hover:border-purple-400/30">
+                                            <div className="w-12 h-12 bg-black/40 rounded-xl flex items-center justify-center border border-white/5 group-hover:border-geeko-purple/30">
                                                 {service.icon}
                                             </div>
                                             <div>
@@ -399,7 +399,7 @@ export const AdminDashboard = () => {
                                         <button
                                             onClick={() => runSync(service.id)}
                                             disabled={running[`sync-${service.id}`]}
-                                            className="bg-purple-600/20 border border-purple-500/50 hover:bg-purple-600/40 text-purple-400 px-6 py-2 rounded-xl font-black text-xs uppercase tracking-widest transition-all"
+                                            className="bg-geeko-purple/20 border border-geeko-purple/50 hover:bg-geeko-purple/40 text-geeko-purple px-6 py-2 rounded-xl font-black text-xs uppercase tracking-widest transition-all"
                                         >
                                             {running[`sync-${service.id}`] ? 'Sincronizando...' : 'Iniciar'}
                                         </button>
@@ -422,8 +422,8 @@ export const AdminDashboard = () => {
                                             <div className="flex items-center justify-between mb-2">
                                                 <span className="font-black text-xs text-slate-300 uppercase tracking-widest">{task.game_code} Ejecutor de Tareas</span>
                                                 <div className="flex items-center gap-2">
-                                                    <button onClick={() => fetchTaskLogs(task.id)} className="text-[10px] font-black uppercase text-blue-400 hover:underline">Ver Logs</button>
-                                                    <span className={`text-[10px] px-2 py-0.5 rounded font-black uppercase ${task.status === 'running' ? 'bg-blue-500/20 text-blue-400' : 'bg-emerald-500/20 text-emerald-400'}`}>
+                                                    <button onClick={() => fetchTaskLogs(task.id)} className="text-[10px] font-black uppercase text-geeko-cyan hover:underline">Ver Logs</button>
+                                                    <span className={`text-[10px] px-2 py-0.5 rounded font-black uppercase ${task.status === 'running' ? 'bg-geeko-cyan/20 text-geeko-cyan' : 'bg-emerald-500/20 text-emerald-400'}`}>
                                                         {task.status}
                                                     </span>
                                                 </div>
