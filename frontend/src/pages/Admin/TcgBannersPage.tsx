@@ -55,7 +55,7 @@ export const TcgBannersPage: React.FC = () => {
       const filtered = (data || []).filter((g: Game) => FEATURED_CODES.includes(g.game_code));
       
       // Remove duplicates if any (like PKM vs POKEMON) - prioritize the one with more data or canonical
-      const unique = filtered.reduce((acc: Game[], current) => {
+      const unique = filtered.reduce((acc: Game[], current: Game) => {
         const isDuplicate = acc.find(g => 
           (g.game_code === 'PKM' && current.game_code === 'POKEMON') ||
           (g.game_code === 'POKEMON' && current.game_code === 'PKM') ||
