@@ -999,9 +999,12 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                         </a>
                                     )}
                                 </div>
-                        </>
-                    )}
-                </motion.div>
-            </div>
-        );
+                            </>
+                        ) : null}
+                    </div>
+                </>
+                )}
+            </motion.div>
+        </div>
+    );
 };
