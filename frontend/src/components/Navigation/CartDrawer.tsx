@@ -85,8 +85,8 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                     {/* Header */}
                     <div className="px-6 py-6 border-b border-white/5 flex items-center justify-between bg-neutral-900/20">
                         <div className="flex items-center gap-3">
-                            <div className="p-2 bg-white/10 rounded-lg">
-                                <ShoppingCart size={20} className="text-white" />
+                            <div className="p-2 bg-geeko-cyan/10 rounded-lg">
+                                <ShoppingCart size={20} className="text-geeko-cyan" />
                             </div>
                             <h2 className="text-lg font-black tracking-tight uppercase">Tu Carrito</h2>
                         </div>
@@ -99,7 +99,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                     <div className="flex-1 overflow-y-auto px-6 py-8 space-y-6 custom-scrollbar">
                         {isLoading && displayItems.length === 0 ? (
                             <div className="flex flex-col items-center justify-center h-full gap-4">
-                                <Loader2 size={32} className="text-white animate-spin" />
+                                <Loader2 size={32} className="text-geeko-cyan animate-spin" />
                                 <span className="text-xs font-bold text-neutral-500 uppercase tracking-widest">Cargando Carrito...</span>
                             </div>
                         ) : displayItems.length === 0 ? (
@@ -126,7 +126,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                                             {/* Finish & stock badges */}
                                             <div className="flex flex-wrap gap-1 mt-1">
                                                 {(item.is_foil || (item.products?.finish || '').toLowerCase() === 'foil') && (
-                                                    <span className="inline-block px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest bg-gradient-to-r from-pink-500 via-purple-500 to-white text-white">
+                                                    <span className="inline-block px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white">
                                                         ✦ Foil
                                                     </span>
                                                 )}
@@ -138,7 +138,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                                             </div>
                                         </div>
                                         <div className="flex items-center justify-between">
-                                            <span className="text-sm font-mono font-black text-white">${(item.price || item.products?.price || 0).toFixed(2)}</span>
+                                            <span className="text-sm font-mono font-black text-geeko-cyan">${(item.price || item.products?.price || 0).toFixed(2)}</span>
 
                                             {/* Quantity Controls */}
                                             <div className="flex items-center gap-2">
@@ -167,14 +167,14 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                                                     title={item.quantity >= (item.products?.stock ?? 99) ? "Stock máximo alcanzado" : undefined}
                                                     className={`w-7 h-7 bg-black/40 border border-white/5 rounded-lg flex items-center justify-center transition-all group/btn ${item.quantity >= (item.products?.stock ?? 99)
                                                         ? 'opacity-50 cursor-not-allowed'
-                                                        : 'hover:bg-white/20 hover:border-white/50'
+                                                        : 'hover:bg-geeko-cyan/20 hover:border-geeko-cyan/50'
                                                         }`}
                                                     disabled={updating === item.id || item.quantity >= (item.products?.stock ?? 99)}
                                                 >
                                                     {updating === item.id ? (
                                                         <Loader2 size={14} className="text-neutral-400 animate-spin" />
                                                     ) : (
-                                                        <Plus size={14} className="text-neutral-400 group-hover/btn:text-white" />
+                                                        <Plus size={14} className="text-neutral-400 group-hover/btn:text-geeko-cyan" />
                                                     )}
                                                 </button>
 
@@ -210,7 +210,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                                 </div>
                                 <div className="flex justify-between text-xs font-bold text-neutral-500 uppercase tracking-widest">
                                     <span>Envío</span>
-                                    <span className="text-white">Gratis</span>
+                                    <span className="text-geeko-cyan">Gratis</span>
                                 </div>
                                 <div className="h-px bg-white/5 my-4" />
                                 <div className="flex justify-between items-end">
@@ -222,7 +222,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                             <button
                                 onClick={handleCheckout}
                                 data-testid="checkout-button"
-                                className="w-full h-14 bg-white hover:bg-cyan-400 text-black font-black uppercase tracking-widest text-xs rounded-2xl flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(255, 255, 255, 0.1)] hover:shadow-[0_0_50px_rgba(255, 255, 255, 0.1)] transition-all transform active:scale-[0.98]"
+                                className="w-full h-14 bg-geeko-cyan hover:bg-cyan-400 text-black font-black uppercase tracking-widest text-xs rounded-2xl flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(0, 153, 255, 0.2)] hover:shadow-[0_0_50px_rgba(0, 153, 255, 0.4)] transition-all transform active:scale-[0.98]"
                             >
                                 <CreditCard size={18} />
                                 Finalizar Compra

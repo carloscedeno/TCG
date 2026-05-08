@@ -130,13 +130,13 @@ export const HeroSection: React.FC = () => {
                     <>
                         <button
                             onClick={(e) => { e.preventDefault(); prevSlide(); }}
-                            className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm border border-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-black/60 hover:border-white/50 transition-all z-20"
+                            className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm border border-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-black/60 hover:border-geeko-cyan/50 transition-all z-20"
                         >
                             <ChevronLeft size={18} className="text-white" />
                         </button>
                         <button
                             onClick={(e) => { e.preventDefault(); nextSlide(); }}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm border border-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-black/60 hover:border-white/50 transition-all z-20"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm border border-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-black/60 hover:border-geeko-cyan/50 transition-all z-20"
                         >
                             <ChevronRight size={18} className="text-white" />
                         </button>
@@ -151,7 +151,7 @@ export const HeroSection: React.FC = () => {
                                 key={i}
                                 onClick={(e) => { e.preventDefault(); setCurrentIndex(i); }}
                                 className={`h-1.5 rounded-full transition-all duration-500 ${i === currentIndex
-                                    ? 'w-8 bg-white shadow-[0_0_8px_rgba(255, 255, 255, 0.1)]'
+                                    ? 'w-8 bg-geeko-cyan shadow-[0_0_8px_rgba(0, 153, 255, 0.6)]'
                                     : 'w-3 bg-white/30 hover:bg-white/50'
                                 }`}
                             />

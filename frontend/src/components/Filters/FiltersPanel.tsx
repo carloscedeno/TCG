@@ -95,7 +95,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
     <aside className="w-full glass-panel border border-white/5 p-8 rounded-[32px] shadow-2xl space-y-10">
       <div className="flex items-center justify-between mb-2">
         <h2 className="text-sm md:text-lg font-black italic tracking-tighter text-white flex items-center gap-2">
-          <Sliders size={18} className="text-white" />
+          <Sliders size={18} className="text-geeko-cyan" />
           FILTROS
         </h2>
         {hasActiveFilters && (
@@ -117,7 +117,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
             className="w-full flex items-center justify-between text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-2 hover:text-neutral-300 transition-colors"
           >
             <div className="flex items-center gap-2">
-              <div className="w-1.5 h-1.5 bg-white rounded-full shadow-[0_0_10px_rgba(255, 255, 255, 0.1)]"></div>
+              <div className="w-1.5 h-1.5 bg-geeko-cyan rounded-full shadow-[0_0_10px_rgba(0, 153, 255, 0.8)]"></div>
               Universo de Juegos
             </div>
             {expandedSections.games ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
@@ -132,7 +132,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
                     key={game}
                     onClick={() => handleCheckbox('games', game)}
                     className={`px-4 py-2 rounded-xl text-[11px] md:text-[12px] font-bold transition-all border ${isSelected
-                      ? 'bg-geeko-violet-accent/20 border-white/40 text-white shadow-lg shadow-white/10'
+                      ? 'bg-geeko-violet-accent/20 border-geeko-cyan/40 text-geeko-cyan shadow-lg shadow-geeko-cyan/10'
                       : 'bg-neutral-900/50 border-neutral-800 text-neutral-500 hover:border-neutral-700 hover:text-neutral-300'
                       }`}
                   >
@@ -178,7 +178,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
                       key={setName}
                       onClick={() => handleCheckbox('sets', setName)}
                       className={`flex items-center justify-between w-full px-3 py-2 rounded-lg text-left text-[11px] md:text-[12px] font-medium transition-all ${selected.sets?.includes(setName)
-                        ? 'bg-white/10 text-white'
+                        ? 'bg-geeko-cyan/10 text-geeko-cyan'
                         : 'text-neutral-500 hover:bg-white/5 hover:text-neutral-300'
                         }`}
                     >
@@ -293,7 +293,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
             className="w-full flex items-center justify-between text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-2 hover:text-neutral-300 transition-colors"
           >
             <div className="flex items-center gap-2">
-              <div className="w-1.5 h-1.5 bg-white rounded-full shadow-[0_0_10px_rgba(255, 255, 255, 0.1)]"></div>
+              <div className="w-1.5 h-1.5 bg-geeko-cyan rounded-full shadow-[0_0_10px_rgba(0, 153, 255, 0.8)]"></div>
               {selectedGame === 'MTG' ? 'Mana (Colores)' : 'Colores'}
             </div>
             {expandedSections.colors ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
@@ -323,12 +323,12 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
                     onClick={() => handleCheckbox('colors', color)}
                     title={colorMap[color] || color}
                     className={`relative group w-full aspect-square rounded-xl border flex items-center justify-center transition-all ${isSelected
-                      ? 'border-white/50 bg-white/10'
+                      ? 'border-geeko-cyan/50 bg-geeko-cyan/10'
                       : 'border-neutral-800 bg-neutral-900/50 hover:border-neutral-600'
                       }`}
                   >
                     <div className={`w-4 h-4 rounded-full ${colorClassMap[color] || 'bg-neutral-500'} ${isSelected ? 'scale-125' : 'opacity-80 group-hover:opacity-100'} transition-all`} />
-                    {isSelected && <div className="absolute top-1 right-1"><Check size={8} className="text-white" /></div>}
+                    {isSelected && <div className="absolute top-1 right-1"><Check size={8} className="text-geeko-cyan" /></div>}
                   </button>
                 );
               })}
@@ -415,7 +415,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
             className="w-full flex items-center justify-between text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 mb-2 hover:text-neutral-300 transition-colors"
           >
           <div className="flex items-center gap-2">
-            <div className="w-1.5 h-1.5 bg-white rounded-full shadow-[0_0_10px_rgba(0, 102, 255,0.8)]"></div>
+            <div className="w-1.5 h-1.5 bg-geeko-cyan rounded-full shadow-[0_0_10px_rgba(0, 153, 255,0.8)]"></div>
             Año
           </div>
           {expandedSections.year ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
@@ -428,7 +428,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
               placeholder="Desde"
               value={selected.yearRange?.[0] || ''}
               onChange={(e) => onChange({ ...selected, yearRange: [parseInt(e.target.value) || 1993, selected.yearRange?.[1] || 2026] })}
-              className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-white/50"
+              className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-geeko-cyan/50"
             />
             <span className="text-neutral-700">→</span>
             <input
@@ -436,7 +436,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
               placeholder="Hasta"
               value={selected.yearRange?.[1] || ''}
               onChange={(e) => onChange({ ...selected, yearRange: [selected.yearRange?.[0] || 1993, parseInt(e.target.value) || 2026] })}
-              className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-white/50"
+              className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-geeko-cyan/50"
             />
             </div>
           )}

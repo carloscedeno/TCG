@@ -96,7 +96,7 @@ export const CardDetail: React.FC = () => {
 
     const getLegalityIcon = (status: string) => {
         switch (status) {
-            case 'legal': return <CheckCircle2 size={16} className="text-white" />;
+            case 'legal': return <CheckCircle2 size={16} className="text-geeko-cyan" />;
             case 'not_legal': return <X size={16} className="text-neutral-700" />;
             case 'restricted': return <AlertCircle size={16} className="text-amber-500" />;
             case 'banned': return <AlertCircle size={16} className="text-red-500" />;
@@ -170,7 +170,7 @@ export const CardDetail: React.FC = () => {
                 <AlertCircle size={64} className="text-red-500 mb-6" />
                 <h1 className="text-3xl font-black mb-4">Error loading card</h1>
                 <p className="text-neutral-400 max-w-md mb-8">{error}</p>
-                <Link to="/" className="px-8 py-3 bg-white rounded-full font-black text-black hover:scale-105 transition-all flex items-center gap-2 shadow-[0_0_20px_rgba(0, 102, 255,0.3)]">
+                <Link to="/" className="px-8 py-3 bg-geeko-cyan rounded-full font-black text-black hover:scale-105 transition-all flex items-center gap-2 shadow-[0_0_20px_rgba(0, 153, 255,0.3)]">
                     <ArrowLeft size={18} /> Back to Market
                 </Link>
             </div>
@@ -178,10 +178,11 @@ export const CardDetail: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen flex flex-col bg-[#050505] text-white font-sans selection:bg-white/30">
+        <div className="min-h-screen flex flex-col bg-[#050505] text-white font-sans selection:bg-geeko-cyan/30">
             {/* Ambient Background */}
             <div className="fixed inset-0 z-0 pointer-events-none">
-                <div className="absolute inset-0 bg-black" />
+                <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-purple-600/5 rounded-full blur-[150px]" />
+                <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-geeko-cyan/5 rounded-full blur-[150px]" />
             </div>
 
             {/* Header */}
@@ -190,19 +191,20 @@ export const CardDetail: React.FC = () => {
             <main className="relative z-10 w-full max-w-[1600px] mx-auto p-6 lg:p-12 flex-1">
                 {loading ? (
                     <div className="flex flex-col items-center justify-center h-[60vh]">
-                        <Loader2 size={48} className="text-white animate-spin mb-4" />
+                        <Loader2 size={48} className="text-geeko-cyan animate-spin mb-4" />
                         <p className="text-neutral-500 font-bold tracking-widest uppercase text-xs">Loading Card Data...</p>
                     </div>
                 ) : details ? (
-                    <div className="glass-panel rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0, 102, 255,0.15)] flex flex-col lg:flex-row overflow-hidden min-h-[85vh] max-h-[90vh]">
+                    <div className="glass-panel rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0, 153, 255,0.15)] flex flex-col lg:flex-row overflow-hidden min-h-[85vh] max-h-[90vh]">
                         {/* LEFT: IMAGE & VERSIONS LIST */}
                         <div className="w-full lg:w-[420px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden h-full">
-                            <div className="flex-1 min-h-[450px] md:min-h-[600px] flex items-center justify-center p-6 sm:p-8 md:p-10 relative bg-[#0c0c0c] overflow-hidden">
+                            <div className="flex-1 min-h-[450px] md:min-h-[600px] flex items-center justify-center p-6 sm:p-8 md:p-10 relative bg-gradient-to-b from-white/[0.04] to-transparent overflow-hidden">
                                 <div className="relative group w-full h-full flex items-center justify-center">
+                                    <div className="absolute inset-0 bg-geeko-cyan/25 blur-[120px] rounded-full opacity-40 group-hover:opacity-60 transition-opacity duration-700 animate-pulse pointer-events-none" />
                                     <img
                                         src={currentImage}
                                         alt={details.name}
-                                        className="w-full h-full object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)] z-10 hover:scale-[1.03] transition-all duration-700"
+                                        className="w-full h-full object-contain drop-shadow-[0_45px_100px_rgba(0,0,0,0.95)] z-10 hover:scale-[1.03] transition-all duration-700 foil-shimmer"
                                         style={{
                                             imageRendering: 'auto',
                                         }}
@@ -211,7 +213,7 @@ export const CardDetail: React.FC = () => {
                                 {hasMultipleFaces && (
                                     <button
                                         onClick={() => setCurrentFaceIndex(prev => (prev + 1) % 2)}
-                                        className="absolute bottom-6 right-6 p-4 bg-black/80 hover:bg-white text-white hover:text-black rounded-full border border-white/20 transition-all z-20 group shadow-2xl backdrop-blur-md"
+                                        className="absolute bottom-6 right-6 p-4 bg-black/80 hover:bg-geeko-cyan text-white hover:text-black rounded-full border border-white/20 transition-all z-20 group shadow-2xl backdrop-blur-md"
                                     >
                                         <RotateCw size={22} className="group-hover:rotate-180 transition-transform duration-500" />
                                     </button>
@@ -251,14 +253,14 @@ export const CardDetail: React.FC = () => {
                                                             if (targetPrintingId) handleVersionClick(targetPrintingId);
                                                         }
                                                     }}
-                                                    className={`w-full flex flex-col md:flex-row items-stretch md:items-center gap-2 md:gap-4 px-6 py-4 hover:bg-white/10 transition-colors border-b border-white/5 group text-left cursor-pointer outline-none focus-visible:bg-white/10 ${isGroupActive ? 'bg-white/10' : ''}`}
+                                                    className={`w-full flex flex-col md:flex-row items-stretch md:items-center gap-2 md:gap-4 px-6 py-4 hover:bg-white/10 transition-colors border-b border-white/5 group text-left cursor-pointer outline-none focus-visible:bg-white/10 ${isGroupActive ? 'bg-geeko-cyan/10' : ''}`}
                                                 >
                                                     <div className="flex items-center gap-3 md:gap-4 flex-1">
-                                                        <div className="w-8 h-8 rounded bg-neutral-900 flex items-center justify-center text-[10px] font-black group-hover:text-white transition-colors shrink-0">
+                                                        <div className="w-8 h-8 rounded bg-neutral-900 flex items-center justify-center text-[10px] font-black group-hover:text-geeko-cyan transition-colors shrink-0">
                                                             {group.base.set_code?.toUpperCase()}
                                                         </div>
                                                         <div className="flex-1 text-left min-w-[120px]">
-                                                            <div className={`text-xs font-bold font-web-titles tracking-tight leading-tight truncate ${isGroupActive ? 'text-white' : 'text-neutral-300'}`}>
+                                                            <div className={`text-xs font-bold font-web-titles tracking-tight leading-tight truncate ${isGroupActive ? 'text-geeko-cyan' : 'text-neutral-300'}`}>
                                                                 {group.base.set_name}
                                                             </div>
                                                             <div className="text-[10px] text-neutral-600 font-bold flex items-center gap-2">
@@ -297,7 +299,7 @@ export const CardDetail: React.FC = () => {
                                                                         </svg>
                                                                         Foil
                                                                     </span>
-                                                                    <span className={`text-[11px] font-black ${group.foil.stock > 0 ? 'text-white' : 'text-neutral-600'}`}>
+                                                                    <span className={`text-[11px] font-black ${group.foil.stock > 0 ? 'text-geeko-cyan' : 'text-neutral-600'}`}>
                                                                         {group.foil.discount_percentage > 0 && (
                                                                             <span className="text-[9px] text-neutral-500 line-through mr-1.5 opacity-60">
                                                                                 ${Number(group.foil.original_price).toFixed(2)}
@@ -317,7 +319,7 @@ export const CardDetail: React.FC = () => {
 
                                                         <div className="flex items-center gap-4">
                                                             {rowActiveVersion?.stock > 0 ? (
-                                                                <span className="text-[9px] font-black text-white bg-white/5 px-2 py-0.5 rounded-full border border-white/10 uppercase tracking-tight">
+                                                                <span className="text-[9px] font-black text-geeko-cyan bg-geeko-cyan/10 px-2 py-0.5 rounded-full border border-geeko-cyan/20 uppercase tracking-tight">
                                                                     En Stock
                                                                 </span>
                                                             ) : (
@@ -349,7 +351,7 @@ export const CardDetail: React.FC = () => {
                                     }}
                                     className="block group/title"
                                 >
-                                    <h2 className="text-4xl lg:text-6xl font-web-titles font-normal tracking-tight text-white transition-colors capitalize">
+                                    <h2 className="text-4xl lg:text-6xl font-web-titles font-normal tracking-tight text-white group-hover/title:text-geeko-cyan transition-colors text-gradient-cyan capitalize">
                                         {details.name}
                                     </h2>
                                 </a>
@@ -362,7 +364,8 @@ export const CardDetail: React.FC = () => {
                                 </div>
                             </div>
 
-                            <div className="p-8 rounded-[32px] bg-white/[0.03] border border-white/10 space-y-6 relative overflow-hidden group">
+                            <div className="p-8 rounded-[32px] bg-white/5 border border-white/10 space-y-6 relative overflow-hidden group">
+                                <div className="absolute -top-24 -right-24 w-64 h-64 bg-geeko-cyan/5 rounded-full blur-[100px] group-hover:bg-geeko-cyan/10 transition-colors" />
                                 <div className="text-lg lg:text-xl leading-relaxed text-neutral-200 font-medium relative z-10">
                                     {details.oracle_text?.split('\n').map((line: string, i: number) => <p key={i} className="mb-3"><ManaText text={line} /></p>)}
                                 </div>
@@ -373,7 +376,7 @@ export const CardDetail: React.FC = () => {
                                 )}
                                 <div className="pt-2 flex flex-wrap gap-8 text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em]">
                                     <div>Artist <span className="text-white ml-2">{details.artist}</span></div>
-                                    <div>Set <span className="text-white ml-2">{details.set} ({details.set_code?.toUpperCase()})</span></div>
+                                    <div>Set <span className="text-geeko-cyan ml-2">{details.set} ({details.set_code?.toUpperCase()})</span></div>
                                 </div>
                             </div>
 
@@ -382,8 +385,9 @@ export const CardDetail: React.FC = () => {
                                 <div className="space-y-6">
                                     <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-500 pl-2">Trading Hub</h3>
 
-                                    <div className="p-8 rounded-[32px] bg-white/[0.02] border border-white/10 group relative overflow-hidden transition-colors">
-                                        <div className="text-[9px] font-black uppercase text-neutral-500 tracking-[0.2em] mb-4">Internal Store Price</div>
+                                    <div className="p-8 rounded-[32px] bg-gradient-to-br from-geeko-cyan/10 via-transparent to-transparent border border-white/10 group relative overflow-hidden hover:border-geeko-cyan/30 transition-colors">
+                                        <div className="absolute top-0 right-0 w-40 h-40 bg-geeko-cyan/5 rounded-full blur-[50px]" />
+                                        <div className="text-[9px] font-black uppercase text-geeko-cyan tracking-[0.2em] mb-4">Internal Store Price</div>
                                         <div className="flex flex-col gap-6">
                                             {/* Price + Variant Badge (horizontal layout matching CardModal) */}
                                             <div className="flex items-center justify-between">
@@ -404,7 +408,7 @@ export const CardDetail: React.FC = () => {
                                                         )}
                                                     </div>
                                                 </div>
-                                                <span className={`text-[9px] px-3 py-1 rounded-full font-black tracking-[0.2em] shadow-sm ${activeFinish === 'foil' ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-white text-white animate-pulse' : 'bg-white text-black'}`}>
+                                                <span className={`text-[9px] px-3 py-1 rounded-full font-black tracking-[0.2em] shadow-sm ${activeFinish === 'foil' ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white animate-pulse' : 'bg-white text-black'}`}>
                                                     {activeFinish === 'foil' ? 'FOIL' : 'NONFOIL'}
                                                 </span>
                                             </div>
@@ -435,7 +439,7 @@ export const CardDetail: React.FC = () => {
                                                                 if (targetId) handleVersionClick(targetId, 'foil');
                                                             }}
                                                             className={`px-3 py-2 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all flex items-center gap-1 ${activeFinish === 'foil'
-                                                                ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-white border-transparent text-white shadow-[0_0_15px_rgba(236,72,153,0.3)] scale-[1.05]'
+                                                                ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 border-transparent text-white shadow-[0_0_15px_rgba(236,72,153,0.3)] scale-[1.05]'
                                                                 : (activeGroup.foil?.stock || 0) === 0
                                                                     ? 'text-neutral-500 opacity-60'
                                                                     : 'text-neutral-500 hover:text-white'
@@ -449,7 +453,7 @@ export const CardDetail: React.FC = () => {
                                                 <button
                                                     onClick={handleAddToCart}
                                                     disabled={isAdding}
-                                                    className="flex-1 h-12 rounded-xl bg-white text-black font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255, 255, 255, 0.1)] hover:shadow-[0_0_30px_rgba(255, 255, 255, 0.1)] hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
+                                                    className="flex-1 h-12 rounded-xl bg-geeko-cyan text-black font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0, 153, 255, 0.3)] hover:shadow-[0_0_30px_rgba(0, 153, 255, 0.5)] hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
                                                 >
                                                     {isAdding ? <Loader2 size={16} className="animate-spin" /> : <ShoppingCart size={16} fill="currentColor" />}
                                                     {isAdding ? '...' : ((activeVersion?.stock || 0) > 0 ? 'Agregar' : 'Encargo')}
@@ -463,7 +467,7 @@ export const CardDetail: React.FC = () => {
                                             href={ckUrl}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="w-full flex items-center justify-between p-6 rounded-2xl bg-neutral-900/30 hover:bg-white/5 border border-white/5 hover:border-white/30 transition-all group"
+                                            className="w-full flex items-center justify-between p-6 rounded-2xl bg-neutral-900/30 hover:bg-geeko-cyan/5 border border-white/5 hover:border-geeko-cyan/30 transition-all group"
                                         >
                                             <div className="flex flex-col">
                                                 <span className="text-[9px] font-black uppercase text-neutral-500 tracking-[0.2em] mb-1">Market Price</span>
@@ -471,7 +475,7 @@ export const CardDetail: React.FC = () => {
                                             </div>
                                             <div className="flex items-center gap-4">
                                                 <span className="text-2xl font-mono font-black text-white">$ {details.valuation?.market_price ? Number(details.valuation?.market_price).toFixed(2) : '---'}</span>
-                                                <div className="p-2 rounded-full bg-white/5 group-hover:bg-white group-hover:text-black transition-colors">
+                                                <div className="p-2 rounded-full bg-white/5 group-hover:bg-geeko-cyan group-hover:text-black transition-colors">
                                                     <ExternalLink size={14} />
                                                 </div>
                                             </div>

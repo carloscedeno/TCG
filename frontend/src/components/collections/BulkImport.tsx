@@ -366,7 +366,7 @@ const handleImport = async () => {
             {step === 1 && (
                 <div className="space-y-6">
                     <GlassCard
-                        className={`p-12 border-2 border-dashed transition-all duration-500 ${isDragging ? 'border-white bg-white/5 scale-105' : 'border-white/10'
+                        className={`p-12 border-2 border-dashed transition-all duration-500 ${isDragging ? 'border-geeko-cyan bg-geeko-cyan/5 scale-105' : 'border-white/10'
                             }`}
                         onDragOver={handleDragOver}
                         onDragLeave={handleDragLeave}
@@ -381,12 +381,12 @@ const handleImport = async () => {
                             accept=".csv,.txt"
                         />
                         <div className="flex flex-col items-center text-center space-y-6">
-                            <div className="w-20 h-20 bg-white/10 rounded-3xl flex items-center justify-center border border-white/20 group-hover:scale-110 transition-transform">
-                                <Upload className="text-white w-10 h-10 animate-bounce" />
+                            <div className="w-20 h-20 bg-geeko-cyan/10 rounded-3xl flex items-center justify-center border border-geeko-cyan/20 group-hover:scale-110 transition-transform">
+                                <Upload className="text-geeko-cyan w-10 h-10 animate-bounce" />
                             </div>
                             <div>
                                 <h2 className="text-3xl font-black italic tracking-tighter uppercase mb-2">
-                                    Carga Masiva <span className="text-white">{importType === 'prices' ? 'PRECIOS' : importType === 'inventory' ? 'INVENTARIO' : 'COLECCIÓN'}</span>
+                                    Carga Masiva <span className="text-geeko-cyan">{importType === 'prices' ? 'PRECIOS' : importType === 'inventory' ? 'INVENTARIO' : 'COLECCIÓN'}</span>
                                 </h2>
                                 <p className="text-slate-400 font-bold text-sm">
                                     Arrastra tu archivo CSV o haz clic para buscar.
@@ -402,7 +402,7 @@ const handleImport = async () => {
                                 <button
                                     key={tcg}
                                     onClick={(e) => { e.stopPropagation(); downloadTemplate(tcg); }}
-                                    className="px-6 py-2 bg-white/5 border border-white/10 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all"
+                                    className="px-6 py-2 bg-white/5 border border-white/10 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-geeko-cyan hover:text-black transition-all"
                                 >
                                     Template {tcg}
                                 </button>
@@ -416,11 +416,11 @@ const handleImport = async () => {
                 <GlassCard className="p-8 space-y-8 animate-in fade-in slide-in-from-bottom-4">
                     <div className="flex items-center justify-between border-b border-white/10 pb-6">
                         <div className="flex items-center gap-4">
-                            <FileText className="text-white w-8 h-8" />
+                            <FileText className="text-geeko-cyan w-8 h-8" />
                             <div>
                                 <h3 className="text-xl font-black italic uppercase">{file?.name}</h3>
                                 <p className="text-slate-500 text-xs font-bold">
-                                    {rows.length} filas detectadas {formatName && <span className="text-white ml-1">[{formatName}]</span>}
+                                    {rows.length} filas detectadas {formatName && <span className="text-geeko-cyan ml-1">[{formatName}]</span>}
                                 </p>
                             </div>
                         </div>
@@ -435,12 +435,12 @@ const handleImport = async () => {
                     <div className="space-y-4">
                         {isAutoMapped ? (
                             <div className="space-y-4">
-                                <div className="flex items-center gap-2 text-white">
+                                <div className="flex items-center gap-2 text-geeko-cyan">
                                     <CheckCircle2 size={16} />
                                     <h4 className="text-xs font-black uppercase tracking-[0.2em]">Formato Detectado Automáticamente</h4>
                                 </div>
                                 <div className="bg-black/20 rounded-xl border border-white/5 overflow-hidden flex flex-col max-h-[400px]">
-                                    <div className="overflow-y-auto scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
+                                    <div className="overflow-y-auto scrollbar-thin scrollbar-thumb-geeko-cyan/20 scrollbar-track-transparent">
                                         <table className="w-full text-left text-[10px]">
                                             <thead className="bg-[#0c0c0c] sticky top-0 z-10 text-slate-400 font-bold uppercase tracking-wider shadow-sm">
                                                 <tr>
@@ -465,7 +465,7 @@ const handleImport = async () => {
                                                             <td className="p-3 font-bold text-white">{row[nameCol]}</td>
                                                             <td className="p-3 w-24">{row[setCol]}</td>
                                                             <td className="p-3 w-24">#{row[numCol]}</td>
-                                                            <td className="p-3 w-24 uppercase font-black text-white">{row[finishCol]}</td>
+                                                            <td className="p-3 w-24 uppercase font-black text-geeko-cyan">{row[finishCol]}</td>
                                                         </tr>
                                                     );
                                                 })}
@@ -476,7 +476,7 @@ const handleImport = async () => {
                             </div>
                         ) : (
                             <>
-                                <h4 className="text-xs font-black uppercase tracking-[0.2em] text-white">Mapeo de Columnas</h4>
+                                <h4 className="text-xs font-black uppercase tracking-[0.2em] text-geeko-cyan">Mapeo de Columnas</h4>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     {systemFields.map((field) => (
                                         <div key={field.id} className="bg-black/20 p-4 rounded-2xl border border-white/5 flex items-center justify-between">
@@ -484,7 +484,7 @@ const handleImport = async () => {
                                             <select
                                                 value={mapping[field.id]}
                                                 onChange={(e) => setMapping(prev => ({ ...prev, [field.id]: e.target.value }))}
-                                                className="bg-slate-900 border border-white/10 rounded-lg text-[10px] px-3 py-1.5 focus:border-white/50 outline-none"
+                                                className="bg-slate-900 border border-white/10 rounded-lg text-[10px] px-3 py-1.5 focus:border-geeko-cyan/50 outline-none"
                                             >
                                                 <option value="">Seleccionar columna...</option>
                                                 {headers.map(h => <option key={h} value={h}>{h}</option>)}
@@ -499,16 +499,16 @@ const handleImport = async () => {
                     {loading ? (
                         <div className="w-full space-y-6 p-8 bg-black/40 backdrop-blur-xl rounded-[2rem] border border-white/10 shadow-2xl animate-in fade-in zoom-in-95 duration-500 relative overflow-hidden">
                             {/* Background glow decoration */}
-                            <div className="absolute -top-24 -right-24 w-48 h-48 bg-white/10 blur-[100px] rounded-full" />
+                            <div className="absolute -top-24 -right-24 w-48 h-48 bg-geeko-cyan/10 blur-[100px] rounded-full" />
 
                             <div className="flex justify-between items-end relative z-10">
                                 <div className="space-y-2">
                                     <div className="flex items-center gap-3">
                                         <div className="relative">
-                                            <div className="w-3 h-3 bg-white rounded-full animate-ping absolute inset-0" />
-                                            <div className="w-3 h-3 bg-white rounded-full relative shadow-[0_0_10px_#00E5FF]" />
+                                            <div className="w-3 h-3 bg-geeko-cyan rounded-full animate-ping absolute inset-0" />
+                                            <div className="w-3 h-3 bg-geeko-cyan rounded-full relative shadow-[0_0_10px_#00E5FF]" />
                                         </div>
-                                        <h4 className="text-xs font-black uppercase tracking-[0.3em] text-white text-white">
+                                        <h4 className="text-xs font-black uppercase tracking-[0.3em] text-geeko-cyan neon-text-cyan">
                                             Procesando Bloque {progress.current} de {progress.total}
                                         </h4>
                                     </div>
@@ -528,7 +528,7 @@ const handleImport = async () => {
                                 <div className="h-4 bg-white/5 rounded-full overflow-hidden border border-white/10 p-[3px] backdrop-blur-md">
                                     {/* Fill */}
                                     <div
-                                        className="h-full bg-white rounded-full shadow-[0_0_25px_rgba(255, 255, 255, 0.1)] transition-all duration-700 ease-out relative overflow-hidden"
+                                        className="h-full bg-geeko-cyan rounded-full shadow-[0_0_25px_rgba(0, 153, 255, 0.7)] transition-all duration-700 ease-out relative overflow-hidden"
                                         style={{ width: `${(progress.current / progress.total) * 100}%` }}
                                     >
                                         {/* Shimmer effect */}
@@ -541,7 +541,7 @@ const handleImport = async () => {
 
                                 {/* Glow under the bar */}
                                 <div
-                                    className="absolute -bottom-4 h-8 bg-white/20 blur-2xl transition-all duration-700 rounded-full"
+                                    className="absolute -bottom-4 h-8 bg-geeko-cyan/20 blur-2xl transition-all duration-700 rounded-full"
                                     style={{
                                         width: `${(progress.current / progress.total) * 100}%`,
                                         left: 0
@@ -557,7 +557,7 @@ const handleImport = async () => {
                                     {[1, 2, 3].map(i => (
                                         <div
                                             key={i}
-                                            className="w-1 h-1 bg-white rounded-full animate-bounce"
+                                            className="w-1 h-1 bg-geeko-cyan rounded-full animate-bounce"
                                             style={{ animationDelay: `${i * 0.2}s` }}
                                         />
                                     ))}
@@ -568,7 +568,7 @@ const handleImport = async () => {
                         <button
                             onClick={handleImport}
                             disabled={loading}
-                            className="w-full bg-white text-black py-4 rounded-2xl font-black uppercase tracking-widest text-sm hover:scale-[1.02] active:scale-95 transition-all shadow-[0_0_30px_rgba(255, 255, 255, 0.1)] flex items-center justify-center gap-2 disabled:opacity-50"
+                            className="w-full bg-geeko-cyan text-black py-4 rounded-2xl font-black uppercase tracking-widest text-sm hover:scale-[1.02] active:scale-95 transition-all shadow-[0_0_30px_rgba(0, 153, 255, 0.2)] flex items-center justify-center gap-2 disabled:opacity-50"
                         >
                             Confirmar Importación <ArrowRight size={18} />
                         </button>
@@ -578,13 +578,13 @@ const handleImport = async () => {
 
             {step === 3 && (
                 <GlassCard className="p-16 text-center space-y-8 animate-in zoom-in-95">
-                    <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center border border-white/30 mx-auto">
-                        <CheckCircle2 className="text-white w-12 h-12" />
+                    <div className="w-24 h-24 bg-geeko-cyan/20 rounded-full flex items-center justify-center border border-geeko-cyan/30 mx-auto">
+                        <CheckCircle2 className="text-geeko-cyan w-12 h-12" />
                     </div>
                     <div>
                         <h2 className="text-4xl font-black italic uppercase tracking-tighter mb-2">¡Sincronización Finalizada!</h2>
                         <p className="text-slate-400 font-bold">
-                            Hemos importado <span className="text-white">{result?.imported_count || 0}</span> de <span className="text-white">{rows.length}</span> cartas detectadas.
+                            Hemos importado <span className="text-geeko-cyan">{result?.imported_count || 0}</span> de <span className="text-white">{rows.length}</span> cartas detectadas.
                         </p>
                         {result?.errors?.length > 0 && (
                             <div className="mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-left max-h-40 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10">
@@ -602,7 +602,7 @@ const handleImport = async () => {
                         {result?.failed_indices?.length > 0 && (
                             <button
                                 onClick={downloadFailedRows}
-                                className="mt-2 text-[10px] font-black uppercase tracking-widest text-white hover:underline hover:text-white transition-colors"
+                                className="mt-2 text-[10px] font-black uppercase tracking-widest text-geeko-cyan hover:underline hover:text-white transition-colors"
                             >
                                 Descargar {result.failed_indices.length} filas fallidas (.txt)
                             </button>
@@ -617,7 +617,7 @@ const handleImport = async () => {
                         </button>
                         <button
                             onClick={() => onImportComplete(rows)}
-                            className="px-8 py-3 bg-white text-black rounded-xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all"
+                            className="px-8 py-3 bg-geeko-cyan text-black rounded-xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all"
                         >
                             Ver Portafolio
                         </button>
