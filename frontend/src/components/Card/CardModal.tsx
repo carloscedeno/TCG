@@ -457,7 +457,6 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                 <div className="w-48 h-48 rounded-2xl bg-white/5 animate-pulse" />
                             ) : (
                                 <div className="relative w-full h-full flex items-center justify-center group/carousel">
-                                    <div className="absolute inset-0 bg-geeko-cyan/10 blur-[100px] rounded-full pointer-events-none opacity-50" />
                                     
                                     <AnimatePresence mode="wait">
                                         <motion.img
@@ -477,13 +476,13 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                         <>
                                             <button 
                                                 onClick={(e) => { e.stopPropagation(); setCarouselIndex(prev => (prev - 1 + allImages.length) % allImages.length); }}
-                                                className="absolute left-0 top-1/2 -translate-y-1/2 p-3 bg-black/40 hover:bg-geeko-cyan text-white hover:text-black rounded-full border border-white/10 backdrop-blur-md transition-all z-20 opacity-0 group-hover/carousel:opacity-100 -translate-x-4 group-hover/carousel:translate-x-2"
+                                                className="absolute left-0 top-1/2 -translate-y-1/2 p-3 bg-black/40 hover:bg-white/20 text-white hover:text-white rounded-full border border-white/10 backdrop-blur-md transition-all z-20 opacity-0 group-hover/carousel:opacity-100 -translate-x-4 group-hover/carousel:translate-x-2"
                                             >
                                                 <ChevronLeft size={20} />
                                             </button>
                                             <button 
                                                 onClick={(e) => { e.stopPropagation(); setCarouselIndex(prev => (prev + 1) % allImages.length); }}
-                                                className="absolute right-0 top-1/2 -translate-y-1/2 p-3 bg-black/40 hover:bg-geeko-cyan text-white hover:text-black rounded-full border border-white/10 backdrop-blur-md transition-all z-20 opacity-0 group-hover/carousel:opacity-100 translate-x-4 group-hover/carousel:-translate-x-2"
+                                                className="absolute right-0 top-1/2 -translate-y-1/2 p-3 bg-black/40 hover:bg-white/20 text-white hover:text-white rounded-full border border-white/10 backdrop-blur-md transition-all z-20 opacity-0 group-hover/carousel:opacity-100 translate-x-4 group-hover/carousel:-translate-x-2"
                                             >
                                                 <ChevronRight size={20} />
                                             </button>
@@ -494,7 +493,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                     <button
                                                         key={i}
                                                         onClick={(e) => { e.stopPropagation(); setCarouselIndex(i); }}
-                                                        className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === carouselIndex ? 'bg-white w-6 shadow-[0_0_10px_rgba(255,255,255,0.5)]' : 'bg-white/20 hover:bg-white/40'}`}
+                                                        className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === carouselIndex ? 'bg-white w-6' : 'bg-white/20 hover:bg-white/40'}`}
                                                     />
                                                 ))}
                                             </div>
@@ -563,7 +562,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                                 : '---'}
                                                         </div>
                                                         {(activeVersion?.discount_percentage || details.discount_percentage) > 0 && (
-                                                            <div className="px-2 py-1 bg-purple-500/20 text-purple-400 text-xs font-black rounded-lg border border-purple-500/30 shadow-[0_0_15px_rgba(168,85,247,0.4)] animate-pulse">
+                                                            <div className="px-2 py-1 bg-white/10 text-white text-xs font-black rounded-lg border border-white/20">
                                                                 -{(activeVersion?.discount_percentage || details.discount_percentage)}%
                                                             </div>
                                                         )}
@@ -583,8 +582,8 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                 data-testid="add-to-cart-button"
                                                 className={`w-full h-14 rounded-xl font-web-titles font-normal text-sm uppercase tracking-widest flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 ${
                                                     addedSuccess
-                                                        ? 'bg-geeko-cyan text-black shadow-[0_0_20px_rgba(0,255,133,0.4)]'
-                                                        : 'bg-geeko-cyan text-black shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_40px_rgba(0,229,255,0.6)]'
+                                                        ? 'bg-white text-black'
+                                                        : 'bg-white text-black hover:bg-white/90'
                                                 }`}
                                             >
                                                 {isAdding ? <Loader2 size={18} className="animate-spin" /> : addedSuccess ? '¡Añadido! ✓' : <ShoppingCart size={18} fill="currentColor" />}
@@ -606,19 +605,15 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                     <div className="flex-1 min-h-[300px] md:min-h-0 relative flex items-center justify-center p-4 sm:p-6 md:p-10 bg-gradient-to-b from-white/[0.04] to-transparent overflow-hidden">
                         {loading ? (
                             <div className="w-64 aspect-[5/7] rounded-xl bg-white/5 animate-pulse flex items-center justify-center">
-                                <div className="w-10 h-10 border-4 border-t-geeko-cyan border-white/10 rounded-full animate-spin" />
+                                <div className="w-10 h-10 border-4 border-t-white border-white/10 rounded-full animate-spin" />
                             </div>
                         ) : (
                             <div className="relative w-full h-full flex items-center justify-center group/card">
-                                <div className="absolute inset-0 bg-geeko-cyan/20 blur-[120px] rounded-full opacity-40 animate-pulse pointer-events-none" />
-                                <div className={`relative w-full h-full flex items-center justify-center drop-shadow-[0_45px_100px_rgba(0,0,0,0.95)] ${selectedFinish === 'foil' ? 'holo-effect' : ''}`}>
-                                    {selectedFinish === 'foil' && (
-                                        <div className="absolute inset-0 z-20 foil-shimmer opacity-30 mix-blend-overlay pointer-events-none rounded-[10%] scale-[0.95]" />
-                                    )}
+                                <div className={`relative w-full h-full flex items-center justify-center drop-shadow-[0_20px_50px_rgba(0,0,0,0.85)]`}>
                                     <img
                                         src={currentImage}
                                         alt={details?.name}
-                                        className="max-w-[90%] max-h-[95%] md:max-w-full md:max-h-full object-contain relative z-10 transition-transform duration-700 group-hover/card:scale-[1.03]"
+                                        className="max-w-[90%] max-h-[95%] md:max-w-full md:max-h-full object-contain relative z-10"
                                         style={{
                                             imageRendering: 'auto',
                                             height: 'auto',
@@ -631,9 +626,9 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                         {hasMultipleFaces && !loading && (
                             <button
                                 onClick={(e) => { e.stopPropagation(); setCurrentFaceIndex(prev => (prev + 1) % 2); }}
-                                className="absolute bottom-6 right-6 p-3 md:p-4 bg-black/80 hover:bg-geeko-cyan text-white hover:text-black rounded-full border border-white/20 backdrop-blur-md transition-all z-30 group shadow-2xl"
+                                className="absolute bottom-6 right-6 p-3 md:p-4 bg-black/80 hover:bg-white/20 text-white hover:text-white rounded-full border border-white/20 backdrop-blur-md transition-all z-30 group shadow-2xl"
                             >
-                                <RotateCw size={18} className="group-hover:rotate-180 transition-transform duration-500" />
+                                <RotateCw size={18} />
                             </button>
                         )}
                     </div>
@@ -687,10 +682,10 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                     }
                                                 }}
                                                 data-testid="edition-link"
-                                                className={`flex flex-col md:flex-row items-stretch md:items-center gap-2 md:gap-4 px-4 md:px-6 py-3 md:py-4 hover:bg-white/10 transition-colors border-r md:border-r-0 md:border-b border-white/5 group rounded-lg md:rounded-none w-full text-left cursor-pointer outline-none focus-visible:bg-white/10 ${isGroupActive ? 'bg-geeko-cyan/10 border-geeko-cyan/20' : ''}`}
+                                                className={`flex flex-col md:flex-row items-stretch md:items-center gap-2 md:gap-4 px-4 md:px-6 py-3 md:py-4 hover:bg-white/10 transition-colors border-r md:border-r-0 md:border-b border-white/5 group rounded-lg md:rounded-none w-full text-left cursor-pointer outline-none focus-visible:bg-white/10 ${isGroupActive ? 'bg-white/5 border-white/10' : ''}`}
                                             >
                                                 <div className="flex items-center gap-3 md:gap-4 flex-1">
-                                                    <div className="w-8 h-8 rounded bg-neutral-900 flex items-center justify-center text-xs font-web-titles group-hover:text-geeko-cyan transition-colors shrink-0">
+                                                    <div className="w-8 h-8 rounded bg-neutral-900 flex items-center justify-center text-xs font-web-titles transition-colors shrink-0">
                                                         {group.base.set_code?.toUpperCase()}
                                                     </div>
                                                     <div className="flex-1 text-left min-w-[120px] md:min-w-0">
@@ -714,7 +709,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                                     )}
                                                                     ${group.normal.price.toFixed(2)}
                                                                     {group.normal.discount_percentage > 0 && (
-                                                                        <span className="ml-1.5 px-1 bg-purple-500/20 text-purple-400 text-[9px] font-black rounded border border-purple-500/20">
+                                                                        <span className="ml-1.5 px-1 bg-white/10 text-white text-[9px] font-black rounded">
                                                                             -{group.normal.discount_percentage}%
                                                                         </span>
                                                                     )}
@@ -724,11 +719,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                         )}
                                                         {group.foil && (
                                                             <div className="flex items-center gap-2">
-                                                                <span className="text-[10px] text-purple-400 font-bold uppercase tracking-widest flex items-center gap-1">
-                                                                    <svg width="8" height="8" viewBox="0 0 10 12" fill="none">
-                                                                        <rect x="0.5" y="0.5" width="9" height="11" rx="1.5" stroke="currentColor" strokeWidth="1" />
-                                                                        <path d="M2 3 L8 3" stroke="currentColor" strokeWidth="1" />
-                                                                    </svg>
+                                                                <span className="text-[10px] text-white font-bold uppercase tracking-widest flex items-center gap-1">
                                                                     Foil
                                                                 </span>
                                                                  <span className={`text-[11px] font-black ${group.foil.stock > 0 ? 'text-white' : 'text-neutral-600'}`}>
@@ -739,7 +730,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                                     )}
                                                                     ${group.foil.price.toFixed(2)}
                                                                     {group.foil.discount_percentage > 0 && (
-                                                                        <span className="ml-1.5 px-1 bg-purple-500/20 text-purple-400 text-[9px] font-black rounded border border-purple-500/20">
+                                                                        <span className="ml-1.5 px-1 bg-white/10 text-white text-[9px] font-black rounded">
                                                                             -{group.foil.discount_percentage}%
                                                                         </span>
                                                                     )}
@@ -769,7 +760,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                                 }}
                                                                 className={`p-2 rounded-lg transition-all shrink-0 ${!rowActiveVersion?.stock || rowActiveVersion.stock === 0
                                                                     ? 'text-neutral-800 cursor-not-allowed'
-                                                                    : 'text-neutral-500 hover:text-geeko-cyan hover:bg-geeko-cyan/10'
+                                                                    : 'text-neutral-500 hover:text-white hover:bg-white/10'
                                                                     }`}
                                                             >
                                                                 <ShoppingCart size={14} />
@@ -835,7 +826,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                         }
                                     }}
                                 >
-                                    <h2 className="text-xl sm:text-2xl md:text-3xl font-web-titles font-normal tracking-tight text-white text-gradient-cyan group-hover/title:brightness-125 transition-all leading-tight">
+                                    <h2 className="text-xl sm:text-2xl md:text-3xl font-web-titles font-normal tracking-tight text-white group-hover/title:brightness-125 transition-all leading-tight">
                                         {details.name}
                                     </h2>
                                 </a>
@@ -863,7 +854,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                         <h3 className="text-xs font-web-titles font-normal uppercase tracking-widest text-neutral-500 flex items-center justify-between">
                                             Legalidad de Formato
                                             {details.total_stock > 0 && (
-                                                <span className="text-[10px] text-geeko-cyan bg-geeko-cyan/10 px-3 py-1 rounded-full border border-geeko-cyan/20">
+                                                <span className="text-[10px] text-white bg-white/10 px-3 py-1 rounded-full border border-white/20">
                                                     Existencia Total: {details.total_stock}
                                                 </span>
                                             )}
@@ -875,7 +866,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                     <div
                                                         key={fmt}
                                                         className={`flex items-center justify-center p-2.5 rounded-lg border transition-all duration-300 ${isLegal
-                                                            ? 'bg-geeko-gold/10 border-geeko-gold/40 text-geeko-gold shadow-[0_0_20px_rgba(249,174,0,0.1)]'
+                                                            ? 'bg-white/10 border-white/20 text-white'
                                                             : 'bg-neutral-900/40 border-white/5 text-neutral-600 opacity-60'
                                                             }`}
                                                     >
@@ -893,13 +884,13 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                     {/* Left Column: Local Inventory & Actions */}
                                     <div className="flex flex-col gap-3">
                                         {/* GK Price Box */}
-                                        <div className="p-5 md:p-6 rounded-2xl bg-gradient-to-br from-geeko-cyan/10 via-transparent to-transparent border border-white/10 group relative overflow-hidden flex flex-col justify-between gap-4 flex-1">
-                                            <div className="absolute top-0 right-0 w-32 h-32 bg-geeko-cyan/5 rounded-full blur-[40px]" />
+                                        <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/10 flex items-center justify-between">
+                                            <div className="flex flex-col justify-between gap-4 flex-1">
                                             <div className="space-y-1 relative z-10">
-                                                <div className="text-[10px] font-semibold uppercase text-geeko-cyan tracking-widest flex items-center justify-between">
+                                                <div className="text-[10px] font-semibold uppercase text-neutral-500 tracking-widest flex items-center justify-between">
                                                     <span>GK Price</span>
                                                     {marketPrice > 0 && (activeVersion?.price || details.price || 0) > 0 && (activeVersion?.price || details.price || 0) < marketPrice ? (
-                                                        <span className="text-[9px] text-geeko-cyan bg-geeko-cyan/10 px-2 py-0.5 rounded-full border border-geeko-cyan/20">
+                                                        <span className="text-[9px] text-white bg-white/10 px-2 py-0.5 rounded-full border border-white/20">
                                                             Ahorro: ${(marketPrice - (activeVersion?.price || details.price || 0)).toFixed(2)}
                                                         </span>
                                                     ) : null}

@@ -181,8 +181,7 @@ export const CardDetail: React.FC = () => {
         <div className="min-h-screen flex flex-col bg-[#050505] text-white font-sans selection:bg-geeko-cyan/30">
             {/* Ambient Background */}
             <div className="fixed inset-0 z-0 pointer-events-none">
-                <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-purple-600/5 rounded-full blur-[150px]" />
-                <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-geeko-cyan/5 rounded-full blur-[150px]" />
+                <div className="absolute inset-0 bg-black" />
             </div>
 
             {/* Header */}
@@ -198,13 +197,12 @@ export const CardDetail: React.FC = () => {
                     <div className="glass-panel rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0, 102, 255,0.15)] flex flex-col lg:flex-row overflow-hidden min-h-[85vh] max-h-[90vh]">
                         {/* LEFT: IMAGE & VERSIONS LIST */}
                         <div className="w-full lg:w-[420px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden h-full">
-                            <div className="flex-1 min-h-[450px] md:min-h-[600px] flex items-center justify-center p-6 sm:p-8 md:p-10 relative bg-gradient-to-b from-white/[0.04] to-transparent overflow-hidden">
+                            <div className="flex-1 min-h-[450px] md:min-h-[600px] flex items-center justify-center p-6 sm:p-8 md:p-10 relative bg-[#0c0c0c] overflow-hidden">
                                 <div className="relative group w-full h-full flex items-center justify-center">
-                                    <div className="absolute inset-0 bg-geeko-cyan/25 blur-[120px] rounded-full opacity-40 group-hover:opacity-60 transition-opacity duration-700 animate-pulse pointer-events-none" />
                                     <img
                                         src={currentImage}
                                         alt={details.name}
-                                        className="w-full h-full object-contain drop-shadow-[0_45px_100px_rgba(0,0,0,0.95)] z-10 hover:scale-[1.03] transition-all duration-700 foil-shimmer"
+                                        className="w-full h-full object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)] z-10 hover:scale-[1.03] transition-all duration-700"
                                         style={{
                                             imageRendering: 'auto',
                                         }}
@@ -364,8 +362,7 @@ export const CardDetail: React.FC = () => {
                                 </div>
                             </div>
 
-                            <div className="p-8 rounded-[32px] bg-white/5 border border-white/10 space-y-6 relative overflow-hidden group">
-                                <div className="absolute -top-24 -right-24 w-64 h-64 bg-geeko-cyan/5 rounded-full blur-[100px] group-hover:bg-geeko-cyan/10 transition-colors" />
+                            <div className="p-8 rounded-[32px] bg-white/[0.03] border border-white/10 space-y-6 relative overflow-hidden group">
                                 <div className="text-lg lg:text-xl leading-relaxed text-neutral-200 font-medium relative z-10">
                                     {details.oracle_text?.split('\n').map((line: string, i: number) => <p key={i} className="mb-3"><ManaText text={line} /></p>)}
                                 </div>
@@ -385,8 +382,7 @@ export const CardDetail: React.FC = () => {
                                 <div className="space-y-6">
                                     <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-500 pl-2">Trading Hub</h3>
 
-                                    <div className="p-8 rounded-[32px] bg-gradient-to-br from-geeko-cyan/10 via-transparent to-transparent border border-white/10 group relative overflow-hidden hover:border-geeko-cyan/30 transition-colors">
-                                        <div className="absolute top-0 right-0 w-40 h-40 bg-geeko-cyan/5 rounded-full blur-[50px]" />
+                                    <div className="p-8 rounded-[32px] bg-white/[0.02] border border-white/10 group relative overflow-hidden transition-colors">
                                         <div className="text-[9px] font-black uppercase text-neutral-500 tracking-[0.2em] mb-4">Internal Store Price</div>
                                         <div className="flex flex-col gap-6">
                                             {/* Price + Variant Badge (horizontal layout matching CardModal) */}
