@@ -69,8 +69,8 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
             {/* Top Bar: Logo & Search & User */}
             <div className="max-w-[1600px] mx-auto px-4 h-[60px] flex items-center justify-between gap-4">
                 <Link to="/" className="flex-shrink-0 group relative">
-                    <img src="/branding/Logo.png" alt="Geekorium" className="w-24 sm:w-32 lg:w-36 object-contain group-hover:scale-105 transition-transform" />
-                    <span className="absolute -top-1 -right-4 bg-red-600 text-white text-[7px] md:text-[8px] font-black px-1.5 py-0.5 rounded-md rotate-12 shadow-lg">BETA</span>
+                    <img src="/branding/Logo.png" alt="Geekorium" className="w-32 sm:w-40 object-contain group-hover:scale-105 transition-transform" />
+                    <span className="absolute -top-1 -right-4 bg-red-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded-md rotate-12 shadow-lg">BETA</span>
                 </Link>
 
                 {/* Main Utility Nav - Always show on PC */}
@@ -94,20 +94,20 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                 </nav>
 
                 {/* Search & Cart & Auth */}
-                <div className="flex items-center gap-4 md:gap-6">
-                    <div className="hidden lg:block w-48 xl:w-64 2xl:w-80 transition-all duration-500">
-                        <div className="relative group">
-                            <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500 group-focus-within:text-white transition-colors" />
-                            <input 
-                                type="text"
-                                value={query}
-                                onChange={(e) => handleSearch(e.target.value)}
-                                placeholder="Buscar..."
-                                className="w-full bg-neutral-900/50 border border-white/10 rounded-full py-2 pl-10 pr-4 text-[11px] text-white placeholder:text-neutral-600 focus:outline-none focus:border-white/50 focus:ring-1 focus:ring-white/20 transition-all"
-                            />
-                        </div>
+                <div className="flex-1 max-w-2xl hidden lg:block mx-auto transition-all duration-500">
+                    <div className="relative group">
+                        <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500 group-focus-within:text-geeko-cyan transition-colors" />
+                        <input 
+                            type="text"
+                            value={query}
+                            onChange={(e) => handleSearch(e.target.value)}
+                            placeholder="Buscar..."
+                            className="w-full bg-neutral-900/50 border border-white/10 rounded-full py-2.5 pl-10 pr-4 text-[11px] text-white placeholder:text-neutral-600 focus:outline-none focus:border-geeko-cyan/50 focus:ring-1 focus:ring-geeko-cyan/20 transition-all shadow-inner"
+                        />
                     </div>
+                </div>
 
+                <div className="flex items-center gap-4 md:gap-6">
                     <div className="flex items-center gap-3">
                         <button onClick={onCartOpen} className="relative p-2 text-neutral-400 hover:text-white transition-all">
                             <ShoppingCart size={22} />
