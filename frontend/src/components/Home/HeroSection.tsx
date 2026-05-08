@@ -25,15 +25,20 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ gameCode }) => {
             setLoading(true);
             try {
                 const bannerData = await fetchBanners('main_hero', gameCode).catch(err => {
-                    console.warn("Banners fetch failed, falling back to mock:", err);
+                    console.warn("Banners fetch failed, falling back to global/mock:", err);
                     return [];
                 });
 
                 if (bannerData && bannerData.length > 0) {
                     setBanners(bannerData);
                 } else {
-                    // Fallback to MOCK only for global banners
-                    if (!gameCode) {
+                    // Try to fetch global banners if game-specific ones are missing
+                    const globalBanners = gameCode ? await fetchBanners('main_hero').catch(() => []) : [];
+                    
+                    if (globalBanners && globalBanners.length > 0) {
+                        setBanners(globalBanners);
+                    } else {
+                        // Final fallback to MOCK
                         const MOCK_BANNERS: Banner[] = [
                             {
                                 id: 'mock-1',
@@ -61,8 +66,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ gameCode }) => {
                             }
                         ];
                         setBanners(MOCK_BANNERS);
-                    } else {
-                        setBanners([]);
                     }
                 }
             } catch (err) {

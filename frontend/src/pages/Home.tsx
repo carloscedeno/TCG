@@ -149,7 +149,12 @@ const Home: React.FC = () => {
     return !val;
   };
 
-  const isDashboardView = !query && Object.entries(filters).every(([key, val]) => isDefaultFilter(key, val)) && (activeTab as string) !== 'catalog';
+  const isDashboardView = !query && 
+    Object.entries(filters).every(([key, val]) => {
+      if (key === 'games') return Array.isArray(val) && val.length <= 1;
+      return isDefaultFilter(key, val);
+    }) && 
+    (activeTab as string) !== 'catalog';
 
   useEffect(() => {
     const gameCode = filters.games && filters.games.length > 0 ? filters.games[0] : undefined;
