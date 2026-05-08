@@ -458,11 +458,11 @@ const Home: React.FC = () => {
                     onClick={() => handleTabChange('catalog')}
                     data-testid="catalog-tab"
                     className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'catalog'
-                      ? 'ring-2 ring-blue-500/30 bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.4)]'
+                      ? 'ring-2 ring-geeko-cyan-neon/30 bg-geeko-cyan-neon text-black shadow-[0_0_15px_rgba(0,209,255,0.4)]'
                       : 'text-neutral-500 hover:text-neutral-300'
                       }`}
                   >
-                    <Search size={16} className={activeTab === 'catalog' ? 'text-white' : 'text-blue-500'} />
+                    <Search size={16} className={activeTab === 'catalog' ? 'text-black' : 'text-geeko-cyan-neon'} />
                     Catálogo
                   </button>
                 )}
@@ -477,7 +477,7 @@ const Home: React.FC = () => {
                 <div className="relative">
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" /></svg>
                   {Object.values(filters).some(v => v && (typeof v === 'boolean' ? v : (v as any).length > 0)) && (
-                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full" />
+                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-geeko-cyan-neon rounded-full" />
                   )}
                 </div>
                 <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Filtros</span>

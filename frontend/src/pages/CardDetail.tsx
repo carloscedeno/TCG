@@ -11,6 +11,8 @@ import { Header } from '../components/Navigation/Header';
 import { useCart } from '../context/CartContext';
 import { ManaText } from '../components/Mana/ManaText';
 import { Footer } from '../components/Navigation/Footer';
+import { CartDrawer } from '../components/Navigation/CartDrawer';
+import { AuthModal } from '../components/Auth/AuthModal';
 
 export const CardDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -176,7 +178,7 @@ export const CardDetail: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen flex flex-col bg-[#050505] text-white font-sans selection:bg-cyan-500/30">
+        <div className="min-h-screen flex flex-col bg-[#050505] text-white font-sans selection:bg-geeko-cyan/30">
             {/* Ambient Background */}
             <div className="fixed inset-0 z-0 pointer-events-none">
                 <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-purple-600/5 rounded-full blur-[150px]" />
@@ -193,7 +195,7 @@ export const CardDetail: React.FC = () => {
                         <p className="text-neutral-500 font-bold tracking-widest uppercase text-xs">Loading Card Data...</p>
                     </div>
                 ) : details ? (
-                    <div className="glass-panel rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0,163,255,0.15)] flex flex-col md:flex-row overflow-hidden min-h-[80vh]">
+                    <div className="glass-panel rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0,209,255,0.15)] flex flex-col md:flex-row overflow-hidden min-h-[80vh]">
                         {/* LEFT: IMAGE & VERSIONS LIST */}
                         <div className="w-full md:w-[520px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden h-full">
                             <div className="flex-1 min-h-[450px] md:min-h-[600px] flex items-center justify-center p-6 sm:p-8 md:p-10 relative bg-gradient-to-b from-white/[0.04] to-transparent overflow-hidden">
@@ -258,7 +260,7 @@ export const CardDetail: React.FC = () => {
                                                             {group.base.set_code?.toUpperCase()}
                                                         </div>
                                                         <div className="flex-1 text-left min-w-[120px]">
-                                                            <div className={`text-xs font-bold leading-tight truncate ${isGroupActive ? 'text-geeko-cyan' : 'text-neutral-300'}`}>
+                                                            <div className={`text-xs font-bold font-web-titles tracking-tight leading-tight truncate ${isGroupActive ? 'text-geeko-cyan' : 'text-neutral-300'}`}>
                                                                 {group.base.set_name}
                                                             </div>
                                                             <div className="text-[10px] text-neutral-600 font-bold flex items-center gap-2">
@@ -349,7 +351,7 @@ export const CardDetail: React.FC = () => {
                                     }}
                                     className="block group/title"
                                 >
-                                    <h2 className="text-6xl lg:text-8xl font-black tracking-tighter text-white group-hover/title:text-geeko-cyan transition-colors text-gradient-cyan">
+                                    <h2 className="text-6xl lg:text-8xl font-web-titles font-normal tracking-tight text-white group-hover/title:text-geeko-cyan transition-colors text-gradient-cyan capitalize">
                                         {details.name}
                                     </h2>
                                 </a>

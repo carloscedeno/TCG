@@ -42,8 +42,14 @@ END $$;
 ALTER TABLE public.hero_banners ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.events ENABLE ROW LEVEL SECURITY;
 
--- 5. Backfill role for existing admin users (if any)
--- Assuming existing admins have is_admin = true in profiles (if such column existed)
--- This step is environment‑specific; you may need to run a manual update.
+-- 5. Backfill role for existing admin users
+-- We only do this if is_admin column exists to avoid errors
+DO $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='profiles' AND column_name='is_admin') THEN
+        UPDATE public.profiles SET role = 'admin' WHERE is_admin = true AND role IS NULL;
+        UPDATE public.profiles SET role = 'user' WHERE (is_admin = false OR is_admin IS NULL) AND role IS NULL;
+    END IF;
+END $$;
 
 COMMIT;
