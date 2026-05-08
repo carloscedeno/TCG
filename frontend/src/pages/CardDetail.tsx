@@ -498,7 +498,8 @@ export const CardDetail: React.FC = () => {
                                 )}
                             </div>
                         </div>
-                    ) : null
+                    </div>
+                ) : null
                 }
             </main>
 
