@@ -50,9 +50,27 @@ export const TcgBannersPage: React.FC = () => {
   const loadGames = async () => {
     try {
       const data = await fetchGames();
-      setGames(data || []);
-      if (data && data.length > 0) {
-        setGameFilter(data[0].game_code);
+      // Only show the 8 featured TCGs from the storefront menu
+      const FEATURED_CODES = ['MTG', 'POKEMON', 'PKM', 'YUGIOH', 'YGO', 'RFB', 'ONEPIECE', 'OPC', 'DGM', 'GND', 'FAB'];
+      const filtered = (data || []).filter((g: Game) => FEATURED_CODES.includes(g.game_code));
+      
+      // Remove duplicates if any (like PKM vs POKEMON) - prioritize the one with more data or canonical
+      const unique = filtered.reduce((acc: Game[], current) => {
+        const isDuplicate = acc.find(g => 
+          (g.game_code === 'PKM' && current.game_code === 'POKEMON') ||
+          (g.game_code === 'POKEMON' && current.game_code === 'PKM') ||
+          (g.game_code === 'YGO' && current.game_code === 'YUGIOH') ||
+          (g.game_code === 'YUGIOH' && current.game_code === 'YGO') ||
+          (g.game_code === 'OPC' && current.game_code === 'ONEPIECE') ||
+          (g.game_code === 'ONEPIECE' && current.game_code === 'OPC')
+        );
+        if (!isDuplicate) acc.push(current);
+        return acc;
+      }, []);
+
+      setGames(unique);
+      if (unique.length > 0) {
+        setGameFilter(unique[0].game_code);
       }
     } catch (error) {
       console.error('Error loading games:', error);
