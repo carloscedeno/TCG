@@ -24,6 +24,7 @@ import LoginPage from './pages/Admin/LoginPage';
 import CustomersPage from './pages/Admin/CustomersPage';
 import CatalogPage from './pages/Admin/CatalogPage';
 import { BannersPage } from './pages/Admin/BannersPage';
+import { TcgBannersPage } from './pages/Admin/TcgBannersPage';
 import { EventsPage } from './pages/Admin/EventsPage';
 import { PresalesPage } from './pages/Admin/PresalesPage';
 import { PosSessionBanner } from './components/Admin/PosSessionBanner';
@@ -86,6 +87,7 @@ function App() {
                         <Route path="/admin/orders" element={<AdminRoute><OrdersPage /></AdminRoute>} />
                         <Route path="/admin/customers" element={<AdminRoute><CustomersPage /></AdminRoute>} />
                         <Route path="/admin/banners" element={<AdminRoute><BannersPage /></AdminRoute>} />
+                        <Route path="/admin/banners-tcg" element={<AdminRoute><TcgBannersPage /></AdminRoute>} />
                         <Route path="/admin/presales" element={<AdminRoute><PresalesPage /></AdminRoute>} />
                         <Route path="/admin/events" element={<AdminRoute><EventsPage /></AdminRoute>} />
                         <Route path="/checkout" element={<CheckoutPage />} />

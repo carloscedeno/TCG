@@ -1,4 +1,4 @@
-﻿# AGENTS â€” Geekorium Project Context & Rules
+# AGENTS â€” Geekorium Project Context & Rules
 
 Este directorio contiene las reglas de arquitectura modular del proyecto. Garantizan consistencia y alta calidad en el output de todos los agentes que trabajan en el sistema.
 
@@ -124,7 +124,10 @@ Artefactos del Compound step:
 - âœ… **Saneamiento Masivo de Credenciales (v55)**: RemediaciÃ³n total de un incidente de seguridad crÃ­tico. EliminaciÃ³n de contraseÃ±as hardcodeadas en mÃ¡s de 60 scripts y parametrizaciÃ³n vÃ­a `os.getenv`. ActualizaciÃ³n de `.gitignore` global y eliminaciÃ³n de archivos de texto con credenciales (`prod_credentials.txt`).
 - âœ… **EstabilizaciÃ³n de Precios en ProducciÃ³n (v56)**: ReparaciÃ³n de discrepancias masivas mediante sincronizaciÃ³n atÃ³mica SQL. Procesamiento de 148,000+ precios y actualizaciÃ³n de 38,000+ cartas sin timeouts.
 - âœ… **Hardening de CI/CD (Omni-Sync)**: InyecciÃ³n de secretos de producciÃ³n en GitHub Actions y refactorizaciÃ³n de `common/db.py` para aislamiento total de entornos.
-- âœ… **IntegraciÃ³n de Logos TCG (Premium)**: SustituciÃ³n de emojis por assets PNG estandarizados (`color` y `black`) en landing, header y administraciÃ³n. ImplementaciÃ³n de leyes de respiraciÃ³n visual para evitar clipping en animaciones de escala.
+- ✅ **Integración de Logos TCG (Premium)**: Sustitución de emojis por assets PNG estandarizados (`color` y `black`) en landing, header y administración. Implementación de leyes de respiración visual para evitar clipping en animaciones de escala.
+- ✅ **Estandarización de Pantone y Color (Mayo 2026)**: Eliminación masiva de clases `neutral-XXX` de Tailwind y reemplazo por tokens `#B7B7B7` (`text-low`) y `#FFFFFF` (`text-high`) para asegurar paridad visual con el PRD en todos los entornos.
+- ✅ **Optimización de Efectos Foil (v59)**: Refactorización de `CardDetail.tsx` para evitar el oscurecimiento de imágenes. El efecto shimmer ahora usa una capa independiente con opacidad controlada (30%) y solo se activa en versiones Foil.
+
 
 ## ðŸš§ Features Pendientes
 

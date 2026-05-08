@@ -1048,3 +1048,15 @@ useEffect(() => {
 - **Problema**: La pestaña "Stock Geekorium" aparecía en la sección de accesorios (Artilugios), confundiendo al usuario ya que solo hay stock de cartas para MTG.
 - **Solución**: Implementar una restricción lógica en `Home.tsx` que evalúa `filters.games?.includes('MTG')` antes de renderizar la pestaña de inventario de cartas.
 - **Lección**: Menos es más. Ocultar opciones irrelevantes según el contexto de filtrado actual reduce la carga cognitiva y previene errores de navegación del usuario.
+
+### 162. Errores de Sintaxis en Refactorizaciones Masivas — 2026-05-08
+- **Problema**: El build fallaba con `error TS1381: Property or signature expected.` en `CartDrawer.tsx`.
+- **Causa Raíz**: Durante el reemplazo masivo de colores `neutral-XXX` por tokens de marca, se rompió accidentalmente la sintaxis de un operador ternario en los controles de cantidad, dejando un código inválido.
+- **Lección**: Las refactorizaciones de "Buscar y Reemplazar" en múltiples archivos deben ir acompañadas de un `npm run build` local inmediato. Un error tipográfico pequeño en un componente central puede bloquear todo el pipeline de CI/CD.
+
+### 163. Mezcla de Capas y Opacidad en Imágenes Foil — 2026-05-08
+- **Problema**: Las imágenes de las cartas se veían oscuras ("opacas") en la página de detalle.
+- **Causa Raíz**: Aplicación directa de `mix-blend-mode: overlay` sobre la etiqueta `<img>`. Al no tener una capa base de color, el modo de mezcla oscurecía la imagen original en lugar de iluminarla. Además, el efecto se aplicaba incluso a cartas no-foil.
+- **Solución**: Mover el efecto `foil-shimmer` a una capa (div) independiente sobre la imagen con `opacity-30` y `pointer-events-none`. Condicionar la aplicación del efecto y de la clase `holo-effect` estrictamente al estado `isFoil`.
+- **Lección**: Nunca aplicar modos de mezcla destructivos (`overlay`, `multiply`) directamente sobre el activo visual principal si se busca un efecto de brillo. Usar siempre capas superpuestas con opacidad controlada para preservar la legibilidad del arte original.
+

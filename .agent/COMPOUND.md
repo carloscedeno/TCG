@@ -934,3 +934,21 @@ $content
 **Artefacto creado:** N/A
 
 **Regla derivada:** Ley 30 (Branding Inmutable) y Ley 31 (Visibilidad Condicional).
+
+## 2026-05-08 — Estandarización Pantone y Optimización Foil
+
+**Qué pasó:** Se completó la transición de la paleta de colores de Geekorium a los tokens oficiales de marca (#B7B7B7 / #FFFFFF) y se resolvieron las regresiones visuales en el efecto foil de la página de detalle. Se estabilizó el build tras una refactorización masiva que introdujo errores de sintaxis en el carrito.
+
+**Lo que cambió:**
+- `lessons_learned.md` → Lecciones #162, #163.
+- `AGENTS.md` → Marcada implementación de Pantone y Optimización Foil.
+- `PROGRESS.md` → Actualizado estado (Compound v59).
+- `frontend/src/index.css` → Optimización de la clase `foil-shimmer`.
+- `frontend/src/pages/CardDetail.tsx` → Refactorización de capas de brillo y guardas contra crashes.
+- `frontend/src/components/Navigation/CartDrawer.tsx` → Fix de sintaxis en controles de cantidad.
+- Refactorización de colores en 9 componentes (`Footer`, `CartDrawer`, `CardGrid`, `Header`, `Home`, `CardDetail`, `FiltersPanel`, `Card`, `CardModal`).
+
+**Artefacto creado:** Capa de brillo independiente para efectos Foil.
+
+**Regla derivada:** Lección #163 — Nunca aplicar modos de mezcla destructivos directamente sobre el activo visual principal. Usar siempre capas superpuestas con opacidad controlada.
+

@@ -299,11 +299,24 @@ export const AdminDashboard = () => {
                         <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
                         <div className="relative z-10 flex items-center justify-between">
                             <div>
-                                <h3 className="text-2xl font-black italic text-white mb-2">BANNERS</h3>
-                                <p className="text-cyan-300 text-xs font-bold uppercase tracking-widest">Gestionar Carrusel Home</p>
+                                <h3 className="text-2xl font-black italic text-white mb-2">BANNERS HOME</h3>
+                                <p className="text-cyan-300 text-xs font-bold uppercase tracking-widest">Gestionar Carrusel Principal</p>
                             </div>
                             <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
                                 <Image className="text-white" size={32} />
+                            </div>
+                        </div>
+                    </Link>
+
+                    <Link to="/admin/banners-tcg" className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-geeko-purple/40 to-slate-900 border border-white/10 p-8 hover:border-geeko-purple/50 transition-all">
+                        <div className="absolute inset-0 bg-geeko-purple/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="relative z-10 flex items-center justify-between">
+                            <div>
+                                <h3 className="text-2xl font-black italic text-white mb-2">BANNERS TCG</h3>
+                                <p className="text-geeko-purple text-xs font-bold uppercase tracking-widest">Gestionar Carrusel por Juego</p>
+                            </div>
+                            <div className="w-16 h-16 bg-geeko-purple/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <Image className="text-geeko-purple" size={32} />
                             </div>
                         </div>
                     </Link>

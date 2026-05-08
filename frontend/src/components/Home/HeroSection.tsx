@@ -11,7 +11,11 @@ interface Banner {
     category: string;
 }
 
-export const HeroSection: React.FC = () => {
+interface HeroSectionProps {
+    gameCode?: string;
+}
+
+export const HeroSection: React.FC<HeroSectionProps> = ({ gameCode }) => {
     const [banners, setBanners] = useState<Banner[]>([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [loading, setLoading] = useState(true);
@@ -20,7 +24,7 @@ export const HeroSection: React.FC = () => {
         const loadHeroData = async () => {
             setLoading(true);
             try {
-                const bannerData = await fetchBanners('main_hero').catch(err => {
+                const bannerData = await fetchBanners('main_hero', gameCode).catch(err => {
                     console.warn("Banners fetch failed, falling back to mock:", err);
                     return [];
                 });
@@ -28,33 +32,38 @@ export const HeroSection: React.FC = () => {
                 if (bannerData && bannerData.length > 0) {
                     setBanners(bannerData);
                 } else {
-                    const MOCK_BANNERS: Banner[] = [
-                        {
-                            id: 'mock-1',
-                            title: 'El Emporio de Geekorium',
-                            subtitle: 'Tu destino premium para Singles de Magic: The Gathering.',
-                            image_url: 'https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg',
-                            link_url: '/?game=MTG',
-                            category: 'main_hero'
-                        },
-                        {
-                            id: 'mock-2',
-                            title: 'Outlaws of Thunder Junction',
-                            subtitle: 'Stock completo de la última edición disponible.',
-                            image_url: 'https://cards.scryfall.io/art_crop/front/6/7/67f4c93b-080c-4196-b095-6a120a221988.jpg',
-                            link_url: '/?game=MTG&set=OTJ',
-                            category: 'main_hero'
-                        },
-                        {
-                            id: 'mock-3',
-                            title: 'Compramos tu Colección',
-                            subtitle: 'Trae tus cartas y obtén crédito en tienda o efectivo.',
-                            image_url: 'https://cards.scryfall.io/art_crop/front/a/1/a1d9ae04-3747-4402-8608-8f85f36e479c.jpg',
-                            link_url: '#',
-                            category: 'main_hero'
-                        }
-                    ];
-                    setBanners(MOCK_BANNERS);
+                    // Fallback to MOCK only for global banners
+                    if (!gameCode) {
+                        const MOCK_BANNERS: Banner[] = [
+                            {
+                                id: 'mock-1',
+                                title: 'El Emporio de Geekorium',
+                                subtitle: 'Tu destino premium para Singles de Magic: The Gathering.',
+                                image_url: 'https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg',
+                                link_url: '/?game=MTG',
+                                category: 'main_hero'
+                            },
+                            {
+                                id: 'mock-2',
+                                title: 'Outlaws of Thunder Junction',
+                                subtitle: 'Stock completo de la última edición disponible.',
+                                image_url: 'https://cards.scryfall.io/art_crop/front/6/7/67f4c93b-080c-4196-b095-6a120a221988.jpg',
+                                link_url: '/?game=MTG&set=OTJ',
+                                category: 'main_hero'
+                            },
+                            {
+                                id: 'mock-3',
+                                title: 'Compramos tu Colección',
+                                subtitle: 'Trae tus cartas y obtén crédito en tienda o efectivo.',
+                                image_url: 'https://cards.scryfall.io/art_crop/front/a/1/a1d9ae04-3747-4402-8608-8f85f36e479c.jpg',
+                                link_url: '#',
+                                category: 'main_hero'
+                            }
+                        ];
+                        setBanners(MOCK_BANNERS);
+                    } else {
+                        setBanners([]);
+                    }
                 }
             } catch (err) {
                 console.error("Critical Hero data load error:", err);
@@ -63,7 +72,8 @@ export const HeroSection: React.FC = () => {
             }
         };
         loadHeroData();
-    }, []);
+        setCurrentIndex(0); // Reset index when gameCode changes
+    }, [gameCode]);
 
     // Auto-advance every 6 seconds
     useEffect(() => {

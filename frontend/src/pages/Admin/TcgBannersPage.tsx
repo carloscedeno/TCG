@@ -11,7 +11,7 @@ import {
   EyeOff,
   Link as LinkIcon
 } from 'lucide-react';
-import { adminFetchBanners, adminSaveBanner, adminDeleteBanner, uploadAsset } from '../../utils/api';
+import { adminFetchBanners, adminSaveBanner, adminDeleteBanner, uploadAsset, fetchGames } from '../../utils/api';
 
 interface Banner {
   id?: string;
@@ -31,7 +31,7 @@ interface Game {
   game_code: string;
 }
 
-export const BannersPage: React.FC = () => {
+export const TcgBannersPage: React.FC = () => {
   const navigate = useNavigate();
   const [banners, setBanners] = useState<Banner[]>([]);
   const [loading, setLoading] = useState(true);
@@ -39,17 +39,32 @@ export const BannersPage: React.FC = () => {
   const [editingBanner, setEditingBanner] = useState<Banner | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [games, setGames] = useState<Game[]>([]);
+  const [gameFilter, setGameFilter] = useState<string>('');
 
   useEffect(() => {
     loadBanners();
+    loadGames();
   }, []);
+
+  const loadGames = async () => {
+    try {
+      const data = await fetchGames();
+      setGames(data || []);
+      if (data && data.length > 0) {
+        setGameFilter(data[0].game_code);
+      }
+    } catch (error) {
+      console.error('Error loading games:', error);
+    }
+  };
 
   const loadBanners = async () => {
     try {
       setLoading(true);
       const data = await adminFetchBanners();
-      // Only show global banners (game_code is null)
-      setBanners((data || []).filter((b: any) => !b.game_code));
+      // Filter to only show banners with a game_code
+      setBanners((data || []).filter((b: any) => b.game_code !== null));
     } catch (error) {
       console.error('Error loading banners:', error);
     } finally {
@@ -58,8 +73,9 @@ export const BannersPage: React.FC = () => {
   };
 
   const handleCreate = () => {
-    if (banners.length >= 5) {
-      alert('Se ha alcanzado el límite máximo de 5 banners. Debes eliminar uno antes de crear otro.');
+    const bannersForThisGame = banners.filter(b => b.game_code === gameFilter);
+    if (bannersForThisGame.length >= 5) {
+      alert(`Se ha alcanzado el límite máximo de 5 banners para ${gameFilter}. Debes eliminar uno antes de crear otro.`);
       return;
     }
     setEditingBanner({
@@ -68,9 +84,9 @@ export const BannersPage: React.FC = () => {
       image_url: '',
       link_url: '',
       is_active: true,
-      display_order: banners.length,
+      display_order: bannersForThisGame.length,
       category: 'main_hero',
-      game_code: null
+      game_code: gameFilter
     });
     setIsModalOpen(true);
   };
@@ -158,25 +174,37 @@ export const BannersPage: React.FC = () => {
               Volver al Panel
             </button>
             <h1 className="text-4xl md:text-5xl font-black italic tracking-tighter uppercase">
-              Gestión de <span className="text-white">Banners</span>
+              Banners <span className="text-geeko-purple">por TCG</span>
             </h1>
             <div className="flex items-center gap-2">
-              <p className="text-slate-500 text-xs font-bold uppercase tracking-[0.2em]">Carrusel Promocional ({banners.length}/5)</p>
-              <div className="flex gap-1">
-                {[...Array(5)].map((_, i) => (
-                  <div key={i} className={`w-3 h-1.5 rounded-full transition-colors ${i < banners.length ? 'bg-white' : 'bg-white/10'}`} />
-                ))}
-              </div>
+              <p className="text-slate-500 text-xs font-bold uppercase tracking-[0.2em]">Administración Independiente de Juegos</p>
             </div>
           </div>
           
           <button 
             onClick={handleCreate}
-            className="flex items-center justify-center gap-3 bg-white text-black px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_30px_rgba(34,211,238,0.3)]"
+            className="flex items-center justify-center gap-3 bg-geeko-purple text-white px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_30px_rgba(168,85,247,0.3)]"
           >
             <Plus size={18} />
-            Nuevo Banner
+            Nuevo Banner TCG
           </button>
+        </div>
+
+        {/* TCG Selector Tabs */}
+        <div className="flex flex-wrap items-center gap-3 mb-8 bg-slate-900/20 p-2 rounded-[2rem] border border-white/5">
+          {games.map(game => (
+            <button
+              key={game.game_code}
+              onClick={() => setGameFilter(game.game_code)}
+              className={`px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
+                gameFilter === game.game_code 
+                  ? 'bg-geeko-purple text-white shadow-lg' 
+                  : 'text-slate-500 hover:text-white'
+              }`}
+            >
+              {game.game_name}
+            </button>
+          ))}
         </div>
 
         {/* Content */}
@@ -185,15 +213,17 @@ export const BannersPage: React.FC = () => {
             <div className="w-12 h-12 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
             <p className="text-slate-500 font-black text-[10px] uppercase tracking-widest animate-pulse">Sincronizando Banners...</p>
           </div>
-        ) : banners.length === 0 ? (
+        ) : banners.filter(b => b.game_code === gameFilter).length === 0 ? (
           <div className="text-center py-20 bg-slate-900/20 border-2 border-dashed border-white/5 rounded-[2.5rem]">
             <ImageIcon className="w-16 h-16 text-slate-700 mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-slate-500 uppercase tracking-tighter">No hay banners configurados</h3>
-            <p className="text-slate-400 text-xs mt-2 font-medium">Crea el primer banner para empezar a promocionar tus productos.</p>
+            <h3 className="text-xl font-bold text-slate-500 uppercase tracking-tighter">No hay banners para {gameFilter}</h3>
+            <p className="text-slate-400 text-xs mt-2 font-medium">Crea el primer banner para este TCG.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {banners.map((banner) => (
+            {banners
+              .filter(b => b.game_code === gameFilter)
+              .map((banner) => (
               <div 
                 key={banner.id} 
                 className="group relative bg-slate-900/40 border border-white/5 rounded-[2rem] overflow-hidden hover:border-white/30 transition-all flex flex-col"
@@ -213,7 +243,7 @@ export const BannersPage: React.FC = () => {
                       onClick={() => toggleActive(banner)}
                       className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all shadow-lg ${
                         banner.is_active 
-                          ? 'bg-white text-black border-cyan-400 shadow-cyan-500/20' 
+                          ? 'bg-geeko-purple text-white border-purple-400 shadow-purple-500/20' 
                           : 'bg-slate-800 text-slate-400 border-white/10 shadow-black'
                       }`}
                     >
@@ -274,7 +304,7 @@ export const BannersPage: React.FC = () => {
               
               <div className="p-8 border-b border-white/5 flex items-center justify-between">
                 <h3 className="text-2xl font-black italic uppercase tracking-tighter">
-                  {editingBanner.id ? 'Editar' : 'Nuevo'} <span className="text-white">Banner</span>
+                  {editingBanner.id ? 'Editar' : 'Nuevo'} <span className="text-geeko-purple">Banner TCG</span>
                 </h3>
                 <button onClick={() => setIsModalOpen(false)} className="text-slate-500 hover:text-white transition-colors bg-white/5 p-2 rounded-full">
                   <X size={20} />
@@ -285,7 +315,7 @@ export const BannersPage: React.FC = () => {
                 
                 {/* Image Upload Area */}
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Imagen del Banner (1600x600 recomendado)</label>
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Imagen del Banner (TCG)</label>
                   <div className="relative aspect-video w-full rounded-2xl overflow-hidden bg-slate-900 border-2 border-dashed border-white/10 flex flex-col items-center justify-center gap-4 group">
                     {editingBanner.image_url ? (
                       <>
@@ -323,23 +353,30 @@ export const BannersPage: React.FC = () => {
                       value={editingBanner.title}
                       onChange={(e) => setEditingBanner({ ...editingBanner, title: e.target.value })}
                       className="w-full bg-slate-900/50 border border-white/5 p-4 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-white/50 transition-all"
-                      placeholder="Ej: SECRETS OF STRIXHAVEN"
+                      placeholder="Ej: NUEVA EXPANSIÓN"
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Subtítulo / Estado</label>
+                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Subtítulo</label>
                     <input 
                       type="text" 
                       value={editingBanner.subtitle}
                       onChange={(e) => setEditingBanner({ ...editingBanner, subtitle: e.target.value })}
                       className="w-full bg-slate-900/50 border border-white/5 p-4 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-white/50 transition-all"
-                      placeholder="Ej: YA DISPONIBLE"
+                      placeholder="Ej: CARTAS DISPONIBLES"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">URL de Destino (Link)</label>
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">TCG Seleccionado</label>
+                  <div className="w-full bg-slate-900/20 border border-geeko-purple/30 p-4 rounded-xl text-xs font-black text-geeko-purple uppercase tracking-widest">
+                    {games.find(g => g.game_code === editingBanner.game_code)?.game_name || editingBanner.game_code}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">URL de Destino</label>
                   <div className="relative">
                     <LinkIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600" size={16} />
                     <input 
@@ -354,7 +391,7 @@ export const BannersPage: React.FC = () => {
 
                 <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Orden de Visualización</label>
+                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Orden</label>
                     <input 
                       type="number" 
                       value={editingBanner.display_order}
@@ -368,12 +405,12 @@ export const BannersPage: React.FC = () => {
                       onClick={() => setEditingBanner({ ...editingBanner, is_active: !editingBanner.is_active })}
                       className={`w-full p-4 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all flex items-center justify-center gap-3 ${
                         editingBanner.is_active 
-                          ? 'bg-white/10 border-white/20 text-white' 
+                          ? 'bg-geeko-purple/20 border-geeko-purple/50 text-geeko-purple' 
                           : 'bg-slate-900/50 border-white/5 text-slate-500'
                       }`}
                     >
                       {editingBanner.is_active ? <Eye size={16} /> : <EyeOff size={16} />}
-                      {editingBanner.is_active ? 'Banner Visible' : 'Banner Oculto'}
+                      {editingBanner.is_active ? 'Visible' : 'Oculto'}
                     </button>
                   </div>
                 </div>
@@ -389,11 +426,11 @@ export const BannersPage: React.FC = () => {
                 <button 
                   onClick={handleSave}
                   disabled={saving || uploading}
-                  className="flex items-center gap-3 bg-white text-black px-10 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_20px_rgba(34,211,238,0.3)] disabled:opacity-50"
+                  className="flex items-center gap-3 bg-geeko-purple text-white px-10 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_20px_rgba(168,85,247,0.3)] disabled:opacity-50"
                 >
                   {saving ? (
                     <>
-                      <div className="w-3 h-3 border-2 border-black/20 border-t-black rounded-full animate-spin"></div>
+                      <div className="w-3 h-3 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
                       Guardando...
                     </>
                   ) : (

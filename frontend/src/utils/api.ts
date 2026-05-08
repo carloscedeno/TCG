@@ -27,6 +27,16 @@ const getApiUrl = (path: string): string => {
   }
 };
 
+export const fetchGames = async () => {
+  const { data, error } = await supabase
+    .from('games')
+    .select('*')
+    .eq('is_active', true)
+    .order('game_name');
+  if (error) throw error;
+  return data || [];
+};
+
 // Compatibilidad con nombres antiguos
 export type Card = CardApi;
 
@@ -1468,13 +1478,20 @@ export const uploadAccessoryImage = async (file: File) => {
 
 // --- BANNERS & ASSETS COMPATIBILITY ---
 
-export const fetchBanners = async (category: string = 'main_hero') => {
-  const { data, error } = await supabase
+export const fetchBanners = async (category: string = 'main_hero', gameCode?: string) => {
+  let query = supabase
     .from('hero_banners')
     .select('*')
     .eq('category', category)
-    .eq('is_active', true)
-    .order('display_order');
+    .eq('is_active', true);
+
+  if (gameCode) {
+    query = query.eq('game_code', gameCode);
+  } else {
+    query = query.is('game_code', null);
+  }
+
+  const { data, error } = await query.order('display_order');
   
   if (error) {
     console.error('fetchBanners failed:', error);
