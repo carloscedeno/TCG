@@ -24,6 +24,7 @@ export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryD
         suggested_price: '',
         stock: '0',
         category_code: '',
+        category: 'Accesorios',
         game_id: '',
         unit_type: 'Unidad',
         language: 'Inglés'
@@ -54,6 +55,16 @@ export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryD
         }
     };
 
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        if (name === 'category_code') {
+            const catName = categories.find(c => c.code === value)?.name || 'Accesorios';
+            setFormData(prev => ({ ...prev, [name]: value, category: catName }));
+        } else {
+            setFormData(prev => ({ ...prev, [name]: value }));
+        }
+    };
+
     const removeImage = (index: number) => {
         setImageItems(prev => {
             const filtered = prev.filter((_, i) => i !== index);
@@ -80,6 +91,7 @@ export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryD
 
             await createAccessory({
                 ...formData,
+                category_code: formData.category_code || null,
                 price: parseFloat(formData.price) || 0,
                 cost: parseFloat(formData.cost) || 0,
                 suggested_price: parseFloat(formData.suggested_price) || 0,
@@ -202,8 +214,9 @@ export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryD
                             <input
                                 required
                                 type="text"
+                                name="name"
                                 value={formData.name}
-                                onChange={(e) => setFormData({...formData, name: e.target.value})}
+                                onChange={handleChange}
                                 placeholder="Ej: Playmat Secrets of Strixhaven"
                                 className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-sm text-white focus:outline-none focus:border-orange-500/50 transition-all"
                             />
@@ -212,8 +225,9 @@ export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryD
                         <div className="space-y-2">
                             <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block ml-1">Descripción</label>
                             <textarea
+                                name="description"
                                 value={formData.description}
-                                onChange={(e) => setFormData({...formData, description: e.target.value})}
+                                onChange={handleChange}
                                 placeholder="Detalles del accesorio..."
                                 rows={3}
                                 className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-sm text-white focus:outline-none focus:border-orange-500/50 transition-all resize-none"
@@ -226,8 +240,9 @@ export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryD
                                 <input
                                     type="number"
                                     step="0.01"
+                                    name="cost"
                                     value={formData.cost}
-                                    onChange={(e) => setFormData({...formData, cost: e.target.value})}
+                                    onChange={handleChange}
                                     placeholder="0.00"
                                     className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-sm font-mono text-white focus:outline-none focus:border-orange-500/50 transition-all"
                                 />
@@ -237,8 +252,9 @@ export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryD
                                 <input
                                     type="number"
                                     step="0.01"
+                                    name="suggested_price"
                                     value={formData.suggested_price}
-                                    onChange={(e) => setFormData({...formData, suggested_price: e.target.value})}
+                                    onChange={handleChange}
                                     placeholder="0.00"
                                     className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-sm font-mono text-white focus:outline-none focus:border-orange-500/50 transition-all"
                                 />
@@ -249,8 +265,9 @@ export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryD
                                     required
                                     type="number"
                                     step="0.01"
+                                    name="price"
                                     value={formData.price}
-                                    onChange={(e) => setFormData({...formData, price: e.target.value})}
+                                    onChange={handleChange}
                                     placeholder="0.00"
                                     className="w-full bg-orange-500/10 border border-orange-500/30 rounded-2xl px-5 py-4 text-sm font-mono text-white focus:outline-none focus:border-orange-500/50 transition-all"
                                 />
@@ -263,8 +280,9 @@ export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryD
                                 <input
                                     required
                                     type="number"
+                                    name="stock"
                                     value={formData.stock}
-                                    onChange={(e) => setFormData({...formData, stock: e.target.value})}
+                                    onChange={handleChange}
                                     placeholder="10"
                                     className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-sm font-mono text-white focus:outline-none focus:border-orange-500/50 transition-all"
                                 />
@@ -272,8 +290,9 @@ export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryD
                             <div className="space-y-2">
                                 <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block ml-1">Idioma</label>
                                 <select
+                                    name="language"
                                     value={formData.language}
-                                    onChange={(e) => setFormData({...formData, language: e.target.value})}
+                                    onChange={handleChange}
                                     className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-sm text-white focus:outline-none focus:border-orange-500/50 transition-all appearance-none"
                                 >
                                     <option value="Español">Español</option>
@@ -289,8 +308,9 @@ export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryD
                             <div className="space-y-2">
                                 <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block ml-1">Tipo de Venta</label>
                                 <select
+                                    name="unit_type"
                                     value={formData.unit_type}
-                                    onChange={(e) => setFormData({...formData, unit_type: e.target.value})}
+                                    onChange={handleChange}
                                     className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-sm text-white focus:outline-none focus:border-orange-500/50 transition-all appearance-none"
                                 >
                                     <option value="Unidad">Unidad (Sencillo)</option>
@@ -303,8 +323,9 @@ export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryD
                                 <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block ml-1">Categoría</label>
                                 <select
                                     required
+                                    name="category_code"
                                     value={formData.category_code}
-                                    onChange={(e) => setFormData({...formData, category_code: e.target.value})}
+                                    onChange={handleChange}
                                     className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-sm text-white focus:outline-none focus:border-orange-500/50 transition-all appearance-none"
                                 >
                                     <option value="">Seleccionar Categoría...</option>
@@ -330,8 +351,9 @@ export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryD
                         <div className="space-y-2">
                             <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block ml-1">Juego Asociado</label>
                             <select
+                                name="game_id"
                                 value={formData.game_id}
-                                onChange={(e) => setFormData({...formData, game_id: e.target.value})}
+                                onChange={handleChange}
                                 className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-sm text-white focus:outline-none focus:border-orange-500/50 transition-all appearance-none"
                             >
                                 <option value="">Ninguno / Genérico</option>

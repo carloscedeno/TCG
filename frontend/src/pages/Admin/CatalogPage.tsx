@@ -3,7 +3,7 @@ import {
     Search, Plus, Package, Trash2, Edit2, X, 
     ChevronLeft, ChevronRight, Check
 } from "lucide-react";
-import { fetchAccessoriesAdmin, updateAccessory, deleteAccessory, uploadAccessoryImage } from "../../utils/api";
+import { fetchAccessoriesAdmin, updateAccessory, deleteAccessory, uploadAccessoryImage, fetchAccessoryCategories } from "../../utils/api";
 import { AddAccessoryDrawer } from "../../components/Admin/AddAccessoryDrawer";
 
 export default function CatalogPage() {
@@ -18,20 +18,19 @@ export default function CatalogPage() {
     const [lastSavedId, setLastSavedId] = useState<string | null>(null);
 
     const pageSize = 20;
-    const categories = [
-        'Accesorios',
-        'Sealed Product',
-        'Consumibles',
-        'Magic',
-        'Pokemon',
-        'Digimon',
-        'One Piece',
-        'Yu-Gi-Oh',
-        'Weiss Schwarz',
-        'Dungeons and Dragons',
-        'Concesión',
-        'Other'
-    ];
+    const [dbCategories, setDbCategories] = useState<any[]>([]);
+
+    const categories = dbCategories.length > 0 
+        ? dbCategories.map(c => c.name)
+        : [
+            'Accesorios', 'Sealed Product', 'Consumibles', 'Magic', 'Pokemon', 
+            'Digimon', 'One Piece', 'Yu-Gi-Oh', 'Weiss Schwarz', 
+            'Dungeons and Dragons', 'Concesión', 'Other'
+        ];
+
+    useEffect(() => {
+        fetchAccessoryCategories().then(setDbCategories);
+    }, []);
 
     const loadAccessories = useCallback(async () => {
         setLoading(true);
@@ -211,7 +210,14 @@ export default function CatalogPage() {
                                             {editingId === item.id ? (
                                                 <select
                                                     value={tempData.category}
-                                                    onChange={(e) => setTempData({...tempData, category: e.target.value})}
+                                                    onChange={(e) => {
+                                                        const cat = dbCategories.find(c => c.name === e.target.value);
+                                                        setTempData({
+                                                            ...tempData, 
+                                                            category: e.target.value,
+                                                            category_code: cat?.code || null
+                                                        });
+                                                    }}
                                                     className="w-full bg-black border border-orange-500/50 rounded-xl px-2 py-2 text-center text-[10px] font-black uppercase text-white appearance-none"
                                                 >
                                                     {categories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
@@ -383,6 +389,7 @@ export default function CatalogPage() {
                                                                 setTempData({ 
                                                                     name: item.name,
                                                                     category: item.category,
+                                                                    category_code: item.category_code,
                                                                     language: item.language || 'Inglés',
                                                                     unit_type: item.unit_type || 'Unidad',
                                                                     cost: item.cost,
