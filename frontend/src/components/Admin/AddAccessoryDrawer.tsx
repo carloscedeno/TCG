@@ -112,6 +112,7 @@ export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryD
                 suggested_price: '',
                 stock: '0',
                 category_code: '',
+                category: 'Accesorios',
                 game_id: '',
                 unit_type: 'Unidad',
                 language: 'Inglés'
