@@ -1183,9 +1183,10 @@ async function handleAdminEndpoint(supabase: SupabaseClient, path: string, metho
       query GetAnalytics($zoneTag: String!, $start: String!) {
         viewer {
           zones(filter: { zoneTag: $zoneTag }) {
+            # Hourly traffic and cache
             httpRequests1hGroups(limit: 24, filter: { datetime_gt: $start }, orderBy: [datetime_ASC]) {
               dimensions { datetime }
-              sum { requests, pageViews }
+              sum { requests, pageViews, bytes, cachedRequests }
             }
           }
         }
@@ -1211,13 +1212,26 @@ async function handleAdminEndpoint(supabase: SupabaseClient, path: string, metho
       throw new Error(cfResult.errors[0].message);
     }
 
-    const groups = cfResult.data.viewer.zones[0]?.httpRequests1hGroups || [];
+    const zoneData = cfResult.data.viewer.zones[0];
+    const groups = zoneData?.httpRequests1hGroups || [];
+
+    const totalRequests = groups.reduce((acc: number, g: any) => acc + (g.sum.requests || 0), 0);
+    const totalCached = groups.reduce((acc: number, g: any) => acc + (g.sum.cachedRequests || 0), 0);
+    const cacheHitRatio = totalRequests > 0 ? (totalCached / totalRequests) * 100 : 0;
+
     return {
       success: true,
       data: groups,
+      top_countries: [],
+      top_paths: [],
+      security: {
+        threats_blocked: 0 // Node restricted in current plan
+      },
       summary: {
-        total_requests: groups.reduce((acc: number, g: any) => acc + (g.sum.requests || 0), 0),
-        total_pageviews: groups.reduce((acc: number, g: any) => acc + (g.sum.pageViews || 0), 0)
+        total_requests: totalRequests,
+        total_pageviews: groups.reduce((acc: number, g: any) => acc + (g.sum.pageViews || 0), 0),
+        cache_hit_ratio: Math.round(cacheHitRatio * 100) / 100,
+        total_bandwidth_gb: Math.round((groups.reduce((acc: number, g: any) => acc + (g.sum.bytes || 0), 0) / (1024 * 1024 * 1024)) * 100) / 100
       }
     };
   }
