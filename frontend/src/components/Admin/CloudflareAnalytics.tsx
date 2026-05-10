@@ -5,6 +5,7 @@ interface CloudflareStats {
     success: boolean;
     data: any[];
     top_countries: { country: string, requests: number }[];
+    top_paths: { path: string, requests: number }[];
     security: { threats_blocked: number };
     summary: {
         total_requests: number;
@@ -19,6 +20,7 @@ export const CloudflareAnalytics = ({ session, apiBase }: { session: any, apiBas
     const [stats, setStats] = useState<CloudflareStats | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [showHelp, setShowHelp] = useState(false);
 
     const fetchAnalytics = async () => {
         setLoading(true);
@@ -86,10 +88,18 @@ export const CloudflareAnalytics = ({ session, apiBase }: { session: any, apiBas
                         </div>
                         <div>
                             <h2 className="text-2xl font-black italic text-white leading-none mb-1">MÉTRICAS CLOUDFLARE</h2>
-                            <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
-                                <Zap size={10} className="text-yellow-400" />
-                                Inteligencia de Tráfico Real (Últimas 24h)
-                            </p>
+                            <div className="flex items-center gap-2">
+                                <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
+                                    <Zap size={10} className="text-yellow-400" />
+                                    Últimas 24 horas de actividad
+                                </p>
+                                <button 
+                                    onClick={() => setShowHelp(!showHelp)}
+                                    className="text-[9px] font-black text-[#00D1FF] uppercase bg-[#00D1FF]/10 px-2 py-0.5 rounded-full hover:bg-[#00D1FF]/20 transition-colors"
+                                >
+                                    {showHelp ? 'Cerrar Ayuda' : '¿Qué significa esto?'}
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <button 
@@ -100,6 +110,30 @@ export const CloudflareAnalytics = ({ session, apiBase }: { session: any, apiBas
                         <RefreshCw size={18} className="text-slate-400 group-hover/btn:text-white group-hover/btn:rotate-180 transition-all duration-500" />
                     </button>
                 </div>
+
+                {/* Help Section */}
+                {showHelp && (
+                    <div className="mb-8 p-6 bg-[#00D1FF]/5 border border-[#00D1FF]/20 rounded-2xl animate-in fade-in slide-in-from-top-4 duration-300">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 className="text-[10px] font-black text-[#00D1FF] uppercase mb-2 flex items-center gap-2">
+                                    <MousePointer2 size={12} /> Peticiones (Total de Esfuerzo)
+                                </h4>
+                                <p className="text-[10px] text-slate-400 leading-relaxed font-bold">
+                                    Cuenta cada vez que alguien pide algo a tu servidor. Esto incluye no solo ver la página, sino cargar fotos, el inventario, los precios y scripts. Si este número es muy alto, significa que hay mucha actividad técnica en el sitio.
+                                </p>
+                            </div>
+                            <div>
+                                <h4 className="text-[10px] font-black text-blue-400 uppercase mb-2 flex items-center gap-2">
+                                    <Eye size={12} /> Vistas (Visitas Reales)
+                                </h4>
+                                <p className="text-[10px] text-slate-400 leading-relaxed font-bold">
+                                    Cuenta específicamente las veces que un usuario carga una página de la tienda. Es el mejor indicador de cuántas personas están navegando activamente.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 {/* Primary Stats Grid */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -136,31 +170,33 @@ export const CloudflareAnalytics = ({ session, apiBase }: { session: any, apiBas
                     </div>
                 </div>
 
-                {/* Secondary Layout: Top Countries & Timeline */}
+                {/* Secondary Layout: Top Paths & Timeline */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {/* Top Countries List */}
+                    {/* Top Paths List */}
                     <div>
                         <div className="flex items-center gap-2 mb-4">
                             <Globe size={14} className="text-[#00D1FF]" />
-                            <h3 className="text-[12px] font-black text-white uppercase tracking-widest italic">Países Principales</h3>
+                            <h3 className="text-[12px] font-black text-white uppercase tracking-widest italic">URLs más visitadas</h3>
                         </div>
                         <div className="space-y-3">
-                            {stats?.top_countries.map((c, i) => (
-                                <div key={i} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5">
-                                    <span className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">{c.country || 'Desconocido'}</span>
+                            {(stats?.top_paths || []).map((p, i) => (
+                                <div key={i} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5 hover:bg-white/10 transition-all">
+                                    <div className="flex flex-col gap-1 overflow-hidden">
+                                        <span className="text-[10px] font-bold text-slate-300 truncate max-w-[180px]">{p.path || '/'}</span>
+                                        <span className="text-[7px] font-black text-slate-500 uppercase">Ruta del sitio</span>
+                                    </div>
                                     <div className="flex items-center gap-2">
-                                        <div className="w-24 h-1.5 bg-white/5 rounded-full overflow-hidden">
-                                            <div 
-                                                className="h-full bg-[#00D1FF]" 
-                                                style={{ width: `${(c.requests / (stats?.summary.total_requests || 1)) * 100}%` }}
-                                            />
+                                        <div className="text-right">
+                                            <span className="block text-[8px] font-black text-emerald-400 italic">{p.requests.toLocaleString()}</span>
+                                            <span className="text-[7px] font-black text-slate-600 uppercase">Peticiones</span>
                                         </div>
-                                        <span className="text-[10px] font-black text-white italic">{c.requests.toLocaleString()}</span>
                                     </div>
                                 </div>
                             ))}
-                            {!stats?.top_countries.length && (
-                                <div className="text-center py-8 text-slate-600 text-[10px] font-black uppercase tracking-widest">Sin datos de ubicación</div>
+                            {(!stats?.top_paths || stats.top_paths.length === 0) && (
+                                <div className="text-center py-8 border border-dashed border-white/10 rounded-2xl bg-white/5">
+                                    <p className="text-slate-600 text-[10px] font-black uppercase tracking-widest">Sin datos de rutas</p>
+                                </div>
                             )}
                         </div>
                     </div>
