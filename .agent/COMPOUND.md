@@ -852,7 +852,19 @@ $content
 
 
 
-## 2026-05-05 — Integración de Logos TCG Premium y UI Polishing
+## 2026-05-10 — Accessory Creation Stabilization (v60)
+
+**Qué pasó:** Se resolvió un error 400 (Bad Request) y fallos de build al crear accesorios en el dashboard administrativo.
+**Lo que cambió:**
+- `frontend/src/components/Admin/AddAccessoryDrawer.tsx` → Corregida sincronización de `category` y reset de estado.
+- `supabase/migrations/20260507000000_fix_admin_rls.sql` → Endurecimiento de políticas RLS.
+- `lessons_learned.md` → Lecciones #154 (RLS) y #155 (TS State).
+- `PROGRESS.md` → Marcada feature de accesorios como estable.
+**Artefacto creado:** Migración de seguridad RLS.
+**Regla derivada:** Ley de Seguridad RLS (verificación explícita de rol admin).
+
+## 2026-05-09 — Aligning Dev Font Colors (v59)
+TCG Premium y UI Polishing
 
 **Qué pasó:** Se sustituyeron los emojis genéricos por assets PNG estandarizados en toda la plataforma (Landing, Header y Admin). Se corrigieron problemas de clipping en animaciones y se escalaron los iconos para una UX más premium.
 **Lo que cambió:**
@@ -937,7 +949,11 @@ $content
 
 ## 2026-05-08 — Estandarización Pantone y Optimización Foil
 
-**Qué pasó:** Se completó la transición de la paleta de colores de Geekorium a los tokens oficiales de marca (#B7B7B7 / #FFFFFF) y se resolvieron las regresiones visuales en el efecto foil de la página de detalle. Se estabilizó el build tras una refactorización masiva que introdujo errores de sintaxis en el carrito.
+**Qué pasó:** Se completó la transición de- [x] Unificar colores de fuente en Dev con tokens de marca (#FFFFFF, #B7B7B7).
+- [x] Corregir opacidad de Foil en CardDetail.tsx.
+- [x] Estabilización de creación de accesorios (RLS + TS Fix).
+- [ ] Implementación de Bulk Import (Diseño base listo).
+- [ ] Refactorización de `sync_cardkingdom_api.py` para usar nueva lógica SKU.ntaxis en el carrito.
 
 **Lo que cambió:**
 - `lessons_learned.md` → Lecciones #162, #163.
@@ -969,3 +985,17 @@ $content
 **Artefacto creado:** SQL de remediación de RLS para tablas de metadatos (`conditions`, `sources`, `games`).
 **Regla derivada:** Los banners de TCG deben ser independientes del dashboard global de ofertas para no interrumpir el flujo de compra de singles.
 
+---
+
+## 2026-05-09 — Estabilización de Taxonomía de Accesorios y Fix de Crash
+
+**Qué pasó:** Se resolvió un crash crítico en el panel de administración que impedía la creación de nuevos productos debido a una violación de restricción `NOT NULL` en el campo `category`. Se estandarizó la gestión de categorías en todo el panel administrativo mediante el uso de taxonomía dinámica desde la base de datos.
+**Lo que cambió:**
+- `lessons_learned.md` → Lección #167 (Constraint Mapping).
+- `AGENTS.md` → Registro de Fix de Creación de Accesorios.
+- `PROGRESS.md` → Actualización de estado (Compound v61).
+- `frontend/src/components/Admin/AddAccessoryDrawer.tsx` → Implementación de derivación automática de nombre de categoría desde `category_code`.
+- `frontend/src/pages/Admin/CatalogPage.tsx` → Refactorización para usar `accessory_categories` dinámicas en lugar de una lista hardcodeada.
+- `utils/api.ts` → Exportación de utilidades de taxonomía para uso administrativo.
+**Artefacto creado:** N/A (Refactorización de componentes existentes).
+**Regla derivada:** Lección #167 — En sistemas con duplicación de datos por performance (categoría + código), el frontend debe garantizar la consistencia de ambos campos antes de la inserción para evitar fallos de integridad.
