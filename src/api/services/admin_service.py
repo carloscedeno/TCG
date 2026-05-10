@@ -1,4 +1,6 @@
 import os
+import httpx
+from datetime import datetime, timedelta
 import sys
 import time
 import subprocess
@@ -245,3 +247,71 @@ class AdminService:
             "task_id": task_id,
             "message": f"Scraper for {source} started in background"
         }
+
+    @staticmethod
+    async def get_cloudflare_analytics():
+        """Fetches traffic metrics from Cloudflare GraphQL API."""
+        try:
+            # 1. Fetch credentials from system_config
+            zone_id_resp = supabase.table('system_config').select('value').eq('key', 'CLOUDFLARE_ZONE_ID').single().execute()
+            token_resp = supabase.table('system_config').select('value').eq('key', 'CLOUDFLARE_API_TOKEN').single().execute()
+            
+            if not zone_id_resp.data or not token_resp.data:
+                return {"error": "Cloudflare configuration not found in database"}
+            
+            zone_id = zone_id_resp.data['value']
+            token = token_resp.data['value']
+            
+            # 2. Query Cloudflare GraphQL
+            url = "https://api.cloudflare.com/client/v4/graphql"
+            headers = {
+                "Authorization": f"Bearer {token}",
+                "Content-Type": "application/json"
+            }
+            
+            # Last 24 hours
+            start_time = (datetime.utcnow() - timedelta(hours=24)).strftime("%Y-%m-%dT%H:%M:%SZ")
+            
+            query = """
+            query GetAnalytics($zoneTag: String!, $start: String!) {
+              viewer {
+                zones(filter: { zoneTag: $zoneTag }) {
+                  httpRequests1hGroups(limit: 24, filter: { datetime_gt: $start }, orderBy: [datetime_ASC]) {
+                    dimensions { datetime }
+                    sum { 
+                        requests
+                        pageViews
+                    }
+                  }
+                }
+              }
+            }
+            """
+            
+            async with httpx.AsyncClient() as client:
+                resp = await client.post(url, headers=headers, json={
+                    "query": query,
+                    "variables": {"zoneTag": zone_id, "start": start_time}
+                }, timeout=10.0)
+                
+                data = resp.json()
+                if "errors" in data and data["errors"]:
+                    return {"error": data["errors"][0]["message"]}
+                
+                # Extract and format results
+                zones = data.get("data", {}).get("viewer", {}).get("zones", [])
+                if not zones:
+                    return {"error": "No data returned for this Zone ID"}
+                    
+                groups = zones[0].get("httpRequests1hGroups", [])
+                return {
+                    "success": True,
+                    "data": groups,
+                    "summary": {
+                        "total_requests": sum(g["sum"]["requests"] for g in groups),
+                        "total_pageviews": sum(g["sum"]["pageViews"] for g in groups)
+                    }
+                }
+                
+        except Exception as e:
+            return {"error": f"Internal error connecting to Cloudflare: {str(e)}"}

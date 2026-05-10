@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Play, Settings, Users, Database, Shield, AlertCircle, Package, ExternalLink, Image, Calendar, TrendingUp, Upload } from 'lucide-react';
+import { Play, Settings, Users, Database, Shield, AlertCircle, Package, ExternalLink, Image, Calendar, TrendingUp, Upload, ShoppingBag, CheckCircle, XCircle } from 'lucide-react';
 
 import { supabase } from '../../utils/supabaseClient';
+import { CloudflareAnalytics } from '../../components/Admin/CloudflareAnalytics';
 
 const API_BASE = import.meta.env.VITE_API_BASE;
 
@@ -13,8 +14,11 @@ export const AdminDashboard = () => {
     const [results, setResults] = useState<Record<string, any>>({});
     const [stats, setStats] = useState({
         total_cards: '0',
-        total_users: '0',
-        total_updates: '0'
+        total_products: '0',
+        total_orders_week: '0',
+        effective_orders: '0',
+        failed_orders: '0',
+        total_users: '0'
     });
     const [activeTasks, setActiveTasks] = useState<any[]>([]);
     const [selectedTaskLog, setSelectedTaskLog] = useState<{ id: string, logs: string } | null>(null);
@@ -95,18 +99,30 @@ export const AdminDashboard = () => {
 
     const fetchStats = async () => {
         try {
-            // Parallel fetch for dashboard stats
-            // Use 'estimated' count for large tables (price_history, card_printings) to prevent execution timeouts (500)
-            const [cards, users, updates] = await Promise.all([
-                supabase.from('card_printings').select('*', { count: 'estimated', head: true }),
-                supabase.from('profiles').select('*', { count: 'exact', head: true }), // Profiles is small enough for exact
-                supabase.from('price_history').select('*', { count: 'estimated', head: true })
+            const lastWeek = new Date();
+            lastWeek.setDate(lastWeek.getDate() - 7);
+            const lastWeekISO = lastWeek.toISOString();
+
+            const [cards, products, ordersWeek, effectiveOrders, failedOrders, users] = await Promise.all([
+                supabase.from('products').select('*', { count: 'estimated', head: true }),
+                supabase.from('accessories').select('*', { count: 'estimated', head: true }),
+                supabase.from('orders').select('*', { count: 'exact', head: true }).gte('created_at', lastWeekISO),
+                supabase.from('orders').select('*', { count: 'exact', head: true })
+                    .gte('created_at', lastWeekISO)
+                    .in('status', ['paid', 'processing', 'ready_for_pickup', 'shipped', 'delivered']),
+                supabase.from('orders').select('*', { count: 'exact', head: true })
+                    .gte('created_at', lastWeekISO)
+                    .in('status', ['cancelled', 'returned', 'refunded']),
+                supabase.from('profiles').select('*', { count: 'exact', head: true })
             ]);
 
             setStats({
                 total_cards: (cards.count || 0).toLocaleString(),
-                total_users: (users.count || 0).toLocaleString(),
-                total_updates: (updates.count || 0).toLocaleString()
+                total_products: (products.count || 0).toLocaleString(),
+                total_orders_week: (ordersWeek.count || 0).toLocaleString(),
+                effective_orders: (effectiveOrders.count || 0).toLocaleString(),
+                failed_orders: (failedOrders.count || 0).toLocaleString(),
+                total_users: (users.count || 0).toLocaleString()
             });
         } catch (err) {
             console.error("Error fetching stats:", err);
@@ -228,10 +244,13 @@ export const AdminDashboard = () => {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                    <StatCard title="Usuarios Registrados" value={stats.total_users} change="En Línea" icon={<Users className="text-blue-400" />} />
-                    <StatCard title="Índice de Cartas" value={stats.total_cards} change="Cartas" icon={<Database className="text-purple-400" />} />
-                    <StatCard title="Actualizaciones de Precios" value={stats.total_updates} change="Operaciones" icon={<Settings className="text-white" />} />
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                    <StatCard title="Cartas en Inventario" value={stats.total_cards} change="Singles" icon={<Database className="text-purple-400" />} />
+                    <StatCard title="Productos en Inventario" value={stats.total_products} change="Sellado" icon={<ShoppingBag className="text-[#00FF85]" />} />
+                    <StatCard title="Pedidos última semana" value={stats.total_orders_week} change="Total 7d" icon={<Package className="text-[#00D1FF]" />} />
+                    <StatCard title="Pedidos Efectivos" value={stats.effective_orders} change="Completados" icon={<CheckCircle className="text-emerald-400" />} />
+                    <StatCard title="Pedidos Fallidos" value={stats.failed_orders} change="Rechazados" icon={<XCircle className="text-rose-500" />} />
+                    <StatCard title="Usuarios Activos" value={stats.total_users} change="Global" icon={<Users className="text-blue-400" />} />
                 </div>
 
                 <div className="mb-12">
@@ -368,6 +387,10 @@ export const AdminDashboard = () => {
                             </div>
                         </div>
                     </Link>
+                </div>
+
+                <div className="mb-12">
+                    <CloudflareAnalytics session={session} apiBase={API_BASE} />
                 </div>
 
                 {false && (

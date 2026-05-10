@@ -40,3 +40,7 @@ async def parse_manabox_inventory(
 ):
     from ..services.manabox_parser import ManaBoxParser
     return ManaBoxParser.parse_text(request.text)
+
+@router.get("/cloudflare/analytics")
+async def get_cloudflare_analytics(admin_id: str = Depends(get_current_admin)):
+    return await AdminService.get_cloudflare_analytics()
