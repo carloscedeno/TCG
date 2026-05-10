@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { MousePointer2, Eye, BarChart3, RefreshCw, AlertCircle, Clock, Shield, Zap, Globe, Activity } from 'lucide-react';
+import { MousePointer2, Eye, RefreshCw, AlertCircle, Clock, Shield, Zap, Globe, Activity } from 'lucide-react';
 
 interface CloudflareStats {
     success: boolean;
