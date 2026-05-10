@@ -134,7 +134,7 @@ export const CloudflareAnalytics = ({ session, apiBase }: { session: any, apiBas
                             <div>
                                 <h4 className="text-[10px] font-black text-yellow-400 uppercase mb-2 flex items-center gap-2">
                                     <Clock size={12} /> ¿Hora de qué?
-                                </p>
+                                </h4>
                                 <p className="text-[10px] text-slate-400 leading-relaxed font-bold">
                                     Es la ventana de 60 minutos donde ocurrió la actividad. Te sirve para saber en qué momento del día entran más clientes a tu tienda.
                                 </p>
@@ -178,76 +178,38 @@ export const CloudflareAnalytics = ({ session, apiBase }: { session: any, apiBas
                     </div>
                 </div>
 
-                {/* Secondary Layout: Top Countries & Timeline */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {/* Top Countries List */}
-                    <div>
-                        <div className="flex items-center gap-2 mb-4">
-                            <Globe size={14} className="text-[#00D1FF]" />
-                            <h3 className="text-[12px] font-black text-white uppercase tracking-widest italic">Origen del Tráfico</h3>
-                        </div>
-                        <div className="space-y-3">
-                            {(stats?.top_countries || []).map((c, i) => (
-                                <div key={i} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5 hover:bg-white/10 transition-all">
-                                    <div className="flex flex-col gap-1 overflow-hidden">
-                                        <span className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">{c.country || 'Desconocido'}</span>
-                                        <span className="text-[7px] font-black text-slate-500 uppercase">País de origen</span>
-                                    </div>
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-24 h-1 bg-white/5 rounded-full overflow-hidden hidden sm:block">
-                                            <div 
-                                                className="h-full bg-[#00D1FF]" 
-                                                style={{ width: `${(c.requests / (stats?.summary.total_requests || 1)) * 100}%` }}
-                                            />
-                                        </div>
-                                        <div className="text-right">
-                                            <span className="block text-[8px] font-black text-emerald-400 italic">{c.requests.toLocaleString()}</span>
-                                            <span className="text-[7px] font-black text-slate-600 uppercase">Peticiones</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                            {(!stats?.top_countries || stats.top_countries.length === 0) && (
-                                <div className="text-center py-8 border border-dashed border-white/10 rounded-2xl bg-white/5">
-                                    <p className="text-slate-600 text-[10px] font-black uppercase tracking-widest">Sin datos de ubicación</p>
-                                </div>
-                            )}
+                {/* Activity Layout */}
+                <div className="w-full">
+                    <div className="flex items-center gap-2 mb-4">
+                        <Clock size={14} className="text-[#00D1FF]" />
+                        <div>
+                            <h3 className="text-[12px] font-black text-white uppercase tracking-widest italic leading-none">Actividad por Hora</h3>
+                            <p className="text-[8px] font-bold text-slate-500 uppercase tracking-tighter">Historial de tráfico de las últimas 24h</p>
                         </div>
                     </div>
-
-                    {/* Timeline */}
-                    <div>
-                        <div className="flex items-center gap-2 mb-4">
-                            <Clock size={14} className="text-[#00D1FF]" />
-                            <div>
-                                <h3 className="text-[12px] font-black text-white uppercase tracking-widest italic leading-none">Actividad por Hora</h3>
-                                <p className="text-[8px] font-bold text-slate-500 uppercase tracking-tighter">Desglose detallado del tráfico</p>
-                            </div>
-                        </div>
-                        <div className="space-y-2 max-h-[220px] overflow-y-auto custom-scrollbar pr-2">
-                            {stats?.data.slice().reverse().map((group: any, idx: number) => (
-                                <div key={idx} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5 hover:border-white/20 transition-all">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-8 h-8 bg-white/5 rounded-lg flex items-center justify-center">
-                                            <Clock size={12} className="text-[#00D1FF]" />
-                                        </div>
-                                        <span className="text-[11px] font-black text-slate-300">
-                                            {new Date(group.dimensions.datetime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                        </span>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[300px] overflow-y-auto custom-scrollbar pr-2">
+                        {stats?.data.slice().reverse().map((group: any, idx: number) => (
+                            <div key={idx} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5 hover:border-white/20 transition-all">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-8 h-8 bg-white/5 rounded-lg flex items-center justify-center">
+                                        <Clock size={12} className="text-[#00D1FF]" />
                                     </div>
-                                    <div className="flex gap-6">
-                                        <div className="text-right">
-                                            <span className="block text-[7px] font-black text-slate-500 uppercase tracking-widest">Peticiones</span>
-                                            <span className="text-[11px] font-black text-emerald-400">{group.sum.requests.toLocaleString()}</span>
-                                        </div>
-                                        <div className="text-right">
-                                            <span className="block text-[7px] font-black text-slate-500 uppercase tracking-widest">Vistas</span>
-                                            <span className="text-[11px] font-black text-blue-400">{group.sum.pageViews.toLocaleString()}</span>
-                                        </div>
+                                    <span className="text-[11px] font-black text-slate-300">
+                                        {new Date(group.dimensions.datetime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                    </span>
+                                </div>
+                                <div className="flex gap-6">
+                                    <div className="text-right">
+                                        <span className="block text-[7px] font-black text-slate-500 uppercase tracking-widest">Peticiones</span>
+                                        <span className="text-[11px] font-black text-emerald-400">{group.sum.requests.toLocaleString() || '0'}</span>
+                                    </div>
+                                    <div className="text-right">
+                                        <span className="block text-[7px] font-black text-slate-500 uppercase tracking-widest">Vistas</span>
+                                        <span className="text-[11px] font-black text-blue-400">{group.sum.pageViews.toLocaleString() || '0'}</span>
                                     </div>
                                 </div>
-                            ))}
-                        </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
 
