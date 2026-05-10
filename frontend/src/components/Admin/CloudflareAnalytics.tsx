@@ -169,25 +169,30 @@ export const CloudflareAnalytics = ({ session, apiBase }: { session: any, apiBas
                     <div>
                         <div className="flex items-center gap-2 mb-4">
                             <Clock size={14} className="text-[#00D1FF]" />
-                            <h3 className="text-[12px] font-black text-white uppercase tracking-widest italic">Línea de Tiempo</h3>
+                            <div>
+                                <h3 className="text-[12px] font-black text-white uppercase tracking-widest italic leading-none">Actividad por Hora</h3>
+                                <p className="text-[8px] font-bold text-slate-500 uppercase tracking-tighter">Desglose detallado del tráfico</p>
+                            </div>
                         </div>
                         <div className="space-y-2 max-h-[220px] overflow-y-auto custom-scrollbar pr-2">
                             {stats?.data.slice().reverse().map((group: any, idx: number) => (
                                 <div key={idx} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5 hover:border-white/20 transition-all">
                                     <div className="flex items-center gap-3">
-                                        <Clock size={12} className="text-slate-500" />
-                                        <span className="text-[10px] font-bold text-slate-300">
+                                        <div className="w-8 h-8 bg-white/5 rounded-lg flex items-center justify-center">
+                                            <Clock size={12} className="text-[#00D1FF]" />
+                                        </div>
+                                        <span className="text-[11px] font-black text-slate-300">
                                             {new Date(group.dimensions.datetime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                         </span>
                                     </div>
-                                    <div className="flex gap-4">
+                                    <div className="flex gap-6">
                                         <div className="text-right">
-                                            <span className="block text-[8px] font-black text-slate-500 uppercase">Reqs</span>
-                                            <span className="text-[10px] font-black text-emerald-400">{group.sum.requests}</span>
+                                            <span className="block text-[7px] font-black text-slate-500 uppercase tracking-widest">Peticiones</span>
+                                            <span className="text-[11px] font-black text-emerald-400">{group.sum.requests.toLocaleString()}</span>
                                         </div>
                                         <div className="text-right">
-                                            <span className="block text-[8px] font-black text-slate-500 uppercase">Views</span>
-                                            <span className="text-[10px] font-black text-blue-400">{group.sum.pageViews}</span>
+                                            <span className="block text-[7px] font-black text-slate-500 uppercase tracking-widest">Vistas</span>
+                                            <span className="text-[11px] font-black text-blue-400">{group.sum.pageViews.toLocaleString()}</span>
                                         </div>
                                     </div>
                                 </div>
