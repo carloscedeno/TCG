@@ -999,3 +999,14 @@ TCG Premium y UI Polishing
 - `utils/api.ts` â†’ ExportaciÃ³n de utilidades de taxonomÃ­a para uso administrativo.
 **Artefacto creado:** N/A (RefactorizaciÃ³n de componentes existentes).
 **Regla derivada:** LecciÃ³n #167 â€” En sistemas con duplicaciÃ³n de datos por performance (categorÃ­a + cÃ³digo), el frontend debe garantizar la consistencia de ambos campos antes de la inserciÃ³n para evitar fallos de integridad.
+
+## 2026-05-10 — Dashboard de Analíticas Localizado y Glosario Semántico
+
+**Qué pasó:** Se completó la integración y localización al español del dashboard de analíticas de Cloudflare. Se resolvió la ambigüedad de las métricas técnicas mediante un glosario interactivo y se estabilizó la conexión con el API de Cloudflare manejando las restricciones de los esquemas GraphQL por plan.
+**Lo que cambió:**
+- lessons_learned.md -> Lecciones #168 y #169.
+- AGENTS.md -> Registro de Analíticas Localizadas (v63).
+- frontend/src/components/Admin/CloudflareAnalytics.tsx -> Implementación de UI en español y glosario interactivo.
+- supabase/functions/tcg-api/index.ts -> Estabilización de la query GraphQL defensiva.
+**Artefacto creado:** Glosario de Métricas Semánticas para TCG Admin.
+**Regla derivada:** Lección #168 — Priorizar claridad semántica sobre precisión técnica en dashboards administrativos para usuarios no técnicos.

@@ -1094,3 +1094,14 @@ useEffect(() => {
 - **Causa Raíz:** Al añadir un campo obligatorio (`category`) al tipo del estado `formData`, cualquier llamada a `setFormData` que pase el objeto completo DEBE incluir dicha propiedad para cumplir con el contrato del tipo, incluso si se desea resetear a un valor por defecto.
 - **Solución:** Sincronizar el objeto de reset inicial con la definición completa del tipo.
 - **Lección:** Al escalar estados complejos en React, usar interfaces explícitas y buscar todas las llamadas de actualización total del estado para evitar roturas de build silenciosas durante el desarrollo.
+
+### 168. Localización Semántica de Analíticas — 2026-05-10
+- **Problema**: Los términos técnicos como "Requests" y "Page Views" eran ambiguos para el usuario administrativo ("¿peticiones a qué?").
+- **Solución**: Implementar un glosario interactivo ("¿Qué significa esto?") que traduce métricas a lenguaje de negocio: Peticiones = Esfuerzo técnico (fotos/datos), Vistas = Visitas reales a páginas.
+- **Lección**: En dashboards de métricas, la claridad semántica es más importante que la precisión técnica. Siempre acompañar números con explicaciones contextuales de "qué" y "cuándo".
+
+### 169. Limitaciones de GraphQL en Planes Cloudflare — 2026-05-10
+- **Problema**: Errores persistentes de "Unknown field" al intentar obtener desgloses por URL o País.
+- **Causa Raíz**: Los nodos de agregación como `clientRequestPath` y `clientCountryName` dentro de `httpRequests1hGroups` están restringidos o requieren habilitación específica según el plan de Cloudflare (Free/Pro/Ent).
+- **Solución**: Adoptar un enfoque de "Estabilidad Progresiva". Ante fallos de esquema, revertir a la query mínima estable (sólo tráfico/caché) para garantizar que el dashboard nunca se rompa, priorizando la disponibilidad de datos críticos sobre el desglose granular.
+- **Lección**: Al integrar APIs de terceros con tiers de precios, el backend debe ser defensivo y manejar esquemas opcionales para evitar que un cambio de plan bloquee el sistema.

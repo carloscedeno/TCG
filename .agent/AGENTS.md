@@ -130,6 +130,7 @@ Artefactos del Compound step:
 - ✅ **Banners TCG e Independencia de UI (v60)**: Restauración de banners específicos (Pokémon/Yu-Gi-Oh!) mediante normalización de códigos y desacoplamiento de la vista de dashboard, preservando la parrilla de singles en navegaciones por juego.
 - ✅ **Fix de Creación de Accesorios y Taxonomía Dinámica (v61)**: Resolución de crash crítico en la creación de productos mediante la sincronización automática del campo `category` con la nueva taxonomía de base de datos. Estandarización del panel de catálogo para usar categorías dinámicas desde Supabase.
 - ✅ **Soporte Multi-Imagen y Carrusel Premium (v62)**: Implementación de galería de imágenes adicionales en administración de accesorios y visor de carrusel interactivo en el storefront.
+- ✅ **Dashboard de Analíticas Localizado y Glosario Semántico (v63)**: Integración de métricas de Cloudflare (Peticiones, Vistas, Caché, Amenazas) con interfaz 100% en español y glosario interactivo para traducción de términos técnicos a impacto de negocio.
 
 ## 🚧 Features Pendientes
 
