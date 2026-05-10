@@ -149,11 +149,13 @@ const Home: React.FC = () => {
     return !val;
   };
 
-  const showHeroSection = !query && 
+  const showHeroSection = !query && (
+    activeTab === 'catalog' ||
     Object.entries(filters).every(([key, val]) => {
       if (key === 'games') return Array.isArray(val) && val.length <= 1;
       return isDefaultFilter(key, val);
-    });
+    })
+  );
 
   const isDashboardView = !query && Object.entries(filters).every(([key, val]) => isDefaultFilter(key, val)) && (activeTab as string) !== 'catalog';
 
@@ -433,7 +435,7 @@ const Home: React.FC = () => {
         {showHeroSection && (
           <div className="max-w-[1600px] mx-auto w-full px-6 pt-2 animate-in fade-in slide-in-from-top-4 duration-1000">
             <HeroSection gameCode={filters.games && filters.games.length === 1 ? filters.games[0] : undefined} />
-            {isDashboardView && <PresaleSection />}
+            {(isDashboardView || activeTab === 'catalog') && <PresaleSection />}
           </div>
         )}
 

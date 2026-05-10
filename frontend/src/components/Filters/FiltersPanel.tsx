@@ -8,7 +8,8 @@ const gameNameMap: Record<string, string> = {
   'PKM': 'Pokémon',
   'OPC': 'One Piece',
   'DGM': 'Digimon',
-  'LOR': 'Lorcana'
+  'LOR': 'Lorcana',
+  'YGO': 'Yu-Gi-Oh!'
 };
 
 export interface Filters {
@@ -213,7 +214,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
             <div className="grid grid-cols-1 gap-2 pt-3 animate-in fade-in slide-in-from-top-1 duration-200">
               {filters.categories
                 .filter(cat => {
-                  if (!selectedGame) return true;
+                  if (!selectedGame || isAccessoryMode) return true;
                   const otherGames = ['Magic', 'Pokemon', 'Digimon', 'One Piece', 'Yu-Gi-Oh', 'Weiss Schwarz'].filter(g => {
                     if (selectedGame === 'MTG' && g === 'Magic') return false;
                     if ((selectedGame === 'PKM' || selectedGame === 'POKEMON') && g === 'Pokemon') return false;
