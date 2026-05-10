@@ -1150,6 +1150,78 @@ async function handleAdminEndpoint(supabase: SupabaseClient, path: string, metho
   const { data: { user }, error: authError } = await supabase.auth.getUser(authToken);
   if (authError || !user) throw new Error('Unauthorized: Invalid token');
 
+  // GET /api/admin/cloudflare/analytics
+  if (method === 'GET' && path === '/api/admin/cloudflare/analytics') {
+    // 1. Verify admin role in profiles table
+    const { data: profile, error: pErr } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+    
+    if (pErr || profile?.role !== 'admin') {
+      throw new Error('Forbidden: Admin access required');
+    }
+
+    // 2. Fetch credentials from system_config
+    const { data: config, error: cErr } = await supabase
+      .from('system_config')
+      .select('key, value')
+      .in('key', ['CLOUDFLARE_ZONE_ID', 'CLOUDFLARE_API_TOKEN']);
+
+    if (cErr) throw new Error(`Config error: ${cErr.message}`);
+    
+    const zoneId = config?.find(c => c.key === 'CLOUDFLARE_ZONE_ID')?.value;
+    const token = config?.find(c => c.key === 'CLOUDFLARE_API_TOKEN')?.value;
+
+    if (!zoneId || !token) {
+      throw new Error('Cloudflare configuration (ZONE_ID/API_TOKEN) not found in system_config table');
+    }
+
+    // 3. Query Cloudflare GraphQL
+    const query = `
+      query GetAnalytics($zoneTag: String!, $start: String!) {
+        viewer {
+          zones(filter: { zoneTag: $zoneTag }) {
+            httpRequests1hGroups(limit: 24, filter: { datetime_gt: $start }, orderBy: [datetime_ASC]) {
+              dimensions { datetime }
+              sum { requests, pageViews }
+            }
+          }
+        }
+      }
+    `;
+
+    const startTime = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+
+    const cfResponse = await fetch("https://api.cloudflare.com/client/v4/graphql", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        query,
+        variables: { zoneTag: zoneId, start: startTime }
+      })
+    });
+
+    const cfResult = await cfResponse.json();
+    if (cfResult.errors) {
+      throw new Error(cfResult.errors[0].message);
+    }
+
+    const groups = cfResult.data.viewer.zones[0]?.httpRequests1hGroups || [];
+    return {
+      success: true,
+      data: groups,
+      summary: {
+        total_requests: groups.reduce((acc: number, g: any) => acc + (g.sum.requests || 0), 0),
+        total_pageviews: groups.reduce((acc: number, g: any) => acc + (g.sum.pageViews || 0), 0)
+      }
+    };
+  }
+
   // GET /api/admin/tasks
   if (method === 'GET' && path === '/api/admin/tasks') {
     // Return empty array to verify connectivity and fix 400 error
