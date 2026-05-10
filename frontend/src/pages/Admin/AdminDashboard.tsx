@@ -203,17 +203,26 @@ export const AdminDashboard = () => {
     return (
         <div className="min-h-screen bg-slate-950 text-white p-8 font-sans">
             <div className="max-w-6xl mx-auto">
-                <div className="flex items-center justify-between mb-12">
-                    <div>
-                        <div className="flex items-center gap-2 mb-2">
-                            <Shield className="text-white w-5 h-5" />
-                            <span className="text-white font-black text-xs tracking-widest uppercase">Admin Terminal v1.0</span>
+                <div className="flex items-center justify-between mb-12 border-b border-white/5 pb-6">
+                    <div className="flex items-center gap-6">
+                        <Link to="/" className="flex-shrink-0 group relative">
+                            <img src="/branding/Logo.png" alt="Geekorium" className="w-32 sm:w-40 object-contain group-hover:scale-105 transition-transform" />
+                        </Link>
+                        <div className="h-10 w-px bg-white/10 hidden md:block"></div>
+                        <div className="hidden md:block">
+                            <div className="flex items-center gap-2 mb-1">
+                                <Shield className="text-[#00D1FF] w-4 h-4" />
+                                <span className="text-[#00D1FF] font-black text-[10px] tracking-widest uppercase">Admin Terminal v1.0</span>
+                            </div>
+                            <h1 className="text-2xl font-black text-white tracking-tighter italic leading-none">GEEKO<span className="text-white/50">SYSTEM</span></h1>
                         </div>
-                        <h1 className="text-5xl font-black text-white tracking-tighter italic">GEEKO<span className="text-white">SYSTEM</span></h1>
                     </div>
                     <div className="flex items-center gap-4">
-                        <div className="bg-slate-900 border border-slate-800 px-4 py-2 rounded-xl flex items-center gap-3 shadow-lg">
-                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_#22c55e]"></div>
+                        <Link to="/" className="text-slate-400 hover:text-white transition-all text-[10px] font-black uppercase tracking-widest flex items-center gap-2 group bg-white/5 hover:bg-white/10 px-4 py-2 rounded-xl border border-white/5">
+                            <span className="group-hover:-translate-x-1 transition-transform">←</span> Volver a la Tienda
+                        </Link>
+                        <div className="bg-slate-900 border border-slate-800 px-4 py-2 rounded-xl hidden sm:flex items-center gap-3 shadow-lg">
+                            <div className="w-2 h-2 bg-[#00FF85] rounded-full animate-pulse shadow-[0_0_8px_#00FF85]"></div>
                             <span className="text-xs font-bold text-slate-300 uppercase tracking-widest">Conexión Activa</span>
                         </div>
                     </div>
@@ -361,169 +370,162 @@ export const AdminDashboard = () => {
                     </Link>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div className="space-y-8">
-                        <div className="glass-card rounded-3xl p-8 border border-white/5 bg-slate-900/50">
-                            <h2 className="text-2xl font-black mb-6 flex items-center gap-3 italic">
-                                <Play className="text-white fill-white" />
-                                EJECUTAR SCRAPERS
-                            </h2>
-                            <div className="space-y-4">
-                                {scrapers.map((scraper) => (
-                                    <div key={scraper.id} className="bg-slate-800/20 border border-white/5 rounded-2xl p-6 flex items-center justify-between hover:bg-white/5 transition-all group">
-                                        <div className="flex items-center gap-4">
-                                            <div className="w-12 h-12 bg-black/40 rounded-xl flex items-center justify-center border border-white/5 group-hover:border-white/30">
-                                                {scraper.icon}
+                {false && (
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div className="space-y-8">
+                            <div className="glass-card rounded-3xl p-8 border border-white/5 bg-slate-900/50">
+                                <h2 className="text-2xl font-black mb-6 flex items-center gap-3 italic">
+                                    <Play className="text-white fill-white" />
+                                    EJECUTAR SCRAPERS
+                                </h2>
+                                <div className="space-y-4">
+                                    {scrapers.map((scraper) => (
+                                        <div key={scraper.id} className="bg-slate-800/20 border border-white/5 rounded-2xl p-6 flex items-center justify-between hover:bg-white/5 transition-all group">
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-12 h-12 bg-black/40 rounded-xl flex items-center justify-center border border-white/5 group-hover:border-white/30">
+                                                    {scraper.icon}
+                                                </div>
+                                                <div>
+                                                    <h3 className="font-black text-lg italic uppercase">{scraper.name}</h3>
+                                                    <p className="text-slate-500 text-xs font-bold">{scraper.description}</p>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <h3 className="font-black text-lg italic uppercase">{scraper.name}</h3>
-                                                <p className="text-slate-500 text-xs font-bold">{scraper.description}</p>
-                                            </div>
+                                            <button
+                                                onClick={() => runScraper(scraper.id)}
+                                                disabled={running[scraper.id]}
+                                                className="bg-white/20 border border-white/50 hover:bg-white/40 text-white px-6 py-2 rounded-xl font-black text-xs uppercase tracking-widest transition-all"
+                                            >
+                                                {running[scraper.id] ? 'Ejecutando...' : 'Desplegar'}
+                                            </button>
                                         </div>
-                                        <button
-                                            onClick={() => runScraper(scraper.id)}
-                                            disabled={running[scraper.id]}
-                                            className="bg-white/20 border border-white/50 hover:bg-white/40 text-white px-6 py-2 rounded-xl font-black text-xs uppercase tracking-widest transition-all"
-                                        >
-                                            {running[scraper.id] ? 'Ejecutando...' : 'Desplegar'}
-                                        </button>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="glass-card rounded-3xl p-8 border border-white/5 bg-slate-900/50">
+                                <h2 className="text-2xl font-black mb-6 flex items-center gap-3 italic text-geeko-purple">
+                                    <Database className="text-geeko-purple" />
+                                    SINCRONIZACIÓN DE CATÁLOGO
+                                </h2>
+                                <div className="space-y-4">
+                                    {syncServices.map((service) => (
+                                        <div key={service.id} className="bg-slate-800/20 border border-white/5 rounded-2xl p-6 flex items-center justify-between hover:bg-white/5 transition-all group">
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-12 h-12 bg-black/40 rounded-xl flex items-center justify-center border border-white/5 group-hover:border-geeko-purple/30">
+                                                    {service.icon}
+                                                </div>
+                                                <div>
+                                                    <h3 className="font-black text-lg italic uppercase">{service.name}</h3>
+                                                    <p className="text-slate-500 text-xs font-bold">{service.description}</p>
+                                                </div>
+                                            </div>
+                                            <button
+                                                onClick={() => runSync(service.id)}
+                                                disabled={running[`sync-${service.id}`]}
+                                                className="bg-geeko-purple/20 border border-geeko-purple/50 hover:bg-geeko-purple/40 text-geeko-purple px-6 py-2 rounded-xl font-black text-xs uppercase tracking-widest transition-all"
+                                            >
+                                                {running[`sync-${service.id}`] ? 'Sincronizando...' : 'Iniciar'}
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         </div>
 
-                        <div className="glass-card rounded-3xl p-8 border border-white/5 bg-slate-900/50">
-                            <h2 className="text-2xl font-black mb-6 flex items-center gap-3 italic text-geeko-purple">
-                                <Database className="text-geeko-purple" />
-                                SINCRONIZACIÓN DE CATÁLOGO
-                            </h2>
-                            <div className="space-y-4">
-                                {syncServices.map((service) => (
-                                    <div key={service.id} className="bg-slate-800/20 border border-white/5 rounded-2xl p-6 flex items-center justify-between hover:bg-white/5 transition-all group">
-                                        <div className="flex items-center gap-4">
-                                            <div className="w-12 h-12 bg-black/40 rounded-xl flex items-center justify-center border border-white/5 group-hover:border-geeko-purple/30">
-                                                {service.icon}
+                        <div className="space-y-8">
+                            <div className="glass-card rounded-3xl p-8 border border-white/5 bg-slate-900/50">
+                                <h2 className="text-2xl font-black mb-6 flex items-center gap-3 italic">
+                                    <Shield className="text-white" />
+                                    CONTROL DE MISIÓN
+                                </h2>
+                                <div className="space-y-4 mb-6">
+                                    {activeTasks.length > 0 ? (
+                                        activeTasks.map(task => (
+                                            <div key={task.id} className="bg-slate-800/20 border border-white/5 rounded-2xl p-4">
+                                                <div className="flex items-center justify-between mb-2">
+                                                    <span className="font-black text-xs text-slate-300 uppercase tracking-widest">{task.game_code} Ejecutor de Tareas</span>
+                                                    <div className="flex items-center gap-2">
+                                                        <button onClick={() => fetchTaskLogs(task.id)} className="text-[10px] font-black uppercase text-white hover:underline">Ver Logs</button>
+                                                        <span className={`text-[10px] px-2 py-0.5 rounded font-black uppercase ${task.status === 'running' ? 'bg-white/20 text-white' : 'bg-white/20 text-white'}`}>
+                                                            {task.status}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                {task.status === 'running' && (
+                                                    <div className="w-full bg-black h-1 mt-2 rounded-full overflow-hidden">
+                                                        <div className="bg-white h-full animate-pulse" style={{ width: '100%' }}></div>
+                                                    </div>
+                                                )}
                                             </div>
-                                            <div>
-                                                <h3 className="font-black text-lg italic uppercase">{service.name}</h3>
-                                                <p className="text-slate-500 text-xs font-bold">{service.description}</p>
-                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="text-slate-600 font-bold text-center py-6 bg-black/20 rounded-2xl border border-dashed border-white/5">
+                                            NO HAY TAREAS ACTIVAS
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="bg-black/60 rounded-2xl p-4 font-mono text-[10px] h-32 overflow-y-auto space-y-1 border border-white/5">
+                                    {Object.entries(results).map(([source, result], idx) => (
+                                        <div key={idx} className="flex gap-2">
+                                            <span className="text-slate-600">[{new Date().toLocaleTimeString()}]</span>
+                                            <span className="text-white">{source.toUpperCase()}:</span>
+                                            <span className={result.error ? 'text-red-400' : 'text-white'}>
+                                                {result.error || result.message || 'OK'}
+                                            </span>
+                                        </div>
+                                    ))}
+                                    {Object.keys(results).length === 0 && <div className="text-slate-700 italic">Salida de consola inicializada...</div>}
+                                </div>
+                            </div>
+
+                            {/* Section: Webhooks & Automation */}
+                            <div className="glass-card rounded-3xl p-8 border border-white/10 bg-black/40 border-dashed">
+                                <h2 className="text-2xl font-black mb-4 flex items-center gap-3 italic">
+                                    <Settings className="text-white" />
+                                    AUTOMATIZACIÓN GITHUB
+                                </h2>
+                                <p className="text-slate-500 text-xs font-bold mb-6 italic">
+                                    Dispara la sincronización directamente en GitHub Actions.
+                                </p>
+
+                                <div className="space-y-4">
+                                    <div className="p-4 bg-black/40 rounded-2xl border border-white/5">
+                                        <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">Token de Acceso Personal de GitHub</div>
+                                        <div className="flex gap-2 mb-2">
+                                            <input
+                                                type="password"
+                                                value={githubToken}
+                                                onChange={(e) => saveGithubToken(e.target.value)}
+                                                placeholder="ghp_xxxxxxxxxxxx"
+                                                className="bg-black/60 p-3 rounded-xl text-white text-[10px] flex-grow border border-white/5 focus:outline-none focus:border-white/50"
+                                            />
                                         </div>
                                         <button
-                                            onClick={() => runSync(service.id)}
-                                            disabled={running[`sync-${service.id}`]}
-                                            className="bg-geeko-purple/20 border border-geeko-purple/50 hover:bg-geeko-purple/40 text-geeko-purple px-6 py-2 rounded-xl font-black text-xs uppercase tracking-widest transition-all"
+                                            onClick={triggerGithubSync}
+                                            disabled={isTriggeringGit}
+                                            className="w-full mt-2 bg-white/5 hover:bg-white/10 disabled:opacity-50 text-white p-3 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all border border-white/10 flex items-center justify-center gap-2"
                                         >
-                                            {running[`sync-${service.id}`] ? 'Sincronizando...' : 'Iniciar'}
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="space-y-8">
-                        <div className="glass-card rounded-3xl p-8 border border-white/5 bg-slate-900/50">
-                            <h2 className="text-2xl font-black mb-6 flex items-center gap-3 italic">
-                                <Shield className="text-white" />
-                                CONTROL DE MISIÓN
-                            </h2>
-                            <div className="space-y-4 mb-6">
-                                {activeTasks.length > 0 ? (
-                                    activeTasks.map(task => (
-                                        <div key={task.id} className="bg-slate-800/20 border border-white/5 rounded-2xl p-4">
-                                            <div className="flex items-center justify-between mb-2">
-                                                <span className="font-black text-xs text-slate-300 uppercase tracking-widest">{task.game_code} Ejecutor de Tareas</span>
-                                                <div className="flex items-center gap-2">
-                                                    <button onClick={() => fetchTaskLogs(task.id)} className="text-[10px] font-black uppercase text-white hover:underline">Ver Logs</button>
-                                                    <span className={`text-[10px] px-2 py-0.5 rounded font-black uppercase ${task.status === 'running' ? 'bg-white/20 text-white' : 'bg-white/20 text-white'}`}>
-                                                        {task.status}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            {task.status === 'running' && (
-                                                <div className="w-full bg-black h-1 mt-2 rounded-full overflow-hidden">
-                                                    <div className="bg-white h-full animate-pulse" style={{ width: '100%' }}></div>
-                                                </div>
+                                            {isTriggeringGit ? (
+                                                <>
+                                                    <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                                    Iniciando...
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Shield size={14} className="text-white" />
+                                                    Activar Sincronización Manual (Actions)
+                                                </>
                                             )}
-                                        </div>
-                                    ))
-                                ) : (
-                                    <div className="text-slate-600 font-bold text-center py-6 bg-black/20 rounded-2xl border border-dashed border-white/5">
-                                        NO HAY TAREAS ACTIVAS
+                                        </button>
                                     </div>
-                                )}
-                            </div>
-                            <div className="bg-black/60 rounded-2xl p-4 font-mono text-[10px] h-32 overflow-y-auto space-y-1 border border-white/5">
-                                {Object.entries(results).map(([source, result], idx) => (
-                                    <div key={idx} className="flex gap-2">
-                                        <span className="text-slate-600">[{new Date().toLocaleTimeString()}]</span>
-                                        <span className="text-white">{source.toUpperCase()}:</span>
-                                        <span className={result.error ? 'text-red-400' : 'text-white'}>
-                                            {result.error || result.message || 'OK'}
-                                        </span>
+                                    <div className="p-4 bg-slate-900/30 rounded-2xl border border-white/5 text-[9px] text-slate-500 leading-relaxed font-bold">
+                                        Pega tu PAT de GitHub arriba para habilitar el botón. El token se guarda localmente en tu navegador.
                                     </div>
-                                ))}
-                                {Object.keys(results).length === 0 && <div className="text-slate-700 italic">Salida de consola inicializada...</div>}
-                            </div>
-                        </div>
-
-                        {/* Section: Webhooks & Automation */}
-                        <div className="glass-card rounded-3xl p-8 border border-white/10 bg-black/40 border-dashed">
-                            <h2 className="text-2xl font-black mb-4 flex items-center gap-3 italic">
-                                <Settings className="text-white" />
-                                AUTOMATIZACIÓN GITHUB
-                            </h2>
-                            <p className="text-slate-500 text-xs font-bold mb-6 italic">
-                                Dispara la sincronización directamente en GitHub Actions.
-                            </p>
-
-                            <div className="space-y-4">
-                                <div className="p-4 bg-black/40 rounded-2xl border border-white/5">
-                                    <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">Token de Acceso Personal de GitHub</div>
-                                    <div className="flex gap-2 mb-2">
-                                        <input
-                                            type="password"
-                                            value={githubToken}
-                                            onChange={(e) => saveGithubToken(e.target.value)}
-                                            placeholder="ghp_xxxxxxxxxxxx"
-                                            className="bg-black/60 p-3 rounded-xl text-white text-[10px] flex-grow border border-white/5 focus:outline-none focus:border-white/50"
-                                        />
-                                    </div>
-                                    <button
-                                        onClick={triggerGithubSync}
-                                        disabled={isTriggeringGit}
-                                        className="w-full mt-2 bg-white/5 hover:bg-white/10 disabled:opacity-50 text-white p-3 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all border border-white/10 flex items-center justify-center gap-2"
-                                    >
-                                        {isTriggeringGit ? (
-                                            <>
-                                                <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                                Iniciando...
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Shield size={14} className="text-white" />
-                                                Activar Sincronización Manual (Actions)
-                                            </>
-                                        )}
-                                    </button>
-                                </div>
-                                <div className="p-4 bg-slate-900/30 rounded-2xl border border-white/5 text-[9px] text-slate-500 leading-relaxed font-bold">
-                                    Pega tu PAT de GitHub arriba para habilitar el botón. El token se guarda localmente en tu navegador.
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div className="mt-12 flex justify-center">
-                    <button
-                        onClick={() => window.location.href = './'}
-                        className="text-slate-500 hover:text-white transition-all text-xs font-black uppercase tracking-[0.3em] flex items-center gap-3 group"
-                    >
-                        <span className="group-hover:-translate-x-1 transition-transform">←</span> Volver a la Plataforma
-                    </button>
-                </div>
+                )}
             </div>
 
             {showLogModal && (
