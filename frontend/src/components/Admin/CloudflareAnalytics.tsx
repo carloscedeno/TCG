@@ -114,21 +114,29 @@ export const CloudflareAnalytics = ({ session, apiBase }: { session: any, apiBas
                 {/* Help Section */}
                 {showHelp && (
                     <div className="mb-8 p-6 bg-[#00D1FF]/5 border border-[#00D1FF]/20 rounded-2xl animate-in fade-in slide-in-from-top-4 duration-300">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div>
                                 <h4 className="text-[10px] font-black text-[#00D1FF] uppercase mb-2 flex items-center gap-2">
-                                    <MousePointer2 size={12} /> Peticiones (Total de Esfuerzo)
+                                    <MousePointer2 size={12} /> ¿Peticiones a qué?
                                 </h4>
                                 <p className="text-[10px] text-slate-400 leading-relaxed font-bold">
-                                    Cuenta cada vez que alguien pide algo a tu servidor. Esto incluye no solo ver la página, sino cargar fotos, el inventario, los precios y scripts. Si este número es muy alto, significa que hay mucha actividad técnica en el sitio.
+                                    A todo el contenido: imágenes de cartas, precios que vienen de APIs externas, scripts para que funcione el carrito y la carga inicial de la tienda.
                                 </p>
                             </div>
                             <div>
                                 <h4 className="text-[10px] font-black text-blue-400 uppercase mb-2 flex items-center gap-2">
-                                    <Eye size={12} /> Vistas (Visitas Reales)
+                                    <Eye size={12} /> ¿Vistas a dónde?
                                 </h4>
                                 <p className="text-[10px] text-slate-400 leading-relaxed font-bold">
-                                    Cuenta específicamente las veces que un usuario carga una página de la tienda. Es el mejor indicador de cuántas personas están navegando activamente.
+                                    Específicamente a las páginas que ven tus clientes: Home, buscador de cartas, detalles de un producto y el panel administrativo.
+                                </p>
+                            </div>
+                            <div>
+                                <h4 className="text-[10px] font-black text-yellow-400 uppercase mb-2 flex items-center gap-2">
+                                    <Clock size={12} /> ¿Hora de qué?
+                                </p>
+                                <p className="text-[10px] text-slate-400 leading-relaxed font-bold">
+                                    Es la ventana de 60 minutos donde ocurrió la actividad. Te sirve para saber en qué momento del día entran más clientes a tu tienda.
                                 </p>
                             </div>
                         </div>
@@ -170,32 +178,38 @@ export const CloudflareAnalytics = ({ session, apiBase }: { session: any, apiBas
                     </div>
                 </div>
 
-                {/* Secondary Layout: Top Paths & Timeline */}
+                {/* Secondary Layout: Top Countries & Timeline */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {/* Top Paths List */}
+                    {/* Top Countries List */}
                     <div>
                         <div className="flex items-center gap-2 mb-4">
                             <Globe size={14} className="text-[#00D1FF]" />
-                            <h3 className="text-[12px] font-black text-white uppercase tracking-widest italic">URLs más visitadas</h3>
+                            <h3 className="text-[12px] font-black text-white uppercase tracking-widest italic">Origen del Tráfico</h3>
                         </div>
                         <div className="space-y-3">
-                            {(stats?.top_paths || []).map((p, i) => (
+                            {(stats?.top_countries || []).map((c, i) => (
                                 <div key={i} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5 hover:bg-white/10 transition-all">
                                     <div className="flex flex-col gap-1 overflow-hidden">
-                                        <span className="text-[10px] font-bold text-slate-300 truncate max-w-[180px]">{p.path || '/'}</span>
-                                        <span className="text-[7px] font-black text-slate-500 uppercase">Ruta del sitio</span>
+                                        <span className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">{c.country || 'Desconocido'}</span>
+                                        <span className="text-[7px] font-black text-slate-500 uppercase">País de origen</span>
                                     </div>
-                                    <div className="flex items-center gap-2">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-24 h-1 bg-white/5 rounded-full overflow-hidden hidden sm:block">
+                                            <div 
+                                                className="h-full bg-[#00D1FF]" 
+                                                style={{ width: `${(c.requests / (stats?.summary.total_requests || 1)) * 100}%` }}
+                                            />
+                                        </div>
                                         <div className="text-right">
-                                            <span className="block text-[8px] font-black text-emerald-400 italic">{p.requests.toLocaleString()}</span>
+                                            <span className="block text-[8px] font-black text-emerald-400 italic">{c.requests.toLocaleString()}</span>
                                             <span className="text-[7px] font-black text-slate-600 uppercase">Peticiones</span>
                                         </div>
                                     </div>
                                 </div>
                             ))}
-                            {(!stats?.top_paths || stats.top_paths.length === 0) && (
+                            {(!stats?.top_countries || stats.top_countries.length === 0) && (
                                 <div className="text-center py-8 border border-dashed border-white/10 rounded-2xl bg-white/5">
-                                    <p className="text-slate-600 text-[10px] font-black uppercase tracking-widest">Sin datos de rutas</p>
+                                    <p className="text-slate-600 text-[10px] font-black uppercase tracking-widest">Sin datos de ubicación</p>
                                 </div>
                             )}
                         </div>
