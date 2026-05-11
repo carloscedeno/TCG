@@ -76,7 +76,7 @@ export const CardDetail: React.FC = () => {
         try {
             // Strip synthetic suffix from id, pass finish explicitly
             const baseId = activeVersion.printing_id.replace(/-foil$/, '').replace(/-nonfoil$/, '').replace(/-etched$/, '');
-            const result = await addToCart(baseId, 1, activeFinish);
+            const result = await addToCart(baseId, 1, activeFinish, !!details?.is_accessory);
 
             if (result && !result.success) {
                 alert(result.message || result.error || 'No se pudo agregar al carrito');

@@ -91,6 +91,9 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
     const [activePrintingId, setActivePrintingId] = useState<string | null>(null);
     const [selectedFinish, setSelectedFinish] = useState<'nonfoil' | 'foil' | 'etched'>('nonfoil');
 
+    const isPresale = details?.name?.toLowerCase().includes('(preventa)');
+    const cleanName = isPresale ? details?.name?.replace(/\(preventa\)/gi, '').trim() : details?.name;
+
     // ... useEffect ...
 
     useEffect(() => {
@@ -245,7 +248,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
         try {
             // Use the real printing_id (strip any synthetic suffix before calling RPC)
             const baseId = activePrintingId.replace(/-foil$/, '').replace(/-nonfoil$/, '').replace(/-etched$/, '');
-            const result = await addToCart(baseId, 1, selectedFinish);
+            const result = await addToCart(baseId, 1, selectedFinish, !!details?.is_accessory);
             if (result && !result.success) {
                 alert(result.message || result.error || 'No se pudo agregar al carrito');
                 setIsAdding(false);
@@ -274,7 +277,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
             // Strip synthetic suffix, pass finish explicitly
             const baseId = (v.printing_id || '').replace(/-foil$/, '').replace(/-nonfoil$/, '').replace(/-etched$/, '');
             const vFinish = v.finish || (v.is_foil ? 'foil' : 'nonfoil');
-            const result = await addToCart(baseId, 1, vFinish);
+            const result = await addToCart(baseId, 1, vFinish, !!details?.is_accessory);
             if (result && !result.success) {
                 // Show error message to user
                 alert(result.message || result.error || 'No se pudo agregar al carrito');
@@ -521,7 +524,10 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                             {details.set || 'Accesorio'}
                                         </span>
                                         <h2 className="text-2xl md:text-4xl font-web-titles font-normal tracking-tight text-white leading-tight capitalize">
-                                            {details.name}
+                                            {cleanName}
+                                            {isPresale && (
+                                                <span className="ml-3 px-2 py-1 bg-geeko-cyan text-black text-[10px] font-black uppercase rounded shadow-lg shadow-geeko-cyan/20 align-middle">Preventa</span>
+                                            )}
                                         </h2>
                                     </div>
 
@@ -576,7 +582,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                             </div>
                                         </div>
 
-                                        {!isArchive && (
+                                        {(!isArchive || details.is_accessory || details.accessory_id) && (
                                             <button
                                                 onClick={handleAddToCart}
                                                 disabled={isAdding}
@@ -588,7 +594,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                                 }`}
                                             >
                                                 {isAdding ? <Loader2 size={18} className="animate-spin" /> : addedSuccess ? '¡Añadido! ✓' : <ShoppingCart size={18} fill="currentColor" />}
-                                                {!isAdding && !addedSuccess && ((activeVersion?.stock || 0) > 0 ? 'Agregar al Carrito' : 'Pedir por Encargo')}
+                                                {!isAdding && !addedSuccess && ((activeVersion?.stock || details.stock || details.total_stock || 0) > 0 ? 'Agregar al Carrito' : 'Pedir por Encargo')}
                                             </button>
                                         )}
                                     </div>

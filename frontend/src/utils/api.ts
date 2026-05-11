@@ -275,62 +275,8 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
     const sanitizedId = printingId.replace('-foil', '').replace('-nonfoil', '').replace('-etched', '');
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     
-    // 2. Try fetching from API/Supabase as a CARD first (This is 99% of requests)
-    const dbPrintingId = sanitizedId;
-
-    try {
-      // Try API first
-      const apiUrl = getApiUrl(`/cards/${dbPrintingId}`);
-      if (apiUrl) {
-        const response = await fetch(apiUrl);
-        if (response.ok) {
-          const json = await response.json();
-          data = json.card || json;
-        }
-      }
-    } catch (e) {
-      console.warn('[API] Detail fetch failed:', e);
-    }
-
-    // 3. If API didn't find it, try Supabase Card Printings
-    if (!data || !data.name) {
-        const { data: sbData } = await supabase
-          .from('card_printings')
-          .select('*, cards(*), sets(*)')
-          .eq('printing_id', dbPrintingId)
-          .maybeSingle();
-          
-        if (sbData) {
-            data = {
-              printing_id: sbData.printing_id,
-              card_id: sbData.card_id,
-              name: sbData.cards?.card_name || sbData.name || 'Unknown Card',
-              mana_cost: sbData.cards?.mana_cost,
-              type: sbData.cards?.type_line,
-              oracle_text: sbData.cards?.oracle_text,
-              flavor_text: sbData.flavor_text || sbData.cards?.flavor_text,
-              artist: sbData.artist,
-              rarity: sbData.rarity,
-              set: sbData.sets?.set_name || '',
-              set_code: sbData.sets?.set_code || '',
-              collector_number: sbData.collector_number,
-              image_url: sbData.image_url,
-              price: 0,
-              finish: sbData.finish || (sbData.is_foil ? 'foil' : 'nonfoil'),
-              is_foil: !!sbData.is_foil || (sbData.finish === 'foil'),
-              total_stock: 0,
-              valuation: { store_price: 0, market_price: 0, valuation_avg: 0 },
-              legalities: sbData.cards?.legalities,
-              colors: sbData.cards?.colors,
-              card_faces: sbData.card_faces || sbData.cards?.card_faces,
-              all_versions: []
-            };
-        }
-    }
-
-    // 4. If STILL not found and it's a UUID, check Accessories (The 1% fallback)
-    if ((!data || !data.name) && uuidRegex.test(sanitizedId)) {
-        console.log('[Catalog] Checking fallback for accessories table:', sanitizedId);
+    // 2. Check Accessories FIRST if it's a UUID (Common for store-specific products)
+    if (uuidRegex.test(sanitizedId)) {
         const { data: accData } = await supabase
           .from('accessories')
           .select('*')
@@ -356,8 +302,8 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                 card_id: accData.id,
                 printing_id: accData.id,
                 name: accData.name,
-                set: accData.category,
-                set_code: accData.category,
+                set: accData.category || 'Accesorio',
+                set_code: accData.category || 'ACC',
                 image_url: accData.image_url,
                 additional_images: accData.additional_images || [],
                 price: finalPrice,
@@ -368,8 +314,8 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                 description: accData.description,
                 all_versions: [{
                     printing_id: accData.id,
-                    set_name: accData.category,
-                    set_code: accData.category,
+                    set_name: accData.category || 'Accesorio',
+                    set_code: accData.category || 'ACC',
                     collector_number: 'ACC',
                     rarity: 'Common',
                     image_url: accData.image_url,
@@ -383,25 +329,31 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
         }
     }
 
-    // 5. If it's a card (or we found it), proceed with version enrichment
-    const apiVersionsLackFinishData = data?.all_versions?.length > 0 &&
+    // 3. Try Edge Function (Main Source for full card metadata and external fetch)
+    try {
+        const response = await fetch(`${API_BASE}/cards/${sanitizedId}`);
+        if (response.ok) {
+            data = await response.json();
+        }
+    } catch (err) {
+        console.warn("Edge function fetch failed, checking database...", err);
+    }
+
+    // 4. Enrich/Fallback with Supabase if Edge failed or has missing data
+    const apiVersionsLackFinishData = data?.all_versions?.length > 0 && 
       !data.all_versions[0]?.finishes && !data.all_versions[0]?.avg_market_price_foil_usd;
+
     if (!data || !data.name || (!data.all_versions || data.all_versions.length === 0) || apiVersionsLackFinishData) {
       console.log('[Supabase] Falling back for details or missing versions');
       const { data: sbData, error: sbError } = await supabase
         .from('card_printings')
         .select('*, cards(*), sets(*)')
-        .eq('printing_id', dbPrintingId)
-        .single();
+        .eq('printing_id', sanitizedId)
+        .maybeSingle();
 
-      if (sbError) {
-        // If even Supabase fails, but we have partial data from API, keep it
-        if (!data) throw sbError;
-      } else {
+      if (sbData) {
         // Build or supplement data
-        const marketPrice = 0; // Fallback to 0, backend should provide this
-
-        // Basic card info
+        const marketPrice = 0; 
         const baseData = {
           printing_id: sbData.printing_id,
           card_id: sbData.card_id,
@@ -430,8 +382,6 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
           card_faces: sbData.card_faces || sbData.cards?.card_faces,
           all_versions: []
         };
-
-        // Merge API data with Supabase data if both exist
         data = { ...baseData, ...data };
 
         // If the API provided incomplete version data (missing foil prices/finishes), discard it 
@@ -441,7 +391,7 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
         }
 
         // Fetch versions if missing
-        if (!data.all_versions || data.all_versions.length === 0) {
+        if ((!data.all_versions || data.all_versions.length === 0) && sbData) {
           const cardIdForVersions = sbData.card_id || data.oracle_id;
           if (cardIdForVersions) {
             const { data: versionsData } = await supabase
@@ -1347,7 +1297,7 @@ export const fetchAccessories = async (params: {
     const { data: gameData } = await supabase
       .from('games')
       .select('game_id')
-      .or(`game_name.eq."${normalizedCode}",game_code.eq."${normalizedCode}"`)
+      .or(`game_name.eq.${normalizedCode},game_code.eq.${normalizedCode}`)
       .maybeSingle();
     if (gameData) gameId = gameData.game_id;
   }
@@ -1508,7 +1458,7 @@ export const fetchBanners = async (category: string = 'main_hero', gameCode?: st
       .eq('category', category)
       .eq('is_active', true)
       .is('game_code', null)
-      .order('display_order');
+      .order('display_order', { ascending: true });
     return globalData || [];
   }
 

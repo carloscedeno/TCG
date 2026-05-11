@@ -55,6 +55,9 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
   };
 
   const currentName = hasMultipleFaces ? card_faces![currentFaceIndex].name : name;
+  const isPresale = currentName?.toLowerCase().includes('(preventa)');
+  const cleanName = isPresale ? currentName.replace(/\(preventa\)/gi, '').trim() : currentName;
+
   const currentType = hasMultipleFaces ? card_faces![currentFaceIndex].type_line || type : type;
   const imgSrc = getImgSrc();
 
@@ -136,7 +139,10 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
 
         <div className="flex-1 min-w-0">
           <h3 className="text-white font-bold text-sm group-hover:text-geeko-cyan transition-colors break-words whitespace-normal leading-snug flex items-center gap-2">
-            {currentName}
+            {cleanName}
+            {isPresale && (
+              <span className="px-1.5 py-0.5 bg-geeko-cyan text-black text-[7px] font-black uppercase rounded shadow-lg shadow-geeko-cyan/20">Preventa</span>
+            )}
             {['sos', 'soa', 'soc', 'tsos'].includes(set?.toLowerCase()) && (
               <span className="px-1.5 py-0.5 bg-purple-600 text-[7px] font-black uppercase rounded shadow-lg shadow-purple-500/20 animate-pulse">Nuevo</span>
             )}
@@ -237,9 +243,17 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         </button>
       )}
 
+      {/* PREVENTA Badge Overlay */}
+      {isPresale && (
+        <div className="absolute top-2 left-2 z-30 px-2 py-1 bg-geeko-cyan text-black text-[8px] font-black uppercase rounded shadow-lg shadow-geeko-cyan/30 flex items-center gap-1 animate-in zoom-in duration-300">
+          <div className="w-1.5 h-1.5 bg-black rounded-full animate-pulse" />
+          Preventa
+        </div>
+      )}
+
       {/* NEW Badge Overlay */}
       {['sos', 'soa', 'soc', 'tsos'].includes(set?.toLowerCase()) && (
-        <div className="absolute top-2 left-2 z-30 px-2 py-1 bg-purple-600 text-white text-[8px] font-black uppercase rounded shadow-lg shadow-purple-600/30 flex items-center gap-1 animate-in zoom-in duration-300">
+        <div className={`absolute ${isPresale ? 'top-10' : 'top-2'} left-2 z-30 px-2 py-1 bg-purple-600 text-white text-[8px] font-black uppercase rounded shadow-lg shadow-purple-600/30 flex items-center gap-1 animate-in zoom-in duration-300`}>
           <div className="w-1 h-1 bg-white rounded-full animate-ping" />
           Nuevo
         </div>
@@ -333,8 +347,8 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
       {/* Card Info */}
       <div className="p-4 flex flex-col gap-1 z-20 bg-[#0a0a0a]/90 backdrop-blur-md border-t border-white/5 flex-grow">
         {/* Fix text overlap: Truncate + Title */}
-        <h3 className="text-white text-sm font-bold truncate leading-snug group-hover:text-geeko-cyan transition-colors" title={currentName}>
-          {currentName}
+        <h3 className="text-white text-sm font-bold truncate leading-snug group-hover:text-geeko-cyan transition-colors" title={cleanName}>
+          {cleanName}
         </h3>
 
         <div className="flex items-center justify-between text-[10px] text-text-low font-medium">
