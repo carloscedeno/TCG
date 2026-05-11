@@ -4,12 +4,13 @@ import { rarityMap, typeMap, colorMap } from '../../utils/translations';
 
 const gameNameMap: Record<string, string> = {
   'MTG': 'Magic: The Gathering',
-  'POKEMON': 'Pokémon',
   'PKM': 'Pokémon',
   'OPC': 'One Piece',
   'DGM': 'Digimon',
   'LOR': 'Lorcana',
-  'YGO': 'Yu-Gi-Oh!'
+  'YGO': 'Yu-Gi-Oh!',
+  'FAB': 'Flesh and Blood',
+  'WXS': 'Wixoss'
 };
 
 export interface Filters {

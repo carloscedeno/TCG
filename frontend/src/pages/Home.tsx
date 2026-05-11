@@ -20,7 +20,7 @@ import { DealsCarousel } from '../components/Home/DealsCarousel';
 
 
 const mockFilters: Filters = {
-  games: ['MTG', 'PKM', 'YGO', 'RFB', 'OPC', 'DGM', 'GND', 'FAB'],
+  games: ['MTG', 'PKM', 'YGO', 'FAB', 'OPC', 'DGM', 'WXS', 'LOR'],
   rarities: ['Common', 'Uncommon', 'Rare', 'Mythic'],
   colors: ['White', 'Blue', 'Black', 'Red', 'Green', 'Colorless', 'Multicolor'],
   types: ['Creature', 'Instant', 'Sorcery', 'Enchantment', 'Artifact', 'Planeswalker', 'Land'],
@@ -570,8 +570,8 @@ const Home: React.FC = () => {
 
             {/* Cards Grid / Deals Dashboard */}
             <div className="flex-1">
-              {isDashboardView ? (
-                // DEALS DASHBOARD
+              {isDashboardView && activeTab === 'marketplace' ? (
+                // DEALS DASHBOARD (Only for marketplace home)
                 <div className="flex flex-col gap-6 w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
                   {loadingDeals ? (
                     <div className="flex flex-col items-center justify-center py-32 gap-6">
@@ -669,6 +669,7 @@ const Home: React.FC = () => {
             </div>
             </div>
         </main>
+
 
         {/* Footer */}
         <Footer />

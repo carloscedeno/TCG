@@ -1339,14 +1339,16 @@ export const fetchAccessories = async (params: {
     price_min, price_max, sort = 'newest', limit = 50, offset = 0
   } = params;
   
-  // Dynamic game mapping
+  // Clean 3-letter mapping
   let gameId: number | null = null;
   if (game) {
+    const normalizedCode = game;
+
     const { data: gameData } = await supabase
       .from('games')
       .select('game_id')
-      .or(`game_name.eq."${game}",game_code.eq."${game}"`)
-      .single();
+      .or(`game_name.eq."${normalizedCode}",game_code.eq."${normalizedCode}"`)
+      .maybeSingle();
     if (gameData) gameId = gameData.game_id;
   }
   
@@ -1486,18 +1488,30 @@ export const fetchBanners = async (category: string = 'main_hero', gameCode?: st
     .eq('is_active', true);
 
   if (gameCode) {
-    // Normalize codes to match DB aliases if necessary
     query = query.eq('game_code', gameCode);
   } else {
     query = query.is('game_code', null);
   }
 
-  const { data, error } = await query.order('display_order');
+  let { data, error } = await query.order('display_order');
   
   if (error) {
     console.error('fetchBanners failed:', error);
     return [];
   }
+
+  // Fallback: If no game-specific banners, fetch global ones
+  if (gameCode && (!data || data.length === 0)) {
+    const { data: globalData } = await supabase
+      .from('hero_banners')
+      .select('*')
+      .eq('category', category)
+      .eq('is_active', true)
+      .is('game_code', null)
+      .order('display_order');
+    return globalData || [];
+  }
+
   return data || [];
 };
 
@@ -1694,10 +1708,7 @@ export const fetchDiscountedSingles = async (gameCode?: string, limit = 10): Pro
       .limit(limit);
       
     if (gameCode) {
-      const code = gameCode.startsWith('Poke') || gameCode === 'POKEMON' ? 'PKM' : 
-                   gameCode.startsWith('Magic') ? 'MTG' : 
-                   gameCode.startsWith('One') ? 'OPC' : 
-                   gameCode.startsWith('Digi') ? 'DGM' : gameCode;
+      const code = gameCode;
       query = query.eq('game', code);
     }
     
@@ -1736,7 +1747,7 @@ export const fetchDiscountedAccessories = async (gameCode?: string, limit = 10):
       .limit(limit);
 
     if (gameCode) {
-      const code = gameCode === 'POKEMON' ? 'PKM' : gameCode;
+      const code = gameCode;
       const { data: gameData } = await supabase.from('games').select('game_id').eq('game_code', code).maybeSingle();
       if (gameData) {
         query = query.eq('game_id', gameData.game_id);
@@ -1773,10 +1784,7 @@ export const checkGameInventoryPresence = async (gameCode?: string): Promise<{ h
   try {
     if (!gameCode) return { hasSingles: true, hasCatalog: true };
     
-    const code = gameCode.startsWith('Poke') || gameCode === 'POKEMON' ? 'PKM' : 
-                   gameCode.startsWith('Magic') ? 'MTG' : 
-                   gameCode.startsWith('One') ? 'OPC' : 
-                   gameCode.startsWith('Digi') ? 'DGM' : gameCode;
+    const code = gameCode;
                    
     const [{ data: singles }, { data: gameData }] = await Promise.all([
       supabase.from('products').select('id').eq('game', code).gt('stock', 0).limit(1),
