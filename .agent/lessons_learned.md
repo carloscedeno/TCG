@@ -1105,3 +1105,13 @@ useEffect(() => {
 - **Causa Raíz**: Los nodos de agregación como `clientRequestPath` y `clientCountryName` dentro de `httpRequests1hGroups` están restringidos o requieren habilitación específica según el plan de Cloudflare (Free/Pro/Ent).
 - **Solución**: Adoptar un enfoque de "Estabilidad Progresiva". Ante fallos de esquema, revertir a la query mínima estable (sólo tráfico/caché) para garantizar que el dashboard nunca se rompa, priorizando la disponibilidad de datos críticos sobre el desglose granular.
 - **Lección**: Al integrar APIs de terceros con tiers de precios, el backend debe ser defensivo y manejar esquemas opcionales para evitar que un cambio de plan bloquee el sistema.
+
+### 170. Reparación Quirúrgica de Filtros (SQL RPC) — 2026-05-11
+- **Problema:** Los filtros de Color, Rareza, Tipo y Año en la tienda (`geekorium.shop`) no funcionaban a pesar de que el frontend enviaba los parámetros correctos.
+- **Causa Raíz:** La función RPC `get_products_filtered` en producción ignoraba sistemáticamente estos parámetros en su cláusula `WHERE`. Además, los nombres de colores del frontend ('White') no coincidían con los códigos de una letra de la base de datos ('W').
+- **Solución:** Actualizar quirúrgicamente el RPC para:
+  1. Mapear nombres de colores a códigos ('White' -> 'W').
+  2. Implementar filtros usando intersección de arrays (`&&`) para colores y `EXISTS/ILIKE` para tipos.
+  3. Aplicar `EXTRACT(YEAR FROM release_date)` para el filtrado por año.
+  4. Recargar el esquema de PostgREST (`NOTIFY pgrst, 'reload schema'`) para asegurar visibilidad inmediata.
+- **Regla Derivada:** Todo cambio en la firma o lógica interna de una función RPC de Supabase debe ir acompañado de una recarga de esquema y una verificación 1:1 entre el formato de envío del frontend y el almacenamiento en DB.

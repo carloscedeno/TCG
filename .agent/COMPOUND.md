@@ -1,4 +1,35 @@
-# dY  COMPOUND: TCG Code Consolidation & Banner Sync
+# 🧠 COMPOUND: Reparación de Filtros de Producción (MTG & Multi-TCG)
+
+**Date**: 2026-05-11 01:25
+
+## Objective
+
+Restaurar la funcionalidad de filtrado (Color, Tipo, Año, Rareza) en el catálogo de producción (`geekorium.shop`) mediante una actualización quirúrgica del RPC `get_products_filtered`.
+
+## Knowledge Codification
+
+### 1. Mapeo de Metadatos TCG (Frontend vs DB)
+
+- **Patrón**: El frontend envía nombres descriptivos ('White', 'Mythic') mientras que la base de datos utiliza códigos compactos ('W') o minúsculas.
+- **Solución**: El RPC debe actuar como capa de normalización, traduciendo `unnest(color_filter)` a códigos internos mediante un `CASE` statement.
+
+### 2. Filtrado de Alto Rendimiento en Arrays
+
+- **Estándar**: Usar el operador de intersección de arrays `&&` para filtrar por colores (`p.colors && v_color_codes`). Es significativamente más rápido que múltiples joins o subconsultas `IN`.
+
+### 3. Sincronización PostgREST (Hotfix)
+
+- **Regla**: Cualquier cambio directo en funciones SQL en Supabase requiere la ejecución de `NOTIFY pgrst, 'reload schema';`. Sin esto, la API HTTP puede seguir sirviendo la firma antigua de la función, rompiendo el contrato con el frontend.
+
+## Technical Validation
+
+- **Frontend Build**: Éxito.
+- **SQL Verification**: Filtros de Color, Tipo y Año validados con 100% de precisión.
+- **E2E Browser**: Verificado en `geekorium.shop` (Negro + Criatura + 2024).
+- **Scripts**: Creado `scripts/test_new_filters.py` para regresiones futuras.
+
+---
+
 
 **Date**: 2026-05-10 10:45
 
