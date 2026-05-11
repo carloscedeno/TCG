@@ -355,9 +355,18 @@ export const CardDetail: React.FC = () => {
                                     }}
                                     className="block group/title"
                                 >
-                                    <h2 className="text-4xl lg:text-6xl font-web-titles font-normal tracking-tight text-white group-hover/title:text-geeko-cyan transition-colors text-gradient-cyan capitalize">
-                                        {details.name}
-                                    </h2>
+                                    <div className="flex flex-col gap-2">
+                                        {(details.name?.toLowerCase().includes('(preventa)') || details.is_presale) && (
+                                            <div className="flex items-center gap-2">
+                                                <div className="px-3 py-1 bg-geeko-cyan/20 text-geeko-cyan text-[10px] font-black rounded-lg border border-geeko-cyan/30 shadow-[0_0_15px_rgba(0,209,255,0.2)] animate-pulse uppercase tracking-[0.2em]">
+                                                    Preventa
+                                                </div>
+                                            </div>
+                                        )}
+                                        <h2 className="text-4xl lg:text-6xl font-web-titles font-normal tracking-tight text-white group-hover/title:text-geeko-cyan transition-colors text-gradient-cyan capitalize leading-tight">
+                                            {details.name?.replace(/\(preventa\)/gi, '').trim()}
+                                        </h2>
+                                    </div>
                                 </a>
                                 <div className="flex flex-wrap items-center gap-4 text-lg lg:text-xl font-medium text-text-low">
                                     <span><ManaText text={details.mana_cost || ''} /></span>
