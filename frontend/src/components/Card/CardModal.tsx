@@ -78,6 +78,8 @@ interface CardDetails {
     card_faces?: CardFace[];
     all_versions?: Version[];
     is_accessory?: boolean;
+    accessory_id?: string;
+    stock?: number;
     additional_images?: string[];
 }
 

@@ -345,7 +345,7 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
 
     if (!data || !data.name || (!data.all_versions || data.all_versions.length === 0) || apiVersionsLackFinishData) {
       console.log('[Supabase] Falling back for details or missing versions');
-      const { data: sbData, error: sbError } = await supabase
+      const { data: sbData } = await supabase
         .from('card_printings')
         .select('*, cards(*), sets(*)')
         .eq('printing_id', sanitizedId)
