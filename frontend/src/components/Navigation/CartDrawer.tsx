@@ -135,10 +135,22 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                                                         Por Encargo
                                                     </span>
                                                 )}
+                                                {item.products?.discount_percentage > 0 && (
+                                                    <span className="inline-block px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest bg-red-500/20 border border-red-500/40 text-red-400">
+                                                        -{item.products.discount_percentage}% OFF
+                                                    </span>
+                                                )}
                                             </div>
                                         </div>
                                         <div className="flex items-center justify-between">
-                                            <span className="text-sm font-mono font-black text-geeko-cyan">${(item.price || item.products?.price || 0).toFixed(2)}</span>
+                                            <div className="flex flex-col">
+                                                <span className="text-sm font-mono font-black text-geeko-cyan">${(item.price || item.products?.price || 0).toFixed(2)}</span>
+                                                {(item.products?.original_price > (item.products?.price || 0)) && (
+                                                    <span className="text-[10px] text-text-low line-through decoration-red-500/50">
+                                                        ${item.products.original_price.toFixed(2)}
+                                                    </span>
+                                                )}
+                                            </div>
 
                                             {/* Quantity Controls */}
                                             <div className="flex items-center gap-2">

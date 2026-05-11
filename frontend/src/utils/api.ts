@@ -284,6 +284,7 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
           .maybeSingle();
           
         if (accData) {
+            console.log(`[Catalog] Found accessory in DB: ${sanitizedId}`);
             const originalPrice = Number(accData.price || 0);
             let finalPrice = originalPrice;
             let discountPct = Number(accData.discount_percentage || 0);
@@ -326,6 +327,8 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                     finish: 'standard'
                 }]
             };
+        } else {
+            console.log(`[Catalog] UUID not found in accessories table: ${sanitizedId}. Falling back to Edge Function.`);
         }
     }
 
@@ -753,74 +756,27 @@ export const fetchCart = async (): Promise<any> => {
       const rawItems = cartData?.items || [];
       
       // We will map and then enrich if needed
-      const items = await Promise.all(rawItems.map(async (item: any) => {
-        // Try to extract from flat or nested 'products' object
-        const nested = item.products || item.product || {};
-        const extractName = item.product_name || item.name || nested.name || nested.product_name;
-        const extractPrice = item.price ?? nested.price;
-        const extractImageUrl = item.image_url || nested.image_url;
-        const extractSetCode = item.set_code || nested.set_code;
-        const extractStock = item.stock ?? nested.stock ?? 0;
-        const extractFinish = item.finish || nested.finish;
-        const isAcc = !!item.accessory_id || !!item.is_accessory || item.type === 'accessory';
-        
-        let mappedItem = {
-          id: item.cart_item_id || item.id,
-          product_id: item.product_id || (isAcc ? null : nested.id),
-          accessory_id: item.accessory_id || (isAcc ? (item.product_id || nested.id) : null),
+      // Trust the unified RPC result for authenticated users
+      const items = rawItems.map((item: any) => {
+        const isAcc = !!item.is_accessory;
+        return {
+          id: item.id,
+          product_id: item.product_id,
+          accessory_id: item.accessory_id,
           quantity: Number(item.quantity || 1),
           products: {
-            id: item.product_id || item.accessory_id || nested.id,
-            name: extractName || '',
-            price: Number(extractPrice || 0),
-            image_url: extractImageUrl || '',
-            set_code: extractSetCode || '',
-            stock: extractStock,
-            finish: extractFinish || (isAcc ? 'standard' : '')
+            id: item.product_id || item.accessory_id,
+            name: item.name || '',
+            price: Number(item.price || 0),
+            original_price: Number(item.original_price || item.price || 0),
+            discount_percentage: Number(item.discount_percentage || 0),
+            image_url: item.image_url || '',
+            set_code: item.set_code || '',
+            stock: item.stock || 0,
+            finish: item.finish || (isAcc ? 'standard' : 'nonfoil')
           }
         };
-
-        // If data is still missing (e.g. old RPC version that only returns cart_items columns)
-        if (!mappedItem.products.name || !mappedItem.products.image_url) {
-            try {
-                if (mappedItem.accessory_id) {
-                    const { data: aData } = await supabase
-                        .from('accessories')
-                        .select('*')
-                        .eq('id', mappedItem.accessory_id)
-                        .single();
-                        
-                    if (aData) {
-                        mappedItem.products.name = aData.name;
-                        mappedItem.products.price = Number(aData.price || 0);
-                        mappedItem.products.image_url = aData.image_url;
-                        mappedItem.products.set_code = aData.category || '';
-                        mappedItem.products.finish = 'standard';
-                        mappedItem.products.stock = aData.stock || 0;
-                    }
-                } else if (mappedItem.product_id) {
-                    const { data: pData } = await supabase
-                        .from('products')
-                        .select('*')
-                        .eq('id', mappedItem.product_id)
-                        .single();
-                        
-                    if (pData) {
-                        mappedItem.products.name = pData.name;
-                        mappedItem.products.price = Number(pData.price || pData.store_price || 0);
-                        mappedItem.products.image_url = pData.image_url;
-                        mappedItem.products.set_code = pData.set_code || '';
-                        mappedItem.products.finish = pData.finish || '';
-                        mappedItem.products.stock = pData.stock || 0;
-                    }
-                }
-            } catch (err) {
-                console.error("Fallback item fetch failed for item: ", mappedItem.id, err);
-            }
-        }
-
-        return mappedItem;
-      }));
+      });
       
       return { 
         items, 
@@ -875,6 +831,8 @@ export const fetchCart = async (): Promise<any> => {
               id: product?.id || itemMapping.baseId,
               name: printing.cards?.card_name || printing.name || 'Unknown Card',
               price: Number(product?.price ?? priceFallback),
+              original_price: Number(product?.original_price || product?.price || priceFallback),
+              discount_percentage: Number(product?.discount_percentage || 0),
               image_url: printing.image_url,
               set_code: printing.sets?.set_code || '',
               stock: product?.stock || 0,
@@ -900,6 +858,19 @@ export const fetchCart = async (): Promise<any> => {
         const mappedAccs = accessoryItems.map((item: any) => {
           const acc = (accData || []).find((a: any) => a.id === item.accessory_id);
           if (!acc) return null;
+          const originalPrice = Number(acc.price || 0);
+          let finalPrice = originalPrice;
+          let discountPct = Number(acc.discount_percentage || 0);
+
+          if (discountPct > 0 && acc.discount_until) {
+            const endDate = new Date(acc.discount_until);
+            if (endDate > new Date()) {
+              finalPrice = originalPrice * (1 - discountPct / 100);
+            } else {
+              discountPct = 0;
+            }
+          }
+
           return {
             id: `guest-acc-${acc.id}`,
             accessory_id: acc.id,
@@ -909,7 +880,9 @@ export const fetchCart = async (): Promise<any> => {
             products: {
               id: acc.id,
               name: acc.name,
-              price: Number(acc.price),
+              price: Number(finalPrice.toFixed(2)),
+              original_price: originalPrice,
+              discount_percentage: discountPct,
               image_url: acc.image_url,
               set_code: acc.category,
               stock: acc.stock,

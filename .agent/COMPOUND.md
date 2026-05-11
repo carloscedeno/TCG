@@ -1,34 +1,36 @@
-# dY  COMPOUND: TCG Code Consolidation & Banner Sync
+# dY  COMPOUND: Unified Cart & Discount Synchronization
 
-**Date**: 2026-05-10 10:45
+**Date**: 2026-05-11 22:00
 
 ## Objective
 
-Unify TCG branding and catalog visibility by resolving banner mismatches, RPC filtering errors, and consolidating duplicate game codes in the database.
+Finalize the unified cart architecture to ensure cards and accessories are handled consistently, with real-time discount synchronization across authenticated and guest sessions.
 
 ## Knowledge Codification
 
-### 1. Canonical TCG Code Standard
+### 1. Unified Cart Mapping (RPC Trust)
 
-- **Standard**: All operations (Banners, Filters, Products) MUST use 3-letter canonical codes: `MTG`, `PKM`, `YGO`, `OPC`, `LOR`, `FAB`, `RFB`, `GND`, `DGM`.
-- **Bypass**: Removed legacy mapping in `api.ts` that forced `YGO` to `YUGIOH`. The database is now the single source of truth for codes.
+- **Standard**: The frontend `fetchCart` now trusts the `get_user_cart` RPC as the single source of truth for all cart item metadata and price calculations.
+- **Bypass**: Removed complex client-side normalization and fallback queries in `api.ts` to favor server-side consistency.
 
-### 2. Strict Accessory Filtering
+### 2. Guest Discount Parity
 
-- **Pattern**: The RPC `get_accessories_filtered` now excludes generic accessories (`game_id IS NULL`) when a specific `p_game_id` is provided. This prevents unrelated items (e.g., D&D books) from appearing in TCG-specific catalogs.
-- **Rule**: Generic items only appear in the global "Artilugios" view (no game filter).
+- **Pattern**: Guest cart processing in `api.ts` now mirrors the backend's discount logic.
+- **Rule**: Prices for accessories and cards in local storage are dynamically recalculated based on active offers (`discount_percentage` and expiration dates) to prevent pricing drift.
 
-### 3. Presale Section Visibility
+### 3. Detail Fetching Hierarchy
 
-- **UI**: The `PresaleSection` is now hidden in individual TCG catalog views (`activeTab === 'catalog' && filters.games.length > 0`) to maintain focus on the specific game's inventory.
+- **Hierarchy**: When fetching product details by UUID, always check the `accessories` table BEFORE falling back to the Edge Function (Scryfall/Cards). 
+- **Logging**: Added diagnostic logging to distinguish between store-local inventory (Accessories) and global catalog data (Cards), resolving 404 console errors.
 
 ## Technical Validation
 
 - **Frontend Build**: Success.
-- **Git Status**: Clean.
-- **Database**: Merged legacy IDs (26, 23, 28) into canonical IDs (11, 10, 13). Updated `hero_banners` and `accessories` tables.
+- **E2E Verification**: Confirmed via browser subagent (Auth & Guest flows).
+- **Console Audit**: Zero 404s for accessory details.
 
 ---
+
 
 # dY  COMPOUND: E2E Checkout Remediation & "Por Encargo" Workflow
 
