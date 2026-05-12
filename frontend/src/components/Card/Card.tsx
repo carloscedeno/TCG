@@ -260,7 +260,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
       )}
 
       {/* Discount Ribbon (Top Left Diagonal) */}
-      {discount_percentage && discount_percentage > 0 && (
+      {discount_percentage! > 0 && (
         <div className="absolute top-0 left-0 w-20 h-20 overflow-hidden z-[100] pointer-events-none rounded-tl-2xl">
           <div className="absolute top-[16px] left-[-22px] w-[100px] py-1.5 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-[10px] font-black uppercase text-center -rotate-45 shadow-[0_4px_15px_rgba(147,51,234,0.6)] border-y border-white/20 tracking-tighter">
             -{discount_percentage}%
