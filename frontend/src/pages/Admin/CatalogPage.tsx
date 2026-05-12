@@ -5,11 +5,14 @@ import {
 } from "lucide-react";
 import { fetchAccessoriesAdmin, updateAccessory, deleteAccessory, uploadAccessoryImage, fetchAccessoryCategories } from "../../utils/api";
 import { AddAccessoryDrawer } from "../../components/Admin/AddAccessoryDrawer";
+import { BulkImportCatalogModal } from "../../components/Admin/BulkImportCatalogModal";
+import { FileUp } from "lucide-react";
 
 export default function CatalogPage() {
     const [items, setItems] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [isImportModalOpen, setIsImportModalOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [page, setPage] = useState(0);
     const [totalCount, setTotalCount] = useState(0);
@@ -113,13 +116,23 @@ export default function CatalogPage() {
                         </p>
                     </div>
 
-                    <button
-                        onClick={() => setIsDrawerOpen(true)}
-                        className="px-8 py-4 bg-white text-black font-black text-xs uppercase tracking-widest rounded-2xl hover:bg-orange-500 transition-all active:scale-95 shadow-2xl flex items-center gap-3"
-                    >
-                        <Plus size={18} />
-                        Nuevo Producto
-                    </button>
+                    <div className="flex items-center gap-3">
+                        <button
+                            onClick={() => setIsImportModalOpen(true)}
+                            className="px-6 py-4 bg-black border border-white/10 text-white font-black text-xs uppercase tracking-widest rounded-2xl hover:border-orange-500/50 transition-all active:scale-95 flex items-center gap-3"
+                        >
+                            <FileUp size={18} className="text-slate-500" />
+                            Carga Masiva
+                        </button>
+                        
+                        <button
+                            onClick={() => setIsDrawerOpen(true)}
+                            className="px-8 py-4 bg-white text-black font-black text-xs uppercase tracking-widest rounded-2xl hover:bg-orange-500 transition-all active:scale-95 shadow-2xl flex items-center gap-3"
+                        >
+                            <Plus size={18} />
+                            Nuevo Producto
+                        </button>
+                    </div>
                 </div>
 
                 {/* Filters */}
@@ -450,6 +463,14 @@ export default function CatalogPage() {
                 isOpen={isDrawerOpen} 
                 onClose={() => setIsDrawerOpen(false)} 
                 onSuccess={loadAccessories} 
+            />
+
+            <BulkImportCatalogModal
+                isOpen={isImportModalOpen}
+                onClose={() => setIsImportModalOpen(false)}
+                onSuccess={() => {
+                    loadAccessories();
+                }}
             />
         </div>
     );
