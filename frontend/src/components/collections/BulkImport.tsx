@@ -112,12 +112,14 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
                     setRows(csvContent);
                     setFile(selectedFile);
 
-                    // Auto-detect known formats (e.g. ManaBox)
+                    // Auto-detect known formats (e.g. ManaBox or our own CATALOG template)
                     const isManaBox = csvHeaders.includes('ManaBox ID') || csvHeaders.includes('Scryfall ID');
+                    const isCatalog = importType === 'catalog' && (csvHeaders.includes('category_code') || csvHeaders.includes('suggested_price'));
 
                     if (isManaBox) {
                         setFormatName('ManaBox');
-                        setMapping({
+                        setMapping(prev => ({
+                            ...prev,
                             name: csvHeaders.includes('Name') ? 'Name' : '',
                             set: csvHeaders.includes('Set code') ? 'Set code' : '',
                             collector_number: csvHeaders.includes('Collector number') ? 'Collector number' : '',
@@ -126,7 +128,18 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
                             condition: csvHeaders.includes('Condition') ? 'Condition' : '',
                             finish: csvHeaders.includes('Foil') ? 'Foil' : '',
                             scryfall_id: csvHeaders.includes('Scryfall ID') ? 'Scryfall ID' : ''
+                        }));
+                        setIsAutoMapped(true);
+                    } else if (isCatalog) {
+                        setFormatName('Catálogo');
+                        const newMapping = { ...mapping };
+                        csvHeaders.forEach(h => {
+                            const cleanH = h.toLowerCase().trim();
+                            if (prevMappingKeys.includes(cleanH)) {
+                                (newMapping as any)[cleanH] = h;
+                            }
                         });
+                        setMapping(newMapping);
                         setIsAutoMapped(true);
                     } else {
                         setFormatName('');
@@ -154,7 +167,7 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
     const downloadTemplate = (tcg: string) => {
         const templates: Record<string, string> = {
             'MTG': 'Name,Set Code,Collector Number,Condition,Quantity,Price Paid\nBlack Lotus,LEA,1,NM,1,20000',
-            'CATALOG': 'name,description,price,stock,category_code,unit_type,language,cost,suggested_price\nSleeves Dragon Shield Blue,Protectores de alta calidad,12.50,50,SLEEVE,Unidad,N/A,8.00,15.00'
+            'CATALOG': 'name,description,price,stock,category_code,unit_type,language,cost,suggested_price\nSleeves Dragon Shield Blue,High quality sleeves,12.50,50,SLEEVE,Unit,English,8.00,15.00'
         };
 
         const content = templates[tcg] || templates['MTG'];
@@ -233,6 +246,7 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
         suggested_price: '',
         game_id: ''
     });
+    const prevMappingKeys = Object.keys(mapping);
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState<any>(null);
     const [progress, setProgress] = useState({ current: 0, total: 0, items: 0 });
