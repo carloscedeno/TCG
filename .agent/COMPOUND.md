@@ -1,3 +1,35 @@
+# dY  COMPOUND: Banner Regression & React "Phantom Zero" Remediation
+
+**Date**: 2026-05-12 16:45
+
+## Objective
+
+Remediate a UI regression where global banners were overwriting game-specific TCG banners, and eliminate "stray 0" artifacts from the product grid.
+
+## Knowledge Codification
+
+### 1. Banner Category Shadowing (Home.tsx)
+
+- **Regression**: In a recent refactor, `gameCode` was being forced to `undefined` when `activeTab === 'catalog'`, causing the `HeroSection` to fallback to global home banners even when a specific TCG was filtered.
+- **Fix**: Restored the direct link between `filters.games` and `HeroSection`. The banner logic now respects the selected TCG regardless of the active viewing mode (Cartas vs Accesorios).
+- **Rule**: Never override state-derived props with hardcoded defaults in the top-level page unless a specific view explicitly forbids it.
+
+### 2. The "Phantom Zero" React Anti-pattern
+
+- **Discovery**: In React, `{number && <Component />}` evaluates to `0` and renders it if the number is `0`.
+- **Lesson**: Transitioned components to `{!!number && <Component />}` or `number > 0 && <Component />`.
+- **Reference**: Added to `.agent/lessons_learned.md` as Lesson #155.
+
+## Technical Validation
+
+- **Frontend Build**: Success.
+- **Git Status**: Clean.
+- **TCG Testing**: MTG and Pokémon banners verified via browser subagent.
+- **Unit Tests**: 28 Passed.
+
+---
+
+
 # dY  COMPOUND: Unified Cart & Discount Synchronization
 
 **Date**: 2026-05-11 22:00
