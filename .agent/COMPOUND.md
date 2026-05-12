@@ -1,3 +1,38 @@
+# dY  COMPOUND: Bulk Catalog Import & Validation Hardening
+
+**Date**: 2026-05-12 17:45
+
+## Objective
+
+Implement a high-performance bulk import system for the accessory catalog, bypassing image requirements and standardizing category ingestion.
+
+## Knowledge Codification
+
+### 1. Catalog Import Architecture (Edge Function)
+
+- **Feature**: Added `catalog` import type to `tcg-api`. It maps CSV headers to the `accessories` table and performs batch insertions.
+- **Optimization**: Implemented `.trim()` on `category_code` within the Edge Function to prevent foreign key violations caused by hidden whitespace in CSV files.
+- **Flexibility**: Updated validation to allow `price: 0.00` for promotional or free items, using `isNaN()` instead of truthy checks.
+
+### 2. Intelligent Auto-mapping (BulkImport.tsx)
+
+- **Pattern**: Implemented a "Catalog Detection" mode. If headers match the system template (`category_code`, `suggested_price`), the UI pre-selects all mappings automatically.
+- **Language**: Standardized example data and templates to **English** by default, aligning with international TCG standards while maintaining local currency support.
+
+### 3. Product-Centric UI Integration
+
+- **Component**: Created `BulkImportCatalogModal.tsx` following the "Geeko Noir" design system (GlassCard, Geeko Cyan accents).
+- **Placement**: Integrated into `CatalogPage.tsx` as a primary administrative action alongside manual creation.
+
+## Technical Validation
+
+- **Frontend Build**: Success.
+- **Git Status**: Pushed to `dev`.
+- **Edge Function**: Deployed and verified with a 10-row test file (`TEST_IMPORT_FUNCIONA.csv`).
+
+---
+
+
 # dY  COMPOUND: Banner Regression & React "Phantom Zero" Remediation
 
 **Date**: 2026-05-12 16:45
