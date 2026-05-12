@@ -678,7 +678,7 @@ async function handleImportEndpoint(supabase: SupabaseClient, path: string, meth
         const description = row[mapping?.description] || row['description'] || row['Description'] || row['Descripción'] || '';
         const price = parseFloat(row[mapping?.price] || row['price'] || row['Price'] || row['Precio'] || '0') || 0;
         const stock = parseInt(row[mapping?.stock] || row['stock'] || row['Stock'] || '0') || 0;
-        const categoryCode = row[mapping?.category_code] || row['category_code'] || row['Categoría'];
+        const categoryCode = (row[mapping?.category_code] || row['category_code'] || row['Categoría'] || '').trim();
         const unitType = row[mapping?.unit_type] || row['unit_type'] || row['Tipo'] || 'Unidad';
         
         // Optional fields
@@ -687,7 +687,7 @@ async function handleImportEndpoint(supabase: SupabaseClient, path: string, meth
         const gameId = row[mapping?.game_id] ? parseInt(row[mapping?.game_id]) : null;
         const language = row[mapping?.language] || 'Inglés';
 
-        if (!name || !price || !categoryCode) {
+        if (!name || isNaN(price) || !categoryCode) {
           errors.push(`Row ${i + 1}: Faltan campos obligatorios (Nombre, Precio o Categoría)`)
           failedIndices.push(i)
           continue
