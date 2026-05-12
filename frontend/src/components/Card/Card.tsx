@@ -127,7 +127,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
           ) : (
             <Shield size={20} className="absolute inset-0 m-auto opacity-10" />
           )}
-          {hasMultipleFaces && (
+          {!!hasMultipleFaces && (
             <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
               <RotateCw size={12} className="text-white" />
             </div>
@@ -234,7 +234,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
       className={`flex flex-col glass-card rounded-2xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 group relative ${getRarityStyle(rarity)} cursor-pointer h-full`}
     >
       {/* Flip Button overlay */}
-      {hasMultipleFaces && (
+      {!!hasMultipleFaces && (
         <button
           onClick={handleFlip}
           className="absolute top-2 left-2 z-30 p-1.5 bg-black/60 hover:bg-geeko-cyan text-white rounded-full border border-white/10 transition-colors"
@@ -260,7 +260,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
       )}
 
       {/* Discount Ribbon (Top Left Diagonal) */}
-      {discount_percentage! > 0 && (
+      {!!(discount_percentage && discount_percentage > 0) && (
         <div className="absolute top-0 left-0 w-20 h-20 overflow-hidden z-[100] pointer-events-none rounded-tl-2xl">
           <div className="absolute top-[16px] left-[-22px] w-[100px] py-1.5 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-[10px] font-black uppercase text-center -rotate-45 shadow-[0_4px_15px_rgba(147,51,234,0.6)] border-y border-white/20 tracking-tighter">
             -{discount_percentage}%
