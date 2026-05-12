@@ -4,6 +4,20 @@ import { getCardKingdomUrl } from './urlUtils';
 const API_BASE = import.meta.env.VITE_API_BASE || '';
 
 /**
+ * Checks if a discount is still valid based on Caracas time (UTC-4).
+ * The discount is considered valid until 23:59:59 of the specified date in CCS time.
+ */
+export const isDiscountActive = (discountUntil: string | null): boolean => {
+    if (!discountUntil) return false;
+    
+    const now = new Date();
+    const limitDate = new Date(discountUntil);
+    limitDate.setUTCHours(23 + 4, 59, 59, 999);
+    
+    return now < limitDate;
+};
+
+/**
  * Helper to construct API URLs from API_BASE correctly handling paths and trailing slashes.
  * Ensures consistent use of the '/api' segment if not already in base.
  */
@@ -289,13 +303,10 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
             let finalPrice = originalPrice;
             let discountPct = Number(accData.discount_percentage || 0);
 
-            if (discountPct > 0 && accData.discount_until) {
-                const endDate = new Date(accData.discount_until);
-                if (endDate > new Date()) {
-                    finalPrice = originalPrice * (1 - discountPct / 100);
-                } else {
-                    discountPct = 0;
-                }
+            if (discountPct > 0 && isDiscountActive(accData.discount_until)) {
+                finalPrice = originalPrice * (1 - discountPct / 100);
+            } else if (accData.discount_until) {
+                discountPct = 0;
             }
 
             return {
@@ -862,13 +873,10 @@ export const fetchCart = async (): Promise<any> => {
           let finalPrice = originalPrice;
           let discountPct = Number(acc.discount_percentage || 0);
 
-          if (discountPct > 0 && acc.discount_until) {
-            const endDate = new Date(acc.discount_until);
-            if (endDate > new Date()) {
-              finalPrice = originalPrice * (1 - discountPct / 100);
-            } else {
-              discountPct = 0;
-            }
+          if (discountPct > 0 && isDiscountActive(acc.discount_until)) {
+            finalPrice = originalPrice * (1 - discountPct / 100);
+          } else if (acc.discount_until) {
+            discountPct = 0;
           }
 
           return {
@@ -1295,13 +1303,10 @@ export const fetchAccessories = async (params: {
     let finalPrice = originalPrice;
     let discountPct = Number(item.discount_percentage || 0);
 
-    if (discountPct > 0 && item.discount_until) {
-      const endDate = new Date(item.discount_until);
-      if (endDate > new Date()) {
-        finalPrice = originalPrice * (1 - discountPct / 100);
-      } else {
-        discountPct = 0;
-      }
+    if (discountPct > 0 && isDiscountActive(item.discount_until)) {
+      finalPrice = originalPrice * (1 - discountPct / 100);
+    } else if (item.discount_until) {
+      discountPct = 0;
     }
 
     return {
