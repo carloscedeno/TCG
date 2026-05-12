@@ -154,7 +154,7 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
     const downloadTemplate = (tcg: string) => {
         const templates: Record<string, string> = {
             'MTG': 'Name,Set Code,Collector Number,Condition,Quantity,Price Paid\nBlack Lotus,LEA,1,NM,1,20000',
-            'CATALOG': 'name,description,price,stock,category_code,unit_type,language,cost,suggested_price\nSleeves Dragon Shield Blue,Protectores de alta calidad,12.50,50,ACCESSORIES_SLEEVES,Unidad,N/A,8.00,15.00'
+            'CATALOG': 'name,description,price,stock,category_code,unit_type,language,cost,suggested_price\nSleeves Dragon Shield Blue,Protectores de alta calidad,12.50,50,SLEEVE,Unidad,N/A,8.00,15.00'
         };
 
         const content = templates[tcg] || templates['MTG'];
