@@ -67,14 +67,14 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
     return (
         <header className="sticky top-0 z-50 w-full bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-white/5 shadow-2xl">
             {/* Top Bar: Logo & Search & User */}
-            <div className="max-w-[1600px] mx-auto px-4 h-[60px] flex items-center justify-between gap-4">
+            <div className="max-w-[1600px] mx-auto px-4 h-[60px] flex items-center justify-between gap-12">
                 <Link to="/" className="flex-shrink-0 group relative">
                     <img src="/branding/Logo.png" alt="Geekorium" className="w-32 sm:w-40 object-contain group-hover:scale-105 transition-transform" />
                     <span className="absolute -top-1 -right-4 bg-red-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded-md rotate-12 shadow-lg">BETA</span>
                 </Link>
 
                 {/* Main Utility Nav - Always show on PC */}
-                <nav className="hidden lg:flex items-center gap-6 xl:gap-10">
+                <nav className="hidden lg:flex items-center gap-8 xl:gap-14">
                     {[
                         { name: 'Home', path: '/' },
                         { name: 'Artilugios', path: '/?tab=catalog' }
