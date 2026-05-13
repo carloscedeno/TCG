@@ -1,3 +1,35 @@
+# 🧠 COMPOUND: Sincronización de Catálogo y Remediación de Importación Masiva (v63)
+
+**Date**: 2026-05-13 11:30
+
+## Objective
+
+Resolver fallos en la carga masiva de inventario mediante la sincronización de metadatos faltantes y el endurecimiento de la lógica de upsert en la base de datos.
+
+## Knowledge Codification
+
+### 1. Remediación Automática de Catálogo (Scryfall Sync)
+
+- **Feature**: Creados scripts de utilidad (`fetch_missing_cards.py`) que utilizan IDs de Scryfall para parchar automáticamente el catálogo maestro cuando se detectan sets o cartas faltantes.
+- **Rule**: Ninguna importación de inventario debe fallar por restricciones de llave foránea si el ID de Scryfall es válido; el sistema debe ser capaz de auto-abastecerse de metadatos.
+
+### 2. Endurecimiento de Upsert (SQL Constraints)
+
+- **Pattern**: Uso de `ON CONFLICT ON CONSTRAINT products_printing_id_condition_finish_key` en lugar de targets de columnas genéricos.
+- **Lesson**: Esto previene ambigüedades en tablas con columnas que permiten nulos (`finish`) o donde existen múltiples índices parciales.
+
+### 3. Integridad Visual de Tokens y Sets Especiales
+
+- **Optimization**: Los tokens (sets terminados en `C`, `Tokens`) ahora se registran correctamente vinculándolos a sus juegos correspondientes (`MTG`), asegurando que las imágenes y rarezas sean visibles en el storefront.
+
+## Technical Validation
+
+- **Frontend Build**: Success.
+- **Database**: 24 productos fallidos cargados exitosamente tras el parche de catálogo.
+- **Unit Tests**: 28 Passed.
+
+---
+
 # dY  COMPOUND: Bulk Catalog Import & Validation Hardening
 
 **Date**: 2026-05-12 17:45

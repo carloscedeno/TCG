@@ -1,8 +1,8 @@
-# ðŸ“Š Progress Report - Geekorium Optimization
+# 📈 Progress Report - Geekorium Optimization
 
-**Last Updated**: 2026-04-28 03:00 (PokAmon TCG Stabilization & PKM Code Alignment)
+**Last Updated**: 2026-05-13 11:30 (Catalog Sync & Bulk Import Remediation)
 
-**Status**: âœ… Cart Performance | âœ… Cart Context Unification | âœ… Optimistic UI | âœ… Accessories Module | âœ… Polymorphic Checkout | âœ… Public Tracking RLS | âœ… Admin Visibility | âœ… Dev Branch Recreation | âœ… Catalog & Inventory Sync | âœ… Quick Add UX Optimized | âœ… Performance Optimization (Batch Fetch) | âœ… Global 'Nuevo' Feature | âœ… Schema Fallback implemented | âœ… Strixhaven Visibility Fix | âœ… Production Checkout Restored | âœ… PokÃƒÂ©mon PKM Standardization | âœ… Security Audit & Cleanup | âœ… Dynamic Discounts & Visual Integrity
+**Status**: ✅ Cart Performance | ✅ Cart Context Unification | ✅ Optimistic UI | ✅ Accessories Module | ✅ Polymorphic Checkout | ✅ Public Tracking RLS | ✅ Admin Visibility | ✅ Dev Branch Recreation | ✅ Catalog & Inventory Sync | ✅ Quick Add UX Optimized | ✅ Performance Optimization (Batch Fetch) | ✅ Global 'Nuevo' Feature | ✅ Schema Fallback implemented | ✅ Strixhaven Visibility Fix | ✅ Production Checkout Restored | ✅ Pokémon PKM Standardization | ✅ Security Audit & Cleanup | ✅ Dynamic Discounts & Visual Integrity | ✅ Bulk Import Catalog Sync
 
 
 
@@ -22,7 +22,7 @@ This session focused on reactivating the "Fast Add to Cart" feature with a premi
 
 
 
-### âœ… Database Infrastructure
+### ✅ Database Infrastructure
 
 - **Branch Recreation**: Eliminated corrupt `dev` branch and created a clean one keyed to `bqfkqnnostzaqueujdms`.
 
@@ -32,7 +32,7 @@ This session focused on reactivating the "Fast Add to Cart" feature with a premi
 
 
 
-### âœ… Data Synchronization (Compound v45)
+### ✅ Data Synchronization (Compound v45)
 
 - **API-Based Sync**: Implemented a robust HTTPS/PostgREST synchronization strategy to bypass local DNS restrictions (`getaddrinfo failed`).
 
@@ -42,7 +42,7 @@ This session focused on reactivating the "Fast Add to Cart" feature with a premi
 
 
 
-### âœ… User Experience & Catalog Refinement (Compound v46)
+### ✅ User Experience & Catalog Refinement (Compound v46)
 
 - **Quick Add to Cart**: Reactivated the "Fast Add" feature with a new premium UI (overlay on image). 
 
@@ -54,7 +54,7 @@ This session focused on reactivating the "Fast Add to Cart" feature with a premi
 
 
 
-### âœ… UX Polishing & Production Deployment (Compound v47)
+### ✅ UX Polishing & Production Deployment (Compound v47)
 
 - **Touch-First Visibility**: Changed the "Quick Add" button from hover-only to **permanently visible**. This solved visibility issues on mobile and touch devices where hover states don't exist.
 
@@ -86,7 +86,39 @@ This session focused on reactivating the "Fast Add to Cart" feature with a premi
 
     - [x] Multi-image support para accesorios (Galería)
 
-    - [ ] Implementación de Bulk Import (en progreso)
+    - [x] Implementación de Bulk Import (completada)
+
+
+
+## 🧠 COMPOUND: Sincronización de Catálogo y Remediación de Importación Masiva (v63)
+
+**Date**: 2026-05-13 11:30
+
+### Objective
+
+Resolver fallos en la carga masiva de inventario mediante la sincronización de metadatos faltantes y el endurecimiento de la lógica de upsert en la base de datos.
+
+### Knowledge Codification
+
+#### 1. Remediación Automática de Catálogo (Scryfall Sync)
+
+- **Feature**: Creados scripts de utilidad (`fetch_missing_cards.py`) que utilizan IDs de Scryfall para parchar automáticamente el catálogo maestro cuando se detectan sets o cartas faltantes.
+- **Rule**: Ninguna importación de inventario debe fallar por restricciones de llave foránea si el ID de Scryfall es válido; el sistema debe ser capaz de auto-abastecerse de metadatos.
+
+#### 2. Endurecimiento de Upsert (SQL Constraints)
+
+- **Pattern**: Uso de `ON CONFLICT ON CONSTRAINT products_printing_id_condition_finish_key` en lugar de targets de columnas genéricos.
+- **Lesson**: Esto previene ambigüedades en tablas con columnas que permiten nulos (`finish`) o donde existen múltiples índices parciales.
+
+#### 3. Integridad Visual de Tokens y Sets Especiales
+
+- **Optimization**: Los tokens (sets terminados en `C`, `Tokens`) ahora se registran correctamente vinculándolos a sus juegos correspondientes (`MTG`), asegurando que las imágenes y rarezas sean visibles en el storefront.
+
+### Technical Validation
+
+- **Frontend Build**: Success.
+- **Database**: 24 productos fallidos cargados exitosamente tras el parche de catálogo.
+- **Unit Tests**: 28 Passed.
 
 
 
@@ -158,6 +190,14 @@ This session focused on reactivating the "Fast Add to Cart" feature with a premi
 
 
 
+### ✅ Sincronización de Catálogo y Remediación de Importación Masiva (v63) — 2026-05-13
+- **Identificación de Gaps**: Diagnosticados fallos en la carga masiva debido a la ausencia de metadatos para los sets **TM3C**, **TECC** y **TMOR**.
+- **Sincronización con Scryfall**: Implementados scripts de recuperación (`fetch_missing_cards.py`) para extraer datos oficiales de la API de Scryfall y parchar el catálogo.
+- **Endurecimiento de Upsert**: Refactorizado el proceso de carga SQL para utilizar restricciones de unicidad explícitas (`products_printing_id_condition_finish_key`), resolviendo ambigüedades en el `ON CONFLICT`.
+- **Remediación de Inventario**: Cargados exitosamente 24 ítems fallidos en la tabla `products`, garantizando que todas las cartas importadas tengan sus ancestros (`sets`, `cards`, `card_printings`) correctamente vinculados.
+- **Paridad de Datos**: Asegurada la integridad visual de los nuevos ítems mediante la propagación de URLs de imagen y metadatos de rareza desde el catálogo maestro.
+
+
 ---
 
 
@@ -221,6 +261,8 @@ This session focused on reactivating the "Fast Add to Cart" feature with a premi
 - **Parametrización de Entorno**: Transición de URLs estáticas a variables de entorno (`DATABASE_URL_PROD`, `DATABASE_URL_DEV`) siguiendo la nueva Ley de Seguridad 21.
 
 - **Protección de Ramas**: Saneamiento de las ramas `dev` y `main`, eliminando secretos del código fuente y asegurando `.gitignore` contra futuras fugas.
+
+- ✅ Consolidación TCG y Branding (Mayo 2026): Unificación total de códigos canónicos (`YGO`, `PKM`, `OPC`) eliminando capas de mapeo legacy. Refinado RPC de Artilugios para filtrado estricto por juego.
 
 - **Auditoría de Artefactos**: Eliminación de archivos de credenciales huérfanos (`prod_credentials.txt`) y desactivación de archivos de entorno rastreados.
 
