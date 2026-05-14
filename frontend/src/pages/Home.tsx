@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
 import { CardGrid } from '../components/Card/CardGrid';
-import { CardModal } from '../components/Card/CardModal';
 import type { CardProps } from '../components/Card/Card';
 import { fetchCards, fetchSets, fetchProducts, fetchCart, fetchAccessories, fetchDiscountedSingles, fetchDiscountedAccessories, checkGameInventoryPresence } from '../utils/api';
 import { FiltersPanel } from '../components/Filters/FiltersPanel';
