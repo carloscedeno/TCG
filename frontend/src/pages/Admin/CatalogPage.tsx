@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { 
-    Search, Plus, Package, Trash2, Edit2, X, 
+    Search, Plus, Package, Trash2, Edit2, 
     ChevronLeft, ChevronRight
 } from "lucide-react";
 import { fetchAccessoriesAdmin, deleteAccessory, fetchAccessoryCategories, updateAccessory } from "../../utils/api";
@@ -22,10 +22,9 @@ export default function CatalogPage() {
     const [lastSavedId, setLastSavedId] = useState<string | null>(null);
 
     const pageSize = 20;
-    const [dbCategories, setDbCategories] = useState<any[]>([]);
 
     useEffect(() => {
-        fetchAccessoryCategories().then(setDbCategories);
+        fetchAccessoryCategories();
     }, []);
 
     const loadAccessories = useCallback(async () => {
