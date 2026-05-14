@@ -204,12 +204,20 @@ export default function CatalogPage() {
                                                 </div>
                                                 <div className="flex-1">
                                                     {editingId === item.id ? (
-                                                        <input
-                                                            type="text"
-                                                            value={tempData.name}
-                                                            onChange={(e) => setTempData({...tempData, name: e.target.value})}
-                                                            className="w-full bg-black border border-orange-500/50 rounded-xl px-3 py-2 text-xs font-black uppercase italic text-white"
-                                                        />
+                                                        <div className="space-y-2">
+                                                            <input
+                                                                type="text"
+                                                                value={tempData.name}
+                                                                onChange={(e) => setTempData({...tempData, name: e.target.value})}
+                                                                className="w-full bg-black border border-orange-500/50 rounded-xl px-3 py-2 text-xs font-black uppercase italic text-white"
+                                                            />
+                                                            <textarea
+                                                                value={tempData.description || ''}
+                                                                onChange={(e) => setTempData({...tempData, description: e.target.value})}
+                                                                placeholder="Descripción del producto..."
+                                                                className="w-full bg-black border border-orange-500/50 rounded-xl px-3 py-2 text-[10px] font-bold text-white min-h-[60px] resize-none"
+                                                            />
+                                                        </div>
                                                     ) : (
                                                         <>
                                                             <p className="text-sm font-black italic text-white uppercase">{item.name}</p>
@@ -409,6 +417,7 @@ export default function CatalogPage() {
                                                                     price: item.price, 
                                                                     stock: item.stock,
                                                                     image_url: item.image_url,
+                                                                    description: item.description || '',
                                                                     discount_percentage: item.discount_percentage || 0,
                                                                     discount_until: item.discount_until || null
                                                                 });

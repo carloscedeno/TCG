@@ -379,6 +379,16 @@ export const CardDetail: React.FC = () => {
 
                             <div className="p-8 rounded-[32px] bg-white/5 border border-white/10 space-y-6 relative overflow-hidden group">
                                 <div className="absolute -top-24 -right-24 w-64 h-64 bg-geeko-cyan/5 rounded-full blur-[100px] group-hover:bg-geeko-cyan/10 transition-colors" />
+                                
+                                {details.description && (
+                                    <div className="mb-6 p-4 bg-geeko-cyan/5 border border-geeko-cyan/20 rounded-2xl relative z-10">
+                                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-geeko-cyan mb-2">Descripción del Producto</h4>
+                                        <p className="text-sm text-neutral-300 leading-relaxed">
+                                            {details.description}
+                                        </p>
+                                    </div>
+                                )}
+
                                 <div className="text-lg lg:text-xl leading-relaxed text-neutral-200 font-medium relative z-10">
                                     {details.oracle_text?.split('\n').map((line: string, i: number) => <p key={i} className="mb-3"><ManaText text={line} /></p>)}
                                 </div>

@@ -74,6 +74,14 @@ export const PreRegistrationModal: React.FC<PreRegistrationModalProps> = ({ isOp
                             <h2 className="text-3xl font-black italic uppercase tracking-tighter leading-tight">{event.name}</h2>
                         </div>
 
+                        {event.description && (
+                            <div className="mb-8 p-4 bg-white/5 border border-white/10 rounded-2xl max-h-[120px] overflow-y-auto custom-scrollbar">
+                                <p className="text-[11px] text-neutral-400 font-medium leading-relaxed">
+                                    {event.description}
+                                </p>
+                            </div>
+                        )}
+
                         <form onSubmit={handleSubmit} className="space-y-5">
                             <div className="space-y-2">
                                 <label className="text-[10px] font-black text-neutral-500 uppercase tracking-widest">Nombre Completo</label>

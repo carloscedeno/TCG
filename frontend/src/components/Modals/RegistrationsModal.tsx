@@ -61,6 +61,11 @@ export const RegistrationsModal: React.FC<RegistrationsModalProps> = ({ isOpen, 
                     <div className="space-y-1">
                         <h3 className="text-[10px] font-black text-white uppercase tracking-[0.3em]">Gestión de Participantes</h3>
                         <h2 className="text-2xl font-black italic uppercase tracking-tighter">{event?.name}</h2>
+                        {event?.description && (
+                            <p className="text-[10px] text-neutral-500 font-bold uppercase tracking-widest mt-2 max-w-xl line-clamp-2">
+                                {event.description}
+                            </p>
+                        )}
                     </div>
                     <div className="flex items-center gap-3">
                         <button 
