@@ -133,12 +133,26 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
                     } else if (isCatalog) {
                         setFormatName('Catálogo');
                         const newMapping = { ...mapping };
-                        csvHeaders.forEach(h => {
-                            const cleanH = h.toLowerCase().trim();
-                            if (prevMappingKeys.includes(cleanH)) {
-                                (newMapping as any)[cleanH] = h;
-                            }
+                        
+                        // Robust catalog auto-mapping
+                        const catalogMap: Record<string, string[]> = {
+                            name: ['name', 'producto', 'nombre'],
+                            price: ['price', 'precio', 'venta'],
+                            cost: ['cost', 'costo'],
+                            suggested_price: ['suggested_price', 'precio_sugerido', 'sugerido'],
+                            category_code: ['category_code', 'categoría', 'categoria', 'category'],
+                            game_id: ['game_id', 'id_juego', 'juego'],
+                            stock: ['stock', 'cantidad', 'inventario'],
+                            description: ['description', 'descripción', 'descripcion'],
+                            unit_type: ['unit_type', 'unidad', 'tipo'],
+                            language: ['language', 'idioma']
+                        };
+
+                        Object.entries(catalogMap).forEach(([field, aliases]) => {
+                            const found = csvHeaders.find(h => aliases.includes(h.toLowerCase().trim()));
+                            if (found) newMapping[field] = found;
                         });
+
                         setMapping(newMapping);
                         setIsAutoMapped(true);
                     } else {
@@ -479,15 +493,45 @@ const handleImport = async () => {
                                         <table className="w-full text-left text-[10px]">
                                             <thead className="bg-[#0c0c0c] sticky top-0 z-10 text-slate-400 font-bold uppercase tracking-wider shadow-sm">
                                                 <tr>
-                                                    <th className="p-3">Cantidad</th>
-                                                    <th className="p-3">Nombre</th>
-                                                    <th className="p-3">Set</th>
-                                                    <th className="p-3">#</th>
-                                                    <th className="p-3">Acabado</th>
+                                                    {importType === 'catalog' ? (
+                                                        <>
+                                                            <th className="p-3">Nombre</th>
+                                                            <th className="p-3">Categoría</th>
+                                                            <th className="p-3">Precio</th>
+                                                            <th className="p-3">Costo</th>
+                                                            <th className="p-3">Juego ID</th>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <th className="p-3">Cantidad</th>
+                                                            <th className="p-3">Nombre</th>
+                                                            <th className="p-3">Set</th>
+                                                            <th className="p-3">#</th>
+                                                            <th className="p-3">Acabado</th>
+                                                        </>
+                                                    )}
                                                 </tr>
                                             </thead>
                                             <tbody className="text-slate-300 divide-y divide-white/5">
-                                                {rows.map((row, i) => {
+                                                {rows.slice(0, 10).map((row, i) => {
+                                                    if (importType === 'catalog') {
+                                                        const nameVal = row[headers.indexOf(mapping.name)];
+                                                        const catVal = row[headers.indexOf(mapping.category_code)];
+                                                        const priceVal = row[headers.indexOf(mapping.price)];
+                                                        const costVal = row[headers.indexOf(mapping.cost)];
+                                                        const gameVal = row[headers.indexOf(mapping.game_id)];
+
+                                                        return (
+                                                            <tr key={i} className="hover:bg-white/5 transition-colors">
+                                                                <td className="p-3 font-bold text-white">{nameVal}</td>
+                                                                <td className="p-3 w-24">{catVal}</td>
+                                                                <td className="p-3 w-24 font-mono text-geeko-cyan">${priceVal}</td>
+                                                                <td className="p-3 w-24 font-mono text-slate-500">${costVal || '0'}</td>
+                                                                <td className="p-3 w-24">{gameVal || '-'}</td>
+                                                            </tr>
+                                                        );
+                                                    }
+
                                                     const nameCol = headers.indexOf(mapping.name);
                                                     const setCol = headers.indexOf(mapping.set);
                                                     const numCol = headers.indexOf(mapping.collector_number);

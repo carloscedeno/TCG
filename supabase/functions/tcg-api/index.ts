@@ -682,10 +682,11 @@ async function handleImportEndpoint(supabase: SupabaseClient, path: string, meth
         const unitType = row[mapping?.unit_type] || row['unit_type'] || row['Tipo'] || 'Unidad';
         
         // Optional fields
-        const cost = parseFloat(row[mapping?.cost] || row['cost'] || row['Costo'] || '0') || 0;
-        const suggestedPrice = parseFloat(row[mapping?.suggested_price] || row['suggested_price'] || row['Sugerido'] || '0') || 0;
-        const gameId = row[mapping?.game_id] ? parseInt(row[mapping?.game_id]) : null;
-        const language = row[mapping?.language] || 'Inglés';
+        const cost = parseFloat(row[mapping?.cost] || row['cost'] || row['Costo'] || row['costo'] || '0') || 0;
+        const suggestedPrice = parseFloat(row[mapping?.suggested_price] || row['suggested_price'] || row['Sugerido'] || row['precio_sugerido'] || '0') || 0;
+        const gameIdRaw = row[mapping?.game_id] || row['game_id'] || row['id_juego'] || row['Juego'] || null;
+        const gameId = gameIdRaw && !isNaN(parseInt(String(gameIdRaw))) ? parseInt(String(gameIdRaw)) : null;
+        const language = row[mapping?.language] || row['language'] || row['Idioma'] || 'Inglés';
 
         if (!name || isNaN(price) || !categoryCode) {
           errors.push(`Row ${i + 1}: Faltan campos obligatorios (Nombre, Precio o Categoría)`)
