@@ -10,7 +10,7 @@ import { useAuth } from '../context/AuthContext';
 import { AuthModal } from '../components/Auth/AuthModal';
 import { X, Sparkles, Search } from 'lucide-react';
 
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { CartDrawer } from '../components/Navigation/CartDrawer';
 import { Footer } from '../components/Navigation/Footer';
 import { Header } from '../components/Navigation/Header';
@@ -42,6 +42,7 @@ const colorCodeMap: Record<string, string> = {
 
 const Home: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [cards, setCards] = useState<(CardProps & { card_id: string })[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -68,7 +69,6 @@ const Home: React.FC = () => {
   const [page, setPage] = useState(0);
   const { user } = useAuth();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
   const [debouncedQuery, setDebouncedQuery] = useState(searchParams.get('q') || '');
   const [debouncedFilters, setDebouncedFilters] = useState<Partial<Filters>>(filters);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -417,6 +417,14 @@ const Home: React.FC = () => {
     setPage(0);
   };
 
+  const handleCardClick = (id: string, isArchive: boolean = false) => {
+    if (isArchive || activeTab === 'catalog') {
+      navigate(`/product/${id}`);
+    } else {
+      navigate(`/card/${id}`);
+    }
+  };
+
   return (
     <div className="min-h-[100dvh] flex flex-col bg-geeko-black text-text-high font-sans relative selection:bg-white/30">
 
@@ -594,10 +602,10 @@ const Home: React.FC = () => {
                   ) : (
                     <>
                       {inventoryPresence.hasSingles && discountedSingles.length > 0 && (
-                        <DealsCarousel title="Hechizos en Descuento" cards={discountedSingles} onCardClick={setSelectedCardId} />
+                        <DealsCarousel title="Hechizos en Descuento" cards={discountedSingles} onCardClick={(id) => handleCardClick(id, false)} />
                       )}
                       {inventoryPresence.hasCatalog && discountedAccessories.length > 0 && (
-                        <DealsCarousel title="Artilugios en Descuento" cards={discountedAccessories} onCardClick={setSelectedCardId} isArchive={true} />
+                        <DealsCarousel title="Artilugios en Descuento" cards={discountedAccessories} onCardClick={(id) => handleCardClick(id, true)} isArchive={true} />
                       )}
                     </>
                   )}
@@ -644,7 +652,7 @@ const Home: React.FC = () => {
                     </div>
                   ) : (
                     <>
-                      <CardGrid cards={cards} onCardClick={setSelectedCardId} viewMode={viewMode} isArchive={activeTab === 'catalog'} showCartButton={true} />
+                      <CardGrid cards={cards} onCardClick={(id) => handleCardClick(id, activeTab === 'catalog')} viewMode={viewMode} isArchive={activeTab === 'catalog'} showCartButton={true} />
                       {cards.length < totalCount && (
                         <div className="flex justify-center pb-20">
                           <button
@@ -676,13 +684,8 @@ const Home: React.FC = () => {
 
         <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
         <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
-        <CardModal
-          isOpen={selectedCardId !== null}
-          onClose={() => setSelectedCardId(null)}
-          cardId={selectedCardId}
-          onRequireAuth={() => setIsAuthModalOpen(true)}
-          isArchive={activeTab === 'catalog'}
-        />
+        <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+        <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
 
         {/* Mobile Filters Drawer */}
         {
