@@ -1,3 +1,38 @@
+# 🧠 COMPOUND: Gestión de Descripciones y UX Premium (Mayo 2026)
+
+**Date**: 2026-05-14 17:35
+
+## Objective
+
+Restaurar la visibilidad de descripciones en el catálogo y torneos, y mejorar drásticamente la experiencia de edición administrativa y navegación.
+
+## Knowledge Codification
+
+### 1. Modal de Edición Full vs Inline Editing
+
+- **Feature**: Reemplazo de la edición inline en `CatalogPage.tsx` por un componente `EditProductModal.tsx` de pantalla completa.
+- **Pattern**: Para objetos complejos (TCG Products), la edición modal es superior porque permite gestionar galerías de imágenes, descripciones largas y metadatos sin romper el flujo visual de la tabla maestra.
+- **Lesson**: El diseño inline falla cuando el número de campos supera los 5-6 o cuando hay inputs multilínea.
+
+### 2. SPA Navigation & Scroll Management
+
+- **Feature**: Implementación de `ScrollToTop.tsx` global en `App.tsx`.
+- **Lesson**: En aplicaciones React, es obligatorio resetear el scroll (`window.scrollTo(0, 0)`) en cada cambio de ruta para evitar que el usuario aterrice en el "footer" al entrar a un detalle de producto desde una lista larga.
+- **Rule**: Cada nueva aplicación SPA debe incluir un `ScrollToTop` de serie.
+
+### 3. Redirección Directa vs Vista Previa
+
+- **UX**: Eliminación del modal de vista previa rápida en favor de la navegación directa a la página de detalle espectacular (`CardDetail.tsx`).
+- **Optimization**: Esto simplifica la lógica del frontend y asegura que el usuario siempre vea la mejor versión del producto con todos sus metadatos (descripción, variantes, carrusel).
+
+## Technical Validation
+
+- **Frontend Build**: Success (tras limpieza de variables TS6133).
+- **Git Status**: Pushed to `dev`.
+- **UX Audit**: Verificado el reset de scroll y la carga de descripciones en `dev.geekorium.shop`.
+
+---
+
 # 🧠 COMPOUND: Sincronización de Catálogo y Remediación de Importación Masiva (v63)
 
 **Date**: 2026-05-13 11:30
