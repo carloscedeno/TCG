@@ -260,7 +260,6 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
         suggested_price: '',
         game_id: ''
     });
-    const prevMappingKeys = Object.keys(mapping);
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState<any>(null);
     const [progress, setProgress] = useState({ current: 0, total: 0, items: 0 });
