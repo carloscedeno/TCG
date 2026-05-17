@@ -102,7 +102,6 @@ Artefactos del Compound step:
 - ✅ **Comprobante PDF Real**: `CheckoutSuccessPage` genera un HTML de recibo completo (Inter font, tabla itemizada, datos del cliente, ID de orden, total, status) en una nueva pestaña que auto-dispara el diálogo de impresión. Sin librerías externas.
 - ✅ **WhatsApp Itemizado (Restaurado)**: El mensaje de WhatsApp incluye línea por carta (`• Qty x Nombre [SET] [FINISH] - $Total`) con límite de 40 ítems y overflow note. Los datos del cliente ahora se pasan vía `navigate()` state.
 - ✅ **Frontend Request Cancellation**: Implementación de `AbortController` en `Home.tsx` para cancelar peticiones de red obsoletas durante el filtrado.
-
 - ✅ **Detalles del Comprador en Admin**: El panel de órdenes ahora muestra Nombre, Teléfono, Email y Dirección completa (priorizando datos de invitado y envío).
 - ✅ **Ocultamiento de Sección Archivo**: Removida la pestaña de histórico para simplificar la UX. El sistema ahora opera exclusivamente sobre el inventario vivo (Marketplace).
 - ✅ **Version 1.0 Baseline**: Creación de rama estable `v1.0-productiva` para preservar features apagadas.
@@ -121,6 +120,10 @@ Artefactos del Compound step:
 - ✅ **RPC Integrity & Overload Cleaning**: Limpieza quirúrgica de funciones Postgres para evitar ambigüedad (`PGRST203`) y asegurar filtrado exacto por TCG.
 - ✅ **Centralized UX Navigation**: Sincronización reactiva de URL y menús para navegación fluida entre Marketplace y Catálogo por juego.
 - ✅ **Estabilización de Motor de Precios Omni-Sync (Mayo 2026)**: Unificación de scripts fragmentados en un solo orquestador robusto (`omni_sync.py`). Corrección de bug crítico de URL en GitHub Actions. Sincronización de precios `price_retail` para MTG y `market` para Pokémon.
+- ✅ **Consolidación TCG y Branding (Mayo 2026)**: Unificación total de códigos canónicos (`YGO`, `PKM`, `OPC`) eliminando capas de mapeo legacy. Refinado RPC de Artilugios para filtrado estricto por juego.
+- ✅ **Sincronización Automática de Catálogo (Bulk Import Recovery)**: Implementación de flujos de recuperación para metadatos faltantes detectados durante importaciones masivas. El sistema ahora identifica y parcha automáticamente sets y cartas inexistentes cruzando datos con la API de Scryfall.
+- ✅ **Gestión Avanzada de Descripciones y UX Premium (Mayo 2026)**: Restauración completa de la visibilidad de descripciones para productos y eventos. Implementación de un **Modal de Edición Full** en el panel administrativo, eliminando la edición inline inestable. Optimización de la navegación mediante redirección directa a páginas de detalle y garantía de scroll al inicio (`ScrollToTop`) en cada cambio de ruta.
+- ✅ **Prevención de Deadlocks y Concurrencia en Checkout (Mayo 2026)**: Refactorización total del RPC `create_order_atomic` para implementar ordenación canónica por tipo e ID de ítem antes de reservar stock, eliminando interbloqueos mutuos en transacciones simultáneas durante picos de tráfico en producción.
 
 ## 🚧 Features Pendientes
 
@@ -146,4 +149,4 @@ Artefactos del Compound step:
 
 ## 🛡️ Footer
 
-*Geekorium — Geeko-Engineering Division | Limpieza: 2026-03-23*
+*Geekorium — Geeko-Engineering Division | Limpieza: 2026-05-17*
