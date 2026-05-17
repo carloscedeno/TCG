@@ -1,3 +1,24 @@
+# 🧠 COMPOUND: Hotfix de Producción - Restricción NOT NULL en `order_items.product_name` (Mayo 2026)
+
+**Date**: 2026-05-17 19:30
+
+## Objective
+Solucionar incidencia crítica de producción donde las compras fallaban con `null value in column "product_name" of relation "order_items" violates not-null constraint`.
+
+## Knowledge Codification
+
+### 1. Invariantes del Esquema de Base de Datos vs RPC Dinámicos
+- **Feature**: Refactorización de la migración de `create_order_atomic` para recuperar explícitamente `name`, `printing_id`, `finish` y `set_code` desde las tablas de catálogo (`products` y `accessories`).
+- **Lesson**: Al escribir y refactorizar procedimientos almacenados en PL/pgSQL, es mandatorio inspeccionar previamente las restricciones de columna de la base de datos (e.g. `NOT NULL`, `CHECK`). Cualquier columna obligatoria en la tabla destino debe ser explícitamente asignada o tener un `COALESCE` robusto con un valor por defecto.
+- **Pattern**: En sistemas de comercio electrónico, los ítems de un pedido (`order_items`) deben capturar y congelar los metadatos descriptivos en el instante de la compra (nombre del producto, precio, acabado, edición) para preservar la inmutabilidad del historial y las facturas ante futuras modificaciones o borrados del catálogo.
+
+## Technical Validation
+- **Database**: Migración `20260517233000_fix_create_order_atomic_product_name.sql` aplicada y verificada en producción.
+- **Unit Tests**: 100% exitosos en `main` y `dev`.
+- **Frontend Build**: Compilación exitosa en ambas ramas.
+
+---
+
 # 🧠 COMPOUND: Corrección de Atomicidad y Deadlocks en Transacciones de Orden (Mayo 2026)
 
 **Date**: 2026-05-17 17:20
