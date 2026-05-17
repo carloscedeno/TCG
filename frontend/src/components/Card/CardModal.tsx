@@ -403,13 +403,13 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                 drag="y"
                 dragConstraints={{ top: 0, bottom: 0 }}
                 dragElastic={0.2}
-                onDragEnd={(_, info) => {
+                onDragEnd={(_: any, info: any) => {
                     if (info.offset.y > 100) {
                         onClose();
                     }
                 }}
                 className="glass-panel w-full max-w-6xl max-h-[95vh] md:max-h-[90vh] rounded-t-[32px] md:rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0,0,0,0.8)] flex flex-col md:flex-row overflow-hidden relative bg-[#0a0a0a]"
-                onClick={e => e.stopPropagation()}
+                onClick={(e: React.MouseEvent) => e.stopPropagation()}
             >
                 {/* Swipe indicator handle for mobile */}
                 <div className="w-full h-8 flex items-center justify-center md:hidden shrink-0 cursor-grab active:cursor-grabbing relative z-50">
