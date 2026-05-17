@@ -91,7 +91,6 @@ const Home: React.FC = () => {
   const [inventoryPresence, setInventoryPresence] = useState({ hasSingles: true, hasCatalog: true });
   const [discountedSingles, setDiscountedSingles] = useState<(CardProps & { card_id: string })[]>([]);
   const [discountedAccessories, setDiscountedAccessories] = useState<(CardProps & { card_id: string })[]>([]);
-  const [loadingDeals, setLoadingDeals] = useState(false);
 
   useEffect(() => {
     const gameCode = filters.games && filters.games.length > 0 ? filters.games[0] : undefined;
@@ -164,14 +163,12 @@ const Home: React.FC = () => {
     
     if (isDashboardView) {
       const loadDeals = async () => {
-        setLoadingDeals(true);
         const [singles, accessories] = await Promise.all([
           fetchDiscountedSingles(gameCode),
           fetchDiscountedAccessories(gameCode)
         ]);
         setDiscountedSingles(singles);
         setDiscountedAccessories(accessories);
-        setLoadingDeals(false);
       };
       loadDeals();
     }
@@ -575,39 +572,19 @@ const Home: React.FC = () => {
 
             {/* Cards Grid / Deals Dashboard */}
             <div className="flex-1">
-              {isDashboardView && activeTab === 'marketplace' ? (
-                // DEALS DASHBOARD (Only for marketplace home)
-                <div className="flex flex-col gap-6 w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  {loadingDeals ? (
-                    <div className="flex flex-col items-center justify-center py-32 gap-6">
-                      <div className="w-16 h-16 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
-                      <p className="text-text-low font-black text-xs tracking-widest uppercase animate-pulse">Buscando Ofertas...</p>
-                    </div>
-                  ) : discountedSingles.length === 0 && discountedAccessories.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-32 text-center">
-                      <div className="w-24 h-24 bg-neutral-900/50 rounded-3xl flex items-center justify-center mb-8 border border-white/5 relative group">
-                        <div className="absolute inset-0 bg-white/20 blur-2xl rounded-full group-hover:bg-white/30 transition-all" />
-                        <Sparkles size={40} className="text-white relative z-10" />
-                      </div>
-                      <h3 className="text-3xl font-black italic uppercase tracking-tighter mb-4 text-white">
-                        Pronto Nuevas Ofertas
-                      </h3>
-                      <p className="text-text-low font-medium max-w-sm">
-                        Estamos preparando los mejores descuentos para tu colección. ¡Vuelve pronto!
-                      </p>
-                    </div>
-                  ) : (
-                    <>
-                      {inventoryPresence.hasSingles && discountedSingles.length > 0 && (
-                        <DealsCarousel title="Hechizos en Descuento" cards={discountedSingles} onCardClick={(id) => handleCardClick(id, false)} />
-                      )}
-                      {inventoryPresence.hasCatalog && discountedAccessories.length > 0 && (
-                        <DealsCarousel title="Artilugios en Descuento" cards={discountedAccessories} onCardClick={(id) => handleCardClick(id, true)} isArchive={true} />
-                      )}
-                    </>
+              {isDashboardView && activeTab === 'marketplace' && (discountedSingles.length > 0 || discountedAccessories.length > 0) && (
+                // DEALS DASHBOARD (Only for marketplace home when deals exist)
+                <div className="flex flex-col gap-6 w-full mb-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                  {inventoryPresence.hasSingles && discountedSingles.length > 0 && (
+                    <DealsCarousel title="Hechizos en Descuento" cards={discountedSingles} onCardClick={(id) => handleCardClick(id, false)} />
+                  )}
+                  {inventoryPresence.hasCatalog && discountedAccessories.length > 0 && (
+                    <DealsCarousel title="Artilugios en Descuento" cards={discountedAccessories} onCardClick={(id) => handleCardClick(id, true)} isArchive={true} />
                   )}
                 </div>
-              ) : loading && page === 0 ? (
+              )}
+
+              {loading && page === 0 ? (
                 <div className="flex flex-col items-center justify-center py-32 gap-6">
                   <div className="w-16 h-16 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
                   <p className="text-text-low font-black text-xs tracking-widest uppercase animate-pulse">Invocando Cartas...</p>
