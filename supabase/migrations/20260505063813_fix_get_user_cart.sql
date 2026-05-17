@@ -29,24 +29,28 @@ BEGIN
     SELECT jsonb_agg(
         jsonb_build_object(
             'id', ci.id,
-            'product_id', p.id,
-            'printing_id', p.printing_id,
+            'product_id', ci.product_id,
+            'accessory_id', ci.accessory_id,
+            'printing_id', COALESCE(p.printing_id::text, ci.accessory_id::text),
             'quantity', ci.quantity,
-            'price', CASE WHEN p.discount_end_date IS NOT NULL AND p.discount_end_date > now() 
+            'price', CASE WHEN ci.accessory_id IS NOT NULL THEN COALESCE(a.price, 0)
+                          WHEN p.discount_end_date IS NOT NULL AND p.discount_end_date > now() 
                           THEN ROUND(p.price * (1 - p.discount_percentage / 100.0), 2)
                           ELSE COALESCE(p.price, 0) END,
-            'original_price', COALESCE(p.price, 0),
-            'discount_percentage', COALESCE(p.discount_percentage, 0),
-            'name', p.name,
-            'image_url', p.image_url,
-            'set_code', p.set_code,
+            'original_price', CASE WHEN ci.accessory_id IS NOT NULL THEN COALESCE(a.price, 0) ELSE COALESCE(p.price, 0) END,
+            'discount_percentage', CASE WHEN ci.accessory_id IS NOT NULL THEN 0 ELSE COALESCE(p.discount_percentage, 0) END,
+            'name', COALESCE(p.name, a.name),
+            'image_url', COALESCE(p.image_url, a.image_url),
+            'set_code', COALESCE(p.set_code, a.category),
             'finish', COALESCE(p.finish, 'nonfoil'),
-            'stock', COALESCE(p.stock, 0)
+            'stock', COALESCE(p.stock, a.stock, 0),
+            'type', CASE WHEN ci.accessory_id IS NOT NULL THEN 'accessory' ELSE 'product' END
         )
     )
     INTO v_items
     FROM public.cart_items ci
-    JOIN public.products p ON ci.product_id = p.id
+    LEFT JOIN public.products p ON ci.product_id = p.id
+    LEFT JOIN public.accessories a ON ci.accessory_id = a.id
     WHERE ci.cart_id = v_cart_id;
 
     RETURN QUERY SELECT v_cart_id, v_cart_name, v_is_pos, COALESCE(v_items, '[]'::jsonb);

@@ -3,8 +3,21 @@
 -- Author: Antigravity
 
 -- 1. Update get_inventory_list (DECOUPLED)
-DROP FUNCTION IF EXISTS public.get_inventory_list(INTEGER, INTEGER, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT);
-DROP FUNCTION IF EXISTS public.get_inventory_list(INTEGER, INTEGER, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, BOOLEAN);
+DO $$ 
+DECLARE
+  func_record RECORD;
+  drop_cmd TEXT;
+BEGIN
+  FOR func_record IN 
+    SELECT oid::regprocedure AS func_signature 
+    FROM pg_proc 
+    WHERE proname = 'get_inventory_list' 
+      AND pronamespace = 'public'::regnamespace
+  LOOP
+    drop_cmd := 'DROP FUNCTION IF EXISTS ' || func_record.func_signature || ' CASCADE;';
+    EXECUTE drop_cmd;
+  END LOOP;
+END $$;
 
 CREATE OR REPLACE FUNCTION public.get_inventory_list(
     p_page INTEGER,
@@ -93,6 +106,22 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- 2. Update get_products_filtered (DECOUPLED)
+DO $$ 
+DECLARE
+  func_record RECORD;
+  drop_cmd TEXT;
+BEGIN
+  FOR func_record IN 
+    SELECT oid::regprocedure AS func_signature 
+    FROM pg_proc 
+    WHERE proname = 'get_products_filtered' 
+      AND pronamespace = 'public'::regnamespace
+  LOOP
+    drop_cmd := 'DROP FUNCTION IF EXISTS ' || func_record.func_signature || ' CASCADE;';
+    EXECUTE drop_cmd;
+  END LOOP;
+END $$;
+
 CREATE OR REPLACE FUNCTION public.get_products_filtered(
     search_query text DEFAULT NULL::text,
     game_filter text DEFAULT NULL::text,
@@ -117,7 +146,7 @@ RETURNS TABLE (
     price numeric,
     image_url text,
     rarity text,
-    printing_id uuid,
+    printing_id text,
     stock integer,
     set_name text,
     finish text,
@@ -147,8 +176,8 @@ RETURNS TABLE (
 
               RETURN QUERY
               SELECT 
-                p.id, p.name::text, p.game::text, p.set_code::text, p.price_usd as price,
-                p.image_url::text, p.rarity::text, p.printing_id, p.stock, p.set_name::text,
+                p.id, p.name::text, p.game::text, p.set_code::text, p.price,
+                p.image_url::text, p.rarity::text, p.printing_id::text, p.stock, p.set_name::text,
                 LOWER(COALESCE(p.finish, 'nonfoil')) as finish,
                 p.updated_at
               FROM public.products p
@@ -162,8 +191,8 @@ RETURNS TABLE (
                 AND (NOT p_only_new OR NOT v_has_recent OR p.updated_at >= NOW() - INTERVAL '12 days')
                 AND (year_from IS NULL OR EXTRACT(YEAR FROM p.release_date) >= year_from)
                 AND (year_to IS NULL OR EXTRACT(YEAR FROM p.release_date) <= year_to)
-                AND (price_min IS NULL OR p.price_usd >= price_min)
-                AND (price_max IS NULL OR p.price_usd <= price_max)
+                AND (price_min IS NULL OR p.price >= price_min)
+                AND (price_max IS NULL OR p.price <= price_max)
                 AND (type_filter IS NULL OR EXISTS (SELECT 1 FROM unnest(type_filter) tf WHERE p.type_line ILIKE '%' || tf || '%'))
               ORDER BY
                 CASE 
@@ -171,8 +200,8 @@ RETURNS TABLE (
                     WHEN search_query IS NOT NULL AND p.name ILIKE search_query || '%' THEN 1
                     ELSE 2 END ASC,
                 CASE WHEN v_sort_by = 'newest' THEN p.updated_at END DESC,
-                CASE WHEN v_sort_by = 'price_asc' THEN p.price_usd END ASC,
-                CASE WHEN v_sort_by = 'price_desc' THEN p.price_usd END DESC,
+                CASE WHEN v_sort_by = 'price_asc' THEN p.price END ASC,
+                CASE WHEN v_sort_by = 'price_desc' THEN p.price END DESC,
                 CASE WHEN v_sort_by = 'name' THEN p.name END ASC,
                 CASE WHEN v_sort_by = 'name_desc' THEN p.name END DESC,
                 CASE WHEN v_sort_by = 'release_date' THEN p.release_date END DESC,

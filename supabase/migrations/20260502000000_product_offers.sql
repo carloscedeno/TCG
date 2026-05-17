@@ -40,7 +40,21 @@ END
 $$;
 
 -- 3. Update get_inventory_list to include discount fields
-DROP FUNCTION IF EXISTS public.get_inventory_list(integer, integer, text, text, text, text, text, boolean, text);
+DO $$ 
+DECLARE
+  func_record RECORD;
+  drop_cmd TEXT;
+BEGIN
+  FOR func_record IN 
+    SELECT oid::regprocedure AS func_signature 
+    FROM pg_proc 
+    WHERE proname = 'get_inventory_list' 
+      AND pronamespace = 'public'::regnamespace
+  LOOP
+    drop_cmd := 'DROP FUNCTION IF EXISTS ' || func_record.func_signature || ' CASCADE;';
+    EXECUTE drop_cmd;
+  END LOOP;
+END $$;
 
 CREATE OR REPLACE FUNCTION public.get_inventory_list(
     p_page integer, 
@@ -139,7 +153,21 @@ END;
 $function$;
 
 -- 4. Update get_products_filtered to include discount fields and return discounted price if active
-DROP FUNCTION IF EXISTS public.get_products_filtered(text,text,text[],text[],text[],text[],integer,integer,numeric,numeric,integer,integer,boolean,text);
+DO $$ 
+DECLARE
+  func_record RECORD;
+  drop_cmd TEXT;
+BEGIN
+  FOR func_record IN 
+    SELECT oid::regprocedure AS func_signature 
+    FROM pg_proc 
+    WHERE proname = 'get_products_filtered' 
+      AND pronamespace = 'public'::regnamespace
+  LOOP
+    drop_cmd := 'DROP FUNCTION IF EXISTS ' || func_record.func_signature || ' CASCADE;';
+    EXECUTE drop_cmd;
+  END LOOP;
+END $$;
 
 CREATE OR REPLACE FUNCTION public.get_products_filtered(
     search_query text DEFAULT NULL,
@@ -282,7 +310,8 @@ BEGIN
 END;
 $$;
 
--- 6. Update get_user_cart for discounts
+-- 6. Update get_user_cart for discounts and accessories
+DROP FUNCTION IF EXISTS public.get_user_cart(uuid);
 CREATE OR REPLACE FUNCTION public.get_user_cart(p_user_id uuid)
  RETURNS TABLE(cart_id uuid, cart_name text, is_pos boolean, items jsonb)
  LANGUAGE plpgsql
@@ -310,24 +339,28 @@ BEGIN
     SELECT jsonb_agg(
         jsonb_build_object(
             'id', ci.id,
-            'product_id', p.id,
-            'printing_id', p.printing_id,
+            'product_id', ci.product_id,
+            'accessory_id', ci.accessory_id,
+            'printing_id', COALESCE(p.printing_id::text, ci.accessory_id::text),
             'quantity', ci.quantity,
-            'price', CASE WHEN p.discount_end_date IS NOT NULL AND p.discount_end_date > now() 
+            'price', CASE WHEN ci.accessory_id IS NOT NULL THEN COALESCE(a.price, 0)
+                          WHEN p.discount_end_date IS NOT NULL AND p.discount_end_date > now() 
                           THEN ROUND(p.price * (1 - p.discount_percentage / 100.0), 2)
                           ELSE COALESCE(p.price, 0) END,
-            'original_price', COALESCE(p.price, 0),
-            'discount_percentage', COALESCE(p.discount_percentage, 0),
-            'name', p.name,
-            'image_url', p.image_url,
-            'set_code', p.set_code,
+            'original_price', CASE WHEN ci.accessory_id IS NOT NULL THEN COALESCE(a.price, 0) ELSE COALESCE(p.price, 0) END,
+            'discount_percentage', CASE WHEN ci.accessory_id IS NOT NULL THEN 0 ELSE COALESCE(p.discount_percentage, 0) END,
+            'name', COALESCE(p.name, a.name),
+            'image_url', COALESCE(p.image_url, a.image_url),
+            'set_code', COALESCE(p.set_code, a.category),
             'finish', COALESCE(p.finish, 'nonfoil'),
-            'stock', COALESCE(p.stock, 0)
+            'stock', COALESCE(p.stock, a.stock, 0),
+            'type', CASE WHEN ci.accessory_id IS NOT NULL THEN 'accessory' ELSE 'product' END
         )
     )
     INTO v_items
     FROM public.cart_items ci
-    JOIN public.products p ON ci.product_id = p.id
+    LEFT JOIN public.products p ON ci.product_id = p.id
+    LEFT JOIN public.accessories a ON ci.accessory_id = a.id
     WHERE ci.cart_id = v_cart_id;
 
     RETURN QUERY SELECT v_cart_id, v_cart_name, v_is_pos, COALESCE(v_items, '[]'::jsonb);

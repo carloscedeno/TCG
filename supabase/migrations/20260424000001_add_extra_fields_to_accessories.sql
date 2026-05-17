@@ -12,8 +12,21 @@ ADD COLUMN IF NOT EXISTS unit_type text DEFAULT 'Unidad', -- 'Unidad', 'Sellado'
 ADD COLUMN IF NOT EXISTS language text; -- 'Español', 'Inglés', 'Japonés', etc.
 
 -- 2. Update get_accessories_filtered RPC to include new fields and match frontend signature
-DROP FUNCTION IF EXISTS public.get_accessories_filtered(integer, text, integer, integer);
-DROP FUNCTION IF EXISTS public.get_accessories_filtered(integer, text, text, numeric, numeric, text, integer, integer);
+DO $$ 
+DECLARE
+  func_record RECORD;
+  drop_cmd TEXT;
+BEGIN
+  FOR func_record IN 
+    SELECT oid::regprocedure AS func_signature 
+    FROM pg_proc 
+    WHERE proname = 'get_accessories_filtered' 
+      AND pronamespace = 'public'::regnamespace
+  LOOP
+    drop_cmd := 'DROP FUNCTION IF EXISTS ' || func_record.func_signature || ' CASCADE;';
+    EXECUTE drop_cmd;
+  END LOOP;
+END $$;
 
 CREATE OR REPLACE FUNCTION public.get_accessories_filtered(
     p_game_id integer DEFAULT NULL,
