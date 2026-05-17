@@ -120,12 +120,14 @@ const Home: React.FC = () => {
     const game = searchParams.get('game')?.split(',').filter(Boolean) || [];
     const set = searchParams.get('set')?.split(',').filter(Boolean) || [];
     const rarity = searchParams.get('rarity')?.split(',').filter(Boolean) || [];
+    const color = searchParams.get('color')?.split(',').filter(Boolean) || [];
+    const type = searchParams.get('type')?.split(',').filter(Boolean) || [];
     const category = searchParams.get('category')?.split(',').filter(Boolean) || [];
     const tab = searchParams.get('tab') as 'marketplace' | 'catalog' || 'marketplace';
     const year_from = parseInt(searchParams.get('year_from') || '1993');
     const year_to = parseInt(searchParams.get('year_to') || '2026');
-    const price_min = parseFloat(searchParams.get('price_min') || '0');
-    const price_max = parseFloat(searchParams.get('price_max') || '1000000');
+    const price_min = searchParams.has('price_min') ? parseFloat(searchParams.get('price_min')!) : undefined;
+    const price_max = searchParams.has('price_max') ? parseFloat(searchParams.get('price_max')!) : undefined;
 
     setQuery(q);
     setActiveTab(tab);
@@ -133,10 +135,14 @@ const Home: React.FC = () => {
       games: game,
       sets: set,
       rarities: rarity,
+      colors: color,
+      types: type,
       categories: category,
       yearRange: [year_from, year_to],
       priceRange: [price_min, price_max],
-      only_new: searchParams.get('only_new') === 'true'
+      only_new: searchParams.get('only_new') === 'true',
+      only_discount: searchParams.get('only_discount') === 'true',
+      only_presale: searchParams.get('only_presale') === 'true'
     });
   }, [searchParams]);
 
@@ -268,6 +274,8 @@ const Home: React.FC = () => {
             price_min: debouncedFilters.priceRange ? debouncedFilters.priceRange[0] : undefined,
             price_max: debouncedFilters.priceRange ? debouncedFilters.priceRange[1] : undefined,
             only_new: debouncedFilters.only_new,
+            only_discount: debouncedFilters.only_discount,
+            only_presale: debouncedFilters.only_presale,
             limit: LIMIT,
             offset,
             sort: sortBy
@@ -299,6 +307,8 @@ const Home: React.FC = () => {
             category_code: searchParams.get('category') || (debouncedFilters.categories && debouncedFilters.categories.length > 0 ? debouncedFilters.categories[0] : undefined),
             price_min: debouncedFilters.priceRange ? debouncedFilters.priceRange[0] : undefined,
             price_max: debouncedFilters.priceRange ? debouncedFilters.priceRange[1] : undefined,
+            only_discount: debouncedFilters.only_discount,
+            only_presale: debouncedFilters.only_presale,
             sort: sortBy,
             limit: LIMIT,
             offset
@@ -403,7 +413,14 @@ const Home: React.FC = () => {
       game: newFilters.games,
       set: newFilters.sets,
       rarity: newFilters.rarities,
-      category: newFilters.categories
+      category: newFilters.categories,
+      color: newFilters.colors,
+      type: newFilters.types,
+      price_min: newFilters.priceRange?.[0]?.toString(),
+      price_max: newFilters.priceRange?.[1]?.toString(),
+      only_discount: newFilters.only_discount ? 'true' : undefined,
+      only_presale: newFilters.only_presale ? 'true' : undefined,
+      only_new: newFilters.only_new ? 'true' : undefined
     });
     setPage(0);
   };

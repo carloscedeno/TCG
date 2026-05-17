@@ -173,14 +173,11 @@ export default function CatalogPage() {
                                             <div className="flex flex-col items-end">
                                                 {item.discount_percentage > 0 && (
                                                     <span className="text-[10px] line-through text-slate-600 font-mono">
-                                                        ${item.price?.toFixed(2)}
+                                                        ${(item.original_price ?? item.price).toFixed(2)}
                                                     </span>
                                                 )}
                                                 <span className="text-lg font-black font-mono tracking-tighter">
-                                                    ${(item.discount_percentage > 0 
-                                                        ? item.price * (1 - item.discount_percentage / 100) 
-                                                        : item.price
-                                                    ).toFixed(2)}
+                                                    ${(item.price ?? 0).toFixed(2)}
                                                 </span>
                                             </div>
                                         </td>
