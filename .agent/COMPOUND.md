@@ -1,3 +1,28 @@
+# 🧠 COMPOUND: Corrección de Atomicidad y Deadlocks en Transacciones de Orden (Mayo 2026)
+
+**Date**: 2026-05-17 17:20
+
+## Objective
+
+Resolver bloqueos de concurrencia (deadlocks) y cuellos de botella de atomicidad en el RPC `create_order_atomic` durante picos de tráfico en el checkout.
+
+## Knowledge Codification
+
+### 1. Ordenación Canónica para Prevención de Deadlocks
+- **Feature**: Refactorización del RPC `create_order_atomic` para ordenar los ítems entrantes por su identificador (`printing_id` o `accessory_id`) antes de realizar la validación y reserva de stock.
+- **Pattern**: En bases de datos relacionales, cuando múltiples transacciones concurrentes actualizan el mismo conjunto de registros en diferente orden, se producen deadlocks de exclusión mutua. El ordenamiento canónico (ej. `ORDER BY id`) garantiza que todas las transacciones adquieran los bloqueos de fila exactamente en la misma secuencia, eliminando la posibilidad de interbloqueos.
+
+### 2. Gestión de Bloqueos Selectivos (`FOR UPDATE`)
+- **Feature**: Reemplazo de bloqueos de tabla pesados por cursores y `SELECT ... FOR UPDATE` a nivel de fila individual durante la iteración de reserva de stock.
+- **Lesson**: El uso incondicional de bloqueos de tabla o la falta de bloqueos explícitos a nivel de fila durante lecturas-para-escritura en funciones PL/pgSQL genera condiciones de carrera o bloqueos masivos que degradan el rendimiento de la aplicación en producción.
+
+## Technical Validation
+- **Database**: Migración `20260517211800_fix_create_order_atomic_status.sql` aplicada con éxito.
+- **Unit Tests**: 28 passed.
+- **Frontend Build**: Success con 0 errores y exit code 0.
+
+---
+
 # 🧠 COMPOUND: Gestión de Descripciones y UX Premium (Mayo 2026)
 
 **Date**: 2026-05-14 17:35

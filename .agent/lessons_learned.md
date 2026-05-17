@@ -2235,3 +2235,9 @@ useEffect(() => {
 - **Causa Raíz**: Los nodos de agregación como `clientRequestPath` y `clientCountryName` dentro de `httpRequests1hGroups` están restringidos o requieren habilitación específica según el plan de Cloudflare (Free/Pro/Ent).
 - **Solución**: Adoptar un enfoque de "Estabilidad Progresiva". Ante fallos de esquema, revertir a la query mínima estable (sólo tráfico/caché) para garantizar que el dashboard nunca se rompa, priorizando la disponibilidad de datos críticos sobre el desglose granular.
 - **Lección**: Al integrar APIs de terceros con tiers de precios, el backend debe ser defensivo y manejar esquemas opcionales para evitar que un cambio de plan bloquee el sistema.
+
+### 170. Prevención de Deadlocks mediante Ordenación Canónica en Transacciones SQL (Mayo 2026)
+- **Problema**: Errores intermitentes de "deadlock detected" y lentitud masiva en producción durante el proceso de checkout cuando múltiples clientes compraban ítems coincidentes simultáneamente.
+- **Causa Raíz**: El RPC `create_order_atomic` iteraba sobre el JSON de ítems del carrito en el orden arbitrario proporcionado por el cliente, actualizando el stock de `card_printings` o `accessories`. Cuando la Transacción A bloqueaba el ítem X y luego el Y, y la Transacción B (simultánea) bloqueaba el ítem Y y luego el X, la base de datos abortaba una de las transacciones por interbloqueo.
+- **Solución**: Parchar el procedimiento almacenado para reordenar internamente el array de ítems mediante una consulta SQL (`ORDER BY item_type, item_id`) antes de realizar cualquier `SELECT ... FOR UPDATE` o `UPDATE` sobre el inventario.
+- **Lección**: Toda función o procedimiento almacenado que actualice múltiples registros en lote DEBE garantizar un orden canónico y determinista antes de adquirir bloqueos de fila para asegurar escalabilidad y resiliencia bajo concurrencia.
