@@ -10,12 +10,12 @@ test.describe('Business Rules: Deduplication', () => {
         // This means if we search for a common card name like "Sol Ring", 
         // we should see distinct names in the initial results, not multiple Sol Rings from different sets.
 
-        const searchInput = page.getByPlaceholder(/Buscar cartas|Search/i);
+        const searchInput = page.getByPlaceholder(/Buscar/i).first();
         await searchInput.fill('Sol Ring');
         await searchInput.press('Enter');
 
         // Wait for results
-        const cardNames = page.locator('.card-item .card-name'); // Adjust selector
+        const cardNames = page.locator('[data-testid="product-card"] h3');
         await expect(cardNames.first()).toBeVisible();
 
         const names = await cardNames.allInnerTexts();

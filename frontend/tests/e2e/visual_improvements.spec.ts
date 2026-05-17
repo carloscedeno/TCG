@@ -207,7 +207,7 @@ test.describe('Visual & Functional Improvements (PRD v2.0)', () => {
 
         // Wait for list view render
         // Check first card name
-        const cardName = page.locator('.flex.flex-col.gap-2 h3').first();
+        const cardName = page.locator('[data-testid="product-card"] h3').first();
 
         // It should NOT have 'truncate' class
         await expect(cardName).not.toHaveClass(/truncate/);

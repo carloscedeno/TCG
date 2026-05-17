@@ -6,14 +6,14 @@ test.describe('Advanced Search & Filtering', () => {
     });
 
     test('should support boolean search logic (AND)', async ({ page }) => {
-        const searchInput = page.getByPlaceholder(/Buscar cartas|Search/i);
+        const searchInput = page.getByPlaceholder(/Buscar/i).first();
 
         // Search for "Lotus AND Black"
         await searchInput.fill('Lotus AND Black');
         await searchInput.press('Enter');
 
         // Wait for results
-        const results = page.locator('.card-item');
+        const results = page.locator('[data-testid="product-card"]');
         await expect(results.first()).toBeVisible();
 
         // Verify multiple matches contain both terms

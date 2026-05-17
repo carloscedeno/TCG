@@ -118,6 +118,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
           }
         }}
         onMouseEnter={handlePreFetch}
+        data-testid="product-card"
         className="flex items-center gap-4 px-4 py-3 bg-black/40 hover:bg-neutral-900 border border-white/5 hover:border-geeko-cyan/30 rounded-xl transition-all cursor-pointer group"
       >
         <div className="w-12 h-16 bg-[#1a1a1a] rounded-md overflow-hidden flex-shrink-0 relative">

@@ -157,6 +157,7 @@ const Home: React.FC = () => {
   );
 
   const isDashboardView = !query && Object.entries(filters).every(([key, val]) => isDefaultFilter(key, val)) && (activeTab as string) !== 'catalog';
+  const isAccessoryTab = activeTab === 'catalog' && (!filters.games?.length || filters.games.includes('ACCESSORIES') || filters.games.includes('OTHERS'));
 
   useEffect(() => {
     const gameCode = filters.games && filters.games.length > 0 ? filters.games[0] : undefined;
@@ -419,7 +420,7 @@ const Home: React.FC = () => {
 
   const handleCardClick = (id: string, isArchive: boolean = false) => {
     if (isArchive || activeTab === 'catalog') {
-      navigate(`/product/${id}`);
+      navigate(`/product/${id}?archive=true`);
     } else {
       navigate(`/card/${id}`);
     }
@@ -560,19 +561,17 @@ const Home: React.FC = () => {
         <main className="max-w-[1600px] w-full mx-auto px-6 py-4 flex-1">
           <div className="flex flex-col lg:flex-row gap-4">
             {/* Sidebar Filters */}
-            {(!isDashboardView || (filters.games && filters.games.length > 0) || (activeTab as string) === 'catalog') && (
-              <aside className="hidden lg:block w-72 flex-shrink-0">
-                <div className="sticky top-[130px] max-h-[calc(100vh-150px)] overflow-y-auto pr-2 custom-scrollbar">
-                  <FiltersPanel
-                    filters={{ ...mockFilters, sets }}
-                    selected={filters}
-                    onChange={handleFilterChange}
-                    setsOptions={sets}
-                    isAccessoryMode={activeTab === 'catalog'}
-                  />
-                </div>
-              </aside>
-            )}
+            <aside className="hidden lg:block w-72 flex-shrink-0">
+              <div className="sticky top-[130px] max-h-[calc(100vh-150px)] overflow-y-auto pr-2 custom-scrollbar">
+                <FiltersPanel
+                  filters={{ ...mockFilters, sets }}
+                  selected={filters}
+                  onChange={handleFilterChange}
+                  setsOptions={sets}
+                  isAccessoryMode={isAccessoryTab}
+                />
+              </div>
+            </aside>
 
             {/* Cards Grid / Deals Dashboard */}
             <div className="flex-1">
@@ -702,7 +701,7 @@ const Home: React.FC = () => {
                   selected={filters}
                   onChange={handleFilterChange}
                   setsOptions={sets}
-                  isAccessoryMode={activeTab === 'catalog'}
+                  isAccessoryMode={isAccessoryTab}
                 />
                 <button
                   onClick={() => setIsMobileFiltersOpen(false)}
