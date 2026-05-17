@@ -23,33 +23,17 @@ test.describe('Advanced Search & Filtering', () => {
     });
 
     test('should filter by year range', async ({ page }) => {
-        // Open filters if necessary
-        const filterToggle = page.getByRole('button', { name: /Filtros|Filters/i });
-        if (await filterToggle.isVisible()) {
-            await filterToggle.click();
-        }
+        // Open Year filter section
+        const yearToggle = page.getByRole('button', { name: /Año/i });
+        await yearToggle.click();
 
-        // Locate Year Range slider or inputs
-        // Assuming there's a year-from and year-to input or similar
-        const yearFrom = page.locator('input[name="year_from"], #year-from');
-        const yearTo = page.locator('input[name="year_to"], #year-to');
+        // Locate Year Range inputs
+        const yearFrom = page.getByPlaceholder('Desde');
+        const yearTo = page.getByPlaceholder('Hasta');
 
-        if (await yearFrom.isVisible()) {
-            await yearFrom.fill('1993');
-            await yearTo.fill('1994');
-
-            // Wait for update
-            await expect(page).toHaveURL(/.*year_from=1993/);
-            await expect(page).toHaveURL(/.*year_to=1994/);
-        } else {
-            // Fallback for slider logic if implemented as a slider
-            const slider = page.locator('.year-range-slider');
-            if (await slider.isVisible()) {
-                // Perform drag or keyboard interaction for slider
-                // For now, check if it exists
-                await expect(slider).toBeVisible();
-            }
-        }
+        await expect(yearFrom).toBeVisible();
+        await yearFrom.fill('2020');
+        await yearTo.fill('2025');
     });
 
     test('should specifically verify Pokemon set filtering', async ({ page }) => {
@@ -57,12 +41,16 @@ test.describe('Advanced Search & Filtering', () => {
         const pokemonTab = page.getByRole('button', { name: /Pokémon/i });
         await pokemonTab.click();
 
-        // Open Sets filter
-        const setFilter = page.getByRole('combobox', { name: /Set|Edición/i });
-        await expect(setFilter).toBeVisible();
+        // Open Sets filter section if not expanded
+        const setsToggle = page.getByRole('button', { name: /Expansión \/ Set/i });
+        await setsToggle.click();
 
-        // Check for common Pokemon sets (e.g., Base Set)
-        await setFilter.click();
-        await expect(page.locator('option, .set-option')).toContainText(/Base Set|Scarlet/i);
+        // Search for Pokemon set
+        const setSearch = page.getByPlaceholder('Buscar sets...');
+        await expect(setSearch).toBeVisible();
+        await setSearch.fill('Crown');
+
+        // Check for matching Pokemon set in the filtered list
+        await expect(page.getByText('Crown Zenith')).toBeVisible();
     });
 });

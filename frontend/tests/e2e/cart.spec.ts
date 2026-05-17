@@ -25,6 +25,6 @@ test('shopping cart flow', async ({ page }) => {
     if (await cartDrawer.isVisible()) {
         await expect(cartDrawer).toBeVisible();
     } else {
-        await expect(page.locator('text=carrito|tu pedido|carro|cart/i')).toBeVisible();
+        await expect(page.getByText(/carrito|tu pedido|carro|cart/i)).toBeVisible();
     }
 });
