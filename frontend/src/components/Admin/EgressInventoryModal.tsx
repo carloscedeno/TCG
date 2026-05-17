@@ -47,7 +47,7 @@ export function EgressInventoryModal({ isOpen, onClose, onSuccess }: EgressInven
             const requiredHeaders = ['name', 'quantity'];
             const hasRequired = requiredHeaders.every(h => headers.includes(h) || headers.includes(h === 'quantity' ? 'qty' : ''));
             
-            if (!hasRequired && !headers.includes('name')) {
+            if (!hasRequired) {
                 alert('El CSV debe contener al menos las columnas "name" y "quantity".');
                 return;
             }
@@ -56,7 +56,7 @@ export function EgressInventoryModal({ isOpen, onClose, onSuccess }: EgressInven
                 const cells = line.split(',');
                 const obj: any = {};
                 headers.forEach((h, i) => {
-                    let val = (cells[i] || '').trim();
+                    const val = (cells[i] || '').trim();
                     // Basic mapping
                     let key = h;
                     if (h === 'qty') key = 'quantity';

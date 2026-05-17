@@ -39,15 +39,22 @@ export const CardDetail: React.FC = () => {
         }
     }, [id]);
 
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                navigate(-1);
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [navigate]);
+
     const loadDetails = async (printingId: string) => {
         setLoading(true);
         setError(null);
         try {
             const data = await fetchCardDetails(printingId);
-                if (data.all_versions) {
-                    data.all_versions = data.all_versions.filter((v: any) => (v.stock || 0) > 0);
-                }
-                setDetails(data);
+            setDetails(data);
         } catch (err) {
             console.error('Error loading card details:', err);
             setError('Failed to load card details. Please try again.');
@@ -120,9 +127,6 @@ export const CardDetail: React.FC = () => {
         if (!details?.all_versions) return [];
 
         const groups = (Array.isArray(details.all_versions) ? details.all_versions : []).reduce((acc: any, v: any) => {
-            // ONLY include versions with stock > 0
-            if ((v.stock || 0) <= 0) return acc;
-
             const key = `${v.set_code}-${v.collector_number}`;
             if (!acc[key]) {
                 acc[key] = {
@@ -196,7 +200,7 @@ export const CardDetail: React.FC = () => {
                         <p className="text-text-low font-bold tracking-widest uppercase text-xs">Loading Card Data...</p>
                     </div>
                 ) : details ? (
-                    <div className="glass-panel rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0, 209, 255, 0.15)] flex flex-col lg:flex-row overflow-hidden min-h-[85vh] max-h-[90vh]">
+                    <div data-testid="card-modal" className="glass-panel rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0, 209, 255, 0.15)] flex flex-col lg:flex-row overflow-hidden min-h-[85vh] max-h-[90vh] relative">
                         {/* LEFT: IMAGE & VERSIONS LIST */}
                         <div className="w-full lg:w-[420px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden h-full">
                             <div className="flex-1 min-h-[450px] md:min-h-[600px] flex items-center justify-center p-6 sm:p-8 md:p-10 relative bg-gradient-to-b from-white/[0.04] to-transparent overflow-hidden">
@@ -239,6 +243,7 @@ export const CardDetail: React.FC = () => {
                                             return (
                                                 <div
                                                     key={`${group.base.set_code}-${group.base.collector_number}`}
+                                                    data-testid="edition-link"
                                                     role="button"
                                                     tabIndex={0}
                                                     onClick={() => {
@@ -346,7 +351,14 @@ export const CardDetail: React.FC = () => {
                         </div>
 
                         {/* RIGHT: CARD TEXT & ACTIONS */}
-                        <div className="flex-1 overflow-y-auto custom-scrollbar bg-[#050505] p-8 lg:p-12 space-y-10">
+                        <div className="flex-1 overflow-y-auto custom-scrollbar bg-[#050505] p-8 lg:p-12 space-y-10 relative">
+                            <button
+                                onClick={() => navigate(-1)}
+                                className="absolute top-6 right-6 p-2 rounded-full bg-neutral-900/80 hover:bg-white/10 text-text-low hover:text-white transition-colors z-50 border border-white/10"
+                                aria-label="Cerrar modal"
+                            >
+                                <X size={20} />
+                            </button>
                             <div className="space-y-4">
                                 <a
                                     href={`card/${activePrintingId}`}
@@ -474,6 +486,7 @@ export const CardDetail: React.FC = () => {
                                                 </div>
 
                                                 <button
+                                                    data-testid="add-to-cart-button"
                                                     onClick={handleAddToCart}
                                                     disabled={isAdding}
                                                     className="flex-1 h-12 rounded-xl bg-geeko-cyan text-black font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0, 209, 255, 0.3)] hover:shadow-[0_0_30px_rgba(0, 209, 255, 0.5)] hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"

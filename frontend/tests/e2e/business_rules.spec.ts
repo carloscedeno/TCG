@@ -21,7 +21,6 @@ test.describe('Business Rules: Deduplication', () => {
         const names = await cardNames.allInnerTexts();
 
         // Check for duplicates in the displayed names
-        const uniqueNames = new Set(names);
 
         // In a deduplicated environment, we expect fewer results than the total versions,
         // often just one result for a specific search if only unique names are shown.

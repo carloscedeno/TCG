@@ -14,7 +14,6 @@ test('marketplace link works', async ({ page }) => {
     await page.evaluate(() => window.scrollTo(0, 500));
 
     // Check for card items
-    const cardItems = page.locator('.card-item'); // Assuming a class or something exists
     // If we don't know the class, we just check for basic text
     await expect(page.locator('body')).toContainText(/Marketplace|Cards|Cartas/i);
 });

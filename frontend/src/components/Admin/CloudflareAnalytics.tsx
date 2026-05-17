@@ -38,8 +38,8 @@ export const CloudflareAnalytics = ({ session, apiBase }: { session: any, apiBas
             } else {
                 setStats(data);
             }
-        } catch (err) {
-            setError("Error de conexión con el servidor");
+        } catch {
+            setError("Error al conectar con Cloudflare.");
         } finally {
             setLoading(false);
         }

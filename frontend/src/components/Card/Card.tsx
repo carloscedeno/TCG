@@ -79,8 +79,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
       } else {
           await addToCart(card_id, 1, finish);
       }
-    } catch (err) {
-      console.error("Failed to add to cart", err);
+    } catch {
       alert("Error al añadir al carrito. Por favor, intenta de nuevo.");
     } finally {
       setAddingToCart(false);
@@ -103,7 +102,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
     // Pre-fetch card details on hover
     try {
       fetchCardDetails(card_id);
-    } catch (err) {
+    } catch {
       // Ignore errors during pre-fetch
     }
   };
@@ -149,7 +148,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
           </h3>
           <div className="flex items-center gap-2 mt-0.5">
             <span className="text-[10px] text-text-low font-bold uppercase tracking-wider px-1.5 py-0.5 bg-white/5 rounded">{set}</span>
-            {rarity && (
+            {!is_accessory && rarity && (
               <span className={`text-[9px] font-black uppercase tracking-widest ${rarity.toLowerCase() === 'mythic' ? 'text-orange-400' :
                 rarity.toLowerCase() === 'rare' ? 'text-geeko-gold' : 'text-text-low'
                 }`}>
@@ -231,7 +230,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
       }}
       onMouseEnter={handlePreFetch}
       data-testid="product-card"
-      className={`flex flex-col glass-card rounded-2xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 group relative ${getRarityStyle(rarity)} cursor-pointer h-full`}
+      className={`flex flex-col glass-card rounded-2xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 group relative ${!is_accessory ? getRarityStyle(rarity) : 'border border-white/10 hover:border-white/30'} cursor-pointer h-full`}
     >
       {/* Flip Button overlay */}
       {!!hasMultipleFaces && (
@@ -261,7 +260,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
 
       {/* Discount Ribbon (Top Left Diagonal) */}
       {!!(discount_percentage && discount_percentage > 0) && (
-        <div className="absolute top-0 left-0 w-20 h-20 overflow-hidden z-[100] pointer-events-none rounded-tl-2xl">
+        <div className="absolute top-0 left-0 w-20 h-20 overflow-hidden z-30 pointer-events-none rounded-tl-2xl">
           <div className="absolute top-[16px] left-[-22px] w-[100px] py-1.5 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-[10px] font-black uppercase text-center -rotate-45 shadow-[0_4px_15px_rgba(147,51,234,0.6)] border-y border-white/20 tracking-tighter">
             -{discount_percentage}%
           </div>
@@ -301,7 +300,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         )}
 
         {/* Rarity Badge (Overlay) */}
-        {rarity && (
+        {!is_accessory && rarity && (
           <div className={`absolute top-2 right-2 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider backdrop-blur-md border border-white/10 z-20 ${rarity.toLowerCase() === 'mythic' ? 'bg-orange-500/20 text-orange-400 border-orange-500/30' :
             rarity.toLowerCase() === 'rare' ? 'bg-geeko-gold/20 text-geeko-gold border-geeko-gold/30' :
               'bg-black/60 text-text-low'

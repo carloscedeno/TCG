@@ -32,8 +32,8 @@ export const PreRegistrationModal: React.FC<PreRegistrationModalProps> = ({ isOp
             });
             setSuccess(true);
             // In a real app, the backend or a Supabase Edge Function would send the email here.
-        } catch (err) {
-            setError('Hubo un problema con tu inscripción. Por favor intenta de nuevo.');
+        } catch {
+            setError('Error de conexión. Intenta de nuevo.');
         } finally {
             setLoading(false);
         }

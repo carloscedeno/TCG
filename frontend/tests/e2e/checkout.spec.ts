@@ -24,7 +24,6 @@ test.describe('Checkout Flow with Foil Cards', () => {
 
         // Mock search suggestions
         await page.route('**/rpc/search_card_names*', async route => {
-            const query = route.request().postDataJSON()?.query_text || '';
             await route.fulfill({
                 status: 200,
                 contentType: 'application/json',

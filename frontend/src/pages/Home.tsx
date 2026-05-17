@@ -362,8 +362,9 @@ const Home: React.FC = () => {
         setError('Failed to fetch cards. Please try again later.');
         console.error(err);
       } finally {
-        if (controller.signal.aborted) return;
-        setLoading(false);
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
       }
     };
 
@@ -458,11 +459,10 @@ const Home: React.FC = () => {
         )}
 
         {/* Rarity Filter Tabs & Sort */}
-        {(!isDashboardView || (filters.games && filters.games.length > 0)) && (
-          <div className="bg-[#0a0a0a]/95 border-b border-neutral-800 sticky top-[60px] z-40 backdrop-blur-md">
+        <div className="bg-[#0a0a0a]/95 border-b border-neutral-800 sticky top-[60px] z-40 backdrop-blur-md">
             <div className="max-w-[1600px] mx-auto px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex bg-neutral-900/50 p-1 rounded-full border border-neutral-800">
-                  {inventoryPresence.hasSingles && filters.games?.includes('MTG') && (
+                  {inventoryPresence.hasSingles && (!filters.games?.length || filters.games?.includes('MTG')) && (
                   <button
                     onClick={() => handleTabChange('marketplace')}
                     data-testid="inventory-tab"
@@ -479,7 +479,7 @@ const Home: React.FC = () => {
                 {inventoryPresence.hasCatalog && (
                   <button
                     onClick={() => handleTabChange('catalog')}
-                    data-testid="catalog-tab"
+                    data-testid="archives-tab"
                     className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'catalog'
                       ? 'ring-2 ring-geeko-cyan/30 bg-geeko-cyan text-black shadow-[0_0_15px_rgba(0,209,255,0.4)]'
                       : 'text-text-low hover:text-neutral-300'
@@ -555,7 +555,6 @@ const Home: React.FC = () => {
             </div>
           </div>
         </div>
-      )}
 
         {/* Main Content */}
         <main className="max-w-[1600px] w-full mx-auto px-6 py-4 flex-1">

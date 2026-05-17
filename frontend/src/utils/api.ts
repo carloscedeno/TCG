@@ -24,7 +24,7 @@ export const isDiscountActive = (discountUntil: string | null): boolean => {
 const getApiUrl = (path: string): string => {
   if (!API_BASE) return '';
 
-  let base = API_BASE.endsWith('/') ? API_BASE.slice(0, -1) : API_BASE;
+  const base = API_BASE.endsWith('/') ? API_BASE.slice(0, -1) : API_BASE;
 
   // We want to ensure it ends with /api if it doesn't already.
   // We check for /api and /tcg-api (for backward compatibility during migration)
@@ -198,7 +198,7 @@ export const fetchUserCollections = async (): Promise<any[]> => {
       const { collection } = await response.json();
       return collection;
     }
-  } catch (error) {
+  } catch {
     console.warn('API Collection fetch failed, falling back to Supabase');
   }
 
@@ -231,6 +231,8 @@ export const fetchProducts = async (params: any = {}, signal?: AbortSignal): Pro
       limit_count: params.limit || 50,
       offset_count: params.offset || 0,
       p_only_new: params.only_new || false,
+      p_only_discount: params.only_discount || false,
+      p_only_presale: params.only_presale || false,
       sort_by: params.sort || 'newest'
     }).abortSignal(signal);
 
@@ -1261,18 +1263,20 @@ export const fetchAccessories = async (params: {
   parent_code?: string;       // parent group filter (e.g. 'SEALED')
   price_min?: number;
   price_max?: number;
+  only_discount?: boolean;
+  only_presale?: boolean;
   sort?: string;
   limit?: number;
   offset?: number;
 }) => {
   const {
     q, game, category, category_code, parent_code,
-    price_min, price_max, sort = 'newest', limit = 50, offset = 0
+    price_min, price_max, only_discount, only_presale, sort = 'newest', limit = 50, offset = 0
   } = params;
   
   // Clean 3-letter mapping
   let gameId: number | null = null;
-  if (game) {
+  if (game && game !== 'OTHERS') {
     const normalizedCode = game;
 
     const { data: gameData } = await supabase
@@ -1285,12 +1289,15 @@ export const fetchAccessories = async (params: {
   
   const { data, error } = await supabase.rpc('get_accessories_filtered', {
     p_game_id: gameId,
+    p_game_code: game || null,
     p_category: category || null,
     p_category_code: category_code || null,
     p_parent_code: parent_code || null,
     p_search_query: q || null,
     p_price_min: price_min || null,
     p_price_max: price_max || null,
+    p_only_discount: only_discount || false,
+    p_only_presale: only_presale || false,
     p_sort: sort,
     p_limit: limit,
     p_offset: offset
@@ -1421,7 +1428,7 @@ export const fetchBanners = async (category: string = 'main_hero', gameCode?: st
     query = query.is('game_code', null);
   }
 
-  let { data, error } = await query.order('display_order');
+  const { data, error } = await query.order('display_order');
   
   if (error) {
     console.error('fetchBanners failed:', error);

@@ -28,7 +28,8 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
         { name: 'One Piece', code: 'OPC', icon: '/logos/tcg/OPC.png' },
         { name: 'Digimon', code: 'DGM', icon: '/logos/tcg/DGM.png' },
         { name: 'Gundam', code: 'GND', icon: '/logos/tcg/GND.png' },
-        { name: 'Flesh and Blood', code: 'FAB', icon: '/logos/tcg/FAB.png' }
+        { name: 'Flesh and Blood', code: 'FAB', icon: '/logos/tcg/FAB.png' },
+        { name: 'Otros', code: 'OTHERS', icon: '/logos/tcg/OTHERS.png' }
     ];
 
     useEffect(() => {
@@ -109,7 +110,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
 
                 <div className="flex items-center gap-4 md:gap-6">
                     <div className="flex items-center gap-3">
-                        <button onClick={onCartOpen} className="relative p-2 text-text-low hover:text-text-high transition-all">
+                        <button onClick={onCartOpen} data-testid="cart-button" className="relative p-2 text-text-low hover:text-text-high transition-all">
                             <ShoppingCart size={22} />
                             {cartCount > 0 && (
                                 <div className="absolute -top-1 -right-1 bg-white text-black text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center">

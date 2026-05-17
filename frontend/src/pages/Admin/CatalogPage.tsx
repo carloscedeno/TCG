@@ -80,6 +80,14 @@ export default function CatalogPage() {
                     </div>
 
                     <div className="flex items-center gap-3">
+                        <a
+                            href="/admin"
+                            className="px-6 py-4 bg-neutral-900 border border-white/10 text-white font-black text-xs uppercase tracking-widest rounded-2xl hover:bg-neutral-800 transition-all active:scale-95 flex items-center gap-2 mr-2"
+                        >
+                            <ChevronLeft size={18} />
+                            Volver al Panel
+                        </a>
+
                         <button
                             onClick={() => setIsImportModalOpen(true)}
                             className="px-6 py-4 bg-black border border-white/10 text-white font-black text-xs uppercase tracking-widest rounded-2xl hover:border-orange-500/50 transition-all active:scale-95 flex items-center gap-3"

@@ -3,7 +3,7 @@ import { supabase } from "../../utils/supabaseClient";
 import { AddProductDrawer } from "../../components/Admin/AddProductDrawer";
 import {
     Plus, Search, Trash2, Package, Save, X,
-    ChevronUp, ChevronDown, Check,
+    ChevronUp, ChevronDown, ChevronLeft, Check,
     ArrowUpDown,
     FileUp, ArrowDownFromLine,
     Download, ShoppingCart, Sparkles, Tag
@@ -372,7 +372,15 @@ export function InventoryPage() {
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-wrap items-center gap-3">
+                        <a
+                            href="/admin"
+                            className="group relative px-6 py-4 bg-neutral-900 border border-white/10 text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl overflow-hidden active:scale-95 transition-all w-full md:w-auto hover:bg-neutral-800 flex items-center gap-2"
+                        >
+                            <ChevronLeft size={18} />
+                            Volver al Panel
+                        </a>
+
                         <button
                             onClick={() => setIsDrawerOpen(true)}
                             className="group relative px-8 py-4 bg-white text-black font-black text-xs uppercase tracking-[0.2em] rounded-2xl overflow-hidden active:scale-95 transition-all w-full md:w-auto shadow-2xl shadow-white/5"

@@ -26,7 +26,3 @@ export const colorMap: Record<string, string> = {
     'Colorless': 'Incoloro',
     'Multicolor': 'Multicolor'
 };
-
-export const reverseRarityMap: Record<string, string> = Object.entries(rarityMap).reduce((acc, [k, v]) => ({ ...acc, [v]: k }), {});
-export const reverseTypeMap: Record<string, string> = Object.entries(typeMap).reduce((acc, [k, v]) => ({ ...acc, [v]: k }), {});
-export const reverseColorMap: Record<string, string> = Object.entries(colorMap).reduce((acc, [k, v]) => ({ ...acc, [v]: k }), {});
