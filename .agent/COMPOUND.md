@@ -90,7 +90,7 @@ Resolver fallos en la carga masiva de inventario mediante la sincronización de 
 
 ---
 
-# dY  COMPOUND: Bulk Catalog Import & Validation Hardening
+# 🧠 COMPOUND: Bulk Catalog Import & Validation Hardening
 
 **Date**: 2026-05-12 17:45
 
@@ -125,7 +125,7 @@ Implement a high-performance bulk import system for the accessory catalog, bypas
 ---
 
 
-# dY  COMPOUND: Banner Regression & React "Phantom Zero" Remediation
+# 🧠 COMPOUND: Banner Regression & React "Phantom Zero" Remediation
 
 **Date**: 2026-05-12 16:45
 
@@ -157,7 +157,7 @@ Remediate a UI regression where global banners were overwriting game-specific TC
 ---
 
 
-# dY  COMPOUND: Unified Cart & Discount Synchronization
+# 🧠 COMPOUND: Unified Cart & Discount Synchronization
 
 **Date**: 2026-05-11 22:00
 
@@ -191,7 +191,7 @@ Finalize the unified cart architecture to ensure cards and accessories are handl
 ---
 
 
-# dY  COMPOUND: E2E Checkout Remediation & "Por Encargo" Workflow
+# 🧠 COMPOUND: E2E Checkout Remediation & "Por Encargo" Workflow
 
 **Date**: 2026-05-07 00:10
 
