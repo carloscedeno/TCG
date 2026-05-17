@@ -60,12 +60,12 @@ def update_denormalized_prices(printing_ids=None):
         with conn.cursor() as cur:
             logger.info(f"Updating denormalized columns using source_id {ck_source_id}...")
             
-            where_clause = ""
             if printing_ids:
                 where_clause = "AND ph.printing_id IN %s"
-                params = (ck_source_id, tuple(printing_ids), ck_source_id, tuple(printing_ids))
+                sql_params = (ck_source_id, nm_condition_id, tuple(printing_ids), ck_source_id, nm_condition_id, tuple(printing_ids))
             else:
-                params = (ck_source_id, ck_source_id)
+                where_clause = ""
+                sql_params = (ck_source_id, nm_condition_id, ck_source_id, nm_condition_id)
 
             update_sql = f"""
             -- Update non-foil prices
@@ -102,7 +102,7 @@ def update_denormalized_prices(printing_ids=None):
             FROM latest_foil lf
             WHERE cp.printing_id = lf.printing_id;
             """
-            cur.execute(update_sql, (ck_source_id, nm_condition_id) + params[2:])
+            cur.execute(update_sql, sql_params)
             conn.commit()
             logger.info(f"Denormalized columns updated successfully ({cur.rowcount} cards affected).")
             
