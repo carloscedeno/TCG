@@ -114,37 +114,6 @@ const Home: React.FC = () => {
     checkInventory();
   }, [filters.games]);
 
-  // Sincronizar filtros desde la URL
-  useEffect(() => {
-    const q = searchParams.get('q') || '';
-    const game = searchParams.get('game')?.split(',').filter(Boolean) || [];
-    const set = searchParams.get('set')?.split(',').filter(Boolean) || [];
-    const rarity = searchParams.get('rarity')?.split(',').filter(Boolean) || [];
-    const color = searchParams.get('color')?.split(',').filter(Boolean) || [];
-    const type = searchParams.get('type')?.split(',').filter(Boolean) || [];
-    const category = searchParams.get('category')?.split(',').filter(Boolean) || [];
-    const tab = searchParams.get('tab') as 'marketplace' | 'catalog' || 'marketplace';
-    const year_from = parseInt(searchParams.get('year_from') || '1993');
-    const year_to = parseInt(searchParams.get('year_to') || '2026');
-    const price_min = searchParams.has('price_min') ? parseFloat(searchParams.get('price_min')!) : undefined;
-    const price_max = searchParams.has('price_max') ? parseFloat(searchParams.get('price_max')!) : undefined;
-
-    setQuery(q);
-    setActiveTab(tab);
-    setFilters({
-      games: game,
-      sets: set,
-      rarities: rarity,
-      colors: color,
-      types: type,
-      categories: category,
-      yearRange: [year_from, year_to],
-      priceRange: [price_min, price_max],
-      only_new: searchParams.get('only_new') === 'true',
-      only_discount: searchParams.get('only_discount') === 'true',
-      only_presale: searchParams.get('only_presale') === 'true'
-    });
-  }, [searchParams]);
 
   const isDefaultFilter = (key: string, val: any) => {
     if (key === 'yearRange') return (val as any)[0] <= 1993 && (val as any)[1] >= 2026;
