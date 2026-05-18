@@ -225,18 +225,44 @@ const Home: React.FC = () => {
     const setParam = searchParams.get('set')?.split(',').filter(Boolean) || [];
     const rarityParam = searchParams.get('rarity')?.split(',').filter(Boolean) || [];
     const catParam = searchParams.get('category')?.split(',').filter(Boolean) || [];
+    const colorParam = searchParams.get('color')?.split(',').filter(Boolean) || [];
+    const typeParam = searchParams.get('type')?.split(',').filter(Boolean) || [];
+    const minPrice = searchParams.has('price_min') ? parseFloat(searchParams.get('price_min')!) : 0;
+    const maxPrice = searchParams.has('price_max') ? parseFloat(searchParams.get('price_max')!) : 1000000;
+    const minYear = searchParams.has('year_from') ? parseInt(searchParams.get('year_from')!) : 1993;
+    const maxYear = searchParams.has('year_to') ? parseInt(searchParams.get('year_to')!) : 2026;
+    const onlyNew = searchParams.get('only_new') === 'true';
+    const onlyDiscount = searchParams.get('only_discount') === 'true';
+    const onlyPresale = searchParams.get('only_presale') === 'true';
     const tabParam = (searchParams.get('tab') as any) || 'marketplace';
+
+    const newPriceRange: [number, number] = [minPrice, maxPrice];
+    const newYearRange: [number, number] = [minYear, maxYear];
 
     if (JSON.stringify(filters.games) !== JSON.stringify(gameParam) ||
         JSON.stringify(filters.sets) !== JSON.stringify(setParam) ||
         JSON.stringify(filters.rarities) !== JSON.stringify(rarityParam) ||
-        JSON.stringify(filters.categories) !== JSON.stringify(catParam)) {
+        JSON.stringify(filters.categories) !== JSON.stringify(catParam) ||
+        JSON.stringify(filters.colors) !== JSON.stringify(colorParam) ||
+        JSON.stringify(filters.types) !== JSON.stringify(typeParam) ||
+        JSON.stringify(filters.priceRange) !== JSON.stringify(newPriceRange) ||
+        JSON.stringify(filters.yearRange) !== JSON.stringify(newYearRange) ||
+        filters.only_new !== onlyNew ||
+        filters.only_discount !== onlyDiscount ||
+        filters.only_presale !== onlyPresale) {
       setFilters(prev => ({
         ...prev,
         games: gameParam,
         sets: setParam,
         rarities: rarityParam,
-        categories: catParam
+        categories: catParam,
+        colors: colorParam,
+        types: typeParam,
+        priceRange: newPriceRange,
+        yearRange: newYearRange,
+        only_new: onlyNew,
+        only_discount: onlyDiscount,
+        only_presale: onlyPresale
       }));
     }
 
