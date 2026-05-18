@@ -1,6 +1,32 @@
+# 🧠 COMPOUND: Inmutabilidad de Precios de Compra y Estabilidad de Filtros de Catálogo (Mayo 2026)
+
+**Date**: 2026-05-18 16:00
+
+## Objective
+Garantizar la inmutabilidad de los precios con descuento al registrar pedidos en la base de datos (`create_order_atomic`) y eliminar la desincronización de filtros de accesorios en el storefront (`Home.tsx`).
+
+## Knowledge Codification
+
+### 1. Inmutabilidad de Precios en Transacciones de Compra
+- **Feature**: Refactorización del procedimiento almacenado `create_order_atomic` para calcular dinámicamente `v_real_price` con el descuento activo al momento de insertar en `order_items`.
+- **Pattern**: En bases de datos de comercio electrónico, los ítems de un pedido (`order_items`) deben registrar el precio efectivamente pagado (`price_at_purchase`) en el instante exacto de la transacción. Nunca debe guardarse el precio físico base si existe un descuento o promoción activa, ya que esto adultera los reportes financieros y el historial del cliente.
+- **Robustez**: Todas las consultas de validación de vigencia de descuentos en PL/pgSQL (`create_order_atomic`, `get_products_filtered`, `get_accessories_filtered`) ahora utilizan `>= CURRENT_DATE` (o truncado por día) en lugar de un estricto `> now()`, asegurando que las promociones permanezcan estables y vigentes durante todo el día de vencimiento según la zona horaria del cliente.
+
+### 2. Eliminación de Efectos Secundarios Competitivos en Sincronización de URL
+- **Feature**: Eliminación de un hook `useEffect` redundante en `Home.tsx` que sobrescribía los parámetros de búsqueda de la URL con valores por defecto `[undefined, undefined]`.
+- **Lesson**: Al sincronizar el estado local de una aplicación SPA con los parámetros de la URL (`searchParams`), debe existir una única fuente de verdad (Single Source of Truth). Tener múltiples hooks observando y modificando las mismas dependencias genera condiciones de carrera y ciclos de actualización que corrompen la selección del usuario.
+
+## Technical Validation
+- **Database**: Migración `20260518195000_fix_create_order_atomic_discounts` aplicada exitosamente en el entorno remoto.
+- **Frontend**: Sincronización de filtros y visualización de ofertas en el catálogo de accesorios verificada remotamente en `dev.geekorium.shop`.
+- **Build & CI**: Compilación limpia y exitosa en la rama `dev`.
+
+---
+
 # 🧠 COMPOUND: Hotfix de Producción - Restricción NOT NULL en `order_items.product_name` (Mayo 2026)
 
 **Date**: 2026-05-17 19:30
+
 
 ## Objective
 Solucionar incidencia crítica de producción donde las compras fallaban con `null value in column "product_name" of relation "order_items" violates not-null constraint`.
