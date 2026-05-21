@@ -23,6 +23,7 @@ interface InventoryItem {
     condition: string;
     finish: string;
     price: number;
+    original_price: number;
     stock: number;
     image_url: string;
     rarity: string;
@@ -928,12 +929,12 @@ export function InventoryPage() {
                 <OfferManagementModal
                     isOpen={!!selectedOfferProduct}
                     onClose={() => setSelectedOfferProduct(null)}
-                    productId={selectedOfferProduct.product_id}
-                    productName={selectedOfferProduct.name}
-                    currentPrice={selectedOfferProduct.price}
-                    initialDiscountPercentage={selectedOfferProduct.discount_percentage}
-                    initialDiscountEndDate={selectedOfferProduct.discount_end_date}
-                    onSuccess={() => {
+                     productId={selectedOfferProduct.product_id}
+                     productName={selectedOfferProduct.name}
+                     currentPrice={selectedOfferProduct.original_price}
+                     initialDiscountPercentage={selectedOfferProduct.discount_percentage}
+                     initialDiscountEndDate={selectedOfferProduct.discount_end_date}
+                     onSuccess={() => {
                         fetchInventory();
                         setSelectedOfferProduct(null);
                     }}

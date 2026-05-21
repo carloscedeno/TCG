@@ -1,12 +1,12 @@
--- Migration: Discount as Label (no price recalculation)
+-- Migration: Restore Discount Calculations (Price is Discounted, original_price is Base)
 -- Date: 2026-05-21
--- Description: Removes all discount-based price recalculation from RPCs.
---              discount_percentage is now purely a visual label/badge.
---              The stored price IS the final price.
+-- Description: Re-enables discount-based price calculation in RPCs.
+--              The 'price' returned will be the discounted price.
+--              The 'original_price' returned will be the base price.
 
 BEGIN;
 
--- 1. Drop get_products_filtered and recreate WITHOUT discount price calculation
+-- 1. Drop get_products_filtered and recreate WITH discount price calculation
 DROP FUNCTION IF EXISTS public.get_products_filtered(text, text, text[], text[], text[], text[], integer, integer, numeric, numeric, integer, integer, boolean, boolean, boolean, text) CASCADE;
 
 CREATE OR REPLACE FUNCTION public.get_products_filtered(
@@ -69,7 +69,11 @@ BEGIN
     p.name,
     p.game,
     p.set_code,
-    p.price as price,
+    -- Calculate final price dynamically
+    CASE WHEN p.discount_end_date IS NOT NULL AND p.discount_end_date > now() 
+         THEN ROUND(p.price * (1 - p.discount_percentage / 100.0), 2)
+         ELSE p.price 
+    END as price,
     p.image_url,
     p.rarity,
     p.printing_id::text,
@@ -87,19 +91,19 @@ BEGIN
     AND (v_game_code IS NULL OR p.game = v_game_code OR (v_game_code = 'MTG' AND p.game IN ('Magic', '22')))
     AND (set_filter IS NULL OR p.set_code = ANY(set_filter) OR p.set_name = ANY(set_filter) OR UPPER(p.set_code) = ANY(set_filter))
     AND (rarity_filter IS NULL OR LOWER(p.rarity) = ANY(rarity_filter))
-    AND (price_min IS NULL OR p.price >= price_min)
-    AND (price_max IS NULL OR p.price <= price_max)
+    AND (price_min IS NULL OR (CASE WHEN p.discount_end_date IS NOT NULL AND p.discount_end_date > now() THEN p.price * (1 - p.discount_percentage / 100.0) ELSE p.price END) >= price_min)
+    AND (price_max IS NULL OR (CASE WHEN p.discount_end_date IS NOT NULL AND p.discount_end_date > now() THEN p.price * (1 - p.discount_percentage / 100.0) ELSE p.price END) <= price_max)
     AND (NOT p_only_new OR (UPPER(p.set_code) IN ('SOS', 'SOA', 'SOC', 'TSOS')))
     AND (NOT p_only_discount OR (p.discount_percentage > 0 AND p.discount_end_date IS NOT NULL AND p.discount_end_date > now()))
-    AND (NOT p_only_presale OR (p.name ILIKE '%(preventa)%'))
+    AND (NOT p_only_presale OR (p.name ILIKE '%(preventa)%' OR p.category_code = 'PRESALE' OR p.category ILIKE '%preventa%'))
   ORDER BY
     CASE 
         WHEN search_query IS NOT NULL AND p.name ILIKE search_query THEN 0 
         WHEN search_query IS NOT NULL AND p.name ILIKE search_query || '%' THEN 1
         ELSE 2 END ASC,
     CASE WHEN v_sort_by = 'newest' THEN p.updated_at END DESC,
-    CASE WHEN v_sort_by = 'price_asc' THEN p.price END ASC,
-    CASE WHEN v_sort_by = 'price_desc' THEN p.price END DESC,
+    CASE WHEN v_sort_by = 'price_asc' THEN (CASE WHEN p.discount_end_date IS NOT NULL AND p.discount_end_date > now() THEN ROUND(p.price * (1 - p.discount_percentage / 100.0), 2) ELSE p.price END) END ASC,
+    CASE WHEN v_sort_by = 'price_desc' THEN (CASE WHEN p.discount_end_date IS NOT NULL AND p.discount_end_date > now() THEN ROUND(p.price * (1 - p.discount_percentage / 100.0), 2) ELSE p.price END) END DESC,
     CASE WHEN v_sort_by = 'name' THEN p.name END ASC,
     CASE WHEN v_sort_by = 'name_desc' THEN p.name END DESC,
     CASE WHEN v_sort_by = 'release_date' THEN p.release_date END DESC,
@@ -110,7 +114,7 @@ BEGIN
 END;
 $function$;
 
--- 2. Drop get_accessories_filtered and recreate WITHOUT discount price calculation
+-- 2. Drop get_accessories_filtered and recreate WITH discount price calculation
 DROP FUNCTION IF EXISTS public.get_accessories_filtered(integer, text, text, text, text, text, numeric, numeric, boolean, boolean, text, integer, integer) CASCADE;
 
 CREATE OR REPLACE FUNCTION public.get_accessories_filtered(
@@ -189,8 +193,8 @@ BEGIN
               OR a.description ILIKE '%' || p_search_query || '%'
               OR a.category ILIKE '%' || p_search_query || '%'
           )
-          AND (p_price_min IS NULL OR a.price >= p_price_min)
-          AND (p_price_max IS NULL OR a.price <= p_price_max)
+          AND (p_price_min IS NULL OR (CASE WHEN a.discount_percentage > 0 AND a.discount_until > now() THEN a.price * (1 - a.discount_percentage / 100.0) ELSE a.price END) >= p_price_min)
+          AND (p_price_max IS NULL OR (CASE WHEN a.discount_percentage > 0 AND a.discount_until > now() THEN a.price * (1 - a.discount_percentage / 100.0) ELSE a.price END) <= p_price_max)
           AND (NOT p_only_discount OR (a.discount_percentage > 0 AND a.discount_until IS NOT NULL AND a.discount_until > now()))
           AND (NOT p_only_presale OR (a.name ILIKE '%(preventa)%' OR a.category_code = 'PRESALE' OR a.category ILIKE '%preventa%'))
     ),
@@ -206,8 +210,8 @@ BEGIN
         t.full_count
     FROM filtered_data f, total t
     ORDER BY
-        CASE WHEN p_sort = 'price_asc' THEN f.price END ASC,
-        CASE WHEN p_sort = 'price_desc' THEN f.price END DESC,
+        CASE WHEN p_sort = 'price_asc' THEN (CASE WHEN f.discount_percentage > 0 AND f.discount_until > now() THEN f.price * (1 - f.discount_percentage / 100.0) ELSE f.price END) END ASC,
+        CASE WHEN p_sort = 'price_desc' THEN (CASE WHEN f.discount_percentage > 0 AND f.discount_until > now() THEN f.price * (1 - f.discount_percentage / 100.0) ELSE f.price END) END DESC,
         CASE WHEN p_sort = 'name' THEN f.name END ASC,
         CASE WHEN p_sort = 'newest' THEN f.created_at END DESC NULLS LAST,
         f.created_at DESC
@@ -221,3 +225,4 @@ GRANT EXECUTE ON FUNCTION public.get_products_filtered(text, text, text[], text[
 GRANT EXECUTE ON FUNCTION public.get_accessories_filtered(integer, text, text, text, text, text, numeric, numeric, boolean, boolean, text, integer, integer) TO anon, authenticated;
 
 COMMIT;
+

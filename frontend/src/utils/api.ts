@@ -295,39 +295,48 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
           .eq('id', sanitizedId)
           .maybeSingle();
           
-        if (accData) {
-            console.log(`[Catalog] Found accessory in DB: ${sanitizedId}`);
+            if (accData) {
+                console.log(`[Catalog] Found accessory in DB: ${sanitizedId}`);
+                const originalPrice = Number(accData.price || 0);
+                let finalPrice = originalPrice;
+                let discountPct = Number(accData.discount_percentage || 0);
 
-            return {
-                id: accData.id,
-                card_id: accData.id,
-                printing_id: accData.id,
-                name: accData.name,
-                set: accData.category || 'Accesorio',
-                set_code: accData.category || 'ACC',
-                image_url: accData.image_url,
-                additional_images: accData.additional_images || [],
-                price: Number(accData.price || 0),
-                original_price: Number(accData.price || 0),
-                discount_percentage: Number(accData.discount_percentage || 0),
-                total_stock: accData.stock,
-                is_accessory: true,
-                description: accData.description,
-                all_versions: [{
+                if (discountPct > 0 && isDiscountActive(accData.discount_until)) {
+                    finalPrice = originalPrice * (1 - discountPct / 100);
+                } else if (accData.discount_until) {
+                    discountPct = 0;
+                }
+
+                return {
+                    id: accData.id,
+                    card_id: accData.id,
                     printing_id: accData.id,
-                    set_name: accData.category || 'Accesorio',
+                    name: accData.name,
+                    set: accData.category || 'Accesorio',
                     set_code: accData.category || 'ACC',
-                    collector_number: 'ACC',
-                    rarity: 'Common',
                     image_url: accData.image_url,
-                    price: Number(accData.price || 0),
-                    original_price: Number(accData.price || 0),
-                    discount_percentage: Number(accData.discount_percentage || 0),
-                    stock: accData.stock,
-                    finish: 'standard'
-                }]
-            };
-        } else {
+                    additional_images: accData.additional_images || [],
+                    price: finalPrice,
+                    original_price: originalPrice,
+                    discount_percentage: discountPct,
+                    total_stock: accData.stock,
+                    is_accessory: true,
+                    description: accData.description,
+                    all_versions: [{
+                        printing_id: accData.id,
+                        set_name: accData.category || 'Accesorio',
+                        set_code: accData.category || 'ACC',
+                        collector_number: 'ACC',
+                        rarity: 'Common',
+                        image_url: accData.image_url,
+                        price: finalPrice,
+                        original_price: originalPrice,
+                        discount_percentage: discountPct,
+                        stock: accData.stock,
+                        finish: 'standard'
+                    }]
+                };
+            } else {
             console.log(`[Catalog] UUID not found in accessories table: ${sanitizedId}. Falling back to Edge Function.`);
         }
     }
@@ -457,14 +466,17 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                 if (pushesNonFoil) {
                   const isSynthetic = baseIsFoil && (pushesFoil || pushesEtched);
                   const prodDataNormal = productMap.get(`${v.printing_id}-nonfoil`);
-                  let priceNormal = Number(v.avg_market_price_usd || 0);
+                  let finalPriceNormal = Number(v.avg_market_price_usd || 0);
+                  let originalPriceNormal = finalPriceNormal;
                   let discountNormal = 0;
                   
                   if (prodDataNormal?.price) {
-                      priceNormal = prodDataNormal.price;
+                      originalPriceNormal = prodDataNormal.price;
+                      finalPriceNormal = prodDataNormal.price;
                       if (prodDataNormal.discount_percentage && prodDataNormal.discount_end_date) {
                           const endDate = new Date(prodDataNormal.discount_end_date);
                           if (endDate > new Date()) {
+                              finalPriceNormal = originalPriceNormal * (1 - prodDataNormal.discount_percentage / 100);
                               discountNormal = prodDataNormal.discount_percentage;
                           }
                       }
@@ -473,8 +485,8 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                   expandedVersions.push({
                     ...baseVersion,
                     printing_id: isSynthetic ? `${v.printing_id}-nonfoil` : v.printing_id,
-                    price: priceNormal,
-                    original_price: priceNormal,
+                    price: finalPriceNormal,
+                    original_price: originalPriceNormal,
                     discount_percentage: discountNormal,
                     market_price: Number(v.avg_market_price_usd || 0),
                     finish: 'nonfoil',
@@ -486,14 +498,17 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                 if (pushesFoil) {
                   const isSynthetic = !baseIsFoil && (pushesNonFoil || pushesEtched);
                   const prodDataFoil = productMap.get(`${v.printing_id}-foil`);
-                  let priceFoil = Number(v.avg_market_price_foil_usd || 0);
+                  let finalPriceFoil = Number(v.avg_market_price_foil_usd || 0);
+                  let originalPriceFoil = finalPriceFoil;
                   let discountFoil = 0;
                   
                   if (prodDataFoil?.price) {
-                      priceFoil = prodDataFoil.price;
+                      originalPriceFoil = prodDataFoil.price;
+                      finalPriceFoil = prodDataFoil.price;
                       if (prodDataFoil.discount_percentage && prodDataFoil.discount_end_date) {
                           const endDate = new Date(prodDataFoil.discount_end_date);
                           if (endDate > new Date()) {
+                              finalPriceFoil = originalPriceFoil * (1 - prodDataFoil.discount_percentage / 100);
                               discountFoil = prodDataFoil.discount_percentage;
                           }
                       }
@@ -502,8 +517,8 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                   expandedVersions.push({
                     ...baseVersion,
                     printing_id: isSynthetic ? `${v.printing_id}-foil` : v.printing_id,
-                    price: priceFoil,
-                    original_price: priceFoil,
+                    price: finalPriceFoil,
+                    original_price: originalPriceFoil,
                     discount_percentage: discountFoil,
                     market_price: Number(v.avg_market_price_foil_usd || 0),
                     finish: 'foil',
@@ -852,8 +867,15 @@ export const fetchCart = async (): Promise<any> => {
         const mappedAccs = accessoryItems.map((item: any) => {
           const acc = (accData || []).find((a: any) => a.id === item.accessory_id);
           if (!acc) return null;
-          const finalPrice = Number(acc.price || 0);
-          const discountPct = Number(acc.discount_percentage || 0);
+          const originalPrice = Number(acc.price || 0);
+          let finalPrice = originalPrice;
+          let discountPct = Number(acc.discount_percentage || 0);
+
+          if (discountPct > 0 && isDiscountActive(acc.discount_until)) {
+            finalPrice = originalPrice * (1 - discountPct / 100);
+          } else if (acc.discount_until) {
+            discountPct = 0;
+          }
 
           return {
             id: `guest-acc-${acc.id}`,
@@ -1280,13 +1302,20 @@ export const fetchAccessories = async (params: {
   if (error) throw error;
   
   const accessories = (data || []).map((item: any) => {
-    const finalPrice = Number(item.price || 0);
-    const discountPct = Number(item.discount_percentage || 0);
+    const originalPrice = Number(item.price || 0);
+    let finalPrice = originalPrice;
+    let discountPct = Number(item.discount_percentage || 0);
+
+    if (discountPct > 0 && isDiscountActive(item.discount_until)) {
+      finalPrice = originalPrice * (1 - discountPct / 100);
+    } else if (item.discount_until) {
+      discountPct = 0;
+    }
 
     return {
       ...item,
       price: finalPrice,
-      original_price: finalPrice,
+      original_price: originalPrice,
       discount_percentage: discountPct
     };
   });
@@ -1619,19 +1648,22 @@ export const fetchDiscountedSingles = async (gameCode?: string, limit = 10): Pro
     
     const now = new Date();
     return (data || [])
-      .filter((row: any) => !row.discount_end_date || new Date(row.discount_end_date) > now)
+      .filter((row: any) => !row.discount_until || new Date(row.discount_until) > now)
       .map((row: any) => {
-        const finalPrice = Number(row.price || 0);
-        
+        const originalPrice = Number(row.price || 0);
+        const discountPct = Number(row.discount_percentage || 0);
         return {
-          ...row,
-          card_id: row.printing_id || row.id,
-          finish: row.finish || (row.is_foil ? 'foil' : 'nonfoil'),
-          is_foil: !!row.is_foil || (row.finish === 'foil'),
-          original_price: finalPrice,
-          price: finalPrice,
-          discount_percentage: Number(row.discount_percentage || 0),
-          total_stock: row.stock || 0
+          card_id: row.id,
+          name: row.name,
+          set: row.category,
+          price: discountPct > 0 ? originalPrice * (1 - discountPct / 100) : originalPrice,
+          original_price: originalPrice,
+          discount_percentage: discountPct,
+          image_url: row.image_url,
+          rarity: 'Common',
+          total_stock: row.stock || 0,
+          is_accessory: true,
+          updated_at: row.updated_at
         };
       });
   } catch (error) {
