@@ -295,48 +295,48 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
           .eq('id', sanitizedId)
           .maybeSingle();
           
-        if (accData) {
-            console.log(`[Catalog] Found accessory in DB: ${sanitizedId}`);
-            const originalPrice = Number(accData.price || 0);
-            let finalPrice = originalPrice;
-            let discountPct = Number(accData.discount_percentage || 0);
+            if (accData) {
+                console.log(`[Catalog] Found accessory in DB: ${sanitizedId}`);
+                const originalPrice = Number(accData.price || 0);
+                let finalPrice = originalPrice;
+                let discountPct = Number(accData.discount_percentage || 0);
 
-            if (discountPct > 0 && isDiscountActive(accData.discount_until)) {
-                finalPrice = originalPrice * (1 - discountPct / 100);
-            } else if (accData.discount_until) {
-                discountPct = 0;
-            }
+                if (discountPct > 0 && isDiscountActive(accData.discount_until)) {
+                    finalPrice = originalPrice * (1 - discountPct / 100);
+                } else if (accData.discount_until) {
+                    discountPct = 0;
+                }
 
-            return {
-                id: accData.id,
-                card_id: accData.id,
-                printing_id: accData.id,
-                name: accData.name,
-                set: accData.category || 'Accesorio',
-                set_code: accData.category || 'ACC',
-                image_url: accData.image_url,
-                additional_images: accData.additional_images || [],
-                price: finalPrice,
-                original_price: originalPrice,
-                discount_percentage: discountPct,
-                total_stock: accData.stock,
-                is_accessory: true,
-                description: accData.description,
-                all_versions: [{
+                return {
+                    id: accData.id,
+                    card_id: accData.id,
                     printing_id: accData.id,
-                    set_name: accData.category || 'Accesorio',
+                    name: accData.name,
+                    set: accData.category || 'Accesorio',
                     set_code: accData.category || 'ACC',
-                    collector_number: 'ACC',
-                    rarity: 'Common',
                     image_url: accData.image_url,
+                    additional_images: accData.additional_images || [],
                     price: finalPrice,
                     original_price: originalPrice,
                     discount_percentage: discountPct,
-                    stock: accData.stock,
-                    finish: 'standard'
-                }]
-            };
-        } else {
+                    total_stock: accData.stock,
+                    is_accessory: true,
+                    description: accData.description,
+                    all_versions: [{
+                        printing_id: accData.id,
+                        set_name: accData.category || 'Accesorio',
+                        set_code: accData.category || 'ACC',
+                        collector_number: 'ACC',
+                        rarity: 'Common',
+                        image_url: accData.image_url,
+                        price: finalPrice,
+                        original_price: originalPrice,
+                        discount_percentage: discountPct,
+                        stock: accData.stock,
+                        finish: 'standard'
+                    }]
+                };
+            } else {
             console.log(`[Catalog] UUID not found in accessories table: ${sanitizedId}. Falling back to Edge Function.`);
         }
     }
@@ -887,7 +887,7 @@ export const fetchCart = async (): Promise<any> => {
               id: acc.id,
               name: acc.name,
               price: Number(finalPrice.toFixed(2)),
-              original_price: originalPrice,
+              original_price: Number(finalPrice.toFixed(2)),
               discount_percentage: discountPct,
               image_url: acc.image_url,
               set_code: acc.category,
@@ -1646,21 +1646,26 @@ export const fetchDiscountedSingles = async (gameCode?: string, limit = 10): Pro
     const { data, error } = await query;
     if (error) throw error;
     
-    return (data || []).map((row: any) => {
-      const finalPrice = Number(row.price || 0);
-      const discountPct = Number(row.discount_percentage || 0);
-      
-      return {
-        ...row,
-        card_id: row.printing_id || row.id,
-        finish: row.finish || (row.is_foil ? 'foil' : 'nonfoil'),
-        is_foil: !!row.is_foil || (row.finish === 'foil'),
-        original_price: finalPrice,
-        price: discountPct > 0 ? finalPrice * (1 - discountPct / 100) : finalPrice,
-        discount_percentage: discountPct,
-        total_stock: row.stock || 0
-      };
-    });
+    const now = new Date();
+    return (data || [])
+      .filter((row: any) => !row.discount_until || new Date(row.discount_until) > now)
+      .map((row: any) => {
+        const originalPrice = Number(row.price || 0);
+        const discountPct = Number(row.discount_percentage || 0);
+        return {
+          card_id: row.id,
+          name: row.name,
+          set: row.category,
+          price: discountPct > 0 ? originalPrice * (1 - discountPct / 100) : originalPrice,
+          original_price: originalPrice,
+          discount_percentage: discountPct,
+          image_url: row.image_url,
+          rarity: 'Common',
+          total_stock: row.stock || 0,
+          is_accessory: true,
+          updated_at: row.updated_at
+        };
+      });
   } catch (error) {
     console.error('Fetch Discounted Singles Failed:', error);
     return [];
@@ -1688,23 +1693,25 @@ export const fetchDiscountedAccessories = async (gameCode?: string, limit = 10):
     const { data, error } = await query;
     if (error) throw error;
     
-    return (data || []).map((row: any) => {
-      const originalPrice = Number(row.price || 0);
-      const discountPct = Number(row.discount_percentage || 0);
-      return {
-        card_id: row.id,
-        name: row.name,
-        set: row.category,
-        price: discountPct > 0 ? originalPrice * (1 - discountPct / 100) : originalPrice,
-        original_price: originalPrice,
-        discount_percentage: discountPct,
-        image_url: row.image_url,
-        rarity: 'Common',
-        total_stock: row.stock || 0,
-        is_accessory: true,
-        updated_at: row.updated_at
-      };
-    });
+    const now = new Date();
+    return (data || [])
+      .filter((row: any) => !row.discount_until || new Date(row.discount_until) > now)
+      .map((row: any) => {
+        const finalPrice = Number(row.price || 0);
+        return {
+          card_id: row.id,
+          name: row.name,
+          set: row.category,
+          price: finalPrice,
+          original_price: finalPrice,
+          discount_percentage: Number(row.discount_percentage || 0),
+          image_url: row.image_url,
+          rarity: 'Common',
+          total_stock: row.stock || 0,
+          is_accessory: true,
+          updated_at: row.updated_at
+        };
+      });
   } catch (error) {
     console.error('Fetch Discounted Accessories Failed:', error);
     return [];
