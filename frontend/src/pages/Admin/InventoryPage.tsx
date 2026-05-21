@@ -12,7 +12,7 @@ import { ImportInventoryModal } from "../../components/Admin/ImportInventoryModa
 import { EgressInventoryModal } from "../../components/Admin/EgressInventoryModal";
 import { OfferManagementModal } from "../../components/Admin/OfferManagementModal";
 import { useCart } from "../../context/CartContext";
-import { addProductToCart, isDiscountActive } from "../../utils/api";
+import { addProductToCart, isDiscountActive, manageProductOffer } from "../../utils/api";
 
 interface InventoryItem {
     product_id: string;
@@ -266,22 +266,41 @@ export function InventoryPage() {
         }
     };
 
-    const handleBatchPriceUpdate = async (percentage: number) => {
-        if (!confirm(`¿Aplicar un cambio de precio del ${percentage}% a ${selectedIds.size} artículos?`)) return;
+    const handleBatchDiscount = async (apply: boolean) => {
+        let pct = 0;
+        let endDate = new Date().toISOString();
+        
+        if (apply) {
+            const inputPct = prompt(`¿Qué porcentaje de descuento aplicar a ${selectedIds.size} artículos? (ej: 10 para 10%)`);
+            if (!inputPct) return;
+            pct = parseFloat(inputPct);
+            if (isNaN(pct) || pct <= 0) return alert("Porcentaje inválido");
+            
+            const days = prompt("¿Cuántos días durará la oferta?", "7");
+            if (!days) return;
+            const numDays = parseInt(days);
+            if (isNaN(numDays) || numDays <= 0) return alert("Días inválidos");
+            
+            const date = new Date();
+            date.setDate(date.getDate() + numDays);
+            endDate = date.toISOString().split('T')[0] + "T23:59:59.999-04:00";
+        } else {
+            if (!confirm(`¿Remover ofertas de ${selectedIds.size} artículos?`)) return;
+        }
 
         setLoading(true);
         try {
             const selectedItems = items.filter(i => selectedIds.has(i.product_id));
-
-            for (const item of selectedItems) {
-                const newPrice = item.price * (1 + percentage / 100);
-                await supabase.from('products').update({ price: newPrice }).eq('id', item.product_id);
-            }
+            
+            // Apply offers sequentially or via Promise.all to ensure all go through
+            await Promise.all(selectedItems.map(item => 
+                manageProductOffer(item.product_id, pct, endDate)
+            ));
 
             setSelectedIds(new Set());
             fetchInventory();
         } catch (err: any) {
-            alert("Error en actualización por lotes: " + err.message);
+            alert("Error en actualización de descuentos por lotes: " + err.message);
         } finally {
             setLoading(false);
         }
@@ -512,16 +531,18 @@ export function InventoryPage() {
                                 <div className="h-8 w-px bg-white/20" />
                                 <div className="flex items-center gap-2">
                                     <button
-                                        onClick={() => handleBatchPriceUpdate(10)}
-                                        className="bg-white/10 hover:bg-white/20 px-4 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
+                                        onClick={() => handleBatchDiscount(true)}
+                                        className="bg-purple-500 hover:bg-purple-600 px-4 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-purple-500/20 text-white flex items-center gap-2"
                                     >
-                                        +10% Precio
+                                        <Tag size={12} />
+                                        Aplicar Oferta Lote
                                     </button>
                                     <button
-                                        onClick={() => handleBatchPriceUpdate(-10)}
-                                        className="bg-white/10 hover:bg-white/20 px-4 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
+                                        onClick={() => handleBatchDiscount(false)}
+                                        className="bg-white/10 hover:bg-white/20 px-4 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-white flex items-center gap-2"
                                     >
-                                        -10% Precio
+                                        <X size={12} />
+                                        Remover Ofertas Lote
                                     </button>
                                 </div>
                             </div>
