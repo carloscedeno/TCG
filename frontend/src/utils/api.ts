@@ -1635,7 +1635,6 @@ export const fetchDiscountedSingles = async (gameCode?: string, limit = 10): Pro
       .select('*, discount_percentage, discount_end_date')
       .gt('stock', 0)
       .gt('discount_percentage', 0)
-      .gt('discount_end_date', new Date().toISOString())
       .order('discount_percentage', { ascending: false })
       .limit(limit);
       
@@ -1647,21 +1646,24 @@ export const fetchDiscountedSingles = async (gameCode?: string, limit = 10): Pro
     const { data, error } = await query;
     if (error) throw error;
     
-    return (data || []).map((row: any) => {
-      const finalPrice = Number(row.price || 0);
-      const discountPct = Number(row.discount_percentage || 0);
-      
-      return {
-        ...row,
-        card_id: row.printing_id || row.id,
-        finish: row.finish || (row.is_foil ? 'foil' : 'nonfoil'),
-        is_foil: !!row.is_foil || (row.finish === 'foil'),
-        original_price: finalPrice,
-        price: discountPct > 0 ? finalPrice * (1 - discountPct / 100) : finalPrice,
-        discount_percentage: discountPct,
-        total_stock: row.stock || 0
-      };
-    });
+    const now = new Date();
+    return (data || [])
+      .filter((row: any) => !row.discount_end_date || new Date(row.discount_end_date) > now)
+      .map((row: any) => {
+        const finalPrice = Number(row.price || 0);
+        const discountPct = Number(row.discount_percentage || 0);
+        
+        return {
+          ...row,
+          card_id: row.printing_id || row.id,
+          finish: row.finish || (row.is_foil ? 'foil' : 'nonfoil'),
+          is_foil: !!row.is_foil || (row.finish === 'foil'),
+          original_price: finalPrice,
+          price: discountPct > 0 ? finalPrice * (1 - discountPct / 100) : finalPrice,
+          discount_percentage: discountPct,
+          total_stock: row.stock || 0
+        };
+      });
   } catch (error) {
     console.error('Fetch Discounted Singles Failed:', error);
     return [];
@@ -1675,7 +1677,6 @@ export const fetchDiscountedAccessories = async (gameCode?: string, limit = 10):
       .select('*')
       .gt('stock', 0)
       .gt('discount_percentage', 0)
-      .gt('discount_until', new Date().toISOString())
       .order('discount_percentage', { ascending: false })
       .limit(limit);
 
@@ -1690,23 +1691,26 @@ export const fetchDiscountedAccessories = async (gameCode?: string, limit = 10):
     const { data, error } = await query;
     if (error) throw error;
     
-    return (data || []).map((row: any) => {
-      const originalPrice = Number(row.price || 0);
-      const discountPct = Number(row.discount_percentage || 0);
-      return {
-        card_id: row.id,
-        name: row.name,
-        set: row.category,
-        price: discountPct > 0 ? originalPrice * (1 - discountPct / 100) : originalPrice,
-        original_price: originalPrice,
-        discount_percentage: discountPct,
-        image_url: row.image_url,
-        rarity: 'Common',
-        total_stock: row.stock || 0,
-        is_accessory: true,
-        updated_at: row.updated_at
-      };
-    });
+    const now = new Date();
+    return (data || [])
+      .filter((row: any) => !row.discount_until || new Date(row.discount_until) > now)
+      .map((row: any) => {
+        const originalPrice = Number(row.price || 0);
+        const discountPct = Number(row.discount_percentage || 0);
+        return {
+          card_id: row.id,
+          name: row.name,
+          set: row.category,
+          price: discountPct > 0 ? originalPrice * (1 - discountPct / 100) : originalPrice,
+          original_price: originalPrice,
+          discount_percentage: discountPct,
+          image_url: row.image_url,
+          rarity: 'Common',
+          total_stock: row.stock || 0,
+          is_accessory: true,
+          updated_at: row.updated_at
+        };
+      });
   } catch (error) {
     console.error('Fetch Discounted Accessories Failed:', error);
     return [];
