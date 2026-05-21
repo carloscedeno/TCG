@@ -5,16 +5,12 @@ const API_BASE = import.meta.env.VITE_API_BASE || '';
 
 /**
  * Checks if a discount is still valid based on Caracas time (UTC-4).
- * The discount is considered valid until 23:59:59 of the specified date in CCS time.
+ * Since dates are saved with the explicit Caracas timezone offset (e.g. -04:00),
+ * we can simply compare the instantiations directly without manual hours offset shifting.
  */
-export const isDiscountActive = (discountUntil: string | null): boolean => {
+export const isDiscountActive = (discountUntil: string | null | undefined): boolean => {
     if (!discountUntil) return false;
-    
-    const now = new Date();
-    const limitDate = new Date(discountUntil);
-    limitDate.setUTCHours(23 + 4, 59, 59, 999);
-    
-    return now < limitDate;
+    return new Date() < new Date(discountUntil);
 };
 
 /**

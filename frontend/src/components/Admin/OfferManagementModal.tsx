@@ -44,8 +44,8 @@ export function OfferManagementModal({
         setLoading(true);
         setError(null);
 
-        // Append time to the end of the selected day
-        const fullEndDate = endDate ? `${endDate}T23:59:59.999Z` : new Date().toISOString();
+        // Append time to the end of the selected day with Caracas offset (-04:00)
+        const fullEndDate = endDate ? `${endDate}T23:59:59.999-04:00` : new Date().toISOString();
 
         const res = await manageProductOffer(productId, parsedPercentage, fullEndDate);
         

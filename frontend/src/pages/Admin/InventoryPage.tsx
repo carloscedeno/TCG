@@ -12,7 +12,7 @@ import { ImportInventoryModal } from "../../components/Admin/ImportInventoryModa
 import { EgressInventoryModal } from "../../components/Admin/EgressInventoryModal";
 import { OfferManagementModal } from "../../components/Admin/OfferManagementModal";
 import { useCart } from "../../context/CartContext";
-import { addProductToCart } from "../../utils/api";
+import { addProductToCart, isDiscountActive } from "../../utils/api";
 
 interface InventoryItem {
     product_id: string;
@@ -707,7 +707,7 @@ export function InventoryPage() {
                                                     </div>
                                                 ) : (
                                                     <div className="flex flex-col items-end">
-                                                        {item.discount_percentage && item.discount_percentage > 0 && (
+                                                        {item.discount_percentage && item.discount_percentage > 0 && isDiscountActive(item.discount_end_date) && (
                                                             <span className="text-[10px] line-through text-neutral-600 font-mono">
                                                                 ${(item.price || 0).toFixed(2)}
                                                             </span>
@@ -720,7 +720,7 @@ export function InventoryPage() {
                                                             className={`text-lg font-black font-mono tracking-tighter hover:text-purple-400 transition-colors ${(item.price || 0) === 0 ? 'text-purple-400' : 'text-white'}`}
                                                         >
                                                             {(item.price || 0) === 0 ? 'AUTO [CK]' : (
-                                                                item.discount_percentage && item.discount_percentage > 0 
+                                                                item.discount_percentage && item.discount_percentage > 0 && isDiscountActive(item.discount_end_date)
                                                                     ? `$${((item.price || 0) * (1 - item.discount_percentage / 100)).toFixed(2)}`
                                                                     : `$${(item.price || 0).toFixed(2)}`
                                                             )}
@@ -732,7 +732,7 @@ export function InventoryPage() {
                                                 )}
                                             </td>
                                             <td className="px-6 py-4 text-center">
-                                                {item.discount_percentage && item.discount_percentage > 0 ? (
+                                                {item.discount_percentage && item.discount_percentage > 0 && isDiscountActive(item.discount_end_date) ? (
                                                     <button 
                                                         onClick={() => setSelectedOfferProduct(item)}
                                                         className="px-2 py-1 bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded-lg text-[10px] font-black font-mono hover:bg-purple-500 hover:text-white transition-all"
@@ -740,7 +740,13 @@ export function InventoryPage() {
                                                         -{item.discount_percentage}%
                                                     </button>
                                                 ) : (
-                                                    <span className="text-[10px] font-bold text-neutral-800">-</span>
+                                                    <button
+                                                        onClick={() => setSelectedOfferProduct(item)}
+                                                        className="px-2 py-1 border border-dashed border-neutral-700 hover:border-purple-500/50 text-neutral-600 hover:text-purple-400 rounded-lg text-[10px] font-bold font-mono transition-all"
+                                                        title="Agregar descuento"
+                                                    >
+                                                        + %
+                                                    </button>
                                                 )}
                                             </td>
                                             <td className="px-6 py-4 text-center">
@@ -825,13 +831,13 @@ export function InventoryPage() {
                                                     <button
                                                         onClick={() => setSelectedOfferProduct(item)}
                                                         className={`p-3 rounded-xl transition-all ${
-                                                            item.discount_percentage && item.discount_percentage > 0 
+                                                            item.discount_percentage && item.discount_percentage > 0 && isDiscountActive(item.discount_end_date)
                                                                 ? 'bg-purple-500/20 text-purple-400 hover:bg-purple-500 hover:text-white'
                                                                 : 'bg-white/5 text-neutral-500 hover:bg-white/10 hover:text-white'
                                                         }`}
                                                         title="Gestionar Oferta"
                                                     >
-                                                        <Tag size={16} className={item.discount_percentage && item.discount_percentage > 0 ? "fill-purple-500/20" : ""} />
+                                                        <Tag size={16} className={item.discount_percentage && item.discount_percentage > 0 && isDiscountActive(item.discount_end_date) ? "fill-purple-500/20" : ""} />
                                                     </button>
                                                     <button
                                                         onClick={() => {
