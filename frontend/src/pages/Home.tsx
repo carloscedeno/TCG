@@ -486,7 +486,7 @@ const Home: React.FC = () => {
                   </button>
                 )}
                 
-                {inventoryPresence.hasCatalog && (
+                {inventoryPresence.hasCatalog && (!filters.games?.length || filters.games?.includes('MTG')) && (
                   <button
                     onClick={() => handleTabChange('catalog')}
                     data-testid="archives-tab"
@@ -615,6 +615,16 @@ const Home: React.FC = () => {
                     Recargar Página
                   </button>
                 </div>
+              ) : isDashboardView && activeTab === 'marketplace' ? (
+                discountedSingles.length === 0 && discountedAccessories.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-32 text-center">
+                    <div className="w-24 h-24 bg-neutral-900/50 rounded-3xl flex items-center justify-center mb-8 border border-white/5">
+                      <Sparkles size={40} className="text-white" />
+                    </div>
+                    <h3 className="text-3xl font-black italic uppercase tracking-tighter mb-4 text-white">Sin Ofertas por Ahora</h3>
+                    <p className="text-text-low font-medium max-w-sm">No hay descuentos activos en este momento. Usa los filtros o busca para explorar el catálogo completo.</p>
+                  </div>
+                ) : null
               ) : (
                 <div className="flex flex-col gap-6">
                   {activeTab === 'catalog' && cards.length === 0 ? (
