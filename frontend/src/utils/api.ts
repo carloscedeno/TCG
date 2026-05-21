@@ -1635,6 +1635,7 @@ export const fetchDiscountedSingles = async (gameCode?: string, limit = 10): Pro
       .select('*, discount_percentage, discount_end_date')
       .gt('stock', 0)
       .gt('discount_percentage', 0)
+      .gt('discount_end_date', new Date().toISOString())
       .order('discount_percentage', { ascending: false })
       .limit(limit);
       
@@ -1674,6 +1675,7 @@ export const fetchDiscountedAccessories = async (gameCode?: string, limit = 10):
       .select('*')
       .gt('stock', 0)
       .gt('discount_percentage', 0)
+      .gt('discount_until', new Date().toISOString())
       .order('discount_percentage', { ascending: false })
       .limit(limit);
 

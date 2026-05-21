@@ -1,0 +1,25 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "github": {
+      "type": "local",
+      "command": ["powershell", "-ExecutionPolicy", "Bypass", "-File", ".opencode/mcp-github.ps1"],
+      "disabled": false
+    },
+    "supabase": {
+      "type": "local",
+      "command": ["powershell", "-ExecutionPolicy", "Bypass", "-File", ".opencode/mcp-supabase.ps1"],
+      "disabled": false
+    },
+    "sequential-thinking": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "disabled": false
+    },
+    "code-review-graph": {
+      "type": "local",
+      "command": ["uvx", "code-review-graph", "serve"],
+      "disabled": false
+    }
+  }
+}
