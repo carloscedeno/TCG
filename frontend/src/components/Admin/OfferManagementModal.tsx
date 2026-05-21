@@ -33,7 +33,6 @@ export function OfferManagementModal({
     if (!isOpen) return null;
 
     const parsedPercentage = parseFloat(percentage) || 0;
-    const finalPrice = parsedPercentage > 0 ? currentPrice * (1 - parsedPercentage / 100) : currentPrice;
 
     const handleSave = async () => {
         if (parsedPercentage > 0 && !endDate) {
@@ -139,13 +138,14 @@ export function OfferManagementModal({
 
                     <div className="p-4 bg-purple-500/5 border border-purple-500/20 rounded-2xl flex items-center justify-between">
                         <div>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-purple-400/70">Precio Original</p>
-                            <p className="text-sm font-bold text-neutral-500 line-through">${currentPrice.toFixed(2)}</p>
+                            <p className="text-[10px] font-black uppercase tracking-widest text-purple-400/70">Precio</p>
+                            <p className="text-2xl font-black italic text-white">${currentPrice.toFixed(2)}</p>
                         </div>
-                        <div className="text-right">
-                            <p className="text-[10px] font-black uppercase tracking-widest text-white/70">Precio Final</p>
-                            <p className="text-2xl font-black italic text-white">${finalPrice.toFixed(2)}</p>
-                        </div>
+                        {parsedPercentage > 0 && (
+                            <div className="bg-purple-500/20 text-purple-400 px-4 py-2 rounded-xl font-black text-sm">
+                                -{parsedPercentage}%
+                            </div>
+                        )}
                     </div>
                 </div>
 
