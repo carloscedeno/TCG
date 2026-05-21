@@ -38,7 +38,7 @@ export const EditProductModal = ({ isOpen, onClose, onSuccess, product }: EditPr
             setFormData({
                 name: product.name || '',
                 description: product.description || '',
-                price: product.original_price?.toString() || product.price?.toString() || '',
+                price: (product.original_price ?? product.price)?.toString() || '',
                 cost: product.cost?.toString() || '',
                 suggested_price: product.suggested_price?.toString() || '',
                 stock: product.stock?.toString() || '0',
