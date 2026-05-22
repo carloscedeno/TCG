@@ -1,3 +1,11 @@
+## 2026-05-22 - Importación Masiva de Catálogo y Etiquetado Dinámico
+
+**Qué pasó:** Se completó el workflow de carga masiva de accesorios desde la UI. El backend no soportaba `importType='catalog'`, causando fall-through silencioso. Se implementó un mapeo de columnas y lógica de upsert basado en nombre. Además, se añadió inyección dinámica de la etiqueta de preventa `(preventa)` a nivel de backend si la columna Categoría la contiene.
+**Lo que cambió:**
+- `.agent/lessons_learned.md` -> Lección #160
+- `supabase/functions/api/index.ts` -> Manejador explícito de importación de catálogo con mapeo de campos genéricos y smart upsert.
+**Regla derivada:** Evitar el patrón de fall-through silencioso en endpoints multipropósito.
+
 # ðŸ§  COMPOUND: Inmutabilidad de Precios de Compra y Estabilidad de Filtros de CatÃ¡logo (Mayo 2026)
 
 **Date**: 2026-05-18 16:00
@@ -267,3 +275,4 @@ Remediate the E2E checkout process by implementing "Por Encargo" logic to bypass
 - **Frontend Build**: Success.
 - **Unit Tests**: 28 Passed.
 - **Database**: Migration 20260507120000 prepared for remote deployment.
+

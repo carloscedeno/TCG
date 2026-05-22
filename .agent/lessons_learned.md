@@ -2247,3 +2247,9 @@ useEffect(() => {
 - **Causa RaÃ­z**: El RPC `create_order_atomic` iteraba sobre el JSON de Ã­tems del carrito en el orden arbitrario proporcionado por el cliente, actualizando el stock de `card_printings` o `accessories`. Cuando la TransacciÃ³n A bloqueaba el Ã­tem X y luego el Y, y la TransacciÃ³n B (simultÃ¡nea) bloqueaba el Ã­tem Y y luego el X, la base de datos abortaba una de las transacciones por interbloqueo.
 - **SoluciÃ³n**: Parchar el procedimiento almacenado para reordenar internamente el array de Ã­tems mediante una consulta SQL (`ORDER BY item_type, item_id`) antes de realizar cualquier `SELECT ... FOR UPDATE` o `UPDATE` sobre el inventario.
 - **LecciÃ³n**: Toda funciÃ³n o procedimiento almacenado que actualice mÃºltiples registros en lote DEBE garantizar un orden canÃ³nico y determinista antes de adquirir bloqueos de fila para asegurar escalabilidad y resiliencia bajo concurrencia.
+
+### 160. Lógica de Enrutamiento en Endpoints de Propósito General (Mayo 2026)
+- **Problema:** La importación masiva de accesorios desde la UI fallaba silenciosamente, descartando los productos.
+- **Causa Raíz:** El frontend enviaba import_type=catalog, pero el Edge Function pi/index.ts carecía de un bloque condicional explícito para este tipo. Como resultado, el código hacía un 'fall-through' (cayendo por defecto en la lógica de importación de colecciones TCG), la cual exigía Scryfall IDs y rechazaba los accesorios genéricos.
+- **Solución:** Implementar un bloque if (importType === 'catalog') explícito con mapeo dinámico de columnas (precio, nombre, costo) y lógica de upsert (sobrescribir por Nombre de producto exacto) dirigida a la tabla ccessories.
+- **Regla Derivada:** En endpoints multipropósito (/api/collections/import), evitar el patrón de fall-through silencioso. Cada caso de uso (colección, inventario, precios, catálogo) debe tener su manejador explícito, y cualquier tipo no reconocido debe devolver un Error 400 Inmediato.
