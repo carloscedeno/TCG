@@ -55,11 +55,12 @@ Artefactos del Compound step:
 
 ## 🛠️ Workflows Disponibles
 
+- `/prehook` — **Pre-sesión**: anclaje y validación del entorno para evitar pérdida de contexto o desvaríos
 - `/audit` — **Post-ejecución**: verificar integridad del sistema (build, git, tests, docs)
 - `/compound` — **Post-sesión**: codificar lo aprendido (Compound step)
 - `/finalize` — **Cierre de Sesión**: Auditoría, Compound y Push en un solo paso
 - `/import` — Implementar y verificar el Bulk Import feature
-- `/nightly-sync` — Ejecución autónoma del framework Strata
+- `/nightly-sync` — Ejecución autónoma del Carlos AI Framework
 
 ## ✅ Features Implementadas (Feb 2026)
 

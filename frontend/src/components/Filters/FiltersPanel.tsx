@@ -45,7 +45,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
     if (selected.rarities && selected.rarities.length > 0) initialState.rarities = true;
     if (selected.colors && selected.colors.length > 0) initialState.colors = true;
     if (selected.types && selected.types.length > 0) initialState.types = true;
-    if (selected.priceRange && ((selected.priceRange[0] !== undefined && selected.priceRange[0] > 0) || (selected.priceRange[1] !== undefined && selected.priceRange[1] < 1000000))) initialState.price = true;
+    if (selected.priceRange && ((selected.priceRange[0] !== undefined && selected.priceRange[0] > 0) || (selected.priceRange[1] !== undefined))) initialState.price = true;
     if (selected.yearRange && (selected.yearRange[0] > 1993 || selected.yearRange[1] < 2026)) initialState.year = true;
     return initialState;
   });

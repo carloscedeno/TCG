@@ -1,5 +1,5 @@
 ---
-description: Workflow para ejecución autónoma del framework (Strata) y validación del PRD mientras el usuario descansa.
+description: Workflow para ejecución autónoma del Carlos AI Framework y validación del PRD mientras el usuario descansa.
 ---
 
 // turbo-all

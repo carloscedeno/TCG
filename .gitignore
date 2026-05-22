@@ -90,3 +90,5 @@ scripts/debug/
 
 # Added by ggshield
 .cache_ggshield
+# Added by code-review-graph
+.code-review-graph/

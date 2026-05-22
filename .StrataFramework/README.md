@@ -1,6 +1,6 @@
-# Strata Dev Framework – Project TCG
+# Carlos AI Framework – Project TCG
 
-This repository follows the **Strata Dev Framework** principles. It is a full‑stack application built on **Supabase** (PostgreSQL + Auth + Edge Functions) and a **React** front‑end managed with **Node.js**.
+This repository follows the **Carlos AI Framework** principles. It is a full‑stack application built on **Supabase** (PostgreSQL + Auth + Edge Functions) and a **React** front‑end managed with **Node.js**.
 
 ## Quick start
 ```bash
