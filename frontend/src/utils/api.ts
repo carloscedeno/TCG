@@ -1646,8 +1646,6 @@ export const fetchDiscountedSingles = async (gameCode?: string, limit = 10): Pro
     
     const { data, error } = await query;
     if (error) throw error;
-    
-    const now = new Date();
     return (data || [])
       .filter((row: any) => isDiscountActive(row.discount_end_date))
       .map((row: any) => {
@@ -1693,8 +1691,6 @@ export const fetchDiscountedAccessories = async (gameCode?: string, limit = 10):
     
     const { data, error } = await query;
     if (error) throw error;
-    
-    const now = new Date();
     return (data || [])
       .filter((row: any) => isDiscountActive(row.discount_until))
       .map((row: any) => {
