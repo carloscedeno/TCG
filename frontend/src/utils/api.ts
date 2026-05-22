@@ -616,17 +616,24 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
             const finishMatches = matches.filter((p: any) => (p.finish || 'nonfoil').toLowerCase() === vFinish);
             const totalStockForFinish = finishMatches.reduce((acc: number, curr: any) => acc + (curr.stock || 0), 0);
             const exactProd = finishMatches[0];
-            const finalPrice = (exactProd?.price && Number(exactProd.price) > 0) ? Number(exactProd.price) : v.price;
-            const originalPrice = (exactProd?.original_price && Number(exactProd.original_price) > 0) ? Number(exactProd.original_price) : finalPrice;
+            const basePriceFromDB = (exactProd?.price && Number(exactProd.price) > 0) ? Number(exactProd.price) : v.price;
+            const originalPrice = (exactProd?.original_price && Number(exactProd.original_price) > 0) ? Number(exactProd.original_price) : basePriceFromDB;
             const discountPct = Number(exactProd?.discount_percentage || 0);
+            const discountActive = isDiscountActive(exactProd?.discount_end_date);
+            
+            // Calculate final price based on the visual label
+            let finalPrice = basePriceFromDB;
+            if (discountPct > 0 && discountActive) {
+              finalPrice = basePriceFromDB * (1 - discountPct / 100);
+            }
 
             return {
               ...v,
               product_id: exactProd?.id,
               stock: totalStockForFinish,
               price: finalPrice,
-              original_price: originalPrice,
-              discount_percentage: discountPct
+              original_price: basePriceFromDB,
+              discount_percentage: discountActive ? discountPct : 0
             };
           });
         } else {
