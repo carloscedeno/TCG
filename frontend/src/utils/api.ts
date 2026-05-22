@@ -1649,7 +1649,7 @@ export const fetchDiscountedSingles = async (gameCode?: string, limit = 10): Pro
     
     const now = new Date();
     return (data || [])
-      .filter((row: any) => !row.discount_until || new Date(row.discount_until) > now)
+      .filter((row: any) => isDiscountActive(row.discount_end_date))
       .map((row: any) => {
         const originalPrice = Number(row.price || 0);
         const discountPct = Number(row.discount_percentage || 0);
@@ -1696,16 +1696,18 @@ export const fetchDiscountedAccessories = async (gameCode?: string, limit = 10):
     
     const now = new Date();
     return (data || [])
-      .filter((row: any) => !row.discount_until || new Date(row.discount_until) > now)
+      .filter((row: any) => isDiscountActive(row.discount_until))
       .map((row: any) => {
-        const finalPrice = Number(row.price || 0);
+        const originalPrice = Number(row.price || 0);
+        const discountPct = Number(row.discount_percentage || 0);
+        const finalPrice = discountPct > 0 ? originalPrice * (1 - discountPct / 100) : originalPrice;
         return {
           card_id: row.id,
           name: row.name,
           set: row.category,
           price: finalPrice,
-          original_price: finalPrice,
-          discount_percentage: Number(row.discount_percentage || 0),
+          original_price: originalPrice,
+          discount_percentage: discountPct,
           image_url: row.image_url,
           rarity: 'Common',
           total_stock: row.stock || 0,
