@@ -267,3 +267,12 @@ Remediate the E2E checkout process by implementing "Por Encargo" logic to bypass
 - **Frontend Build**: Success.
 - **Unit Tests**: 28 Passed.
 - **Database**: Migration 20260507120000 prepared for remote deployment.
+
+
+## 2026-05-22 — Arreglo del Flujo Visual y Base de Datos para Descuentos
+
+**Qué pasó:** El administrador reportó que al asignar un descuento a un ítem, el precio en la base de datos se corrompía y la UI no mostraba la rebaja. Luego reportó que al arreglarlo, el catálogo desapareció y la ficha de producto no aplicaba el descuento si no había fecha límite.
+**Lo que cambió:**
+- lessons_learned.md → Lección N: Lógica de Descuentos, Fechas NULL y Funciones Duplicadas (PostgREST 300).
+- rontend/src/utils/api.ts → isDiscountActive acepta ahora fechas nulas y getCardDetails calcula dinámicamente el precio con base en el descuento activo.
+- supabase/ → Eliminación de triggers destructivos de descuentos, limpieza de sobrecarga de funciones y corrección de lógica de NULL date.
