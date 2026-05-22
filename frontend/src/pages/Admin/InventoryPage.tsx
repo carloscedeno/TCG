@@ -729,11 +729,6 @@ export function InventoryPage() {
                                                     </div>
                                                 ) : (
                                                     <div className="flex flex-col items-end">
-                                                        {item.discount_percentage && item.discount_percentage > 0 && isDiscountActive(item.discount_end_date) && (
-                                                            <span className="text-[10px] line-through text-neutral-600 font-mono">
-                                                                ${(item.price || 0).toFixed(2)}
-                                                            </span>
-                                                        )}
                                                         <button
                                                             onClick={() => {
                                                                 setEditingPriceId(item.product_id);
@@ -743,6 +738,11 @@ export function InventoryPage() {
                                                         >
                                                             {(item.price || 0) === 0 ? 'AUTO [CK]' : `$${(item.price || 0).toFixed(2)}`}
                                                         </button>
+                                                        {item.discount_percentage && item.discount_percentage > 0 && isDiscountActive(item.discount_end_date) && (
+                                                            <span className="text-[10px] text-purple-400 font-mono mt-1 bg-purple-500/10 px-2 py-0.5 rounded border border-purple-500/20">
+                                                                Venta: ${(item.price * (1 - item.discount_percentage / 100)).toFixed(2)}
+                                                            </span>
+                                                        )}
                                                         {lastSavedId === item.product_id && (
                                                             <span className="text-[8px] font-black text-white uppercase tracking-widest animate-pulse">GUARDADO</span>
                                                         )}

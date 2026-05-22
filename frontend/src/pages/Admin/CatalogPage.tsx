@@ -171,14 +171,14 @@ export default function CatalogPage() {
                                         </td>
                                         <td className="px-6 py-6 text-right">
                                             <div className="flex flex-col items-end">
+                                                <span className="text-lg font-black font-mono tracking-tighter">
+                                                    ${(item.original_price ?? item.price).toFixed(2)}
+                                                </span>
                                                 {item.discount_percentage > 0 && (
-                                                    <span className="text-[10px] line-through text-slate-600 font-mono">
-                                                        ${(item.original_price ?? item.price).toFixed(2)}
+                                                    <span className="text-[10px] text-orange-500 font-mono mt-1 bg-orange-500/10 px-2 py-0.5 rounded border border-orange-500/20">
+                                                        Venta: ${(item.price ?? 0).toFixed(2)}
                                                     </span>
                                                 )}
-                                                <span className="text-lg font-black font-mono tracking-tighter">
-                                                    ${(item.price ?? 0).toFixed(2)}
-                                                </span>
                                             </div>
                                         </td>
                                         <td className="px-6 py-6 text-center">
