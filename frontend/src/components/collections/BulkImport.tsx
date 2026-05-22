@@ -181,7 +181,7 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
     const downloadTemplate = (tcg: string) => {
         const templates: Record<string, string> = {
             'MTG': 'Name,Set Code,Collector Number,Condition,Quantity,Price Paid\nBlack Lotus,LEA,1,NM,1,20000',
-            'CATALOG': 'name,description,price,stock,category_code,unit_type,language,cost,suggested_price\nSleeves Dragon Shield Blue,High quality sleeves,12.50,50,SLEEVE,Unit,English,8.00,15.00'
+            'CATALOG': 'Nombre,Descripción,Precio,Stock,Categoría,Costo,Precio Sugerido,Unidad,Idioma\nSleeves Dragon Shield Matte Black,Micas protectoras,12.50,50,SLEEVE,8.00,15.00,Und.,Español\nCaja de Sobres Commander Masters,Booster Box sellada,300.00,5,BOOSTER_BOX,250.00,320.00,Caja,Inglés\nDisney Lorcana The First Chapter,Preventa del nuevo TCG,150.00,20,Preventa,100.00,180.00,Und.,Español\nPlaymat Custom,Playmat con arte exclusivo,25.00,10,PLAYMAT,15.00,30.00,Und.,Español'
         };
 
         const content = templates[tcg] || templates['MTG'];
@@ -392,7 +392,7 @@ const handleImport = async () => {
         { id: 'description', label: 'Descripción' },
         { id: 'price', label: 'Precio Geek (Venta)' },
         { id: 'stock', label: 'Stock Inicial' },
-        { id: 'category_code', label: 'Código de Categoría' },
+        { id: 'category_code', label: 'Categoría (Código o Texto Libre)' },
         { id: 'unit_type', label: 'Tipo de Unidad' },
         { id: 'language', label: 'Idioma' },
         { id: 'cost', label: 'Costo (USD)' },
