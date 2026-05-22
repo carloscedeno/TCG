@@ -473,12 +473,9 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                   if (prodDataNormal?.price) {
                       originalPriceNormal = prodDataNormal.price;
                       finalPriceNormal = prodDataNormal.price;
-                      if (prodDataNormal.discount_percentage && prodDataNormal.discount_end_date) {
-                          const endDate = new Date(prodDataNormal.discount_end_date);
-                          if (endDate > new Date()) {
-                              finalPriceNormal = originalPriceNormal * (1 - prodDataNormal.discount_percentage / 100);
-                              discountNormal = prodDataNormal.discount_percentage;
-                          }
+                      if (prodDataNormal.discount_percentage && isDiscountActive(prodDataNormal.discount_end_date)) {
+                          finalPriceNormal = originalPriceNormal * (1 - prodDataNormal.discount_percentage / 100);
+                          discountNormal = prodDataNormal.discount_percentage;
                       }
                   }
 
@@ -505,12 +502,9 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                   if (prodDataFoil?.price) {
                       originalPriceFoil = prodDataFoil.price;
                       finalPriceFoil = prodDataFoil.price;
-                      if (prodDataFoil.discount_percentage && prodDataFoil.discount_end_date) {
-                          const endDate = new Date(prodDataFoil.discount_end_date);
-                          if (endDate > new Date()) {
-                              finalPriceFoil = originalPriceFoil * (1 - prodDataFoil.discount_percentage / 100);
-                              discountFoil = prodDataFoil.discount_percentage;
-                          }
+                      if (prodDataFoil.discount_percentage && isDiscountActive(prodDataFoil.discount_end_date)) {
+                          finalPriceFoil = originalPriceFoil * (1 - prodDataFoil.discount_percentage / 100);
+                          discountFoil = prodDataFoil.discount_percentage;
                       }
                   }
 
