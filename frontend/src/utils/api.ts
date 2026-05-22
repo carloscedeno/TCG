@@ -9,7 +9,7 @@ const API_BASE = import.meta.env.VITE_API_BASE || '';
  * we can simply compare the instantiations directly without manual hours offset shifting.
  */
 export const isDiscountActive = (discountUntil: string | null | undefined): boolean => {
-    if (!discountUntil) return false;
+    if (!discountUntil) return true; // Null date means permanent discount
     return new Date() < new Date(discountUntil);
 };
 
