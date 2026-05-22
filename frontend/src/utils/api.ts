@@ -632,7 +632,7 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
               product_id: exactProd?.id,
               stock: totalStockForFinish,
               price: finalPrice,
-              original_price: basePriceFromDB,
+              original_price: originalPrice,
               discount_percentage: discountActive ? discountPct : 0
             };
           });
