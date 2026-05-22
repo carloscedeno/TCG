@@ -701,6 +701,109 @@ async function handleImportEndpoint(supabase: SupabaseClient, path: string, meth
     return result
   }
 
+  if (importType === 'catalog') {
+    const errors: string[] = [];
+    const failedIndices: number[] = [];
+    let importedCount = 0;
+
+    const gamesCache: Record<string, number> = {};
+    const { data: allGames } = await supabase.from('games').select('game_id, game_name, game_code');
+    if (allGames) {
+      for (const g of allGames) {
+        gamesCache[g.game_name.toLowerCase()] = g.game_id;
+        if (g.game_code) gamesCache[g.game_code.toLowerCase()] = g.game_id;
+      }
+    }
+
+    for (let i = 0; i < importData.length; i++) {
+      const row = importData[i];
+      try {
+        const nameRaw = row[mapping?.name] || row['Name'] || row['name'] || row['producto'] || row['Nombre'] || row['nombre'];
+        let name = String(nameRaw || '').trim();
+        
+        if (!name) {
+          errors.push(`Row ${i + 1}: Missing product name`);
+          failedIndices.push(i);
+          continue;
+        }
+
+        const priceRaw = row[mapping?.price] || row['price'] || row['precio'] || row['venta'] || '0';
+        const price = parseFloat(String(priceRaw).replace(',', '.')) || 0;
+
+        const costRaw = row[mapping?.cost] || row['cost'] || row['costo'] || row['Costo unitario'] || '0';
+        const cost = parseFloat(String(costRaw).replace(',', '.')) || 0;
+
+        const suggRaw = row[mapping?.suggested_price] || row['suggested_price'] || row['precio_sugerido'] || row['sugerido'] || '0';
+        let suggested_price = parseFloat(String(suggRaw).replace(',', '.')) || 0;
+        if (suggested_price === 0) suggested_price = price > 0 ? price : cost;
+
+        const finalPrice = price > 0 ? price : suggested_price;
+
+        const stockRaw = row[mapping?.stock] || row['stock'] || row['cantidad'] || row['Cantidad'] || row['inventario'] || '0';
+        const stock = parseInt(String(stockRaw)) || 0;
+
+        const category = String(row[mapping?.category_code] || row['category_code'] || row['categoría'] || row['Categoria'] || row['categoria'] || 'General').trim();
+        
+        if (category.toLowerCase().includes('preventa') && !name.toLowerCase().includes('(preventa)')) {
+          name = '(preventa) ' + name;
+        }
+
+        const description = String(row[mapping?.description] || row['description'] || row['descripción'] || row['descripcion'] || '').trim();
+        const unit_type = String(row[mapping?.unit_type] || row['unit_type'] || row['unidad'] || row['Unidad'] || row['tipo'] || 'Und.').trim();
+        const language = String(row[mapping?.language] || row['language'] || row['idioma'] || 'Español').trim();
+
+        const gameIdRaw = row[mapping?.game_id] || row['game_id'] || row['id_juego'] || row['juego'] || '';
+        let game_id = null;
+
+        if (gameIdRaw) {
+          const gameStr = String(gameIdRaw).trim().toLowerCase();
+          if (gamesCache[gameStr]) {
+            game_id = gamesCache[gameStr];
+          } else if (!isNaN(parseInt(gameStr))) {
+            game_id = parseInt(gameStr);
+          }
+        }
+
+        const { data: existing } = await supabase
+          .from('accessories')
+          .select('id')
+          .eq('name', name)
+          .limit(1);
+
+        if (existing && existing.length > 0) {
+          const { error: updateError } = await supabase
+            .from('accessories')
+            .update({
+              price: finalPrice, cost, suggested_price, stock, category, description, unit_type, language, game_id, is_active: true
+            })
+            .eq('id', existing[0].id);
+
+          if (updateError) throw updateError;
+        } else {
+          const { error: insertError } = await supabase
+            .from('accessories')
+            .insert({
+              name, price: finalPrice, cost, suggested_price, stock, category, description, unit_type, language, game_id, is_active: true
+            });
+
+          if (insertError) throw insertError;
+        }
+
+        importedCount++;
+      } catch (rowErr: any) {
+        errors.push(`Row ${i + 1} (${row[mapping?.name] || row['Nombre'] || '?'}): ${rowErr.message}`);
+        failedIndices.push(i);
+      }
+    }
+
+    return {
+      imported_count: importedCount,
+      total_rows: importData.length,
+      errors: errors,
+      failed_indices: failedIndices
+    };
+  }
+
   // Collection import
   const errors: string[] = []
   const failedIndices: number[] = []
