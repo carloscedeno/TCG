@@ -678,46 +678,91 @@ async function handleImportEndpoint(supabase: SupabaseClient, path: string, meth
         const description = row[mapping?.description] || row['description'] || row['Description'] || row['Descripción'] || '';
         const price = parseFloat(row[mapping?.price] || row['price'] || row['Price'] || row['Precio'] || '0') || 0;
         const stock = parseInt(row[mapping?.stock] || row['stock'] || row['Stock'] || '0') || 0;
-        const categoryCode = (row[mapping?.category_code] || row['category_code'] || row['Categoría'] || '').trim();
-        const unitType = row[mapping?.unit_type] || row['unit_type'] || row['Tipo'] || 'Unidad';
+        const categoryRaw = String(row[mapping?.category_code] || row['category_code'] || row['categoría'] || row['Categoria'] || row['categoria'] || 'General').trim();
+        
+        let processedName = name;
+        if (categoryRaw.toLowerCase().includes('preventa') && !processedName.toLowerCase().includes('(preventa)')) {
+          processedName = '(preventa) ' + processedName;
+        }
+
+        const validCode = categoryMap[categoryRaw] ? categoryRaw : null;
+        const categoryName = categoryMap[categoryRaw] || categoryRaw || 'Accesorios';
+
+        const unitType = String(row[mapping?.unit_type] || row['unit_type'] || row['unidad'] || row['Unidad'] || row['tipo'] || 'Und.').trim();
         
         // Optional fields
         const cost = parseFloat(row[mapping?.cost] || row['cost'] || row['Costo'] || row['costo'] || '0') || 0;
         const suggestedPrice = parseFloat(row[mapping?.suggested_price] || row['suggested_price'] || row['Sugerido'] || row['precio_sugerido'] || '0') || 0;
-        const gameIdRaw = row[mapping?.game_id] || row['game_id'] || row['id_juego'] || row['Juego'] || null;
-        const gameId = gameIdRaw && !isNaN(parseInt(String(gameIdRaw))) ? parseInt(String(gameIdRaw)) : null;
-        const language = row[mapping?.language] || row['language'] || row['Idioma'] || 'Inglés';
+        
+        const gameIdRaw = row[mapping?.game_id] || row['game_id'] || row['id_juego'] || row['Juego'] || '';
+        let gameId = null;
+        if (gameIdRaw) {
+          const gameStr = String(gameIdRaw).trim().toLowerCase();
+          if (!isNaN(parseInt(gameStr))) {
+            gameId = parseInt(gameStr);
+          }
+        }
+        
+        const language = String(row[mapping?.language] || row['language'] || row['idioma'] || 'Español').trim();
 
-        if (!name || isNaN(price) || !categoryCode) {
-          errors.push(`Row ${i + 1}: Faltan campos obligatorios (Nombre, Precio o Categoría)`)
+        if (!processedName || isNaN(price)) {
+          errors.push(`Row ${i + 1}: Faltan campos obligatorios (Nombre o Precio)`)
           failedIndices.push(i)
           continue
         }
 
-        const categoryName = categoryMap[categoryCode] || 'Accesorios';
-
-        const { error: insertError } = await supabase
+        const { data: existing } = await supabase
           .from('accessories')
-          .insert({
-            name,
-            description,
-            price,
-            cost,
-            suggested_price: suggestedPrice,
-            stock,
-            category: categoryName,
-            category_code: categoryCode,
-            unit_type: unitType,
-            game_id: gameId,
-            language,
-            is_active: true
-            // Image URL omitted as per request
-          })
+          .select('id')
+          .eq('name', processedName)
+          .limit(1);
 
-        if (insertError) {
-          errors.push(`Row ${i + 1} (${name}): Error de inserción - ${insertError.message}`)
-          failedIndices.push(i)
-          continue
+        if (existing && existing.length > 0) {
+          const { error: updateError } = await supabase
+            .from('accessories')
+            .update({
+              price,
+              cost,
+              suggested_price: suggestedPrice,
+              stock,
+              category: categoryName,
+              category_code: validCode,
+              description,
+              unit_type: unitType,
+              game_id: gameId,
+              language,
+              is_active: true
+            })
+            .eq('id', existing[0].id);
+
+          if (updateError) {
+            errors.push(`Row ${i + 1} (${processedName}): Error de actualización - ${updateError.message}`)
+            failedIndices.push(i)
+            continue
+          }
+        } else {
+          const { error: insertError } = await supabase
+            .from('accessories')
+            .insert({
+              name: processedName,
+              description,
+              price,
+              cost,
+              suggested_price: suggestedPrice,
+              stock,
+              category: categoryName,
+              category_code: validCode,
+              unit_type: unitType,
+              game_id: gameId,
+              language,
+              is_active: true
+            });
+
+          if (insertError) {
+            errors.push(`Row ${i + 1} (${processedName}): Error de inserción - ${insertError.message}`)
+            failedIndices.push(i)
+            continue
+          }
         }
 
         importedCount++
