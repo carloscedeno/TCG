@@ -709,7 +709,7 @@ export function InventoryPage() {
                                                 ) : (
                                                     <div className="flex flex-col items-end">
                                                         {item.discount_percentage && item.discount_percentage > 0 && isDiscountActive(item.discount_end_date) && (
-                                                            <span className="text-[10px] line-through text-neutral-600 font-mono">
+                                                            <span className="text-[10px] line-through text-neutral-600 font-mono" title="PVP Base (Original)">
                                                                 ${(item.price || 0).toFixed(2)}
                                                             </span>
                                                         )}
@@ -719,8 +719,9 @@ export function InventoryPage() {
                                                                 setTempPrice((item.price || 0).toString());
                                                             }}
                                                             className={`text-lg font-black font-mono tracking-tighter hover:text-purple-400 transition-colors ${(item.price || 0) === 0 ? 'text-purple-400' : 'text-white'}`}
+                                                            title="Clic para editar el precio base (PVP)"
                                                         >
-                                                            {(item.price || 0) === 0 ? 'AUTO [CK]' : `$${(item.price || 0).toFixed(2)}`}
+                                                            {(item.price || 0) === 0 ? 'AUTO [CK]' : `$${(item.discount_percentage && item.discount_percentage > 0 && isDiscountActive(item.discount_end_date) ? (item.price * (1 - item.discount_percentage / 100.0)) : item.price || 0).toFixed(2)}`}
                                                         </button>
                                                         {lastSavedId === item.product_id && (
                                                             <span className="text-[8px] font-black text-white uppercase tracking-widest animate-pulse">GUARDADO</span>
