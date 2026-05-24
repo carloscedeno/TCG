@@ -276,3 +276,14 @@ Remediate the E2E checkout process by implementing "Por Encargo" logic to bypass
 - lessons_learned.md → Lección N: Lógica de Descuentos, Fechas NULL y Funciones Duplicadas (PostgREST 300).
 - rontend/src/utils/api.ts → isDiscountActive acepta ahora fechas nulas y getCardDetails calcula dinámicamente el precio con base en el descuento activo.
 - supabase/ → Eliminación de triggers destructivos de descuentos, limpieza de sobrecarga de funciones y corrección de lógica de NULL date.
+
+## 2026-05-24 — Sincronización de Base de Datos DEV y Optimización de PDF
+
+**Qué pasó:** El frontend de DEV fallaba con errores 400 y 404 en el panel de administración de órdenes debido a una desincronización entre la base de datos DEV y las recientes migraciones de esquema (order_items). Se aplicaron manualmente las migraciones pendientes en el proyecto de DEV usando el MCP de Supabase. Luego, se intentó inyectar collector_number en una consulta GraphQL sobre la tabla products, lo cual provocó un error 400 ya que dicha columna no existe en esa tabla (reside en card_printings). Se limpiaron las proyecciones y se optimizó el PDF de recibos para mostrar el código de edición y la foliación.
+**Lo que cambió:**
+- lessons_learned.md -> Lecciones #171 (Multi-entorno y DEV DB) y #172 (Proyecciones GraphQL)
+- rontend/src/pages/Admin/OrdersPage.tsx -> Ajuste de queries (sin collector_number) y mejora en el HTML del PDF.
+- rontend/src/pages/OrderTrackingPage.tsx -> Sincronización de queries.
+- supabase/migrations/20260524150000_add_missing_order_items_columns.sql -> Migración añadida formalmente.
+**Artefacto creado:** Migración SQL y PDF receipt mejorado.
+**Regla derivada:** No asumir que DEV y PROD tienen el mismo DDL en Supabase. Aplicar migraciones explícitamente. Nunca pedir campos "ciegamente" en Supabase RPC sin verificar information_schema.
