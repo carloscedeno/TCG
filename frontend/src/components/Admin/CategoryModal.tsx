@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import type { FC, FormEvent } from 'react';
 import { supabase } from '../../utils/supabaseClient';
 import { X, Save, AlertCircle } from 'lucide-react';
 
@@ -19,7 +20,7 @@ interface Props {
     allCategories: Category[];
 }
 
-export const CategoryModal: React.FC<Props> = ({ isOpen, onClose, onSave, category, allCategories }) => {
+export const CategoryModal: FC<Props> = ({ isOpen, onClose, onSave, category, allCategories }) => {
     const [formData, setFormData] = useState<Partial<Category>>({
         code: '',
         name: '',
@@ -53,7 +54,7 @@ export const CategoryModal: React.FC<Props> = ({ isOpen, onClose, onSave, catego
 
     if (!isOpen) return null;
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         setIsSaving(true);
         setError(null);

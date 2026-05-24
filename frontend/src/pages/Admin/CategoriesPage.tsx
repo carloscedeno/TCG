@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Shield, Plus, Edit2, Archive, CheckCircle } from 'lucide-react';
 import { supabase } from '../../utils/supabaseClient';
-import { CategoryModal, Category } from '../../components/Admin/CategoryModal';
+import { CategoryModal } from '../../components/Admin/CategoryModal';
+import type { Category } from '../../components/Admin/CategoryModal';
 
 const CategoriesPage = () => {
     const [categories, setCategories] = useState<Category[]>([]);
