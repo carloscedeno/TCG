@@ -86,7 +86,8 @@ export const CardDetail: React.FC = () => {
             const result = await addToCart(baseId, 1, activeFinish, !!details?.is_accessory);
 
             if (result && !result.success) {
-                alert(result.message || result.error || 'No se pudo agregar al carrito');
+                console.error("ADD TO CART FAILED:", result);
+                alert(`Error al agregar al carrito: ${result.message || result.error || JSON.stringify(result)}`);
                 return;
             }
 
