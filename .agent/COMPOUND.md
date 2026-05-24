@@ -287,3 +287,14 @@ Remediate the E2E checkout process by implementing "Por Encargo" logic to bypass
 - supabase/migrations/20260524150000_add_missing_order_items_columns.sql -> MigraciÃ³n aÃ±adida formalmente.
 **Artefacto creado:** MigraciÃ³n SQL y PDF receipt mejorado.
 **Regla derivada:** No asumir que DEV y PROD tienen el mismo DDL en Supabase. Aplicar migraciones explÃ­citamente. Nunca pedir campos "ciegamente" en Supabase RPC sin verificar information_schema.
+
+## 2026-05-24 — Sincronía de Filtros Frontend-Backend
+
+**Qué pasó:** Reparamos la desconexión entre la UI de React y las RPC de Supabase que provocaba que los filtros visuales (precio, preventa, descuento, otros) no tuvieran efecto real en el catálogo.
+**Lo que cambió:**
+- .agent/lessons_learned.md -> Lección #173 (Frontend Filters Disconnected from Backend RPCs)
+- .agent/AGENTS.md -> Nueva feature documentada.
+- rontend/src/pages/Home.tsx -> Removido cap de precio en isDefaultFilter y mapeado type_line.
+- rontend/src/components/Card/Card.tsx -> Ocultada rareza en Sealed Products.
+**Artefacto creado:** scripts/apply_rpc_fixes.py -> Script para inyectar los flags p_only_discount, p_only_presale y p_games (OTHERS) en las consultas SQL de producción/dev.
+**Regla derivada:** Validar que los contratos backend (SQL/RPC) están listos para recibir parámetros antes de implementar switches visuales que modifiquen la URL del catálogo.

@@ -2266,3 +2266,9 @@ useEffect(() => {
 - **Causa RaÃ­z**: Se asumiÃ³ incorrectamente que collector_number residÃ­a en la tabla products. Al enviar una peticiÃ³n con una columna inexistente, Supabase (PostgREST) rechaza toda la peticiÃ³n con HTTP 400.
 - **SoluciÃ³n**: Remover collector_number del select y documentar que los metadatos extendidos solo estÃ¡n en card_printings. 
 - **LecciÃ³n**: JamÃ¡s agregar campos especulativos a una peticiÃ³n de PostgREST. Antes de modificar proyecciones (select), verificar obligatoriamente la existencia de la columna ejecutando SELECT column_name FROM information_schema.columns WHERE table_name = 'X'.
+
+### 173. Frontend Filters Disconnected from Backend RPCs (Mayo 2026)
+- **Problema**: Los filtros de interfaz (Descuentos, Preventa y Otros) estaban conectados al estado y URL de React, pero no producían cambios en los resultados de búsqueda.
+- **Causa Raíz**: Los parámetros booleanos y arrays (p_only_discount, p_only_presale, p_games con valor OTHERS) eran enviados correctamente por el frontend, pero las funciones RPC de Supabase (get_products_filtered y get_accessories_filtered) no tenían la lógica en su bloque WHERE para procesarlos, devolviendo el catálogo entero.
+- **Solución**: Modificadas las RPCs en Supabase para interceptar estos flags y filtrar a nivel de SQL. Se añadió soporte para OTHERS (excluyendo la lista de juegos principales).
+- **Lección**: Al implementar un nuevo control de filtro visual, la primera verificación debe ser **siempre** el contrato de la función de base de datos (RPC/endpoint) que recibe y procesa el parámetro. De lo contrario se genera una ilusión de funcionalidad en el cliente.
