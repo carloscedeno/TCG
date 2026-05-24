@@ -117,7 +117,7 @@ const Home: React.FC = () => {
 
   const isDefaultFilter = (key: string, val: any) => {
     if (key === 'yearRange') return (val as any)[0] <= 1993 && (val as any)[1] >= 2026;
-    if (key === 'priceRange') return (val as any)[0] <= 0 && (val as any)[1] >= 1000000;
+    if (key === 'priceRange') return (val as any)[0] <= 0 && ((val as any)[1] === 1000000 || (val as any)[1] === undefined);
     if (Array.isArray(val)) return val.length === 0;
     return !val;
   };
@@ -284,6 +284,7 @@ const Home: React.FC = () => {
               price: Number(p.price) || 0,
               image_url: p.image_url,
               rarity: p.rarity,
+              type: p.type_line,
               total_stock: Number(p.stock) || 0,
               finish: p.finish,
               is_foil: p.finish === 'foil' || p.finish === 'etched',

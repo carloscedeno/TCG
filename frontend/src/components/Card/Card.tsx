@@ -301,7 +301,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         )}
 
         {/* Rarity Badge (Overlay) */}
-        {!is_accessory && rarity && rarity.toLowerCase() !== 'común' && rarity.toLowerCase() !== 'comun' && rarity.toLowerCase() !== 'common' && (
+        {!is_accessory && rarity && type?.toLowerCase() !== 'sealed product' && type?.toLowerCase() !== 'sealed' && rarity.toLowerCase() !== 'común' && rarity.toLowerCase() !== 'comun' && rarity.toLowerCase() !== 'common' && (
           <div className={`absolute top-2 right-2 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider backdrop-blur-md border border-white/10 z-10 ${rarity.toLowerCase() === 'mythic' ? 'bg-orange-500/20 text-orange-400 border-orange-500/30' :
             rarity.toLowerCase() === 'rare' ? 'bg-geeko-gold/20 text-geeko-gold border-geeko-gold/30' :
               'bg-black/60 text-text-low'
