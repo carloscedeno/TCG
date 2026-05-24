@@ -924,6 +924,10 @@ export const addToCart = async (printingId: string, quantity: number = 1, finish
           });
           if (error) throw error;
           window.dispatchEvent(new Event('cart-updated'));
+          
+          if (typeof data === 'string') {
+              return { success: true, cart_id: data };
+          }
           return data || { success: true };
       }
 
