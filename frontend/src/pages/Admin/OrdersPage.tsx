@@ -210,7 +210,6 @@ const OrdersPage = () => {
                             image_url,
                             set_code
                         ),
-                        finish,
                         is_on_demand
                     )
                 `)
