@@ -23,7 +23,7 @@ export const OrderTrackingPage = () => {
                     *,
                     order_items(
                         *,
-                        products(name, image_url, set_code, collector_number)
+                        products(name, image_url, set_code)
                     )
                 `)
                 .eq('id', orderId)
