@@ -2254,3 +2254,15 @@ useEffect(() => {
 - **Causa Raíz**: 1. Las validaciones matemáticas no tenían un fallback para fechas NULL como sinónimo de descuento permanente. 2. DROP FUNCTION asume una firma específica y si difiere, PostgREST colapsa al intentar resolver el RPC en endpoints /rest/v1/rpc/....
 - **Solución**: Se actualizaron todos los RPC (get_products_filtered, get_accessories_filtered, get_products_stock_by_printing_ids) y isDiscountActive del frontend para tratar discount_end_date IS NULL como un descuento activo permanente. Se limpiaron con sus firmas exactas todas las funciones duplicadas en Supabase.
 - **Regla Derivada**: Nunca actualizar un RPC que cambia de firma sin hacer un DROP CASCADE explícito de las versiones anteriores. Siempre tratar las fechas opcionales (discount_end_date) con fallback a infinito para evitar que una etiqueta puramente visual no genere el impacto matemático deseado en caja.
+
+### 171. Despliegues Multi-Entorno y Migraciones Manuales en DEV (Mayo 2026)
+- **Problema**: El frontend DEV desplegado por Cloudflare arrojó error 400 (column order_items_1.finish does not exist) al consultar metadatos de órdenes.
+- **Causa Raíz**: Las migraciones SQL de cambios de esquema en order_items solo se habían aplicado en producción. Como DEV está segregado en otro proyecto de Supabase y el pipeline CI/CD de Cloudflare solo procesa código frontend, la base de datos DEV quedó desincronizada del esquema esperado.
+- **Solución**: Se utilizó el MCP de Supabase para aplicar manualmente las migraciones pendientes en el proyecto DEV (qfkqnnostzaqueujdms) usando el execute_sql con el DDL faltante.
+- **Lección**: Al crear migraciones SQL que afecten el modelo de datos (agregando columnas como inish o product_name), es mandatario aplicarlas explícitamente en el proyecto DEV a través de la CLI, dashboard o herramientas de MCP *antes* o *al mismo tiempo* de subir los cambios de frontend.
+
+### 172. Proyecciones GraphQL Cíegas y Errores 400 (Mayo 2026)
+- **Problema**: Fallo total de carga de la página de órdenes tras agregar collector_number al bloque de selección products(...).
+- **Causa Raíz**: Se asumió incorrectamente que collector_number residía en la tabla products. Al enviar una petición con una columna inexistente, Supabase (PostgREST) rechaza toda la petición con HTTP 400.
+- **Solución**: Remover collector_number del select y documentar que los metadatos extendidos solo están en card_printings. 
+- **Lección**: Jamás agregar campos especulativos a una petición de PostgREST. Antes de modificar proyecciones (select), verificar obligatoriamente la existencia de la columna ejecutando SELECT column_name FROM information_schema.columns WHERE table_name = 'X'.
