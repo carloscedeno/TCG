@@ -323,6 +323,19 @@ export const AdminDashboard = () => {
                         </div>
                     </Link>
 
+                    <Link to="/admin/categories" className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#00D1FF]/30 to-slate-900 border border-white/10 p-8 hover:border-[#00D1FF]/50 transition-all md:col-span-1">
+                        <div className="absolute inset-0 bg-[#00D1FF]/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="relative z-10 flex items-center justify-between">
+                            <div>
+                                <h3 className="text-2xl font-black italic text-white mb-2">CATEGORÍAS</h3>
+                                <p className="text-[#00D1FF] text-xs font-bold uppercase tracking-widest">Taxonomía del Catálogo</p>
+                            </div>
+                            <div className="w-16 h-16 bg-[#00D1FF]/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <Database className="text-[#00D1FF]" size={32} />
+                            </div>
+                        </div>
+                    </Link>
+
                     <Link to="/admin/banners" className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-cyan-900/50 to-slate-900 border border-white/10 p-8 hover:border-cyan-500/50 transition-all">
                         <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
                         <div className="relative z-10 flex items-center justify-between">
