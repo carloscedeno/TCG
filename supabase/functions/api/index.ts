@@ -701,6 +701,111 @@ async function handleImportEndpoint(supabase: SupabaseClient, path: string, meth
     return result
   }
 
+  if (importType === 'catalog') {
+    const errors: string[] = []
+    const failedIndices: number[] = []
+    let importedCount = 0
+
+    for (let i = 0; i < importData.length; i++) {
+      const row = importData[i]
+      try {
+        const name = row[mapping?.name] || row['Name'] || row['name'] || row['Nombre'] || row['producto'];
+        const description = row[mapping?.description] || row['Description'] || row['description'] || '';
+        const categoryCode = row[mapping?.category_code] || row['Category code'] || row['category_code'] || row['category'] || row['categoría'] || 'OTROS';
+        const unitType = row[mapping?.unit_type] || row['Unit type'] || row['unit_type'] || 'Unidad';
+        const language = row[mapping?.language] || row['Language'] || row['language'] || 'ES';
+        
+        const priceRaw = row[mapping?.price] || row['Price'] || row['price'] || row['venta'] || '0';
+        // Handle comma as decimal separator
+        const price = parseFloat(String(priceRaw).replace(',', '.')) || 0;
+        
+        const costRaw = row[mapping?.cost] || row['Cost'] || row['cost'] || row['costo'] || '0';
+        const cost = parseFloat(String(costRaw).replace(',', '.')) || 0;
+        
+        const suggestedRaw = row[mapping?.suggested_price] || row['Suggested price'] || row['suggested_price'] || row['sugerido'] || '0';
+        const suggested_price = parseFloat(String(suggestedRaw).replace(',', '.')) || 0;
+
+        const stockRaw = row[mapping?.stock] || row['Stock'] || row['stock'] || row['cantidad'] || '0';
+        const stock = parseInt(String(stockRaw)) || 0;
+        
+        const gameIdRaw = row[mapping?.game_id] || row['Game ID'] || row['game_id'] || row['juego'];
+        const game_id = gameIdRaw ? parseInt(String(gameIdRaw)) : null;
+
+        if (!name) {
+          errors.push(`Row ${i + 1}: Missing product name`)
+          failedIndices.push(i)
+          continue
+        }
+
+        // Look up existing accessory by name
+        const cleanName = String(name).trim();
+        
+        const { data: existing, error: lookupError } = await supabase
+          .from('accessories')
+          .select('id')
+          .ilike('name', cleanName)
+          .maybeSingle();
+
+        if (lookupError) {
+          errors.push(`Row ${i + 1} (${cleanName}): Lookup error - ${lookupError.message}`)
+          failedIndices.push(i)
+          continue
+        }
+
+        const payload = {
+          name: cleanName,
+          description: String(description).trim(),
+          category_code: String(categoryCode).trim(),
+          category: String(categoryCode).trim(), // Set category as it is NOT NULL
+          unit_type: String(unitType).trim(),
+          language: String(language).trim(),
+          price,
+          cost,
+          suggested_price,
+          stock,
+          game_id: isNaN(game_id as number) ? null : game_id
+        };
+
+        if (existing) {
+          // Update
+          const { error: updateError } = await supabase
+            .from('accessories')
+            .update(payload)
+            .eq('id', existing.id);
+            
+          if (updateError) {
+            errors.push(`Row ${i + 1} (${cleanName}): Update error - ${updateError.message}`)
+            failedIndices.push(i)
+            continue
+          }
+        } else {
+          // Insert
+          const { error: insertError } = await supabase
+            .from('accessories')
+            .insert(payload);
+            
+          if (insertError) {
+            errors.push(`Row ${i + 1} (${cleanName}): Insert error - ${insertError.message}`)
+            failedIndices.push(i)
+            continue
+          }
+        }
+
+        importedCount++
+      } catch (rowErr: any) {
+        errors.push(`Row ${i + 1}: Unexpected error - ${rowErr.message}`)
+        failedIndices.push(i)
+      }
+    }
+
+    return {
+      imported_count: importedCount,
+      total_rows: importData.length,
+      errors: errors,
+      failed_indices: failedIndices
+    }
+  }
+
   // Collection import
   const errors: string[] = []
   const failedIndices: number[] = []
