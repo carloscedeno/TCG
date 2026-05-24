@@ -133,6 +133,7 @@ END;
 $$;
 
 -- 8. Updated get_user_cart to include accessories
+DROP FUNCTION IF EXISTS public.get_user_cart(uuid);
 CREATE OR REPLACE FUNCTION public.get_user_cart(p_user_id uuid)
 RETURNS jsonb
 LANGUAGE plpgsql
@@ -185,6 +186,22 @@ END;
 $$;
 
 -- 9. Get Accessories Filtered RPC
+DO $$ 
+DECLARE
+  func_record RECORD;
+  drop_cmd TEXT;
+BEGIN
+  FOR func_record IN 
+    SELECT oid::regprocedure AS func_signature 
+    FROM pg_proc 
+    WHERE proname = 'get_accessories_filtered' 
+      AND pronamespace = 'public'::regnamespace
+  LOOP
+    drop_cmd := 'DROP FUNCTION IF EXISTS ' || func_record.func_signature || ' CASCADE;';
+    EXECUTE drop_cmd;
+  END LOOP;
+END $$;
+
 CREATE OR REPLACE FUNCTION public.get_accessories_filtered(
     p_game_id integer DEFAULT NULL,
     p_category text DEFAULT NULL,

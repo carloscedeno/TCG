@@ -23,6 +23,8 @@ def get_db_connection():
     if not db_url:
         raise ValueError("No database connection string found (DATABASE_URL, DATABASE_URL_PROD, or DATABASE_URL_DEV).")
     
+    db_url = db_url.strip().replace('"', '').replace("'", "")
+    
     # Clean URL if it has pooler params that might cause issues with psycopg2
     if db_url and "?" in db_url:
         db_url = db_url.split("?")[0]

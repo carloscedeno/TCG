@@ -4,12 +4,13 @@ import { rarityMap, typeMap, colorMap } from '../../utils/translations';
 
 const gameNameMap: Record<string, string> = {
   'MTG': 'Magic: The Gathering',
-  'POKEMON': 'Pokémon',
   'PKM': 'Pokémon',
   'OPC': 'One Piece',
   'DGM': 'Digimon',
   'LOR': 'Lorcana',
-  'YGO': 'Yu-Gi-Oh!'
+  'YGO': 'Yu-Gi-Oh!',
+  'FAB': 'Flesh and Blood',
+  'WXS': 'Wixoss'
 };
 
 export interface Filters {
@@ -20,8 +21,10 @@ export interface Filters {
   types: string[];
   categories?: string[];
   yearRange: [number, number];
-  priceRange: [number, number];
+  priceRange: [number | undefined, number | undefined];
   only_new?: boolean;
+  only_discount?: boolean;
+  only_presale?: boolean;
 }
 
 export interface FiltersPanelProps {
@@ -42,7 +45,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
     if (selected.rarities && selected.rarities.length > 0) initialState.rarities = true;
     if (selected.colors && selected.colors.length > 0) initialState.colors = true;
     if (selected.types && selected.types.length > 0) initialState.types = true;
-    if (selected.priceRange && (selected.priceRange[0] > 0 || selected.priceRange[1] < 1000000)) initialState.price = true;
+    if (selected.priceRange && ((selected.priceRange[0] !== undefined && selected.priceRange[0] > 0) || (selected.priceRange[1] !== undefined))) initialState.price = true;
     if (selected.yearRange && (selected.yearRange[0] > 1993 || selected.yearRange[1] < 2026)) initialState.year = true;
     return initialState;
   });
@@ -374,6 +377,46 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
         </section>
       )}
 
+      {/* Promociones y Ofertas */}
+      <section className="border-b border-white/5 pb-6 space-y-3">
+        <div className="flex items-center justify-between text-[11px] font-black uppercase tracking-[0.2em] text-text-low mb-2">
+          <div className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full shadow-[0_0_10px_rgba(52,211,153,0.8)]"></div>
+            Promociones
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            onClick={() => onChange({ ...selected, only_discount: !selected.only_discount })}
+            className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold transition-all border ${
+              selected.only_discount
+                ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.2)]'
+                : 'bg-neutral-900/50 border-neutral-800 text-text-low hover:border-neutral-700 hover:text-text-high'
+            }`}
+          >
+            <div className={`w-3.5 h-3.5 rounded flex items-center justify-center border ${selected.only_discount ? 'bg-emerald-500 border-emerald-400 text-black' : 'border-neutral-700 bg-neutral-800'}`}>
+              {selected.only_discount && <Check size={10} strokeWidth={3} />}
+            </div>
+            En Descuento
+          </button>
+
+          <button
+            onClick={() => onChange({ ...selected, only_presale: !selected.only_presale })}
+            className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold transition-all border ${
+              selected.only_presale
+                ? 'bg-purple-500/20 border-purple-500/50 text-purple-400 shadow-[0_0_15px_rgba(168,85,247,0.2)]'
+                : 'bg-neutral-900/50 border-neutral-800 text-text-low hover:border-neutral-700 hover:text-text-high'
+            }`}
+          >
+            <div className={`w-3.5 h-3.5 rounded flex items-center justify-center border ${selected.only_presale ? 'bg-purple-500 border-purple-400 text-white' : 'border-neutral-700 bg-neutral-800'}`}>
+              {selected.only_presale && <Check size={10} strokeWidth={3} />}
+            </div>
+            Preventa
+          </button>
+        </div>
+      </section>
+
       {/* Rango de Precio */}
       <section className="border-b border-white/5 pb-6">
         <button 
@@ -392,16 +435,22 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
             <input
               type="number"
               placeholder="Mín"
-              value={selected.priceRange?.[0] || ''}
-              onChange={(e) => onChange({ ...selected, priceRange: [parseFloat(e.target.value) || 0, selected.priceRange?.[1] || 1000000] })}
+              value={selected.priceRange?.[0] !== undefined ? selected.priceRange[0] : ''}
+              onChange={(e) => {
+                const val = e.target.value === '' ? undefined : parseFloat(e.target.value);
+                onChange({ ...selected, priceRange: [val, selected.priceRange?.[1]] });
+              }}
               className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-geeko-gold/50"
             />
             <span className="text-neutral-700">→</span>
             <input
               type="number"
               placeholder="Máx"
-              value={selected.priceRange?.[1] || ''}
-              onChange={(e) => onChange({ ...selected, priceRange: [selected.priceRange?.[0] || 0, parseFloat(e.target.value) || 1000000] })}
+              value={selected.priceRange?.[1] !== undefined ? selected.priceRange[1] : ''}
+              onChange={(e) => {
+                const val = e.target.value === '' ? undefined : parseFloat(e.target.value);
+                onChange({ ...selected, priceRange: [selected.priceRange?.[0], val] });
+              }}
               className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-geeko-gold/50"
             />
           </div>

@@ -14,6 +14,7 @@ import { CheckoutPage } from './pages/CheckoutPage';
 import { CheckoutSuccessPage } from './pages/CheckoutSuccessPage';
 import { OrderTrackingPage } from './pages/OrderTrackingPage';
 import UpdatePassword from './pages/UpdatePassword';
+import ScrollToTop from './components/Navigation/ScrollToTop';
 import { AdminRoute } from './components/Auth/AdminRoute';
 import NotFound from './pages/NotFound';
 import HelpPage from './pages/HelpPage';
@@ -70,6 +71,7 @@ function App() {
         <AuthProvider>
             <CartProvider>
                 <Router basename="/">
+                    <ScrollToTop />
                     <PosSessionBanner />
                     <Routes>
                         <Route path="/" element={<Home />} />

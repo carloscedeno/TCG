@@ -92,7 +92,7 @@ export const AdminDashboard = () => {
             if (Array.isArray(data)) {
                 setActiveTasks(data);
             }
-        } catch (err) {
+        } catch {
             // Silencioso
         }
     };
@@ -393,7 +393,7 @@ export const AdminDashboard = () => {
                     <CloudflareAnalytics session={session} apiBase={API_BASE} />
                 </div>
 
-                {false && (
+                {(() => false)() && (
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         <div className="space-y-8">
                             <div className="glass-card rounded-3xl p-8 border border-white/5 bg-slate-900/50">

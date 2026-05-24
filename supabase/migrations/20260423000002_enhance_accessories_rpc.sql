@@ -4,6 +4,22 @@
 
 BEGIN;
 
+DO $$ 
+DECLARE
+  func_record RECORD;
+  drop_cmd TEXT;
+BEGIN
+  FOR func_record IN 
+    SELECT oid::regprocedure AS func_signature 
+    FROM pg_proc 
+    WHERE proname = 'get_accessories_filtered' 
+      AND pronamespace = 'public'::regnamespace
+  LOOP
+    drop_cmd := 'DROP FUNCTION IF EXISTS ' || func_record.func_signature || ' CASCADE;';
+    EXECUTE drop_cmd;
+  END LOOP;
+END $$;
+
 CREATE OR REPLACE FUNCTION public.get_accessories_filtered(
     p_game_id integer DEFAULT NULL,
     p_category text DEFAULT NULL,

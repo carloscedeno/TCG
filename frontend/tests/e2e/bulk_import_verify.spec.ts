@@ -19,7 +19,7 @@ test.describe('Bulk Import CSV/TXT Verification', () => {
 
         // Verify detection
         await expect(page.locator('text=Formato Detectado Automáticamente')).toBeVisible({ timeout: 10000 });
-        await expect(page.locator('text=ManaBox')).toBeVisible();
+        await expect(page.getByText('[ManaBox]')).toBeVisible();
         await expect(page.locator('table')).toContainText('WWK');
         await expect(page.locator('table')).toContainText('47');
     });

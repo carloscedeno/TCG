@@ -55,6 +55,9 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
   };
 
   const currentName = hasMultipleFaces ? card_faces![currentFaceIndex].name : name;
+  const isPresale = currentName?.toLowerCase().includes('(preventa)');
+  const cleanName = isPresale ? currentName.replace(/\(preventa\)/gi, '').trim() : currentName;
+
   const currentType = hasMultipleFaces ? card_faces![currentFaceIndex].type_line || type : type;
   const imgSrc = getImgSrc();
 
@@ -76,8 +79,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
       } else {
           await addToCart(card_id, 1, finish);
       }
-    } catch (err) {
-      console.error("Failed to add to cart", err);
+    } catch {
       alert("Error al añadir al carrito. Por favor, intenta de nuevo.");
     } finally {
       setAddingToCart(false);
@@ -100,7 +102,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
     // Pre-fetch card details on hover
     try {
       fetchCardDetails(card_id);
-    } catch (err) {
+    } catch {
       // Ignore errors during pre-fetch
     }
   };
@@ -116,6 +118,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
           }
         }}
         onMouseEnter={handlePreFetch}
+        data-testid="product-card"
         className="flex items-center gap-4 px-4 py-3 bg-black/40 hover:bg-neutral-900 border border-white/5 hover:border-geeko-cyan/30 rounded-xl transition-all cursor-pointer group"
       >
         <div className="w-12 h-16 bg-[#1a1a1a] rounded-md overflow-hidden flex-shrink-0 relative">
@@ -124,7 +127,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
           ) : (
             <Shield size={20} className="absolute inset-0 m-auto opacity-10" />
           )}
-          {hasMultipleFaces && (
+          {!!hasMultipleFaces && (
             <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
               <RotateCw size={12} className="text-white" />
             </div>
@@ -136,14 +139,17 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
 
         <div className="flex-1 min-w-0">
           <h3 className="text-white font-bold text-sm group-hover:text-geeko-cyan transition-colors break-words whitespace-normal leading-snug flex items-center gap-2">
-            {currentName}
+            {cleanName}
+            {isPresale && (
+              <span className="px-1.5 py-0.5 bg-geeko-cyan text-black text-[7px] font-black uppercase rounded shadow-lg shadow-geeko-cyan/20">Preventa</span>
+            )}
             {['sos', 'soa', 'soc', 'tsos'].includes(set?.toLowerCase()) && (
               <span className="px-1.5 py-0.5 bg-purple-600 text-[7px] font-black uppercase rounded shadow-lg shadow-purple-500/20 animate-pulse">Nuevo</span>
             )}
           </h3>
           <div className="flex items-center gap-2 mt-0.5">
             <span className="text-[10px] text-text-low font-bold uppercase tracking-wider px-1.5 py-0.5 bg-white/5 rounded">{set}</span>
-            {rarity && (
+            {!is_accessory && rarity && (
               <span className={`text-[9px] font-black uppercase tracking-widest ${rarity.toLowerCase() === 'mythic' ? 'text-orange-400' :
                 rarity.toLowerCase() === 'rare' ? 'text-geeko-gold' : 'text-text-low'
                 }`}>
@@ -225,29 +231,37 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
       }}
       onMouseEnter={handlePreFetch}
       data-testid="product-card"
-      className={`flex flex-col glass-card rounded-2xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 group relative ${getRarityStyle(rarity)} cursor-pointer h-full`}
+      className={`flex flex-col glass-card rounded-2xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 group relative ${!is_accessory ? getRarityStyle(rarity) : 'border border-white/10 hover:border-white/30'} cursor-pointer h-full`}
     >
       {/* Flip Button overlay */}
-      {hasMultipleFaces && (
+      {!!hasMultipleFaces && (
         <button
           onClick={handleFlip}
-          className="absolute top-2 left-2 z-30 p-1.5 bg-black/60 hover:bg-geeko-cyan text-white rounded-full border border-white/10 transition-colors"
+          className="absolute top-2 left-2 z-10 p-1.5 bg-black/60 hover:bg-geeko-cyan text-white rounded-full border border-white/10 transition-colors"
         >
           <RotateCw size={14} className="group-hover:rotate-180 transition-transform duration-500" />
         </button>
       )}
 
+      {/* PREVENTA Badge Overlay */}
+      {isPresale && (
+        <div className="absolute top-2 left-2 z-10 px-2 py-1 bg-geeko-cyan text-black text-[8px] font-black uppercase rounded shadow-lg shadow-geeko-cyan/30 flex items-center gap-1 animate-in zoom-in duration-300">
+          <div className="w-1.5 h-1.5 bg-black rounded-full animate-pulse" />
+          Preventa
+        </div>
+      )}
+
       {/* NEW Badge Overlay */}
       {['sos', 'soa', 'soc', 'tsos'].includes(set?.toLowerCase()) && (
-        <div className="absolute top-2 left-2 z-30 px-2 py-1 bg-purple-600 text-white text-[8px] font-black uppercase rounded shadow-lg shadow-purple-600/30 flex items-center gap-1 animate-in zoom-in duration-300">
+        <div className={`absolute ${isPresale ? 'top-10' : 'top-2'} left-2 z-10 px-2 py-1 bg-purple-600 text-white text-[8px] font-black uppercase rounded shadow-lg shadow-purple-600/30 flex items-center gap-1 animate-in zoom-in duration-300`}>
           <div className="w-1 h-1 bg-white rounded-full animate-ping" />
           Nuevo
         </div>
       )}
 
       {/* Discount Ribbon (Top Left Diagonal) */}
-      {discount_percentage && discount_percentage > 0 && (
-        <div className="absolute top-0 left-0 w-20 h-20 overflow-hidden z-[100] pointer-events-none rounded-tl-2xl">
+      {!!(discount_percentage && discount_percentage > 0) && (
+        <div className="absolute top-0 left-0 w-20 h-20 overflow-hidden z-10 pointer-events-none rounded-tl-2xl">
           <div className="absolute top-[16px] left-[-22px] w-[100px] py-1.5 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-[10px] font-black uppercase text-center -rotate-45 shadow-[0_4px_15px_rgba(147,51,234,0.6)] border-y border-white/20 tracking-tighter">
             -{discount_percentage}%
           </div>
@@ -287,8 +301,8 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         )}
 
         {/* Rarity Badge (Overlay) */}
-        {rarity && (
-          <div className={`absolute top-2 right-2 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider backdrop-blur-md border border-white/10 z-20 ${rarity.toLowerCase() === 'mythic' ? 'bg-orange-500/20 text-orange-400 border-orange-500/30' :
+        {!is_accessory && rarity && rarity.toLowerCase() !== 'común' && rarity.toLowerCase() !== 'comun' && rarity.toLowerCase() !== 'common' && (
+          <div className={`absolute top-2 right-2 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider backdrop-blur-md border border-white/10 z-10 ${rarity.toLowerCase() === 'mythic' ? 'bg-orange-500/20 text-orange-400 border-orange-500/30' :
             rarity.toLowerCase() === 'rare' ? 'bg-geeko-gold/20 text-geeko-gold border-geeko-gold/30' :
               'bg-black/60 text-text-low'
             }`}>
@@ -297,7 +311,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         )}
 
         {isFoil && (
-          <div className="absolute top-8 right-2 px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider bg-gradient-to-r from-pink-500/80 via-purple-600/80 to-cyan-500/80 text-white border border-white/20 z-20 shadow-lg flex items-center gap-1 animate-pulse">
+          <div className="absolute top-8 right-2 px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider bg-gradient-to-r from-pink-500/80 via-purple-600/80 to-cyan-500/80 text-white border border-white/20 z-10 shadow-lg flex items-center gap-1 animate-pulse">
             <svg width="8" height="10" viewBox="0 0 10 12" fill="none">
               <rect x="0.5" y="0.5" width="9" height="11" rx="1.5" stroke="currentColor" strokeWidth="1" />
               <path d="M2 3 L8 3 M2 5 L6 5" stroke="currentColor" strokeWidth="1" />
@@ -310,7 +324,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         {showCartButton && (
           <button
             onClick={handleQuickAdd}
-            className={`absolute bottom-3 right-3 h-10 rounded-full flex items-center justify-center transition-all duration-300 shadow-2xl z-40 group/addbtn ${
+            className={`absolute bottom-3 right-3 h-10 rounded-full flex items-center justify-center transition-all duration-300 shadow-2xl z-20 group/addbtn ${
               addingToCart 
                 ? 'w-10 bg-white text-black scale-100 opacity-100' 
                 : 'w-10 hover:w-[140px] bg-geeko-cyan text-black border border-white/20 shadow-[0_0_15px_rgba(0, 209, 255, 0.4)] opacity-100 translate-y-0 scale-100'
@@ -333,8 +347,8 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
       {/* Card Info */}
       <div className="p-4 flex flex-col gap-1 z-20 bg-[#0a0a0a]/90 backdrop-blur-md border-t border-white/5 flex-grow">
         {/* Fix text overlap: Truncate + Title */}
-        <h3 className="text-white text-sm font-bold truncate leading-snug group-hover:text-geeko-cyan transition-colors" title={currentName}>
-          {currentName}
+        <h3 className="text-white text-sm font-bold truncate leading-snug group-hover:text-geeko-cyan transition-colors" title={cleanName}>
+          {cleanName}
         </h3>
 
         <div className="flex items-center justify-between text-[10px] text-text-low font-medium">

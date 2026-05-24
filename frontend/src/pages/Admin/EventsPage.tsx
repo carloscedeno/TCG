@@ -128,7 +128,7 @@ export const EventsPage: React.FC = () => {
       setSaving(true);
       
       // Auto-assign default image if none provided
-      let finalEvent = { ...editingEvent };
+      const finalEvent = { ...editingEvent };
       if (!finalEvent.image_url) {
         // Here we could have a map of default images per game
         const defaultImages: Record<string, string> = {

@@ -6,7 +6,7 @@ test.describe('Guest Checkout Flow', () => {
 
     test.beforeEach(async ({ page }) => {
         // Ensure we are logged out
-        await page.goto('/TCG/');
+        await page.goto('/');
         // Clear local storage to reset guest cart and bypass WelcomeModal
         await page.evaluate(() => {
             localStorage.clear();
@@ -21,7 +21,7 @@ test.describe('Guest Checkout Flow', () => {
             page.on('console', msg => console.log(`BROWSER LOG: ${msg.text()}`));
             console.log('TEST STARTED: Guest Checkout');
 
-            await page.goto('/TCG/');
+            await page.goto('/');
             page.on('request', request => {
                 if (request.url().includes('get_unique_cards_optimized')) {
                     console.log('>>', request.method(), request.url());

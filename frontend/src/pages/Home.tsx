@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
 import { CardGrid } from '../components/Card/CardGrid';
-import { CardModal } from '../components/Card/CardModal';
 import type { CardProps } from '../components/Card/Card';
 import { fetchCards, fetchSets, fetchProducts, fetchCart, fetchAccessories, fetchDiscountedSingles, fetchDiscountedAccessories, checkGameInventoryPresence } from '../utils/api';
 import { FiltersPanel } from '../components/Filters/FiltersPanel';
@@ -10,7 +9,7 @@ import { useAuth } from '../context/AuthContext';
 import { AuthModal } from '../components/Auth/AuthModal';
 import { X, Sparkles, Search } from 'lucide-react';
 
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { CartDrawer } from '../components/Navigation/CartDrawer';
 import { Footer } from '../components/Navigation/Footer';
 import { Header } from '../components/Navigation/Header';
@@ -20,7 +19,7 @@ import { DealsCarousel } from '../components/Home/DealsCarousel';
 
 
 const mockFilters: Filters = {
-  games: ['MTG', 'PKM', 'YGO', 'RFB', 'OPC', 'DGM', 'GND', 'FAB'],
+  games: ['MTG', 'PKM', 'YGO', 'FAB', 'OPC', 'DGM', 'WXS', 'LOR'],
   rarities: ['Common', 'Uncommon', 'Rare', 'Mythic'],
   colors: ['White', 'Blue', 'Black', 'Red', 'Green', 'Colorless', 'Multicolor'],
   types: ['Creature', 'Instant', 'Sorcery', 'Enchantment', 'Artifact', 'Planeswalker', 'Land'],
@@ -42,6 +41,7 @@ const colorCodeMap: Record<string, string> = {
 
 const Home: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [cards, setCards] = useState<(CardProps & { card_id: string })[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -68,7 +68,6 @@ const Home: React.FC = () => {
   const [page, setPage] = useState(0);
   const { user } = useAuth();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
   const [debouncedQuery, setDebouncedQuery] = useState(searchParams.get('q') || '');
   const [debouncedFilters, setDebouncedFilters] = useState<Partial<Filters>>(filters);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -92,7 +91,6 @@ const Home: React.FC = () => {
   const [inventoryPresence, setInventoryPresence] = useState({ hasSingles: true, hasCatalog: true });
   const [discountedSingles, setDiscountedSingles] = useState<(CardProps & { card_id: string })[]>([]);
   const [discountedAccessories, setDiscountedAccessories] = useState<(CardProps & { card_id: string })[]>([]);
-  const [loadingDeals, setLoadingDeals] = useState(false);
 
   useEffect(() => {
     const gameCode = filters.games && filters.games.length > 0 ? filters.games[0] : undefined;
@@ -116,31 +114,6 @@ const Home: React.FC = () => {
     checkInventory();
   }, [filters.games]);
 
-  // Sincronizar filtros desde la URL
-  useEffect(() => {
-    const q = searchParams.get('q') || '';
-    const game = searchParams.get('game')?.split(',').filter(Boolean) || [];
-    const set = searchParams.get('set')?.split(',').filter(Boolean) || [];
-    const rarity = searchParams.get('rarity')?.split(',').filter(Boolean) || [];
-    const category = searchParams.get('category')?.split(',').filter(Boolean) || [];
-    const tab = searchParams.get('tab') as 'marketplace' | 'catalog' || 'marketplace';
-    const year_from = parseInt(searchParams.get('year_from') || '1993');
-    const year_to = parseInt(searchParams.get('year_to') || '2026');
-    const price_min = parseFloat(searchParams.get('price_min') || '0');
-    const price_max = parseFloat(searchParams.get('price_max') || '1000000');
-
-    setQuery(q);
-    setActiveTab(tab);
-    setFilters({
-      games: game,
-      sets: set,
-      rarities: rarity,
-      categories: category,
-      yearRange: [year_from, year_to],
-      priceRange: [price_min, price_max],
-      only_new: searchParams.get('only_new') === 'true'
-    });
-  }, [searchParams]);
 
   const isDefaultFilter = (key: string, val: any) => {
     if (key === 'yearRange') return (val as any)[0] <= 1993 && (val as any)[1] >= 2026;
@@ -158,20 +131,19 @@ const Home: React.FC = () => {
   );
 
   const isDashboardView = !query && Object.entries(filters).every(([key, val]) => isDefaultFilter(key, val)) && (activeTab as string) !== 'catalog';
+  const isAccessoryTab = activeTab === 'catalog' && (!filters.games?.length || filters.games.includes('ACCESSORIES') || filters.games.includes('OTHERS'));
 
   useEffect(() => {
     const gameCode = filters.games && filters.games.length > 0 ? filters.games[0] : undefined;
     
     if (isDashboardView) {
       const loadDeals = async () => {
-        setLoadingDeals(true);
         const [singles, accessories] = await Promise.all([
           fetchDiscountedSingles(gameCode),
           fetchDiscountedAccessories(gameCode)
         ]);
         setDiscountedSingles(singles);
         setDiscountedAccessories(accessories);
-        setLoadingDeals(false);
       };
       loadDeals();
     }
@@ -222,18 +194,44 @@ const Home: React.FC = () => {
     const setParam = searchParams.get('set')?.split(',').filter(Boolean) || [];
     const rarityParam = searchParams.get('rarity')?.split(',').filter(Boolean) || [];
     const catParam = searchParams.get('category')?.split(',').filter(Boolean) || [];
+    const colorParam = searchParams.get('color')?.split(',').filter(Boolean) || [];
+    const typeParam = searchParams.get('type')?.split(',').filter(Boolean) || [];
+    const minPrice = searchParams.has('price_min') ? parseFloat(searchParams.get('price_min')!) : 0;
+    const maxPrice = searchParams.has('price_max') ? parseFloat(searchParams.get('price_max')!) : 1000000;
+    const minYear = searchParams.has('year_from') ? parseInt(searchParams.get('year_from')!) : 1993;
+    const maxYear = searchParams.has('year_to') ? parseInt(searchParams.get('year_to')!) : 2026;
+    const onlyNew = searchParams.get('only_new') === 'true';
+    const onlyDiscount = searchParams.get('only_discount') === 'true';
+    const onlyPresale = searchParams.get('only_presale') === 'true';
     const tabParam = (searchParams.get('tab') as any) || 'marketplace';
+
+    const newPriceRange: [number, number] = [minPrice, maxPrice];
+    const newYearRange: [number, number] = [minYear, maxYear];
 
     if (JSON.stringify(filters.games) !== JSON.stringify(gameParam) ||
         JSON.stringify(filters.sets) !== JSON.stringify(setParam) ||
         JSON.stringify(filters.rarities) !== JSON.stringify(rarityParam) ||
-        JSON.stringify(filters.categories) !== JSON.stringify(catParam)) {
+        JSON.stringify(filters.categories) !== JSON.stringify(catParam) ||
+        JSON.stringify(filters.colors) !== JSON.stringify(colorParam) ||
+        JSON.stringify(filters.types) !== JSON.stringify(typeParam) ||
+        JSON.stringify(filters.priceRange) !== JSON.stringify(newPriceRange) ||
+        JSON.stringify(filters.yearRange) !== JSON.stringify(newYearRange) ||
+        filters.only_new !== onlyNew ||
+        filters.only_discount !== onlyDiscount ||
+        filters.only_presale !== onlyPresale) {
       setFilters(prev => ({
         ...prev,
         games: gameParam,
         sets: setParam,
         rarities: rarityParam,
-        categories: catParam
+        categories: catParam,
+        colors: colorParam,
+        types: typeParam,
+        priceRange: newPriceRange,
+        yearRange: newYearRange,
+        only_new: onlyNew,
+        only_discount: onlyDiscount,
+        only_presale: onlyPresale
       }));
     }
 
@@ -271,6 +269,8 @@ const Home: React.FC = () => {
             price_min: debouncedFilters.priceRange ? debouncedFilters.priceRange[0] : undefined,
             price_max: debouncedFilters.priceRange ? debouncedFilters.priceRange[1] : undefined,
             only_new: debouncedFilters.only_new,
+            only_discount: debouncedFilters.only_discount,
+            only_presale: debouncedFilters.only_presale,
             limit: LIMIT,
             offset,
             sort: sortBy
@@ -302,6 +302,8 @@ const Home: React.FC = () => {
             category_code: searchParams.get('category') || (debouncedFilters.categories && debouncedFilters.categories.length > 0 ? debouncedFilters.categories[0] : undefined),
             price_min: debouncedFilters.priceRange ? debouncedFilters.priceRange[0] : undefined,
             price_max: debouncedFilters.priceRange ? debouncedFilters.priceRange[1] : undefined,
+            only_discount: debouncedFilters.only_discount,
+            only_presale: debouncedFilters.only_presale,
             sort: sortBy,
             limit: LIMIT,
             offset
@@ -363,8 +365,9 @@ const Home: React.FC = () => {
         setError('Failed to fetch cards. Please try again later.');
         console.error(err);
       } finally {
-        if (controller.signal.aborted) return;
-        setLoading(false);
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
       }
     };
 
@@ -405,7 +408,14 @@ const Home: React.FC = () => {
       game: newFilters.games,
       set: newFilters.sets,
       rarity: newFilters.rarities,
-      category: newFilters.categories
+      category: newFilters.categories,
+      color: newFilters.colors,
+      type: newFilters.types,
+      price_min: newFilters.priceRange?.[0]?.toString(),
+      price_max: newFilters.priceRange?.[1]?.toString(),
+      only_discount: newFilters.only_discount ? 'true' : undefined,
+      only_presale: newFilters.only_presale ? 'true' : undefined,
+      only_new: newFilters.only_new ? 'true' : undefined
     });
     setPage(0);
   };
@@ -415,6 +425,14 @@ const Home: React.FC = () => {
   const handleTabChange = (tab: 'marketplace' | 'catalog') => {
     updateURL({ tab });
     setPage(0);
+  };
+
+  const handleCardClick = (id: string, isArchive: boolean = false) => {
+    if (isArchive || activeTab === 'catalog') {
+      navigate(`/product/${id}?archive=true`);
+    } else {
+      navigate(`/card/${id}`);
+    }
   };
 
   return (
@@ -435,7 +453,7 @@ const Home: React.FC = () => {
         {showHeroSection && (
           <div className="max-w-[1600px] mx-auto w-full px-6 pt-2 animate-in fade-in slide-in-from-top-4 duration-1000">
             <HeroSection gameCode={filters.games && filters.games.length === 1 ? filters.games[0] : undefined} />
-            {(isDashboardView || (activeTab === 'catalog' && filters.games?.length === 0)) && <PresaleSection />}
+            {(isDashboardView || (activeTab === 'catalog' && (!filters.games || filters.games.length === 0))) && <PresaleSection />}
           </div>
         )}
 
@@ -451,11 +469,10 @@ const Home: React.FC = () => {
         )}
 
         {/* Rarity Filter Tabs & Sort */}
-        {(!isDashboardView || (filters.games && filters.games.length > 0)) && (
-          <div className="bg-[#0a0a0a]/95 border-b border-neutral-800 sticky top-[60px] z-40 backdrop-blur-md">
+        <div className="bg-[#0a0a0a]/95 border-b border-neutral-800 sticky top-[60px] z-40 backdrop-blur-md">
             <div className="max-w-[1600px] mx-auto px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex bg-neutral-900/50 p-1 rounded-full border border-neutral-800">
-                  {inventoryPresence.hasSingles && filters.games?.includes('MTG') && (
+                  {inventoryPresence.hasSingles && (!filters.games?.length || filters.games?.includes('MTG')) && (
                   <button
                     onClick={() => handleTabChange('marketplace')}
                     data-testid="inventory-tab"
@@ -469,10 +486,10 @@ const Home: React.FC = () => {
                   </button>
                 )}
                 
-                {inventoryPresence.hasCatalog && (
+                {inventoryPresence.hasCatalog && (!filters.games?.length || filters.games?.includes('MTG')) && (
                   <button
                     onClick={() => handleTabChange('catalog')}
-                    data-testid="catalog-tab"
+                    data-testid="archives-tab"
                     className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'catalog'
                       ? 'ring-2 ring-geeko-cyan/30 bg-geeko-cyan text-black shadow-[0_0_15px_rgba(0,209,255,0.4)]'
                       : 'text-text-low hover:text-neutral-300'
@@ -548,61 +565,38 @@ const Home: React.FC = () => {
             </div>
           </div>
         </div>
-      )}
 
         {/* Main Content */}
         <main className="max-w-[1600px] w-full mx-auto px-6 py-4 flex-1">
           <div className="flex flex-col lg:flex-row gap-4">
             {/* Sidebar Filters */}
-            {(!isDashboardView || (filters.games && filters.games.length > 0) || (activeTab as string) === 'catalog') && (
-              <aside className="hidden lg:block w-72 flex-shrink-0">
-                <div className="sticky top-[130px] max-h-[calc(100vh-150px)] overflow-y-auto pr-2 custom-scrollbar">
-                  <FiltersPanel
-                    filters={{ ...mockFilters, sets }}
-                    selected={filters}
-                    onChange={handleFilterChange}
-                    setsOptions={sets}
-                    isAccessoryMode={activeTab === 'catalog'}
-                  />
-                </div>
-              </aside>
-            )}
+            <aside className="hidden lg:block w-72 flex-shrink-0">
+              <div className="sticky top-[130px] max-h-[calc(100vh-150px)] overflow-y-auto pr-2 custom-scrollbar">
+                <FiltersPanel
+                  filters={{ ...mockFilters, sets }}
+                  selected={filters}
+                  onChange={handleFilterChange}
+                  setsOptions={sets}
+                  isAccessoryMode={isAccessoryTab}
+                />
+              </div>
+            </aside>
 
             {/* Cards Grid / Deals Dashboard */}
             <div className="flex-1">
-              {isDashboardView ? (
-                // DEALS DASHBOARD
-                <div className="flex flex-col gap-6 w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  {loadingDeals ? (
-                    <div className="flex flex-col items-center justify-center py-32 gap-6">
-                      <div className="w-16 h-16 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
-                      <p className="text-text-low font-black text-xs tracking-widest uppercase animate-pulse">Buscando Ofertas...</p>
-                    </div>
-                  ) : discountedSingles.length === 0 && discountedAccessories.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-32 text-center">
-                      <div className="w-24 h-24 bg-neutral-900/50 rounded-3xl flex items-center justify-center mb-8 border border-white/5 relative group">
-                        <div className="absolute inset-0 bg-white/20 blur-2xl rounded-full group-hover:bg-white/30 transition-all" />
-                        <Sparkles size={40} className="text-white relative z-10" />
-                      </div>
-                      <h3 className="text-3xl font-black italic uppercase tracking-tighter mb-4 text-white">
-                        Pronto Nuevas Ofertas
-                      </h3>
-                      <p className="text-text-low font-medium max-w-sm">
-                        Estamos preparando los mejores descuentos para tu colección. ¡Vuelve pronto!
-                      </p>
-                    </div>
-                  ) : (
-                    <>
-                      {inventoryPresence.hasSingles && discountedSingles.length > 0 && (
-                        <DealsCarousel title="Hechizos en Descuento" cards={discountedSingles} onCardClick={setSelectedCardId} />
-                      )}
-                      {inventoryPresence.hasCatalog && discountedAccessories.length > 0 && (
-                        <DealsCarousel title="Artilugios en Descuento" cards={discountedAccessories} onCardClick={setSelectedCardId} isArchive={true} />
-                      )}
-                    </>
+              {isDashboardView && activeTab === 'marketplace' && (discountedSingles.length > 0 || discountedAccessories.length > 0) && (
+                // DEALS DASHBOARD (Only for marketplace home when deals exist)
+                <div className="flex flex-col gap-6 w-full mb-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                  {inventoryPresence.hasSingles && discountedSingles.length > 0 && (
+                    <DealsCarousel title="Hechizos en Descuento" cards={discountedSingles} onCardClick={(id) => handleCardClick(id, false)} />
+                  )}
+                  {inventoryPresence.hasCatalog && discountedAccessories.length > 0 && (
+                    <DealsCarousel title="Artilugios en Descuento" cards={discountedAccessories} onCardClick={(id) => handleCardClick(id, true)} isArchive={true} />
                   )}
                 </div>
-              ) : loading && page === 0 ? (
+              )}
+
+              {loading && page === 0 ? (
                 <div className="flex flex-col items-center justify-center py-32 gap-6">
                   <div className="w-16 h-16 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
                   <p className="text-text-low font-black text-xs tracking-widest uppercase animate-pulse">Invocando Cartas...</p>
@@ -621,6 +615,16 @@ const Home: React.FC = () => {
                     Recargar Página
                   </button>
                 </div>
+              ) : isDashboardView && activeTab === 'marketplace' ? (
+                discountedSingles.length === 0 && discountedAccessories.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-32 text-center">
+                    <div className="w-24 h-24 bg-neutral-900/50 rounded-3xl flex items-center justify-center mb-8 border border-white/5">
+                      <Sparkles size={40} className="text-white" />
+                    </div>
+                    <h3 className="text-3xl font-black italic uppercase tracking-tighter mb-4 text-white">Sin Ofertas por Ahora</h3>
+                    <p className="text-text-low font-medium max-w-sm">No hay descuentos activos en este momento. Usa los filtros o busca para explorar el catálogo completo.</p>
+                  </div>
+                ) : null
               ) : (
                 <div className="flex flex-col gap-6">
                   {activeTab === 'catalog' && cards.length === 0 ? (
@@ -644,7 +648,7 @@ const Home: React.FC = () => {
                     </div>
                   ) : (
                     <>
-                      <CardGrid cards={cards} onCardClick={setSelectedCardId} viewMode={viewMode} isArchive={activeTab === 'catalog'} showCartButton={true} />
+                      <CardGrid cards={cards} onCardClick={(id) => handleCardClick(id, activeTab === 'catalog')} viewMode={viewMode} isArchive={activeTab === 'catalog'} showCartButton={true} />
                       {cards.length < totalCount && (
                         <div className="flex justify-center pb-20">
                           <button
@@ -670,18 +674,14 @@ const Home: React.FC = () => {
             </div>
         </main>
 
+
         {/* Footer */}
         <Footer />
 
         <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
         <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
-        <CardModal
-          isOpen={selectedCardId !== null}
-          onClose={() => setSelectedCardId(null)}
-          cardId={selectedCardId}
-          onRequireAuth={() => setIsAuthModalOpen(true)}
-          isArchive={activeTab === 'catalog'}
-        />
+        <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+        <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
 
         {/* Mobile Filters Drawer */}
         {
@@ -700,7 +700,7 @@ const Home: React.FC = () => {
                   selected={filters}
                   onChange={handleFilterChange}
                   setsOptions={sets}
-                  isAccessoryMode={activeTab === 'catalog'}
+                  isAccessoryMode={isAccessoryTab}
                 />
                 <button
                   onClick={() => setIsMobileFiltersOpen(false)}

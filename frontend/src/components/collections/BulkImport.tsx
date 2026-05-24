@@ -5,7 +5,7 @@ import { GlassCard } from '../ui/GlassCard';
 
 interface BulkImportProps {
     onImportComplete: (data: any) => void;
-    importType: 'collection' | 'prices' | 'inventory';
+    importType: 'collection' | 'prices' | 'inventory' | 'catalog';
 }
 
 export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, importType }) => {
@@ -19,7 +19,7 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
     const [isAutoMapped, setIsAutoMapped] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const TXT_FORMAT_REGEX = /^(\d+)\s+(.+?)\s+\((.+?)\)\s+(\d+)(?:\s+([\*F]+))?$/;
+    const TXT_FORMAT_REGEX = /^(\d+)\s+(.+?)\s+\((.+?)\)\s+(\d+)(?:\s+([*F]+))?$/;
 
     const handleDragOver = (e: React.DragEvent) => {
         e.preventDefault();
@@ -112,12 +112,14 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
                     setRows(csvContent);
                     setFile(selectedFile);
 
-                    // Auto-detect known formats (e.g. ManaBox)
+                    // Auto-detect known formats (e.g. ManaBox or our own CATALOG template)
                     const isManaBox = csvHeaders.includes('ManaBox ID') || csvHeaders.includes('Scryfall ID');
+                    const isCatalog = importType === 'catalog' && (csvHeaders.includes('category_code') || csvHeaders.includes('suggested_price'));
 
                     if (isManaBox) {
                         setFormatName('ManaBox');
-                        setMapping({
+                        setMapping(prev => ({
+                            ...prev,
                             name: csvHeaders.includes('Name') ? 'Name' : '',
                             set: csvHeaders.includes('Set code') ? 'Set code' : '',
                             collector_number: csvHeaders.includes('Collector number') ? 'Collector number' : '',
@@ -126,7 +128,32 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
                             condition: csvHeaders.includes('Condition') ? 'Condition' : '',
                             finish: csvHeaders.includes('Foil') ? 'Foil' : '',
                             scryfall_id: csvHeaders.includes('Scryfall ID') ? 'Scryfall ID' : ''
+                        }));
+                        setIsAutoMapped(true);
+                    } else if (isCatalog) {
+                        setFormatName('Catálogo');
+                        const newMapping = { ...mapping };
+                        
+                        // Robust catalog auto-mapping
+                        const catalogMap: Record<string, string[]> = {
+                            name: ['name', 'producto', 'nombre'],
+                            price: ['price', 'precio', 'venta'],
+                            cost: ['cost', 'costo'],
+                            suggested_price: ['suggested_price', 'precio_sugerido', 'sugerido'],
+                            category_code: ['category_code', 'categoría', 'categoria', 'category'],
+                            game_id: ['game_id', 'id_juego', 'juego'],
+                            stock: ['stock', 'cantidad', 'inventario'],
+                            description: ['description', 'descripción', 'descripcion'],
+                            unit_type: ['unit_type', 'unidad', 'tipo'],
+                            language: ['language', 'idioma']
+                        };
+
+                        Object.entries(catalogMap).forEach(([field, aliases]) => {
+                            const found = csvHeaders.find(h => aliases.includes(h.toLowerCase().trim()));
+                            if (found) newMapping[field] = found;
                         });
+
+                        setMapping(newMapping);
                         setIsAutoMapped(true);
                     } else {
                         setFormatName('');
@@ -153,7 +180,8 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
 
     const downloadTemplate = (tcg: string) => {
         const templates: Record<string, string> = {
-            'MTG': 'Name,Set Code,Collector Number,Condition,Quantity,Price Paid\nBlack Lotus,LEA,1,NM,1,20000'
+            'MTG': 'Name,Set Code,Collector Number,Condition,Quantity,Price Paid\nBlack Lotus,LEA,1,NM,1,20000',
+            'CATALOG': 'name,description,price,stock,category_code,unit_type,language,cost,suggested_price\nSleeves Dragon Shield Blue,High quality sleeves,12.50,50,SLEEVE,Unit,English,8.00,15.00'
         };
 
         const content = templates[tcg] || templates['MTG'];
@@ -221,7 +249,16 @@ export const BulkImport: React.FC<BulkImportProps> = ({ onImportComplete, import
         price: '',
         condition: '',
         finish: '',
-        scryfall_id: ''
+        scryfall_id: '',
+        // Catalog fields
+        description: '',
+        stock: '',
+        category_code: '',
+        unit_type: '',
+        language: '',
+        cost: '',
+        suggested_price: '',
+        game_id: ''
     });
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState<any>(null);
@@ -350,7 +387,18 @@ const handleImport = async () => {
         }
     };
 
-    const systemFields = [
+    const systemFields = importType === 'catalog' ? [
+        { id: 'name', label: 'Nombre del Producto' },
+        { id: 'description', label: 'Descripción' },
+        { id: 'price', label: 'Precio Geek (Venta)' },
+        { id: 'stock', label: 'Stock Inicial' },
+        { id: 'category_code', label: 'Código de Categoría' },
+        { id: 'unit_type', label: 'Tipo de Unidad' },
+        { id: 'language', label: 'Idioma' },
+        { id: 'cost', label: 'Costo (USD)' },
+        { id: 'suggested_price', label: 'Precio Sugerido' },
+        { id: 'game_id', label: 'ID de Juego (Opcional)' }
+    ] : [
         { id: 'name', label: 'Nombre de Carta' },
         { id: 'set', label: 'Set/Código' },
         { id: 'collector_number', label: 'Num. Coleccionista' },
@@ -386,7 +434,7 @@ const handleImport = async () => {
                             </div>
                             <div>
                                 <h2 className="text-3xl font-black italic tracking-tighter uppercase mb-2">
-                                    Carga Masiva <span className="text-geeko-cyan">{importType === 'prices' ? 'PRECIOS' : importType === 'inventory' ? 'INVENTARIO' : 'COLECCIÓN'}</span>
+                                    Carga Masiva <span className="text-geeko-cyan">{importType === 'prices' ? 'PRECIOS' : importType === 'inventory' ? 'INVENTARIO' : importType === 'catalog' ? 'CATÁLOGO' : 'COLECCIÓN'}</span>
                                 </h2>
                                 <p className="text-slate-400 font-bold text-sm">
                                     Arrastra tu archivo CSV o haz clic para buscar.
@@ -398,13 +446,13 @@ const handleImport = async () => {
                     <div className="flex flex-col items-center gap-4">
                         <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">¿No tienes un formato? Descarga uno:</p>
                         <div className="flex flex-wrap justify-center gap-3">
-                            {['MTG'].map(tcg => (
+                            {(importType === 'catalog' ? ['CATALOG'] : ['MTG']).map(tcg => (
                                 <button
                                     key={tcg}
                                     onClick={(e) => { e.stopPropagation(); downloadTemplate(tcg); }}
                                     className="px-6 py-2 bg-white/5 border border-white/10 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-geeko-cyan hover:text-black transition-all"
                                 >
-                                    Template {tcg}
+                                    Template {tcg === 'CATALOG' ? 'Catálogo' : tcg}
                                 </button>
                             ))}
                         </div>
@@ -444,15 +492,45 @@ const handleImport = async () => {
                                         <table className="w-full text-left text-[10px]">
                                             <thead className="bg-[#0c0c0c] sticky top-0 z-10 text-slate-400 font-bold uppercase tracking-wider shadow-sm">
                                                 <tr>
-                                                    <th className="p-3">Cantidad</th>
-                                                    <th className="p-3">Nombre</th>
-                                                    <th className="p-3">Set</th>
-                                                    <th className="p-3">#</th>
-                                                    <th className="p-3">Acabado</th>
+                                                    {importType === 'catalog' ? (
+                                                        <>
+                                                            <th className="p-3">Nombre</th>
+                                                            <th className="p-3">Categoría</th>
+                                                            <th className="p-3">Precio</th>
+                                                            <th className="p-3">Costo</th>
+                                                            <th className="p-3">Juego ID</th>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <th className="p-3">Cantidad</th>
+                                                            <th className="p-3">Nombre</th>
+                                                            <th className="p-3">Set</th>
+                                                            <th className="p-3">#</th>
+                                                            <th className="p-3">Acabado</th>
+                                                        </>
+                                                    )}
                                                 </tr>
                                             </thead>
                                             <tbody className="text-slate-300 divide-y divide-white/5">
-                                                {rows.map((row, i) => {
+                                                {rows.slice(0, 10).map((row, i) => {
+                                                    if (importType === 'catalog') {
+                                                        const nameVal = row[headers.indexOf(mapping.name)];
+                                                        const catVal = row[headers.indexOf(mapping.category_code)];
+                                                        const priceVal = row[headers.indexOf(mapping.price)];
+                                                        const costVal = row[headers.indexOf(mapping.cost)];
+                                                        const gameVal = row[headers.indexOf(mapping.game_id)];
+
+                                                        return (
+                                                            <tr key={i} className="hover:bg-white/5 transition-colors">
+                                                                <td className="p-3 font-bold text-white">{nameVal}</td>
+                                                                <td className="p-3 w-24">{catVal}</td>
+                                                                <td className="p-3 w-24 font-mono text-geeko-cyan">${priceVal}</td>
+                                                                <td className="p-3 w-24 font-mono text-slate-500">${costVal || '0'}</td>
+                                                                <td className="p-3 w-24">{gameVal || '-'}</td>
+                                                            </tr>
+                                                        );
+                                                    }
+
                                                     const nameCol = headers.indexOf(mapping.name);
                                                     const setCol = headers.indexOf(mapping.set);
                                                     const numCol = headers.indexOf(mapping.collector_number);
@@ -619,7 +697,7 @@ const handleImport = async () => {
                             onClick={() => onImportComplete(rows)}
                             className="px-8 py-3 bg-geeko-cyan text-black rounded-xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all"
                         >
-                            Ver Portafolio
+                            {importType === 'catalog' ? 'Ver Catálogo' : 'Ver Portafolio'}
                         </button>
                     </div>
                 </GlassCard>

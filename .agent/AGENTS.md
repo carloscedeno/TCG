@@ -55,11 +55,12 @@ Artefactos del Compound step:
 
 ## 🛠️ Workflows Disponibles
 
+- `/prehook` — **Pre-sesión**: anclaje y validación del entorno para evitar pérdida de contexto o desvaríos
 - `/audit` — **Post-ejecución**: verificar integridad del sistema (build, git, tests, docs)
 - `/compound` — **Post-sesión**: codificar lo aprendido (Compound step)
 - `/finalize` — **Cierre de Sesión**: Auditoría, Compound y Push en un solo paso
 - `/import` — Implementar y verificar el Bulk Import feature
-- `/nightly-sync` — Ejecución autónoma del framework Strata
+- `/nightly-sync` — Ejecución autónoma del Carlos AI Framework
 
 ## ✅ Features Implementadas (Feb 2026)
 
@@ -97,5 +98,10 @@ Artefactos del Compound step:
 - ✅ **Sincronización de Credenciales SMTP**: Unificación de nombres de variables (`SMTP_USERNAME`/`SMTP_PASSWORD`) y sincronización de lógica entre las funciones `api` y `tcg-api` para garantizar fiabilidad en las notificaciones.
 - ✅ **Visibilidad Condicional de Carrito**: El botón "Añadir al carrito" ahora está oculto por defecto en la vista general (grid/list) y solo es visible en el modal de detalles, mejorando la estética de navegación masiva.
 - ✅ **Sincronización de Metadatos Strixhaven**: Reparación de visibilidad de 360+ productos mediante la corrección del trigger `sync_product_metadata` en la base de datos, asegurando que `type_line`, `colors` y `release_date` se propaguen siempre al inventario.
+- ✅ **Unificación de Carrito y Sincronización de Descuentos (v62)**: Refactorización total de `fetchCart` para confiar en el RPC del servidor como única fuente de verdad. Implementación de paridad de precios y badges de oferta para carritos de invitados. Resolución de 404s en detalles de accesorios mediante priorización de búsqueda local.
+- ✅ **Remediación de Banners y "Cero Fantasma" (v63)**: Restauración de la lógica de filtrado por TCG en `HeroSection` para evitar que banners globales oculten los específicos del juego. Limpieza masiva de artefactos visuales "0" en el grid mediante endurecimiento de lógica booleana en React.
 - ✅ **Extrema Performance (Denormalización)**: Eliminación de timeouts mediante denormalización de metadatos (`colors`, `type`, `release_date`) en tabla `products`. RPC `get_products_filtered` optimizado para single-table query.
 - ✅ **Consolidación TCG y Branding (Mayo 2026)**: Unificación total de códigos canónicos (`YGO`, `PKM`, `OPC`) eliminando capas de mapeo legacy. Refinado RPC de Artilugios para filtrado estricto por juego.
+- ✅ **Sincronización Automática de Catálogo (Bulk Import Recovery)**: Implementación de flujos de recuperación para metadatos faltantes detectados durante importaciones masivas. El sistema ahora identifica y parcha automáticamente sets y cartas inexistentes cruzando datos con la API de Scryfall.
+- ✅ **Gestión Avanzada de Descripciones y UX Premium (Mayo 2026)**: Restauración completa de la visibilidad de descripciones para productos y eventos. Implementación de un **Modal de Edición Full** en el panel administrativo, eliminando la edición inline inestable. Optimización de la navegación mediante redirección directa a páginas de detalle y garantía de scroll al inicio (`ScrollToTop`) en cada cambio de ruta.
+- ✅ **Prevención de Deadlocks y Concurrencia en Checkout (Mayo 2026)**: Refactorización total del RPC `create_order_atomic` para implementar ordenación canónica por tipo e ID de ítem antes de reservar stock, eliminando interbloqueos mutuos en transacciones simultáneas durante picos de tráfico en producción.

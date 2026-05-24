@@ -4,9 +4,22 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-SUPABASE_URL = os.getenv('SUPABASE_URL')
-SUPABASE_KEY = os.getenv('SUPABASE_ANON_KEY')
-SUPABASE_SERVICE_ROLE_KEY = os.getenv('SUPABASE_SERVICE_ROLE_KEY')
+def clean_url(url: str) -> str:
+    if not url:
+        return ""
+    url = url.strip().replace('"', '').replace("'", "")
+    if url and not url.startswith('http'):
+        url = f"https://{url}.supabase.co"
+    return url.rstrip('/')
+
+def clean_key(key: str) -> str:
+    if not key:
+        return ""
+    return key.strip().replace('"', '').replace("'", "")
+
+SUPABASE_URL = clean_url(os.getenv('SUPABASE_URL'))
+SUPABASE_KEY = clean_key(os.getenv('SUPABASE_ANON_KEY'))
+SUPABASE_SERVICE_ROLE_KEY = clean_key(os.getenv('SUPABASE_SERVICE_ROLE_KEY'))
 
 def get_supabase_client() -> Client:
     if not SUPABASE_URL or not SUPABASE_KEY:

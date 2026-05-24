@@ -44,7 +44,7 @@ test.describe('External Marketplace Links', () => {
         await expect(ckLink).toBeVisible({ timeout: 10000 });
 
         // Check if the card is currently showing as FOIL
-        const foilLabel = page.locator('span:has-text("FOIL")');
+        const foilLabel = page.getByText('✦ Foil', { exact: true });
         const isFoil = await foilLabel.isVisible().catch(() => false);
 
         const href = await ckLink.getAttribute('href') ?? '';

@@ -1,35 +1,30 @@
 import { useState, useEffect, useCallback } from "react";
 import { 
-    Search, Plus, Package, Trash2, Edit2, X, 
-    ChevronLeft, ChevronRight, Check
+    Search, Plus, Package, Trash2, Edit2, 
+    ChevronLeft, ChevronRight
 } from "lucide-react";
-import { fetchAccessoriesAdmin, updateAccessory, deleteAccessory, uploadAccessoryImage, fetchAccessoryCategories } from "../../utils/api";
+import { fetchAccessoriesAdmin, deleteAccessory, fetchAccessoryCategories, updateAccessory } from "../../utils/api";
+import { EditProductModal } from "../../components/Admin/EditProductModal";
 import { AddAccessoryDrawer } from "../../components/Admin/AddAccessoryDrawer";
+import { BulkImportCatalogModal } from "../../components/Admin/BulkImportCatalogModal";
+import { FileUp } from "lucide-react";
 
 export default function CatalogPage() {
     const [items, setItems] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState<any>(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [page, setPage] = useState(0);
     const [totalCount, setTotalCount] = useState(0);
-    const [editingId, setEditingId] = useState<string | null>(null);
-    const [tempData, setTempData] = useState<any>({});
     const [lastSavedId, setLastSavedId] = useState<string | null>(null);
 
     const pageSize = 20;
-    const [dbCategories, setDbCategories] = useState<any[]>([]);
-
-    const categories = dbCategories.length > 0 
-        ? dbCategories.map(c => c.name)
-        : [
-            'Accesorios', 'Sealed Product', 'Consumibles', 'Magic', 'Pokemon', 
-            'Digimon', 'One Piece', 'Yu-Gi-Oh', 'Weiss Schwarz', 
-            'Dungeons and Dragons', 'Concesión', 'Other'
-        ];
 
     useEffect(() => {
-        fetchAccessoryCategories().then(setDbCategories);
+        fetchAccessoryCategories();
     }, []);
 
     const loadAccessories = useCallback(async () => {
@@ -53,35 +48,6 @@ export default function CatalogPage() {
         const timer = setTimeout(loadAccessories, 300);
         return () => clearTimeout(timer);
     }, [loadAccessories]);
-
-    const handleSave = async (id: string) => {
-        try {
-            const updates = {
-                ...tempData,
-                price: parseFloat(tempData.price) || 0,
-                cost: parseFloat(tempData.cost) || 0,
-                stock: parseInt(tempData.stock) || 0,
-                discount_percentage: parseFloat(tempData.discount_percentage) || 0,
-                discount_until: tempData.discount_until || null
-            };
-            await updateAccessory(id, updates);
-            setEditingId(null);
-            setLastSavedId(id);
-            setTimeout(() => setLastSavedId(null), 2000);
-            loadAccessories();
-        } catch (err: any) {
-            alert("Error al actualizar: " + err.message);
-        }
-    };
-
-    const handleImageChange = async (file: File) => {
-        try {
-            const url = await uploadAccessoryImage(file);
-            setTempData({ ...tempData, image_url: url });
-        } catch (err: any) {
-            alert("Error al subir imagen: " + err.message);
-        }
-    };
 
     const handleDelete = async (id: string) => {
         if (!confirm("¿Estás seguro de eliminar este producto?")) return;
@@ -109,17 +75,35 @@ export default function CatalogPage() {
                             </h1>
                         </div>
                         <p className="text-slate-500 text-xs font-black uppercase tracking-[0.2em] ml-1">
-                            Administración de Productos v1.1 • {totalCount} Items Detectados
+                            Administración de Productos v1.5 • {totalCount} Items Detectados
                         </p>
                     </div>
 
-                    <button
-                        onClick={() => setIsDrawerOpen(true)}
-                        className="px-8 py-4 bg-white text-black font-black text-xs uppercase tracking-widest rounded-2xl hover:bg-orange-500 transition-all active:scale-95 shadow-2xl flex items-center gap-3"
-                    >
-                        <Plus size={18} />
-                        Nuevo Producto
-                    </button>
+                    <div className="flex items-center gap-3">
+                        <a
+                            href="/admin"
+                            className="px-6 py-4 bg-neutral-900 border border-white/10 text-white font-black text-xs uppercase tracking-widest rounded-2xl hover:bg-neutral-800 transition-all active:scale-95 flex items-center gap-2 mr-2"
+                        >
+                            <ChevronLeft size={18} />
+                            Volver al Panel
+                        </a>
+
+                        <button
+                            onClick={() => setIsImportModalOpen(true)}
+                            className="px-6 py-4 bg-black border border-white/10 text-white font-black text-xs uppercase tracking-widest rounded-2xl hover:border-orange-500/50 transition-all active:scale-95 flex items-center gap-3"
+                        >
+                            <FileUp size={18} className="text-slate-500" />
+                            Carga Masiva
+                        </button>
+                        
+                        <button
+                            onClick={() => setIsDrawerOpen(true)}
+                            className="px-8 py-4 bg-white text-black font-black text-xs uppercase tracking-widest rounded-2xl hover:bg-orange-500 transition-all active:scale-95 shadow-2xl flex items-center gap-3"
+                        >
+                            <Plus size={18} />
+                            Nuevo Producto
+                        </button>
+                    </div>
                 </div>
 
                 {/* Filters */}
@@ -143,13 +127,7 @@ export default function CatalogPage() {
                             <tr>
                                 <th className="pl-8 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest">Producto / Item</th>
                                 <th className="px-6 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-center">Categoría</th>
-                                <th className="px-4 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-center">Idioma</th>
-                                <th className="px-4 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-center">Venta</th>
-                                <th className="px-4 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-center">Juego</th>
-                                <th className="px-4 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-right">Costo</th>
                                 <th className="px-6 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-right">Precio</th>
-                                <th className="px-6 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-center">Descuento %</th>
-                                <th className="px-6 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-center">Oferta Hasta</th>
                                 <th className="px-6 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-center">Stock</th>
                                 <th className="px-6 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-center">Estado</th>
                                 <th className="pr-8 py-6 font-black text-[10px] text-slate-500 uppercase tracking-widest text-right">Acciones</th>
@@ -158,16 +136,16 @@ export default function CatalogPage() {
                         <tbody className="divide-y divide-white/5">
                             {loading && items.length === 0 ? (
                                 <tr>
-                                    <td colSpan={8} className="py-32 text-center">
+                                    <td colSpan={6} className="py-32 text-center">
                                         <div className="w-12 h-12 border-4 border-orange-500/30 border-t-orange-500 rounded-full animate-spin mx-auto mb-4" />
-                                        <span className="text-xs font-black uppercase tracking-widest text-slate-500">Sincronizando Base de Datos...</span>
+                                        <span className="text-xs font-black uppercase tracking-widest text-slate-500">Sincronizando...</span>
                                     </td>
                                 </tr>
                             ) : items.length === 0 ? (
                                 <tr>
-                                    <td colSpan={8} className="py-32 text-center grayscale opacity-30">
+                                    <td colSpan={6} className="py-32 text-center grayscale opacity-30">
                                         <Package size={48} className="mx-auto mb-4" />
-                                        <p className="text-sm font-black uppercase tracking-widest">No se hallaron productos</p>
+                                        <p className="text-sm font-black uppercase tracking-widest">No hay resultados</p>
                                     </td>
                                 </tr>
                             ) : (
@@ -175,184 +153,44 @@ export default function CatalogPage() {
                                     <tr key={item.id} className="group hover:bg-white/[0.02] transition-all">
                                         <td className="pl-8 py-6">
                                             <div className="flex items-center gap-4">
-                                                <div className="relative group/img w-16 h-16 bg-black rounded-2xl overflow-hidden border border-white/10 shadow-xl group-hover:scale-105 transition-transform flex-shrink-0">
-                                                    <img src={editingId === item.id ? (tempData.image_url || item.image_url) : (item.image_url || '/placeholder-accessory.png')} alt={item.name} className="w-full h-full object-cover" />
-                                                    {editingId === item.id && (
-                                                        <label className="absolute inset-0 bg-black/60 flex items-center justify-center cursor-pointer opacity-0 group-hover/img:opacity-100 transition-opacity">
-                                                            <Plus size={20} className="text-white" />
-                                                            <input
-                                                                type="file"
-                                                                className="hidden"
-                                                                accept="image/*"
-                                                                onChange={(e) => e.target.files?.[0] && handleImageChange(e.target.files[0])}
-                                                            />
-                                                        </label>
-                                                    )}
+                                                <div className="w-12 h-12 bg-black rounded-xl overflow-hidden border border-white/10 shrink-0">
+                                                    <img src={item.image_url || '/placeholder-accessory.png'} alt={item.name} className="w-full h-full object-cover" />
                                                 </div>
-                                                <div className="flex-1">
-                                                    {editingId === item.id ? (
-                                                        <input
-                                                            type="text"
-                                                            value={tempData.name}
-                                                            onChange={(e) => setTempData({...tempData, name: e.target.value})}
-                                                            className="w-full bg-black border border-orange-500/50 rounded-xl px-3 py-2 text-xs font-black uppercase italic text-white"
-                                                        />
-                                                    ) : (
-                                                        <>
-                                                            <p className="text-sm font-black italic text-white uppercase">{item.name}</p>
-                                                            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-tighter mt-1 line-clamp-1 max-w-xs">{item.description || 'Sin descripción'}</p>
-                                                        </>
-                                                    )}
+                                                <div>
+                                                    <p className="text-sm font-black italic text-white uppercase">{item.name}</p>
+                                                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-tighter mt-1 line-clamp-1 max-w-xs">
+                                                        {item.description || 'Sin descripción'}
+                                                    </p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td className="px-6 py-6 text-center">
-                                            {editingId === item.id ? (
-                                                <select
-                                                    value={tempData.category}
-                                                    onChange={(e) => {
-                                                        const cat = dbCategories.find(c => c.name === e.target.value);
-                                                        setTempData({
-                                                            ...tempData, 
-                                                            category: e.target.value,
-                                                            category_code: cat?.code || null
-                                                        });
-                                                    }}
-                                                    className="w-full bg-black border border-orange-500/50 rounded-xl px-2 py-2 text-center text-[10px] font-black uppercase text-white appearance-none"
-                                                >
-                                                    {categories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
-                                                </select>
-                                            ) : (
-                                                <span className="px-3 py-1 bg-white/5 rounded-full text-[10px] font-black uppercase tracking-widest text-slate-400 border border-white/5">
-                                                    {item.category}
-                                                </span>
-                                            )}
-                                        </td>
-                                        <td className="px-4 py-6 text-center">
-                                            {editingId === item.id ? (
-                                                <select
-                                                    value={tempData.language}
-                                                    onChange={(e) => setTempData({...tempData, language: e.target.value})}
-                                                    className="w-full bg-black border border-orange-500/50 rounded-xl px-2 py-2 text-center text-[10px] font-bold text-white"
-                                                >
-                                                    <option value="Español">ESP</option>
-                                                    <option value="Inglés">ENG</option>
-                                                    <option value="Japonés">JPN</option>
-                                                    <option value="Otros">OTR</option>
-                                                </select>
-                                            ) : (
-                                                <span className="text-[10px] font-bold text-slate-500 uppercase">{item.language || 'N/A'}</span>
-                                            )}
-                                        </td>
-                                        <td className="px-4 py-6 text-center">
-                                            {editingId === item.id ? (
-                                                <select
-                                                    value={tempData.unit_type}
-                                                    onChange={(e) => setTempData({...tempData, unit_type: e.target.value})}
-                                                    className="w-full bg-black border border-orange-500/50 rounded-xl px-2 py-2 text-center text-[10px] font-bold text-white"
-                                                >
-                                                    <option value="Unidad">Und</option>
-                                                    <option value="Sellado">Sel</option>
-                                                    <option value="Display">Dsp</option>
-                                                    <option value="Kit">Kit</option>
-                                                </select>
-                                            ) : (
-                                                <span className="text-[10px] font-bold text-slate-500 uppercase">{item.unit_type || 'Unidad'}</span>
-                                            )}
-                                        </td>
-                                        <td className="px-4 py-6 text-center text-[10px] font-bold text-slate-500 uppercase">
-                                            {item.game_id === 1 ? 'MTG' : item.game_id === 2 ? 'PKM' : item.game_id === 3 ? 'LOR' : item.game_id === 4 ? 'OP' : 'GEN'}
-                                        </td>
-                                        <td className="px-4 py-6 text-right">
-                                            {editingId === item.id ? (
-                                                <input
-                                                    type="number"
-                                                    step="0.01"
-                                                    value={tempData.cost}
-                                                    onChange={(e) => setTempData({...tempData, cost: e.target.value})}
-                                                    className="w-20 bg-black border border-orange-500/50 rounded-xl px-2 py-2 text-right text-xs font-mono text-white"
-                                                />
-                                            ) : (
-                                                <span className="text-xs font-mono text-slate-600">${item.cost?.toFixed(2) || '0.00'}</span>
-                                            )}
+                                            <span className="px-3 py-1 bg-white/5 rounded-full text-[10px] font-black uppercase tracking-widest text-slate-400 border border-white/5">
+                                                {item.category}
+                                            </span>
                                         </td>
                                         <td className="px-6 py-6 text-right">
-                                            {editingId === item.id ? (
-                                                <input
-                                                    type="number"
-                                                    value={tempData.price}
-                                                    onChange={(e) => setTempData({...tempData, price: e.target.value})}
-                                                    className="w-24 bg-black border border-orange-500/50 rounded-xl px-3 py-2 text-right text-xs font-mono text-white"
-                                                    autoFocus
-                                                />
-                                            ) : (
-                                                <div className="flex flex-col items-end">
-                                                    {item.discount_percentage > 0 && (
-                                                        <span className="text-[10px] line-through text-slate-600 font-mono">
-                                                            ${item.price?.toFixed(2)}
-                                                        </span>
-                                                    )}
-                                                    <span className="text-lg font-black font-mono tracking-tighter">
-                                                        ${(item.discount_percentage > 0 
-                                                            ? item.price * (1 - item.discount_percentage / 100) 
-                                                            : item.price
-                                                        ).toFixed(2)}
-                                                    </span>
-                                                </div>
-                                            )}
-                                        </td>
-                                        <td className="px-6 py-6 text-center">
-                                            {editingId === item.id ? (
-                                                <input
-                                                    type="number"
-                                                    placeholder="%"
-                                                    value={tempData.discount_percentage}
-                                                    onChange={(e) => setTempData({...tempData, discount_percentage: e.target.value})}
-                                                    className="w-16 bg-black border border-purple-500/50 rounded-xl px-2 py-2 text-center text-xs font-mono text-purple-400 placeholder:text-purple-900"
-                                                />
-                                            ) : (
-                                                item.discount_percentage > 0 ? (
-                                                    <span className="px-2 py-1 bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded-lg text-[10px] font-black font-mono">
-                                                        -{item.discount_percentage}%
-                                                    </span>
-                                                ) : (
-                                                    <span className="text-[10px] font-bold text-slate-700">-</span>
-                                                )
-                                            )}
-                                        </td>
-                                        <td className="px-6 py-6 text-center">
-                                            {editingId === item.id ? (
-                                                <input
-                                                    type="date"
-                                                    value={tempData.discount_until ? tempData.discount_until.split('T')[0] : ''}
-                                                    onChange={(e) => setTempData({...tempData, discount_until: e.target.value})}
-                                                    className="bg-black border border-orange-500/50 rounded-xl px-2 py-2 text-[10px] font-mono text-white"
-                                                />
-                                            ) : (
-                                                <span className="text-[10px] font-mono text-slate-500">
-                                                    {item.discount_until ? new Date(item.discount_until).toLocaleDateString() : '-'}
+                                            <div className="flex flex-col items-end">
+                                                <span className="text-lg font-black font-mono tracking-tighter">
+                                                    ${(item.original_price ?? item.price).toFixed(2)}
                                                 </span>
-                                            )}
+                                                {item.discount_percentage > 0 && (
+                                                    <span className="text-[10px] text-orange-500 font-mono mt-1 bg-orange-500/10 px-2 py-0.5 rounded border border-orange-500/20">
+                                                        Venta: ${(item.price ?? 0).toFixed(2)}
+                                                    </span>
+                                                )}
+                                            </div>
                                         </td>
                                         <td className="px-6 py-6 text-center">
-                                            {editingId === item.id ? (
-                                                <input
-                                                    type="number"
-                                                    value={tempData.stock}
-                                                    onChange={(e) => setTempData({...tempData, stock: e.target.value})}
-                                                    className="w-16 bg-black border border-orange-500/50 rounded-xl px-2 py-2 text-center text-xs font-mono text-white"
-                                                />
-                                            ) : (
-                                                <span className={`px-2 py-1 rounded-lg text-[10px] font-black font-mono border ${
-                                                    item.stock > 10 
-                                                    ? 'bg-white/10 text-white border-white/20' 
-                                                    : item.stock > 0 
-                                                    ? 'bg-orange-500/10 text-orange-500 border-orange-500/20'
-                                                    : 'bg-rose-500/10 text-rose-500 border-rose-500/20'
-                                                }`}>
-                                                    {item.stock}
-                                                </span>
-                                            )}
+                                            <span className={`px-2 py-1 rounded-lg text-[10px] font-black font-mono border ${
+                                                item.stock > 10 
+                                                ? 'bg-white/10 text-white border-white/20' 
+                                                : item.stock > 0 
+                                                ? 'bg-orange-500/10 text-orange-500 border-orange-500/20'
+                                                : 'bg-rose-500/10 text-rose-500 border-rose-500/20'
+                                            }`}>
+                                                {item.stock}
+                                            </span>
                                         </td>
                                         <td className="px-6 py-6 text-center">
                                             <button 
@@ -369,49 +207,23 @@ export default function CatalogPage() {
                                                 {item.is_active ? 'Activo' : 'Inactivo'}
                                             </button>
                                         </td>
-
                                         <td className="pr-8 py-6 text-right">
                                             <div className="flex items-center justify-end gap-2">
-                                                {editingId === item.id ? (
-                                                    <>
-                                                        <button onClick={() => handleSave(item.id)} className="p-3 bg-white text-black rounded-xl hover:scale-105 transition-all">
-                                                            <Check size={16} />
-                                                        </button>
-                                                        <button onClick={() => setEditingId(null)} className="p-3 bg-white/10 text-white rounded-xl hover:bg-white/20 transition-all">
-                                                            <X size={16} />
-                                                        </button>
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <button 
-                                                            onClick={() => {
-                                                                setEditingId(item.id);
-                                                                setTempData({ 
-                                                                    name: item.name,
-                                                                    category: item.category,
-                                                                    category_code: item.category_code,
-                                                                    language: item.language || 'Inglés',
-                                                                    unit_type: item.unit_type || 'Unidad',
-                                                                    cost: item.cost,
-                                                                    price: item.price, 
-                                                                    stock: item.stock,
-                                                                    image_url: item.image_url,
-                                                                    discount_percentage: item.discount_percentage || 0,
-                                                                    discount_until: item.discount_until || null
-                                                                });
-                                                            }}
-                                                            className="p-3 bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 rounded-xl transition-all"
-                                                        >
-                                                            <Edit2 size={16} />
-                                                        </button>
-                                                        <button 
-                                                            onClick={() => handleDelete(item.id)}
-                                                            className="p-3 bg-red-500/10 text-red-500/70 hover:bg-red-500 hover:text-white rounded-xl transition-all"
-                                                        >
-                                                            <Trash2 size={16} />
-                                                        </button>
-                                                    </>
-                                                )}
+                                                <button 
+                                                    onClick={() => {
+                                                        setSelectedProduct(item);
+                                                        setIsEditModalOpen(true);
+                                                    }}
+                                                    className="p-3 bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 rounded-xl transition-all"
+                                                >
+                                                    <Edit2 size={16} />
+                                                </button>
+                                                <button 
+                                                    onClick={() => handleDelete(item.id)}
+                                                    className="p-3 bg-red-500/10 text-red-500/70 hover:bg-red-500 hover:text-white rounded-xl transition-all"
+                                                >
+                                                    <Trash2 size={16} />
+                                                </button>
                                             </div>
                                             {lastSavedId === item.id && <p className="text-[8px] font-black text-white uppercase mt-1 animate-pulse">Guardado</p>}
                                         </td>
@@ -450,6 +262,28 @@ export default function CatalogPage() {
                 isOpen={isDrawerOpen} 
                 onClose={() => setIsDrawerOpen(false)} 
                 onSuccess={loadAccessories} 
+            />
+
+            <BulkImportCatalogModal
+                isOpen={isImportModalOpen}
+                onClose={() => setIsImportModalOpen(false)}
+                onSuccess={() => {
+                    loadAccessories();
+                }}
+            />
+
+            <EditProductModal
+                isOpen={isEditModalOpen}
+                onClose={() => {
+                    setIsEditModalOpen(false);
+                    setSelectedProduct(null);
+                }}
+                onSuccess={() => {
+                    if (selectedProduct) setLastSavedId(selectedProduct.id);
+                    setTimeout(() => setLastSavedId(null), 3000);
+                    loadAccessories();
+                }}
+                product={selectedProduct}
             />
         </div>
     );

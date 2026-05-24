@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import type { User, Session, AuthChangeEvent } from '@supabase/supabase-js';
 import { supabase } from '../utils/supabaseClient';
+// eslint-disable-next-line react-refresh/only-export-components
 export { supabase };
 
 interface AuthContextType {
@@ -99,4 +100,5 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);

@@ -128,6 +128,12 @@ const TournamentHub: React.FC = () => {
                                                     </div>
                                                 </div>
 
+                                                {tournament.description && (
+                                                    <p className="text-xs text-neutral-400 font-medium line-clamp-3 leading-relaxed">
+                                                        {tournament.description}
+                                                    </p>
+                                                )}
+
                                                 <div className="grid grid-cols-2 gap-6 py-6 border-y border-white/5">
                                                     <div className="space-y-1">
                                                         <div className="text-[10px] text-neutral-600 font-black uppercase tracking-widest flex items-center gap-2">

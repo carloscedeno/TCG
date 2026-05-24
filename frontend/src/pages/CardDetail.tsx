@@ -20,6 +20,7 @@ export const CardDetail: React.FC = () => {
     const { user } = useAuth();
     const [searchParams] = useSearchParams();
     const activeFinish = searchParams.get('finish') || 'nonfoil';
+    const isArchiveView = searchParams.get('archive') === 'true';
 
     const [details, setDetails] = useState<any>(null);
     const [loading, setLoading] = useState(true);
@@ -39,15 +40,22 @@ export const CardDetail: React.FC = () => {
         }
     }, [id]);
 
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                navigate(-1);
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [navigate]);
+
     const loadDetails = async (printingId: string) => {
         setLoading(true);
         setError(null);
         try {
             const data = await fetchCardDetails(printingId);
-                if (data.all_versions) {
-                    data.all_versions = data.all_versions.filter((v: any) => (v.stock || 0) > 0);
-                }
-                setDetails(data);
+            setDetails(data);
         } catch (err) {
             console.error('Error loading card details:', err);
             setError('Failed to load card details. Please try again.');
@@ -76,7 +84,7 @@ export const CardDetail: React.FC = () => {
         try {
             // Strip synthetic suffix from id, pass finish explicitly
             const baseId = activeVersion.printing_id.replace(/-foil$/, '').replace(/-nonfoil$/, '').replace(/-etched$/, '');
-            const result = await addToCart(baseId, 1, activeFinish);
+            const result = await addToCart(baseId, 1, activeFinish, !!details?.is_accessory);
 
             if (result && !result.success) {
                 alert(result.message || result.error || 'No se pudo agregar al carrito');
@@ -120,9 +128,6 @@ export const CardDetail: React.FC = () => {
         if (!details?.all_versions) return [];
 
         const groups = (Array.isArray(details.all_versions) ? details.all_versions : []).reduce((acc: any, v: any) => {
-            // ONLY include versions with stock > 0
-            if ((v.stock || 0) <= 0) return acc;
-
             const key = `${v.set_code}-${v.collector_number}`;
             if (!acc[key]) {
                 acc[key] = {
@@ -196,7 +201,7 @@ export const CardDetail: React.FC = () => {
                         <p className="text-text-low font-bold tracking-widest uppercase text-xs">Loading Card Data...</p>
                     </div>
                 ) : details ? (
-                    <div className="glass-panel rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0, 209, 255, 0.15)] flex flex-col lg:flex-row overflow-hidden min-h-[85vh] max-h-[90vh]">
+                    <div data-testid="card-modal" className="glass-panel rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0, 209, 255, 0.15)] flex flex-col lg:flex-row overflow-hidden min-h-[85vh] max-h-[90vh] relative">
                         {/* LEFT: IMAGE & VERSIONS LIST */}
                         <div className="w-full lg:w-[420px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden h-full">
                             <div className="flex-1 min-h-[450px] md:min-h-[600px] flex items-center justify-center p-6 sm:p-8 md:p-10 relative bg-gradient-to-b from-white/[0.04] to-transparent overflow-hidden">
@@ -239,6 +244,7 @@ export const CardDetail: React.FC = () => {
                                             return (
                                                 <div
                                                     key={`${group.base.set_code}-${group.base.collector_number}`}
+                                                    data-testid="edition-link"
                                                     role="button"
                                                     tabIndex={0}
                                                     onClick={() => {
@@ -346,7 +352,14 @@ export const CardDetail: React.FC = () => {
                         </div>
 
                         {/* RIGHT: CARD TEXT & ACTIONS */}
-                        <div className="flex-1 overflow-y-auto custom-scrollbar bg-[#050505] p-8 lg:p-12 space-y-10">
+                        <div className="flex-1 overflow-y-auto custom-scrollbar bg-[#050505] p-8 lg:p-12 space-y-10 relative">
+                            <button
+                                onClick={() => navigate(-1)}
+                                className="absolute top-6 right-6 p-2 rounded-full bg-neutral-900/80 hover:bg-white/10 text-text-low hover:text-white transition-colors z-50 border border-white/10"
+                                aria-label="Cerrar modal"
+                            >
+                                <X size={20} />
+                            </button>
                             <div className="space-y-4">
                                 <a
                                     href={`card/${activePrintingId}`}
@@ -355,9 +368,18 @@ export const CardDetail: React.FC = () => {
                                     }}
                                     className="block group/title"
                                 >
-                                    <h2 className="text-4xl lg:text-6xl font-web-titles font-normal tracking-tight text-white group-hover/title:text-geeko-cyan transition-colors text-gradient-cyan capitalize">
-                                        {details.name}
-                                    </h2>
+                                    <div className="flex flex-col gap-2">
+                                        {(details.name?.toLowerCase().includes('(preventa)') || details.is_presale) && (
+                                            <div className="flex items-center gap-2">
+                                                <div className="px-3 py-1 bg-geeko-cyan/20 text-geeko-cyan text-[10px] font-black rounded-lg border border-geeko-cyan/30 shadow-[0_0_15px_rgba(0,209,255,0.2)] animate-pulse uppercase tracking-[0.2em]">
+                                                    Preventa
+                                                </div>
+                                            </div>
+                                        )}
+                                        <h2 className="text-4xl lg:text-6xl font-web-titles font-normal tracking-tight text-white group-hover/title:text-geeko-cyan transition-colors text-gradient-cyan capitalize leading-tight">
+                                            {details.name?.replace(/\(preventa\)/gi, '').trim()}
+                                        </h2>
+                                    </div>
                                 </a>
                                 <div className="flex flex-wrap items-center gap-4 text-lg lg:text-xl font-medium text-text-low">
                                     <span><ManaText text={details.mana_cost || ''} /></span>
@@ -370,6 +392,16 @@ export const CardDetail: React.FC = () => {
 
                             <div className="p-8 rounded-[32px] bg-white/5 border border-white/10 space-y-6 relative overflow-hidden group">
                                 <div className="absolute -top-24 -right-24 w-64 h-64 bg-geeko-cyan/5 rounded-full blur-[100px] group-hover:bg-geeko-cyan/10 transition-colors" />
+                                
+                                {details.description && (
+                                    <div className="mb-6 p-4 bg-geeko-cyan/5 border border-geeko-cyan/20 rounded-2xl relative z-10">
+                                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-geeko-cyan mb-2">Descripción del Producto</h4>
+                                        <p className="text-sm text-neutral-300 leading-relaxed">
+                                            {details.description}
+                                        </p>
+                                    </div>
+                                )}
+
                                 <div className="text-lg lg:text-xl leading-relaxed text-neutral-200 font-medium relative z-10">
                                     {details.oracle_text?.split('\n').map((line: string, i: number) => <p key={i} className="mb-3"><ManaText text={line} /></p>)}
                                 </div>
@@ -454,14 +486,17 @@ export const CardDetail: React.FC = () => {
                                                     )}
                                                 </div>
 
-                                                <button
-                                                    onClick={handleAddToCart}
-                                                    disabled={isAdding}
-                                                    className="flex-1 h-12 rounded-xl bg-geeko-cyan text-black font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0, 209, 255, 0.3)] hover:shadow-[0_0_30px_rgba(0, 209, 255, 0.5)] hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
-                                                >
-                                                    {isAdding ? <Loader2 size={16} className="animate-spin" /> : <ShoppingCart size={16} fill="currentColor" />}
-                                                    {isAdding ? '...' : ((activeVersion?.stock || 0) > 0 ? 'Agregar' : 'Encargo')}
-                                                </button>
+                                                {!isArchiveView && (
+                                                    <button
+                                                        data-testid="add-to-cart-button"
+                                                        onClick={handleAddToCart}
+                                                        disabled={isAdding}
+                                                        className="flex-1 h-12 rounded-xl bg-geeko-cyan text-black font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0, 209, 255, 0.3)] hover:shadow-[0_0_30px_rgba(0, 209, 255, 0.5)] hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
+                                                    >
+                                                        {isAdding ? <Loader2 size={16} className="animate-spin" /> : <ShoppingCart size={16} fill="currentColor" />}
+                                                        {isAdding ? '...' : ((activeVersion?.stock || 0) > 0 ? 'Agregar' : 'Encargo')}
+                                                    </button>
+                                                )}
                                             </div>
                                         </div>
                                     </div>

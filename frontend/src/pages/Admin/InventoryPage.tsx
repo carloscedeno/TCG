@@ -3,7 +3,7 @@ import { supabase } from "../../utils/supabaseClient";
 import { AddProductDrawer } from "../../components/Admin/AddProductDrawer";
 import {
     Plus, Search, Trash2, Package, Save, X,
-    ChevronUp, ChevronDown, Check,
+    ChevronUp, ChevronDown, ChevronLeft, Check,
     ArrowUpDown,
     FileUp, ArrowDownFromLine,
     Download, ShoppingCart, Sparkles, Tag
@@ -12,7 +12,7 @@ import { ImportInventoryModal } from "../../components/Admin/ImportInventoryModa
 import { EgressInventoryModal } from "../../components/Admin/EgressInventoryModal";
 import { OfferManagementModal } from "../../components/Admin/OfferManagementModal";
 import { useCart } from "../../context/CartContext";
-import { addProductToCart } from "../../utils/api";
+import { addProductToCart, isDiscountActive, manageProductOffer } from "../../utils/api";
 
 interface InventoryItem {
     product_id: string;
@@ -23,6 +23,7 @@ interface InventoryItem {
     condition: string;
     finish: string;
     price: number;
+    original_price: number;
     stock: number;
     image_url: string;
     rarity: string;
@@ -266,22 +267,41 @@ export function InventoryPage() {
         }
     };
 
-    const handleBatchPriceUpdate = async (percentage: number) => {
-        if (!confirm(`¿Aplicar un cambio de precio del ${percentage}% a ${selectedIds.size} artículos?`)) return;
+    const handleBatchDiscount = async (apply: boolean) => {
+        let pct = 0;
+        let endDate = new Date().toISOString();
+        
+        if (apply) {
+            const inputPct = prompt(`¿Qué porcentaje de descuento aplicar a ${selectedIds.size} artículos? (ej: 10 para 10%)`);
+            if (!inputPct) return;
+            pct = parseFloat(inputPct);
+            if (isNaN(pct) || pct <= 0) return alert("Porcentaje inválido");
+            
+            const days = prompt("¿Cuántos días durará la oferta?", "7");
+            if (!days) return;
+            const numDays = parseInt(days);
+            if (isNaN(numDays) || numDays <= 0) return alert("Días inválidos");
+            
+            const date = new Date();
+            date.setDate(date.getDate() + numDays);
+            endDate = date.toISOString().split('T')[0] + "T23:59:59.999-04:00";
+        } else {
+            if (!confirm(`¿Remover ofertas de ${selectedIds.size} artículos?`)) return;
+        }
 
         setLoading(true);
         try {
             const selectedItems = items.filter(i => selectedIds.has(i.product_id));
-
-            for (const item of selectedItems) {
-                const newPrice = item.price * (1 + percentage / 100);
-                await supabase.from('products').update({ price: newPrice }).eq('id', item.product_id);
-            }
+            
+            // Apply offers sequentially or via Promise.all to ensure all go through
+            await Promise.all(selectedItems.map(item => 
+                manageProductOffer(item.product_id, pct, endDate)
+            ));
 
             setSelectedIds(new Set());
             fetchInventory();
         } catch (err: any) {
-            alert("Error en actualización por lotes: " + err.message);
+            alert("Error en actualización de descuentos por lotes: " + err.message);
         } finally {
             setLoading(false);
         }
@@ -372,7 +392,15 @@ export function InventoryPage() {
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-wrap items-center gap-3">
+                        <a
+                            href="/admin"
+                            className="group relative px-6 py-4 bg-neutral-900 border border-white/10 text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl overflow-hidden active:scale-95 transition-all w-full md:w-auto hover:bg-neutral-800 flex items-center gap-2"
+                        >
+                            <ChevronLeft size={18} />
+                            Volver al Panel
+                        </a>
+
                         <button
                             onClick={() => setIsDrawerOpen(true)}
                             className="group relative px-8 py-4 bg-white text-black font-black text-xs uppercase tracking-[0.2em] rounded-2xl overflow-hidden active:scale-95 transition-all w-full md:w-auto shadow-2xl shadow-white/5"
@@ -504,16 +532,18 @@ export function InventoryPage() {
                                 <div className="h-8 w-px bg-white/20" />
                                 <div className="flex items-center gap-2">
                                     <button
-                                        onClick={() => handleBatchPriceUpdate(10)}
-                                        className="bg-white/10 hover:bg-white/20 px-4 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
+                                        onClick={() => handleBatchDiscount(true)}
+                                        className="bg-purple-500 hover:bg-purple-600 px-4 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-purple-500/20 text-white flex items-center gap-2"
                                     >
-                                        +10% Precio
+                                        <Tag size={12} />
+                                        Aplicar Oferta Lote
                                     </button>
                                     <button
-                                        onClick={() => handleBatchPriceUpdate(-10)}
-                                        className="bg-white/10 hover:bg-white/20 px-4 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
+                                        onClick={() => handleBatchDiscount(false)}
+                                        className="bg-white/10 hover:bg-white/20 px-4 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-white flex items-center gap-2"
                                     >
-                                        -10% Precio
+                                        <X size={12} />
+                                        Remover Ofertas Lote
                                     </button>
                                 </div>
                             </div>
@@ -699,8 +729,8 @@ export function InventoryPage() {
                                                     </div>
                                                 ) : (
                                                     <div className="flex flex-col items-end">
-                                                        {item.discount_percentage && item.discount_percentage > 0 && (
-                                                            <span className="text-[10px] line-through text-neutral-600 font-mono">
+                                                        {item.discount_percentage && item.discount_percentage > 0 && isDiscountActive(item.discount_end_date) && (
+                                                            <span className="text-[10px] line-through text-neutral-600 font-mono" title="PVP Base (Original)">
                                                                 ${(item.price || 0).toFixed(2)}
                                                             </span>
                                                         )}
@@ -710,13 +740,15 @@ export function InventoryPage() {
                                                                 setTempPrice((item.price || 0).toString());
                                                             }}
                                                             className={`text-lg font-black font-mono tracking-tighter hover:text-purple-400 transition-colors ${(item.price || 0) === 0 ? 'text-purple-400' : 'text-white'}`}
+                                                            title="Clic para editar el precio base (PVP)"
                                                         >
-                                                            {(item.price || 0) === 0 ? 'AUTO [CK]' : (
-                                                                item.discount_percentage && item.discount_percentage > 0 
-                                                                    ? `$${((item.price || 0) * (1 - item.discount_percentage / 100)).toFixed(2)}`
-                                                                    : `$${(item.price || 0).toFixed(2)}`
-                                                            )}
+                                                            {(item.price || 0) === 0 ? 'AUTO [CK]' : `$${(item.discount_percentage && item.discount_percentage > 0 && isDiscountActive(item.discount_end_date) ? (item.price * (1 - item.discount_percentage / 100.0)) : item.price || 0).toFixed(2)}`}
                                                         </button>
+                                                        {item.discount_percentage && item.discount_percentage > 0 && isDiscountActive(item.discount_end_date) && (
+                                                            <span className="text-[10px] text-purple-400 font-mono mt-1 bg-purple-500/10 px-2 py-0.5 rounded border border-purple-500/20">
+                                                                Venta: ${(item.price * (1 - item.discount_percentage / 100)).toFixed(2)}
+                                                            </span>
+                                                        )}
                                                         {lastSavedId === item.product_id && (
                                                             <span className="text-[8px] font-black text-white uppercase tracking-widest animate-pulse">GUARDADO</span>
                                                         )}
@@ -724,7 +756,7 @@ export function InventoryPage() {
                                                 )}
                                             </td>
                                             <td className="px-6 py-4 text-center">
-                                                {item.discount_percentage && item.discount_percentage > 0 ? (
+                                                {item.discount_percentage && item.discount_percentage > 0 && isDiscountActive(item.discount_end_date) ? (
                                                     <button 
                                                         onClick={() => setSelectedOfferProduct(item)}
                                                         className="px-2 py-1 bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded-lg text-[10px] font-black font-mono hover:bg-purple-500 hover:text-white transition-all"
@@ -732,7 +764,13 @@ export function InventoryPage() {
                                                         -{item.discount_percentage}%
                                                     </button>
                                                 ) : (
-                                                    <span className="text-[10px] font-bold text-neutral-800">-</span>
+                                                    <button
+                                                        onClick={() => setSelectedOfferProduct(item)}
+                                                        className="px-2 py-1 border border-dashed border-neutral-700 hover:border-purple-500/50 text-neutral-600 hover:text-purple-400 rounded-lg text-[10px] font-bold font-mono transition-all"
+                                                        title="Agregar descuento"
+                                                    >
+                                                        + %
+                                                    </button>
                                                 )}
                                             </td>
                                             <td className="px-6 py-4 text-center">
@@ -817,13 +855,13 @@ export function InventoryPage() {
                                                     <button
                                                         onClick={() => setSelectedOfferProduct(item)}
                                                         className={`p-3 rounded-xl transition-all ${
-                                                            item.discount_percentage && item.discount_percentage > 0 
+                                                            item.discount_percentage && item.discount_percentage > 0 && isDiscountActive(item.discount_end_date)
                                                                 ? 'bg-purple-500/20 text-purple-400 hover:bg-purple-500 hover:text-white'
                                                                 : 'bg-white/5 text-neutral-500 hover:bg-white/10 hover:text-white'
                                                         }`}
                                                         title="Gestionar Oferta"
                                                     >
-                                                        <Tag size={16} className={item.discount_percentage && item.discount_percentage > 0 ? "fill-purple-500/20" : ""} />
+                                                        <Tag size={16} className={item.discount_percentage && item.discount_percentage > 0 && isDiscountActive(item.discount_end_date) ? "fill-purple-500/20" : ""} />
                                                     </button>
                                                     <button
                                                         onClick={() => {
@@ -918,12 +956,12 @@ export function InventoryPage() {
                 <OfferManagementModal
                     isOpen={!!selectedOfferProduct}
                     onClose={() => setSelectedOfferProduct(null)}
-                    productId={selectedOfferProduct.product_id}
-                    productName={selectedOfferProduct.name}
-                    currentPrice={selectedOfferProduct.price}
-                    initialDiscountPercentage={selectedOfferProduct.discount_percentage}
-                    initialDiscountEndDate={selectedOfferProduct.discount_end_date}
-                    onSuccess={() => {
+                     productId={selectedOfferProduct.product_id}
+                     productName={selectedOfferProduct.name}
+                     currentPrice={selectedOfferProduct.original_price}
+                     initialDiscountPercentage={selectedOfferProduct.discount_percentage}
+                     initialDiscountEndDate={selectedOfferProduct.discount_end_date}
+                     onSuccess={() => {
                         fetchInventory();
                         setSelectedOfferProduct(null);
                     }}

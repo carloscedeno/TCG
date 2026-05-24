@@ -62,6 +62,7 @@ BEGIN
 END $$;
 
 -- 4. UPDATED CART RPC (LEFT JOIN / COALESCE Support for Accessories)
+DROP FUNCTION IF EXISTS public.get_user_cart(uuid);
 CREATE OR REPLACE FUNCTION public.get_user_cart(p_user_id uuid)
 RETURNS jsonb
 LANGUAGE plpgsql
@@ -168,6 +169,22 @@ ALTER TABLE public.order_items ALTER COLUMN product_id DROP NOT NULL;
 ALTER TABLE public.order_items ADD COLUMN IF NOT EXISTS accessory_id UUID REFERENCES public.accessories(id);
 
 -- Refined create_order_atomic with Price Verification and Stock Management
+DO $$ 
+DECLARE
+  func_record RECORD;
+  drop_cmd TEXT;
+BEGIN
+  FOR func_record IN 
+    SELECT oid::regprocedure AS func_signature 
+    FROM pg_proc 
+    WHERE proname = 'create_order_atomic' 
+      AND pronamespace = 'public'::regnamespace
+  LOOP
+    drop_cmd := 'DROP FUNCTION IF EXISTS ' || func_record.func_signature || ' CASCADE;';
+    EXECUTE drop_cmd;
+  END LOOP;
+END $$;
+
 CREATE OR REPLACE FUNCTION public.create_order_atomic(
     p_user_id uuid,
     p_total_amount numeric,

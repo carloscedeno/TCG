@@ -54,16 +54,16 @@ export const PresaleSection: React.FC = () => {
             <img
               src={item.image_url}
               alt={item.title}
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100"
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
             
-            {/* Overlay Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent flex flex-col justify-center px-6">
-              <h3 className="text-sm font-black text-white italic uppercase tracking-tighter leading-tight group-hover:text-white transition-colors">
+            {/* Overlay */}
+            <div className="absolute inset-0 flex flex-col justify-end p-4">
+              <h3 className="text-sm font-black text-white italic uppercase tracking-tighter leading-tight drop-shadow-md group-hover:text-white transition-colors">
                 {item.title}
               </h3>
               {item.subtitle && (
-                <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest mt-0.5">
+                <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest mt-0.5 drop-shadow-md">
                   {item.subtitle}
                 </p>
               )}

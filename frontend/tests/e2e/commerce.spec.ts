@@ -42,7 +42,7 @@ test.describe('Shopping Cart & Checkout', () => {
                 if (isOpen) {
                     await page.getByTestId('cart-button').click({ timeout: 5000 });
                 }
-            } catch (e) {
+            } catch {
                 // Ignore cleanup errors
             }
         }
@@ -141,7 +141,6 @@ test.describe('Shopping Cart & Checkout', () => {
         await expect(page.getByTestId('product-card').first()).toBeVisible({ timeout: 20000 });
 
         const productCard = page.locator('[data-testid="product-card"]').first();
-        const productName = await productCard.locator('h3').textContent();
         await productCard.click();
         await page.getByTestId('add-to-cart-button').click();
 

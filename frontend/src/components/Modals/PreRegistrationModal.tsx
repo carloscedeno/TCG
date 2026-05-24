@@ -32,8 +32,8 @@ export const PreRegistrationModal: React.FC<PreRegistrationModalProps> = ({ isOp
             });
             setSuccess(true);
             // In a real app, the backend or a Supabase Edge Function would send the email here.
-        } catch (err) {
-            setError('Hubo un problema con tu inscripción. Por favor intenta de nuevo.');
+        } catch {
+            setError('Error de conexión. Intenta de nuevo.');
         } finally {
             setLoading(false);
         }
@@ -73,6 +73,14 @@ export const PreRegistrationModal: React.FC<PreRegistrationModalProps> = ({ isOp
                             <h3 className="text-[10px] font-black text-white uppercase tracking-[0.3em] mb-1">Inscripción a Misión</h3>
                             <h2 className="text-3xl font-black italic uppercase tracking-tighter leading-tight">{event.name}</h2>
                         </div>
+
+                        {event.description && (
+                            <div className="mb-8 p-4 bg-white/5 border border-white/10 rounded-2xl max-h-[120px] overflow-y-auto custom-scrollbar">
+                                <p className="text-[11px] text-neutral-400 font-medium leading-relaxed">
+                                    {event.description}
+                                </p>
+                            </div>
+                        )}
 
                         <form onSubmit={handleSubmit} className="space-y-5">
                             <div className="space-y-2">

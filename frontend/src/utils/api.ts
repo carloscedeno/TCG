@@ -4,13 +4,23 @@ import { getCardKingdomUrl } from './urlUtils';
 const API_BASE = import.meta.env.VITE_API_BASE || '';
 
 /**
+ * Checks if a discount is still valid based on Caracas time (UTC-4).
+ * Since dates are saved with the explicit Caracas timezone offset (e.g. -04:00),
+ * we can simply compare the instantiations directly without manual hours offset shifting.
+ */
+export const isDiscountActive = (discountUntil: string | null | undefined): boolean => {
+    if (!discountUntil) return true; // Null date means permanent discount
+    return new Date() < new Date(discountUntil);
+};
+
+/**
  * Helper to construct API URLs from API_BASE correctly handling paths and trailing slashes.
  * Ensures consistent use of the '/api' segment if not already in base.
  */
 const getApiUrl = (path: string): string => {
   if (!API_BASE) return '';
 
-  let base = API_BASE.endsWith('/') ? API_BASE.slice(0, -1) : API_BASE;
+  const base = API_BASE.endsWith('/') ? API_BASE.slice(0, -1) : API_BASE;
 
   // We want to ensure it ends with /api if it doesn't already.
   // We check for /api and /tcg-api (for backward compatibility during migration)
@@ -184,7 +194,7 @@ export const fetchUserCollections = async (): Promise<any[]> => {
       const { collection } = await response.json();
       return collection;
     }
-  } catch (error) {
+  } catch {
     console.warn('API Collection fetch failed, falling back to Supabase');
   }
 
@@ -217,6 +227,8 @@ export const fetchProducts = async (params: any = {}, signal?: AbortSignal): Pro
       limit_count: params.limit || 50,
       offset_count: params.offset || 0,
       p_only_new: params.only_new || false,
+      p_only_discount: params.only_discount || false,
+      p_only_presale: params.only_presale || false,
       sort_by: params.sort || 'newest'
     }).abortSignal(signal);
 
@@ -275,133 +287,85 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
     const sanitizedId = printingId.replace('-foil', '').replace('-nonfoil', '').replace('-etched', '');
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     
-    // 2. Try fetching from API/Supabase as a CARD first (This is 99% of requests)
-    const dbPrintingId = sanitizedId;
-
-    try {
-      // Try API first
-      const apiUrl = getApiUrl(`/cards/${dbPrintingId}`);
-      if (apiUrl) {
-        const response = await fetch(apiUrl);
-        if (response.ok) {
-          const json = await response.json();
-          data = json.card || json;
-        }
-      }
-    } catch (e) {
-      console.warn('[API] Detail fetch failed:', e);
-    }
-
-    // 3. If API didn't find it, try Supabase Card Printings
-    if (!data || !data.name) {
-        const { data: sbData } = await supabase
-          .from('card_printings')
-          .select('*, cards(*), sets(*)')
-          .eq('printing_id', dbPrintingId)
-          .maybeSingle();
-          
-        if (sbData) {
-            data = {
-              printing_id: sbData.printing_id,
-              card_id: sbData.card_id,
-              name: sbData.cards?.card_name || sbData.name || 'Unknown Card',
-              mana_cost: sbData.cards?.mana_cost,
-              type: sbData.cards?.type_line,
-              oracle_text: sbData.cards?.oracle_text,
-              flavor_text: sbData.flavor_text || sbData.cards?.flavor_text,
-              artist: sbData.artist,
-              rarity: sbData.rarity,
-              set: sbData.sets?.set_name || '',
-              set_code: sbData.sets?.set_code || '',
-              collector_number: sbData.collector_number,
-              image_url: sbData.image_url,
-              price: 0,
-              finish: sbData.finish || (sbData.is_foil ? 'foil' : 'nonfoil'),
-              is_foil: !!sbData.is_foil || (sbData.finish === 'foil'),
-              total_stock: 0,
-              valuation: { store_price: 0, market_price: 0, valuation_avg: 0 },
-              legalities: sbData.cards?.legalities,
-              colors: sbData.cards?.colors,
-              card_faces: sbData.card_faces || sbData.cards?.card_faces,
-              all_versions: []
-            };
-        }
-    }
-
-    // 4. If STILL not found and it's a UUID, check Accessories (The 1% fallback)
-    if ((!data || !data.name) && uuidRegex.test(sanitizedId)) {
-        console.log('[Catalog] Checking fallback for accessories table:', sanitizedId);
+    // 2. Check Accessories FIRST if it's a UUID (Common for store-specific products)
+    if (uuidRegex.test(sanitizedId)) {
         const { data: accData } = await supabase
           .from('accessories')
           .select('*')
           .eq('id', sanitizedId)
           .maybeSingle();
           
-        if (accData) {
-            const originalPrice = Number(accData.price || 0);
-            let finalPrice = originalPrice;
-            let discountPct = Number(accData.discount_percentage || 0);
+            if (accData) {
+                console.log(`[Catalog] Found accessory in DB: ${sanitizedId}`);
+                const originalPrice = Number(accData.price || 0);
+                let finalPrice = originalPrice;
+                let discountPct = Number(accData.discount_percentage || 0);
 
-            if (discountPct > 0 && accData.discount_until) {
-                const endDate = new Date(accData.discount_until);
-                if (endDate > new Date()) {
+                if (discountPct > 0 && isDiscountActive(accData.discount_until)) {
                     finalPrice = originalPrice * (1 - discountPct / 100);
-                } else {
+                } else if (accData.discount_until) {
                     discountPct = 0;
                 }
-            }
 
-            return {
-                id: accData.id,
-                card_id: accData.id,
-                printing_id: accData.id,
-                name: accData.name,
-                set: accData.category,
-                set_code: accData.category,
-                image_url: accData.image_url,
-                additional_images: accData.additional_images || [],
-                price: finalPrice,
-                original_price: originalPrice,
-                discount_percentage: discountPct,
-                total_stock: accData.stock,
-                is_accessory: true,
-                description: accData.description,
-                all_versions: [{
+                return {
+                    id: accData.id,
+                    card_id: accData.id,
                     printing_id: accData.id,
-                    set_name: accData.category,
-                    set_code: accData.category,
-                    collector_number: 'ACC',
-                    rarity: 'Common',
+                    name: accData.name,
+                    set: accData.category || 'Accesorio',
+                    set_code: accData.category || 'ACC',
                     image_url: accData.image_url,
+                    additional_images: accData.additional_images || [],
                     price: finalPrice,
                     original_price: originalPrice,
                     discount_percentage: discountPct,
-                    stock: accData.stock,
-                    finish: 'standard'
-                }]
-            };
+                    total_stock: accData.stock,
+                    is_accessory: true,
+                    description: accData.description,
+                    all_versions: [{
+                        printing_id: accData.id,
+                        set_name: accData.category || 'Accesorio',
+                        set_code: accData.category || 'ACC',
+                        collector_number: 'ACC',
+                        rarity: 'Common',
+                        image_url: accData.image_url,
+                        price: finalPrice,
+                        original_price: originalPrice,
+                        discount_percentage: discountPct,
+                        stock: accData.stock,
+                        finish: 'standard'
+                    }]
+                };
+            } else {
+            console.log(`[Catalog] UUID not found in accessories table: ${sanitizedId}. Falling back to Edge Function.`);
         }
     }
 
-    // 5. If it's a card (or we found it), proceed with version enrichment
-    const apiVersionsLackFinishData = data?.all_versions?.length > 0 &&
+    // 3. Try Edge Function (Main Source for full card metadata and external fetch)
+    try {
+        const response = await fetch(`${API_BASE}/cards/${sanitizedId}`);
+        if (response.ok) {
+            data = await response.json();
+        }
+    } catch (err) {
+        console.warn("Edge function fetch failed, checking database...", err);
+    }
+
+    // 4. Enrich/Fallback with Supabase if Edge failed or has missing data
+    const apiVersionsLackFinishData = data?.all_versions?.length > 0 && 
       !data.all_versions[0]?.finishes && !data.all_versions[0]?.avg_market_price_foil_usd;
+
     if (!data || !data.name || (!data.all_versions || data.all_versions.length === 0) || apiVersionsLackFinishData) {
       console.log('[Supabase] Falling back for details or missing versions');
-      const { data: sbData, error: sbError } = await supabase
+      const { data: sbData } = await supabase
         .from('card_printings')
         .select('*, cards(*), sets(*)')
-        .eq('printing_id', dbPrintingId)
-        .single();
+        .eq('printing_id', sanitizedId)
+        .maybeSingle();
 
-      if (sbError) {
-        // If even Supabase fails, but we have partial data from API, keep it
-        if (!data) throw sbError;
-      } else {
+      if (sbData) {
         // Build or supplement data
-        const marketPrice = 0; // Fallback to 0, backend should provide this
-
-        // Basic card info
+        const marketPrice = 0; 
         const baseData = {
           printing_id: sbData.printing_id,
           card_id: sbData.card_id,
@@ -430,8 +394,6 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
           card_faces: sbData.card_faces || sbData.cards?.card_faces,
           all_versions: []
         };
-
-        // Merge API data with Supabase data if both exist
         data = { ...baseData, ...data };
 
         // If the API provided incomplete version data (missing foil prices/finishes), discard it 
@@ -441,7 +403,7 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
         }
 
         // Fetch versions if missing
-        if (!data.all_versions || data.all_versions.length === 0) {
+        if ((!data.all_versions || data.all_versions.length === 0) && sbData) {
           const cardIdForVersions = sbData.card_id || data.oracle_id;
           if (cardIdForVersions) {
             const { data: versionsData } = await supabase
@@ -511,12 +473,9 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                   if (prodDataNormal?.price) {
                       originalPriceNormal = prodDataNormal.price;
                       finalPriceNormal = prodDataNormal.price;
-                      if (prodDataNormal.discount_percentage && prodDataNormal.discount_end_date) {
-                          const endDate = new Date(prodDataNormal.discount_end_date);
-                          if (endDate > new Date()) {
-                              finalPriceNormal = originalPriceNormal * (1 - prodDataNormal.discount_percentage / 100);
-                              discountNormal = prodDataNormal.discount_percentage;
-                          }
+                      if (prodDataNormal.discount_percentage && isDiscountActive(prodDataNormal.discount_end_date)) {
+                          finalPriceNormal = originalPriceNormal * (1 - prodDataNormal.discount_percentage / 100);
+                          discountNormal = prodDataNormal.discount_percentage;
                       }
                   }
 
@@ -543,12 +502,9 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                   if (prodDataFoil?.price) {
                       originalPriceFoil = prodDataFoil.price;
                       finalPriceFoil = prodDataFoil.price;
-                      if (prodDataFoil.discount_percentage && prodDataFoil.discount_end_date) {
-                          const endDate = new Date(prodDataFoil.discount_end_date);
-                          if (endDate > new Date()) {
-                              finalPriceFoil = originalPriceFoil * (1 - prodDataFoil.discount_percentage / 100);
-                              discountFoil = prodDataFoil.discount_percentage;
-                          }
+                      if (prodDataFoil.discount_percentage && isDiscountActive(prodDataFoil.discount_end_date)) {
+                          finalPriceFoil = originalPriceFoil * (1 - prodDataFoil.discount_percentage / 100);
+                          discountFoil = prodDataFoil.discount_percentage;
                       }
                   }
 
@@ -654,9 +610,16 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
             const finishMatches = matches.filter((p: any) => (p.finish || 'nonfoil').toLowerCase() === vFinish);
             const totalStockForFinish = finishMatches.reduce((acc: number, curr: any) => acc + (curr.stock || 0), 0);
             const exactProd = finishMatches[0];
-            const finalPrice = (exactProd?.price && Number(exactProd.price) > 0) ? Number(exactProd.price) : v.price;
-            const originalPrice = (exactProd?.original_price && Number(exactProd.original_price) > 0) ? Number(exactProd.original_price) : finalPrice;
+            const basePriceFromDB = (exactProd?.price && Number(exactProd.price) > 0) ? Number(exactProd.price) : v.price;
+            const originalPrice = (exactProd?.original_price && Number(exactProd.original_price) > 0) ? Number(exactProd.original_price) : basePriceFromDB;
             const discountPct = Number(exactProd?.discount_percentage || 0);
+            const discountActive = isDiscountActive(exactProd?.discount_end_date);
+            
+            // Calculate final price based on the visual label
+            let finalPrice = basePriceFromDB;
+            if (discountPct > 0 && discountActive) {
+              finalPrice = basePriceFromDB * (1 - discountPct / 100);
+            }
 
             return {
               ...v,
@@ -664,7 +627,7 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
               stock: totalStockForFinish,
               price: finalPrice,
               original_price: originalPrice,
-              discount_percentage: discountPct
+              discount_percentage: discountActive ? discountPct : 0
             };
           });
         } else {
@@ -803,74 +766,27 @@ export const fetchCart = async (): Promise<any> => {
       const rawItems = cartData?.items || [];
       
       // We will map and then enrich if needed
-      const items = await Promise.all(rawItems.map(async (item: any) => {
-        // Try to extract from flat or nested 'products' object
-        const nested = item.products || item.product || {};
-        const extractName = item.product_name || item.name || nested.name || nested.product_name;
-        const extractPrice = item.price ?? nested.price;
-        const extractImageUrl = item.image_url || nested.image_url;
-        const extractSetCode = item.set_code || nested.set_code;
-        const extractStock = item.stock ?? nested.stock ?? 0;
-        const extractFinish = item.finish || nested.finish;
-        const isAcc = !!item.accessory_id || !!item.is_accessory || item.type === 'accessory';
-        
-        let mappedItem = {
-          id: item.cart_item_id || item.id,
-          product_id: item.product_id || (isAcc ? null : nested.id),
-          accessory_id: item.accessory_id || (isAcc ? (item.product_id || nested.id) : null),
+      // Trust the unified RPC result for authenticated users
+      const items = rawItems.map((item: any) => {
+        const isAcc = !!item.is_accessory;
+        return {
+          id: item.id,
+          product_id: item.product_id,
+          accessory_id: item.accessory_id,
           quantity: Number(item.quantity || 1),
           products: {
-            id: item.product_id || item.accessory_id || nested.id,
-            name: extractName || '',
-            price: Number(extractPrice || 0),
-            image_url: extractImageUrl || '',
-            set_code: extractSetCode || '',
-            stock: extractStock,
-            finish: extractFinish || (isAcc ? 'standard' : '')
+            id: item.product_id || item.accessory_id,
+            name: item.name || '',
+            price: Number(item.price || 0),
+            original_price: Number(item.original_price || item.price || 0),
+            discount_percentage: Number(item.discount_percentage || 0),
+            image_url: item.image_url || '',
+            set_code: item.set_code || '',
+            stock: item.stock || 0,
+            finish: item.finish || (isAcc ? 'standard' : 'nonfoil')
           }
         };
-
-        // If data is still missing (e.g. old RPC version that only returns cart_items columns)
-        if (!mappedItem.products.name || !mappedItem.products.image_url) {
-            try {
-                if (mappedItem.accessory_id) {
-                    const { data: aData } = await supabase
-                        .from('accessories')
-                        .select('*')
-                        .eq('id', mappedItem.accessory_id)
-                        .single();
-                        
-                    if (aData) {
-                        mappedItem.products.name = aData.name;
-                        mappedItem.products.price = Number(aData.price || 0);
-                        mappedItem.products.image_url = aData.image_url;
-                        mappedItem.products.set_code = aData.category || '';
-                        mappedItem.products.finish = 'standard';
-                        mappedItem.products.stock = aData.stock || 0;
-                    }
-                } else if (mappedItem.product_id) {
-                    const { data: pData } = await supabase
-                        .from('products')
-                        .select('*')
-                        .eq('id', mappedItem.product_id)
-                        .single();
-                        
-                    if (pData) {
-                        mappedItem.products.name = pData.name;
-                        mappedItem.products.price = Number(pData.price || pData.store_price || 0);
-                        mappedItem.products.image_url = pData.image_url;
-                        mappedItem.products.set_code = pData.set_code || '';
-                        mappedItem.products.finish = pData.finish || '';
-                        mappedItem.products.stock = pData.stock || 0;
-                    }
-                }
-            } catch (err) {
-                console.error("Fallback item fetch failed for item: ", mappedItem.id, err);
-            }
-        }
-
-        return mappedItem;
-      }));
+      });
       
       return { 
         items, 
@@ -925,6 +841,8 @@ export const fetchCart = async (): Promise<any> => {
               id: product?.id || itemMapping.baseId,
               name: printing.cards?.card_name || printing.name || 'Unknown Card',
               price: Number(product?.price ?? priceFallback),
+              original_price: Number(product?.original_price || product?.price || priceFallback),
+              discount_percentage: Number(product?.discount_percentage || 0),
               image_url: printing.image_url,
               set_code: printing.sets?.set_code || '',
               stock: product?.stock || 0,
@@ -950,6 +868,16 @@ export const fetchCart = async (): Promise<any> => {
         const mappedAccs = accessoryItems.map((item: any) => {
           const acc = (accData || []).find((a: any) => a.id === item.accessory_id);
           if (!acc) return null;
+          const originalPrice = Number(acc.price || 0);
+          let finalPrice = originalPrice;
+          let discountPct = Number(acc.discount_percentage || 0);
+
+          if (discountPct > 0 && isDiscountActive(acc.discount_until)) {
+            finalPrice = originalPrice * (1 - discountPct / 100);
+          } else if (acc.discount_until) {
+            discountPct = 0;
+          }
+
           return {
             id: `guest-acc-${acc.id}`,
             accessory_id: acc.id,
@@ -959,7 +887,9 @@ export const fetchCart = async (): Promise<any> => {
             products: {
               id: acc.id,
               name: acc.name,
-              price: Number(acc.price),
+              price: Number(finalPrice.toFixed(2)),
+              original_price: Number(finalPrice.toFixed(2)),
+              discount_percentage: discountPct,
               image_url: acc.image_url,
               set_code: acc.category,
               stock: acc.stock,
@@ -1330,34 +1260,41 @@ export const fetchAccessories = async (params: {
   parent_code?: string;       // parent group filter (e.g. 'SEALED')
   price_min?: number;
   price_max?: number;
+  only_discount?: boolean;
+  only_presale?: boolean;
   sort?: string;
   limit?: number;
   offset?: number;
 }) => {
   const {
     q, game, category, category_code, parent_code,
-    price_min, price_max, sort = 'newest', limit = 50, offset = 0
+    price_min, price_max, only_discount, only_presale, sort = 'newest', limit = 50, offset = 0
   } = params;
   
-  // Dynamic game mapping
+  // Clean 3-letter mapping
   let gameId: number | null = null;
-  if (game) {
+  if (game && game !== 'OTHERS') {
+    const normalizedCode = game;
+
     const { data: gameData } = await supabase
       .from('games')
       .select('game_id')
-      .or(`game_name.eq."${game}",game_code.eq."${game}"`)
-      .single();
+      .or(`game_name.eq.${normalizedCode},game_code.eq.${normalizedCode}`)
+      .maybeSingle();
     if (gameData) gameId = gameData.game_id;
   }
   
   const { data, error } = await supabase.rpc('get_accessories_filtered', {
     p_game_id: gameId,
+    p_game_code: game || null,
     p_category: category || null,
     p_category_code: category_code || null,
     p_parent_code: parent_code || null,
     p_search_query: q || null,
     p_price_min: price_min || null,
     p_price_max: price_max || null,
+    p_only_discount: only_discount || false,
+    p_only_presale: only_presale || false,
     p_sort: sort,
     p_limit: limit,
     p_offset: offset
@@ -1370,13 +1307,10 @@ export const fetchAccessories = async (params: {
     let finalPrice = originalPrice;
     let discountPct = Number(item.discount_percentage || 0);
 
-    if (discountPct > 0 && item.discount_until) {
-      const endDate = new Date(item.discount_until);
-      if (endDate > new Date()) {
-        finalPrice = originalPrice * (1 - discountPct / 100);
-      } else {
-        discountPct = 0;
-      }
+    if (discountPct > 0 && isDiscountActive(item.discount_until)) {
+      finalPrice = originalPrice * (1 - discountPct / 100);
+    } else if (item.discount_until) {
+      discountPct = 0;
     }
 
     return {
@@ -1486,7 +1420,6 @@ export const fetchBanners = async (category: string = 'main_hero', gameCode?: st
     .eq('is_active', true);
 
   if (gameCode) {
-    // Normalize codes to match DB aliases if necessary
     query = query.eq('game_code', gameCode);
   } else {
     query = query.is('game_code', null);
@@ -1498,6 +1431,19 @@ export const fetchBanners = async (category: string = 'main_hero', gameCode?: st
     console.error('fetchBanners failed:', error);
     return [];
   }
+
+  // Fallback: If no game-specific banners, fetch global ones
+  if (gameCode && (!data || data.length === 0)) {
+    const { data: globalData } = await supabase
+      .from('hero_banners')
+      .select('*')
+      .eq('category', category)
+      .eq('is_active', true)
+      .is('game_code', null)
+      .order('display_order', { ascending: true });
+    return globalData || [];
+  }
+
   return data || [];
 };
 
@@ -1694,31 +1640,31 @@ export const fetchDiscountedSingles = async (gameCode?: string, limit = 10): Pro
       .limit(limit);
       
     if (gameCode) {
-      const code = gameCode.startsWith('Poke') || gameCode === 'POKEMON' ? 'PKM' : 
-                   gameCode.startsWith('Magic') ? 'MTG' : 
-                   gameCode.startsWith('One') ? 'OPC' : 
-                   gameCode.startsWith('Digi') ? 'DGM' : gameCode;
+      const code = gameCode;
       query = query.eq('game', code);
     }
     
     const { data, error } = await query;
     if (error) throw error;
-    
-    return (data || []).map((row: any) => {
-      const finalPrice = Number(row.price || 0);
-      const discountPct = Number(row.discount_percentage || 0);
-      
-      return {
-        ...row,
-        card_id: row.printing_id || row.id,
-        finish: row.finish || (row.is_foil ? 'foil' : 'nonfoil'),
-        is_foil: !!row.is_foil || (row.finish === 'foil'),
-        original_price: finalPrice,
-        price: discountPct > 0 ? finalPrice * (1 - discountPct / 100) : finalPrice,
-        discount_percentage: discountPct,
-        total_stock: row.stock || 0
-      };
-    });
+    return (data || [])
+      .filter((row: any) => isDiscountActive(row.discount_end_date))
+      .map((row: any) => {
+        const originalPrice = Number(row.price || 0);
+        const discountPct = Number(row.discount_percentage || 0);
+        return {
+          card_id: row.id,
+          name: row.name,
+          set: row.category,
+          price: discountPct > 0 ? originalPrice * (1 - discountPct / 100) : originalPrice,
+          original_price: originalPrice,
+          discount_percentage: discountPct,
+          image_url: row.image_url,
+          rarity: 'Common',
+          total_stock: row.stock || 0,
+          is_accessory: true,
+          updated_at: row.updated_at
+        };
+      });
   } catch (error) {
     console.error('Fetch Discounted Singles Failed:', error);
     return [];
@@ -1736,7 +1682,7 @@ export const fetchDiscountedAccessories = async (gameCode?: string, limit = 10):
       .limit(limit);
 
     if (gameCode) {
-      const code = gameCode === 'POKEMON' ? 'PKM' : gameCode;
+      const code = gameCode;
       const { data: gameData } = await supabase.from('games').select('game_id').eq('game_code', code).maybeSingle();
       if (gameData) {
         query = query.eq('game_id', gameData.game_id);
@@ -1745,24 +1691,26 @@ export const fetchDiscountedAccessories = async (gameCode?: string, limit = 10):
     
     const { data, error } = await query;
     if (error) throw error;
-    
-    return (data || []).map((row: any) => {
-      const originalPrice = Number(row.price || 0);
-      const discountPct = Number(row.discount_percentage || 0);
-      return {
-        card_id: row.id,
-        name: row.name,
-        set: row.category,
-        price: discountPct > 0 ? originalPrice * (1 - discountPct / 100) : originalPrice,
-        original_price: originalPrice,
-        discount_percentage: discountPct,
-        image_url: row.image_url,
-        rarity: 'Common',
-        total_stock: row.stock || 0,
-        is_accessory: true,
-        updated_at: row.updated_at
-      };
-    });
+    return (data || [])
+      .filter((row: any) => isDiscountActive(row.discount_until))
+      .map((row: any) => {
+        const originalPrice = Number(row.price || 0);
+        const discountPct = Number(row.discount_percentage || 0);
+        const finalPrice = discountPct > 0 ? originalPrice * (1 - discountPct / 100) : originalPrice;
+        return {
+          card_id: row.id,
+          name: row.name,
+          set: row.category,
+          price: finalPrice,
+          original_price: originalPrice,
+          discount_percentage: discountPct,
+          image_url: row.image_url,
+          rarity: 'Common',
+          total_stock: row.stock || 0,
+          is_accessory: true,
+          updated_at: row.updated_at
+        };
+      });
   } catch (error) {
     console.error('Fetch Discounted Accessories Failed:', error);
     return [];
@@ -1773,10 +1721,7 @@ export const checkGameInventoryPresence = async (gameCode?: string): Promise<{ h
   try {
     if (!gameCode) return { hasSingles: true, hasCatalog: true };
     
-    const code = gameCode.startsWith('Poke') || gameCode === 'POKEMON' ? 'PKM' : 
-                   gameCode.startsWith('Magic') ? 'MTG' : 
-                   gameCode.startsWith('One') ? 'OPC' : 
-                   gameCode.startsWith('Digi') ? 'DGM' : gameCode;
+    const code = gameCode;
                    
     const [{ data: singles }, { data: gameData }] = await Promise.all([
       supabase.from('products').select('id').eq('game', code).gt('stock', 0).limit(1),

@@ -661,6 +661,80 @@ async function handleImportEndpoint(supabase: SupabaseClient, path: string, meth
     throw new Error('No data provided for import')
   }
 
+  if (importType === 'catalog') {
+    // Bulk import for Accessory Catalog (accessories table)
+    const errors: string[] = []
+    const failedIndices: number[] = []
+    let importedCount = 0
+
+    // Fetch categories for mapping names if only codes are provided
+    const { data: categoryList } = await supabase.from('accessory_categories').select('code, name')
+    const categoryMap = Object.fromEntries(categoryList?.map(c => [c.code, c.name]) || [])
+
+    for (let i = 0; i < importData.length; i++) {
+      const row = importData[i]
+      try {
+        const name = row[mapping?.name] || row['name'] || row['Name'] || row['Producto'];
+        const description = row[mapping?.description] || row['description'] || row['Description'] || row['Descripción'] || '';
+        const price = parseFloat(row[mapping?.price] || row['price'] || row['Price'] || row['Precio'] || '0') || 0;
+        const stock = parseInt(row[mapping?.stock] || row['stock'] || row['Stock'] || '0') || 0;
+        const categoryCode = (row[mapping?.category_code] || row['category_code'] || row['Categoría'] || '').trim();
+        const unitType = row[mapping?.unit_type] || row['unit_type'] || row['Tipo'] || 'Unidad';
+        
+        // Optional fields
+        const cost = parseFloat(row[mapping?.cost] || row['cost'] || row['Costo'] || row['costo'] || '0') || 0;
+        const suggestedPrice = parseFloat(row[mapping?.suggested_price] || row['suggested_price'] || row['Sugerido'] || row['precio_sugerido'] || '0') || 0;
+        const gameIdRaw = row[mapping?.game_id] || row['game_id'] || row['id_juego'] || row['Juego'] || null;
+        const gameId = gameIdRaw && !isNaN(parseInt(String(gameIdRaw))) ? parseInt(String(gameIdRaw)) : null;
+        const language = row[mapping?.language] || row['language'] || row['Idioma'] || 'Inglés';
+
+        if (!name || isNaN(price) || !categoryCode) {
+          errors.push(`Row ${i + 1}: Faltan campos obligatorios (Nombre, Precio o Categoría)`)
+          failedIndices.push(i)
+          continue
+        }
+
+        const categoryName = categoryMap[categoryCode] || 'Accesorios';
+
+        const { error: insertError } = await supabase
+          .from('accessories')
+          .insert({
+            name,
+            description,
+            price,
+            cost,
+            suggested_price: suggestedPrice,
+            stock,
+            category: categoryName,
+            category_code: categoryCode,
+            unit_type: unitType,
+            game_id: gameId,
+            language,
+            is_active: true
+            // Image URL omitted as per request
+          })
+
+        if (insertError) {
+          errors.push(`Row ${i + 1} (${name}): Error de inserción - ${insertError.message}`)
+          failedIndices.push(i)
+          continue
+        }
+
+        importedCount++
+      } catch (rowErr: any) {
+        errors.push(`Row ${i + 1}: Error inesperado - ${rowErr.message}`)
+        failedIndices.push(i)
+      }
+    }
+
+    return {
+      imported_count: importedCount,
+      total_rows: importData.length,
+      errors: errors,
+      failed_indices: failedIndices
+    }
+  }
+
   if (importType === 'inventory') {
     // Optimized bulk import for inventory using RPC v3 (Robust Restoration)
     const mappedData = importData.map((row) => {
