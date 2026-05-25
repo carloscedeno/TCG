@@ -429,7 +429,7 @@ const Home: React.FC = () => {
   };
 
   const handleCardClick = (id: string, isArchive: boolean = false) => {
-    if (isArchive || activeTab === 'catalog') {
+    if (isArchive) {
       navigate(`/product/${id}?archive=true`);
     } else {
       navigate(`/card/${id}`);
@@ -592,7 +592,7 @@ const Home: React.FC = () => {
                     <DealsCarousel title="Hechizos en Descuento" cards={discountedSingles} onCardClick={(id) => handleCardClick(id, false)} />
                   )}
                   {inventoryPresence.hasCatalog && discountedAccessories.length > 0 && (
-                    <DealsCarousel title="Artilugios en Descuento" cards={discountedAccessories} onCardClick={(id) => handleCardClick(id, true)} isArchive={true} />
+                    <DealsCarousel title="Artilugios en Descuento" cards={discountedAccessories} onCardClick={(id) => handleCardClick(id, false)} isArchive={false} />
                   )}
                 </div>
               )}
@@ -649,7 +649,7 @@ const Home: React.FC = () => {
                     </div>
                   ) : (
                     <>
-                      <CardGrid cards={cards} onCardClick={(id) => handleCardClick(id, activeTab === 'catalog')} viewMode={viewMode} isArchive={activeTab === 'catalog'} showCartButton={true} />
+                      <CardGrid cards={cards} onCardClick={(id) => handleCardClick(id, false)} viewMode={viewMode} isArchive={false} showCartButton={true} />
                       {cards.length < totalCount && (
                         <div className="flex justify-center pb-20">
                           <button

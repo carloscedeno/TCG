@@ -20,7 +20,6 @@ export const CardDetail: React.FC = () => {
     const { user } = useAuth();
     const [searchParams] = useSearchParams();
     const activeFinish = searchParams.get('finish') || 'nonfoil';
-    const isArchiveView = searchParams.get('archive') === 'true';
 
     const [details, setDetails] = useState<any>(null);
     const [loading, setLoading] = useState(true);
@@ -87,7 +86,8 @@ export const CardDetail: React.FC = () => {
             const result = await addToCart(baseId, 1, activeFinish, !!details?.is_accessory);
 
             if (result && !result.success) {
-                alert(result.message || result.error || 'No se pudo agregar al carrito');
+                console.error("ADD TO CART FAILED:", result);
+                alert(`Error al agregar al carrito: ${result.message || result.error || JSON.stringify(result)}`);
                 return;
             }
 
@@ -486,17 +486,15 @@ export const CardDetail: React.FC = () => {
                                                     )}
                                                 </div>
 
-                                                {!isArchiveView && (
-                                                    <button
-                                                        data-testid="add-to-cart-button"
-                                                        onClick={handleAddToCart}
-                                                        disabled={isAdding}
-                                                        className="flex-1 h-12 rounded-xl bg-geeko-cyan text-black font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0, 209, 255, 0.3)] hover:shadow-[0_0_30px_rgba(0, 209, 255, 0.5)] hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
-                                                    >
-                                                        {isAdding ? <Loader2 size={16} className="animate-spin" /> : <ShoppingCart size={16} fill="currentColor" />}
-                                                        {isAdding ? '...' : ((activeVersion?.stock || 0) > 0 ? 'Agregar' : 'Encargo')}
-                                                    </button>
-                                                )}
+                                                <button
+                                                    data-testid="add-to-cart-button"
+                                                    onClick={handleAddToCart}
+                                                    disabled={isAdding}
+                                                    className="flex-1 h-12 rounded-xl bg-geeko-cyan text-black font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0, 209, 255, 0.3)] hover:shadow-[0_0_30px_rgba(0, 209, 255, 0.5)] hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
+                                                >
+                                                    {isAdding ? <Loader2 size={16} className="animate-spin" /> : <ShoppingCart size={16} fill="currentColor" />}
+                                                    {isAdding ? '...' : ((activeVersion?.stock || 0) > 0 ? 'Agregar' : 'Encargo')}
+                                                </button>
                                             </div>
                                         </div>
                                     </div>

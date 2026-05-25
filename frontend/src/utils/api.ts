@@ -924,6 +924,10 @@ export const addToCart = async (printingId: string, quantity: number = 1, finish
           });
           if (error) throw error;
           window.dispatchEvent(new Event('cart-updated'));
+          
+          if (typeof data === 'string') {
+              return { success: true, cart_id: data };
+          }
           return data || { success: true };
       }
 
@@ -973,9 +977,9 @@ export const addToCart = async (printingId: string, quantity: number = 1, finish
 
     return { success: true, message: "Added to guest cart" };
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error adding to cart:', error);
-    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+    return { success: false, error: error?.message || error?.details || String(error) || 'Unknown error' };
   }
 };
 
