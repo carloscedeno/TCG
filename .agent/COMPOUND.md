@@ -298,3 +298,12 @@ Remediate the E2E checkout process by implementing "Por Encargo" logic to bypass
 - rontend/src/components/Card/Card.tsx -> Ocultada rareza en Sealed Products.
 **Artefacto creado:** scripts/apply_rpc_fixes.py -> Script para inyectar los flags p_only_discount, p_only_presale y p_games (OTHERS) en las consultas SQL de producci�n/dev.
 **Regla derivada:** Validar que los contratos backend (SQL/RPC) est�n listos para recibir par�metros antes de implementar switches visuales que modifiquen la URL del cat�logo.
+
+## 2026-05-24 — Separación de Entornos Dev/Prod y Limpieza
+
+**Qué pasó:** Resolvimos un problema donde el entorno de desarrollo (Preview en Cloudflare Pages) estaba leyendo datos de la base de datos de producción debido a variables de entorno mal configuradas, y limpiamos las tablas de products y ccessories en dev.
+**Lo que cambió:**
+- .agent/lessons_learned.md -> Lección #174 sobre separación de entornos en Cloudflare Pages.
+- Entorno de Dev -> Configurado correctamente en Cloudflare Pages.
+**Artefacto creado:** Ninguno.
+**Regla derivada:** Validar que Cloudflare Pages (Preview) no use credenciales de producción.

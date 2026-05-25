@@ -2272,3 +2272,9 @@ useEffect(() => {
 - **Causa Raíz**: Los parámetros booleanos y arrays (p_only_discount, p_only_presale, p_games con valor OTHERS) eran enviados correctamente por el frontend, pero las funciones RPC de Supabase (get_products_filtered y get_accessories_filtered) no tenían la lógica en su bloque WHERE para procesarlos, devolviendo el catálogo entero.
 - **Solución**: Modificadas las RPCs en Supabase para interceptar estos flags y filtrar a nivel de SQL. Se añadió soporte para OTHERS (excluyendo la lista de juegos principales).
 - **Lección**: Al implementar un nuevo control de filtro visual, la primera verificación debe ser **siempre** el contrato de la función de base de datos (RPC/endpoint) que recibe y procesa el parámetro. De lo contrario se genera una ilusión de funcionalidad en el cliente.
+
+### 174. DesvinculaciÃ³n de Entornos Dev/Prod en Cloudflare Pages â€” 2026-05-24
+- **Problema:** Al hacer una limpieza de la base de datos de DEV, el frontend de dev (Preview) seguÃ­a mostrando los datos de PROD.
+- **Causa RaÃ­z:** Las variables de entorno en Cloudflare Pages (entorno Preview) apuntaban al proyecto de producciÃ³n en lugar del proyecto de desarrollo. AdemÃ¡s, se nos pasÃ³ limpiar la tabla ccessories inicialmente.
+- **SoluciÃ³n:** Se corrigieron manualmente las variables en Cloudflare Pages y se forzÃ³ un re-despliegue haciendo push de un commit vacÃ­o en la branch dev. Se limpiaron las tablas products y ccessories en DEV.
+- **Regla Derivada:** Mantener estricta separaciÃ³n de secretos entre Production y Preview en Cloudflare Pages.
