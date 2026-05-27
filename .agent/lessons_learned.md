@@ -2272,3 +2272,9 @@ useEffect(() => {
 - **Causa Raíz**: Los parámetros booleanos y arrays (p_only_discount, p_only_presale, p_games con valor OTHERS) eran enviados correctamente por el frontend, pero las funciones RPC de Supabase (get_products_filtered y get_accessories_filtered) no tenían la lógica en su bloque WHERE para procesarlos, devolviendo el catálogo entero.
 - **Solución**: Modificadas las RPCs en Supabase para interceptar estos flags y filtrar a nivel de SQL. Se añadió soporte para OTHERS (excluyendo la lista de juegos principales).
 - **Lección**: Al implementar un nuevo control de filtro visual, la primera verificación debe ser **siempre** el contrato de la función de base de datos (RPC/endpoint) que recibe y procesa el parámetro. De lo contrario se genera una ilusión de funcionalidad en el cliente.
+
+### 6. Filtrado OTHERS en Funciones SQL â€” 2026-05-26
+- **Problema:** La pestaÃ±a 'OTROS' en el catÃ¡logo mostraba todos los productos (Magic, Digimon, etc.) en lugar de solo los productos sin juego.
+- **Causa RaÃ­z:** En get_accessories_filtered, cuando el frontend enviaba game_code = 'OTHERS', se pasaba p_game_id = NULL. La condiciÃ³n (p_game_id IS NULL OR a.game_id = p_game_id) evaluaba a TRUE para todos los productos, anulando el filtro.
+- **SoluciÃ³n:** Modificar la funciÃ³n SQL para manejar explÃ­citamente (p_game_code = 'OTHERS' AND a.game_id IS NULL) y aplicar el filtro regular solo si p_game_code != 'OTHERS'.
+- **Regla Derivada:** Al usar filtros dinÃ¡micos en Supabase RPC que aceptan NULL para indicar 'sin filtro', siempre se debe proveer un caso base explÃ­cito (OTHERS o similar) para filtrar registros donde la columna es literalmente NULL. (Codificado en migraciÃ³n 20260527000000_fix_accessories_others_filter.sql).

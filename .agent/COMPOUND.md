@@ -298,3 +298,18 @@ Remediate the E2E checkout process by implementing "Por Encargo" logic to bypass
 - rontend/src/components/Card/Card.tsx -> Ocultada rareza en Sealed Products.
 **Artefacto creado:** scripts/apply_rpc_fixes.py -> Script para inyectar los flags p_only_discount, p_only_presale y p_games (OTHERS) en las consultas SQL de producci�n/dev.
 **Regla derivada:** Validar que los contratos backend (SQL/RPC) est�n listos para recibir par�metros antes de implementar switches visuales que modifiquen la URL del cat�logo.
+
+## 2026-05-27 — Resolución de Bugs en Filtros de Catálogo y Carga Masiva
+
+**Qué pasó:** 
+1. Durante la carga masiva (Bulk Import) de accesorios, faltaba la columna game_id, por lo que todos los productos se cargaron como Genéricos (game_id = NULL).
+2. Se arregló el script de importación para asignar el ID del juego correcto basado en el nombre.
+3. El usuario reportó que la pestaña 'OTROS' en el UI mostraba productos de Magic/Digimon. Se descubrió un bug en get_accessories_filtered donde p_game_code = 'OTHERS' evaluaba a p_game_id IS NULL y anulaba el filtro completo, devolviendo todo el catálogo.
+
+**Lo que cambió:**
+- lessons_learned.md → Lección #6 agregada sobre el manejo de NULL explícito en RPCs.
+- catalogo_formateado_para_importar.csv -> Generado de nuevo con IDs de juego.
+- supabase/migrations/20260527000000_fix_accessories_others_filter.sql -> Fix aplicado.
+
+**Regla derivada:**
+Siempre proveer un caso de evaluación estricto en sentencias SQL cuando el sistema espera filtrar registros por IS NULL como un valor válido en lugar de como la ausencia del filtro.
