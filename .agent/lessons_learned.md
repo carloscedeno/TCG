@@ -2278,3 +2278,10 @@ useEffect(() => {
 - **Causa Raíz:** En get_accessories_filtered, cuando el frontend enviaba game_code = 'OTHERS', se pasaba p_game_id = NULL. La condición (p_game_id IS NULL OR a.game_id = p_game_id) evaluaba a TRUE para todos los productos, anulando el filtro.
 - **Solución:** Modificar la función SQL para manejar explícitamente (p_game_code = 'OTHERS' AND a.game_id IS NULL) y aplicar el filtro regular solo si p_game_code != 'OTHERS'.
 - **Regla Derivada:** Al usar filtros dinámicos en Supabase RPC que aceptan NULL para indicar 'sin filtro', siempre se debe proveer un caso base explícito (OTHERS o similar) para filtrar registros donde la columna es literalmente NULL. (Codificado en migración 20260527000000_fix_accessories_others_filter.sql).
+
+
+### 174. Timeout y Tablas Temporales en Sincronización Masiva — 2026-05-27
+- **Problema:** El script de sincronización perdía datos intermedios en lotes y la fase final de denormalización fallaba silenciosamente tras 2 minutos de procesamiento.
+- **Causa Raíz:** 1. Las tablas temporales de PostgreSQL creadas con ON COMMIT DROP se eliminan en el primer conn.commit() del script (usado para iteraciones en batch), provocando InFailedSqlTransaction. 2. El timeout por defecto de PostgreSQL aborta consultas de agregación masiva que duran más de 2 minutos.
+- **Solución:** 1. Cambiar la declaración de la tabla temporal a ON COMMIT PRESERVE ROWS para procesos en batch. 2. Elevar explícitamente el timeout (SET statement_timeout = '30min') en la sesión del cursor justo antes de consultas analíticas pesadas.
+- **Regla Derivada:** Al diseñar scripts en Python (psycopg2) que dividen inserts masivos en chunks con .commit() intermedios, jamás usar ON COMMIT DROP en tablas temporales. Siempre aumentar el statement_timeout para actualizaciones de desnormalización tipo FULL OUTER JOIN sobre históricos completos.

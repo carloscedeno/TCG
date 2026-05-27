@@ -1,7 +1,42 @@
 import subprocess
 import os
 import sys
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from datetime import datetime
+from dotenv import load_dotenv
+
+load_dotenv('.env')
+
+def send_alert_email(subject, body):
+    sender = os.getenv('SMTP_USER')
+    password = os.getenv('SMTP_PASS')
+    host = os.getenv('SMTP_HOST')
+    port = os.getenv('SMTP_PORT', '587')
+    recipient = os.getenv('ALERT_EMAIL')
+    
+    if not all([sender, password, host, recipient]):
+        print("Skipping email alert: SMTP environment variables are not fully configured.")
+        return False
+        
+    try:
+        msg = MIMEMultipart()
+        msg['From'] = sender
+        msg['To'] = recipient
+        msg['Subject'] = subject
+        msg.attach(MIMEText(body, 'plain'))
+        
+        server = smtplib.SMTP(host, int(port))
+        server.starttls()
+        server.login(sender, password)
+        server.send_message(msg)
+        server.quit()
+        print("Alert email sent successfully.")
+        return True
+    except Exception as e:
+        print(f"Failed to send email alert: {e}")
+        return False
 
 def run_script(script_path):
     print(f"--- Running {script_path} ---")
@@ -51,6 +86,10 @@ def main():
         f.write(report_content)
     
     print("Report generated in SESION_COMPLETADA.md")
+    
+    if not all_passed:
+        print("Sending failure alert email...")
+        send_alert_email("Geekorium Nightly Sync Failed", "One or more scripts failed during the nightly sync. Check SESION_COMPLETADA.md for details.\n\n" + report_content)
     
     if all_passed:
         # Process Price Alerts

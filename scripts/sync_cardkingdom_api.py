@@ -59,6 +59,9 @@ def update_denormalized_prices(conn, printing_ids=None):
     logger.info("--- Updating Denormalized Pricing Columns ---")
     
     with conn.cursor() as cur:
+        # Increase timeout for the massive denormalization query
+        cur.execute("SET statement_timeout = '30min'")
+        
         # Fetch CK Source ID
         cur.execute("SELECT source_id FROM sources WHERE source_code = 'CARDKINGDOM'")
         row = cur.fetchone()
@@ -88,7 +91,6 @@ def update_denormalized_prices(conn, printing_ids=None):
         SET 
             avg_market_price_usd = COALESCE(nf.price_usd, cp.avg_market_price_usd),
             avg_market_price_foil_usd = COALESCE(f.price_usd, cp.avg_market_price_foil_usd),
-            last_price_update = NOW(),
             updated_at = NOW()
         FROM (
             SELECT DISTINCT ON (printing_id) printing_id, price_usd
@@ -187,7 +189,8 @@ def run_ck_sync():
                 logger.info(f"Processing {len(price_entries)} price candidates in batches of {batch_size}...")
                 
                 # Create permanent temporary table for the session
-                cur.execute("CREATE TEMPORARY TABLE temp_prices (printing_id uuid, source_id int, condition_id int, price_usd numeric, is_foil boolean, timestamp timestamptz, price_type text) ON COMMIT DROP")
+                cur.execute("DROP TABLE IF EXISTS temp_prices")
+                cur.execute("CREATE TEMPORARY TABLE temp_prices (printing_id uuid, source_id int, condition_id int, price_usd numeric, is_foil boolean, timestamp timestamptz, price_type text) ON COMMIT PRESERVE ROWS")
                 
                 for i in range(0, len(price_entries), batch_size):
                     chunk = price_entries[i:i + batch_size]

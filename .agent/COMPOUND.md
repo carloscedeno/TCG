@@ -313,3 +313,13 @@ Remediate the E2E checkout process by implementing "Por Encargo" logic to bypass
 
 **Regla derivada:**
 Siempre proveer un caso de evaluación estricto en sentencias SQL cuando el sistema espera filtrar registros por IS NULL como un valor válido en lugar de como la ausencia del filtro.
+
+
+## 2026-05-27 - Sincronizacion y Denormalizacion de Precios Masivos
+
+**Que paso:** El script de actualizacion masiva de precios perdia datos en las tablas temporales y fallaba la denormalizacion final por un timeout de PostgreSQL.
+**Lo que cambio:**
+- lessons_learned.md -> Leccion #174: Timeout y Tablas Temporales.
+- scripts/sync_cardkingdom_api.py -> ON COMMIT PRESERVE ROWS y SET statement_timeout = 30min.
+- scripts/nightly_guardian.py -> Anadida capacidad de enviar alertas de error por correo (smtplib).
+- rontend/src/pages/Admin/AdminDashboard.tsx -> Anadido semaforo de Salud de Sincronizacion.

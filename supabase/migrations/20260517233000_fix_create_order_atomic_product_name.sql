@@ -2,8 +2,6 @@
 -- Date: 2026-05-17
 -- Description: Updates create_order_atomic to insert product_name (NOT NULL constraint), printing_id, finish, and set_code into order_items.
 
-BEGIN;
-
 CREATE OR REPLACE FUNCTION public.create_order_atomic(
     p_user_id uuid,
     p_items jsonb, -- Array of {product_id?: uuid, accessory_id?: uuid, quantity: int, price: numeric, is_on_demand?: boolean, name?: text, printing_id?: uuid, finish?: text, set?: text}
@@ -148,5 +146,3 @@ $$;
 
 -- Grant execute permissions
 GRANT EXECUTE ON FUNCTION public.create_order_atomic(uuid, jsonb, jsonb, numeric, jsonb, uuid) TO anon, authenticated;
-
-COMMIT;

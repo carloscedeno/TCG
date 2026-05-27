@@ -18,7 +18,8 @@ export const AdminDashboard = () => {
         total_orders_week: '0',
         effective_orders: '0',
         failed_orders: '0',
-        total_users: '0'
+        total_users: '0',
+        last_sync_date: null as string | null
     });
     const [activeTasks, setActiveTasks] = useState<any[]>([]);
     const [selectedTaskLog, setSelectedTaskLog] = useState<{ id: string, logs: string } | null>(null);
@@ -103,7 +104,7 @@ export const AdminDashboard = () => {
             lastWeek.setDate(lastWeek.getDate() - 7);
             const lastWeekISO = lastWeek.toISOString();
 
-            const [cards, products, ordersWeek, effectiveOrders, failedOrders, users] = await Promise.all([
+            const [cards, products, ordersWeek, effectiveOrders, failedOrders, users, lastSync] = await Promise.all([
                 supabase.from('products').select('*', { count: 'estimated', head: true }),
                 supabase.from('accessories').select('*', { count: 'estimated', head: true }),
                 supabase.from('orders').select('*', { count: 'exact', head: true }).gte('created_at', lastWeekISO),
@@ -113,7 +114,8 @@ export const AdminDashboard = () => {
                 supabase.from('orders').select('*', { count: 'exact', head: true })
                     .gte('created_at', lastWeekISO)
                     .in('status', ['cancelled', 'returned', 'refunded']),
-                supabase.from('profiles').select('*', { count: 'exact', head: true })
+                supabase.from('profiles').select('*', { count: 'exact', head: true }),
+                supabase.from('products').select('updated_at').order('updated_at', { ascending: false }).limit(1)
             ]);
 
             setStats({
@@ -122,7 +124,8 @@ export const AdminDashboard = () => {
                 total_orders_week: (ordersWeek.count || 0).toLocaleString(),
                 effective_orders: (effectiveOrders.count || 0).toLocaleString(),
                 failed_orders: (failedOrders.count || 0).toLocaleString(),
-                total_users: (users.count || 0).toLocaleString()
+                total_users: (users.count || 0).toLocaleString(),
+                last_sync_date: lastSync.data?.[0]?.updated_at || null
             });
         } catch (err) {
             console.error("Error fetching stats:", err);
@@ -243,6 +246,32 @@ export const AdminDashboard = () => {
                         </div>
                     </div>
                 </div>
+
+                {(() => {
+                    if (!stats.last_sync_date) return null;
+                    const hoursSinceSync = (new Date().getTime() - new Date(stats.last_sync_date).getTime()) / (1000 * 60 * 60);
+                    const isHealthy = hoursSinceSync < 24;
+                    return (
+                        <div className={`mb-8 p-6 rounded-2xl border flex items-center justify-between gap-4 ${isHealthy ? 'bg-emerald-950/30 border-emerald-500/20' : 'bg-red-950/30 border-red-500/20'}`}>
+                            <div className="flex items-center gap-4">
+                                <div className={`w-3 h-3 rounded-full ${isHealthy ? 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)] animate-pulse' : 'bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]'}`} />
+                                <div>
+                                    <h3 className={`font-black text-sm uppercase tracking-widest ${isHealthy ? 'text-emerald-400' : 'text-red-400'}`}>
+                                        {isHealthy ? 'Catálogo Sincronizado' : 'Sincronización Retrasada'}
+                                    </h3>
+                                    <p className="text-slate-400 text-xs mt-1">
+                                        Última actualización de precios: {new Date(stats.last_sync_date).toLocaleString()}
+                                    </p>
+                                </div>
+                            </div>
+                            {!isHealthy && (
+                                <span className="bg-red-500/10 text-red-400 border border-red-500/20 px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-widest">
+                                    Requiere Atención
+                                </span>
+                            )}
+                        </div>
+                    );
+                })()}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
                     <StatCard title="Cartas en Inventario" value={stats.total_cards} change="Singles" icon={<Database className="text-purple-400" />} />

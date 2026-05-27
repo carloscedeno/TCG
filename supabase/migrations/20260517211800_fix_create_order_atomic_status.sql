@@ -2,8 +2,6 @@
 -- Date: 2026-05-17
 -- Description: Replaces create_order_atomic to insert 'pending_verification' status to satisfy orders__status__check constraint.
 
-BEGIN;
-
 -- 1. Ensure is_on_demand column exists on order_items
 ALTER TABLE public.order_items ADD COLUMN IF NOT EXISTS is_on_demand BOOLEAN DEFAULT false;
 
@@ -133,5 +131,3 @@ $$;
 
 -- 3. Grant execute permissions
 GRANT EXECUTE ON FUNCTION public.create_order_atomic(uuid, jsonb, jsonb, numeric, jsonb, uuid) TO anon, authenticated;
-
-COMMIT;
