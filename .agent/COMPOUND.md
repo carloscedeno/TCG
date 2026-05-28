@@ -323,3 +323,12 @@ Siempre proveer un caso de evaluación estricto en sentencias SQL cuando el sist
 - scripts/sync_cardkingdom_api.py -> ON COMMIT PRESERVE ROWS y SET statement_timeout = 30min.
 - scripts/nightly_guardian.py -> Anadida capacidad de enviar alertas de error por correo (smtplib).
 - rontend/src/pages/Admin/AdminDashboard.tsx -> Anadido semaforo de Salud de Sincronizacion.
+
+## 2026-05-28 — Entornos de Base de Datos y Sanitización de Imágenes
+
+**Qué pasó:** Se requería sanitizar los nombres de los productos para hacer match con nombres de archivos de imagen subidos localmente. Inicialmente se limpiaron los dos puntos (`:`) pero se ejecutó erróneamente en el entorno de producción (`main`) en lugar del entorno en uso por el cliente (`dev`). Posteriormente se rectificó conectándose a `dev` vía MCP, y se amplió la limpieza para abarcar TODOS los caracteres incompatibles con el sistema de archivos de Windows (e.g. `/`, `"`).
+**Lo que cambió:**
+- `lessons_learned.md` → Lección #175 (Validación de entornos Supabase)
+- `lessons_learned.md` → Lección #176 (Sanitización completa de caracteres de Windows)
+- `Documentación/catalogo_formateado_para_importar.csv` → Limpiado de caracteres inválidos de SO
+- Base de datos (`dev`) → Tabla `accessories` limpiada de caracteres inválidos de SO

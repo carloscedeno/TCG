@@ -2285,3 +2285,15 @@ useEffect(() => {
 - **Causa Raíz:** 1. Las tablas temporales de PostgreSQL creadas con ON COMMIT DROP se eliminan en el primer conn.commit() del script (usado para iteraciones en batch), provocando InFailedSqlTransaction. 2. El timeout por defecto de PostgreSQL aborta consultas de agregación masiva que duran más de 2 minutos.
 - **Solución:** 1. Cambiar la declaración de la tabla temporal a ON COMMIT PRESERVE ROWS para procesos en batch. 2. Elevar explícitamente el timeout (SET statement_timeout = '30min') en la sesión del cursor justo antes de consultas analíticas pesadas.
 - **Regla Derivada:** Al diseñar scripts en Python (psycopg2) que dividen inserts masivos en chunks con .commit() intermedios, jamás usar ON COMMIT DROP en tablas temporales. Siempre aumentar el statement_timeout para actualizaciones de desnormalización tipo FULL OUTER JOIN sobre históricos completos.
+
+### 175. Modificaciones a BD Remota con Múltiples Entornos (Mayo 2026)
+- **Problema:** Se ejecutó un script de reemplazo de caracteres directamente en la base de datos de producción (rama `main`) asumiendo que el archivo local `.env` (que apuntaba a `main`) era el entorno que el usuario quería probar, cuando el usuario estaba realmente testeando en la rama de Supabase `dev`.
+- **Causa Raíz:** Falta de validación cruzada. El archivo local `.env` no siempre refleja el entorno en el que el usuario interactúa actualmente (por ej. Vercel Preview usando la rama `dev`).
+- **Solución:** Solicitar explícitamente y usar el MCP de Supabase especificando el `project_id` del entorno (en este caso el ID de la rama `dev`) en lugar de usar comandos Python basados ciegamente en `DATABASE_URL`.
+- **Lección:** Al operar directamente sobre bases de datos en la nube que tienen bifurcación por ramas, SIEMPRE usar las herramientas de MCP de Supabase para listar proyectos y ramas (`list_branches`) y forzar la operación a través de `execute_sql` en la rama específica solicitada por el usuario.
+
+### 176. Restricciones de Nombres de Archivo de Windows en Sistemas de Imágenes (Mayo 2026)
+- **Problema:** Los nombres de accesorios contenían caracteres inválidos para el sistema de archivos de Windows (`:`, `/`, `"`, etc.), lo que impedía la coincidencia (match) de imágenes locales al subirlas en masa.
+- **Causa Raíz:** Se corrigió originalmente solo el carácter `:` pensando que era el único obstáculo, omitiendo toda la lista de caracteres no compatibles en nombres de archivo OS.
+- **Solución:** Aplicar expresiones regulares en la base de datos y scripts de limpieza de CSV para eliminar TODOS los caracteres problemáticos (`[\\/*?"<>|:]`) y prevenir que el bulk upload falle.
+- **Regla Derivada:** Si se va a hacer match local entre cadenas de la Base de Datos y nombres de archivos de un OS, la BD y los CSVs de importación deben estar sanitizados de la lista completa de caracteres inválidos, no solo de un carácter particular reportado.
