@@ -1409,13 +1409,18 @@ export const matchAccessoryByName = async (name: string) => {
 };
 
 export const uploadAccessoryImage = async (file: File) => {
+  const baseName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
   const fileExt = file.name.split('.').pop();
-  const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+  
+  // Limpiar el nombre para que sea seguro en URLs (minúsculas, reemplazar espacios con guiones bajos)
+  const sanitizedBaseName = baseName.toLowerCase().replace(/[^a-z0-9-_]/g, '_').replace(/_+/g, '_');
+  
+  const fileName = `${sanitizedBaseName}.${fileExt}`;
   const filePath = `accessories/${fileName}`;
 
   const { error: uploadError } = await supabase.storage
     .from('public_assets')
-    .upload(filePath, file);
+    .upload(filePath, file, { upsert: true });
 
   if (uploadError) throw uploadError;
 
