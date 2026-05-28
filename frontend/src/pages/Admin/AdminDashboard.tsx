@@ -365,6 +365,19 @@ export const AdminDashboard = () => {
                         </div>
                     </Link>
 
+                    <Link to="/admin/media" className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-900/50 to-slate-900 border border-white/10 p-8 hover:border-indigo-500/50 transition-all md:col-span-2">
+                        <div className="absolute inset-0 bg-indigo-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="relative z-10 flex items-center justify-between">
+                            <div>
+                                <h3 className="text-2xl font-black italic text-white mb-2">GALERÍA MULTIMEDIA</h3>
+                                <p className="text-indigo-300 text-xs font-bold uppercase tracking-widest">Gestionar Imágenes y Archivos</p>
+                            </div>
+                            <div className="w-16 h-16 bg-indigo-500/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <Image className="text-indigo-400" size={32} />
+                            </div>
+                        </div>
+                    </Link>
+
                     <Link to="/admin/banners" className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-cyan-900/50 to-slate-900 border border-white/10 p-8 hover:border-cyan-500/50 transition-all">
                         <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
                         <div className="relative z-10 flex items-center justify-between">

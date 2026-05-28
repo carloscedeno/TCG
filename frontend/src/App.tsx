@@ -30,6 +30,7 @@ import { EventsPage } from './pages/Admin/EventsPage';
 import { PresalesPage } from './pages/Admin/PresalesPage';
 import { PosSessionBanner } from './components/Admin/PosSessionBanner';
 import CategoriesPage from './pages/Admin/CategoriesPage';
+import MediaPage from './pages/Admin/MediaPage';
 
 const isSupabaseConfigured = !!import.meta.env.VITE_SUPABASE_URL && !!import.meta.env.VITE_SUPABASE_ANON_KEY;
 
@@ -94,6 +95,7 @@ function App() {
                         <Route path="/admin/banners-tcg" element={<AdminRoute><TcgBannersPage /></AdminRoute>} />
                         <Route path="/admin/presales" element={<AdminRoute><PresalesPage /></AdminRoute>} />
                         <Route path="/admin/events" element={<AdminRoute><EventsPage /></AdminRoute>} />
+                        <Route path="/admin/media" element={<AdminRoute><MediaPage /></AdminRoute>} />
                         <Route path="/checkout" element={<CheckoutPage />} />
                         <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
                         <Route path="/product/:id" element={<CardDetail />} />
