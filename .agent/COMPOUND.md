@@ -332,3 +332,11 @@ Siempre proveer un caso de evaluación estricto en sentencias SQL cuando el sist
 - `lessons_learned.md` → Lección #176 (Sanitización completa de caracteres de Windows)
 - `Documentación/catalogo_formateado_para_importar.csv` → Limpiado de caracteres inválidos de SO
 - Base de datos (`dev`) → Tabla `accessories` limpiada de caracteres inválidos de SO
+
+## 2026-05-28 — Filtros de Precios y UX
+
+**Qué pasó:** Se arregló un bug en la UX del filtro de precios de la vista principal que impedía dejar los campos en blanco y evaluar precios en 0.
+**Lo que cambió:**
+- `frontend/src/pages/Home.tsx` → Permitir `undefined` en el estado del rango de precios.
+- `frontend/src/utils/api.ts` → Refactor de `params.price || null` a validación estricta `!== undefined`.
+- `lessons_learned.md` → Lección añadida sobre estado de variables numéricas opcionales.

@@ -2297,3 +2297,9 @@ useEffect(() => {
 - **Causa Raíz:** Se corrigió originalmente solo el carácter `:` pensando que era el único obstáculo, omitiendo toda la lista de caracteres no compatibles en nombres de archivo OS.
 - **Solución:** Aplicar expresiones regulares en la base de datos y scripts de limpieza de CSV para eliminar TODOS los caracteres problemáticos (`[\\/*?"<>|:]`) y prevenir que el bulk upload falle.
 - **Regla Derivada:** Si se va a hacer match local entre cadenas de la Base de Datos y nombres de archivos de un OS, la BD y los CSVs de importación deben estar sanitizados de la lista completa de caracteres inválidos, no solo de un carácter particular reportado.
+
+### Filtros de Rango UX y Valores Cero — 2026-05-28
+- **Problema:** El filtro de precios forzaba valores por defecto (ej. 1000000) impidiendo que el usuario vaciara el input. Además, el backend ignoraba la búsqueda por el valor `0` absoluto.
+- **Causa Raíz:** Inicialización estricta sin admitir `undefined` en el estado de React. En API, la validación `precio || null` fallaba para el número 0 al ser falsy.
+- **Solución:** Utilizar `undefined` en el estado local para inputs vacíos, y reemplazar `|| null` por validación estricta `!== undefined ? valor : null` en llamadas a la API.
+- **Regla Derivada:** Las variables de estado para filtros numéricos opcionales deben soportar `undefined`. Validaciones hacia el backend deben usar validación estricta explícita `!== undefined`, nunca el operador lógico `||` para números que pueden ser válidamente cero.
