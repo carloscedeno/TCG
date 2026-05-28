@@ -36,7 +36,7 @@ export default function MediaPage() {
             if (error) throw error;
 
             // Map public URLs
-            const mappedFiles = (data || []).filter(f => f.name !== '.emptyFolderPlaceholder').map(f => {
+            const mappedFiles = (data || []).filter((f: any) => f.name !== '.emptyFolderPlaceholder').map((f: any) => {
                 const { data: urlData } = supabase.storage.from('public_assets').getPublicUrl(`${folder}/${f.name}`);
                 return {
                     ...f,
