@@ -1396,6 +1396,18 @@ export const deleteAccessory = async (id: string) => {
   return true;
 };
 
+export const matchAccessoryByName = async (name: string) => {
+  const { data, error } = await supabase
+    .from('accessories')
+    .select('id, name, image_url')
+    .ilike('name', name)
+    .limit(1)
+    .maybeSingle();
+  
+  if (error) throw error;
+  return data;
+};
+
 export const uploadAccessoryImage = async (file: File) => {
   const fileExt = file.name.split('.').pop();
   const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;

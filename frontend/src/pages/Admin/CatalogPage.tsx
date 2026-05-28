@@ -7,13 +7,15 @@ import { fetchAccessoriesAdmin, deleteAccessory, fetchAccessoryCategories, updat
 import { EditProductModal } from "../../components/Admin/EditProductModal";
 import { AddAccessoryDrawer } from "../../components/Admin/AddAccessoryDrawer";
 import { BulkImportCatalogModal } from "../../components/Admin/BulkImportCatalogModal";
-import { FileUp } from "lucide-react";
+import BulkImageUploadModal from "../../components/Admin/BulkImageUploadModal";
+import { FileUp, ImagePlus } from "lucide-react";
 
 export default function CatalogPage() {
     const [items, setItems] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+    const [isImageUploadModalOpen, setIsImageUploadModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<any>(null);
     const [searchQuery, setSearchQuery] = useState("");
@@ -93,7 +95,15 @@ export default function CatalogPage() {
                             className="px-6 py-4 bg-black border border-white/10 text-white font-black text-xs uppercase tracking-widest rounded-2xl hover:border-orange-500/50 transition-all active:scale-95 flex items-center gap-3"
                         >
                             <FileUp size={18} className="text-slate-500" />
-                            Carga Masiva
+                            Carga Masiva CSV
+                        </button>
+
+                        <button
+                            onClick={() => setIsImageUploadModalOpen(true)}
+                            className="px-6 py-4 bg-black border border-white/10 text-white font-black text-xs uppercase tracking-widest rounded-2xl hover:border-geeko-green/50 transition-all active:scale-95 flex items-center gap-3"
+                        >
+                            <ImagePlus size={18} className="text-slate-500" />
+                            Carga Masiva Imágenes
                         </button>
                         
                         <button
@@ -271,6 +281,13 @@ export default function CatalogPage() {
                     loadAccessories();
                 }}
             />
+
+            {isImageUploadModalOpen && (
+                <BulkImageUploadModal
+                    onClose={() => setIsImageUploadModalOpen(false)}
+                    onSuccess={() => loadAccessories()}
+                />
+            )}
 
             <EditProductModal
                 isOpen={isEditModalOpen}
