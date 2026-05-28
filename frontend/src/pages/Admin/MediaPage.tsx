@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '../../utils/supabaseClient';
-import { Image, Trash2, Copy, UploadCloud, ChevronLeft, RefreshCw, Folder, ImagePlus } from 'lucide-react';
+import { Image, Trash2, Copy, ChevronLeft, RefreshCw, Folder, ImagePlus } from 'lucide-react';
 import BulkImageUploadModal from '../../components/Admin/BulkImageUploadModal';
 
 interface StorageFile {
@@ -19,7 +19,6 @@ interface StorageFile {
 export default function MediaPage() {
     const [files, setFiles] = useState<StorageFile[]>([]);
     const [loading, setLoading] = useState(true);
-    const [isUploading, setIsUploading] = useState(false);
     const [folder, setFolder] = useState<'accessories' | 'banners'>('accessories');
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
@@ -75,10 +74,6 @@ export default function MediaPage() {
         } catch (err: any) {
             alert('Error al eliminar archivo: ' + err.message);
         }
-    };
-
-    const handleCopyUrl = (url: string) => {
-        navigator.clipboard.writeText(url);
     };
 
     const handleCopyUrl = (url: string) => {
