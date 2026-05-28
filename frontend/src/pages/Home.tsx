@@ -56,8 +56,8 @@ const Home: React.FC = () => {
       parseInt(searchParams.get('year_to') || '2026')
     ],
     priceRange: [
-      parseFloat(searchParams.get('price_min') || '0'),
-      parseFloat(searchParams.get('price_max') || '1000000')
+      searchParams.has('price_min') ? parseFloat(searchParams.get('price_min')!) : undefined,
+      searchParams.has('price_max') ? parseFloat(searchParams.get('price_max')!) : undefined
     ],
     only_new: searchParams.get('only_new') === 'true'
   });
@@ -117,7 +117,7 @@ const Home: React.FC = () => {
 
   const isDefaultFilter = (key: string, val: any) => {
     if (key === 'yearRange') return (val as any)[0] <= 1993 && (val as any)[1] >= 2026;
-    if (key === 'priceRange') return (val as any)[0] <= 0 && ((val as any)[1] === 1000000 || (val as any)[1] === undefined);
+    if (key === 'priceRange') return (val as any)[0] === undefined && (val as any)[1] === undefined;
     if (Array.isArray(val)) return val.length === 0;
     return !val;
   };
@@ -196,8 +196,8 @@ const Home: React.FC = () => {
     const catParam = searchParams.get('category')?.split(',').filter(Boolean) || [];
     const colorParam = searchParams.get('color')?.split(',').filter(Boolean) || [];
     const typeParam = searchParams.get('type')?.split(',').filter(Boolean) || [];
-    const minPrice = searchParams.has('price_min') ? parseFloat(searchParams.get('price_min')!) : 0;
-    const maxPrice = searchParams.has('price_max') ? parseFloat(searchParams.get('price_max')!) : 1000000;
+    const minPrice = searchParams.has('price_min') ? parseFloat(searchParams.get('price_min')!) : undefined;
+    const maxPrice = searchParams.has('price_max') ? parseFloat(searchParams.get('price_max')!) : undefined;
     const minYear = searchParams.has('year_from') ? parseInt(searchParams.get('year_from')!) : 1993;
     const maxYear = searchParams.has('year_to') ? parseInt(searchParams.get('year_to')!) : 2026;
     const onlyNew = searchParams.get('only_new') === 'true';
@@ -205,7 +205,7 @@ const Home: React.FC = () => {
     const onlyPresale = searchParams.get('only_presale') === 'true';
     const tabParam = (searchParams.get('tab') as any) || 'marketplace';
 
-    const newPriceRange: [number, number] = [minPrice, maxPrice];
+    const newPriceRange: [number | undefined, number | undefined] = [minPrice, maxPrice];
     const newYearRange: [number, number] = [minYear, maxYear];
 
     if (JSON.stringify(filters.games) !== JSON.stringify(gameParam) ||
