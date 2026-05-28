@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../../utils/supabaseClient';
-import { Image, Trash2, Copy, UploadCloud, ChevronLeft, RefreshCw, Folder } from 'lucide-react';
+import { Image, Trash2, Copy, UploadCloud, ChevronLeft, RefreshCw, Folder, ImagePlus } from 'lucide-react';
+import BulkImageUploadModal from '../../components/Admin/BulkImageUploadModal';
 
 interface StorageFile {
     name: string;
@@ -20,7 +21,7 @@ export default function MediaPage() {
     const [loading, setLoading] = useState(true);
     const [isUploading, setIsUploading] = useState(false);
     const [folder, setFolder] = useState<'accessories' | 'banners'>('accessories');
-    const fileInputRef = useRef<HTMLInputElement>(null);
+    const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
     const loadFiles = async () => {
         setLoading(true);
@@ -80,29 +81,8 @@ export default function MediaPage() {
         navigator.clipboard.writeText(url);
     };
 
-    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-
-        setIsUploading(true);
-        try {
-            const fileExt = file.name.split('.').pop();
-            const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
-            const filePath = `${folder}/${fileName}`;
-
-            const { error } = await supabase.storage
-                .from('public_assets')
-                .upload(filePath, file);
-
-            if (error) throw error;
-
-            loadFiles();
-        } catch (err: any) {
-            alert('Error al subir la imagen: ' + err.message);
-        } finally {
-            setIsUploading(false);
-            if (fileInputRef.current) fileInputRef.current.value = '';
-        }
+    const handleCopyUrl = (url: string) => {
+        navigator.clipboard.writeText(url);
     };
 
     const formatBytes = (bytes: number, decimals = 2) => {
@@ -150,21 +130,12 @@ export default function MediaPage() {
                             <RefreshCw size={20} />
                         </button>
                         
-                        <input 
-                            type="file" 
-                            accept="image/*" 
-                            className="hidden" 
-                            ref={fileInputRef}
-                            onChange={handleFileUpload}
-                            disabled={isUploading}
-                        />
                         <button
-                            onClick={() => fileInputRef.current?.click()}
-                            disabled={isUploading}
-                            className="px-8 py-4 bg-white text-black font-black text-xs uppercase tracking-widest rounded-2xl hover:bg-[#00D1FF] transition-all active:scale-95 shadow-2xl flex items-center gap-3 disabled:opacity-50"
+                            onClick={() => setIsUploadModalOpen(true)}
+                            className="px-6 py-4 bg-white text-black font-black text-xs uppercase tracking-widest rounded-2xl hover:bg-[#00D1FF] transition-all active:scale-95 shadow-2xl flex items-center gap-3"
                         >
-                            {isUploading ? <RefreshCw size={18} className="animate-spin" /> : <UploadCloud size={18} />}
-                            {isUploading ? 'Subiendo...' : 'Subir Archivo Raw'}
+                            <ImagePlus size={18} />
+                            Carga Masiva Imágenes
                         </button>
                     </div>
                 </div>
@@ -245,6 +216,15 @@ export default function MediaPage() {
                     </div>
                 )}
             </div>
+
+            {isUploadModalOpen && (
+                <BulkImageUploadModal
+                    onClose={() => setIsUploadModalOpen(false)}
+                    onSuccess={() => {
+                        loadFiles();
+                    }}
+                />
+            )}
         </div>
     );
 }
