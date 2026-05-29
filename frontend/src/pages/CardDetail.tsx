@@ -13,6 +13,7 @@ import { ManaText } from '../components/Mana/ManaText';
 import { Footer } from '../components/Navigation/Footer';
 import { CartDrawer } from '../components/Navigation/CartDrawer';
 import { AuthModal } from '../components/Auth/AuthModal';
+import { CardImage } from '../components/Card/CardImage';
 
 export const CardDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -210,13 +211,12 @@ export const CardDetail: React.FC = () => {
                                     {isFoil && (
                                         <div className="absolute inset-0 z-20 foil-shimmer opacity-30 mix-blend-overlay pointer-events-none rounded-[10%] scale-[0.95]" />
                                     )}
-                                    <img
+                                    <CardImage
                                         src={currentImage}
                                         alt={details.name}
-                                        className="w-full h-full object-contain drop-shadow-[0_45px_100px_rgba(0,0,0,0.95)] z-10 hover:scale-[1.03] transition-all duration-700"
-                                        style={{
-                                            imageRendering: 'auto',
-                                        }}
+                                        size="large"
+                                        objectFit="contain"
+                                        className="drop-shadow-[0_45px_100px_rgba(0,0,0,0.95)] z-10 hover:scale-[1.03] transition-all duration-700 !bg-transparent"
                                     />
                                 </div>
                                 {hasMultipleFaces && (
