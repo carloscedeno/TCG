@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { RotateCw, Shield, Plus } from 'lucide-react';
+import { RotateCw, Plus } from 'lucide-react';
 import { fetchCardDetails, addToCart } from '../../utils/api';
+import { CardImage } from './CardImage';
 
 export interface CardFace {
   image_url?: string;
@@ -117,11 +118,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         className="flex items-center gap-4 px-4 py-3 bg-black/40 hover:bg-neutral-900 border border-white/5 hover:border-geeko-cyan/30 rounded-xl transition-all cursor-pointer group"
       >
         <div className="w-12 h-16 bg-[#1a1a1a] rounded-md overflow-hidden flex-shrink-0 relative">
-          {imgSrc ? (
-            <img src={imgSrc} alt={currentName} className="w-full h-full object-cover" loading="lazy" decoding="async" />
-          ) : (
-            <Shield size={20} className="absolute inset-0 m-auto opacity-10" />
-          )}
+          <CardImage src={imgSrc} alt={currentName} size="small" fallbackIconSize={20} className="rounded-md" />
           {hasMultipleFaces && (
             <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
               <RotateCw size={12} className="text-white" />
@@ -240,21 +237,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
           <div className="absolute inset-0 z-20 foil-shimmer opacity-30 mix-blend-overlay pointer-events-none" />
         )}
 
-        {imgSrc ? (
-          <img
-            src={imgSrc}
-            alt={currentName}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-            loading="lazy"
-            decoding="async"
-            data-testid="product-image"
-          />
-        ) : (
-          <div className="flex flex-col items-center justify-center w-full h-full text-neutral-600 p-4">
-            <Shield size={40} className="mb-2 opacity-20" />
-            <span className="text-[10px] uppercase tracking-widest font-bold opacity-50 text-center">Imagen No Disponible</span>
-          </div>
-        )}
+        <CardImage src={imgSrc} alt={currentName} size="small" fallbackIconSize={40} className="group-hover:scale-110 transition-transform duration-500" />
 
         {/* Stock display - Repositioned & Darker as requested */}
         {total_stock !== undefined && total_stock > 0 && (

@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { fetchCardDetails, addToCart } from '../../utils/api';
 import { getCardKingdomUrl } from '../../utils/urlUtils';
 import { ManaText } from '../Mana/ManaText';
+import { CardImage } from './CardImage';
 
 
 
@@ -443,9 +444,11 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                             ) : (
                                 <div className="relative flex items-center justify-center">
                                     <div className="absolute inset-0 bg-geeko-cyan/10 blur-[80px] rounded-full pointer-events-none" />
-                                    <img
+                                    <CardImage
                                         src={currentImage}
-                                        alt={details?.name}
+                                        alt={details?.name || 'Card Image'}
+                                        size="normal"
+                                        fallbackIconSize={60}
                                         className="max-w-[280px] max-h-[280px] object-contain relative z-10 drop-shadow-[0_20px_60px_rgba(0,0,0,0.8)] hover:scale-105 transition-transform duration-500"
                                     />
                                 </div>
@@ -549,9 +552,11 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                     {selectedFinish === 'foil' && (
                                         <div className="absolute inset-0 z-20 foil-shimmer opacity-30 mix-blend-overlay pointer-events-none rounded-[10%] scale-[0.95]" />
                                     )}
-                                    <img
+                                    <CardImage
                                         src={currentImage}
-                                        alt={details?.name}
+                                        alt={details?.name || 'Card Image'}
+                                        size="large"
+                                        fallbackIconSize={100}
                                         className="max-w-[90%] max-h-[95%] md:max-w-full md:max-h-full object-contain relative z-10 transition-transform duration-700 group-hover/card:scale-[1.03]"
                                         style={{
                                             imageRendering: 'auto',
