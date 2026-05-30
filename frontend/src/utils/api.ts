@@ -243,7 +243,13 @@ export const fetchProducts = async (params: any = {}, signal?: AbortSignal): Pro
 
 
 
+const cardDetailsCache = new Map<string, any>();
+
 export const fetchCardDetails = async (printingId: string): Promise<any> => {
+  if (cardDetailsCache.has(printingId)) {
+    return cardDetailsCache.get(printingId);
+  }
+
   try {
     let data: any = null;
     
@@ -610,6 +616,9 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
       }
     }
 
+    if (data) {
+      cardDetailsCache.set(printingId, data);
+    }
     return data;
   } catch (error) {
     console.error('Fatal error in fetchCardDetails:', error);

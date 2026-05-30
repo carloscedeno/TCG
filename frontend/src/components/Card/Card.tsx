@@ -96,7 +96,8 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
   const isFoil = is_foil === true || finish === 'foil' || name.toLowerCase().includes(' foil ') || (type?.toLowerCase().includes('foil')); // Simple heuristic if finish prop not fully populated yet
 
   const handlePreFetch = () => {
-    // Pre-fetch card details on hover
+    // Pre-fetch card details on hover to cache it in api.ts
+    // This makes the text/info load instantly when the modal opens
     try {
       fetchCardDetails(card_id);
     } catch (err) {
@@ -108,13 +109,13 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
     return (
       <a
         href={`card/${card_id}`}
+        onMouseEnter={handlePreFetch}
         onClick={(e) => {
           if (!e.ctrlKey && !e.metaKey) {
             e.preventDefault();
             onClick?.();
           }
         }}
-        onMouseEnter={handlePreFetch}
         className="flex items-center gap-4 px-4 py-3 bg-black/40 hover:bg-neutral-900 border border-white/5 hover:border-geeko-cyan/30 rounded-xl transition-all cursor-pointer group"
       >
         <div className="w-12 h-16 bg-[#1a1a1a] rounded-md overflow-hidden flex-shrink-0 relative">
