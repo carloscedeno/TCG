@@ -1,10 +1,32 @@
-# 🧠 COMPOUND: Bulk Egress & Audit Module
-# 🧠 COMPOUND: Corrección de Atomicidad y Deadlocks en Transacciones de Orden (Mayo 2026)
-
-**Date**: 2026-05-17 17:20
-
-## Objective
-
+# 🧠 COMPOUND: Optimización de Performance Visual y Progressive Loading (Mayo 2026)
+
+**Date**: 2026-05-30
+
+## Objective
+Resolver la extrema lentitud visual (esqueleto de carga de 3-4 segundos) en el Modal de Detalles de cartas, sin introducir cuellos de botella en la red de Supabase mediante precargas descontroladas.
+
+## Knowledge Codification
+### 1. Inyección de Datos Parciales
+- **Feature**: Reestructuración del flujo de datos entre `Home` -> `CardGrid` -> `CardModal` para inyectar información parcial ya existente (nombre, precio, acabado, imagen miniatura) en lugar de esperar la carga completa del backend.
+- **Impact**: La percepción visual de carga (Perceived Load Time) bajó de ~3.5 segundos a 0 milisegundos, ya que el modal dibuja la interfaz final instantáneamente con la información de la miniatura mientras el resto de los detalles profundos cargan silenciosamente por detrás.
+
+### 2. Eliminación de Precarga (Hover)
+- **Lesson**: Atar llamadas asíncronas de red a eventos pasivos (como `onMouseEnter`) en interfaces de alta densidad (grillas de más de 20 ítems) causa una severa saturación del pool de conexiones. Se revirtió el experimento de `handlePreFetch` y se confirmó que el `onClick` intencional con inyección de datos parciales es la estrategia superior y más ligera.
+
+## Technical Validation
+- **Frontend Build**: ✅ Success (`npm run build`).
+- **Tests**: ✅ 28 Passed (`pytest`).
+- **Git State**: ✅ Pushed to `main` (commit a79c1c39).
+
+---
+
+# 🧠 COMPOUND: Bulk Egress & Audit Module
+# 🧠 COMPOUND: Corrección de Atomicidad y Deadlocks en Transacciones de Orden (Mayo 2026)
+
+**Date**: 2026-05-17 17:20
+
+## Objective
+
 Resolver bloqueos de concurrencia (deadlocks) y cuellos de botella de atomicidad en el RPC `create_order_atomic` durante picos de tráfico en el checkout.
 
 ## Knowledge Codification

@@ -1211,41 +1211,9 @@ useEffect(() => {
 
 - **Lección**: Cuando se trabaja con sistemas heredados o integraciones de terceros, siempre se debe asumir que los códigos de referencia pueden variar. Una capa de normalización centralizada es vital para la integridad de los datos visuales.
 
-
-
-### 165. Desacoplamiento de Vistas de Dashboard y Secciones de TCG — 2026-05-08
-
-- **Problema**: Al intentar mostrar banners en las secciones de cada TCG, el listado de cartas (singles) era reemplazado por la vista de "Dashboard" (ofertas), arruinando la experiencia de navegación.
-
-- **Causa Raíz**: La variable `isDashboardView` controlaba tanto la visibilidad del banner como el tipo de contenido principal (Ofertas vs Parrilla). 
-
-- **Solución**: Desacoplar las condiciones. Se introdujo `showHeroSection` para controlar la visibilidad del banner en cualquier sección "limpia", mientras que `isDashboardView` se mantuvo restringido a la página de inicio global para controlar la renderización del carrusel de ofertas.
-
-- **Lección**: No usar un único flag de estado para controlar múltiples comportamientos de UI estructurales. Cada componente mayor (Banner, Ofertas, Parrilla) debe tener su propia lógica de visibilidad basada en el contexto del router y los filtros.
-
-
-
-### 166. Integridad de Tablas de Metadatos y RLS — 2026-05-08
-
 - **Problema**: Tablas críticas como `conditions`, `sources` y `games` estaban expuestas sin Row Level Security (RLS) activo.
 
 - **Solución**: Habilitar RLS en todas las tablas de metadatos y aplicar políticas granulares: acceso público de solo lectura (`SELECT`) y acceso administrativo total (`ALL`) validado mediante el rol del usuario en la tabla `profiles`.
-
-- **Regla Derivada**: `LEYES_DEL_SISTEMA.md` -> Ley 10 (RLS Prioritario). Ninguna tabla nueva debe crearse en el esquema `public` sin una política de RLS explícitamente definida y verificada.
-
-
-
-### 167. Sincronización de Campos de Taxonomía y Constraints NOT NULL — 2026-05-09
-
-- **Problema**: El sistema crasheaba con un error de violación de restricción `NOT NULL` en la columna `category` al intentar crear nuevos accesorios desde el panel administrativo.
-
-- **Causa Raíz**: La base de datos requiere obligatoriamente el campo `category` (texto) por razones de performance y legado, pero el formulario de administración solo estaba enviando el `category_code`. Al ser `null` el nombre de la categoría, la inserción fallaba fatalmente.
-
-- **Solución**: Implementar una derivación automática en el frontend que busca el nombre de la categoría en la lista de taxonomía (`accessory_categories`) basándose en el código seleccionado. Si no hay coincidencia, se aplica un fallback seguro ("Accesorios").
-
-- **Lección**: En tablas que implementan denormalización (guardar código e ID/Nombre por separado), el frontend debe actuar como garante de la integridad, asegurando que todos los campos requeridos por restricciones de base de datos estén presentes antes de disparar el `create` o `update`. Además, refactorizar interfaces estáticas a dinámicas (basadas en DB) previene que la taxonomía del frontend se desincronice de la realidad del servidor.
-
-
 ### 154. Endurecimiento de RLS para Tablas Administrativas — 2026-05-09
 - **Problema:** Error 42501 (insufficient privilege) al insertar accesorios a pesar de estar autenticado como admin en Supabase Auth.
 - **Causa Raíz:** Las políticas basadas solo en `TO authenticated` son insuficientes si el motor de Supabase no puede verificar de forma atómica el rol extendido sin una política explícita que una `auth.uid()` con `public.profiles`.
