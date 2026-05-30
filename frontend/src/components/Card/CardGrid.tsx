@@ -4,7 +4,7 @@ import type { CardProps } from './Card';
 
 export interface CardGridProps {
   cards: (CardProps & { card_id: string })[];
-  onCardClick?: (id: string) => void;
+  onCardClick?: (id: string, image_url?: string) => void;
   viewMode?: 'grid' | 'list';
   isArchive?: boolean;
   showCartButton?: boolean;
@@ -29,7 +29,7 @@ export const CardGrid: React.FC<CardGridProps> = ({ cards, onCardClick, viewMode
               viewMode={viewMode}
               isArchive={isArchive}
               showCartButton={showCartButton}
-              onClick={() => onCardClick && onCardClick(card.card_id)}
+              onClick={() => onCardClick && onCardClick(card.card_id, card.image_url || card.imageUrl || card.card_faces?.[0]?.image_uris?.normal || card.card_faces?.[0]?.image_url)}
             />
           ))}
         </div>

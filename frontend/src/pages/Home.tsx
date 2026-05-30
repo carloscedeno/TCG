@@ -77,6 +77,7 @@ const Home: React.FC = () => {
   const { user } = useAuth();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
+  const [selectedCardImage, setSelectedCardImage] = useState<string | undefined>(undefined);
   const [debouncedQuery, setDebouncedQuery] = useState(searchParams.get('q') || '');
   const [debouncedFilters, setDebouncedFilters] = useState<Partial<Filters>>(filters);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -618,7 +619,7 @@ const Home: React.FC = () => {
                         </div>
                       )}
 
-                      <CardGrid cards={cards} onCardClick={setSelectedCardId} viewMode={viewMode} isArchive={activeTab === 'reference'} showCartButton={true} />
+                      <CardGrid cards={cards} onCardClick={(id, img) => { setSelectedCardId(id); setSelectedCardImage(img); }} viewMode={viewMode} isArchive={activeTab === 'reference'} showCartButton={true} />
                       {cards.length < totalCount && (
                         <div className="flex justify-center pb-20">
                           <button
@@ -707,8 +708,9 @@ const Home: React.FC = () => {
         <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
         <CardModal
           isOpen={selectedCardId !== null}
-          onClose={() => setSelectedCardId(null)}
+          onClose={() => { setSelectedCardId(null); setSelectedCardImage(undefined); }}
           cardId={selectedCardId}
+          initialImage={selectedCardImage}
           onRequireAuth={() => setIsAuthModalOpen(true)}
           isArchive={activeTab === 'reference'}
         />

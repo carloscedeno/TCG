@@ -12,6 +12,7 @@ interface CardModalProps {
     isOpen: boolean;
     onClose: () => void;
     cardId: string | null;
+    initialImage?: string;
     onAddToCartSuccess?: () => void;
     onRequireAuth?: () => void;
     isArchive?: boolean;
@@ -77,7 +78,7 @@ interface CardDetails {
     is_accessory?: boolean;
 }
 
-export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, onAddToCartSuccess, isArchive }) => {
+export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, initialImage, onAddToCartSuccess, isArchive }) => {
     const [details, setDetails] = useState<CardDetails | null>(null);
     const [loading, setLoading] = useState(false);
     const [isAdding, setIsAdding] = useState(false);
@@ -354,21 +355,9 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
     // Detect DFC from card name (e.g. "Aang, at the Crossroads // Aang, Destined Savior")
     const isDFC = details?.name?.includes(' // ');
 
-    const currentImage = (() => {
-        if (details?.card_faces && details.card_faces.length > 0) {
-            const face = details.card_faces[currentFaceIndex];
-            if (face?.image_uris) {
-                return face.image_uris.normal || face.image_uris.large || face.image_uris.png;
-            }
-        }
-        // DFC fallback: construct back face URL from Scryfall pattern
-        if (isDFC && currentFaceIndex === 1 && details?.image_url) {
-            return details.image_url.replace('/front/', '/back/');
-        }
-        return details?.image_url;
-    })();
-
     const hasMultipleFaces = (details?.card_faces && details.card_faces.length > 1) || isDFC;
+    const currentFace = hasMultipleFaces ? (details?.card_faces?.[currentFaceIndex] || {}) : details;
+    const currentImage = (currentFace as any)?.image_url || (currentFace as any)?.image_uris?.normal || (currentFace as any)?.image_uris?.large || (currentFace as any)?.image_uris?.png || initialImage;
 
     const ckUrl = useMemo(() => {
         if (!details) return '#';
@@ -439,7 +428,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                     <div className="flex flex-col md:flex-row w-full h-full">
                         {/* Image */}
                         <div className="w-full md:w-[380px] bg-[#0c0c0c] flex items-center justify-center p-8 border-r border-white/5 shrink-0 min-h-[300px] md:min-h-0">
-                            {loading ? (
+                            {loading && !currentImage ? (
                                 <div className="w-48 h-48 rounded-2xl bg-white/5 animate-pulse" />
                             ) : (
                                 <div className="relative flex items-center justify-center">
@@ -542,7 +531,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                     {/* LEFT: IMAGE & VERSIONS LIST */}
                     <div className="w-full md:w-[420px] lg:w-[480px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden shrink-0 h-auto md:h-[var(--modal-height,700px)] min-h-[500px] md:min-h-0">
                     <div className="flex-1 min-h-[300px] md:min-h-0 relative flex items-center justify-center p-4 sm:p-6 md:p-10 bg-gradient-to-b from-white/[0.04] to-transparent overflow-hidden">
-                        {loading ? (
+                        {loading && !currentImage ? (
                             <div className="w-64 aspect-[5/7] rounded-xl bg-white/5 animate-pulse flex items-center justify-center">
                                 <div className="w-10 h-10 border-4 border-t-geeko-cyan border-white/10 rounded-full animate-spin" />
                             </div>
