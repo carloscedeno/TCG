@@ -243,15 +243,16 @@ export const fetchProducts = async (params: any = {}, signal?: AbortSignal): Pro
 
 
 
-const cardDetailsCache = new Map<string, any>();
+const cardDetailsCache = new Map<string, Promise<any>>();
 
-export const fetchCardDetails = async (printingId: string): Promise<any> => {
+export const fetchCardDetails = (printingId: string): Promise<any> => {
   if (cardDetailsCache.has(printingId)) {
-    return cardDetailsCache.get(printingId);
+    return cardDetailsCache.get(printingId)!;
   }
 
-  try {
-    let data: any = null;
+  const fetchPromise = (async () => {
+    try {
+      let data: any = null;
     
     // 1. Sanitize the ID
     const sanitizedId = printingId.replace('-foil', '').replace('-nonfoil', '').replace('-etched', '');
@@ -616,14 +617,16 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
       }
     }
 
-    if (data) {
-      cardDetailsCache.set(printingId, data);
-    }
     return data;
   } catch (error) {
     console.error('Fatal error in fetchCardDetails:', error);
+    cardDetailsCache.delete(printingId);
     throw error;
   }
+  })();
+
+  cardDetailsCache.set(printingId, fetchPromise);
+  return fetchPromise;
 };
 
 export const fetchSets = async (gameCode?: string): Promise<any[]> => {

@@ -13,6 +13,7 @@ interface CardModalProps {
     onClose: () => void;
     cardId: string | null;
     initialImage?: string;
+    initialData?: any;
     onAddToCartSuccess?: () => void;
     onRequireAuth?: () => void;
     isArchive?: boolean;
@@ -78,8 +79,8 @@ interface CardDetails {
     is_accessory?: boolean;
 }
 
-export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, initialImage, onAddToCartSuccess, isArchive }) => {
-    const [details, setDetails] = useState<CardDetails | null>(null);
+export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, initialImage, initialData, onAddToCartSuccess, isArchive }) => {
+    const [details, setDetails] = useState<CardDetails | null>(initialData || null);
     const [loading, setLoading] = useState(false);
     const [isAdding, setIsAdding] = useState(false);
     const [addedSuccess, setAddedSuccess] = useState(false);
@@ -91,6 +92,11 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
 
     useEffect(() => {
         if (isOpen && cardId) {
+            if (initialData) {
+                setDetails(initialData as CardDetails);
+            } else {
+                setDetails(null);
+            }
             // Extract requested finish from ID suffix if present (e.g. uuid-foil)
             let initialFinish: 'nonfoil' | 'foil' | 'etched' = 'nonfoil';
             let basePrintingId = cardId;
