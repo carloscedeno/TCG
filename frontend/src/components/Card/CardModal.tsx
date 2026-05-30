@@ -448,6 +448,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                         src={currentImage}
                                         alt={details?.name || 'Card Image'}
                                         size="normal"
+                                        objectFit="contain"
                                         fallbackIconSize={60}
                                         className="max-w-[280px] max-h-[280px] object-contain relative z-10 drop-shadow-[0_20px_60px_rgba(0,0,0,0.8)] hover:scale-105 transition-transform duration-500"
                                     />
@@ -555,7 +556,8 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                     <CardImage
                                         src={currentImage}
                                         alt={details?.name || 'Card Image'}
-                                        size="large"
+                                        size="normal"
+                                        objectFit="contain"
                                         fallbackIconSize={100}
                                         className="max-w-[90%] max-h-[95%] md:max-w-full md:max-h-full object-contain relative z-10 transition-transform duration-700 group-hover/card:scale-[1.03]"
                                         style={{
