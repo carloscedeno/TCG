@@ -27,7 +27,7 @@ export const CardImage: React.FC<CardImageProps> = ({ src, alt, className = '', 
 
   if (!optimizedSrc || hasError) {
     return (
-      <div className={`flex flex-col items-center justify-center w-full h-full text-text-low p-4 bg-[#1a1a1a] ${className}`}>
+      <div className={`flex flex-col items-center justify-center w-full h-full text-neutral-600 p-4 ${className}`}>
         <Shield size={fallbackIconSize} className="mb-2 opacity-20" />
         <span className="text-[10px] uppercase tracking-widest font-bold opacity-50 text-center">Imagen No Disponible</span>
       </div>
@@ -35,7 +35,7 @@ export const CardImage: React.FC<CardImageProps> = ({ src, alt, className = '', 
   }
 
   return (
-    <div className={`relative w-full h-full bg-[#1a1a1a] overflow-hidden ${className}`}>
+    <div className={`relative w-full h-full bg-transparent overflow-hidden ${className}`}>
       {/* Skeleton Shimmer Overlay */}
       {!isLoaded && (
         <div className="absolute inset-0 z-0 bg-slate-800/50 animate-pulse flex items-center justify-center">

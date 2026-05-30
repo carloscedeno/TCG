@@ -560,11 +560,6 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, o
                                         objectFit="contain"
                                         fallbackIconSize={100}
                                         className="max-w-[90%] max-h-[95%] md:max-w-full md:max-h-full object-contain relative z-10 transition-transform duration-700 group-hover/card:scale-[1.03]"
-                                        style={{
-                                            imageRendering: 'auto',
-                                            height: 'auto',
-                                            width: 'auto',
-                                        }}
                                     />
                                 </div>
                             </div>
