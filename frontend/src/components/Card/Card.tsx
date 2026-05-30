@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { RotateCw, Plus } from 'lucide-react';
-import { fetchCardDetails, addToCart } from '../../utils/api';
+import { addToCart } from '../../utils/api';
 import { CardImage } from './CardImage';
 
 export interface CardFace {
@@ -95,21 +95,10 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
 
   const isFoil = is_foil === true || finish === 'foil' || name.toLowerCase().includes(' foil ') || (type?.toLowerCase().includes('foil')); // Simple heuristic if finish prop not fully populated yet
 
-  const handlePreFetch = () => {
-    // Pre-fetch card details on hover to cache it in api.ts
-    // This makes the text/info load instantly when the modal opens
-    try {
-      fetchCardDetails(card_id);
-    } catch (err) {
-      // Ignore errors during pre-fetch
-    }
-  };
-
   if (viewMode === 'list') {
     return (
       <a
         href={`card/${card_id}`}
-        onMouseEnter={handlePreFetch}
         onClick={(e) => {
           if (!e.ctrlKey && !e.metaKey) {
             e.preventDefault();
@@ -207,7 +196,6 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
           onClick?.();
         }
       }}
-      onMouseEnter={handlePreFetch}
       data-testid="product-card"
       className={`flex flex-col glass-card rounded-2xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 group relative ${getRarityStyle(rarity)} cursor-pointer h-full`}
     >
