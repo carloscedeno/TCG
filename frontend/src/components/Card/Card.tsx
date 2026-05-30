@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { RotateCw, Plus } from 'lucide-react';
 import { fetchCardDetails, addToCart } from '../../utils/api';
 import { CardImage } from './CardImage';
+import { getOptimizedScryfallUrl } from '../../utils/imageOptimization';
 
 export interface CardFace {
   image_url?: string;
@@ -99,6 +100,15 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
     // Pre-fetch card details on hover
     try {
       fetchCardDetails(card_id);
+      
+      // Pre-load the high-res image into browser cache so the modal opens instantly
+      if (imgSrc) {
+        const normalUrl = getOptimizedScryfallUrl(imgSrc, 'normal');
+        if (normalUrl) {
+          const img = new Image();
+          img.src = normalUrl;
+        }
+      }
     } catch (err) {
       // Ignore errors during pre-fetch
     }
