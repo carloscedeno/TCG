@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Shield } from 'lucide-react';
 import { getOptimizedScryfallUrl } from '../../utils/imageOptimization';
 
@@ -15,6 +15,7 @@ interface CardImageProps {
 export const CardImage: React.FC<CardImageProps> = ({ src, alt, className = '', testId = 'product-image', size = 'normal', fallbackIconSize = 40, objectFit = 'cover' }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
   
   const optimizedSrc = getOptimizedScryfallUrl(src, size);
 
@@ -22,6 +23,12 @@ export const CardImage: React.FC<CardImageProps> = ({ src, alt, className = '', 
   useEffect(() => {
     setIsLoaded(false);
     setHasError(false);
+  }, [optimizedSrc]);
+
+  useEffect(() => {
+    if (imgRef.current?.complete && imgRef.current.naturalWidth > 0) {
+      setIsLoaded(true);
+    }
   }, [optimizedSrc]);
 
   if (!optimizedSrc || hasError) {
@@ -45,6 +52,7 @@ export const CardImage: React.FC<CardImageProps> = ({ src, alt, className = '', 
 
       {/* Actual Image */}
       <img
+        ref={imgRef}
         src={optimizedSrc}
         alt={alt}
         className={`w-full h-full object-${objectFit} transition-opacity duration-500 ease-in-out absolute inset-0 z-10 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
