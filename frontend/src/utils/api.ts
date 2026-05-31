@@ -333,7 +333,7 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                         original_price: originalPrice,
                         discount_percentage: discountPct,
                         stock: accData.stock,
-                        finish: 'standard'
+                        finish: 'nonfoil'
                     }]
                 };
             } else {
