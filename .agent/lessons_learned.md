@@ -2303,3 +2303,13 @@ useEffect(() => {
 - **Causa Raíz:** Inicialización estricta sin admitir `undefined` en el estado de React. En API, la validación `precio || null` fallaba para el número 0 al ser falsy.
 - **Solución:** Utilizar `undefined` en el estado local para inputs vacíos, y reemplazar `|| null` por validación estricta `!== undefined ? valor : null` en llamadas a la API.
 - **Regla Derivada:** Las variables de estado para filtros numéricos opcionales deben soportar `undefined`. Validaciones hacia el backend deben usar validación estricta explícita `!== undefined`, nunca el operador lógico `||` para números que pueden ser válidamente cero.
+
+### 177. Asunción de Entornos y Filtros Ocultos (Mayo 2026)
+- **Problema:** Se modificó la base de datos de PROD al asumir que `VITE_ENVIRONMENT=development` en el archivo local `.env` indicaba que la URL adjunta correspondía a DEV. Adicionalmente, la RPC de Supabase para búsquedas (`get_accessories_filtered`) devolvía todo el catálogo por un cortocircuito lógico en `p_game_id IS NULL`.
+- **Causa Raíz:** 
+  1. No cruzar la información del archivo `.env` con la documentación canónica (`LEYES_DEL_SISTEMA.md` o IDs conocidos). 
+  2. En PostgreSQL (RPCs), usar `(param IS NULL OR col = param)` cuando se pasa `NULL` como valor para "ignorar filtro" puede generar falsos positivos desastrosos si se combina con una condición excluyente en la misma evaluación (como `game_code = 'OTHERS'`).
+- **Solución:** 
+  1. Se reestructuró `.env` y `frontend/.env` definiendo explícitamente ambos entornos (`DEV_...` y `PROD_...`). 
+  2. Se parcheó la RPC en BD DEV aislando el chequeo explícito `(p_game_code = 'OTHERS' AND a.game_id IS NULL)` fuera del chequeo genérico de ignorar filtros.
+- **Regla Derivada:** Jamás asumir entornos por nombres de variables locales (ej. `development` en un archivo no garantiza que la BD sea el sandbox). SIEMPRE confirmar el ID del proyecto Supabase (DEV=`bqfkqnnostzaqueujdms`, PROD=`sxuotvogwvmxuvwbsscv`).

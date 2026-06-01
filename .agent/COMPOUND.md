@@ -340,3 +340,13 @@ Siempre proveer un caso de evaluación estricto en sentencias SQL cuando el sist
 - `frontend/src/pages/Home.tsx` → Permitir `undefined` en el estado del rango de precios.
 - `frontend/src/utils/api.ts` → Refactor de `params.price || null` a validación estricta `!== undefined`.
 - `lessons_learned.md` → Lección añadida sobre estado de variables numéricas opcionales.
+
+## 2026-06-01 — Entornos y Bugs de Cortocircuito en RPC
+
+**Qué pasó:** Hubo una confusión crítica entre entornos debido a que un archivo local `.env` tenía la variable `VITE_ENVIRONMENT=development` pero apuntaba a la base de datos de PROD. Esto llevó a modificar PROD en lugar de DEV. Adicionalmente, se descubrió un grave bug en la RPC `get_accessories_filtered` donde el paso de `p_game_id IS NULL` junto a un `OR` sin aislamiento causaba un cortocircuito lógico que devolvía todo el catálogo al usar la categoría "Otros".
+**Lo que cambió:**
+- `lessons_learned.md` → Lección #177 agregada con detalles sobre la validación de entornos y el manejo estricto de parámetros de filtrado en RPCs con PostgreSQL.
+- `AGENTS.md` → Se agregó una regla crítica forzando la verificación canónica de entornos (comparando explícitamente IDs de proyectos Supabase) y prohibiendo confiar ciegamente en nombres de variables `.env` locales.
+- `.env` y `frontend/.env` → Refactorizados para contener etiquetas explícitas separadas para `DEV_` y `PROD_`.
+- `bqfkqnnostzaqueujdms` (DEV) → Función `get_accessories_filtered` reescrita para separar `p_game_code = 'OTHERS'` del comportamiento por defecto cuando el filtro es NULL.
+**Regla derivada:** Jamás asumir entornos por nombres de variables locales (ej. `development` en un archivo no garantiza que la BD sea el sandbox). SIEMPRE confirmar el ID del proyecto Supabase (DEV=`bqfkqnnostzaqueujdms`, PROD=`sxuotvogwvmxuvwbsscv`).
