@@ -468,7 +468,7 @@ const Home: React.FC = () => {
         <div className="bg-[#0a0a0a]/95 border-b border-neutral-800 sticky top-[60px] z-40 backdrop-blur-md">
             <div className="max-w-[1600px] mx-auto px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex bg-neutral-900/50 p-1 rounded-full border border-neutral-800">
-                  {filters.games?.length > 0 && inventoryPresence.hasSingles && (
+                  {filters.games && filters.games.length > 0 && inventoryPresence.hasSingles && (
                   <button
                     onClick={() => handleTabChange('marketplace')}
                     data-testid="inventory-tab"
@@ -482,7 +482,7 @@ const Home: React.FC = () => {
                   </button>
                 )}
                 
-                {filters.games?.length > 0 && inventoryPresence.hasCatalog && (
+                {filters.games && filters.games.length > 0 && inventoryPresence.hasCatalog && (
                   <button
                     onClick={() => handleTabChange('catalog')}
                     data-testid="archives-tab"
