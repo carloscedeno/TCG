@@ -468,7 +468,7 @@ const Home: React.FC = () => {
         <div className="bg-[#0a0a0a]/95 border-b border-neutral-800 sticky top-[60px] z-40 backdrop-blur-md">
             <div className="max-w-[1600px] mx-auto px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex bg-neutral-900/50 p-1 rounded-full border border-neutral-800">
-                  {inventoryPresence.hasSingles && (
+                  {filters.games?.length > 0 && inventoryPresence.hasSingles && (
                   <button
                     onClick={() => handleTabChange('marketplace')}
                     data-testid="inventory-tab"
@@ -482,7 +482,7 @@ const Home: React.FC = () => {
                   </button>
                 )}
                 
-                {inventoryPresence.hasCatalog && (
+                {filters.games?.length > 0 && inventoryPresence.hasCatalog && (
                   <button
                     onClick={() => handleTabChange('catalog')}
                     data-testid="archives-tab"
@@ -656,7 +656,7 @@ const Home: React.FC = () => {
                             {loading ? (
                               <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
                             ) : (
-                              'Cargar Más Cartas'
+                              activeTab === 'catalog' ? 'Cargar Más Productos' : 'Cargar Más Cartas'
                             )}
                             {!loading && <span className="text-text-low bg-neutral-800 px-2 py-0.5 rounded-md">[{totalCount - cards.length}]</span>}
                           </button>
