@@ -295,7 +295,7 @@ const Home: React.FC = () => {
           const accRes = await fetchAccessories({
             q: debouncedQuery || undefined,
             game: mappedGame,
-            category_code: searchParams.get('category') || (debouncedFilters.categories && debouncedFilters.categories.length > 0 ? debouncedFilters.categories[0] : undefined),
+            category: searchParams.get('category') || (debouncedFilters.categories && debouncedFilters.categories.length > 0 ? debouncedFilters.categories[0] : undefined),
             price_min: debouncedFilters.priceRange ? debouncedFilters.priceRange[0] : undefined,
             price_max: debouncedFilters.priceRange ? debouncedFilters.priceRange[1] : undefined,
             only_discount: debouncedFilters.only_discount,
