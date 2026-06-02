@@ -60,15 +60,21 @@ def update_denormalized_prices(printing_ids=None):
         with conn.cursor() as cur:
             logger.info(f"Updating denormalized columns using source_id {ck_source_id}...")
             
-            where_clause = ""
-            if printing_ids:
+            if printing_ids and len(printing_ids) <= 1000:
                 where_clause = "AND ph.printing_id IN %s"
-                params = (ck_source_id, tuple(printing_ids), ck_source_id, tuple(printing_ids))
+                params_non_foil = (ck_source_id, nm_condition_id, tuple(printing_ids))
+                params_foil = (ck_source_id, nm_condition_id, tuple(printing_ids))
+                prod_where_clause = "AND p.printing_id IN %s"
+                prod_params = (tuple(printing_ids),)
             else:
-                params = (ck_source_id, ck_source_id)
+                logger.info("Updating all cards (or >1000 changed), omitting IN clause for performance.")
+                where_clause = ""
+                params_non_foil = (ck_source_id, nm_condition_id)
+                params_foil = (ck_source_id, nm_condition_id)
+                prod_where_clause = ""
+                prod_params = ()
 
-            update_sql = f"""
-            -- Update non-foil prices
+            update_non_foil_sql = f"""
             WITH latest_non_foil AS (
                 SELECT DISTINCT ON (ph.printing_id) ph.printing_id, ph.price_usd
                 FROM public.price_history ph
@@ -84,8 +90,11 @@ def update_denormalized_prices(printing_ids=None):
                 non_foil_price = lnf.price_usd
             FROM latest_non_foil lnf
             WHERE cp.printing_id = lnf.printing_id;
+            """
+            cur.execute(update_non_foil_sql, params_non_foil)
+            logger.info(f"Non-foil prices updated ({cur.rowcount} cards affected).")
 
-            -- Update foil prices
+            update_foil_sql = f"""
             WITH latest_foil AS (
                 SELECT DISTINCT ON (ph.printing_id) ph.printing_id, ph.price_usd
                 FROM public.price_history ph
@@ -102,17 +111,12 @@ def update_denormalized_prices(printing_ids=None):
             FROM latest_foil lf
             WHERE cp.printing_id = lf.printing_id;
             """
-            cur.execute(update_sql, (ck_source_id, nm_condition_id) + params[2:])
+            cur.execute(update_foil_sql, params_foil)
+            logger.info(f"Foil prices updated ({cur.rowcount} cards affected).")
             conn.commit()
-            logger.info(f"Denormalized columns updated successfully ({cur.rowcount} cards affected).")
             
             # Sync product prices to match the freshly updated card_printings
             logger.info("Syncing product prices to match CardKingdom...")
-            prod_where_clause = ""
-            prod_params = ()
-            if printing_ids:
-                prod_where_clause = "AND p.printing_id IN %s"
-                prod_params = (tuple(printing_ids),)
                 
             prod_update_sql = f"""
             UPDATE public.products p
