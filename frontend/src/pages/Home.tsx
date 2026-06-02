@@ -23,7 +23,7 @@ const mockFilters: Filters = {
   rarities: ['Common', 'Uncommon', 'Rare', 'Mythic'],
   colors: ['White', 'Blue', 'Black', 'Red', 'Green', 'Colorless', 'Multicolor'],
   types: ['Creature', 'Instant', 'Sorcery', 'Enchantment', 'Artifact', 'Planeswalker', 'Land'],
-  categories: ['Accesorios', 'Sealed Product', 'Consumibles', 'Magic', 'Pokemon', 'Digimon', 'One Piece', 'Yu-Gi-Oh', 'Weiss Schwarz', 'Concesión', 'Other'],
+  categories: ['Sellado TCG', 'Accesorios', 'Snacks & Bebidas', 'Sobre / Booster Pack', 'Booster Box / Display', 'Elite Trainer Box', 'Bundle / Build & Battle', 'Starter / Commander / Precon', 'Tin / Collection Box', 'Ultra Premium Collection', 'Pack Promo', 'Forros', 'Carpetas', 'Dados', 'Playmats', 'Protectores', 'DeckBoxes', 'Otros'],
   sets: [],
   yearRange: [1993, 2026],
   priceRange: [0, 1000]
