@@ -186,7 +186,7 @@ def run_ck_sync():
                     pricelist_map[scid] = []
                 pricelist_map[scid].append(card)
         
-        batch_size = 1000
+        batch_size = 200
         offset = 0
         total_updated = 0
         all_changed_printing_ids = set()
