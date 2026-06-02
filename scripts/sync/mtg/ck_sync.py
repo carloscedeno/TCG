@@ -195,7 +195,7 @@ def run_ck_sync():
             logger.info(f"Processing batch: offset {offset}...")
             db_cards_query = supabase.table('card_printings').select(
                 'printing_id, scryfall_id'
-            ).not_.is_('scryfall_id', 'null').range(offset, offset + batch_size - 1).execute()
+            ).not_.is_('scryfall_id', 'null').order('printing_id').range(offset, offset + batch_size - 1).execute()
             db_cards = db_cards_query.data
             
             if not db_cards:
