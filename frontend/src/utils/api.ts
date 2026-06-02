@@ -1744,22 +1744,29 @@ export const checkGameInventoryPresence = async (gameCode?: string): Promise<{ h
     
     const code = gameCode;
                    
-    const [{ data: singles }, { data: gameData }] = await Promise.all([
-      supabase.from('products').select('id').eq('game', code).gt('stock', 0).limit(1),
-      supabase.from('games').select('game_id').eq('game_code', code).maybeSingle()
-    ]);
-    
+    let hasSingles = false;
     let hasCatalog = false;
-    if (gameData) {
-      const { data: catalog } = await supabase.from('accessories').select('id').eq('game_id', gameData.game_id).gt('stock', 0).limit(1);
-      hasCatalog = (catalog && catalog.length > 0) || false;
+
+    if (code === 'OTHERS') {
+      // OTHERS encompasses multiple games, just enable both tabs to let the user explore
+      hasSingles = true;
+      hasCatalog = true;
+    } else {
+      const [{ data: singles }, { data: gameData }] = await Promise.all([
+        supabase.from('products').select('id').eq('game', code).gt('stock', 0).limit(1),
+        supabase.from('games').select('game_id').eq('game_code', code).maybeSingle()
+      ]);
+      
+      if (gameData) {
+        const { data: catalog } = await supabase.from('accessories').select('id').eq('game_id', gameData.game_id).gt('stock', 0).limit(1);
+        hasCatalog = (catalog && catalog.length > 0) || false;
+      }
+      
+      hasSingles = !!(singles && singles.length > 0);
     }
     
-    // [POLICY] Stock Geekorium (Singles) is ONLY available for MTG
-    const hasSingles = code === 'MTG' && singles && singles.length > 0;
-    
     return {
-      hasSingles: !!hasSingles,
+      hasSingles,
       hasCatalog
     };
   } catch (error) {
