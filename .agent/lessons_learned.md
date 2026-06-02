@@ -2313,3 +2313,10 @@ useEffect(() => {
   1. Se reestructurÃ³ `.env` y `frontend/.env` definiendo explÃ­citamente ambos entornos (`DEV_...` y `PROD_...`). 
   2. Se parcheÃ³ la RPC en BD DEV aislando el chequeo explÃ­cito `(p_game_code = 'OTHERS' AND a.game_id IS NULL)` fuera del chequeo genÃ©rico de ignorar filtros.
 - **Regla Derivada:** JamÃ¡s asumir entornos por nombres de variables locales (ej. `development` en un archivo no garantiza que la BD sea el sandbox). SIEMPRE confirmar el ID del proyecto Supabase (DEV=`bqfkqnnostzaqueujdms`, PROD=`sxuotvogwvmxuvwbsscv`).
+
+
+### 178. Funciones Sobrecargadas en SQL y Despliegues de BD en Cloudflare (Junio 2026)
+- **Problema:** Un error PGRST203 ('Could not choose the best candidate function') rompió la tienda de Producción porque había múltiples firmas para get_products_filtered.
+- **Causa Raíz:** Al crear una migración SQL, se modificó accidentalmente el orden de los parámetros booleanos. PostgreSQL creó una función sobrecargada (overloaded) en vez de reemplazar la existente. Además, Cloudflare Pages no ejecuta estas migraciones automáticamente, creando discrepancia entre el repositorio y la DB remota.
+- **Solución:** Ejecutar explícitamente DROP FUNCTION de la firma defectuosa y CREATE OR REPLACE con los parámetros en orden estricto, aplicando el SQL manualmente a las BDs de DEV y PROD.
+- **Regla Derivada:** LEY 34 (Respetar orden de argumentos en CREATE OR REPLACE FUNCTION) y LEY 35 (Sincronización manual en Cloudflare).

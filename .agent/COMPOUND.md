@@ -350,3 +350,12 @@ Siempre proveer un caso de evaluaciÃ³n estricto en sentencias SQL cuando el sist
 - `.env` y `frontend/.env` â†’ Refactorizados para contener etiquetas explÃ­citas separadas para `DEV_` y `PROD_`.
 - `bqfkqnnostzaqueujdms` (DEV) â†’ FunciÃ³n `get_accessories_filtered` reescrita para separar `p_game_code = 'OTHERS'` del comportamiento por defecto cuando el filtro es NULL.
 **Regla derivada:** JamÃ¡s asumir entornos por nombres de variables locales (ej. `development` en un archivo no garantiza que la BD sea el sandbox). SIEMPRE confirmar el ID del proyecto Supabase (DEV=`bqfkqnnostzaqueujdms`, PROD=`sxuotvogwvmxuvwbsscv`).
+
+
+## 2026-06-02 — Funciones Sobrecargadas y Despliegues Manuales
+
+**Qué pasó:** Un error de tipo PGRST203 colapsó la tienda de Producción porque una actualización de SQL cambió el orden de los argumentos booleanos, creando una función sobrecargada.
+**Lo que cambió:**
+- lessons_learned.md -> Lección #178 (Funciones sobrecargadas y Cloudflare)
+- LEYES_DEL_SISTEMA.md -> Leyes 34 y 35 (Respetar orden de firmas SQL y Sincronización manual en Cloudflare)
+**Regla derivada:** LEY 34 y LEY 35 agregadas.

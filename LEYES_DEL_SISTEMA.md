@@ -195,3 +195,19 @@ El acceso a la pestaña "Stock Geekorium" (inventario de cartas sueltas) debe es
 
 La renderización del Banner Hero (`HeroSection`) debe ser lógica y técnicamente independiente de la renderización del Dashboard de Ofertas.
 - El Dashboard de Ofertas (Presale/Deals) se reserva exclusivamente para la Home Global o vistas de "Ofertas" específicas.
+
+---
+
+### Ley 34: EVITAR SOBRECARGA DE FUNCIONES SQL (PGRST203)
+
+**Siempre** que se modifique una función SQL existente usando `CREATE OR REPLACE FUNCTION`:
+- Se **DEBE** respetar exactamente el mismo orden, nombre y tipo de los argumentos originales.
+- Alterar el orden de los argumentos genera una función *sobrecargada* (overloaded) en lugar de reemplazarla, lo que causa errores fatales en Supabase/PostgREST (`PGRST203: Could not choose the best candidate function`).
+- Si es indispensable cambiar el orden o eliminar argumentos, primero se debe ejecutar un `DROP FUNCTION IF EXISTS nombre_funcion(tipos_viejos);` explícito.
+
+---
+
+### Ley 35: APLICACIÓN MANUAL DE MIGRACIONES EN CLOUDFLARE
+
+**Siempre** recordar que Cloudflare Pages **NO** aplica migraciones de base de datos automáticamente al hacer push.
+- Si se crean o modifican archivos `.sql` en `supabase/migrations/`, estos cambios deben aplicarse **manualmente** tanto en la base de datos de Desarrollo (`bqfkqn`) como en Producción (`sxuotvog`) usando herramientas MCP (`execute_sql`) o el Dashboard de Supabase para que tengan efecto real en el sistema.
