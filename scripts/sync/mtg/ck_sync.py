@@ -193,7 +193,6 @@ def run_ck_sync():
         batch_size = 200
         offset = 0
         total_updated = 0
-        all_changed_printing_ids = set()
         
         while True:
             logger.info(f"Processing batch: offset {offset}...")
@@ -231,8 +230,6 @@ def run_ck_sync():
                 # Insert price history
                 try:
                     supabase.table('price_history').insert(price_entries).execute()
-                    for de in price_entries:
-                        all_changed_printing_ids.add(de['printing_id'])
                     total_updated += len(price_entries)
                 except Exception as ie:
                     logger.error(f"Failed to insert price history batch: {ie}")
@@ -241,12 +238,25 @@ def run_ck_sync():
                 break
             offset += batch_size
         
-        if all_changed_printing_ids:
-            printing_ids_list = list(all_changed_printing_ids)
+        # Failover / Self-Healing: Get ALL printing_ids modified in the last 48 hours
+        logger.info("Running failover recovery: fetching recently updated prices from database...")
+        conn = get_db_connection()
+        with conn.cursor() as cur:
+            cur.execute("""
+                SELECT DISTINCT printing_id 
+                FROM price_history 
+                WHERE source_id = %s 
+                  AND timestamp >= NOW() - INTERVAL '48 hours'
+            """, (ck_source_id,))
+            recent_pids = [r[0] for r in cur.fetchall()]
+        conn.close()
+        
+        if recent_pids:
             chunk_size = 900
-            for i in range(0, len(printing_ids_list), chunk_size):
-                chunk = printing_ids_list[i:i + chunk_size]
-                logger.info(f"Updating denormalized prices for chunk {i} to {i + len(chunk)} of {len(printing_ids_list)}...")
+            logger.info(f"Self-Healing found {len(recent_pids)} unique cards with recent price updates.")
+            for i in range(0, len(recent_pids), chunk_size):
+                chunk = recent_pids[i:i + chunk_size]
+                logger.info(f"Updating denormalized prices for chunk {i} to {i + len(chunk)} of {len(recent_pids)}...")
                 update_denormalized_prices(chunk)
             
         logger.info(f"=== MTG SYNC COMPLETE: {total_updated} prices updated ===")
