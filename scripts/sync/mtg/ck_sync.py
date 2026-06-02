@@ -242,7 +242,12 @@ def run_ck_sync():
             offset += batch_size
         
         if all_changed_printing_ids:
-            update_denormalized_prices(list(all_changed_printing_ids))
+            printing_ids_list = list(all_changed_printing_ids)
+            chunk_size = 900
+            for i in range(0, len(printing_ids_list), chunk_size):
+                chunk = printing_ids_list[i:i + chunk_size]
+                logger.info(f"Updating denormalized prices for chunk {i} to {i + len(chunk)} of {len(printing_ids_list)}...")
+                update_denormalized_prices(chunk)
             
         logger.info(f"=== MTG SYNC COMPLETE: {total_updated} prices updated ===")
         
