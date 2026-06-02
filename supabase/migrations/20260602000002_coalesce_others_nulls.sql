@@ -127,9 +127,9 @@ CREATE OR REPLACE FUNCTION public.get_products_filtered(
     limit_count integer DEFAULT 50,
     offset_count integer DEFAULT 0,
     p_only_new boolean DEFAULT false,
-    sort_by text DEFAULT 'newest',
     p_only_discount boolean DEFAULT false,
-    p_only_presale boolean DEFAULT false
+    p_only_presale boolean DEFAULT false,
+    sort_by text DEFAULT 'newest'
 )
 RETURNS TABLE(
     id uuid,
