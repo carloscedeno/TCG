@@ -197,7 +197,7 @@ export const CardDetail: React.FC = () => {
             {/* Header */}
             <Header onCartOpen={() => setIsCartOpen(true)} cartCount={cartCount} />
 
-            <main className="relative z-10 w-full max-w-[1600px] mx-auto p-6 lg:p-12 flex-1">
+            <main className="relative z-10 w-full max-w-[1600px] mx-auto px-6 pb-6 pt-[80px] lg:px-12 lg:pb-12 lg:pt-[176px] flex-1">
                 {loading && !details ? (
                     <div className="flex flex-col items-center justify-center h-[60vh]">
                         {initialImage ? (
@@ -383,12 +383,12 @@ export const CardDetail: React.FC = () => {
                                                 </div>
                                             </div>
                                         )}
-                                        <h2 className="text-4xl lg:text-6xl font-web-titles font-normal tracking-tight text-white group-hover/title:text-geeko-cyan transition-colors text-gradient-cyan capitalize leading-tight">
+                                        <h2 className="text-3xl lg:text-5xl font-web-titles font-normal tracking-tight text-white group-hover/title:text-geeko-cyan transition-colors text-gradient-cyan capitalize leading-tight">
                                             {details.name?.replace(/\(preventa\)/gi, '').trim()}
                                         </h2>
                                     </div>
                                 </a>
-                                <div className="flex flex-wrap items-center gap-4 text-lg lg:text-xl font-medium text-text-low">
+                                <div className="flex flex-wrap items-center gap-3 text-base lg:text-lg font-medium text-text-low">
                                     <span><ManaText text={details.mana_cost || ''} /></span>
                                     {details.mana_cost && <span className="opacity-30">•</span>}
                                     <span className="text-white/80">{details.type}</span>
@@ -397,7 +397,7 @@ export const CardDetail: React.FC = () => {
                                 </div>
                             </div>
 
-                            <div className="p-8 rounded-[32px] bg-white/5 border border-white/10 space-y-6 relative overflow-hidden group">
+                            <div className="p-6 lg:p-8 rounded-[32px] bg-white/5 border border-white/10 space-y-6 relative overflow-hidden group">
                                 <div className="absolute -top-24 -right-24 w-64 h-64 bg-geeko-cyan/5 rounded-full blur-[100px] group-hover:bg-geeko-cyan/10 transition-colors" />
                                 
                                 {details.description && (
@@ -409,7 +409,7 @@ export const CardDetail: React.FC = () => {
                                     </div>
                                 )}
 
-                                <div className="text-lg lg:text-xl leading-relaxed text-neutral-200 font-medium relative z-10">
+                                <div className="text-base lg:text-lg leading-relaxed text-neutral-200 font-medium relative z-10">
                                     {details.oracle_text?.split('\n').map((line: string, i: number) => <p key={i} className="mb-3"><ManaText text={line} /></p>)}
                                 </div>
                                 {details.flavor_text && (
@@ -428,7 +428,7 @@ export const CardDetail: React.FC = () => {
                                 <div className="space-y-6">
                                     <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-text-low pl-2">Trading Hub</h3>
 
-                                    <div className="p-8 rounded-[32px] bg-gradient-to-br from-geeko-cyan/10 via-transparent to-transparent border border-white/10 group relative overflow-hidden hover:border-geeko-cyan/30 transition-colors">
+                                    <div className="p-6 lg:p-8 rounded-[32px] bg-gradient-to-br from-geeko-cyan/10 via-transparent to-transparent border border-white/10 group relative overflow-hidden hover:border-geeko-cyan/30 transition-colors">
                                         <div className="absolute top-0 right-0 w-40 h-40 bg-geeko-cyan/5 rounded-full blur-[50px]" />
                                         <div className="text-[9px] font-black uppercase text-geeko-cyan tracking-[0.2em] mb-4">Internal Store Price</div>
                                         <div className="flex flex-col gap-6">
@@ -441,7 +441,7 @@ export const CardDetail: React.FC = () => {
                                                         </span>
                                                     )}
                                                     <div className="flex items-center gap-2">
-                                                        <div className="text-5xl font-black text-white font-mono tracking-tighter leading-none">
+                                                        <div className="text-4xl lg:text-5xl font-black text-white font-mono tracking-tighter leading-none">
                                                             ${(activeVersion?.price || details.price || 0) > 0 ? Number(activeVersion?.price || details.price).toFixed(2) : '---'}
                                                         </div>
                                                         {activeVersion?.discount_percentage > 0 && (
