@@ -22,10 +22,34 @@ export const CardDetail: React.FC = () => {
     const [searchParams] = useSearchParams();
     const location = useLocation();
     const initialImage = location.state?.initialImage as string | undefined;
+    const initialCard = location.state?.initialCard as any;
     const activeFinish = searchParams.get('finish') || 'nonfoil';
 
-    const [details, setDetails] = useState<any>(null);
-    const [loading, setLoading] = useState(true);
+    // Build initial placeholder data from the Home page card data
+    const getInitialDetails = () => {
+        if (!initialCard) return null;
+        return {
+            printing_id: initialCard.card_id,
+            card_id: initialCard.card_id,
+            name: initialCard.name,
+            set: initialCard.set,
+            set_code: initialCard.set_code || '',
+            image_url: initialCard.image_url || initialImage,
+            price: initialCard.price,
+            original_price: initialCard.original_price,
+            discount_percentage: initialCard.discount_percentage,
+            rarity: initialCard.rarity,
+            type: initialCard.type,
+            finish: initialCard.finish,
+            is_foil: initialCard.is_foil,
+            total_stock: initialCard.total_stock || initialCard.stock || 0,
+            valuation: initialCard.valuation || { market_price: initialCard.price },
+            all_versions: [] // Start empty, will be populated by fetchCardDetails
+        };
+    };
+
+    const [details, setDetails] = useState<any>(getInitialDetails());
+    const [loading, setLoading] = useState(!initialCard);
     const [error, setError] = useState<string | null>(null);
     const [activePrintingId, setActivePrintingId] = useState<string | undefined>(id);
     const [currentFaceIndex, setCurrentFaceIndex] = useState(0);
@@ -53,7 +77,7 @@ export const CardDetail: React.FC = () => {
     }, [navigate]);
 
     const loadDetails = async (printingId: string) => {
-        setLoading(true);
+        if (!details) setLoading(true);
         setError(null);
         try {
             const data = await fetchCardDetails(printingId);
@@ -211,7 +235,7 @@ export const CardDetail: React.FC = () => {
                     <div data-testid="card-modal" className="w-full glass-panel rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0, 209, 255, 0.15)] flex flex-col lg:flex-row overflow-hidden lg:min-h-[85vh] lg:max-h-[90vh] relative">
                         {/* LEFT: IMAGE & VERSIONS LIST */}
                         <div className="w-full lg:w-[340px] bg-[#0c0c0c] flex flex-col lg:border-r border-b lg:border-b-0 border-white/5 overflow-hidden lg:h-full shrink-0">
-                            <div className="flex-1 min-h-[350px] md:min-h-[480px] p-6 sm:p-8 md:p-10 relative bg-gradient-to-b from-white/[0.04] to-transparent overflow-hidden">
+                            <div className="flex-1 min-h-[350px] lg:min-h-0 p-6 sm:p-8 md:p-10 relative bg-gradient-to-b from-white/[0.04] to-transparent overflow-hidden">
                                 <div className={`absolute inset-6 sm:inset-8 md:inset-10 flex items-center justify-center ${isFoil ? 'holo-effect' : ''} group`}>
                                     <div className="absolute inset-0 bg-geeko-cyan/25 blur-[120px] rounded-full opacity-40 group-hover:opacity-60 transition-opacity duration-700 animate-pulse pointer-events-none" />
                                     {isFoil && (

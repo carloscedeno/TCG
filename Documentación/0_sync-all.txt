@@ -1,0 +1,863 @@
+﻿2026-06-01T15:54:26.0293003Z Current runner version: '2.334.0'
+2026-06-01T15:54:26.0328095Z ##[group]Runner Image Provisioner
+2026-06-01T15:54:26.0329582Z Hosted Compute Agent
+2026-06-01T15:54:26.0330491Z Version: 20260520.533
+2026-06-01T15:54:26.0331621Z Commit: 189110e25284a9812c124fd27b339e2fb4f2f9db
+2026-06-01T15:54:26.0332767Z Build Date: 2026-05-20T17:44:04Z
+2026-06-01T15:54:26.0333968Z Worker ID: {a0901d76-1878-4a51-9beb-bb7fc8a54bfc}
+2026-06-01T15:54:26.0335134Z Azure Region: eastus
+2026-06-01T15:54:26.0336072Z ##[endgroup]
+2026-06-01T15:54:26.0339300Z ##[group]Operating System
+2026-06-01T15:54:26.0340429Z Ubuntu
+2026-06-01T15:54:26.0341331Z 24.04.4
+2026-06-01T15:54:26.0342653Z LTS
+2026-06-01T15:54:26.0343775Z ##[endgroup]
+2026-06-01T15:54:26.0344662Z ##[group]Runner Image
+2026-06-01T15:54:26.0345711Z Image: ubuntu-24.04
+2026-06-01T15:54:26.0346626Z Version: 20260525.161.1
+2026-06-01T15:54:26.0349108Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260525.161/images/ubuntu/Ubuntu2404-Readme.md
+2026-06-01T15:54:26.0351845Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260525.161
+2026-06-01T15:54:26.0353507Z ##[endgroup]
+2026-06-01T15:54:26.0355542Z ##[group]GITHUB_TOKEN Permissions
+2026-06-01T15:54:26.0358895Z Contents: read
+2026-06-01T15:54:26.0359824Z Metadata: read
+2026-06-01T15:54:26.0360729Z Packages: read
+2026-06-01T15:54:26.0361677Z ##[endgroup]
+2026-06-01T15:54:26.0364759Z Secret source: Actions
+2026-06-01T15:54:26.0366524Z Prepare workflow directory
+2026-06-01T15:54:26.0915750Z Prepare all required actions
+2026-06-01T15:54:26.0970886Z Getting action download info
+2026-06-01T15:54:26.5511796Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2026-06-01T15:54:26.6829644Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-06-01T15:54:26.7621717Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-06-01T15:54:27.0427819Z Complete job name: sync-all
+2026-06-01T15:54:27.1275285Z ##[group]Run actions/checkout@v4
+2026-06-01T15:54:27.1276665Z with:
+2026-06-01T15:54:27.1277709Z   repository: carloscedeno/TCG
+2026-06-01T15:54:27.1288566Z   token: ***
+2026-06-01T15:54:27.1289405Z   ssh-strict: true
+2026-06-01T15:54:27.1290274Z   ssh-user: git
+2026-06-01T15:54:27.1291158Z   persist-credentials: true
+2026-06-01T15:54:27.1292117Z   clean: true
+2026-06-01T15:54:27.1293067Z   sparse-checkout-cone-mode: true
+2026-06-01T15:54:27.1294128Z   fetch-depth: 1
+2026-06-01T15:54:27.1294982Z   fetch-tags: false
+2026-06-01T15:54:27.1295874Z   show-progress: true
+2026-06-01T15:54:27.1296756Z   lfs: false
+2026-06-01T15:54:27.1297880Z   submodules: false
+2026-06-01T15:54:27.1298832Z   set-safe-directory: true
+2026-06-01T15:54:27.1300113Z env:
+2026-06-01T15:54:27.1300975Z   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+2026-06-01T15:54:27.1302082Z ##[endgroup]
+2026-06-01T15:54:27.2321683Z Syncing repository: carloscedeno/TCG
+2026-06-01T15:54:27.2324700Z ##[group]Getting Git version info
+2026-06-01T15:54:27.2326029Z Working directory is '/home/runner/work/TCG/TCG'
+2026-06-01T15:54:27.2328438Z [command]/usr/bin/git version
+2026-06-01T15:54:27.2339950Z git version 2.54.0
+2026-06-01T15:54:27.2360572Z ##[endgroup]
+2026-06-01T15:54:27.2375692Z Temporarily overriding HOME='/home/runner/work/_temp/6e01cdef-cb6a-4419-a14c-8f2103064e7e' before making global git config changes
+2026-06-01T15:54:27.2380413Z Adding repository directory to the temporary git global config as a safe directory
+2026-06-01T15:54:27.2383802Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/TCG/TCG
+2026-06-01T15:54:27.2427161Z Deleting the contents of '/home/runner/work/TCG/TCG'
+2026-06-01T15:54:27.2432188Z ##[group]Initializing the repository
+2026-06-01T15:54:27.2437138Z [command]/usr/bin/git init /home/runner/work/TCG/TCG
+2026-06-01T15:54:27.2514303Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-06-01T15:54:27.2516800Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-06-01T15:54:27.2520044Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-06-01T15:54:27.2522405Z hint: call:
+2026-06-01T15:54:27.2523628Z hint:
+2026-06-01T15:54:27.2525157Z hint: 	git config --global init.defaultBranch <name>
+2026-06-01T15:54:27.2526997Z hint:
+2026-06-01T15:54:27.2529056Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-06-01T15:54:27.2532099Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-06-01T15:54:27.2534374Z hint:
+2026-06-01T15:54:27.2535521Z hint: 	git branch -m <name>
+2026-06-01T15:54:27.2537149Z hint:
+2026-06-01T15:54:27.2538726Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-06-01T15:54:27.2540731Z Initialized empty Git repository in /home/runner/work/TCG/TCG/.git/
+2026-06-01T15:54:27.2544298Z [command]/usr/bin/git remote add origin https://github.com/carloscedeno/TCG
+2026-06-01T15:54:27.2605746Z ##[endgroup]
+2026-06-01T15:54:27.2608208Z ##[group]Disabling automatic garbage collection
+2026-06-01T15:54:27.2610309Z [command]/usr/bin/git config --local gc.auto 0
+2026-06-01T15:54:27.2641020Z ##[endgroup]
+2026-06-01T15:54:27.2643168Z ##[group]Setting up auth
+2026-06-01T15:54:27.2648414Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-06-01T15:54:27.2685810Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-06-01T15:54:27.2993668Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-06-01T15:54:27.3028173Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-06-01T15:54:27.3263957Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-06-01T15:54:27.3296660Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-06-01T15:54:27.3531939Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-06-01T15:54:27.3567201Z ##[endgroup]
+2026-06-01T15:54:27.3569054Z ##[group]Fetching the repository
+2026-06-01T15:54:27.3576655Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +1c30b3bef90989c7a4c539202c92b4ac9982553d:refs/remotes/origin/main
+2026-06-01T15:54:27.9354715Z From https://github.com/carloscedeno/TCG
+2026-06-01T15:54:27.9358165Z  * [new ref]         1c30b3bef90989c7a4c539202c92b4ac9982553d -> origin/main
+2026-06-01T15:54:27.9387770Z ##[endgroup]
+2026-06-01T15:54:27.9389932Z ##[group]Determining the checkout info
+2026-06-01T15:54:27.9392310Z ##[endgroup]
+2026-06-01T15:54:27.9395951Z [command]/usr/bin/git sparse-checkout disable
+2026-06-01T15:54:27.9441871Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-06-01T15:54:27.9470896Z ##[group]Checking out the ref
+2026-06-01T15:54:27.9474311Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-06-01T15:54:28.0441735Z Switched to a new branch 'main'
+2026-06-01T15:54:28.0445875Z branch 'main' set up to track 'origin/main'.
+2026-06-01T15:54:28.0456410Z ##[endgroup]
+2026-06-01T15:54:28.0504511Z [command]/usr/bin/git log -1 --format=%H
+2026-06-01T15:54:28.0531545Z 1c30b3bef90989c7a4c539202c92b4ac9982553d
+2026-06-01T15:54:28.0890294Z ##[group]Run actions/setup-python@v5
+2026-06-01T15:54:28.0891445Z with:
+2026-06-01T15:54:28.0892312Z   python-version: 3.12
+2026-06-01T15:54:28.0893289Z   cache: pip
+2026-06-01T15:54:28.0894173Z   check-latest: false
+2026-06-01T15:54:28.0904708Z   token: ***
+2026-06-01T15:54:28.0905624Z   update-environment: true
+2026-06-01T15:54:28.0906676Z   allow-prereleases: false
+2026-06-01T15:54:28.0908117Z   freethreaded: false
+2026-06-01T15:54:28.0909064Z env:
+2026-06-01T15:54:28.0909977Z   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+2026-06-01T15:54:28.0911126Z ##[endgroup]
+2026-06-01T15:54:28.2318168Z ##[group]Installed versions
+2026-06-01T15:54:28.2403277Z (node:2268) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-06-01T15:54:28.2406890Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-06-01T15:54:28.2408662Z Successfully set up CPython (3.12.13)
+2026-06-01T15:54:28.2410760Z ##[endgroup]
+2026-06-01T15:54:28.3432490Z [command]/opt/hostedtoolcache/Python/3.12.13/x64/bin/pip cache dir
+2026-06-01T15:54:28.6128967Z /home/runner/.cache/pip
+2026-06-01T15:54:28.7076976Z Cache hit for: setup-python-Linux-x64-24.04-Ubuntu-python-3.12.13-pip-538aa58eb5c006947e9ec63234907178fb44ce4a890e5e5ec36a8b13b31de157
+2026-06-01T15:54:28.7183245Z (node:2268) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-06-01T15:54:29.2343460Z Received 93569854 of 93569854 (100.0%), 182.1 MBs/sec
+2026-06-01T15:54:29.2344325Z Cache Size: ~89 MB (93569854 B)
+2026-06-01T15:54:29.2370964Z [command]/usr/bin/tar -xf /home/runner/work/_temp/3d96bcb9-b121-4d6a-8852-a9a61fa56de2/cache.tzst -P -C /home/runner/work/TCG/TCG --use-compress-program unzstd
+2026-06-01T15:54:29.3985180Z Cache restored successfully
+2026-06-01T15:54:29.4033863Z Cache restored from key: setup-python-Linux-x64-24.04-Ubuntu-python-3.12.13-pip-538aa58eb5c006947e9ec63234907178fb44ce4a890e5e5ec36a8b13b31de157
+2026-06-01T15:54:29.4253216Z ##[group]Run python -m pip install --upgrade pip
+2026-06-01T15:54:29.4253706Z [36;1mpython -m pip install --upgrade pip[0m
+2026-06-01T15:54:29.4254077Z [36;1mpip install -r requirements.txt[0m
+2026-06-01T15:54:29.4289495Z shell: /usr/bin/bash -e {0}
+2026-06-01T15:54:29.4289829Z env:
+2026-06-01T15:54:29.4290076Z   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+2026-06-01T15:54:29.4290481Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.13/x64
+2026-06-01T15:54:29.4290962Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.13/x64/lib/pkgconfig
+2026-06-01T15:54:29.4291424Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+2026-06-01T15:54:29.4291819Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+2026-06-01T15:54:29.4292201Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+2026-06-01T15:54:29.4292593Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.13/x64/lib
+2026-06-01T15:54:29.4292928Z ##[endgroup]
+2026-06-01T15:54:30.2971457Z Requirement already satisfied: pip in /opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages (26.1.1)
+2026-06-01T15:54:30.3873391Z Collecting pip
+2026-06-01T15:54:30.4399228Z   Downloading pip-26.1.2-py3-none-any.whl.metadata (4.6 kB)
+2026-06-01T15:54:30.4473720Z Downloading pip-26.1.2-py3-none-any.whl (1.8 MB)
+2026-06-01T15:54:30.4925788Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 96.3 MB/s  0:00:00
+2026-06-01T15:54:30.5217845Z Installing collected packages: pip
+2026-06-01T15:54:30.5218982Z   Attempting uninstall: pip
+2026-06-01T15:54:30.5238602Z     Found existing installation: pip 26.1.1
+2026-06-01T15:54:30.6164215Z     Uninstalling pip-26.1.1:
+2026-06-01T15:54:30.6225270Z       Successfully uninstalled pip-26.1.1
+2026-06-01T15:54:31.5798636Z Successfully installed pip-26.1.2
+2026-06-01T15:54:32.6056309Z Collecting aiohappyeyeballs==2.6.1 (from -r requirements.txt (line 1))
+2026-06-01T15:54:32.6070192Z   Using cached aiohappyeyeballs-2.6.1-py3-none-any.whl.metadata (5.9 kB)
+2026-06-01T15:54:33.0196675Z Collecting aiohttp==3.13.3 (from -r requirements.txt (line 2))
+2026-06-01T15:54:33.0210959Z   Using cached aiohttp-3.13.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (8.1 kB)
+2026-06-01T15:54:33.0321023Z Collecting aiosignal==1.4.0 (from -r requirements.txt (line 3))
+2026-06-01T15:54:33.0332047Z   Using cached aiosignal-1.4.0-py3-none-any.whl.metadata (3.7 kB)
+2026-06-01T15:54:33.0403462Z Collecting annotated-doc==0.0.4 (from -r requirements.txt (line 4))
+2026-06-01T15:54:33.0414460Z   Using cached annotated_doc-0.0.4-py3-none-any.whl.metadata (6.6 kB)
+2026-06-01T15:54:33.0488227Z Collecting annotated-types==0.7.0 (from -r requirements.txt (line 5))
+2026-06-01T15:54:33.0499524Z   Using cached annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)
+2026-06-01T15:54:33.0623782Z Collecting anyio==4.12.0 (from -r requirements.txt (line 6))
+2026-06-01T15:54:33.0636212Z   Using cached anyio-4.12.0-py3-none-any.whl.metadata (4.3 kB)
+2026-06-01T15:54:33.0737187Z Collecting attrs==25.4.0 (from -r requirements.txt (line 7))
+2026-06-01T15:54:33.0748210Z   Using cached attrs-25.4.0-py3-none-any.whl.metadata (10 kB)
+2026-06-01T15:54:33.0855797Z Collecting beautifulsoup4==4.14.3 (from -r requirements.txt (line 8))
+2026-06-01T15:54:33.0866861Z   Using cached beautifulsoup4-4.14.3-py3-none-any.whl.metadata (3.8 kB)
+2026-06-01T15:54:33.1010541Z Collecting cachetools==6.2.4 (from -r requirements.txt (line 9))
+2026-06-01T15:54:33.1021758Z   Using cached cachetools-6.2.4-py3-none-any.whl.metadata (5.6 kB)
+2026-06-01T15:54:33.1154926Z Collecting certifi==2025.11.12 (from -r requirements.txt (line 10))
+2026-06-01T15:54:33.1166041Z   Using cached certifi-2025.11.12-py3-none-any.whl.metadata (2.5 kB)
+2026-06-01T15:54:33.1940307Z Collecting cffi==2.0.0 (from -r requirements.txt (line 11))
+2026-06-01T15:54:33.1953493Z   Using cached cffi-2.0.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.6 kB)
+2026-06-01T15:54:33.2693808Z Collecting charset-normalizer==3.4.4 (from -r requirements.txt (line 12))
+2026-06-01T15:54:33.2707144Z   Using cached charset_normalizer-3.4.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (37 kB)
+2026-06-01T15:54:33.2853428Z Collecting click==8.3.1 (from -r requirements.txt (line 13))
+2026-06-01T15:54:33.2864635Z   Using cached click-8.3.1-py3-none-any.whl.metadata (2.6 kB)
+2026-06-01T15:54:33.2962984Z Collecting colorama==0.4.6 (from -r requirements.txt (line 14))
+2026-06-01T15:54:33.2974191Z   Using cached colorama-0.4.6-py2.py3-none-any.whl.metadata (17 kB)
+2026-06-01T15:54:33.4564149Z Collecting cryptography==46.0.3 (from -r requirements.txt (line 15))
+2026-06-01T15:54:33.4582275Z   Using cached cryptography-46.0.3-cp311-abi3-manylinux_2_34_x86_64.whl.metadata (5.7 kB)
+2026-06-01T15:54:33.4690854Z Collecting deprecation==2.1.0 (from -r requirements.txt (line 16))
+2026-06-01T15:54:33.4702014Z   Using cached deprecation-2.1.0-py2.py3-none-any.whl.metadata (4.6 kB)
+2026-06-01T15:54:33.5006674Z Collecting fastapi==0.128.0 (from -r requirements.txt (line 17))
+2026-06-01T15:54:33.5020024Z   Using cached fastapi-0.128.0-py3-none-any.whl.metadata (30 kB)
+2026-06-01T15:54:33.5227901Z Collecting fastapi-mail==1.6.2 (from -r requirements.txt (line 18))
+2026-06-01T15:54:33.5239414Z   Using cached fastapi_mail-1.6.2-py3-none-any.whl.metadata (5.0 kB)
+2026-06-01T15:54:33.5763767Z Collecting frozenlist==1.8.0 (from -r requirements.txt (line 19))
+2026-06-01T15:54:33.5776848Z   Using cached frozenlist-1.8.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (20 kB)
+2026-06-01T15:54:33.5933422Z Collecting fsspec==2025.12.0 (from -r requirements.txt (line 20))
+2026-06-01T15:54:33.5944719Z   Using cached fsspec-2025.12.0-py3-none-any.whl.metadata (10 kB)
+2026-06-01T15:54:33.6172913Z Collecting h11==0.16.0 (from -r requirements.txt (line 21))
+2026-06-01T15:54:33.6184270Z   Using cached h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+2026-06-01T15:54:33.6288845Z Collecting h2==4.3.0 (from -r requirements.txt (line 22))
+2026-06-01T15:54:33.6300320Z   Using cached h2-4.3.0-py3-none-any.whl.metadata (5.1 kB)
+2026-06-01T15:54:33.6381771Z Collecting hpack==4.1.0 (from -r requirements.txt (line 23))
+2026-06-01T15:54:33.6393038Z   Using cached hpack-4.1.0-py3-none-any.whl.metadata (4.6 kB)
+2026-06-01T15:54:33.6513322Z Collecting httpcore==1.0.9 (from -r requirements.txt (line 24))
+2026-06-01T15:54:33.6524982Z   Using cached httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+2026-06-01T15:54:33.6660151Z Collecting httpx==0.28.1 (from -r requirements.txt (line 25))
+2026-06-01T15:54:33.6671729Z   Using cached httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+2026-06-01T15:54:33.6763876Z Collecting hyperframe==6.1.0 (from -r requirements.txt (line 26))
+2026-06-01T15:54:33.6775283Z   Using cached hyperframe-6.1.0-py3-none-any.whl.metadata (4.3 kB)
+2026-06-01T15:54:33.6875530Z Collecting idna==3.11 (from -r requirements.txt (line 27))
+2026-06-01T15:54:33.6886787Z   Using cached idna-3.11-py3-none-any.whl.metadata (8.4 kB)
+2026-06-01T15:54:33.8611854Z Collecting lxml==6.0.2 (from -r requirements.txt (line 28))
+2026-06-01T15:54:33.8634525Z   Using cached lxml-6.0.2-cp312-cp312-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl.metadata (3.6 kB)
+2026-06-01T15:54:33.8769213Z Collecting markdown-it-py==4.0.0 (from -r requirements.txt (line 29))
+2026-06-01T15:54:33.8781165Z   Using cached markdown_it_py-4.0.0-py3-none-any.whl.metadata (7.3 kB)
+2026-06-01T15:54:33.8879298Z Collecting mdurl==0.1.2 (from -r requirements.txt (line 30))
+2026-06-01T15:54:33.8890503Z   Using cached mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+2026-06-01T15:54:33.9318856Z Collecting mmh3==5.2.0 (from -r requirements.txt (line 31))
+2026-06-01T15:54:33.9331687Z   Using cached mmh3-5.2.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (14 kB)
+2026-06-01T15:54:34.1490684Z Collecting multidict==6.7.0 (from -r requirements.txt (line 32))
+2026-06-01T15:54:34.1504820Z   Using cached multidict-6.7.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (5.3 kB)
+2026-06-01T15:54:34.3136532Z Collecting numpy>=2.0.0 (from -r requirements.txt (line 33))
+2026-06-01T15:54:34.3663412Z   Downloading numpy-2.4.6-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+2026-06-01T15:54:34.3809167Z Collecting packaging==25.0 (from -r requirements.txt (line 34))
+2026-06-01T15:54:34.3821496Z   Using cached packaging-25.0-py3-none-any.whl.metadata (3.3 kB)
+2026-06-01T15:54:34.4754489Z Collecting pandas>=2.2.0 (from -r requirements.txt (line 35))
+2026-06-01T15:54:34.4794499Z   Downloading pandas-3.0.3-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (79 kB)
+2026-06-01T15:54:34.5339697Z Collecting postgrest==2.27.0 (from -r requirements.txt (line 36))
+2026-06-01T15:54:34.5351112Z   Using cached postgrest-2.27.0-py3-none-any.whl.metadata (3.4 kB)
+2026-06-01T15:54:34.5820662Z Collecting propcache==0.4.1 (from -r requirements.txt (line 37))
+2026-06-01T15:54:34.5834062Z   Using cached propcache-0.4.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (13 kB)
+2026-06-01T15:54:34.6352726Z Collecting psycopg2-binary==2.9.11 (from -r requirements.txt (line 38))
+2026-06-01T15:54:34.6365170Z   Using cached psycopg2_binary-2.9.11-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (4.9 kB)
+2026-06-01T15:54:34.6452152Z Collecting pycparser==2.23 (from -r requirements.txt (line 39))
+2026-06-01T15:54:34.6463335Z   Using cached pycparser-2.23-py3-none-any.whl.metadata (993 bytes)
+2026-06-01T15:54:34.7329437Z Collecting pydantic==2.12.5 (from -r requirements.txt (line 40))
+2026-06-01T15:54:34.7343477Z   Using cached pydantic-2.12.5-py3-none-any.whl.metadata (90 kB)
+2026-06-01T15:54:35.3259286Z Collecting pydantic_core==2.41.5 (from -r requirements.txt (line 41))
+2026-06-01T15:54:35.3273393Z   Using cached pydantic_core-2.41.5-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (7.3 kB)
+2026-06-01T15:54:35.3416475Z Collecting Pygments==2.19.2 (from -r requirements.txt (line 42))
+2026-06-01T15:54:35.3428450Z   Using cached pygments-2.19.2-py3-none-any.whl.metadata (2.5 kB)
+2026-06-01T15:54:35.4088438Z Collecting pyiceberg==0.10.0 (from -r requirements.txt (line 43))
+2026-06-01T15:54:35.4102656Z   Using cached pyiceberg-0.10.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (4.9 kB)
+2026-06-01T15:54:35.4270919Z Collecting PyJWT==2.10.1 (from -r requirements.txt (line 44))
+2026-06-01T15:54:35.4282810Z   Using cached PyJWT-2.10.1-py3-none-any.whl.metadata (4.0 kB)
+2026-06-01T15:54:35.4821951Z Collecting pyparsing==3.3.1 (from -r requirements.txt (line 45))
+2026-06-01T15:54:35.4833735Z   Using cached pyparsing-3.3.1-py3-none-any.whl.metadata (5.6 kB)
+2026-06-01T15:54:35.5308444Z Collecting pyroaring==1.0.3 (from -r requirements.txt (line 46))
+2026-06-01T15:54:35.5321754Z   Using cached pyroaring-1.0.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (10 kB)
+2026-06-01T15:54:35.5418411Z Collecting python-dateutil==2.9.0.post0 (from -r requirements.txt (line 47))
+2026-06-01T15:54:35.5430257Z   Using cached python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
+2026-06-01T15:54:35.5539612Z Collecting python-dotenv==1.2.1 (from -r requirements.txt (line 48))
+2026-06-01T15:54:35.5551906Z   Using cached python_dotenv-1.2.1-py3-none-any.whl.metadata (25 kB)
+2026-06-01T15:54:35.5858063Z Collecting pytz==2025.2 (from -r requirements.txt (line 49))
+2026-06-01T15:54:35.5870656Z   Using cached pytz-2025.2-py2.py3-none-any.whl.metadata (22 kB)
+2026-06-01T15:54:35.6002550Z Collecting realtime==2.27.0 (from -r requirements.txt (line 50))
+2026-06-01T15:54:35.6013935Z   Using cached realtime-2.27.0-py3-none-any.whl.metadata (7.0 kB)
+2026-06-01T15:54:35.6197762Z Collecting requests==2.32.5 (from -r requirements.txt (line 51))
+2026-06-01T15:54:35.6210763Z   Using cached requests-2.32.5-py3-none-any.whl.metadata (4.9 kB)
+2026-06-01T15:54:35.6444927Z Collecting rich==14.2.0 (from -r requirements.txt (line 52))
+2026-06-01T15:54:35.6459063Z   Using cached rich-14.2.0-py3-none-any.whl.metadata (18 kB)
+2026-06-01T15:54:35.6566754Z Collecting six==1.17.0 (from -r requirements.txt (line 53))
+2026-06-01T15:54:35.6580178Z   Using cached six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+2026-06-01T15:54:35.6692783Z Collecting sortedcontainers==2.4.0 (from -r requirements.txt (line 54))
+2026-06-01T15:54:35.6705972Z   Using cached sortedcontainers-2.4.0-py2.py3-none-any.whl.metadata (10 kB)
+2026-06-01T15:54:35.6832363Z Collecting soupsieve==2.8.1 (from -r requirements.txt (line 55))
+2026-06-01T15:54:35.6845554Z   Using cached soupsieve-2.8.1-py3-none-any.whl.metadata (4.6 kB)
+2026-06-01T15:54:35.7032536Z Collecting starlette==0.50.0 (from -r requirements.txt (line 56))
+2026-06-01T15:54:35.7046567Z   Using cached starlette-0.50.0-py3-none-any.whl.metadata (6.3 kB)
+2026-06-01T15:54:35.7188279Z Collecting storage3==2.27.0 (from -r requirements.txt (line 57))
+2026-06-01T15:54:35.7202655Z   Using cached storage3-2.27.0-py3-none-any.whl.metadata (2.1 kB)
+2026-06-01T15:54:35.7289757Z Collecting StrEnum==0.4.15 (from -r requirements.txt (line 58))
+2026-06-01T15:54:35.7302267Z   Using cached StrEnum-0.4.15-py3-none-any.whl.metadata (5.3 kB)
+2026-06-01T15:54:35.7409859Z Collecting strictyaml==1.7.3 (from -r requirements.txt (line 59))
+2026-06-01T15:54:35.7423251Z   Using cached strictyaml-1.7.3-py3-none-any.whl.metadata (11 kB)
+2026-06-01T15:54:35.7599879Z Collecting supabase==2.27.0 (from -r requirements.txt (line 60))
+2026-06-01T15:54:35.7613631Z   Using cached supabase-2.27.0-py3-none-any.whl.metadata (4.6 kB)
+2026-06-01T15:54:35.7752025Z Collecting supabase-auth==2.27.0 (from -r requirements.txt (line 61))
+2026-06-01T15:54:35.7763758Z   Using cached supabase_auth-2.27.0-py3-none-any.whl.metadata (6.4 kB)
+2026-06-01T15:54:35.7880217Z Collecting supabase-functions==2.27.0 (from -r requirements.txt (line 62))
+2026-06-01T15:54:35.7891260Z   Using cached supabase_functions-2.27.0-py3-none-any.whl.metadata (2.4 kB)
+2026-06-01T15:54:35.7991848Z Collecting tenacity==9.1.2 (from -r requirements.txt (line 63))
+2026-06-01T15:54:35.8002725Z   Using cached tenacity-9.1.2-py3-none-any.whl.metadata (1.2 kB)
+2026-06-01T15:54:35.8075824Z Collecting typing-inspection==0.4.2 (from -r requirements.txt (line 64))
+2026-06-01T15:54:35.8087051Z   Using cached typing_inspection-0.4.2-py3-none-any.whl.metadata (2.6 kB)
+2026-06-01T15:54:35.8193700Z Collecting typing_extensions==4.15.0 (from -r requirements.txt (line 65))
+2026-06-01T15:54:35.8205315Z   Using cached typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)
+2026-06-01T15:54:35.8304918Z Collecting tzdata==2025.3 (from -r requirements.txt (line 66))
+2026-06-01T15:54:35.8316362Z   Using cached tzdata-2025.3-py2.py3-none-any.whl.metadata (1.4 kB)
+2026-06-01T15:54:35.8461255Z Collecting urllib3==2.6.2 (from -r requirements.txt (line 67))
+2026-06-01T15:54:35.8472715Z   Using cached urllib3-2.6.2-py3-none-any.whl.metadata (6.6 kB)
+2026-06-01T15:54:35.8650272Z Collecting uvicorn==0.40.0 (from -r requirements.txt (line 68))
+2026-06-01T15:54:35.8661720Z   Using cached uvicorn-0.40.0-py3-none-any.whl.metadata (6.7 kB)
+2026-06-01T15:54:35.8864585Z Collecting pytest>=8.0.0 (from -r requirements.txt (line 69))
+2026-06-01T15:54:35.8875798Z   Using cached pytest-9.0.3-py3-none-any.whl.metadata (7.6 kB)
+2026-06-01T15:54:35.9033144Z Collecting pytest-asyncio>=0.24.0 (from -r requirements.txt (line 70))
+2026-06-01T15:54:35.9072320Z   Downloading pytest_asyncio-1.4.0-py3-none-any.whl.metadata (4.1 kB)
+2026-06-01T15:54:35.9744363Z Collecting websockets==15.0.1 (from -r requirements.txt (line 71))
+2026-06-01T15:54:35.9757740Z   Using cached websockets-15.0.1-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.8 kB)
+2026-06-01T15:54:36.2348599Z Collecting yarl==1.22.0 (from -r requirements.txt (line 72))
+2026-06-01T15:54:36.2362665Z   Using cached yarl-1.22.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (75 kB)
+2026-06-01T15:54:36.2818995Z Collecting aiosmtplib<6.0.0,>=5.0.0 (from fastapi-mail==1.6.2->-r requirements.txt (line 18))
+2026-06-01T15:54:36.2867731Z   Downloading aiosmtplib-5.1.1-py3-none-any.whl.metadata (3.6 kB)
+2026-06-01T15:54:36.2985139Z Collecting blinker<2.0.0,>=1.9.0 (from fastapi-mail==1.6.2->-r requirements.txt (line 18))
+2026-06-01T15:54:36.2996666Z   Using cached blinker-1.9.0-py3-none-any.whl.metadata (1.6 kB)
+2026-06-01T15:54:36.3108752Z Collecting email-validator<3.0.0,>=2.3.0 (from fastapi-mail==1.6.2->-r requirements.txt (line 18))
+2026-06-01T15:54:36.3120805Z   Using cached email_validator-2.3.0-py3-none-any.whl.metadata (26 kB)
+2026-06-01T15:54:36.3234083Z Collecting jinja2<4.0.0,>=3.1.6 (from fastapi-mail==1.6.2->-r requirements.txt (line 18))
+2026-06-01T15:54:36.3246258Z   Using cached jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+2026-06-01T15:54:36.3390171Z Collecting pydantic-settings<3.0.0,>=2.6.1 (from fastapi-mail==1.6.2->-r requirements.txt (line 18))
+2026-06-01T15:54:36.3433038Z   Downloading pydantic_settings-2.14.1-py3-none-any.whl.metadata (3.4 kB)
+2026-06-01T15:54:36.6407215Z Collecting regex<2026.0.0,>=2025.11.3 (from fastapi-mail==1.6.2->-r requirements.txt (line 18))
+2026-06-01T15:54:36.6422738Z   Using cached regex-2025.11.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (40 kB)
+2026-06-01T15:54:36.7252773Z Collecting dnspython>=2.0.0 (from email-validator<3.0.0,>=2.3.0->fastapi-mail==1.6.2->-r requirements.txt (line 18))
+2026-06-01T15:54:36.7264234Z   Using cached dnspython-2.8.0-py3-none-any.whl.metadata (5.7 kB)
+2026-06-01T15:54:36.7717895Z Collecting MarkupSafe>=2.0 (from jinja2<4.0.0,>=3.1.6->fastapi-mail==1.6.2->-r requirements.txt (line 18))
+2026-06-01T15:54:36.7732364Z   Using cached markupsafe-3.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+2026-06-01T15:54:36.7885569Z Collecting iniconfig>=1.0.1 (from pytest>=8.0.0->-r requirements.txt (line 69))
+2026-06-01T15:54:36.7898518Z   Using cached iniconfig-2.3.0-py3-none-any.whl.metadata (2.5 kB)
+2026-06-01T15:54:36.7991075Z Collecting pluggy<2,>=1.5 (from pytest>=8.0.0->-r requirements.txt (line 69))
+2026-06-01T15:54:36.8002616Z   Using cached pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
+2026-06-01T15:54:36.8138330Z Using cached aiohappyeyeballs-2.6.1-py3-none-any.whl (15 kB)
+2026-06-01T15:54:36.8150440Z Using cached aiohttp-3.13.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (1.8 MB)
+2026-06-01T15:54:36.8168373Z Using cached multidict-6.7.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (256 kB)
+2026-06-01T15:54:36.8180686Z Using cached yarl-1.22.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (377 kB)
+2026-06-01T15:54:36.8192793Z Using cached aiosignal-1.4.0-py3-none-any.whl (7.5 kB)
+2026-06-01T15:54:36.8203776Z Using cached annotated_doc-0.0.4-py3-none-any.whl (5.3 kB)
+2026-06-01T15:54:36.8214822Z Using cached annotated_types-0.7.0-py3-none-any.whl (13 kB)
+2026-06-01T15:54:36.8225781Z Using cached anyio-4.12.0-py3-none-any.whl (113 kB)
+2026-06-01T15:54:36.8236991Z Using cached attrs-25.4.0-py3-none-any.whl (67 kB)
+2026-06-01T15:54:36.8248276Z Using cached beautifulsoup4-4.14.3-py3-none-any.whl (107 kB)
+2026-06-01T15:54:36.8259596Z Using cached cachetools-6.2.4-py3-none-any.whl (11 kB)
+2026-06-01T15:54:36.8270527Z Using cached certifi-2025.11.12-py3-none-any.whl (159 kB)
+2026-06-01T15:54:36.8282440Z Using cached cffi-2.0.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (219 kB)
+2026-06-01T15:54:36.8294540Z Using cached charset_normalizer-3.4.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (153 kB)
+2026-06-01T15:54:36.8305506Z Using cached click-8.3.1-py3-none-any.whl (108 kB)
+2026-06-01T15:54:36.8316638Z Using cached colorama-0.4.6-py2.py3-none-any.whl (25 kB)
+2026-06-01T15:54:36.8328223Z Using cached cryptography-46.0.3-cp311-abi3-manylinux_2_34_x86_64.whl (4.5 MB)
+2026-06-01T15:54:36.8354963Z Using cached deprecation-2.1.0-py2.py3-none-any.whl (11 kB)
+2026-06-01T15:54:36.8366021Z Using cached fastapi-0.128.0-py3-none-any.whl (103 kB)
+2026-06-01T15:54:36.8377320Z Using cached starlette-0.50.0-py3-none-any.whl (74 kB)
+2026-06-01T15:54:36.8388847Z Using cached fastapi_mail-1.6.2-py3-none-any.whl (16 kB)
+2026-06-01T15:54:36.8399861Z Using cached pydantic-2.12.5-py3-none-any.whl (463 kB)
+2026-06-01T15:54:36.8412458Z Using cached typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+2026-06-01T15:54:36.8423916Z Using cached frozenlist-1.8.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (242 kB)
+2026-06-01T15:54:36.8435408Z Using cached fsspec-2025.12.0-py3-none-any.whl (201 kB)
+2026-06-01T15:54:36.8446677Z Using cached h11-0.16.0-py3-none-any.whl (37 kB)
+2026-06-01T15:54:36.8457746Z Using cached h2-4.3.0-py3-none-any.whl (61 kB)
+2026-06-01T15:54:36.8469130Z Using cached hpack-4.1.0-py3-none-any.whl (34 kB)
+2026-06-01T15:54:36.8480194Z Using cached hyperframe-6.1.0-py3-none-any.whl (13 kB)
+2026-06-01T15:54:36.8491079Z Using cached httpcore-1.0.9-py3-none-any.whl (78 kB)
+2026-06-01T15:54:36.8502186Z Using cached httpx-0.28.1-py3-none-any.whl (73 kB)
+2026-06-01T15:54:36.8513199Z Using cached idna-3.11-py3-none-any.whl (71 kB)
+2026-06-01T15:54:36.8524690Z Using cached lxml-6.0.2-cp312-cp312-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl (5.3 MB)
+2026-06-01T15:54:36.8553487Z Using cached markdown_it_py-4.0.0-py3-none-any.whl (87 kB)
+2026-06-01T15:54:36.8564796Z Using cached mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+2026-06-01T15:54:36.8576018Z Using cached mmh3-5.2.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (103 kB)
+2026-06-01T15:54:36.8587050Z Using cached packaging-25.0-py3-none-any.whl (66 kB)
+2026-06-01T15:54:36.8598269Z Using cached postgrest-2.27.0-py3-none-any.whl (21 kB)
+2026-06-01T15:54:36.8609803Z Using cached propcache-0.4.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (221 kB)
+2026-06-01T15:54:36.8621537Z Using cached psycopg2_binary-2.9.11-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (4.2 MB)
+2026-06-01T15:54:36.8645936Z Using cached pycparser-2.23-py3-none-any.whl (118 kB)
+2026-06-01T15:54:36.8657401Z Using cached pydantic_core-2.41.5-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+2026-06-01T15:54:36.8675425Z Using cached pygments-2.19.2-py3-none-any.whl (1.2 MB)
+2026-06-01T15:54:36.8691217Z Using cached pyiceberg-0.10.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (1.4 MB)
+2026-06-01T15:54:36.8706547Z Using cached pyparsing-3.3.1-py3-none-any.whl (121 kB)
+2026-06-01T15:54:36.8718274Z Using cached pyroaring-1.0.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+2026-06-01T15:54:36.8736135Z Using cached requests-2.32.5-py3-none-any.whl (64 kB)
+2026-06-01T15:54:36.8747295Z Using cached rich-14.2.0-py3-none-any.whl (243 kB)
+2026-06-01T15:54:36.8759420Z Using cached strictyaml-1.7.3-py3-none-any.whl (123 kB)
+2026-06-01T15:54:36.8770980Z Using cached tenacity-9.1.2-py3-none-any.whl (28 kB)
+2026-06-01T15:54:36.8782035Z Using cached urllib3-2.6.2-py3-none-any.whl (131 kB)
+2026-06-01T15:54:36.8793291Z Using cached PyJWT-2.10.1-py3-none-any.whl (22 kB)
+2026-06-01T15:54:36.8804444Z Using cached python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+2026-06-01T15:54:36.8815822Z Using cached python_dotenv-1.2.1-py3-none-any.whl (21 kB)
+2026-06-01T15:54:36.8826685Z Using cached pytz-2025.2-py2.py3-none-any.whl (509 kB)
+2026-06-01T15:54:36.8839748Z Using cached realtime-2.27.0-py3-none-any.whl (22 kB)
+2026-06-01T15:54:36.8851467Z Using cached websockets-15.0.1-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (182 kB)
+2026-06-01T15:54:36.8862656Z Using cached six-1.17.0-py2.py3-none-any.whl (11 kB)
+2026-06-01T15:54:36.8873755Z Using cached sortedcontainers-2.4.0-py2.py3-none-any.whl (29 kB)
+2026-06-01T15:54:36.8884865Z Using cached soupsieve-2.8.1-py3-none-any.whl (36 kB)
+2026-06-01T15:54:36.8895531Z Using cached storage3-2.27.0-py3-none-any.whl (27 kB)
+2026-06-01T15:54:36.8906238Z Using cached StrEnum-0.4.15-py3-none-any.whl (8.9 kB)
+2026-06-01T15:54:36.8917157Z Using cached supabase-2.27.0-py3-none-any.whl (16 kB)
+2026-06-01T15:54:36.8928052Z Using cached supabase_auth-2.27.0-py3-none-any.whl (48 kB)
+2026-06-01T15:54:36.8939415Z Using cached supabase_functions-2.27.0-py3-none-any.whl (8.5 kB)
+2026-06-01T15:54:36.8950366Z Using cached typing_inspection-0.4.2-py3-none-any.whl (14 kB)
+2026-06-01T15:54:36.8961352Z Using cached tzdata-2025.3-py2.py3-none-any.whl (348 kB)
+2026-06-01T15:54:36.8973418Z Using cached uvicorn-0.40.0-py3-none-any.whl (68 kB)
+2026-06-01T15:54:36.9011238Z Downloading aiosmtplib-5.1.1-py3-none-any.whl (27 kB)
+2026-06-01T15:54:36.9045749Z Using cached blinker-1.9.0-py3-none-any.whl (8.5 kB)
+2026-06-01T15:54:36.9056934Z Using cached email_validator-2.3.0-py3-none-any.whl (35 kB)
+2026-06-01T15:54:36.9068192Z Using cached jinja2-3.1.6-py3-none-any.whl (134 kB)
+2026-06-01T15:54:36.9113007Z Downloading pydantic_settings-2.14.1-py3-none-any.whl (60 kB)
+2026-06-01T15:54:36.9145893Z Using cached regex-2025.11.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (803 kB)
+2026-06-01T15:54:36.9197834Z Downloading numpy-2.4.6-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.6 MB)
+2026-06-01T15:54:36.9896580Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.6/16.6 MB 261.9 MB/s  0:00:00
+2026-06-01T15:54:36.9938080Z Downloading pandas-3.0.3-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (10.9 MB)
+2026-06-01T15:54:37.0291970Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.9/10.9 MB 323.6 MB/s  0:00:00
+2026-06-01T15:54:37.0306021Z Using cached pytest-9.0.3-py3-none-any.whl (375 kB)
+2026-06-01T15:54:37.0319707Z Using cached pluggy-1.6.0-py3-none-any.whl (20 kB)
+2026-06-01T15:54:37.0367994Z Downloading pytest_asyncio-1.4.0-py3-none-any.whl (16 kB)
+2026-06-01T15:54:37.0396798Z Using cached dnspython-2.8.0-py3-none-any.whl (331 kB)
+2026-06-01T15:54:37.0409037Z Using cached iniconfig-2.3.0-py3-none-any.whl (7.5 kB)
+2026-06-01T15:54:37.0420313Z Using cached markupsafe-3.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+2026-06-01T15:54:37.3112618Z Installing collected packages: StrEnum, sortedcontainers, pytz, pyroaring, websockets, urllib3, tzdata, typing_extensions, tenacity, soupsieve, six, regex, python-dotenv, pyparsing, PyJWT, Pygments, pycparser, psycopg2-binary, propcache, pluggy, packaging, numpy, multidict, mmh3, mdurl, MarkupSafe, lxml, iniconfig, idna, hyperframe, hpack, h11, fsspec, frozenlist, dnspython, colorama, click, charset-normalizer, certifi, cachetools, blinker, attrs, annotated-types, annotated-doc, aiosmtplib, aiohappyeyeballs, yarl, uvicorn, typing-inspection, requests, python-dateutil, pytest, pydantic_core, markdown-it-py, jinja2, httpcore, h2, email-validator, deprecation, cffi, beautifulsoup4, anyio, aiosignal, strictyaml, starlette, rich, pytest-asyncio, pydantic, pandas, httpx, cryptography, aiohttp, realtime, pyiceberg, pydantic-settings, fastapi, supabase-functions, supabase-auth, storage3, postgrest, fastapi-mail, supabase
+2026-06-01T15:54:50.8988884Z 
+2026-06-01T15:54:50.9051568Z Successfully installed MarkupSafe-3.0.3 PyJWT-2.10.1 Pygments-2.19.2 StrEnum-0.4.15 aiohappyeyeballs-2.6.1 aiohttp-3.13.3 aiosignal-1.4.0 aiosmtplib-5.1.1 annotated-doc-0.0.4 annotated-types-0.7.0 anyio-4.12.0 attrs-25.4.0 beautifulsoup4-4.14.3 blinker-1.9.0 cachetools-6.2.4 certifi-2025.11.12 cffi-2.0.0 charset-normalizer-3.4.4 click-8.3.1 colorama-0.4.6 cryptography-46.0.3 deprecation-2.1.0 dnspython-2.8.0 email-validator-2.3.0 fastapi-0.128.0 fastapi-mail-1.6.2 frozenlist-1.8.0 fsspec-2025.12.0 h11-0.16.0 h2-4.3.0 hpack-4.1.0 httpcore-1.0.9 httpx-0.28.1 hyperframe-6.1.0 idna-3.11 iniconfig-2.3.0 jinja2-3.1.6 lxml-6.0.2 markdown-it-py-4.0.0 mdurl-0.1.2 mmh3-5.2.0 multidict-6.7.0 numpy-2.4.6 packaging-25.0 pandas-3.0.3 pluggy-1.6.0 postgrest-2.27.0 propcache-0.4.1 psycopg2-binary-2.9.11 pycparser-2.23 pydantic-2.12.5 pydantic-settings-2.14.1 pydantic_core-2.41.5 pyiceberg-0.10.0 pyparsing-3.3.1 pyroaring-1.0.3 pytest-9.0.3 pytest-asyncio-1.4.0 python-dateutil-2.9.0.post0 python-dotenv-1.2.1 pytz-2025.2 realtime-2.27.0 regex-2025.11.3 requests-2.32.5 rich-14.2.0 six-1.17.0 sortedcontainers-2.4.0 soupsieve-2.8.1 starlette-0.50.0 storage3-2.27.0 strictyaml-1.7.3 supabase-2.27.0 supabase-auth-2.27.0 supabase-functions-2.27.0 tenacity-9.1.2 typing-inspection-0.4.2 typing_extensions-4.15.0 tzdata-2025.3 urllib3-2.6.2 uvicorn-0.40.0 websockets-15.0.1 yarl-1.22.0
+2026-06-01T15:54:51.2100514Z ##[group]Run python scripts/sync/omni_sync.py
+2026-06-01T15:54:51.2100926Z [36;1mpython scripts/sync/omni_sync.py[0m
+2026-06-01T15:54:51.2128814Z shell: /usr/bin/bash -e {0}
+2026-06-01T15:54:51.2129097Z env:
+2026-06-01T15:54:51.2129341Z   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+2026-06-01T15:54:51.2129720Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.13/x64
+2026-06-01T15:54:51.2130186Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.13/x64/lib/pkgconfig
+2026-06-01T15:54:51.2130632Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+2026-06-01T15:54:51.2131048Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+2026-06-01T15:54:51.2131453Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+2026-06-01T15:54:51.2131844Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.13/x64/lib
+2026-06-01T15:54:51.2132446Z   SUPABASE_URL: ***
+2026-06-01T15:54:51.2133753Z   SUPABASE_SERVICE_ROLE_KEY: ***
+2026-06-01T15:54:51.2134987Z   SUPABASE_ANON_KEY: ***
+2026-06-01T15:54:51.2135297Z   POKEMON_TCG_API_KEY: 
+2026-06-01T15:54:51.2135548Z   PYTHONPATH: .
+2026-06-01T15:54:51.2135780Z ##[endgroup]
+2026-06-01T15:54:52.5023526Z 2026-06-01 15:54:52,501 - OmniSync - INFO - ==========================================
+2026-06-01T15:54:52.5024354Z 2026-06-01 15:54:52,502 - OmniSync - INFO - STARTING OMNI-TCG MASTER SYNC
+2026-06-01T15:54:52.5024844Z 2026-06-01 15:54:52,502 - OmniSync - INFO - ==========================================
+2026-06-01T15:54:52.5025258Z 2026-06-01 15:54:52,502 - OmniSync - INFO - 
+2026-06-01T15:54:52.5025598Z --- STEP 1: MTG Card Kingdom (Retail Prices) ---
+2026-06-01T15:54:52.5026064Z 2026-06-01 15:54:52,502 - MTG_CK_Sync - INFO - --- Starting Isolated MTG CardKingdom Sync ---
+2026-06-01T15:54:53.1764729Z 2026-06-01 15:54:53,175 - httpx - INFO - HTTP Request: GET ***/rest/v1/sources?select=source_id&source_code=eq.CARDKINGDOM "HTTP/2 200 OK"
+2026-06-01T15:54:53.5818882Z 2026-06-01 15:54:53,581 - httpx - INFO - HTTP Request: GET ***/rest/v1/conditions?select=condition_id&condition_code=eq.NM "HTTP/2 200 OK"
+2026-06-01T15:54:53.6654091Z 2026-06-01 15:54:53,665 - MTG_CK_Sync - INFO - Downloading full pricelist from CardKingdom...
+2026-06-01T15:54:53.6655297Z 2026-06-01 15:54:53,665 - root - INFO - Downloading full pricelist from https://api.cardkingdom.com/api/v2/pricelist...
+2026-06-01T15:55:00.0170966Z 2026-06-01 15:55:00,016 - root - INFO - Successfully fetched 146461 cards from CardKingdom API.
+2026-06-01T15:55:00.0187979Z 2026-06-01 15:55:00,018 - MTG_CK_Sync - INFO - Pricelist downloaded: 146461 items.
+2026-06-01T15:55:00.2701827Z 2026-06-01 15:55:00,269 - MTG_CK_Sync - INFO - Processing batch: offset 0...
+2026-06-01T15:55:00.9824103Z 2026-06-01 15:55:00,982 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=0&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:55:09.4593648Z 2026-06-01 15:55:09,458 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T15:55:09.4597043Z 2026-06-01 15:55:09,459 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T15:55:09.4598135Z 2026-06-01 15:55:09,459 - MTG_CK_Sync - INFO - Processing batch: offset 1000...
+2026-06-01T15:55:10.0601305Z 2026-06-01 15:55:10,059 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=1000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:55:18.4973374Z 2026-06-01 15:55:18,496 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T15:55:18.4979359Z 2026-06-01 15:55:18,497 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T15:55:18.4980859Z 2026-06-01 15:55:18,497 - MTG_CK_Sync - INFO - Processing batch: offset 2000...
+2026-06-01T15:55:18.9792597Z 2026-06-01 15:55:18,978 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=2000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:55:27.2392995Z 2026-06-01 15:55:27,238 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T15:55:27.2395771Z 2026-06-01 15:55:27,239 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T15:55:27.2397231Z 2026-06-01 15:55:27,239 - MTG_CK_Sync - INFO - Processing batch: offset 3000...
+2026-06-01T15:55:27.6099184Z 2026-06-01 15:55:27,609 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=3000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:55:36.0336646Z 2026-06-01 15:55:36,033 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T15:55:36.0339696Z 2026-06-01 15:55:36,033 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T15:55:36.0341360Z 2026-06-01 15:55:36,033 - MTG_CK_Sync - INFO - Processing batch: offset 4000...
+2026-06-01T15:55:36.7063781Z 2026-06-01 15:55:36,705 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=4000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:55:43.8209381Z 2026-06-01 15:55:43,820 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T15:55:43.8364417Z 2026-06-01 15:55:43,836 - MTG_CK_Sync - INFO - Processing batch: offset 5000...
+2026-06-01T15:55:44.5434971Z 2026-06-01 15:55:44,543 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=5000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:55:52.7990189Z 2026-06-01 15:55:52,798 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T15:55:52.7992679Z 2026-06-01 15:55:52,799 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T15:55:52.7993997Z 2026-06-01 15:55:52,799 - MTG_CK_Sync - INFO - Processing batch: offset 6000...
+2026-06-01T15:55:53.2299311Z 2026-06-01 15:55:53,229 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=6000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:56:01.4737902Z 2026-06-01 15:56:01,473 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T15:56:01.4740524Z 2026-06-01 15:56:01,473 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T15:56:01.4742274Z 2026-06-01 15:56:01,473 - MTG_CK_Sync - INFO - Processing batch: offset 7000...
+2026-06-01T15:56:01.9055212Z 2026-06-01 15:56:01,905 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=7000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:56:10.2090472Z 2026-06-01 15:56:10,208 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T15:56:10.2093224Z 2026-06-01 15:56:10,209 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T15:56:10.2094123Z 2026-06-01 15:56:10,209 - MTG_CK_Sync - INFO - Processing batch: offset 8000...
+2026-06-01T15:56:10.6231091Z 2026-06-01 15:56:10,622 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=8000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:56:15.5778013Z 2026-06-01 15:56:15,577 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T15:56:15.5940409Z 2026-06-01 15:56:15,593 - MTG_CK_Sync - INFO - Processing batch: offset 9000...
+2026-06-01T15:56:15.9843780Z 2026-06-01 15:56:15,983 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=9000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:56:24.2101334Z 2026-06-01 15:56:24,209 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T15:56:24.2358605Z 2026-06-01 15:56:24,235 - MTG_CK_Sync - INFO - Processing batch: offset 10000...
+2026-06-01T15:56:24.6346919Z 2026-06-01 15:56:24,634 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=10000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:56:30.9800600Z 2026-06-01 15:56:30,979 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T15:56:31.0781885Z 2026-06-01 15:56:31,077 - MTG_CK_Sync - INFO - Processing batch: offset 11000...
+2026-06-01T15:56:31.5434729Z 2026-06-01 15:56:31,542 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=11000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:56:39.9344619Z 2026-06-01 15:56:39,934 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T15:56:39.9347453Z 2026-06-01 15:56:39,934 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T15:56:39.9348563Z 2026-06-01 15:56:39,934 - MTG_CK_Sync - INFO - Processing batch: offset 12000...
+2026-06-01T15:56:40.3754416Z 2026-06-01 15:56:40,374 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=12000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:56:47.8634421Z 2026-06-01 15:56:47,863 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T15:56:47.8902508Z 2026-06-01 15:56:47,889 - MTG_CK_Sync - INFO - Processing batch: offset 13000...
+2026-06-01T15:56:48.2707257Z 2026-06-01 15:56:48,270 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=13000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:56:54.4075291Z 2026-06-01 15:56:54,406 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T15:56:54.4333751Z 2026-06-01 15:56:54,433 - MTG_CK_Sync - INFO - Processing batch: offset 14000...
+2026-06-01T15:56:54.9549577Z 2026-06-01 15:56:54,954 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=14000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:57:02.6344662Z 2026-06-01 15:57:02,634 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T15:57:02.6565441Z 2026-06-01 15:57:02,656 - MTG_CK_Sync - INFO - Processing batch: offset 15000...
+2026-06-01T15:57:03.0409792Z 2026-06-01 15:57:03,040 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=15000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:57:08.4313018Z 2026-06-01 15:57:08,430 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T15:57:08.4488262Z 2026-06-01 15:57:08,448 - MTG_CK_Sync - INFO - Processing batch: offset 16000...
+2026-06-01T15:57:08.9379898Z 2026-06-01 15:57:08,937 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=16000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:57:14.1510960Z 2026-06-01 15:57:14,150 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T15:57:14.1735634Z 2026-06-01 15:57:14,173 - MTG_CK_Sync - INFO - Processing batch: offset 17000...
+2026-06-01T15:57:14.6815491Z 2026-06-01 15:57:14,681 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=17000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:57:20.8589331Z 2026-06-01 15:57:20,858 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T15:57:20.8849540Z 2026-06-01 15:57:20,884 - MTG_CK_Sync - INFO - Processing batch: offset 18000...
+2026-06-01T15:57:21.3654209Z 2026-06-01 15:57:21,364 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=18000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:57:25.6500923Z 2026-06-01 15:57:25,649 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T15:57:25.6893168Z 2026-06-01 15:57:25,688 - MTG_CK_Sync - INFO - Processing batch: offset 19000...
+2026-06-01T15:57:26.2121149Z 2026-06-01 15:57:26,211 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=19000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:57:29.3016520Z 2026-06-01 15:57:29,301 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T15:57:29.3158024Z 2026-06-01 15:57:29,315 - MTG_CK_Sync - INFO - Processing batch: offset 20000...
+2026-06-01T15:57:29.8278774Z 2026-06-01 15:57:29,827 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=20000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:57:38.1014266Z 2026-06-01 15:57:38,101 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T15:57:38.1017246Z 2026-06-01 15:57:38,101 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T15:57:38.1019988Z 2026-06-01 15:57:38,101 - MTG_CK_Sync - INFO - Processing batch: offset 21000...
+2026-06-01T15:57:38.8949833Z 2026-06-01 15:57:38,894 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=21000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:57:47.2325849Z 2026-06-01 15:57:47,232 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T15:57:47.2328978Z 2026-06-01 15:57:47,232 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T15:57:47.2329877Z 2026-06-01 15:57:47,232 - MTG_CK_Sync - INFO - Processing batch: offset 22000...
+2026-06-01T15:57:47.9963873Z 2026-06-01 15:57:47,996 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=22000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:57:54.9306072Z 2026-06-01 15:57:54,930 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T15:57:55.0329783Z 2026-06-01 15:57:55,032 - MTG_CK_Sync - INFO - Processing batch: offset 23000...
+2026-06-01T15:57:55.6955848Z 2026-06-01 15:57:55,695 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=23000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:58:03.9833043Z 2026-06-01 15:58:03,982 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T15:58:03.9835949Z 2026-06-01 15:58:03,983 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T15:58:03.9836835Z 2026-06-01 15:58:03,983 - MTG_CK_Sync - INFO - Processing batch: offset 24000...
+2026-06-01T15:58:04.7411637Z 2026-06-01 15:58:04,740 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=24000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:58:13.0634668Z 2026-06-01 15:58:13,063 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T15:58:13.0637153Z 2026-06-01 15:58:13,063 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T15:58:13.0638321Z 2026-06-01 15:58:13,063 - MTG_CK_Sync - INFO - Processing batch: offset 25000...
+2026-06-01T15:58:13.8762665Z 2026-06-01 15:58:13,875 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=25000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:58:22.1461903Z 2026-06-01 15:58:22,145 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T15:58:22.1464737Z 2026-06-01 15:58:22,146 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T15:58:22.1465589Z 2026-06-01 15:58:22,146 - MTG_CK_Sync - INFO - Processing batch: offset 26000...
+2026-06-01T15:58:22.8338015Z 2026-06-01 15:58:22,833 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=26000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:58:31.0773979Z 2026-06-01 15:58:31,076 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T15:58:31.0776489Z 2026-06-01 15:58:31,077 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T15:58:31.0777987Z 2026-06-01 15:58:31,077 - MTG_CK_Sync - INFO - Processing batch: offset 27000...
+2026-06-01T15:58:31.9235516Z 2026-06-01 15:58:31,923 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=27000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:58:40.1710825Z 2026-06-01 15:58:40,170 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T15:58:40.1715921Z 2026-06-01 15:58:40,171 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T15:58:40.1717239Z 2026-06-01 15:58:40,171 - MTG_CK_Sync - INFO - Processing batch: offset 28000...
+2026-06-01T15:58:40.9467899Z 2026-06-01 15:58:40,946 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=28000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:58:47.8148443Z 2026-06-01 15:58:47,814 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T15:58:47.8334221Z 2026-06-01 15:58:47,833 - MTG_CK_Sync - INFO - Processing batch: offset 29000...
+2026-06-01T15:58:48.6901248Z 2026-06-01 15:58:48,689 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=29000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:58:54.8702055Z 2026-06-01 15:58:54,869 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T15:58:54.8958883Z 2026-06-01 15:58:54,895 - MTG_CK_Sync - INFO - Processing batch: offset 30000...
+2026-06-01T15:58:55.6470470Z 2026-06-01 15:58:55,646 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=30000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:59:01.3793328Z 2026-06-01 15:59:01,378 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T15:59:01.3956617Z 2026-06-01 15:59:01,395 - MTG_CK_Sync - INFO - Processing batch: offset 31000...
+2026-06-01T15:59:02.0498576Z 2026-06-01 15:59:02,049 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=31000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:59:08.5787278Z 2026-06-01 15:59:08,578 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T15:59:08.6038503Z 2026-06-01 15:59:08,603 - MTG_CK_Sync - INFO - Processing batch: offset 32000...
+2026-06-01T15:59:09.3515562Z 2026-06-01 15:59:09,351 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=32000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:59:12.9151778Z 2026-06-01 15:59:12,914 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T15:59:13.0198728Z 2026-06-01 15:59:13,019 - MTG_CK_Sync - INFO - Processing batch: offset 33000...
+2026-06-01T15:59:13.7020758Z 2026-06-01 15:59:13,701 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=33000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:59:17.9316447Z 2026-06-01 15:59:17,931 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T15:59:17.9510886Z 2026-06-01 15:59:17,950 - MTG_CK_Sync - INFO - Processing batch: offset 34000...
+2026-06-01T15:59:19.0396480Z 2026-06-01 15:59:19,039 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=34000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:59:27.3993902Z 2026-06-01 15:59:27,398 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T15:59:27.3996158Z 2026-06-01 15:59:27,399 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T15:59:27.3997271Z 2026-06-01 15:59:27,399 - MTG_CK_Sync - INFO - Processing batch: offset 35000...
+2026-06-01T15:59:28.3493728Z 2026-06-01 15:59:28,348 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=35000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:59:36.6123263Z 2026-06-01 15:59:36,611 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T15:59:36.6125253Z 2026-06-01 15:59:36,612 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T15:59:36.6126573Z 2026-06-01 15:59:36,612 - MTG_CK_Sync - INFO - Processing batch: offset 36000...
+2026-06-01T15:59:37.5308849Z 2026-06-01 15:59:37,530 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=36000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:59:42.3024616Z 2026-06-01 15:59:42,301 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T15:59:42.3177326Z 2026-06-01 15:59:42,317 - MTG_CK_Sync - INFO - Processing batch: offset 37000...
+2026-06-01T15:59:43.1579696Z 2026-06-01 15:59:43,157 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=37000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:59:50.9406219Z 2026-06-01 15:59:50,940 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T15:59:51.0056331Z 2026-06-01 15:59:51,005 - MTG_CK_Sync - INFO - Processing batch: offset 38000...
+2026-06-01T15:59:51.7359905Z 2026-06-01 15:59:51,735 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=38000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T15:59:57.2465896Z 2026-06-01 15:59:57,246 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T15:59:57.2610648Z 2026-06-01 15:59:57,260 - MTG_CK_Sync - INFO - Processing batch: offset 39000...
+2026-06-01T15:59:58.2510438Z 2026-06-01 15:59:58,250 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=39000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:00:06.5576336Z 2026-06-01 16:00:06,557 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T16:00:06.5578943Z 2026-06-01 16:00:06,557 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T16:00:06.5579798Z 2026-06-01 16:00:06,557 - MTG_CK_Sync - INFO - Processing batch: offset 40000...
+2026-06-01T16:00:07.6844548Z 2026-06-01 16:00:07,684 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=40000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:00:15.5018937Z 2026-06-01 16:00:15,501 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T16:00:15.5295466Z 2026-06-01 16:00:15,529 - MTG_CK_Sync - INFO - Processing batch: offset 41000...
+2026-06-01T16:00:16.5079774Z 2026-06-01 16:00:16,507 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=41000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:00:23.4671068Z 2026-06-01 16:00:23,466 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T16:00:23.4885330Z 2026-06-01 16:00:23,488 - MTG_CK_Sync - INFO - Processing batch: offset 42000...
+2026-06-01T16:00:24.4897264Z 2026-06-01 16:00:24,489 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=42000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:00:31.4518266Z 2026-06-01 16:00:31,451 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T16:00:31.4782125Z 2026-06-01 16:00:31,477 - MTG_CK_Sync - INFO - Processing batch: offset 43000...
+2026-06-01T16:00:33.8492774Z 2026-06-01 16:00:33,848 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=43000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:00:42.1854875Z 2026-06-01 16:00:42,184 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T16:00:42.1857187Z 2026-06-01 16:00:42,185 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T16:00:42.1858757Z 2026-06-01 16:00:42,185 - MTG_CK_Sync - INFO - Processing batch: offset 44000...
+2026-06-01T16:00:43.4360694Z 2026-06-01 16:00:43,435 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=44000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:00:51.7143540Z 2026-06-01 16:00:51,713 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T16:00:51.7145731Z 2026-06-01 16:00:51,714 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T16:00:51.7146649Z 2026-06-01 16:00:51,714 - MTG_CK_Sync - INFO - Processing batch: offset 45000...
+2026-06-01T16:00:52.7572736Z 2026-06-01 16:00:52,756 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=45000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:00:58.4151690Z 2026-06-01 16:00:58,414 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T16:00:58.4335176Z 2026-06-01 16:00:58,433 - MTG_CK_Sync - INFO - Processing batch: offset 46000...
+2026-06-01T16:00:59.8275215Z 2026-06-01 16:00:59,827 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=46000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:01:06.2145808Z 2026-06-01 16:01:06,214 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T16:01:06.2397798Z 2026-06-01 16:01:06,239 - MTG_CK_Sync - INFO - Processing batch: offset 47000...
+2026-06-01T16:01:07.5071582Z 2026-06-01 16:01:07,506 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=47000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:01:10.7701104Z 2026-06-01 16:01:10,769 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T16:01:10.7886226Z 2026-06-01 16:01:10,788 - MTG_CK_Sync - INFO - Processing batch: offset 48000...
+2026-06-01T16:01:11.5608287Z 2026-06-01 16:01:11,560 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=48000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:01:17.4397126Z 2026-06-01 16:01:17,439 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T16:01:17.4648248Z 2026-06-01 16:01:17,464 - MTG_CK_Sync - INFO - Processing batch: offset 49000...
+2026-06-01T16:01:18.3014101Z 2026-06-01 16:01:18,301 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=49000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:01:20.8606497Z 2026-06-01 16:01:20,860 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T16:01:20.8704143Z 2026-06-01 16:01:20,870 - MTG_CK_Sync - INFO - Processing batch: offset 50000...
+2026-06-01T16:01:21.7376918Z 2026-06-01 16:01:21,737 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=50000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:01:27.7532596Z 2026-06-01 16:01:27,752 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T16:01:27.7798596Z 2026-06-01 16:01:27,779 - MTG_CK_Sync - INFO - Processing batch: offset 51000...
+2026-06-01T16:01:28.5689941Z 2026-06-01 16:01:28,568 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=51000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:01:36.8219052Z 2026-06-01 16:01:36,821 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T16:01:36.8222138Z 2026-06-01 16:01:36,822 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T16:01:36.8223015Z 2026-06-01 16:01:36,822 - MTG_CK_Sync - INFO - Processing batch: offset 52000...
+2026-06-01T16:01:38.2159794Z 2026-06-01 16:01:38,215 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=52000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:01:46.5490920Z 2026-06-01 16:01:46,548 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T16:01:46.5754877Z 2026-06-01 16:01:46,575 - MTG_CK_Sync - INFO - Processing batch: offset 53000...
+2026-06-01T16:01:47.7271622Z 2026-06-01 16:01:47,726 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=53000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:01:55.6188969Z 2026-06-01 16:01:55,618 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T16:01:55.6446307Z 2026-06-01 16:01:55,644 - MTG_CK_Sync - INFO - Processing batch: offset 54000...
+2026-06-01T16:01:56.5550559Z 2026-06-01 16:01:56,554 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=54000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:02:02.9740947Z 2026-06-01 16:02:02,973 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T16:02:03.0008359Z 2026-06-01 16:02:03,000 - MTG_CK_Sync - INFO - Processing batch: offset 55000...
+2026-06-01T16:02:03.9983523Z 2026-06-01 16:02:03,997 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=55000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:02:09.8329748Z 2026-06-01 16:02:09,832 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T16:02:09.8560325Z 2026-06-01 16:02:09,855 - MTG_CK_Sync - INFO - Processing batch: offset 56000...
+2026-06-01T16:02:10.7889155Z 2026-06-01 16:02:10,788 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=56000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:02:16.9380868Z 2026-06-01 16:02:16,937 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T16:02:16.9601148Z 2026-06-01 16:02:16,959 - MTG_CK_Sync - INFO - Processing batch: offset 57000...
+2026-06-01T16:02:18.3173774Z 2026-06-01 16:02:18,317 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=57000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:02:26.6904468Z 2026-06-01 16:02:26,690 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T16:02:26.7172758Z 2026-06-01 16:02:26,716 - MTG_CK_Sync - INFO - Processing batch: offset 58000...
+2026-06-01T16:02:27.7115331Z 2026-06-01 16:02:27,711 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=58000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:02:36.0542945Z 2026-06-01 16:02:36,053 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T16:02:36.0545635Z 2026-06-01 16:02:36,054 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T16:02:36.0546931Z 2026-06-01 16:02:36,054 - MTG_CK_Sync - INFO - Processing batch: offset 59000...
+2026-06-01T16:02:37.5454004Z 2026-06-01 16:02:37,544 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=59000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:02:45.9362886Z 2026-06-01 16:02:45,935 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T16:02:45.9365663Z 2026-06-01 16:02:45,936 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T16:02:45.9366780Z 2026-06-01 16:02:45,936 - MTG_CK_Sync - INFO - Processing batch: offset 60000...
+2026-06-01T16:02:47.4993127Z 2026-06-01 16:02:47,498 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=60000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:02:55.7751069Z 2026-06-01 16:02:55,774 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T16:02:55.7753623Z 2026-06-01 16:02:55,775 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T16:02:55.7754523Z 2026-06-01 16:02:55,775 - MTG_CK_Sync - INFO - Processing batch: offset 61000...
+2026-06-01T16:02:56.6629806Z 2026-06-01 16:02:56,662 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=61000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:03:01.8465474Z 2026-06-01 16:03:01,846 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T16:03:01.8636580Z 2026-06-01 16:03:01,863 - MTG_CK_Sync - INFO - Processing batch: offset 62000...
+2026-06-01T16:03:02.8318725Z 2026-06-01 16:03:02,831 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=62000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:03:09.0715910Z 2026-06-01 16:03:09,071 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T16:03:09.0982301Z 2026-06-01 16:03:09,097 - MTG_CK_Sync - INFO - Processing batch: offset 63000...
+2026-06-01T16:03:10.3550427Z 2026-06-01 16:03:10,354 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=63000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:03:16.9592712Z 2026-06-01 16:03:16,958 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T16:03:16.9857001Z 2026-06-01 16:03:16,985 - MTG_CK_Sync - INFO - Processing batch: offset 64000...
+2026-06-01T16:03:18.0313611Z 2026-06-01 16:03:18,031 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=64000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:03:25.5364967Z 2026-06-01 16:03:25,536 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T16:03:25.5585099Z 2026-06-01 16:03:25,558 - MTG_CK_Sync - INFO - Processing batch: offset 65000...
+2026-06-01T16:03:26.7841750Z 2026-06-01 16:03:26,783 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=65000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:03:35.1115788Z 2026-06-01 16:03:35,111 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T16:03:35.1118335Z 2026-06-01 16:03:35,111 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T16:03:35.1119631Z 2026-06-01 16:03:35,111 - MTG_CK_Sync - INFO - Processing batch: offset 66000...
+2026-06-01T16:03:36.9481660Z 2026-06-01 16:03:36,947 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=66000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:03:45.2461873Z 2026-06-01 16:03:45,245 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T16:03:45.2464152Z 2026-06-01 16:03:45,246 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T16:03:45.2465042Z 2026-06-01 16:03:45,246 - MTG_CK_Sync - INFO - Processing batch: offset 67000...
+2026-06-01T16:03:46.4192923Z 2026-06-01 16:03:46,418 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=67000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:03:54.7270430Z 2026-06-01 16:03:54,726 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T16:03:54.7272538Z 2026-06-01 16:03:54,727 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T16:03:54.7273401Z 2026-06-01 16:03:54,727 - MTG_CK_Sync - INFO - Processing batch: offset 68000...
+2026-06-01T16:03:56.1892620Z 2026-06-01 16:03:56,188 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=68000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:04:04.4573097Z 2026-06-01 16:04:04,456 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T16:04:04.4575409Z 2026-06-01 16:04:04,457 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T16:04:04.4576713Z 2026-06-01 16:04:04,457 - MTG_CK_Sync - INFO - Processing batch: offset 69000...
+2026-06-01T16:04:05.9752955Z 2026-06-01 16:04:05,974 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=69000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:04:14.2966529Z 2026-06-01 16:04:14,296 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T16:04:14.2969443Z 2026-06-01 16:04:14,296 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T16:04:14.2972975Z 2026-06-01 16:04:14,296 - MTG_CK_Sync - INFO - Processing batch: offset 70000...
+2026-06-01T16:04:16.5445203Z 2026-06-01 16:04:16,544 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=70000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:04:25.0051653Z 2026-06-01 16:04:25,004 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T16:04:25.0054037Z 2026-06-01 16:04:25,005 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T16:04:25.0054922Z 2026-06-01 16:04:25,005 - MTG_CK_Sync - INFO - Processing batch: offset 71000...
+2026-06-01T16:04:26.4699394Z 2026-06-01 16:04:26,469 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=71000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:04:34.7699480Z 2026-06-01 16:04:34,769 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T16:04:34.7702164Z 2026-06-01 16:04:34,770 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T16:04:34.7703475Z 2026-06-01 16:04:34,770 - MTG_CK_Sync - INFO - Processing batch: offset 72000...
+2026-06-01T16:04:36.1869861Z 2026-06-01 16:04:36,186 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=72000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:04:44.4013689Z 2026-06-01 16:04:44,400 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T16:04:44.4015637Z 2026-06-01 16:04:44,401 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T16:04:44.4016537Z 2026-06-01 16:04:44,401 - MTG_CK_Sync - INFO - Processing batch: offset 73000...
+2026-06-01T16:04:45.7613961Z 2026-06-01 16:04:45,761 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=73000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:04:53.9892223Z 2026-06-01 16:04:53,988 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T16:04:53.9894349Z 2026-06-01 16:04:53,989 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T16:04:53.9895447Z 2026-06-01 16:04:53,989 - MTG_CK_Sync - INFO - Processing batch: offset 74000...
+2026-06-01T16:04:55.1368681Z 2026-06-01 16:04:55,136 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=74000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:05:03.3488856Z 2026-06-01 16:05:03,348 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T16:05:03.3491327Z 2026-06-01 16:05:03,348 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T16:05:03.3492414Z 2026-06-01 16:05:03,349 - MTG_CK_Sync - INFO - Processing batch: offset 75000...
+2026-06-01T16:05:04.5114530Z 2026-06-01 16:05:04,511 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=75000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:05:12.7669620Z 2026-06-01 16:05:12,766 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T16:05:12.7672575Z 2026-06-01 16:05:12,767 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T16:05:12.7673917Z 2026-06-01 16:05:12,767 - MTG_CK_Sync - INFO - Processing batch: offset 76000...
+2026-06-01T16:05:14.0623615Z 2026-06-01 16:05:14,061 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=76000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:05:22.0219937Z 2026-06-01 16:05:22,021 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T16:05:22.0411743Z 2026-06-01 16:05:22,040 - MTG_CK_Sync - INFO - Processing batch: offset 77000...
+2026-06-01T16:05:23.1776506Z 2026-06-01 16:05:23,177 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=77000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:05:29.1072272Z 2026-06-01 16:05:29,106 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T16:05:29.1228373Z 2026-06-01 16:05:29,122 - MTG_CK_Sync - INFO - Processing batch: offset 78000...
+2026-06-01T16:05:30.3270003Z 2026-06-01 16:05:30,326 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=78000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:05:38.6292436Z 2026-06-01 16:05:38,628 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T16:05:38.6294613Z 2026-06-01 16:05:38,629 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T16:05:38.6295701Z 2026-06-01 16:05:38,629 - MTG_CK_Sync - INFO - Processing batch: offset 79000...
+2026-06-01T16:05:40.2020876Z 2026-06-01 16:05:40,201 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=79000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:05:48.4588760Z 2026-06-01 16:05:48,458 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T16:05:48.4591652Z 2026-06-01 16:05:48,458 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T16:05:48.4592991Z 2026-06-01 16:05:48,459 - MTG_CK_Sync - INFO - Processing batch: offset 80000...
+2026-06-01T16:05:49.8511260Z 2026-06-01 16:05:49,850 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=80000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:05:58.2536496Z 2026-06-01 16:05:58,253 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T16:05:58.2538613Z 2026-06-01 16:05:58,253 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T16:05:58.2539930Z 2026-06-01 16:05:58,253 - MTG_CK_Sync - INFO - Processing batch: offset 81000...
+2026-06-01T16:05:59.8953508Z 2026-06-01 16:05:59,894 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=81000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:06:08.3141494Z 2026-06-01 16:06:08,313 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T16:06:08.3143781Z 2026-06-01 16:06:08,314 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T16:06:08.3145093Z 2026-06-01 16:06:08,314 - MTG_CK_Sync - INFO - Processing batch: offset 82000...
+2026-06-01T16:06:09.5748145Z 2026-06-01 16:06:09,574 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=82000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:06:17.7860440Z 2026-06-01 16:06:17,785 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T16:06:17.7863616Z 2026-06-01 16:06:17,786 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T16:06:17.7865265Z 2026-06-01 16:06:17,786 - MTG_CK_Sync - INFO - Processing batch: offset 83000...
+2026-06-01T16:06:19.3354846Z 2026-06-01 16:06:19,335 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=83000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:06:24.2276168Z 2026-06-01 16:06:24,227 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T16:06:24.2368716Z 2026-06-01 16:06:24,236 - MTG_CK_Sync - INFO - Processing batch: offset 84000...
+2026-06-01T16:06:25.8458173Z 2026-06-01 16:06:25,845 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=84000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:06:33.0236082Z 2026-06-01 16:06:33,023 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T16:06:33.0389726Z 2026-06-01 16:06:33,038 - MTG_CK_Sync - INFO - Processing batch: offset 85000...
+2026-06-01T16:06:34.4092266Z 2026-06-01 16:06:34,407 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=85000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:06:42.6730630Z 2026-06-01 16:06:42,672 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T16:06:42.6733271Z 2026-06-01 16:06:42,673 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T16:06:42.6735690Z 2026-06-01 16:06:42,673 - MTG_CK_Sync - INFO - Processing batch: offset 86000...
+2026-06-01T16:06:44.0358007Z 2026-06-01 16:06:44,035 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=86000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:06:52.3438253Z 2026-06-01 16:06:52,343 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T16:06:52.3440498Z 2026-06-01 16:06:52,343 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T16:06:52.3441839Z 2026-06-01 16:06:52,343 - MTG_CK_Sync - INFO - Processing batch: offset 87000...
+2026-06-01T16:06:53.8626526Z 2026-06-01 16:06:53,862 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=87000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:07:00.5154087Z 2026-06-01 16:07:00,514 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T16:07:00.5423314Z 2026-06-01 16:07:00,541 - MTG_CK_Sync - INFO - Processing batch: offset 88000...
+2026-06-01T16:07:01.9658351Z 2026-06-01 16:07:01,965 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=88000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:07:10.3083343Z 2026-06-01 16:07:10,307 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T16:07:10.3086389Z 2026-06-01 16:07:10,308 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T16:07:10.3088059Z 2026-06-01 16:07:10,308 - MTG_CK_Sync - INFO - Processing batch: offset 89000...
+2026-06-01T16:07:11.8415710Z 2026-06-01 16:07:11,841 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=89000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:07:19.8126271Z 2026-06-01 16:07:19,812 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T16:07:19.8370548Z 2026-06-01 16:07:19,836 - MTG_CK_Sync - INFO - Processing batch: offset 90000...
+2026-06-01T16:07:21.2616508Z 2026-06-01 16:07:21,261 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=90000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:07:28.5229034Z 2026-06-01 16:07:28,522 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T16:07:28.5502752Z 2026-06-01 16:07:28,550 - MTG_CK_Sync - INFO - Processing batch: offset 91000...
+2026-06-01T16:07:30.0147273Z 2026-06-01 16:07:30,014 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=91000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:07:38.3885522Z 2026-06-01 16:07:38,388 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T16:07:38.3888518Z 2026-06-01 16:07:38,388 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T16:07:38.3889430Z 2026-06-01 16:07:38,388 - MTG_CK_Sync - INFO - Processing batch: offset 92000...
+2026-06-01T16:07:40.0949284Z 2026-06-01 16:07:40,094 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=92000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:07:48.4023343Z 2026-06-01 16:07:48,401 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 500 Internal Server Error"
+2026-06-01T16:07:48.4025598Z 2026-06-01 16:07:48,402 - MTG_CK_Sync - ERROR - Failed to insert price history batch: {'message': 'canceling statement due to statement timeout', 'code': '57014', 'hint': None, 'details': None}
+2026-06-01T16:07:48.4026907Z 2026-06-01 16:07:48,402 - MTG_CK_Sync - INFO - Processing batch: offset 93000...
+2026-06-01T16:07:49.8206779Z 2026-06-01 16:07:49,820 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=93000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:07:55.3054380Z 2026-06-01 16:07:55,305 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T16:07:55.3234511Z 2026-06-01 16:07:55,323 - MTG_CK_Sync - INFO - Processing batch: offset 94000...
+2026-06-01T16:07:56.9236964Z 2026-06-01 16:07:56,923 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=94000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:08:04.4683569Z 2026-06-01 16:08:04,467 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T16:08:04.4871627Z 2026-06-01 16:08:04,486 - MTG_CK_Sync - INFO - Processing batch: offset 95000...
+2026-06-01T16:08:06.1454207Z 2026-06-01 16:08:06,145 - httpx - INFO - HTTP Request: GET ***/rest/v1/card_printings?select=printing_id%2Cscryfall_id&scryfall_id=not.is.null&offset=95000&limit=1000 "HTTP/2 200 OK"
+2026-06-01T16:08:06.6311819Z 2026-06-01 16:08:06,630 - httpx - INFO - HTTP Request: POST ***/rest/v1/price_history?columns=%22price_type%22%2C%22timestamp%22%2C%22printing_id%22%2C%22source_id%22%2C%22is_foil%22%2C%22condition_id%22%2C%22price_usd%22 "HTTP/2 201 Created"
+2026-06-01T16:08:06.6437344Z 2026-06-01 16:08:06,643 - MTG_CK_Sync - INFO - --- Updating Denormalized Pricing Columns ---
+2026-06-01T16:08:06.9279649Z 2026-06-01 16:08:06,927 - httpx - INFO - HTTP Request: GET ***/rest/v1/sources?select=source_id&source_code=eq.CARDKINGDOM "HTTP/2 200 OK"
+2026-06-01T16:08:07.1769208Z 2026-06-01 16:08:07,176 - httpx - INFO - HTTP Request: GET ***/rest/v1/conditions?select=condition_id&condition_code=eq.NM "HTTP/2 200 OK"
+2026-06-01T16:08:07.1772456Z 2026-06-01 16:08:07,177 - MTG_CK_Sync - ERROR - Failed to update denormalized columns (SQL Error): DATABASE_URL environment variable is not set.
+2026-06-01T16:08:07.1773476Z 2026-06-01 16:08:07,177 - MTG_CK_Sync - WARNING - Attempt 1 for update_denormalized_prices failed: DATABASE_URL environment variable is not set.. Retrying in 1s...
+2026-06-01T16:08:08.1778131Z 2026-06-01 16:08:08,177 - MTG_CK_Sync - INFO - --- Updating Denormalized Pricing Columns ---
+2026-06-01T16:08:08.3184507Z 2026-06-01 16:08:08,318 - httpx - INFO - HTTP Request: GET ***/rest/v1/sources?select=source_id&source_code=eq.CARDKINGDOM "HTTP/2 200 OK"
+2026-06-01T16:08:08.5031377Z 2026-06-01 16:08:08,502 - httpx - INFO - HTTP Request: GET ***/rest/v1/conditions?select=condition_id&condition_code=eq.NM "HTTP/2 200 OK"
+2026-06-01T16:08:08.5034566Z 2026-06-01 16:08:08,503 - MTG_CK_Sync - ERROR - Failed to update denormalized columns (SQL Error): DATABASE_URL environment variable is not set.
+2026-06-01T16:08:08.5035638Z 2026-06-01 16:08:08,503 - MTG_CK_Sync - WARNING - Attempt 2 for update_denormalized_prices failed: DATABASE_URL environment variable is not set.. Retrying in 1s...
+2026-06-01T16:08:09.5039521Z 2026-06-01 16:08:09,503 - MTG_CK_Sync - INFO - --- Updating Denormalized Pricing Columns ---
+2026-06-01T16:08:09.7027476Z 2026-06-01 16:08:09,702 - httpx - INFO - HTTP Request: GET ***/rest/v1/sources?select=source_id&source_code=eq.CARDKINGDOM "HTTP/2 200 OK"
+2026-06-01T16:08:09.8828050Z 2026-06-01 16:08:09,882 - httpx - INFO - HTTP Request: GET ***/rest/v1/conditions?select=condition_id&condition_code=eq.NM "HTTP/2 200 OK"
+2026-06-01T16:08:09.8831387Z 2026-06-01 16:08:09,882 - MTG_CK_Sync - ERROR - Failed to update denormalized columns (SQL Error): DATABASE_URL environment variable is not set.
+2026-06-01T16:08:09.8833031Z 2026-06-01 16:08:09,883 - MTG_CK_Sync - ERROR - Function update_denormalized_prices failed after 3 attempts: DATABASE_URL environment variable is not set.
+2026-06-01T16:08:09.8843344Z 2026-06-01 16:08:09,883 - MTG_CK_Sync - CRITICAL - Critical error during sync: DATABASE_URL environment variable is not set.
+2026-06-01T16:08:09.8844149Z Traceback (most recent call last):
+2026-06-01T16:08:09.8853253Z   File "/home/runner/work/TCG/TCG/scripts/sync/mtg/ck_sync.py", line 241, in run_ck_sync
+2026-06-01T16:08:09.8854075Z     update_denormalized_prices(list(all_changed_printing_ids))
+2026-06-01T16:08:09.8854847Z   File "/home/runner/work/TCG/TCG/scripts/sync/mtg/ck_sync.py", line 25, in wrapper
+2026-06-01T16:08:09.8855477Z     return func(*args, **kwargs)
+2026-06-01T16:08:09.8855846Z            ^^^^^^^^^^^^^^^^^^^^^
+2026-06-01T16:08:09.8856556Z   File "/home/runner/work/TCG/TCG/scripts/sync/mtg/ck_sync.py", line 59, in update_denormalized_prices
+2026-06-01T16:08:09.8857239Z     conn = get_db_connection()
+2026-06-01T16:08:09.8857786Z            ^^^^^^^^^^^^^^^^^^^
+2026-06-01T16:08:09.8858761Z   File "/home/runner/work/TCG/TCG/scripts/sync/common/db.py", line 17, in get_db_connection
+2026-06-01T16:08:09.8859595Z     raise ValueError("DATABASE_URL environment variable is not set.")
+2026-06-01T16:08:09.8860200Z ValueError: DATABASE_URL environment variable is not set.
+2026-06-01T16:08:09.9392284Z 2026-06-01 16:08:09,938 - OmniSync - INFO - MTG Sync Completed.
+2026-06-01T16:08:09.9392909Z 2026-06-01 16:08:09,939 - OmniSync - INFO - 
+2026-06-01T16:08:09.9393391Z --- STEP 2: Pokemon TCG (Market Prices) ---
+2026-06-01T16:08:09.9394460Z 2026-06-01 16:08:09,939 - POKEMON_Sync - INFO - === STARTING POKÉMON TCG SYNC (Direct SQL) ===
+2026-06-01T16:08:09.9395383Z 2026-06-01 16:08:09,939 - POKEMON_Sync - INFO - Fetching all sets from Pokémon TCG API...
+2026-06-01T16:08:12.7478468Z 2026-06-01 16:08:12,747 - POKEMON_Sync - INFO - Syncing 173 sets...
+2026-06-01T16:08:12.7479531Z 2026-06-01 16:08:12,747 - POKEMON_Sync - ERROR - Critical error during sync: DATABASE_URL environment variable is not set.
+2026-06-01T16:08:12.7480975Z 2026-06-01 16:08:12,747 - POKEMON_Sync - INFO - === POKÉMON TCG SYNC COMPLETE ===
+2026-06-01T16:08:12.7481839Z 2026-06-01 16:08:12,747 - OmniSync - INFO - ✅ Pokemon Metadata Sync Completed.
+2026-06-01T16:08:12.7482619Z 2026-06-01 16:08:12,747 - OmniSync - INFO - ==========================================
+2026-06-01T16:08:12.7483310Z 2026-06-01 16:08:12,747 - OmniSync - INFO - OMNI-TCG MASTER SYNC FINISHED
+2026-06-01T16:08:12.7483927Z 2026-06-01 16:08:12,747 - OmniSync - INFO - DURATION: 0:13:20.245631
+2026-06-01T16:08:12.7488508Z 2026-06-01 16:08:12,747 - OmniSync - INFO - ==========================================
+2026-06-01T16:08:12.8869108Z ##[group]Run actions/upload-artifact@v4
+2026-06-01T16:08:12.8869652Z with:
+2026-06-01T16:08:12.8869892Z   name: sync-logs
+2026-06-01T16:08:12.8870152Z   path: logs/sync/*.log
+2026-06-01T16:08:12.8870418Z   retention-days: 7
+2026-06-01T16:08:12.8870683Z   if-no-files-found: warn
+2026-06-01T16:08:12.8870963Z   compression-level: 6
+2026-06-01T16:08:12.8871243Z   overwrite: false
+2026-06-01T16:08:12.8871504Z   include-hidden-files: false
+2026-06-01T16:08:12.8871792Z env:
+2026-06-01T16:08:12.8872053Z   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+2026-06-01T16:08:12.8872443Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.13/x64
+2026-06-01T16:08:12.8872923Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.13/x64/lib/pkgconfig
+2026-06-01T16:08:12.8873393Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+2026-06-01T16:08:12.8873827Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+2026-06-01T16:08:12.8874273Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+2026-06-01T16:08:12.8874695Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.13/x64/lib
+2026-06-01T16:08:12.8875070Z ##[endgroup]
+2026-06-01T16:08:13.0574814Z (node:2527) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-06-01T16:08:13.0576126Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-06-01T16:08:13.0638153Z With the provided path, there will be 3 files uploaded
+2026-06-01T16:08:13.0643228Z Artifact name is valid!
+2026-06-01T16:08:13.0644044Z Root directory input is valid!
+2026-06-01T16:08:13.3033143Z Beginning upload of artifact content to blob storage
+2026-06-01T16:08:13.3257881Z (node:2527) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-06-01T16:08:13.3573326Z Uploaded bytes 4930
+2026-06-01T16:08:13.3710423Z Finished uploading artifact content to blob storage!
+2026-06-01T16:08:13.3711387Z SHA256 digest of uploaded artifact zip is c9ccd049801a796fa0f90a1e442392095fe22cca2c5864c8ef434b9c8ddad274
+2026-06-01T16:08:13.3713592Z Finalizing artifact upload
+2026-06-01T16:08:13.5261309Z Artifact sync-logs.zip successfully finalized. Artifact ID 7336626575
+2026-06-01T16:08:13.5262569Z Artifact sync-logs has been successfully uploaded! Final size is 4930 bytes. Artifact ID is 7336626575
+2026-06-01T16:08:13.5268847Z Artifact download URL: https://github.com/carloscedeno/TCG/actions/runs/26766027945/artifacts/7336626575
+2026-06-01T16:08:13.5440403Z Post job cleanup.
+2026-06-01T16:08:13.6684704Z Cache hit occurred on the primary key setup-python-Linux-x64-24.04-Ubuntu-python-3.12.13-pip-538aa58eb5c006947e9ec63234907178fb44ce4a890e5e5ec36a8b13b31de157, not saving cache.
+2026-06-01T16:08:13.6686923Z (node:2540) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-06-01T16:08:13.6688481Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-06-01T16:08:13.6849002Z Post job cleanup.
+2026-06-01T16:08:13.7743921Z [command]/usr/bin/git version
+2026-06-01T16:08:13.7786178Z git version 2.54.0
+2026-06-01T16:08:13.7854873Z Temporarily overriding HOME='/home/runner/work/_temp/49c87152-c393-446b-bef6-e49da439f8ea' before making global git config changes
+2026-06-01T16:08:13.7856205Z Adding repository directory to the temporary git global config as a safe directory
+2026-06-01T16:08:13.7861423Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/TCG/TCG
+2026-06-01T16:08:13.7909309Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-06-01T16:08:13.7979377Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-06-01T16:08:13.8216452Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-06-01T16:08:13.8246508Z http.https://github.com/.extraheader
+2026-06-01T16:08:13.8258508Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-06-01T16:08:13.8294896Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-06-01T16:08:13.8555595Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-06-01T16:08:13.8590643Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-06-01T16:08:13.8976716Z Cleaning up orphan processes
+2026-06-01T16:08:13.9288312Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

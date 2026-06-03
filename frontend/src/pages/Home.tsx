@@ -423,11 +423,11 @@ const Home: React.FC = () => {
     setPage(0);
   };
 
-  const handleCardClick = (id: string, isArchive: boolean = false, imageUrl?: string) => {
+  const handleCardClick = (id: string, isArchive: boolean = false, imageUrl?: string, fullCard?: any) => {
     if (isArchive) {
-      navigate(`/product/${id}?archive=true`, { state: { initialImage: imageUrl } });
+      navigate(`/product/${id}?archive=true`, { state: { initialImage: imageUrl, initialCard: fullCard } });
     } else {
-      navigate(`/card/${id}`, { state: { initialImage: imageUrl } });
+      navigate(`/card/${id}`, { state: { initialImage: imageUrl, initialCard: fullCard } });
     }
   };
 
@@ -584,10 +584,10 @@ const Home: React.FC = () => {
                 // DEALS DASHBOARD (Only for marketplace home when deals exist)
                 <div className="flex flex-col gap-6 w-full mb-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
                   {inventoryPresence.hasCatalog && discountedAccessories.length > 0 && (
-                    <DealsCarousel title="Coleccionables en Oferta" cards={discountedAccessories} isArchive={true} onCardClick={(id) => handleCardClick(id, true)} />
+                    <DealsCarousel title="Coleccionables en Oferta" cards={discountedAccessories} isArchive={true} onCardClick={(id, card) => handleCardClick(id, true, card?.image_url, card)} />
                   )}
                   {inventoryPresence.hasSingles && discountedSingles.length > 0 && (
-                    <DealsCarousel title="Hechizos en Descuento" cards={discountedSingles} onCardClick={(id) => handleCardClick(id, false)} />
+                    <DealsCarousel title="Hechizos en Descuento" cards={discountedSingles} onCardClick={(id, card) => handleCardClick(id, false, card?.image_url, card)} />
                   )}
                 </div>
               )}
@@ -644,7 +644,7 @@ const Home: React.FC = () => {
                     </div>
                   ) : (
                     <>
-                      <CardGrid cards={cards} onCardClick={(id, img) => handleCardClick(id, false, img)} viewMode={viewMode} isArchive={false} showCartButton={true} />
+                      <CardGrid cards={cards} onCardClick={(id, img, card) => handleCardClick(id, false, img, card)} viewMode={viewMode} isArchive={false} showCartButton={true} />
                       {cards.length < totalCount && (
                         <div className="flex justify-center pb-20">
                           <button

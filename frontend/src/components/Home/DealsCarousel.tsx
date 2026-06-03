@@ -6,7 +6,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 interface DealsCarouselProps {
   title: string;
   cards: (CardProps & { card_id: string })[];
-  onCardClick?: (id: string) => void;
+  onCardClick?: (id: string, card?: any) => void;
   isArchive?: boolean;
 }
 
@@ -70,7 +70,7 @@ export const DealsCarousel: React.FC<DealsCarouselProps> = ({ title, cards, onCa
                 viewMode="grid"
                 isArchive={isArchive}
                 showCartButton={true}
-                onClick={() => onCardClick && onCardClick(card.card_id)}
+                onClick={() => onCardClick && onCardClick(card.card_id, card)}
               />
             </div>
           ))}
