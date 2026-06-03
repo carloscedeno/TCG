@@ -579,7 +579,7 @@ const Home: React.FC = () => {
             </aside>
 
             {/* Cards Grid / Deals Dashboard */}
-            <div className="flex-1">
+            <div className="flex-1 min-w-0">
               {isDashboardView && activeTab === 'marketplace' && (discountedSingles.length > 0 || discountedAccessories.length > 0) && (
                 // DEALS DASHBOARD (Only for marketplace home when deals exist)
                 <div className="flex flex-col gap-6 w-full mb-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
