@@ -20,6 +20,9 @@ export const CardImage: React.FC<CardImageProps> = ({ src, alt, className = '', 
   
   const optimizedSrc = getOptimizedScryfallUrl(src, size);
 
+  // Auto-generate a small placeholder for progressive loading if requesting a larger image
+  const autoPlaceholderSrc = placeholderSrc || (size !== 'small' ? getOptimizedScryfallUrl(src, 'small') : undefined);
+
   // Reiniciar el estado si cambia la imagen (ej: flip de DFC)
   useEffect(() => {
     setIsLoaded(false);
@@ -45,8 +48,8 @@ export const CardImage: React.FC<CardImageProps> = ({ src, alt, className = '', 
     <div className={`relative w-full h-full bg-transparent overflow-hidden ${className}`}>
       {/* Skeleton Shimmer Overlay */}
       {!isLoaded && (
-        placeholderSrc ? (
-            <img src={placeholderSrc} alt={alt} className={`absolute inset-0 w-full h-full object-${objectFit} opacity-50 blur-sm z-0`} />
+        autoPlaceholderSrc ? (
+            <img src={autoPlaceholderSrc} alt={alt} className={`absolute inset-0 w-full h-full object-${objectFit} opacity-50 blur-sm z-0`} />
         ) : (
             <div className="absolute inset-0 z-0 bg-slate-800/50 animate-pulse flex items-center justify-center">
               <Shield size={fallbackIconSize} className="opacity-10" />
