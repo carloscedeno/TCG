@@ -583,11 +583,11 @@ const Home: React.FC = () => {
               {isDashboardView && activeTab === 'marketplace' && (discountedSingles.length > 0 || discountedAccessories.length > 0) && (
                 // DEALS DASHBOARD (Only for marketplace home when deals exist)
                 <div className="flex flex-col gap-6 w-full mb-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                  {inventoryPresence.hasCatalog && discountedAccessories.length > 0 && (
+                    <DealsCarousel title="Coleccionables en Oferta" cards={discountedAccessories} isArchive={true} onCardClick={(id) => handleCardClick(id, true)} />
+                  )}
                   {inventoryPresence.hasSingles && discountedSingles.length > 0 && (
                     <DealsCarousel title="Hechizos en Descuento" cards={discountedSingles} onCardClick={(id) => handleCardClick(id, false)} />
-                  )}
-                  {inventoryPresence.hasCatalog && discountedAccessories.length > 0 && (
-                    <DealsCarousel title="Artilugios en Descuento" cards={discountedAccessories} onCardClick={(id) => handleCardClick(id, false)} isArchive={false} />
                   )}
                 </div>
               )}

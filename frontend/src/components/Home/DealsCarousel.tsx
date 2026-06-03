@@ -15,13 +15,15 @@ export const DealsCarousel: React.FC<DealsCarouselProps> = ({ title, cards, onCa
 
   const scrollLeft = () => {
     if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: -300, behavior: 'smooth' });
+      const scrollAmount = scrollContainerRef.current.clientWidth * 0.9;
+      scrollContainerRef.current.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
     }
   };
 
   const scrollRight = () => {
     if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: 300, behavior: 'smooth' });
+      const scrollAmount = scrollContainerRef.current.clientWidth * 0.9;
+      scrollContainerRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
   };
 
@@ -62,7 +64,7 @@ export const DealsCarousel: React.FC<DealsCarouselProps> = ({ title, cards, onCa
           className="flex overflow-x-auto gap-6 pb-8 no-scrollbar scroll-smooth snap-x"
         >
           {cards.map((card) => (
-            <div key={card.card_id} className="min-w-[200px] w-[200px] md:min-w-[240px] md:w-[240px] flex-shrink-0 snap-start">
+            <div key={card.card_id} className="min-w-[160px] w-[160px] md:min-w-[180px] md:w-[180px] flex-shrink-0 snap-start">
               <Card
                 {...card}
                 viewMode="grid"
