@@ -1654,35 +1654,41 @@ export const fetchDiscountedSingles = async (gameCode?: string, limit = 10): Pro
   try {
     let query = supabase
       .from('products')
-      .select('*, discount_percentage, discount_end_date')
+      .select('*, card_printings!inner(printing_id, image_url, is_foil, finish, cards(card_name, rarity), sets(set_name))')
       .gt('stock', 0)
       .gt('discount_percentage', 0)
       .order('discount_percentage', { ascending: false })
       .limit(limit);
       
     if (gameCode) {
+      // Need to join through card_printings -> cards -> games, or if game is stored directly in products
+      // We assume game is in products table as per previous code
       const code = gameCode;
       query = query.eq('game', code);
     }
     
     const { data, error } = await query;
     if (error) throw error;
+    
     return (data || [])
       .filter((row: any) => isDiscountActive(row.discount_end_date))
       .map((row: any) => {
         const originalPrice = Number(row.price || 0);
         const discountPct = Number(row.discount_percentage || 0);
+        const printing = row.card_printings;
+        
         return {
-          card_id: row.id,
-          name: row.name,
-          set: row.category,
+          card_id: printing?.printing_id || row.printing_id,
+          name: printing?.cards?.card_name || 'Unknown',
+          set: printing?.sets?.set_name || 'Unknown Set',
           price: discountPct > 0 ? originalPrice * (1 - discountPct / 100) : originalPrice,
           original_price: originalPrice,
           discount_percentage: discountPct,
-          image_url: row.image_url,
-          rarity: 'Common',
+          image_url: printing?.image_url,
+          rarity: printing?.cards?.rarity || 'Common',
           total_stock: row.stock || 0,
-          is_accessory: true,
+          is_accessory: false,
+          is_foil: !!printing?.is_foil || printing?.finish === 'foil',
           updated_at: row.updated_at
         };
       });
