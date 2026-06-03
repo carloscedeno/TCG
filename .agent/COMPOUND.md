@@ -359,3 +359,12 @@ Siempre proveer un caso de evaluaciÃ³n estricto en sentencias SQL cuando el sist
 - lessons_learned.md -> Lección #178 (Funciones sobrecargadas y Cloudflare)
 - LEYES_DEL_SISTEMA.md -> Leyes 34 y 35 (Respetar orden de firmas SQL y Sincronización manual en Cloudflare)
 **Regla derivada:** LEY 34 y LEY 35 agregadas.
+
+
+## 2026-06-02 — Bug en Filtro Cruzado de Categorías
+
+**Qué pasó:** El filtro cruzado de categorías ('Otros') devolvía 'SIN RESULTADOS' a pesar de haber inventario activo.
+**Lo que cambió:**
+- `lessons_learned.md` -> Lección #179: Uso correcto de category vs category_code.
+- `LEYES_DEL_SISTEMA.md` -> Agregada la Ley 36.
+**Regla derivada:** Diferenciación estricta entre búsqueda ILIKE (category) y MATCH exacto (category_code).

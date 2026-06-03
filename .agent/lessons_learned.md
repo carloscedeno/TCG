@@ -2320,3 +2320,10 @@ useEffect(() => {
 - **Causa Raíz:** Al crear una migración SQL, se modificó accidentalmente el orden de los parámetros booleanos. PostgreSQL creó una función sobrecargada (overloaded) en vez de reemplazar la existente. Además, Cloudflare Pages no ejecuta estas migraciones automáticamente, creando discrepancia entre el repositorio y la DB remota.
 - **Solución:** Ejecutar explícitamente DROP FUNCTION de la firma defectuosa y CREATE OR REPLACE con los parámetros en orden estricto, aplicando el SQL manualmente a las BDs de DEV y PROD.
 - **Regla Derivada:** LEY 34 (Respetar orden de argumentos en CREATE OR REPLACE FUNCTION) y LEY 35 (Sincronización manual en Cloudflare).
+
+
+### 179. Bug en Filtro Cruzado de Categorías (category vs category_code) — 2026-06-02
+- **Problema:** Al seleccionar una categoría desde la barra lateral (ej. 'Otros', 'Accesorios'), la API devolvía 'SIN RESULTADOS'.
+- **Causa Raíz:** El frontend asignaba erróneamente la etiqueta de UI de texto libre ('Otros') al parámetro `category_code` en lugar de a `category`. Como `category_code` espera valores de tipo ENUM ('OTHER'), la búsqueda fallaba de manera silenciosa.
+- **Solución:** Reasignar el valor pasado por URL a la propiedad `category` dentro del método `fetchAccessories` en `Home.tsx`.
+- **Regla Derivada:** Ley 36: DIFERENCIACIÓN DE CATEGORY_CODE VS CATEGORY.

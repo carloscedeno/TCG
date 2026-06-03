@@ -211,3 +211,11 @@ La renderizaciÃ³n del Banner Hero (`HeroSection`) debe ser lÃ³gica y tÃ©cnicamen
 
 **Siempre** recordar que Cloudflare Pages **NO** aplica migraciones de base de datos automÃ¡ticamente al hacer push.
 - Si se crean o modifican archivos `.sql` en `supabase/migrations/`, estos cambios deben aplicarse **manualmente** tanto en la base de datos de Desarrollo (`bqfkqn`) como en ProducciÃ³n (`sxuotvog`) usando herramientas MCP (`execute_sql`) o el Dashboard de Supabase para que tengan efecto real en el sistema.
+
+---
+
+### Ley 36: DIFERENCIACIÓN DE CATEGORY_CODE VS CATEGORY
+
+En los endpoints de búsqueda (ej. `fetchAccessories`), **NUNCA** se debe pasar un valor de texto libre o etiqueta de UI (ej. 'Otros', 'Accesorios') al parámetro `category_code`. 
+- `category_code` está reservado estrictamente para **códigos normalizados exactos** (ej. 'OTHER', 'BOOSTER_BOX').
+- Para búsquedas basadas en etiquetas de UI, se debe usar el parámetro `category` heredado, el cual realiza una búsqueda con `ILIKE`.
