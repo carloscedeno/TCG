@@ -1654,7 +1654,7 @@ export const fetchDiscountedSingles = async (gameCode?: string, limit = 10): Pro
   try {
     let query = supabase
       .from('products')
-      .select('*, card_printings!inner(printing_id, image_url, is_foil, finish, cards(card_name, rarity), sets(set_name))')
+      .select('*, card_printings!inner(printing_id, image_url, is_foil, finishes, cards(card_name, rarity), sets(set_name))')
       .gt('stock', 0)
       .gt('discount_percentage', 0)
       .order('discount_percentage', { ascending: false })
@@ -1688,7 +1688,7 @@ export const fetchDiscountedSingles = async (gameCode?: string, limit = 10): Pro
           rarity: printing?.cards?.rarity || 'Common',
           total_stock: row.stock || 0,
           is_accessory: false,
-          is_foil: !!printing?.is_foil || printing?.finish === 'foil',
+          is_foil: !!printing?.is_foil || (printing?.finishes || []).includes('foil'),
           updated_at: row.updated_at
         };
       });
