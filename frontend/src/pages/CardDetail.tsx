@@ -197,7 +197,7 @@ export const CardDetail: React.FC = () => {
             {/* Header */}
             <Header onCartOpen={() => setIsCartOpen(true)} cartCount={cartCount} />
 
-            <main className="relative z-10 w-full max-w-[1600px] mx-auto px-6 pb-6 pt-[80px] lg:px-12 lg:pb-12 lg:pt-[176px] flex-1">
+            <main className="relative z-10 w-full max-w-[1600px] mx-auto p-4 lg:p-8 flex-1 mt-[80px] lg:mt-[156px] flex flex-col justify-center items-center">
                 {loading && !details ? (
                     <div className="flex flex-col items-center justify-center h-[60vh]">
                         {initialImage ? (
@@ -208,7 +208,7 @@ export const CardDetail: React.FC = () => {
                         <p className="text-text-low font-bold tracking-widest uppercase text-xs">Loading Card Data...</p>
                     </div>
                 ) : details ? (
-                    <div data-testid="card-modal" className="glass-panel rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0, 209, 255, 0.15)] flex flex-col lg:flex-row overflow-hidden min-h-[85vh] max-h-[90vh] relative">
+                    <div data-testid="card-modal" className="w-full glass-panel rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0, 209, 255, 0.15)] flex flex-col lg:flex-row overflow-hidden min-h-[85vh] max-h-[90vh] relative">
                         {/* LEFT: IMAGE & VERSIONS LIST */}
                         <div className="w-full lg:w-[340px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden h-full">
                             <div className="flex-1 min-h-[350px] md:min-h-[480px] p-6 sm:p-8 md:p-10 relative bg-gradient-to-b from-white/[0.04] to-transparent overflow-hidden">
