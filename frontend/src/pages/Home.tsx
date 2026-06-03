@@ -423,11 +423,11 @@ const Home: React.FC = () => {
     setPage(0);
   };
 
-  const handleCardClick = (id: string, isArchive: boolean = false) => {
+  const handleCardClick = (id: string, isArchive: boolean = false, imageUrl?: string) => {
     if (isArchive) {
-      navigate(`/product/${id}?archive=true`);
+      navigate(`/product/${id}?archive=true`, { state: { initialImage: imageUrl } });
     } else {
-      navigate(`/card/${id}`);
+      navigate(`/card/${id}`, { state: { initialImage: imageUrl } });
     }
   };
 
@@ -644,7 +644,7 @@ const Home: React.FC = () => {
                     </div>
                   ) : (
                     <>
-                      <CardGrid cards={cards} onCardClick={(id) => handleCardClick(id, false)} viewMode={viewMode} isArchive={false} showCartButton={true} />
+                      <CardGrid cards={cards} onCardClick={(id, img) => handleCardClick(id, false, img)} viewMode={viewMode} isArchive={false} showCartButton={true} />
                       {cards.length < totalCount && (
                         <div className="flex justify-center pb-20">
                           <button

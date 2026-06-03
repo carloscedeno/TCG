@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { useParams, useNavigate, Link, useSearchParams } from 'react-router-dom';
+import { useParams, useNavigate, Link, useSearchParams, useLocation } from 'react-router-dom';
 import {
     X, ShoppingCart, RotateCw, ExternalLink, Loader2,
     ArrowLeft, CheckCircle2, AlertCircle
@@ -20,6 +20,8 @@ export const CardDetail: React.FC = () => {
     const navigate = useNavigate();
     const { user } = useAuth();
     const [searchParams] = useSearchParams();
+    const location = useLocation();
+    const initialImage = location.state?.initialImage as string | undefined;
     const activeFinish = searchParams.get('finish') || 'nonfoil';
 
     const [details, setDetails] = useState<any>(null);
@@ -196,9 +198,13 @@ export const CardDetail: React.FC = () => {
             <Header onCartOpen={() => setIsCartOpen(true)} cartCount={cartCount} />
 
             <main className="relative z-10 w-full max-w-[1600px] mx-auto p-6 lg:p-12 flex-1">
-                {loading ? (
+                {loading && !details ? (
                     <div className="flex flex-col items-center justify-center h-[60vh]">
-                        <Loader2 size={48} className="text-geeko-cyan animate-spin mb-4" />
+                        {initialImage ? (
+                            <img src={initialImage} alt="Loading..." className="w-[300px] rounded-xl object-contain opacity-50 blur-sm animate-pulse mb-4" />
+                        ) : (
+                            <Loader2 size={48} className="text-geeko-cyan animate-spin mb-4" />
+                        )}
                         <p className="text-text-low font-bold tracking-widest uppercase text-xs">Loading Card Data...</p>
                     </div>
                 ) : details ? (
@@ -214,7 +220,7 @@ export const CardDetail: React.FC = () => {
                                     <CardImage
                                         src={currentImage}
                                         alt={details.name}
-                                        size="large"
+                                        size="normal"
                                         objectFit="contain"
                                         className="drop-shadow-[0_45px_100px_rgba(0,0,0,0.95)] z-10 hover:scale-[1.03] transition-all duration-700 !bg-transparent"
                                     />
