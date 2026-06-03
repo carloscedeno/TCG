@@ -10,9 +10,10 @@ interface CardImageProps {
   size?: 'small' | 'normal' | 'large';
   fallbackIconSize?: number;
   objectFit?: 'cover' | 'contain' | 'fill';
+  placeholderSrc?: string;
 }
 
-export const CardImage: React.FC<CardImageProps> = ({ src, alt, className = '', testId = 'product-image', size = 'normal', fallbackIconSize = 40, objectFit = 'cover' }) => {
+export const CardImage: React.FC<CardImageProps> = ({ src, alt, className = '', testId = 'product-image', size = 'normal', fallbackIconSize = 40, objectFit = 'cover', placeholderSrc }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
@@ -44,10 +45,14 @@ export const CardImage: React.FC<CardImageProps> = ({ src, alt, className = '', 
     <div className={`relative w-full h-full bg-transparent overflow-hidden ${className}`}>
       {/* Skeleton Shimmer Overlay */}
       {!isLoaded && (
-        <div className="absolute inset-0 z-0 bg-slate-800/50 animate-pulse flex items-center justify-center">
-          <Shield size={fallbackIconSize} className="opacity-10" />
-          <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
-        </div>
+        placeholderSrc ? (
+            <img src={placeholderSrc} alt={alt} className={`absolute inset-0 w-full h-full object-${objectFit} opacity-50 blur-sm z-0`} />
+        ) : (
+            <div className="absolute inset-0 z-0 bg-slate-800/50 animate-pulse flex items-center justify-center">
+              <Shield size={fallbackIconSize} className="opacity-10" />
+              <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+            </div>
+        )
       )}
 
       {/* Actual Image */}

@@ -210,8 +210,8 @@ export const CardDetail: React.FC = () => {
                 ) : details ? (
                     <div data-testid="card-modal" className="glass-panel rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0, 209, 255, 0.15)] flex flex-col lg:flex-row overflow-hidden min-h-[85vh] max-h-[90vh] relative">
                         {/* LEFT: IMAGE & VERSIONS LIST */}
-                        <div className="w-full lg:w-[420px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden h-full">
-                            <div className="flex-1 min-h-[450px] md:min-h-[600px] p-6 sm:p-8 md:p-10 relative bg-gradient-to-b from-white/[0.04] to-transparent overflow-hidden">
+                        <div className="w-full lg:w-[340px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden h-full">
+                            <div className="flex-1 min-h-[350px] md:min-h-[480px] p-6 sm:p-8 md:p-10 relative bg-gradient-to-b from-white/[0.04] to-transparent overflow-hidden">
                                 <div className={`absolute inset-6 sm:inset-8 md:inset-10 flex items-center justify-center ${isFoil ? 'holo-effect' : ''} group`}>
                                     <div className="absolute inset-0 bg-geeko-cyan/25 blur-[120px] rounded-full opacity-40 group-hover:opacity-60 transition-opacity duration-700 animate-pulse pointer-events-none" />
                                     {isFoil && (
@@ -222,6 +222,7 @@ export const CardDetail: React.FC = () => {
                                         alt={details.name}
                                         size="normal"
                                         objectFit="contain"
+                                        placeholderSrc={initialImage}
                                         className="drop-shadow-[0_45px_100px_rgba(0,0,0,0.95)] z-10 hover:scale-[1.03] transition-all duration-700 !bg-transparent"
                                     />
                                 </div>
