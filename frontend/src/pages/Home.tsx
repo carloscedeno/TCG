@@ -465,7 +465,7 @@ const Home: React.FC = () => {
         )}
 
         {/* Rarity Filter Tabs & Sort */}
-        <div className="bg-[#0a0a0a]/95 border-b border-neutral-800 sticky top-[60px] z-40 backdrop-blur-md">
+        <div className="bg-[#0a0a0a]/95 border-b border-neutral-800 sticky top-[60px] lg:top-[156px] z-40 backdrop-blur-md">
             <div className="max-w-[1600px] mx-auto px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex bg-neutral-900/50 p-1 rounded-full border border-neutral-800">
                   {filters.games && filters.games.length > 0 && inventoryPresence.hasSingles && (
@@ -567,7 +567,7 @@ const Home: React.FC = () => {
           <div className="flex flex-col lg:flex-row gap-4">
             {/* Sidebar Filters */}
             <aside className="hidden lg:block w-72 flex-shrink-0">
-              <div className="sticky top-[130px] max-h-[calc(100vh-150px)] overflow-y-auto pr-2 custom-scrollbar">
+              <div className="sticky top-[60px] lg:top-[230px] max-h-[calc(100vh-230px)] overflow-y-auto pr-2 custom-scrollbar">
                 <FiltersPanel
                   filters={{ ...mockFilters, sets }}
                   selected={filters}
