@@ -61,8 +61,8 @@ cp .env.example .env
 
 # 2. Frontend
 cd frontend
-npm install
-npm run dev
+pnpm install
+pnpm run dev
 # → http://localhost:5173
 
 # 3. Scripts Python (opcional)
@@ -73,7 +73,7 @@ pip install -e .
 
 ```bash
 cd frontend
-npm run build   # SIEMPRE verificar antes de push
+pnpm run build   # SIEMPRE verificar antes de push
 ```
 
 ## Testing
@@ -118,7 +118,7 @@ The Card Modal is a high-complexity component sensitive to layout shifts and API
 
 ### 2. TypeScript & CI/CD Integrity
 
-- **Build First**: Before pushing any change to `frontend/src/components` or `frontend/src/utils`, run `npm run build`.
+- **Build First**: Before pushing any change to `frontend/src/components` or `frontend/src/utils`, run `pnpm run build`.
 - **Typing**: Avoid `any` where possible. NEVER use implicit `any` in array mappings (`map`, `filter`, `forEach`) as it directly breaks the production deployment pipeline.
 
 ### 3. Agent Memory

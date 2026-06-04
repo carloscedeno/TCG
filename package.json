@@ -1,5 +1,5 @@
 {
   "scripts": {
-    "dev:all": "concurrently \"supabase start\" \"cd frontend && npm install && npm run dev\""
+    "dev:all": "concurrently \"supabase start\" \"cd frontend && pnpm install && pnpm run dev\""
   }
 } 

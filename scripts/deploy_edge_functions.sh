@@ -9,7 +9,7 @@ echo "🚀 Iniciando despliegue de Supabase Functions..."
 # Verificar que Supabase CLI esté instalado
 if ! command -v supabase &> /dev/null; then
     echo "❌ Supabase CLI no está instalado"
-    echo "💡 Instala con: npm install -g supabase"
+    echo "💡 Instala con: pnpm add -g supabase"
     exit 1
 fi
 

@@ -54,7 +54,7 @@ class CompleteSystemSetup:
             print("✅ Supabase CLI instalado")
         except (subprocess.CalledProcessError, FileNotFoundError):
             print("❌ Supabase CLI no encontrado")
-            print("💡 Instala con: npm install -g supabase")
+            print("💡 Instala con: pnpm add -g supabase")
             return False
         
         return True

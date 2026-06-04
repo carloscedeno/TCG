@@ -575,8 +575,8 @@ tests/           # Test suite
 
    # Frontend
    cd frontend
-   npm install
-   npm run dev
+   pnpm install
+   pnpm dev
    ```
 
 ## 🧪 Testing
