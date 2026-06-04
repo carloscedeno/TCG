@@ -144,10 +144,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                                         </div>
                                         <div className="flex items-center justify-between">
                                             <div className="flex flex-col">
-                                                <span className="text-sm font-mono font-black text-geeko-cyan">${(item.price || item.products?.price || 0).toFixed(2)}</span>
+                                                <span className="text-sm font-mono font-black text-geeko-cyan">${(Number(item.price || item.products?.price) || 0).toFixed(2)}</span>
                                                 {((item.original_price || item.products?.original_price || 0) > (item.price || item.products?.price || 0)) && (
                                                     <span className="text-[10px] text-text-low line-through decoration-red-500/50">
-                                                        ${Number(item.original_price || item.products?.original_price).toFixed(2)}
+                                                        ${(Number(item.original_price || item.products?.original_price) || 0).toFixed(2)}
                                                     </span>
                                                 )}
                                             </div>
@@ -218,7 +218,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                             <div className="space-y-3">
                                 <div className="flex justify-between text-xs font-bold text-text-low uppercase tracking-widest">
                                     <span>Subtotal</span>
-                                    <span>${subtotal.toFixed(2)}</span>
+                                    <span>${(Number(subtotal) || 0).toFixed(2)}</span>
                                 </div>
                                 <div className="flex justify-between text-xs font-bold text-text-low uppercase tracking-widest">
                                     <span>Envío</span>
@@ -227,7 +227,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                                 <div className="h-px bg-white/5 my-4" />
                                 <div className="flex justify-between items-end">
                                     <span className="text-sm font-black uppercase tracking-widest">Total</span>
-                                    <span className="text-3xl font-black text-white font-mono leading-none">${subtotal.toFixed(2)}</span>
+                                    <span className="text-3xl font-black text-white font-mono leading-none">${(Number(subtotal) || 0).toFixed(2)}</span>
                                 </div>
                             </div>
 
