@@ -372,8 +372,8 @@ Siempre proveer un caso de evaluaciÃ³n estricto en sentencias SQL cuando el sist
 
 ## 2026-06-04 - Fix URL Edge Function y Resiliencia de Fallback
 
-**QuÃ© pasÃ³:** El usuario reportÃ³ mÃºltiples errores rojos en la consola de ProducciÃ³n. Se investigÃ³ y se concluyÃ³ que muchos eran producto de una extensiÃ³n de Chrome (Jam.dev), pero ademÃ¡s se corrigiÃ³ un 404 proveniente de la Edge Function.
-**Lo que cambiÃ³:**
+**Qué pasó:** El usuario reportó múltiples errores rojos en la consola de Producción. Se investigó y se concluyó que muchos eran producto de una extensión de Chrome (Jam.dev), pero además se corrigió un 404 proveniente de la Edge Function.
+**Lo que cambió:**
 - rontend/src/utils/api.ts -> Modificada etchCardDetails para usar getApiUrl al invocar la Edge Function.
-- lessons_learned.md -> LecciÃ³n #180 (ConstrucciÃ³n Correcta de URL para Edge Functions).
-**Regla derivada:** LEY 37: CentralizaciÃ³n en la construcciÃ³n de endpoints API en el frontend.
+- lessons_learned.md -> Lección #180 (Construcción Correcta de URL para Edge Functions).
+**Regla derivada:** LEY 37: Centralización en la construcción de endpoints API en el frontend.
