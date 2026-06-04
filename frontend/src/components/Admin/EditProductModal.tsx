@@ -115,12 +115,14 @@ export const EditProductModal = ({ isOpen, onClose, onSuccess, product }: EditPr
 
         try {
             // Upload new images if any
-            const uploadedUrls = await Promise.all(
-                imageItems.map(item => {
-                    if (item.file) return uploadAccessoryImage(item.file);
-                    return Promise.resolve(item.preview);
-                })
-            );
+            const uploadedUrls = [];
+            for (const item of imageItems) {
+                if (item.file) {
+                    uploadedUrls.push(await uploadAccessoryImage(item.file));
+                } else {
+                    uploadedUrls.push(item.preview);
+                }
+            }
 
             const finalImageUrl = uploadedUrls[mainImageIndex] || '';
             const finalAdditionalImages = uploadedUrls.filter((_, idx) => idx !== mainImageIndex);

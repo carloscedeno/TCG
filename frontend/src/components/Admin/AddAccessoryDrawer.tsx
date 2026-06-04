@@ -84,7 +84,10 @@ export const AddAccessoryDrawer = ({ isOpen, onClose, onSuccess }: AddAccessoryD
             let additionalImages: string[] = [];
 
             if (imageItems.length > 0) {
-                const uploadedUrls = await Promise.all(imageItems.map(item => uploadAccessoryImage(item.file)));
+                const uploadedUrls = [];
+                for (const item of imageItems) {
+                    uploadedUrls.push(await uploadAccessoryImage(item.file));
+                }
                 imageUrl = uploadedUrls[mainImageIndex];
                 additionalImages = uploadedUrls.filter((_, idx) => idx !== mainImageIndex);
             }
