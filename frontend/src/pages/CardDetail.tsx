@@ -247,7 +247,7 @@ export const CardDetail: React.FC = () => {
                 ) : details ? (
                     <div data-testid="card-modal" className="w-full glass-panel rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0, 209, 255, 0.15)] flex flex-col lg:flex-row overflow-hidden lg:min-h-[calc(100vh-220px)] relative">
                         {/* LEFT: IMAGE & VERSIONS LIST */}
-                        <div className="w-full lg:w-[340px] bg-[#0c0c0c] flex flex-col lg:border-r border-b lg:border-b-0 border-white/5 overflow-hidden shrink-0">
+                        <div className="w-full lg:w-[340px] bg-[#0c0c0c] flex flex-col lg:border-r border-b lg:border-b-0 border-white/5 shrink-0 relative">
                             <div className="flex-1 min-h-[350px] lg:min-h-[250px] p-6 sm:p-8 md:p-10 relative bg-gradient-to-b from-white/[0.04] to-transparent overflow-hidden">
                                 <div className={`absolute inset-6 sm:inset-8 md:inset-10 flex items-center justify-center ${isFoil ? 'holo-effect' : ''} group`}>
                                     <div className="absolute inset-0 bg-geeko-cyan/25 blur-[120px] rounded-full opacity-40 group-hover:opacity-60 transition-opacity duration-700 animate-pulse pointer-events-none" />
@@ -315,7 +315,7 @@ export const CardDetail: React.FC = () => {
                             </div>
 
                             {/* MOXFIELD-STYLE VERSIONS LIST */}
-                            <div className="h-[200px] md:h-[250px] border-t border-white/5 bg-[#080808] flex flex-col shrink-0">
+                            <div className="min-h-[150px] max-h-[250px] border-t border-white/5 bg-[#080808] flex flex-col shrink-0 overflow-hidden rounded-bl-[32px]">
                                 <div className="px-6 py-4 flex items-center justify-between border-b border-white/5">
                                     <h3 className="text-xs font-black uppercase tracking-widest text-text-low">Edition / Printings</h3>
                                     <span className="text-[10px] text-text-low font-bold">{details.all_versions?.length || 0} Versions</span>
