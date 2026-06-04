@@ -315,12 +315,13 @@ export const CardDetail: React.FC = () => {
                             </div>
 
                             {/* MOXFIELD-STYLE VERSIONS LIST */}
-                            <div className="min-h-[150px] max-h-[250px] border-t border-white/5 bg-[#080808] flex flex-col shrink-0 overflow-hidden rounded-bl-[32px]">
-                                <div className="px-6 py-4 flex items-center justify-between border-b border-white/5">
-                                    <h3 className="text-xs font-black uppercase tracking-widest text-text-low">Edition / Printings</h3>
-                                    <span className="text-[10px] text-text-low font-bold">{details.all_versions?.length || 0} Versions</span>
-                                </div>
-                                <div className="flex-1 overflow-y-auto custom-scrollbar">
+                            {!details?.is_accessory && (
+                                <div className="min-h-[150px] max-h-[250px] border-t border-white/5 bg-[#080808] flex flex-col shrink-0 overflow-hidden rounded-bl-[32px]">
+                                    <div className="px-6 py-4 flex items-center justify-between border-b border-white/5">
+                                        <h3 className="text-xs font-black uppercase tracking-widest text-text-low">Edition / Printings</h3>
+                                        <span className="text-[10px] text-text-low font-bold">{details.all_versions?.length || 0} Versions</span>
+                                    </div>
+                                    <div className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar">
                                     {versionGroups.length > 0 ? (
                                         versionGroups.map((group: any) => {
                                             const isGroupActive = activePrintingId === group.base.printing_id;
@@ -434,6 +435,7 @@ export const CardDetail: React.FC = () => {
                                     )}
                                 </div>
                             </div>
+                            )}
                         </div>
 
                         {/* RIGHT: CARD TEXT & ACTIONS */}
