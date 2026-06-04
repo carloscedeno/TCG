@@ -25,7 +25,7 @@ export const WhatsAppWidget: React.FC = () => {
     };
 
     return (
-        <div className="fixed bottom-6 right-6 z-[100] flex flex-col items-end gap-4">
+        <div className="fixed bottom-24 lg:bottom-6 right-6 z-[100] flex flex-col items-end gap-4">
             {/* Pop-up Menu */}
             {isOpen && (
                 <div className="w-72 bg-[#121212]/95 backdrop-blur-xl border border-white/10 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
