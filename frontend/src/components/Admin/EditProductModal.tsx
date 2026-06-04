@@ -127,6 +127,7 @@ export const EditProductModal = ({ isOpen, onClose, onSuccess, product }: EditPr
 
             await updateAccessory(product.id, {
                 ...formData,
+                category_code: formData.category_code || null,
                 price: parseFloat(formData.price) || 0,
                 cost: parseFloat(formData.cost) || 0,
                 suggested_price: parseFloat(formData.suggested_price) || 0,
@@ -208,7 +209,22 @@ export const EditProductModal = ({ isOpen, onClose, onSuccess, product }: EditPr
                                     <div className="space-y-2">
                                         <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block ml-1">Categoría</label>
                                         <select required name="category_code" value={formData.category_code} onChange={handleChange} className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-sm text-white outline-none appearance-none focus:border-orange-500/50 transition-all">
-                                            {categories.map(cat => <option key={cat.code} value={cat.code}>{cat.name}</option>)}
+                                            <option value="">Seleccionar Categoría...</option>
+                                            <optgroup label="📦 Sellado / TCG">
+                                                {categories.filter(c => c.parent_code === 'SEALED').map(cat => (
+                                                    <option key={cat.code} value={cat.code}>{cat.name}</option>
+                                                ))}
+                                            </optgroup>
+                                            <optgroup label="🛡️ Accesorios / Insumos">
+                                                {categories.filter(c => c.parent_code === 'ACCESSORIES').map(cat => (
+                                                    <option key={cat.code} value={cat.code}>{cat.name}</option>
+                                                ))}
+                                            </optgroup>
+                                            <optgroup label="Otros">
+                                                {categories.filter(c => !['SEALED', 'ACCESSORIES'].includes(c.parent_code)).map(cat => (
+                                                    <option key={cat.code} value={cat.code}>{cat.name}</option>
+                                                ))}
+                                            </optgroup>
                                         </select>
                                     </div>
                                     <div className="space-y-2">
