@@ -495,16 +495,16 @@ NEXT_PUBLIC_APP_URL=https://your-domain.com
 NODE_ENV=production
 ```
 
-### 2. Configuración de Vercel
+### 2. Configuración de Cloudflare Pages
 
 ```json
-// vercel.json
+// Cloudflare Pages.json
 {
   "version": 2,
   "builds": [
     {
       "src": "frontend/package.json",
-      "use": "@vercel/next"
+      "use": "@Cloudflare Pages/next"
     }
   ],
   "env": {

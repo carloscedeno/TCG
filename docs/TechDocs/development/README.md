@@ -632,16 +632,16 @@ Breve descripción de los cambios realizados.
 
 ## Deployment
 
-### Configuración de Vercel
+### Configuración de Cloudflare Pages
 
 ```json
-// vercel.json
+// Cloudflare Pages.json
 {
   "version": 2,
   "builds": [
     {
       "src": "package.json",
-      "use": "@vercel/next"
+      "use": "@Cloudflare Pages/next"
     }
   ],
   "env": {
@@ -697,12 +697,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: amondnet/vercel-action@v20
+      - uses: amondnet/Cloudflare Pages-action@v20
         with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.ORG_ID }}
-          vercel-project-id: ${{ secrets.PROJECT_ID }}
-          vercel-args: '--prod'
+          Cloudflare Pages-token: ${{ secrets.Cloudflare Pages_TOKEN }}
+          Cloudflare Pages-org-id: ${{ secrets.ORG_ID }}
+          Cloudflare Pages-project-id: ${{ secrets.PROJECT_ID }}
+          Cloudflare Pages-args: '--prod'
 ```
 
 ## Monitoreo y Debugging

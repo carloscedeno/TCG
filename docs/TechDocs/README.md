@@ -21,7 +21,7 @@ Esta documentación técnica acompaña el desarrollo de la Plataforma Agregadora
 - **Base de Datos**: PostgreSQL (Supabase)
 - **Autenticación**: Supabase Auth
 - **APIs**: Scryfall, Pokémon TCG, JustTCG, Apify
-- **Deployment**: Vercel (Frontend) + Supabase (Backend)
+- **Deployment**: Cloudflare Pages (Frontend) + Supabase (Backend)
 
 ### Estructura del Proyecto
 
