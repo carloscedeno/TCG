@@ -368,3 +368,12 @@ Siempre proveer un caso de evaluaci贸n estricto en sentencias SQL cuando el sist
 - `lessons_learned.md` -> Lecci髇 #179: Uso correcto de category vs category_code.
 - `LEYES_DEL_SISTEMA.md` -> Agregada la Ley 36.
 **Regla derivada:** Diferenciaci髇 estricta entre b鷖queda ILIKE (category) y MATCH exacto (category_code).
+
+
+## 2026-06-04 - Fix URL Edge Function y Resiliencia de Fallback
+
+**Qu茅 pas贸:** El usuario report贸 m煤ltiples errores rojos en la consola de Producci贸n. Se investig贸 y se concluy贸 que muchos eran producto de una extensi贸n de Chrome (Jam.dev), pero adem谩s se corrigi贸 un 404 proveniente de la Edge Function.
+**Lo que cambi贸:**
+- rontend/src/utils/api.ts -> Modificada etchCardDetails para usar getApiUrl al invocar la Edge Function.
+- lessons_learned.md -> Lecci贸n #180 (Construcci贸n Correcta de URL para Edge Functions).
+**Regla derivada:** LEY 37: Centralizaci贸n en la construcci贸n de endpoints API en el frontend.

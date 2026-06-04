@@ -2327,3 +2327,10 @@ useEffect(() => {
 - **Causa Ra韟:** El frontend asignaba err髇eamente la etiqueta de UI de texto libre ('Otros') al par醡etro `category_code` en lugar de a `category`. Como `category_code` espera valores de tipo ENUM ('OTHER'), la b鷖queda fallaba de manera silenciosa.
 - **Soluci髇:** Reasignar el valor pasado por URL a la propiedad `category` dentro del m閠odo `fetchAccessories` en `Home.tsx`.
 - **Regla Derivada:** Ley 36: DIFERENCIACI覰 DE CATEGORY_CODE VS CATEGORY.
+
+
+### 180. Construcci贸n Correcta de URL para Edge Functions - 2026-06-04
+- **Problema:** Errores 404 (Not Found) en la consola al consultar detalles de cartas/accesorios, y mensajes de fallback ([Supabase] Falling back for details...).
+- **Causa Ra铆z:** El frontend intentaba consumir la Edge Function omitiendo el prefijo /api o /tcg-api necesario al concatenar directamente API_BASE y /cards/.... Esto causaba que la llamada HTTP fallara, aunque el sistema se recuperaba consultando la tabla directamente.
+- **Soluci贸n:** Utilizar la funci贸n de utilidad getApiUrl() en etchCardDetails (utils/api.ts) que garantiza la correcta inyecci贸n del prefijo, y comprender que los fallbacks a card_printings son mecanismos resilientes esperados.
+- **Regla Derivada:** LEY 37 (Utilizar SIEMPRE getApiUrl para construir endpoints de Edge Functions en el frontend).

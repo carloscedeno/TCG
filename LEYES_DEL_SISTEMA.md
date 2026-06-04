@@ -219,3 +219,12 @@ La renderizaciÃ³n del Banner Hero (`HeroSection`) debe ser lÃ³gica y tÃ©cnicamen
 En los endpoints de búsqueda (ej. `fetchAccessories`), **NUNCA** se debe pasar un valor de texto libre o etiqueta de UI (ej. 'Otros', 'Accesorios') al parámetro `category_code`. 
 - `category_code` está reservado estrictamente para **códigos normalizados exactos** (ej. 'OTHER', 'BOOSTER_BOX').
 - Para búsquedas basadas en etiquetas de UI, se debe usar el parámetro `category` heredado, el cual realiza una búsqueda con `ILIKE`.
+
+
+---
+
+### Ley 37: CENTRALIZACIÃ“N EN LA CONSTRUCCIÃ“N DE ENDPOINTS API EN EL FRONTEND
+
+**Siempre** que se necesite invocar una Edge Function mediante una peticiÃ³n HTTP directa (etch) en lugar de los SDKs de Supabase:
+- Se **DEBE** utilizar la funciÃ³n de utilidad getApiUrl() (o equivalente) para asegurar que se inyectan correctamente los prefijos necesarios (como /api o /tcg-api).
+- Concatenar directamente API_BASE + '/endpoint' causa fallos 404 (Not Found) debido a las discrepancias de enrutamiento entre entornos (DEV vs PROD).
