@@ -266,30 +266,19 @@ export const CardDetail: React.FC = () => {
                                 
                                 {/* Carousel Navigation */}
                                 {!hasMultipleFaces && allImages.length > 1 && (
-                                    <>
+                                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-4 bg-black/60 px-4 py-2 rounded-full border border-white/10 shadow-xl backdrop-blur-md">
                                         <button
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 e.preventDefault();
                                                 setCurrentImageIndex((prev) => prev === 0 ? allImages.length - 1 : prev - 1);
                                             }}
-                                            className="absolute top-1/2 left-4 -translate-y-1/2 z-20 p-2 bg-black/60 hover:bg-geeko-cyan text-white hover:text-black rounded-full transition-all border border-white/10 shadow-xl backdrop-blur-md opacity-0 group-hover:opacity-100"
+                                            className="text-white hover:text-geeko-cyan transition-colors"
                                         >
-                                            <ChevronLeft size={20} />
-                                        </button>
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                e.preventDefault();
-                                                setCurrentImageIndex((prev) => (prev + 1) % allImages.length);
-                                            }}
-                                            className="absolute top-1/2 right-4 -translate-y-1/2 z-20 p-2 bg-black/60 hover:bg-geeko-cyan text-white hover:text-black rounded-full transition-all border border-white/10 shadow-xl backdrop-blur-md opacity-0 group-hover:opacity-100"
-                                        >
-                                            <ChevronRight size={20} />
+                                            <ChevronLeft size={18} />
                                         </button>
 
-                                        {/* Carousel Indicators */}
-                                        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+                                        <div className="flex gap-2">
                                             {allImages.map((_, idx) => (
                                                 <button
                                                     key={idx}
@@ -301,7 +290,18 @@ export const CardDetail: React.FC = () => {
                                                 />
                                             ))}
                                         </div>
-                                    </>
+
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                e.preventDefault();
+                                                setCurrentImageIndex((prev) => (prev + 1) % allImages.length);
+                                            }}
+                                            className="text-white hover:text-geeko-cyan transition-colors"
+                                        >
+                                            <ChevronRight size={18} />
+                                        </button>
+                                    </div>
                                 )}
 
                                 {hasMultipleFaces && (
