@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { RotateCw, Plus } from 'lucide-react';
+import { RotateCw, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
 import { fetchCardDetails, addToCart } from '../../utils/api';
 import { CardImage } from './CardImage';
 
@@ -38,33 +38,42 @@ export interface CardProps {
   is_accessory?: boolean;
   accessory_id?: string;
   updated_at?: string;
+  additional_images?: string[];
   onClick?: () => void;
 }
 
-export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, price, original_price, discount_percentage, card_id, rarity, type, card_faces, viewMode = 'grid', total_stock, finish, is_foil, isArchive, showCartButton = false, is_accessory, accessory_id, onClick }) => {
+export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, price, original_price, discount_percentage, card_id, rarity, type, card_faces, viewMode = 'grid', total_stock, finish, is_foil, isArchive, showCartButton = false, is_accessory, accessory_id, additional_images, onClick }) => {
   const [currentFaceIndex, setCurrentFaceIndex] = useState(0);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [addingToCart, setAddingToCart] = useState(false);
 
   const hasMultipleFaces = card_faces && card_faces.length > 1;
 
-  const getImgSrc = () => {
-    if (hasMultipleFaces) {
-      const face = card_faces![currentFaceIndex];
-      return face.image_uris?.normal || face.image_url || imageUrl || image_url;
+  const allImages = React.useMemo(() => {
+    const mainImg = hasMultipleFaces 
+      ? (card_faces![currentFaceIndex].image_uris?.normal || card_faces![currentFaceIndex].image_url || imageUrl || image_url)
+      : (imageUrl || image_url);
+    const list = mainImg ? [mainImg] : [];
+    if (additional_images && additional_images.length > 0) {
+      additional_images.forEach(img => {
+        if (img && img !== mainImg) list.push(img);
+      });
     }
-    return imageUrl || image_url;
-  };
+    return list;
+  }, [hasMultipleFaces, card_faces, currentFaceIndex, imageUrl, image_url, additional_images]);
 
   const currentName = hasMultipleFaces ? card_faces![currentFaceIndex].name : name;
   const isPresale = currentName?.toLowerCase().includes('(preventa)');
   const cleanName = isPresale ? currentName.replace(/\(preventa\)/gi, '').trim() : currentName;
 
   const currentType = hasMultipleFaces ? card_faces![currentFaceIndex].type_line || type : type;
-  const imgSrc = getImgSrc();
+  const imgSrc = allImages[currentImageIndex] || allImages[0] || '';
 
   const handleFlip = (e: React.MouseEvent) => {
     e.stopPropagation();
+    e.preventDefault();
     setCurrentFaceIndex((prev) => (prev + 1) % card_faces!.length);
+    setCurrentImageIndex(0);
   };
 
   const handleQuickAdd = async (e: React.MouseEvent) => {
@@ -275,6 +284,42 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         )}
 
         <CardImage src={imgSrc} alt={currentName} size="small" fallbackIconSize={40} className="group-hover:scale-110 transition-transform duration-500" />
+
+        {/* Carousel Navigation */}
+        {!hasMultipleFaces && allImages.length > 1 && (
+          <>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                setCurrentImageIndex((prev) => prev === 0 ? allImages.length - 1 : prev - 1);
+              }}
+              className="absolute top-1/2 left-2 -translate-y-1/2 z-20 p-1.5 bg-black/60 hover:bg-geeko-cyan text-white rounded-full opacity-0 group-hover:opacity-100 transition-all border border-white/10"
+            >
+              <ChevronLeft size={16} />
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                setCurrentImageIndex((prev) => (prev + 1) % allImages.length);
+              }}
+              className="absolute top-1/2 right-2 -translate-y-1/2 z-20 p-1.5 bg-black/60 hover:bg-geeko-cyan text-white rounded-full opacity-0 group-hover:opacity-100 transition-all border border-white/10"
+            >
+              <ChevronRight size={16} />
+            </button>
+
+            {/* Carousel Indicators */}
+            <div className={`absolute left-1/2 -translate-x-1/2 z-20 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity ${total_stock !== undefined && total_stock > 0 ? 'bottom-8' : 'bottom-3'}`}>
+              {allImages.map((_, idx) => (
+                <div 
+                  key={idx} 
+                  className={`w-1.5 h-1.5 rounded-full transition-colors ${idx === currentImageIndex ? 'bg-geeko-cyan shadow-[0_0_5px_rgba(0,209,255,0.8)]' : 'bg-white/50'}`} 
+                />
+              ))}
+            </div>
+          </>
+        )}
 
         {/* Stock display - Repositioned & Darker as requested */}
         {total_stock !== undefined && total_stock > 0 && (
