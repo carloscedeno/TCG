@@ -145,6 +145,8 @@ status TEXT ('pending_verification' | 'confirmed' | 'cancelled')
 
 ### 🚧 Pendiente / Mejoras
 
+- Arreglar fallos preexistentes en tests unitarios de Python (`test_valuation_logic.py`, `test_commerce_inventory.py`) descubiertos en Junio 2026.
+- Restaurar o eliminar el script `check_api_health.py` que está ausente en la raíz.
 - Swipe-down para cerrar modal en móvil (framer-motion)
 - Stale-While-Revalidate para datos de Scryfall
 - Virtualización del grid de cartas (performance)
