@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Menu as MenuIcon, X, Search } from 'lucide-react';
+import { ShoppingCart, Search } from 'lucide-react';
 import { SearchBar } from '../SearchBar/SearchBar';
 import { UserMenu } from './UserMenu';
 import { useAuth } from '../../context/AuthContext';
@@ -14,8 +14,6 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
     const { user: _user } = useAuth();
     const [searchParams, setSearchParams] = useSearchParams();
     const [query, setQuery] = useState(searchParams.get('q') || '');
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [categories, setCategories] = useState<any[]>([]);
     const navigate = useNavigate();
 
 
@@ -37,15 +35,6 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
         if (q !== query) setQuery(q);
     }, [searchParams]);
 
-    useEffect(() => {
-        const loadCategories = async () => {
-            const { fetchAccessoryCategories } = await import('../../utils/api');
-            const cats = await fetchAccessoryCategories('ACCESSORIES');
-            setCategories(cats || []);
-        };
-        loadCategories();
-    }, []);
-
     const handleSearch = (val: string) => {
         setQuery(val);
         const newParams = new URLSearchParams(searchParams);
@@ -57,12 +46,6 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
     const navigateToGame = (gameCode: string) => {
         const tab = gameCode === 'MTG' ? 'marketplace' : 'catalog';
         navigate(`/?game=${gameCode}&tab=${tab}`);
-        setIsMobileMenuOpen(false);
-    };
-
-    const navigateToCategory = (catCode: string) => {
-        navigate(`/?tab=catalog&category=${catCode}`);
-        setIsMobileMenuOpen(false);
     };
 
     return (
@@ -118,12 +101,9 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                                 </div>
                             )}
                         </button>
-                        <div className="hidden lg:block">
+                        <div className="flex">
                             <UserMenu />
                         </div>
-                        <button className="lg:hidden text-white" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-                            {isMobileMenuOpen ? <X size={24} /> : <MenuIcon size={24} />}
-                        </button>
                     </div>
                 </div>
             </div>
@@ -158,59 +138,6 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
             <div className="lg:hidden p-4 border-t border-white/5">
                 <SearchBar value={query} onChange={handleSearch} placeholder="Buscar..." />
             </div>
-
-            {/* Mobile Menu Overlay */}
-            {isMobileMenuOpen && (
-                <div className="lg:hidden fixed inset-0 z-[100] bg-[#0a0a0a] overflow-y-auto animate-in fade-in duration-200">
-                    <div className="p-4 border-b border-white/10 flex items-center justify-between">
-                        <img src="/branding/Logo.png" alt="Geekorium" className="w-28 object-contain" />
-                        <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 bg-neutral-900 border border-white/5 rounded-xl text-text-low">
-                            <X size={20} />
-                        </button>
-                    </div>
-
-                    <div className="p-6 space-y-8">
-                        {/* TCG Sections */}
-                        <div>
-                            <h3 className="text-[10px] font-black text-text-low uppercase tracking-[0.2em] mb-4">TCG Catalog</h3>
-                            <div className="grid grid-cols-1 gap-3">
-                                {tcgGames.map(game => (
-                                    <button 
-                                        key={game.code}
-                                        onClick={() => navigateToGame(game.code)}
-                                        className="flex items-center gap-4 p-4 bg-white/5 rounded-xl border border-white/5 text-left transition-all active:scale-95"
-                                    >
-                                        <img src={game.icon} alt={game.name} className="w-10 h-10 object-contain" />
-                                        <div className="flex flex-col">
-                                            <span className="font-bold text-sm">{game.name}</span>
-                                            <span className="text-[10px] text-text-low uppercase tracking-widest">
-                                                {game.code === 'MTG' ? 'Ver Stock' : 'Ver Catálogo'}
-                                            </span>
-                                        </div>
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Accessories */}
-                        <div>
-                            <h3 className="text-[10px] font-black text-text-low uppercase tracking-[0.2em] mb-4">Productos & Accesorios</h3>
-                            <div className="grid grid-cols-2 gap-3">
-                                {categories.map(cat => (
-                                    <button 
-                                        key={cat.code} 
-                                        onClick={() => navigateToCategory(cat.code)}
-                                        className="flex flex-col items-center gap-2 p-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all"
-                                    >
-                                        <span className="text-2xl">{cat.icon}</span>
-                                        <span className="text-[10px] font-bold text-white text-center uppercase tracking-tighter">{cat.name}</span>
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
         </header>
     );
 };

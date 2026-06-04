@@ -1,13 +1,15 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Grid, User, ShoppingCart } from 'lucide-react';
+import { Home, Grid, Menu, ShoppingCart } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useState } from 'react';
 import { CartDrawer } from './CartDrawer';
+import { MobileMenuDrawer } from './MobileMenuDrawer';
 
 export const BottomNav = () => {
     const location = useLocation();
     const { cartCount } = useCart();
     const [isCartOpen, setIsCartOpen] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     // Disable BottomNav on Admin pages to avoid overlapping with admin tools
     if (location.pathname.startsWith('/admin')) {
@@ -16,7 +18,6 @@ export const BottomNav = () => {
 
     const isHome = location.pathname === '/' && !location.search.includes('tab=catalog');
     const isCatalog = location.search.includes('tab=catalog');
-    const isProfile = location.pathname.includes('/profile') || location.pathname === '/geeko-login';
 
     return (
         <>
@@ -44,13 +45,14 @@ export const BottomNav = () => {
                         <span className="text-[10px] mt-1 font-bold">Carrito</span>
                     </button>
 
-                    <Link to="/profile" className={`flex flex-col items-center justify-center w-full h-full transition-colors ${isProfile ? 'text-geeko-cyan' : 'text-text-low hover:text-white'}`}>
-                        <User size={22} className={isProfile ? 'drop-shadow-[0_0_8px_rgba(0,209,255,0.5)]' : ''} />
-                        <span className="text-[10px] mt-1 font-bold">Perfil</span>
-                    </Link>
+                    <button onClick={() => setIsMenuOpen(true)} className={`flex flex-col items-center justify-center w-full h-full transition-colors ${isMenuOpen ? 'text-geeko-cyan' : 'text-text-low hover:text-white'}`}>
+                        <Menu size={22} className={isMenuOpen ? 'drop-shadow-[0_0_8px_rgba(0,209,255,0.5)]' : ''} />
+                        <span className="text-[10px] mt-1 font-bold">Menú</span>
+                    </button>
                 </div>
             </nav>
             <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+            <MobileMenuDrawer isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
         </>
     );
 };
