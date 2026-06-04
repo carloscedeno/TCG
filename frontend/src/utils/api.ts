@@ -343,7 +343,8 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
 
     // 3. Try Edge Function (Main Source for full card metadata and external fetch)
     try {
-        const response = await fetch(`${API_BASE}/cards/${sanitizedId}`);
+        const apiUrl = getApiUrl(`/cards/${sanitizedId}`);
+        const response = await fetch(apiUrl);
         if (response.ok) {
             data = await response.json();
         }

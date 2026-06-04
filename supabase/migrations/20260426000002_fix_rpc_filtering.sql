@@ -1,6 +1,9 @@
 -- Migration: Fix RPC Filtering for Omni-TCG
 -- Description: Updates get_products_filtered to use standard game codes and avoid hardcoded translations.
 
+DROP FUNCTION IF EXISTS public.get_products_filtered(text,text,text[],text[],text[],text[],integer,integer,text,integer,integer,numeric,numeric,boolean) CASCADE;
+DROP FUNCTION IF EXISTS public.get_products_filtered CASCADE;
+
 CREATE OR REPLACE FUNCTION public.get_products_filtered(
     search_query text DEFAULT NULL::text,
     game_filter text DEFAULT NULL::text,
