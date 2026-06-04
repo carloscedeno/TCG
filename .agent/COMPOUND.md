@@ -20,6 +20,28 @@ Erradicar el uso de `npm` para mitigar vulnerabilidades de cadena de suministro 
 
 ---
 
+# 🧠 COMPOUND: Migración a pnpm y Aislamiento de Entorno (Junio 2026)
+
+**Date**: 2026-06-04 18:00
+
+## Objective
+Erradicar el uso de `npm` para mitigar vulnerabilidades de cadena de suministro y aislar scripts de ciclo de vida.
+
+## Knowledge Codification
+
+### 1. Migración de Gestor de Paquetes (npm -> pnpm)
+- **Feature**: Reemplazo de `package-lock.json` por `pnpm-lock.yaml`, y actualización de `deploy.yml`.
+- **Lesson 1**: `pnpm` previene ejecución arbitraria de scripts maliciosos, pero requiere `pnpm approve-builds`.
+- **Lesson 2**: `pnpm` revela dependencias peer faltantes que `npm` ocultaba (ej. `workbox-window` requerido por `vite-plugin-pwa`), obligando a instalarlas explícitamente para el build.
+- **Lesson 3**: GitHub Actions necesita `uses: pnpm/action-setup@v4` antes de instalar dependencias.
+
+## Technical Validation
+- **CI/CD**: `deploy.yml` actualizado y merge a `main` exitoso.
+- **Frontend**: Servidor Vite y build (`workbox-window` agregado) funcionando bajo `pnpm`.
+- **Scripts**: Sincronizadores auditados y seguros.
+
+---
+
 # 🧠 COMPOUND: Inmutabilidad de Precios de Compra y Estabilidad de Filtros de Catálogo (Mayo 2026)
 
 **Date**: 2026-05-18 16:00
