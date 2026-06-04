@@ -37,7 +37,7 @@ Una vez ejecutado el script, el agente DEBE reflexionar explícitamente en su me
 2. **Alineación Inteligente (PRD vs Ad-Hoc)**: 
    - **Para nuevas features de producto**: Cruzar requerimientos con `docs/PRD_MASTER.md`.
    - **Para tareas sin PRD (mantenimiento, refactores, herramientas internas)**: Seguir de forma precisa y rigurosa las instrucciones directas del usuario, inspeccionando los archivos implicados para entender el contexto real del código antes de actuar.
-3. **Cero Suposiciones Locales**: Confirmar que toda prueba y despliegue apunta a Vercel / VITE_SUPABASE_PROJECT_ID en la nube y nunca a servicios locales no autorizados.
+3. **Cero Suposiciones Locales**: Confirmar que toda prueba y despliegue apunta a Cloudflare Pages / VITE_SUPABASE_PROJECT_ID en la nube y nunca a servicios locales no autorizados.
 
 ---
 

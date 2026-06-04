@@ -33,7 +33,7 @@ El agente debe aplicar de inmediato y sin preguntar estas reglas en su memoria o
 
 1. **Ramas y Control de Versiones**:
    - Si el usuario dice "sube a dev", se refiere a hacer commit y push a la rama `dev` en el repositorio remoto.
-   - **NO USAMOS LOCAL**: Toda validación y prueba se asume que corre sobre un entorno de Development remoto o Vercel.
+   - **NO USAMOS LOCAL**: Toda validación y prueba se asume que corre sobre un entorno de Development remoto o Cloudflare Pages.
 
 2. **Base de Datos (Supabase)**:
    - Antes de crear tablas, funciones o RPCs, SIEMPRE usar la herramienta de revisión de BD (ej. listar tablas, revisar esquema actual).

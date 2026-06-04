@@ -2288,7 +2288,7 @@ useEffect(() => {
 
 ### 175. Modificaciones a BD Remota con Múltiples Entornos (Mayo 2026)
 - **Problema:** Se ejecutó un script de reemplazo de caracteres directamente en la base de datos de producción (rama `main`) asumiendo que el archivo local `.env` (que apuntaba a `main`) era el entorno que el usuario quería probar, cuando el usuario estaba realmente testeando en la rama de Supabase `dev`.
-- **Causa Raíz:** Falta de validación cruzada. El archivo local `.env` no siempre refleja el entorno en el que el usuario interactúa actualmente (por ej. Vercel Preview usando la rama `dev`).
+- **Causa Raíz:** Falta de validación cruzada. El archivo local `.env` no siempre refleja el entorno en el que el usuario interactúa actualmente (por ej. Cloudflare Pages Preview usando la rama `dev`).
 - **Solución:** Solicitar explícitamente y usar el MCP de Supabase especificando el `project_id` del entorno (en este caso el ID de la rama `dev`) en lugar de usar comandos Python basados ciegamente en `DATABASE_URL`.
 - **Lección:** Al operar directamente sobre bases de datos en la nube que tienen bifurcación por ramas, SIEMPRE usar las herramientas de MCP de Supabase para listar proyectos y ramas (`list_branches`) y forzar la operación a través de `execute_sql` en la rama específica solicitada por el usuario.
 
