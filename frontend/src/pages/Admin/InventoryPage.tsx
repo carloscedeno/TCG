@@ -958,7 +958,7 @@ export function InventoryPage() {
                     onClose={() => setSelectedOfferProduct(null)}
                      productId={selectedOfferProduct.product_id}
                      productName={selectedOfferProduct.name}
-                     currentPrice={selectedOfferProduct.original_price}
+                     currentPrice={selectedOfferProduct.price || 0}
                      initialDiscountPercentage={selectedOfferProduct.discount_percentage}
                      initialDiscountEndDate={selectedOfferProduct.discount_end_date}
                      onSuccess={() => {

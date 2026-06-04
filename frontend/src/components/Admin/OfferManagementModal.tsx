@@ -139,7 +139,7 @@ export function OfferManagementModal({
                     <div className="p-4 bg-purple-500/5 border border-purple-500/20 rounded-2xl flex items-center justify-between">
                         <div>
                             <p className="text-[10px] font-black uppercase tracking-widest text-purple-400/70">Precio</p>
-                            <p className="text-2xl font-black italic text-white">${currentPrice.toFixed(2)}</p>
+                            <p className="text-2xl font-black italic text-white">${(currentPrice || 0).toFixed(2)}</p>
                         </div>
                         {parsedPercentage > 0 && (
                             <div className="bg-purple-500/20 text-purple-400 px-4 py-2 rounded-xl font-black text-sm">
