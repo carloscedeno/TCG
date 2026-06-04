@@ -1,3 +1,25 @@
+# ðŸ§  COMPOUND: MigraciÃ³n a pnpm y Aislamiento de Entorno (Junio 2026)
+
+**Date**: 2026-06-04 18:00
+
+## Objective
+Erradicar el uso de `npm` para mitigar vulnerabilidades de cadena de suministro y aislar scripts de ciclo de vida.
+
+## Knowledge Codification
+
+### 1. MigraciÃ³n de Gestor de Paquetes (npm -> pnpm)
+- **Feature**: Reemplazo de `package-lock.json` por `pnpm-lock.yaml`, y actualizaciÃ³n de `deploy.yml`.
+- **Lesson 1**: `pnpm` previene ejecuciÃ³n arbitraria de scripts maliciosos, pero requiere `pnpm approve-builds`.
+- **Lesson 2**: `pnpm` revela dependencias peer faltantes que `npm` ocultaba (ej. `workbox-window` requerido por `vite-plugin-pwa`), obligando a instalarlas explÃ­citamente para el build.
+- **Lesson 3**: GitHub Actions necesita `uses: pnpm/action-setup@v4` antes de instalar dependencias.
+
+## Technical Validation
+- **CI/CD**: `deploy.yml` actualizado y merge a `main` exitoso.
+- **Frontend**: Servidor Vite y build (`workbox-window` agregado) funcionando bajo `pnpm`.
+- **Scripts**: Sincronizadores auditados y seguros.
+
+---
+
 # ðŸ§  COMPOUND: Inmutabilidad de Precios de Compra y Estabilidad de Filtros de CatÃ¡logo (Mayo 2026)
 
 **Date**: 2026-05-18 16:00
@@ -288,16 +310,16 @@ Remediate the E2E checkout process by implementing "Por Encargo" logic to bypass
 **Artefacto creado:** MigraciÃ³n SQL y PDF receipt mejorado.
 **Regla derivada:** No asumir que DEV y PROD tienen el mismo DDL en Supabase. Aplicar migraciones explÃ­citamente. Nunca pedir campos "ciegamente" en Supabase RPC sin verificar information_schema.
 
-## 2026-05-24 — Sincronía de Filtros Frontend-Backend
+## 2026-05-24 ï¿½ Sincronï¿½a de Filtros Frontend-Backend
 
-**Qué pasó:** Reparamos la desconexión entre la UI de React y las RPC de Supabase que provocaba que los filtros visuales (precio, preventa, descuento, otros) no tuvieran efecto real en el catálogo.
-**Lo que cambió:**
-- .agent/lessons_learned.md -> Lección #173 (Frontend Filters Disconnected from Backend RPCs)
+**Quï¿½ pasï¿½:** Reparamos la desconexiï¿½n entre la UI de React y las RPC de Supabase que provocaba que los filtros visuales (precio, preventa, descuento, otros) no tuvieran efecto real en el catï¿½logo.
+**Lo que cambiï¿½:**
+- .agent/lessons_learned.md -> Lecciï¿½n #173 (Frontend Filters Disconnected from Backend RPCs)
 - .agent/AGENTS.md -> Nueva feature documentada.
 - rontend/src/pages/Home.tsx -> Removido cap de precio en isDefaultFilter y mapeado type_line.
 - rontend/src/components/Card/Card.tsx -> Ocultada rareza en Sealed Products.
-**Artefacto creado:** scripts/apply_rpc_fixes.py -> Script para inyectar los flags p_only_discount, p_only_presale y p_games (OTHERS) en las consultas SQL de producción/dev.
-**Regla derivada:** Validar que los contratos backend (SQL/RPC) están listos para recibir parámetros antes de implementar switches visuales que modifiquen la URL del catálogo.
+**Artefacto creado:** scripts/apply_rpc_fixes.py -> Script para inyectar los flags p_only_discount, p_only_presale y p_games (OTHERS) en las consultas SQL de producciï¿½n/dev.
+**Regla derivada:** Validar que los contratos backend (SQL/RPC) estï¿½n listos para recibir parï¿½metros antes de implementar switches visuales que modifiquen la URL del catï¿½logo.
 
 ## 2026-05-27 â€” ResoluciÃ³n de Bugs en Filtros de CatÃ¡logo y Carga Masiva
 
@@ -352,28 +374,28 @@ Siempre proveer un caso de evaluaciÃ³n estricto en sentencias SQL cuando el sist
 **Regla derivada:** JamÃ¡s asumir entornos por nombres de variables locales (ej. `development` en un archivo no garantiza que la BD sea el sandbox). SIEMPRE confirmar el ID del proyecto Supabase (DEV=`bqfkqnnostzaqueujdms`, PROD=`sxuotvogwvmxuvwbsscv`).
 
 
-## 2026-06-02 — Funciones Sobrecargadas y Despliegues Manuales
+## 2026-06-02 ï¿½ Funciones Sobrecargadas y Despliegues Manuales
 
-**Qué pasó:** Un error de tipo PGRST203 colapsó la tienda de Producción porque una actualización de SQL cambió el orden de los argumentos booleanos, creando una función sobrecargada.
-**Lo que cambió:**
-- lessons_learned.md -> Lección #178 (Funciones sobrecargadas y Cloudflare)
-- LEYES_DEL_SISTEMA.md -> Leyes 34 y 35 (Respetar orden de firmas SQL y Sincronización manual en Cloudflare)
+**Quï¿½ pasï¿½:** Un error de tipo PGRST203 colapsï¿½ la tienda de Producciï¿½n porque una actualizaciï¿½n de SQL cambiï¿½ el orden de los argumentos booleanos, creando una funciï¿½n sobrecargada.
+**Lo que cambiï¿½:**
+- lessons_learned.md -> Lecciï¿½n #178 (Funciones sobrecargadas y Cloudflare)
+- LEYES_DEL_SISTEMA.md -> Leyes 34 y 35 (Respetar orden de firmas SQL y Sincronizaciï¿½n manual en Cloudflare)
 **Regla derivada:** LEY 34 y LEY 35 agregadas.
 
 
-## 2026-06-02 — Bug en Filtro Cruzado de Categorías
+## 2026-06-02 ï¿½ Bug en Filtro Cruzado de Categorï¿½as
 
-**Qué pasó:** El filtro cruzado de categorías ('Otros') devolvía 'SIN RESULTADOS' a pesar de haber inventario activo.
-**Lo que cambió:**
-- `lessons_learned.md` -> Lección #179: Uso correcto de category vs category_code.
+**Quï¿½ pasï¿½:** El filtro cruzado de categorï¿½as ('Otros') devolvï¿½a 'SIN RESULTADOS' a pesar de haber inventario activo.
+**Lo que cambiï¿½:**
+- `lessons_learned.md` -> Lecciï¿½n #179: Uso correcto de category vs category_code.
 - `LEYES_DEL_SISTEMA.md` -> Agregada la Ley 36.
-**Regla derivada:** Diferenciación estricta entre búsqueda ILIKE (category) y MATCH exacto (category_code).
+**Regla derivada:** Diferenciaciï¿½n estricta entre bï¿½squeda ILIKE (category) y MATCH exacto (category_code).
 
 
 ## 2026-06-04 - Fix URL Edge Function y Resiliencia de Fallback
 
-**Qué pasó:** El usuario reportó múltiples errores rojos en la consola de Producción. Se investigó y se concluyó que muchos eran producto de una extensión de Chrome (Jam.dev), pero además se corrigió un 404 proveniente de la Edge Function.
-**Lo que cambió:**
+**Quï¿½ pasï¿½:** El usuario reportï¿½ mï¿½ltiples errores rojos en la consola de Producciï¿½n. Se investigï¿½ y se concluyï¿½ que muchos eran producto de una extensiï¿½n de Chrome (Jam.dev), pero ademï¿½s se corrigiï¿½ un 404 proveniente de la Edge Function.
+**Lo que cambiï¿½:**
 - rontend/src/utils/api.ts -> Modificada etchCardDetails para usar getApiUrl al invocar la Edge Function.
-- lessons_learned.md -> Lección #180 (Construcción Correcta de URL para Edge Functions).
-**Regla derivada:** LEY 37: Centralización en la construcción de endpoints API en el frontend.
+- lessons_learned.md -> Lecciï¿½n #180 (Construcciï¿½n Correcta de URL para Edge Functions).
+**Regla derivada:** LEY 37: Centralizaciï¿½n en la construcciï¿½n de endpoints API en el frontend.
