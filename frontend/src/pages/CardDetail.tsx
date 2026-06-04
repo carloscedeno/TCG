@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useParams, useNavigate, Link, useSearchParams, useLocation } from 'react-router-dom';
 import {
     X, ShoppingCart, RotateCw, ExternalLink, Loader2,
-    ArrowLeft, CheckCircle2, AlertCircle
+    ArrowLeft, CheckCircle2, AlertCircle, ChevronLeft, ChevronRight
 } from 'lucide-react';
 import { getCardKingdomUrl } from '../utils/urlUtils';
 import { fetchCardDetails, addToCart } from '../utils/api';
@@ -129,6 +129,8 @@ export const CardDetail: React.FC = () => {
     };
 
 
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
     const getLegalityIcon = (status: string) => {
         switch (status) {
             case 'legal': return <CheckCircle2 size={16} className="text-geeko-cyan" />;
@@ -141,15 +143,26 @@ export const CardDetail: React.FC = () => {
 
     const relevantFormats = ['standard', 'pioneer', 'modern', 'legacy', 'commander', 'pauper'];
 
-    const currentImage = (() => {
+    const allImages = useMemo(() => {
+        const list: string[] = [];
+        let mainImg = details?.image_url;
         if (details?.card_faces && details.card_faces.length > 0) {
             const face = details.card_faces[currentFaceIndex];
             if (face?.image_uris) {
-                return face.image_uris.normal || face.image_uris.large || face.image_uris.png;
+                mainImg = face.image_uris.normal || face.image_uris.large || face.image_uris.png;
             }
         }
-        return details?.image_url;
-    })();
+        if (mainImg) list.push(mainImg);
+
+        if (details?.additional_images && details.additional_images.length > 0) {
+            details.additional_images.forEach((img: string) => {
+                if (img && !list.includes(img)) list.push(img);
+            });
+        }
+        return list;
+    }, [details?.card_faces, currentFaceIndex, details?.image_url, details?.additional_images]);
+
+    const currentImage = allImages[currentImageIndex] || allImages[0] || '';
 
     const versionGroups = useMemo(() => {
         if (!details?.all_versions) return [];
@@ -250,6 +263,47 @@ export const CardDetail: React.FC = () => {
                                         className="drop-shadow-[0_45px_100px_rgba(0,0,0,0.95)] z-10 hover:scale-[1.03] transition-all duration-700 !bg-transparent"
                                     />
                                 </div>
+                                
+                                {/* Carousel Navigation */}
+                                {!hasMultipleFaces && allImages.length > 1 && (
+                                    <>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                e.preventDefault();
+                                                setCurrentImageIndex((prev) => prev === 0 ? allImages.length - 1 : prev - 1);
+                                            }}
+                                            className="absolute top-1/2 left-4 -translate-y-1/2 z-20 p-2 bg-black/60 hover:bg-geeko-cyan text-white hover:text-black rounded-full transition-all border border-white/10 shadow-xl backdrop-blur-md opacity-0 group-hover:opacity-100"
+                                        >
+                                            <ChevronLeft size={20} />
+                                        </button>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                e.preventDefault();
+                                                setCurrentImageIndex((prev) => (prev + 1) % allImages.length);
+                                            }}
+                                            className="absolute top-1/2 right-4 -translate-y-1/2 z-20 p-2 bg-black/60 hover:bg-geeko-cyan text-white hover:text-black rounded-full transition-all border border-white/10 shadow-xl backdrop-blur-md opacity-0 group-hover:opacity-100"
+                                        >
+                                            <ChevronRight size={20} />
+                                        </button>
+
+                                        {/* Carousel Indicators */}
+                                        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+                                            {allImages.map((_, idx) => (
+                                                <button
+                                                    key={idx}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setCurrentImageIndex(idx);
+                                                    }}
+                                                    className={`w-2 h-2 rounded-full transition-all ${idx === currentImageIndex ? 'bg-geeko-cyan shadow-[0_0_8px_rgba(0,209,255,0.8)] scale-125' : 'bg-white/30 hover:bg-white/60'}`}
+                                                />
+                                            ))}
+                                        </div>
+                                    </>
+                                )}
+
                                 {hasMultipleFaces && (
                                     <button
                                         onClick={() => setCurrentFaceIndex(prev => (prev + 1) % 2)}
