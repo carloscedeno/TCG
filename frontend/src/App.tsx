@@ -31,6 +31,8 @@ import { PresalesPage } from './pages/Admin/PresalesPage';
 import { PosSessionBanner } from './components/Admin/PosSessionBanner';
 import CategoriesPage from './pages/Admin/CategoriesPage';
 import MediaPage from './pages/Admin/MediaPage';
+import { PwaReloadPrompt } from './components/Navigation/PwaReloadPrompt';
+import { BottomNav } from './components/Navigation/BottomNav';
 
 const isSupabaseConfigured = !!import.meta.env.VITE_SUPABASE_URL && !!import.meta.env.VITE_SUPABASE_ANON_KEY;
 
@@ -107,6 +109,8 @@ function App() {
                     </Routes>
                     <WelcomeModal />
                     <WhatsAppWidget />
+                    <PwaReloadPrompt />
+                    <BottomNav />
                 </Router>
             </CartProvider>
         </AuthProvider>

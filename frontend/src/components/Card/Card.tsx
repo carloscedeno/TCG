@@ -307,10 +307,10 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         {showCartButton && (
           <button
             onClick={handleQuickAdd}
-            className={`absolute bottom-3 right-3 h-10 rounded-full flex items-center justify-center transition-all duration-300 shadow-2xl z-20 group/addbtn ${
+            className={`absolute bottom-3 right-3 h-12 lg:h-10 rounded-full flex items-center justify-center transition-all duration-300 shadow-2xl z-20 group/addbtn ${
               addingToCart 
-                ? 'w-10 bg-white text-black scale-100 opacity-100' 
-                : 'w-10 hover:w-[140px] bg-geeko-cyan text-black border border-white/20 shadow-[0_0_15px_rgba(0, 209, 255, 0.4)] opacity-100 translate-y-0 scale-100'
+                ? 'w-12 lg:w-10 bg-white text-black scale-100 opacity-100' 
+                : 'w-12 lg:w-10 hover:w-[140px] bg-geeko-cyan text-black border border-white/20 shadow-[0_0_15px_rgba(0, 209, 255, 0.4)] opacity-100 translate-y-0 scale-100'
             }`}
           >
             <div className="flex items-center gap-2 whitespace-nowrap overflow-hidden px-1">

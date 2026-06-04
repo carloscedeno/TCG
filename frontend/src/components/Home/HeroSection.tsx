@@ -126,7 +126,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ gameCode }) => {
             <div className="relative group rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-[#050505]">
                 <a
                     href={currentItem.link_url || '#'}
-                    className="block w-full aspect-[3.5/1]"
+                    className="block w-full aspect-[2/1] sm:aspect-[3.5/1]"
                 >
                     <img
                         src={currentItem.image_url}

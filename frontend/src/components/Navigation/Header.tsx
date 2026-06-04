@@ -68,9 +68,9 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
     return (
         <header className="sticky top-0 z-50 w-full bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-white/5 shadow-2xl">
             {/* Top Bar: Logo & Search & User */}
-            <div className="max-w-[1600px] mx-auto px-4 h-[60px] flex items-center justify-between gap-12">
+            <div className="max-w-[1600px] mx-auto px-4 h-14 lg:h-[60px] flex items-center justify-between gap-12">
                 <Link to="/" className="flex-shrink-0 group relative">
-                    <img src="/branding/Logo.png" alt="Geekorium" className="w-32 sm:w-40 object-contain group-hover:scale-105 transition-transform" />
+                    <img src="/branding/Logo.png" alt="Geekorium" className="w-28 sm:w-40 object-contain group-hover:scale-105 transition-transform" />
                     <span className="absolute -top-1 -right-4 bg-red-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded-md rotate-12 shadow-lg">BETA</span>
                 </Link>
 
@@ -110,7 +110,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
 
                 <div className="flex items-center gap-4 md:gap-6">
                     <div className="flex items-center gap-3">
-                        <button onClick={onCartOpen} data-testid="cart-button" className="relative p-2 text-text-low hover:text-text-high transition-all">
+                        <button onClick={onCartOpen} data-testid="cart-button" className="hidden lg:flex relative p-2 text-text-low hover:text-text-high transition-all">
                             <ShoppingCart size={22} />
                             {cartCount > 0 && (
                                 <div className="absolute -top-1 -right-1 bg-white text-black text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center">
@@ -118,7 +118,9 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                                 </div>
                             )}
                         </button>
-                        <UserMenu />
+                        <div className="hidden lg:block">
+                            <UserMenu />
+                        </div>
                         <button className="lg:hidden text-white" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
                             {isMobileMenuOpen ? <X size={24} /> : <MenuIcon size={24} />}
                         </button>
