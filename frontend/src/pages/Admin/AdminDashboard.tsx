@@ -115,7 +115,7 @@ export const AdminDashboard = () => {
                     .gte('created_at', lastWeekISO)
                     .in('status', ['cancelled', 'returned', 'refunded']),
                 supabase.from('profiles').select('*', { count: 'exact', head: true }),
-                supabase.from('products').select('updated_at').order('updated_at', { ascending: false }).limit(1)
+                supabase.from('card_printings').select('updated_at').order('updated_at', { ascending: false }).limit(1)
             ]);
 
             setStats({
