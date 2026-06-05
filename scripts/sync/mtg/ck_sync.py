@@ -87,7 +87,8 @@ def update_denormalized_prices(printing_ids=None):
             UPDATE public.card_printings cp
             SET 
                 avg_market_price_usd = lnf.price_usd,
-                non_foil_price = lnf.price_usd
+                non_foil_price = lnf.price_usd,
+                updated_at = NOW()
             FROM latest_non_foil lnf
             WHERE cp.printing_id = lnf.printing_id;
             """
@@ -107,7 +108,8 @@ def update_denormalized_prices(printing_ids=None):
             UPDATE public.card_printings cp
             SET 
                 avg_market_price_foil_usd = lf.price_usd,
-                foil_price = lf.price_usd
+                foil_price = lf.price_usd,
+                updated_at = NOW()
             FROM latest_foil lf
             WHERE cp.printing_id = lf.printing_id;
             """
@@ -130,7 +132,8 @@ def update_denormalized_prices(printing_ids=None):
                   CASE WHEN LOWER(COALESCE(p.finish, 'nonfoil')) IN ('foil', 'etched') THEN cp.avg_market_price_foil_usd 
                        ELSE cp.avg_market_price_usd 
                   END, 
-                  p.price, p.price_usd, 0)
+                  p.price, p.price_usd, 0),
+              updated_at = NOW()
             FROM public.card_printings cp
             WHERE p.printing_id = cp.printing_id {prod_where_clause}
               AND (

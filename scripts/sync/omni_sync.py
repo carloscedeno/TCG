@@ -49,7 +49,7 @@ def run_omni_sync():
         # For now, let's just sync the 'base1' (test) or metadata if no set provided
         # The pokemon_sync script handles metadata if no set_id is passed
         run_pokemon_sync() 
-        logger.info("✅ Pokemon Metadata Sync Completed.")
+        logger.info("[OK] Pokemon Metadata Sync Completed.")
         
         # If we want to sync specific high-value sets automatically:
         # sets_to_sync = ["swsh12pt5", "sv4pt5", "base1"]
@@ -57,7 +57,7 @@ def run_omni_sync():
         #    run_pokemon_sync(s)
         
     except Exception as e:
-        logger.error(f"❌ Pokemon Sync Failed: {e}")
+        logger.error(f"[ERROR] Pokemon Sync Failed: {e}")
 
     end_time = datetime.now()
     duration = end_time - start_time
