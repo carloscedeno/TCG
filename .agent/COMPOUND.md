@@ -421,3 +421,11 @@ Siempre proveer un caso de evaluaciÃ³n estricto en sentencias SQL cuando el sist
 - rontend/src/utils/api.ts -> Modificada etchCardDetails para usar getApiUrl al invocar la Edge Function.
 - lessons_learned.md -> Lecciï¿½n #180 (Construcciï¿½n Correcta de URL para Edge Functions).
 **Regla derivada:** LEY 37: Centralizaciï¿½n en la construcciï¿½n de endpoints API en el frontend.
+
+## 2026-06-04 — Mejoras Visuales en Detalle de Producto
+
+**Qué pasó:** Se integró un carrusel de imágenes y se corrigió el recorte de texto para productos con múltiples imágenes en el frontend.
+**Lo que cambió:**
+- CardDetail.tsx -> Implementación de Carrusel y arreglos layout Flexbox
+- lessons_learned.md -> Lección #181 (Supabase Storage RLS Concurrency)
+

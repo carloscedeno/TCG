@@ -2352,3 +2352,10 @@ useEffect(() => {
 - **Causa Raï¿½z:** El frontend intentaba consumir la Edge Function omitiendo el prefijo /api o /tcg-api necesario al concatenar directamente API_BASE y /cards/.... Esto causaba que la llamada HTTP fallara, aunque el sistema se recuperaba consultando la tabla directamente.
 - **Soluciï¿½n:** Utilizar la funciï¿½n de utilidad getApiUrl() en etchCardDetails (utils/api.ts) que garantiza la correcta inyecciï¿½n del prefijo, y comprender que los fallbacks a card_printings son mecanismos resilientes esperados.
 - **Regla Derivada:** LEY 37 (Utilizar SIEMPRE getApiUrl para construir endpoints de Edge Functions en el frontend).
+
+
+### 181. Supabase Storage RLS Concurrency y Promise.all() - 2026-06-04
+- **Problema:** Al intentar subir múltiples imágenes simultáneamente usando Promise.all() hacia un bucket de Supabase Storage, el servidor retornaba un falso error 400 Bad Request: new row violates row-level security policy.
+- **Causa Raíz:** Las subidas concurrentes a la misma tabla storage.objects pueden causar colisiones internas o bloqueos durante la evaluación de la política RLS en Supabase, resultando en un rechazo arbitrario.
+- **Solución:** Reemplazar Promise.all() por iteraciones secuenciales (or...of) con wait para subir archivo por archivo, garantizando que no existan carreras de ejecución en el bucket.
+- **Regla Derivada:** Al subir múltiples imágenes a Supabase Storage desde el frontend, SIEMPRE usar un enfoque secuencial (for-loop) en vez de concurrente (Promise.all) para evitar falsos errores de RLS.
