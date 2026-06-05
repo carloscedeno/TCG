@@ -429,3 +429,14 @@ Siempre proveer un caso de evaluación estricto en sentencias SQL cuando el sist
 - CardDetail.tsx -> Implementaci�n de Carrusel y arreglos layout Flexbox
 - lessons_learned.md -> Lecci�n #181 (Supabase Storage RLS Concurrency)
 
+
+
+## 2026-06-05 — Reparación de Analíticas y Banner Fantasma
+
+**Qué pasó:** El usuario reportó que el Admin Dashboard mostraba 'Sincronización Retrasada' continuamente a menos que se hiciera un Hard Refresh. Adicionalmente, el panel de métricas de Cloudflare devolvía error 500 por 'Admin endpoint not found'.
+**Lo que cambió:**
+- `supabase/functions/api/index.ts` → Rutas normalizadas con `includes()` para Cloudflare Analytics.
+- `frontend/src/pages/Admin/AdminDashboard.tsx` → Implementado Cache-busting dinámico en el query de polling de fecha. Agregada la exclusión de nulos.
+- **DB:** Creado `idx_card_printings_updated_at` para prevenir table scans que bloqueaban las peticiones de fetchStats.
+- `.agent/lessons_learned.md` → Lección #36 (Cache Busting y Edge Function Proxys)
+

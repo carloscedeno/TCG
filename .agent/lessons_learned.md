@@ -2359,3 +2359,17 @@ useEffect(() => {
 - **Causa Raíz:** Las subidas concurrentes a la misma tabla storage.objects pueden causar colisiones internas o bloqueos durante la evaluación de la política RLS en Supabase, resultando en un rechazo arbitrario.
 - **Solución:** Reemplazar Promise.all() por iteraciones secuenciales (or...of) con wait para subir archivo por archivo, garantizando que no existan carreras de ejecución en el bucket.
 - **Regla Derivada:** Al subir múltiples imágenes a Supabase Storage desde el frontend, SIEMPRE usar un enfoque secuencial (for-loop) en vez de concurrente (Promise.all) para evitar falsos errores de RLS.
+
+
+### 36. [Routing en Edge Functions & Cache-Busting UI] â€” 2026-06-05
+- **Problema:** El AdminDashboard daba error 500 para Cloudflare Analytics y el banner de 'SincronizaciÃ³n Retrasada' se quedaba atascado en el tiempo.
+- **Causa RaÃ­z:** 
+  1. El servidor de Supabase corta los prefijos en la URL al hacer proxys internos, rompiendo comprobaciones `path === '/api/admin/cloudflare/analytics'`.
+  2. Consultar `order('updated_at', {desc: true})` sobre `card_printings` (sin Ã­ndices) causaba un escaneo secuencial masivo, resultando en nulls silenciosos o timeouts.
+  3. Al consultar cada 30s la misma URL de PostgREST, Google Chrome/Safari cachean agresivamente devolviendo 304 Not Modified, ignorando las actualizaciones en la DB.
+- **SoluciÃ³n:** 
+  1. Usar `path.includes('/admin/cloudflare/analytics')` para todas las validaciones de ruta en Edge Functions.
+  2. Indexar la tabla `card_printings(updated_at DESC NULLS LAST)`.
+  3. Inyectar cache-busting en el cliente Supabase-JS con `.neq('printing_id', Date.now().toString())`.
+- **Regla Derivada:** NUNCA hacer polling estÃ¡tico con `supabase.from().select()` sin un mecanismo de invalidaciÃ³n de cachÃ© o cache-busting. NUNCA usar match estricto para routing manual en Supabase Edge Functions.
+
