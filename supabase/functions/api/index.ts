@@ -1147,27 +1147,112 @@ async function handleProductsEndpoint(supabase: SupabaseClient, path: string, me
 
   throw new Error('Method not allowed')
 }
-
 async function handleAdminEndpoint(supabase: SupabaseClient, path: string, method: string, params: RequestParams, authToken?: string) {
   // Basic Auth Check
   if (!authToken) throw new Error('Unauthorized: No auth token');
   const { data: { user }, error: authError } = await supabase.auth.getUser(authToken);
   if (authError || !user) throw new Error('Unauthorized: Invalid token');
 
+  // GET /api/admin/cloudflare/analytics
+  if (method === 'GET' && path.includes('/admin/cloudflare/analytics')) {
+    // 1. Verify admin role in profiles table
+    const { data: profile, error: pErr } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+    
+    if (pErr || profile?.role !== 'admin') {
+      throw new Error('Forbidden: Admin access required');
+    }
+
+    // 2. Fetch credentials from system_config
+    const { data: config, error: cErr } = await supabase
+      .from('system_config')
+      .select('key, value')
+      .in('key', ['CLOUDFLARE_ZONE_ID', 'CLOUDFLARE_API_TOKEN']);
+
+    if (cErr) throw new Error(`Config error: ${cErr.message}`);
+    
+    const zoneId = config?.find(c => c.key === 'CLOUDFLARE_ZONE_ID')?.value;
+    const token = config?.find(c => c.key === 'CLOUDFLARE_API_TOKEN')?.value;
+
+    if (!zoneId || !token) {
+      throw new Error('Cloudflare configuration (ZONE_ID/API_TOKEN) not found in system_config table');
+    }
+
+    // 3. Query Cloudflare GraphQL
+    const query = `
+      query GetAnalytics($zoneTag: String!, $start: String!) {
+        viewer {
+          zones(filter: { zoneTag: $zoneTag }) {
+            # Hourly traffic and cache
+            httpRequests1hGroups(limit: 24, filter: { datetime_gt: $start }, orderBy: [datetime_ASC]) {
+              dimensions { datetime }
+              sum { requests, pageViews, bytes, cachedRequests }
+            }
+          }
+        }
+      }
+    `;
+
+    const startTime = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+
+    const cfResponse = await fetch("https://api.cloudflare.com/client/v4/graphql", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        query,
+        variables: { zoneTag: zoneId, start: startTime }
+      })
+    });
+
+    const cfResult = await cfResponse.json();
+    if (cfResult.errors) {
+      throw new Error(cfResult.errors[0].message);
+    }
+
+    const zoneData = cfResult.data.viewer.zones[0];
+    const groups = zoneData?.httpRequests1hGroups || [];
+
+    const totalRequests = groups.reduce((acc: number, g: any) => acc + (g.sum.requests || 0), 0);
+    const totalCached = groups.reduce((acc: number, g: any) => acc + (g.sum.cachedRequests || 0), 0);
+    const cacheHitRatio = totalRequests > 0 ? (totalCached / totalRequests) * 100 : 0;
+
+    return {
+      success: true,
+      data: groups,
+      top_countries: [],
+      top_paths: [],
+      security: {
+        threats_blocked: 0 // Node restricted in current plan
+      },
+      summary: {
+        total_requests: totalRequests,
+        total_pageviews: groups.reduce((acc: number, g: any) => acc + (g.sum.pageViews || 0), 0),
+        cache_hit_ratio: Math.round(cacheHitRatio * 100) / 100,
+        total_bandwidth_gb: Math.round((groups.reduce((acc: number, g: any) => acc + (g.sum.bytes || 0), 0) / (1024 * 1024 * 1024)) * 100) / 100
+      }
+    };
+  }
+
   // GET /api/admin/tasks
-  if (method === 'GET' && path === '/api/admin/tasks') {
+  if (method === 'GET' && path.includes('/admin/tasks') && !path.includes('/logs')) {
     // Return empty array to verify connectivity and fix 400 error
     return [];
   }
 
   // POST /api/admin/scraper/run/:source
-  if (method === 'POST' && path.startsWith('/api/admin/scraper/run/')) {
+  if (method === 'POST' && path.includes('/admin/scraper/run/')) {
     const source = path.split('/').pop();
     return { message: `Scraper '${source}' triggered successfully (Mock)`, status: 'queued' };
   }
 
   // POST /api/admin/catalog/sync/:gameCode
-  if (method === 'POST' && path.startsWith('/api/admin/catalog/sync/')) {
+  if (method === 'POST' && path.includes('/admin/catalog/sync/')) {
     const gameCode = path.split('/').pop();
     return { message: `Catalog sync for '${gameCode}' triggered successfully (Mock)`, status: 'queued' };
   }
