@@ -6,6 +6,8 @@ on:
     - cron: '0 5 * * *'
   workflow_dispatch:
     # Allow manual triggering
+  repository_dispatch:
+    types: [manual_sync_trigger, omni_sync_trigger]
 
 jobs:
   sync-all:
