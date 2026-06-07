@@ -93,7 +93,11 @@ def upsert_batch(batch: list, batch_num: int, total_batches: int, max_retries: i
 
 def main():
     print("🚀 Iniciando sincronización de sets desde Scryfall...")
-    resp = requests.get(SCRYFALL_SETS_URL)
+    headers = {
+        "User-Agent": "TCGWebApp/1.0 (Contact: admin@geeko.com)",
+        "Accept": "application/json"
+    }
+    resp = requests.get(SCRYFALL_SETS_URL, headers=headers)
     resp.raise_for_status()
     all_sets = resp.json()['data']
     print(f"Total de sets encontrados en Scryfall: {len(all_sets)}")
