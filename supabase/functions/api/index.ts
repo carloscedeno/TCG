@@ -1257,6 +1257,66 @@ async function handleAdminEndpoint(supabase: SupabaseClient, path: string, metho
     return { message: `Catalog sync for '${gameCode}' triggered successfully (Mock)`, status: 'queued' };
   }
 
+  // GET /api/admin/price-update-jobs
+  if (method === 'GET' && path.includes('/admin/price-update-jobs') && !path.includes('/details')) {
+    const { data, error } = await supabase
+      .from('price_update_jobs')
+      .select('*')
+      .order('started_at', { ascending: false })
+      .limit(20);
+    if (error) throw new Error(error.message);
+    return data || [];
+  }
+
+  // GET /api/admin/price-update-jobs/:id/details
+  if (method === 'GET' && path.match(/\/admin\/price-update-jobs\/[^\/]+\/details/)) {
+    const idMatch = path.match(/\/admin\/price-update-jobs\/([^\/]+)\/details/);
+    if (!idMatch) throw new Error('Invalid job ID');
+    const id = idMatch[1];
+    
+    const { data: job, error: jobErr } = await supabase
+      .from('price_update_jobs')
+      .select('started_at, completed_at')
+      .eq('id', id)
+      .single();
+    if (jobErr) throw new Error(jobErr.message);
+    if (!job) return [];
+    
+    const endTime = job.completed_at || new Date().toISOString();
+    const { data: history, error: histErr } = await supabase
+      .from('price_history')
+      .select(`
+        timestamp,
+        price_usd,
+        is_foil,
+        condition_id,
+        price_type,
+        card_printings!inner (
+          set_code,
+          cards!inner ( name )
+        )
+      `)
+      .gte('timestamp', job.started_at)
+      .lte('timestamp', endTime)
+      .order('timestamp', { ascending: false })
+      .limit(200);
+
+    if (histErr) {
+        console.error("Error fetching history details:", histErr);
+        throw new Error(histErr.message);
+    }
+    
+    return history?.map((h: any) => ({
+        timestamp: h.timestamp,
+        price_usd: h.price_usd,
+        is_foil: h.is_foil,
+        price_type: h.price_type,
+        condition_id: h.condition_id,
+        card_name: h.card_printings?.cards?.name || 'Unknown Card',
+        set_code: h.card_printings?.set_code || 'UNK'
+    })) || [];
+  }
+
   // GET /api/admin/tasks/:id/logs
   if (method === 'GET' && path.includes('/logs')) {
     return { logs: "Logs system initializing... No logs currently available." };

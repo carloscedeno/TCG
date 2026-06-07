@@ -5,6 +5,7 @@ import { Play, Settings, Users, Database, Shield, AlertCircle, Package, External
 
 import { supabase } from '../../utils/supabaseClient';
 import { CloudflareAnalytics } from '../../components/Admin/CloudflareAnalytics';
+import { PriceUpdateHistory } from '../../components/Admin/PriceUpdateHistory';
 
 const API_BASE = import.meta.env.VITE_API_BASE;
 
@@ -609,6 +610,8 @@ export const AdminDashboard = () => {
                         </div>
                     </div>
                 )}
+                
+                <PriceUpdateHistory />
             </div>
 
             {showLogModal && (
