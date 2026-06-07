@@ -451,6 +451,10 @@ export const AdminDashboard = () => {
                 </div>
 
                 <div className="mb-12">
+                    <PriceUpdateHistory />
+                </div>
+
+                <div className="mb-12">
                     <CloudflareAnalytics session={session} apiBase={API_BASE} />
                 </div>
 
@@ -610,8 +614,6 @@ export const AdminDashboard = () => {
                         </div>
                     </div>
                 )}
-                
-                <PriceUpdateHistory />
             </div>
 
             {showLogModal && (
