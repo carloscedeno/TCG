@@ -25,7 +25,7 @@ interface PriceChange {
     set_code: string;
 }
 
-export const PriceUpdateHistory = () => {
+export const PriceUpdateHistory = ({ onClose }: { onClose: () => void }) => {
     const { session } = useAuth();
     const [jobs, setJobs] = useState<Job[]>([]);
     const [loading, setLoading] = useState(true);
@@ -91,26 +91,35 @@ export const PriceUpdateHistory = () => {
     };
 
     return (
-        <div className="bg-slate-900/50 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-sm mt-12">
-            <div className="p-6 border-b border-white/5 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center border border-purple-500/20">
-                        <Database className="w-5 h-5 text-purple-400" />
+        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+            <div className="bg-slate-900/50 border border-white/5 w-full max-w-5xl max-h-[90vh] rounded-3xl overflow-hidden backdrop-blur-sm shadow-[0_0_50px_rgba(0,0,0,0.5)] flex flex-col">
+                <div className="p-6 border-b border-white/5 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center border border-purple-500/20">
+                            <Database className="w-5 h-5 text-purple-400" />
+                        </div>
+                        <div>
+                            <h2 className="text-xl font-black uppercase tracking-tighter text-white">Histórico de Actualización</h2>
+                            <p className="text-slate-400 text-xs mt-1">Registro de sincronización de precios e inventario en bloque</p>
+                        </div>
                     </div>
-                    <div>
-                        <h2 className="text-xl font-black uppercase tracking-tighter text-white">Histórico de Actualización</h2>
-                        <p className="text-slate-400 text-xs mt-1">Registro de sincronización de precios e inventario en bloque</p>
+                    <div className="flex gap-4">
+                        <button 
+                            onClick={fetchJobs} 
+                            className="text-xs bg-white/5 hover:bg-white/10 px-4 py-2 rounded-lg transition border border-white/5 uppercase tracking-widest font-bold text-slate-300"
+                        >
+                            Refrescar
+                        </button>
+                        <button 
+                            onClick={onClose} 
+                            className="text-xs bg-red-500/10 hover:bg-red-500/20 px-4 py-2 rounded-lg transition border border-red-500/20 uppercase tracking-widest font-bold text-red-400"
+                        >
+                            <XCircle className="w-4 h-4" />
+                        </button>
                     </div>
                 </div>
-                <button 
-                    onClick={fetchJobs} 
-                    className="text-xs bg-white/5 hover:bg-white/10 px-4 py-2 rounded-lg transition border border-white/5 uppercase tracking-widest font-bold text-slate-300"
-                >
-                    Refrescar
-                </button>
-            </div>
 
-            <div className="p-6">
+                <div className="p-6 overflow-y-auto custom-scrollbar flex-grow">
                 {loading && jobs.length === 0 ? (
                     <div className="text-center py-12 text-slate-500 text-sm font-bold animate-pulse">
                         CARGANDO HISTORIAL...
@@ -226,6 +235,7 @@ export const PriceUpdateHistory = () => {
                         ))}
                     </div>
                 )}
+                </div>
             </div>
         </div>
     );
