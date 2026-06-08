@@ -4,7 +4,6 @@ import { PortfolioStats } from '../components/Profile/PortfolioStats';
 import { useAuth } from '../context/AuthContext';
 import { CollectionService } from '../services/CollectionService';
 import type { CollectionItem } from '../services/CollectionService';
-import { Link } from 'react-router-dom';
 import { Loader2, Settings } from 'lucide-react';
 
 import OrdersList from '../components/Profile/OrdersList';
