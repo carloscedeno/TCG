@@ -1225,7 +1225,7 @@ async function handleAdminEndpoint(supabase: SupabaseClient, path: string, metho
   if (authError || !user) throw new Error('Unauthorized: Invalid token');
 
   // GET /api/admin/cloudflare/analytics
-  if (method === 'GET' && path === '/api/admin/cloudflare/analytics') {
+  if (method === 'GET' && path.includes('/admin/cloudflare/analytics')) {
     // 1. Verify admin role in profiles table
     const { data: profile, error: pErr } = await supabase
       .from('profiles')
@@ -1311,19 +1311,19 @@ async function handleAdminEndpoint(supabase: SupabaseClient, path: string, metho
   }
 
   // GET /api/admin/tasks
-  if (method === 'GET' && path === '/api/admin/tasks') {
+  if (method === 'GET' && path.includes('/admin/tasks') && !path.includes('/logs')) {
     // Return empty array to verify connectivity and fix 400 error
     return [];
   }
 
   // POST /api/admin/scraper/run/:source
-  if (method === 'POST' && path.startsWith('/api/admin/scraper/run/')) {
+  if (method === 'POST' && path.includes('/admin/scraper/run/')) {
     const source = path.split('/').pop();
     return { message: `Scraper '${source}' triggered successfully (Mock)`, status: 'queued' };
   }
 
   // POST /api/admin/catalog/sync/:gameCode
-  if (method === 'POST' && path.startsWith('/api/admin/catalog/sync/')) {
+  if (method === 'POST' && path.includes('/admin/catalog/sync/')) {
     const gameCode = path.split('/').pop();
     return { message: `Catalog sync for '${gameCode}' triggered successfully (Mock)`, status: 'queued' };
   }

@@ -476,3 +476,13 @@ Siempre proveer un caso de evaluaciÃ³n estricto en sentencias SQL cuando el si
 **Artefacto creado:** Graphify Knowledge Graph (graphify-out/).
 **Regla derivada:** Siempre leer SESSION_STATE.md al inicio. Buscar en el grafo con graphify query antes de usar grep. Tareas grandes requieren un mini-spec antes de codificar.
 
+## 2026-06-08 — Integración de UX de Perfil, Avatares y Checkout Autofill
+
+**Qué pasó:** El usuario reportó problemas con la página de Perfil, fallos silenciosos al guardar configuraciones, y un bug donde los pedidos no aparecían en el historial. Además, se pidió prellenar el checkout con los datos del perfil y añadir soporte para fotos de perfil.
+**Lo que cambió:**
+- `Profile.tsx` → Se reemplazó el header manual por el `<Header />` global para mantener la navegación. Se eliminó la sección estática "Financial Intelligence".
+- **DB:** Se añadió una política RLS `Users can update own profile` en `public.profiles` (estaba fallando silenciosamente) y se creó un bucket `avatars` con su respectiva columna `avatar_url`.
+- `OrdersList.tsx` → Se removió el filtro `.is('deleted_at', null)` que causaba error ya que la columna no existía en `orders`.
+- `CheckoutPage.tsx` → Se añadió autocompletado de datos desde el perfil.
+- `ProfileSettingsModal.tsx` & `api.ts` → Soporte para subir imágenes al bucket `avatars`.
+**Regla derivada:** Validar las columnas existentes antes de usar `.is()` en la DB. Al usar RLS, verificar que exista política UPDATE, de lo contrario devuelve "éxito" pero modifica 0 filas.
