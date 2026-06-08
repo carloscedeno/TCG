@@ -90,6 +90,7 @@ graphify update frontend/src --no-viz
    - DEV Supabase: `bqfkqnnostzaqueujdms`
    - PROD Supabase: `sxuotvogwvmxuvwbsscv`
 5. **Testing en Dev**: No puedes pedirle al usuario que pruebe algo en 'dev' (ej: dev.geekorium.shop) si no has hecho un `git push` de tus cambios. El entorno dev es remoto, por lo que los cambios locales no se reflejan allí automáticamente hasta que se despliegan mediante CI/CD.
+6. **Ejecución Remota de SQL**: Tienes disponible el MCP de Supabase. NUNCA le pidas al usuario que ejecute migraciones, DDL o queries SQL manualmente en su Dashboard. Usa la herramienta `call_mcp_tool` con `execute_sql` (o las de migración) para aplicar los cambios tú mismo en la base de datos remota.
 
 ---
 
