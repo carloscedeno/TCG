@@ -4,20 +4,24 @@ import { PortfolioStats } from '../components/Profile/PortfolioStats';
 import { useAuth } from '../context/AuthContext';
 import { CollectionService } from '../services/CollectionService';
 import type { CollectionItem } from '../services/CollectionService';
-import { UserMenu } from '../components/Navigation/UserMenu';
 import { Link } from 'react-router-dom';
 import { Loader2, Settings } from 'lucide-react';
 
 import OrdersList from '../components/Profile/OrdersList';
 import { ProfileSettingsModal } from '../components/Profile/ProfileSettingsModal';
 import { supabase } from '../utils/supabaseClient';
+import { useCart } from '../context/CartContext';
+import { Header } from '../components/Navigation/Header';
+import { CartDrawer } from '../components/Navigation/CartDrawer';
 
 const ProfilePage: React.FC = () => {
     const { session, user } = useAuth();
+    const { cartCount } = useCart();
     const [collection, setCollection] = useState<CollectionItem[]>([]);
     const [loading, setLoading] = useState(false);
     const [profileData, setProfileData] = useState<any>(null);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    const [isCartOpen, setIsCartOpen] = useState(false);
 
     const loadProfileData = async () => {
         if (!user) return;
@@ -66,20 +70,7 @@ const ProfilePage: React.FC = () => {
             </div>
 
             {/* Header */}
-            <header className="bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-white/5 sticky top-0 z-50 shadow-2xl shadow-black/50 relative">
-                <nav className="max-w-[1600px] mx-auto px-6 py-3 flex items-center justify-between">
-                    <div className="flex items-center gap-8">
-                        <Link to="/" className="flex items-center gap-4 hover:opacity-80 transition-opacity">
-                            <div className="flex items-center justify-center font-black text-xl italic text-white shadow-lg shadow-blue-600/20">
-                                <span className="text-white">El</span>&nbsp;Emporio
-                            </div>
-                        </Link>
-                    </div>
-                    <div className="flex items-center gap-4">
-                        {user && <UserMenu />}
-                    </div>
-                </nav>
-            </header>
+            <Header onCartOpen={() => setIsCartOpen(true)} cartCount={cartCount} />
 
             <div className="relative z-10 py-12 px-4">
                 <div className="max-w-6xl mx-auto space-y-12">
@@ -151,6 +142,8 @@ const ProfilePage: React.FC = () => {
                 currentProfile={profileData}
                 onProfileUpdated={loadProfileData}
             />
+
+            <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
         </div>
     );
 };
