@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { User, LogIn, LogOut } from 'lucide-react';
 
 interface MobileMenuDrawerProps {
     isOpen: boolean;
@@ -9,6 +11,7 @@ interface MobileMenuDrawerProps {
 
 export const MobileMenuDrawer: React.FC<MobileMenuDrawerProps> = ({ isOpen, onClose }) => {
     const navigate = useNavigate();
+    const { user, openAuthModal, signOut } = useAuth();
     const [categories, setCategories] = useState<any[]>([]);
 
     const tcgGames = [
@@ -65,6 +68,44 @@ export const MobileMenuDrawer: React.FC<MobileMenuDrawerProps> = ({ isOpen, onCl
                 {/* Content */}
                 <div className="flex-1 overflow-y-auto px-6 py-6 custom-scrollbar pb-10">
                     <div className="space-y-8">
+                        {/* Auth Section */}
+                        <div className="bg-white/5 rounded-2xl p-4 border border-white/5">
+                            {user ? (
+                                <div className="space-y-4">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-10 h-10 rounded-full bg-geeko-cyan/20 flex items-center justify-center border border-geeko-cyan/50">
+                                            <User size={20} className="text-geeko-cyan" />
+                                        </div>
+                                        <div className="flex-1 overflow-hidden">
+                                            <p className="text-xs font-bold text-white truncate">{user.email?.split('@')[0]}</p>
+                                            <p className="text-[10px] text-text-low truncate">{user.email}</p>
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <button 
+                                            onClick={() => { navigate('/profile'); onClose(); }}
+                                            className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
+                                        >
+                                            Mi Perfil
+                                        </button>
+                                        <button 
+                                            onClick={() => { signOut(); onClose(); navigate('/'); }}
+                                            className="px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2"
+                                        >
+                                            <LogOut size={14} /> Salir
+                                        </button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <button 
+                                    onClick={() => { onClose(); openAuthModal(); }}
+                                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white text-black rounded-xl font-black text-xs uppercase tracking-widest hover:scale-[1.02] transition-transform shadow-[0_0_20px_rgba(255,255,255,0.2)]"
+                                >
+                                    <LogIn size={16} /> Iniciar Sesión / Registro
+                                </button>
+                            )}
+                        </div>
+
                         {/* TCG Sections */}
                         <div>
                             <h3 className="text-[10px] font-black text-text-low uppercase tracking-[0.2em] mb-4">TCG Catalog</h3>
