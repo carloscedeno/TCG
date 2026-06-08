@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { Settings } from 'lucide-react';
 
 import OrdersList from '../components/Profile/OrdersList';
+import { CreditHistoryList } from '../components/Profile/CreditHistoryList';
 import { ProfileSettingsModal } from '../components/Profile/ProfileSettingsModal';
 import { supabase } from '../utils/supabaseClient';
 import { useCart } from '../context/CartContext';
@@ -75,6 +76,35 @@ const ProfilePage: React.FC = () => {
                                 <Settings size={14} />
                                 <span className="uppercase tracking-widest hidden md:inline">Ajustes de Perfil</span>
                             </button>
+                        </div>
+                    </section>
+
+                    {/* Geek Credits Section */}
+                    <section className="animate-in slide-in-from-bottom-8 duration-700 delay-50">
+                        <div className="flex items-center gap-4 mb-8">
+                            <h2 className="text-3xl font-black italic uppercase tracking-tighter">
+                                Créditos <span className="text-geeko-gold">Geek</span>
+                            </h2>
+                            <div className="h-px flex-1 bg-gradient-to-r from-geeko-gold/50 to-transparent"></div>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            <div className="lg:col-span-1">
+                                <div className="bg-gradient-to-br from-geeko-gold/20 to-orange-600/10 border border-geeko-gold/30 rounded-[2rem] p-8 text-center backdrop-blur-md shadow-[0_0_30px_rgba(255,184,0,0.15)] relative overflow-hidden">
+                                    <div className="absolute inset-0 bg-geeko-gold/5 opacity-20 mix-blend-overlay"></div>
+                                    <h3 className="text-geeko-gold text-xs font-black uppercase tracking-[0.3em] mb-2 relative z-10">Saldo Actual</h3>
+                                    <div className="text-6xl font-black text-white italic tracking-tighter relative z-10">
+                                        {profileData?.geek_credits || 0} <span className="text-geeko-gold text-3xl">CG</span>
+                                    </div>
+                                    <p className="text-slate-400 text-xs mt-4 uppercase tracking-widest font-bold relative z-10">Disponibles</p>
+                                </div>
+                            </div>
+                            <div className="lg:col-span-2">
+                                <div className="bg-slate-900/50 border border-white/5 rounded-[2rem] p-6 backdrop-blur-md h-full">
+                                    <h3 className="text-white text-sm font-black uppercase tracking-[0.2em] mb-6">Historial de Movimientos</h3>
+                                    <CreditHistoryList />
+                                </div>
+                            </div>
                         </div>
                     </section>
 

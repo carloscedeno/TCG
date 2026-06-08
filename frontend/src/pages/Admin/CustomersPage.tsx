@@ -1,5 +1,6 @@
 import React from 'react';
 import { CartManager } from '../../components/Admin/CartManager';
+import { UserCreditsManager } from '../../components/Admin/UserCreditsManager';
 import { Shield } from 'lucide-react';
 
 const CustomersPage: React.FC = () => {
@@ -17,9 +18,11 @@ const CustomersPage: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="bg-slate-900/50 border border-white/5 rounded-[2.5rem] p-8 backdrop-blur-xl shadow-2xl">
+                <div className="bg-slate-900/50 border border-white/5 rounded-[2.5rem] p-8 backdrop-blur-xl shadow-2xl mb-12">
                     <CartManager />
                 </div>
+
+                <UserCreditsManager />
 
                 <div className="mt-12 text-center text-slate-700 text-[10px] font-black uppercase tracking-[0.3em]">
                     Geekorium Point of Sale Ecosystem • 2026
