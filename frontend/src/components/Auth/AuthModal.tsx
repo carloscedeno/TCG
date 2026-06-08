@@ -32,6 +32,7 @@ export const AuthModal = ({ isOpen, onClose, initialMode = 'login' }: {
                     email,
                     password,
                     options: {
+                        emailRedirectTo: window.location.origin,
                         data: {
                             role: 'user'
                         }
