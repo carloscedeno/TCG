@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PlayerCard from '../components/Profile/PlayerCard';
 import { useAuth } from '../context/AuthContext';
-import { Loader2, Settings } from 'lucide-react';
+import { Settings } from 'lucide-react';
 
 import OrdersList from '../components/Profile/OrdersList';
 import { ProfileSettingsModal } from '../components/Profile/ProfileSettingsModal';
