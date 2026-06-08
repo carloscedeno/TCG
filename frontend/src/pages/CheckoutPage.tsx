@@ -81,7 +81,7 @@ export const CheckoutPage = () => {
     const isFormValid = () => {
         const nameValid = form.full_name.trim().length >= 3 && /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(form.full_name.trim());
         const phoneDigits = form.whatsapp.replace(/\D/g, '');
-        const phoneValid = /^0(414|424|412|416|426|2\d{2})\d{7}$/.test(phoneDigits);
+        const phoneValid = /^(0|58)?(414|424|412|416|426|2\d{2})\d{7}$/.test(phoneDigits);
         const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim());
         return nameValid && phoneValid && emailValid;
     };
