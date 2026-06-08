@@ -29,6 +29,7 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
     username = "CYBER_WIZARD",
     fullName,
     title = "Elite Member • Geekorium Vanguard",
+    avatarUrl,
     stats
 }) => {
     return (
@@ -38,9 +39,13 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
                 {/* Profile Header */}
                 <div className="flex flex-col md:flex-row items-center gap-6">
                     <div className="relative">
-                        <div className="w-32 h-32 rounded-full border-4 border-geeko-cyan p-1 shadow-[0_0_30px_rgba(0,209,255,0.3)]">
-                            <div className="w-full h-full rounded-full bg-slate-800 flex items-center justify-center overflow-hidden">
-                                <User size={64} className="text-geeko-cyan" />
+                        <div className="w-32 h-32 rounded-full border-4 border-geeko-cyan p-1 shadow-[0_0_30px_rgba(0,209,255,0.3)] bg-[#050505] flex-shrink-0">
+                            <div className="w-full h-full rounded-full bg-slate-800 flex items-center justify-center overflow-hidden relative">
+                                {avatarUrl ? (
+                                    <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                                ) : (
+                                    <User size={64} className="text-geeko-cyan" />
+                                )}
                             </div>
                         </div>
                         <div className="absolute -bottom-2 -right-2 bg-geeko-cyan text-black rounded-full p-2 border-4 border-[#050505]">

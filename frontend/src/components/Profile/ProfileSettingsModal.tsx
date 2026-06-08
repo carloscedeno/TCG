@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { X, Save, User, MapPin, Phone, Hash, AlertCircle } from 'lucide-react';
+import { X, Save, User, MapPin, Phone, Hash, AlertCircle, Camera } from 'lucide-react';
+import { uploadUserAvatar } from '../../utils/api';
 import { supabase } from '../../utils/supabaseClient';
 import { useAuth } from '../../context/AuthContext';
 
@@ -15,6 +16,8 @@ export const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOp
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
+    const [avatarFile, setAvatarFile] = useState<File | null>(null);
+    const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
     const [formData, setFormData] = useState({
         username: '',
@@ -35,6 +38,7 @@ export const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOp
                 phone: currentProfile.phone || '',
                 address: currentProfile.address || ''
             });
+            setAvatarPreview(currentProfile.avatar_url || null);
         }
     }, [currentProfile]);
 
@@ -46,6 +50,16 @@ export const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOp
         setSuccess(false);
     };
 
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            setAvatarFile(file);
+            setAvatarPreview(URL.createObjectURL(file));
+            setError(null);
+            setSuccess(false);
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
@@ -53,9 +67,15 @@ export const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOp
         setSuccess(false);
 
         try {
+            let avatarUrl = currentProfile?.avatar_url;
+            if (avatarFile) {
+                avatarUrl = await uploadUserAvatar(avatarFile, user.id);
+            }
+
             // Nullify empty username to avoid unique constraint error on empty strings if applicable
             const dataToUpdate = {
                 ...formData,
+                avatar_url: avatarUrl,
                 username: formData.username.trim() === '' ? null : formData.username.trim()
             };
 
@@ -115,6 +135,28 @@ export const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOp
                                 <p className="text-green-400 text-sm font-bold text-center">¡Perfil actualizado correctamente!</p>
                             </div>
                         )}
+
+                        {/* Avatar Upload */}
+                        <div className="flex items-center gap-6 pb-4 border-b border-white/5">
+                            <div className="relative group w-24 h-24 rounded-full overflow-hidden bg-neutral-900 border-2 border-white/10 flex-shrink-0">
+                                {avatarPreview ? (
+                                    <img src={avatarPreview} alt="Avatar Preview" className="w-full h-full object-cover" />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center">
+                                        <User size={32} className="text-slate-500" />
+                                    </div>
+                                )}
+                                <label className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity">
+                                    <Camera size={20} className="text-white mb-1" />
+                                    <span className="text-[9px] font-black uppercase text-white tracking-widest">Cambiar</span>
+                                    <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+                                </label>
+                            </div>
+                            <div>
+                                <h3 className="text-sm font-bold text-white mb-1">Foto de Perfil</h3>
+                                <p className="text-xs text-slate-400">Recomendado: 400x400px. JPG, PNG o GIF.</p>
+                            </div>
+                        </div>
 
                         <div className="space-y-4">
                             <h3 className="text-[10px] font-black text-text-low uppercase tracking-[0.2em] border-b border-white/5 pb-2">Información de Usuario</h3>

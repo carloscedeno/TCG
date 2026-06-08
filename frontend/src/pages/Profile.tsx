@@ -64,6 +64,7 @@ const ProfilePage: React.FC = () => {
                             username={profileData?.username || session?.user?.email?.split('@')[0] || "CYBER_WIZARD"}
                             fullName={profileData?.first_name ? `${profileData.first_name} ${profileData?.last_name || ''}`.trim() : undefined}
                             title="Elite Member • Geekorium Vanguard"
+                            avatarUrl={profileData?.avatar_url}
                             stats={userStats}
                         />
                         <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
