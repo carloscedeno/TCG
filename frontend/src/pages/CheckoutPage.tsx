@@ -51,6 +51,33 @@ export const CheckoutPage = () => {
         loadCart();
     }, [navigate]);
 
+    useEffect(() => {
+        const loadProfile = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', user.id)
+                    .single();
+
+                if (profile) {
+                    setForm(prev => ({
+                        ...prev,
+                        full_name: profile.first_name ? `${profile.first_name} ${profile.last_name || ''}`.trim() : prev.full_name,
+                        whatsapp: profile.phone || prev.whatsapp,
+                        email: user.email || prev.email,
+                        address: profile.address || prev.address,
+                        cedula_number: profile.cedula ? profile.cedula.replace(/\D/g, '') : prev.cedula_number,
+                    }));
+                } else {
+                    setForm(prev => ({ ...prev, email: user.email || prev.email }));
+                }
+            }
+        };
+        loadProfile();
+    }, []);
+
     const isFormValid = () => {
         const nameValid = form.full_name.trim().length >= 3 && /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(form.full_name.trim());
         const phoneDigits = form.whatsapp.replace(/\D/g, '');
