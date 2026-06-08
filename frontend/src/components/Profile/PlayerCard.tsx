@@ -19,6 +19,7 @@ interface TCGStat {
 
 interface PlayerCardProps {
     username: string;
+    fullName?: string;
     title: string;
     avatarUrl?: string;
     stats: TCGStat[];
@@ -26,30 +27,36 @@ interface PlayerCardProps {
 
 const PlayerCard: React.FC<PlayerCardProps> = ({
     username = "CYBER_WIZARD",
+    fullName,
     title = "Elite Member • Geekorium Vanguard",
     stats
 }) => {
     return (
-        <div className="w-full max-w-4xl mx-auto p-1 rounded-3xl overflow-hidden glass-card neon-border-gold">
+        <div className="w-full max-w-4xl mx-auto p-1 rounded-3xl overflow-hidden bg-white/5 border border-white/10 backdrop-blur-xl shadow-2xl">
             <div className="p-8 space-y-8">
 
                 {/* Profile Header */}
                 <div className="flex flex-col md:flex-row items-center gap-6">
                     <div className="relative">
-                        <div className="w-32 h-32 rounded-full border-4 border-geeko-gold p-1">
+                        <div className="w-32 h-32 rounded-full border-4 border-geeko-cyan p-1 shadow-[0_0_30px_rgba(0,209,255,0.3)]">
                             <div className="w-full h-full rounded-full bg-slate-800 flex items-center justify-center overflow-hidden">
-                                <User size={64} className="text-geeko-gold" />
+                                <User size={64} className="text-geeko-cyan" />
                             </div>
                         </div>
-                        <div className="absolute -bottom-2 -right-2 bg-geeko-gold text-black rounded-full p-2 border-4 border-geeko-black">
+                        <div className="absolute -bottom-2 -right-2 bg-geeko-cyan text-black rounded-full p-2 border-4 border-[#050505]">
                             <Shield size={20} />
                         </div>
                     </div>
 
                     <div className="text-center md:text-left space-y-1">
-                        <h1 className="text-4xl font-black neon-text-gold tracking-tighter uppercase italic">
+                        <h1 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-geeko-cyan to-blue-500 tracking-tighter uppercase italic drop-shadow-[0_0_15px_rgba(0,209,255,0.4)]">
                             {username}
                         </h1>
+                        {fullName && (
+                            <p className="text-white font-bold tracking-wide text-lg uppercase">
+                                {fullName}
+                            </p>
+                        )}
                         <p className="text-slate-400 font-medium tracking-wide text-sm">
                             {title}
                         </p>

@@ -6,14 +6,34 @@ import { CollectionService } from '../services/CollectionService';
 import type { CollectionItem } from '../services/CollectionService';
 import { UserMenu } from '../components/Navigation/UserMenu';
 import { Link } from 'react-router-dom';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Settings } from 'lucide-react';
 
 import OrdersList from '../components/Profile/OrdersList';
+import { ProfileSettingsModal } from '../components/Profile/ProfileSettingsModal';
+import { supabase } from '../utils/supabaseClient';
 
 const ProfilePage: React.FC = () => {
     const { session, user } = useAuth();
     const [collection, setCollection] = useState<CollectionItem[]>([]);
     const [loading, setLoading] = useState(false);
+    const [profileData, setProfileData] = useState<any>(null);
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
+    const loadProfileData = async () => {
+        if (!user) return;
+        const { data, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', user.id)
+            .single();
+        if (!error && data) {
+            setProfileData(data);
+        }
+    };
+
+    useEffect(() => {
+        loadProfileData();
+    }, [user]);
 
     useEffect(() => {
         const fetchCollection = async () => {
@@ -73,13 +93,18 @@ const ProfilePage: React.FC = () => {
 
                     <section className="relative group">
                         <PlayerCard
-                            username={session?.user?.email?.split('@')[0] || "CYBER_WIZARD"}
+                            username={profileData?.username || session?.user?.email?.split('@')[0] || "CYBER_WIZARD"}
+                            fullName={profileData?.first_name ? `${profileData.first_name} ${profileData?.last_name || ''}`.trim() : undefined}
                             title="Elite Member • Geekorium Vanguard"
                             stats={userStats}
                         />
                         <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button className="px-4 py-2 bg-neutral-900 border border-white/10 rounded-xl text-xs font-bold text-slate-300 hover:text-white hover:border-white/30 transition-all flex items-center gap-2">
-                                <span className="uppercase tracking-widest">Ajustes de Perfil</span>
+                            <button 
+                                onClick={() => setIsSettingsOpen(true)}
+                                className="px-4 py-2 bg-neutral-900 border border-geeko-cyan/30 rounded-xl text-xs font-bold text-geeko-cyan hover:bg-geeko-cyan/10 hover:border-geeko-cyan/50 transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(0,209,255,0.15)]"
+                            >
+                                <Settings size={14} />
+                                <span className="uppercase tracking-widest hidden md:inline">Ajustes de Perfil</span>
                             </button>
                         </div>
                     </section>
@@ -119,6 +144,13 @@ const ProfilePage: React.FC = () => {
                     </footer>
                 </div>
             </div>
+
+            <ProfileSettingsModal 
+                isOpen={isSettingsOpen} 
+                onClose={() => setIsSettingsOpen(false)} 
+                currentProfile={profileData}
+                onProfileUpdated={loadProfileData}
+            />
         </div>
     );
 };
