@@ -2391,3 +2391,10 @@ useEffect(() => {
 
 ## Lesson #36: Cache Busting React Query y Proxies de Supabase-JS con `.neq('printing_id', Date.now().toString())`.
 - **Regla Derivada:** NUNCA hacer polling estático con `supabase.from().select()` sin un mecanismo de invalidación de caché o cache-busting. NUNCA usar match estricto para routing manual en Supabase Edge Functions.
+
+### 182. Pérdida de Contexto y Gasto de Tokens (Junio 2026)
+- **Problema:** En sesiones de desarrollo prolongadas, el agente pierde el estado de la tarea, la rama, y gasta tokens innecesarios escaneando el proyecto (grep/read) o haciendo instalaciones locales incorrectas.
+- **Causa Raíz:** Falta de un protocolo de estado persistente pequeño (SESSION_STATE) y de un Knowledge Graph que contenga la semántica del código pre-computada.
+- **Solución:** Implementación de las 5 técnicas del mercado: Graphify (grafo de código local), SESSION_STATE.md, Context Budget Protocol, Spec-First Development y Browser-First Verification en el /prehook.
+- **Regla Derivada:** Queda prohibido el uso arbitrario de grep/list_dir sin antes consultar el grafo (graphify query). Obligatorio leer SESSION_STATE.md al inicio de cada sesión y actualizarlo al cierre.
+

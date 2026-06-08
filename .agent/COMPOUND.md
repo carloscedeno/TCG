@@ -450,3 +450,29 @@ Siempre proveer un caso de evaluaciÃ³n estricto en sentencias SQL cuando el si
 - **DB:** Creado `idx_card_printings_updated_at` para prevenir table scans que bloqueaban las peticiones de fetchStats.
 - `.agent/lessons_learned.md` â†’ LecciÃ³n #36 (Cache Busting y Edge Function Proxys)
 
+
+
+## 2026-06-08 — Upgrade del Flujo de Desarrollo (Graphify & Context)
+
+**Qué pasó:** El usuario reportó pérdida de contexto, búsquedas innecesarias que gastan tokens, instalaciones locales no deseadas, y falta de pruebas. 
+**Lo que cambió:**
+- .agent/workflows/prehook.md → Reescrito para incluir Graphify, SESSION_STATE, Context Budget Protocol y Spec-First.
+- .agent/SESSION_STATE.md → Creado como archivo de estado persistente entre sesiones.
+- .agent/lessons_learned.md → Lección #182 agregada sobre el Context Budget Protocol y el uso de Graphify.
+- .agent/AGENTS.md → Agregada la feature del Dev Workflow Upgrade.
+- .git/hooks/post-commit → Hook instalado para automatizar graphify update tras cada commit en rontend/src.
+**Artefacto creado:** Graphify Knowledge Graph (graphify-out/).
+**Regla derivada:** Siempre leer SESSION_STATE.md al inicio. Buscar en el grafo con graphify query antes de usar grep. Tareas grandes requieren un mini-spec antes de codificar.
+
+## 2026-06-08 — Upgrade del Flujo de Desarrollo (Graphify & Context)
+
+**Qué pasó:** El usuario reportó pérdida de contexto, búsquedas innecesarias que gastan tokens, instalaciones locales no deseadas, y falta de pruebas.
+**Lo que cambió:**
+- .agent/workflows/prehook.md → Reescrito para incluir Graphify, SESSION_STATE, Context Budget Protocol y Spec-First.
+- .agent/SESSION_STATE.md → Creado como archivo de estado persistente entre sesiones.
+- .agent/lessons_learned.md → Lección #182 agregada sobre el Context Budget Protocol y el uso de Graphify.
+- .agent/AGENTS.md → Agregada la feature del Dev Workflow Upgrade.
+- .git/hooks/post-commit → Hook instalado para automatizar graphify update tras cada commit en rontend/src.
+**Artefacto creado:** Graphify Knowledge Graph (graphify-out/).
+**Regla derivada:** Siempre leer SESSION_STATE.md al inicio. Buscar en el grafo con graphify query antes de usar grep. Tareas grandes requieren un mini-spec antes de codificar.
+

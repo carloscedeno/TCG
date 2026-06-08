@@ -107,3 +107,6 @@ Artefactos del Compound step:
 - ✅ **Prevención de Deadlocks y Concurrencia en Checkout (Mayo 2026)**: Refactorización total del RPC `create_order_atomic` para implementar ordenación canónica por tipo e ID de ítem antes de reservar stock, eliminando interbloqueos mutuos en transacciones simultáneas durante picos de tráfico en producción.
 
 - ? **Sincron�a UI/DB de Filtros (Mayo 2026)**: Desbloqueo del l�mite de filtros de precio y conexi�n funcional de los toggles de Ofertas, Preventas y la categor�a 'Otros' hacia los RPC de Supabase. Eliminaci�n de insignias residuales ('Com�n') en productos sellados.
+
+- ✅ **Dev Workflow Upgrade (Junio 2026)**: Implementación de Graphify (Knowledge Graph), SESSION_STATE, Context Budget, y Spec-First para mejorar la eficiencia del desarrollo y retención de contexto.
+
