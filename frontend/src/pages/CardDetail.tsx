@@ -12,13 +12,12 @@ import { useCart } from '../context/CartContext';
 import { ManaText } from '../components/Mana/ManaText';
 import { Footer } from '../components/Navigation/Footer';
 import { CartDrawer } from '../components/Navigation/CartDrawer';
-import { AuthModal } from '../components/Auth/AuthModal';
 import { CardImage } from '../components/Card/CardImage';
 
 export const CardDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const { user, openAuthModal } = useAuth();
     const [searchParams] = useSearchParams();
     const location = useLocation();
     const initialImage = location.state?.initialImage as string | undefined;
@@ -57,7 +56,6 @@ export const CardDetail: React.FC = () => {
 
     const { cartCount } = useCart();
     const [isCartOpen, setIsCartOpen] = useState(false);
-    const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
     useEffect(() => {
         if (id) {
@@ -101,7 +99,7 @@ export const CardDetail: React.FC = () => {
 
     const handleAddToCart = async () => {
         if (!user) {
-            setIsAuthModalOpen(true);
+            openAuthModal();
             return;
         }
         if (!activeVersion) return;
@@ -632,7 +630,6 @@ export const CardDetail: React.FC = () => {
             <Footer />
 
             <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
-            <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
         </div>
     );
 };

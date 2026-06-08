@@ -6,7 +6,6 @@ import { fetchCards, fetchSets, fetchProducts, fetchCart, fetchAccessories, fetc
 import { FiltersPanel } from '../components/Filters/FiltersPanel';
 import type { Filters } from '../components/Filters/FiltersPanel';
 import { useAuth } from '../context/AuthContext';
-import { AuthModal } from '../components/Auth/AuthModal';
 import { X, Sparkles, Search } from 'lucide-react';
 
 import { useSearchParams, useNavigate } from 'react-router-dom';
@@ -67,7 +66,6 @@ const Home: React.FC = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(0);
   const { user } = useAuth();
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [debouncedQuery, setDebouncedQuery] = useState(searchParams.get('q') || '');
   const [debouncedFilters, setDebouncedFilters] = useState<Partial<Filters>>(filters);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -674,9 +672,6 @@ const Home: React.FC = () => {
         {/* Footer */}
         <Footer />
 
-        <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
-        <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
-        <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
         <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
 
         {/* Mobile Filters Drawer */}

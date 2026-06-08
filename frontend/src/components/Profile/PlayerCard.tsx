@@ -24,20 +24,12 @@ interface PlayerCardProps {
     title: string;
     avatarUrl?: string;
     stats: TCGStat[];
-    dndStats: {
-        level: number;
-        xp: number;
-        nextLevelXp: number;
-        rank: string;
-        achievements: string[];
-    };
 }
 
 const PlayerCard: React.FC<PlayerCardProps> = ({
     username = "CYBER_WIZARD",
     title = "Elite Member • Geekorium Vanguard",
-    stats,
-    dndStats
+    stats
 }) => {
     return (
         <div className="w-full max-w-4xl mx-auto p-1 rounded-3xl overflow-hidden glass-card neon-border-gold">
@@ -73,85 +65,50 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
                     </div>
                 </div>
 
-                {/* TCG Stats Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {stats.map((stat) => (
-                        <div key={stat.gameCode} className="p-5 rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 transition-all group overflow-hidden relative">
-                            <div className={`absolute top-0 right-0 w-24 h-24 blur-3xl opacity-20 -mr-8 -mt-8 ${stat.colorClass}`}></div>
-                            <div className="flex justify-between items-start mb-4">
-                                <div className="p-2 rounded-lg bg-white/5 border border-white/10 group-hover:scale-110 transition-transform">
-                                    <Star size={18} className={stat.colorClass.replace('bg-', 'text-')} />
+                {stats.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {stats.map((stat) => (
+                            <div key={stat.gameCode} className="p-5 rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 transition-all group overflow-hidden relative">
+                                <div className={`absolute top-0 right-0 w-24 h-24 blur-3xl opacity-20 -mr-8 -mt-8 ${stat.colorClass}`}></div>
+                                <div className="flex justify-between items-start mb-4">
+                                    <div className="p-2 rounded-lg bg-white/5 border border-white/10 group-hover:scale-110 transition-transform">
+                                        <Star size={18} className={stat.colorClass.replace('bg-', 'text-')} />
+                                    </div>
+                                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{stat.name}</span>
                                 </div>
-                                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{stat.name}</span>
-                            </div>
 
-                            <div className="space-y-1">
-                                <div className="text-3xl font-black text-white flex items-baseline gap-1">
-                                    {stat.elo}
-                                    <span className="text-xs font-medium text-slate-500 uppercase italic">ELO</span>
+                                <div className="space-y-1">
+                                    <div className="text-3xl font-black text-white flex items-baseline gap-1">
+                                        {stat.elo}
+                                        <span className="text-xs font-medium text-slate-500 uppercase italic">ELO</span>
+                                    </div>
+                                    <div className="flex justify-between text-[10px] uppercase font-bold tracking-wider text-slate-400">
+                                        <span>{stat.tier} TIER</span>
+                                        <span className="text-white">{stat.progress}%</span>
+                                    </div>
+                                    <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                                        <div
+                                            className={`h-full opacity-80 ${stat.colorClass}`}
+                                            style={{ width: `${stat.progress}%` }}
+                                        ></div>
+                                    </div>
                                 </div>
-                                <div className="flex justify-between text-[10px] uppercase font-bold tracking-wider text-slate-400">
-                                    <span>{stat.tier} TIER</span>
-                                    <span className="text-white">{stat.progress}%</span>
+
+                                <div className="mt-4 flex items-center gap-2 text-[10px] text-slate-500">
+                                    <Sword size={12} />
+                                    <span className="truncate">Recent: {stat.recentDeck}</span>
                                 </div>
-                                <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
-                                    <div
-                                        className={`h-full opacity-80 ${stat.colorClass}`}
-                                        style={{ width: `${stat.progress}%` }}
-                                    ></div>
-                                </div>
-                            </div>
-
-                            <div className="mt-4 flex items-center gap-2 text-[10px] text-slate-500">
-                                <Sword size={12} />
-                                <span className="truncate">Recent: {stat.recentDeck}</span>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-
-                {/* D&D Prestige Section */}
-                <div className="p-6 rounded-2xl bg-gradient-to-r from-geeko-red/20 to-geeko-purple/20 border border-white/10 space-y-4">
-                    <div className="flex justify-between items-center">
-                        <div className="flex items-center gap-3">
-                            <div className="p-3 rounded-full bg-geeko-red/20 border border-geeko-red/50">
-                                <Trophy size={24} className="text-geeko-red" />
-                            </div>
-                            <div>
-                                <h3 className="text-lg font-bold text-white uppercase tracking-tighter">D&D Prestige</h3>
-                                <p className="text-xs text-slate-400 uppercase tracking-widest font-bold font-mono">Rank: {dndStats.rank}</p>
-                            </div>
-                        </div>
-                        <div className="text-right">
-                            <span className="text-xs text-slate-500 uppercase font-black font-mono">Campaign Progress</span>
-                            <div className="text-3xl font-black text-white italic">
-                                LVL <span className="neon-text-gold">{dndStats.level}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="space-y-2">
-                        <div className="flex justify-between items-end">
-                            <span className="text-[10px] font-bold text-slate-500 uppercase font-mono">Experience Points (XP)</span>
-                            <span className="text-[10px] font-bold text-white font-mono">{dndStats.xp} / {dndStats.nextLevelXp} XP</span>
-                        </div>
-                        <div className="h-3 w-full bg-geeko-black/50 rounded-full border border-white/10 p-0.5">
-                            <div
-                                className="h-full bg-gradient-to-r from-geeko-red via-geeko-purple to-white rounded-full shadow-[0_0_10px_rgba(225,48,108,0.5)]"
-                                style={{ width: `${(dndStats.xp / dndStats.nextLevelXp) * 100}%` }}
-                            ></div>
-                        </div>
-                    </div>
-
-                    <div className="flex flex-wrap gap-4 pt-2">
-                        {dndStats.achievements.map((ach) => (
-                            <div key={ach} className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold text-slate-300 uppercase italic transition-colors hover:bg-white/10">
-                                <BookOpen size={12} className="text-white" />
-                                {ach}
                             </div>
                         ))}
                     </div>
-                </div>
+                ) : (
+                    <div className="text-center py-8 bg-white/5 rounded-2xl border border-white/10">
+                        <p className="text-slate-400 text-sm font-bold uppercase tracking-widest">Sin Estadísticas TCG</p>
+                        <p className="text-xs text-slate-500 mt-2">Agrega cartas a tu colección o participa en torneos.</p>
+                    </div>
+                )}
+
+
             </div>
         </div>
     );

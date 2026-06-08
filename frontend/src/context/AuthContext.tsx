@@ -9,6 +9,9 @@ interface AuthContextType {
     session: Session | null;
     loading: boolean;
     isAdmin: boolean;
+    isAuthModalOpen: boolean;
+    openAuthModal: () => void;
+    closeAuthModal: () => void;
     signOut: () => Promise<void>;
 }
 
@@ -17,6 +20,9 @@ const AuthContext = createContext<AuthContextType>({
     session: null,
     loading: true,
     isAdmin: false,
+    isAuthModalOpen: false,
+    openAuthModal: () => { },
+    closeAuthModal: () => { },
     signOut: async () => { },
 });
 
@@ -25,6 +31,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [session, setSession] = useState<Session | null>(null);
     const [loading, setLoading] = useState(true);
     const [isAdmin, setIsAdmin] = useState(false);
+    const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
+    const openAuthModal = () => setIsAuthModalOpen(true);
+    const closeAuthModal = () => setIsAuthModalOpen(false);
 
     useEffect(() => {
         console.log('DEBUG: AuthContext initializing...');
@@ -94,7 +104,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, session, loading, isAdmin, signOut }}>
+        <AuthContext.Provider value={{ user, session, loading, isAdmin, isAuthModalOpen, openAuthModal, closeAuthModal, signOut }}>
             {children}
         </AuthContext.Provider>
     );

@@ -34,26 +34,8 @@ const ProfilePage: React.FC = () => {
         fetchCollection();
     }, [session]);
 
-    // Datos de prueba basados en el manual de Geekorium (Static Context)
-    const mockStats = [
-        {
-            name: "Magic: The Gathering",
-            gameCode: "MTG",
-            elo: 1420,
-            tier: "DIAMOND",
-            progress: 92,
-            recentDeck: "Dimir Control",
-            colorClass: "bg-geeko-red"
-        }
-    ];
-
-    const mockDndStats = {
-        level: 14,
-        xp: 8500,
-        nextLevelXp: 10000,
-        rank: "Master of Dungeons",
-        achievements: ["Lorekeeper", "Slayer of Beasts", "World Traveler"]
-    };
+    // Stats will be derived from backend in the future
+    const userStats: any[] = [];
 
     return (
         <div className="min-h-screen bg-[#050505] text-white font-sans relative selection:bg-purple-500/30 overflow-hidden">
@@ -89,13 +71,17 @@ const ProfilePage: React.FC = () => {
                         <div className="w-24 h-1 bg-gradient-to-r from-geeko-red to-white mx-auto rounded-full"></div>
                     </header>
 
-                    <section>
+                    <section className="relative group">
                         <PlayerCard
                             username={session?.user?.email?.split('@')[0] || "CYBER_WIZARD"}
                             title="Elite Member • Geekorium Vanguard"
-                            stats={mockStats}
-                            dndStats={mockDndStats}
+                            stats={userStats}
                         />
+                        <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button className="px-4 py-2 bg-neutral-900 border border-white/10 rounded-xl text-xs font-bold text-slate-300 hover:text-white hover:border-white/30 transition-all flex items-center gap-2">
+                                <span className="uppercase tracking-widest">Ajustes de Perfil</span>
+                            </button>
+                        </div>
                     </section>
 
                     {/* Orders Section */}

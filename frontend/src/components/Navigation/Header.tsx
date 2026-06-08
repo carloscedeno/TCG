@@ -11,7 +11,7 @@ interface HeaderProps {
 }
 
 export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
-    const { user: _user } = useAuth();
+    const { user: _user, openAuthModal } = useAuth();
     const [searchParams, setSearchParams] = useSearchParams();
     const [query, setQuery] = useState(searchParams.get('q') || '');
     const navigate = useNavigate();
@@ -101,8 +101,17 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                                 </div>
                             )}
                         </button>
-                        <div className="flex">
-                            <UserMenu />
+                        <div className="flex items-center">
+                            {_user ? (
+                                <UserMenu />
+                            ) : (
+                                <button 
+                                    onClick={openAuthModal}
+                                    className="px-4 py-2 bg-white text-black font-black text-[11px] uppercase tracking-widest rounded-xl hover:scale-105 transition-transform"
+                                >
+                                    Iniciar Sesión
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>

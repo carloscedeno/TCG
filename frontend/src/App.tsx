@@ -7,8 +7,9 @@ import ImportCollection from './pages/ImportCollection';
 import InventoryPage from './pages/Admin/InventoryPage';
 import OrdersPage from './pages/Admin/OrdersPage';
 import { CardDetail } from './pages/CardDetail';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
+import { AuthModal } from './components/Auth/AuthModal';
 import { AlertCircle } from 'lucide-react';
 import { CheckoutPage } from './pages/CheckoutPage';
 import { CheckoutSuccessPage } from './pages/CheckoutSuccessPage';
@@ -35,6 +36,11 @@ import { PwaReloadPrompt } from './components/Navigation/PwaReloadPrompt';
 import { BottomNav } from './components/Navigation/BottomNav';
 
 const isSupabaseConfigured = !!import.meta.env.VITE_SUPABASE_URL && !!import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+const GlobalAuthModal = () => {
+    const { isAuthModalOpen, closeAuthModal } = useAuth();
+    return <AuthModal isOpen={isAuthModalOpen} onClose={closeAuthModal} />;
+};
 
 function App() {
     if (!isSupabaseConfigured) {
@@ -73,6 +79,7 @@ function App() {
 
     return (
         <AuthProvider>
+            <GlobalAuthModal />
             <CartProvider>
                 <Router basename="/">
                     <ScrollToTop />

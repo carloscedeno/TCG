@@ -89,6 +89,7 @@ graphify update frontend/src --no-viz
 4. **IDs de Entorno**:
    - DEV Supabase: `bqfkqnnostzaqueujdms`
    - PROD Supabase: `sxuotvogwvmxuvwbsscv`
+5. **Testing en Dev**: No puedes pedirle al usuario que pruebe algo en 'dev' (ej: dev.geekorium.shop) si no has hecho un `git push` de tus cambios. El entorno dev es remoto, por lo que los cambios locales no se reflejan allí automáticamente hasta que se despliegan mediante CI/CD.
 
 ---
 
