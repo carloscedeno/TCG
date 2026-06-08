@@ -1,8 +1,6 @@
 import React from 'react';
 import {
-    Trophy,
     Sword,
-    BookOpen,
     Shield,
     Star,
     User,
