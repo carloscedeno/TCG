@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PlayerCard from '../components/Profile/PlayerCard';
-import { PortfolioStats } from '../components/Profile/PortfolioStats';
 import { useAuth } from '../context/AuthContext';
-import { CollectionService } from '../services/CollectionService';
-import type { CollectionItem } from '../services/CollectionService';
 import { Loader2, Settings } from 'lucide-react';
 
 import OrdersList from '../components/Profile/OrdersList';
@@ -16,8 +13,6 @@ import { CartDrawer } from '../components/Navigation/CartDrawer';
 const ProfilePage: React.FC = () => {
     const { session, user } = useAuth();
     const { cartCount } = useCart();
-    const [collection, setCollection] = useState<CollectionItem[]>([]);
-    const [loading, setLoading] = useState(false);
     const [profileData, setProfileData] = useState<any>(null);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [isCartOpen, setIsCartOpen] = useState(false);
@@ -38,24 +33,7 @@ const ProfilePage: React.FC = () => {
         loadProfileData();
     }, [user]);
 
-    useEffect(() => {
-        const fetchCollection = async () => {
-            if (session?.access_token) {
-                setLoading(true);
-                try {
-                    const data = await CollectionService.getUserCollection(session.access_token);
-                    setCollection(Array.isArray(data) ? data : []);
-                } catch (error) {
-                    console.error("Error fetching collection:", error);
-                    setCollection([]);
-                } finally {
-                    setLoading(false);
-                }
-            }
-        };
 
-        fetchCollection();
-    }, [session]);
 
     // Stats will be derived from backend in the future
     const userStats: any[] = [];
@@ -111,23 +89,7 @@ const ProfilePage: React.FC = () => {
                         <OrdersList />
                     </section>
 
-                    {/* Portfolio Section */}
-                    <section className="animate-in slide-in-from-bottom-8 duration-700">
-                        <div className="flex items-center gap-4 mb-8">
-                            <h2 className="text-3xl font-black italic uppercase tracking-tighter">
-                                Financial <span className="text-white">Intelligence</span>
-                            </h2>
-                            <div className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent"></div>
-                        </div>
 
-                        {loading ? (
-                            <div className="h-64 flex items-center justify-center">
-                                <Loader2 className="w-12 h-12 text-white animate-spin" />
-                            </div>
-                        ) : (
-                            <PortfolioStats collection={collection} />
-                        )}
-                    </section>
 
                     <footer className="pt-12 text-center text-slate-600 text-[10px] uppercase font-bold tracking-widest">
                         Geekorium TCG & RPG Ecosystem • 2026
