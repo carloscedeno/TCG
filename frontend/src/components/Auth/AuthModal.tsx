@@ -38,7 +38,7 @@ export const AuthModal = ({ isOpen, onClose, initialMode = 'login' }: {
                     }
                 });
                 if (error) throw error;
-                alert('Verification email sent!');
+                alert('¡Un paso más para unirte a la Orden!\n\nHemos enviado una misiva mágica a tu correo electrónico. Por favor, revisa tu bandeja de entrada (y tu carpeta de spam, por si los duendes la escondieron) para confirmar tu cuenta y completar tu registro en Geekorium.');
                 onClose();
             } else if (mode === 'forgot-password') {
                 const { error } = await supabase.auth.resetPasswordForEmail(email, {
