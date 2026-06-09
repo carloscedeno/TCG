@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Save, AlertCircle, Coins, Clock, TrendingUp, TrendingDown } from 'lucide-react';
+import { X, Save, AlertCircle, Coins, Clock } from 'lucide-react';
 import { supabase } from '../../utils/supabaseClient';
 
 interface ManageCreditsModalProps {
