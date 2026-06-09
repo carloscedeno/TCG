@@ -298,10 +298,10 @@ export const AdminDashboard = () => {
                                     <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center border border-white/30">
                                         <Users className="text-white" size={24} />
                                     </div>
-                                    <span className="text-white font-black text-xs tracking-[0.3em] uppercase">Módulo de Punto de Venta</span>
+                                    <span className="text-white font-black text-xs tracking-[0.3em] uppercase">Módulo de Punto de Venta y Créditos</span>
                                 </div>
-                                <h2 className="text-4xl font-black italic text-white tracking-tighter mb-4 leading-none">PORTAL DE <span className="text-white">ATENCIÓN A CLIENTES</span></h2>
-                                <p className="text-slate-400 text-sm font-bold uppercase tracking-widest max-w-xl">Gestiona carritos múltiples, atiende clientes en tienda y procesa ventas rápidas de forma centralizada.</p>
+                                <h2 className="text-4xl font-black italic text-white tracking-tighter mb-4 leading-none">PORTAL DE <span className="text-geeko-gold">CLIENTES Y CRÉDITOS</span></h2>
+                                <p className="text-slate-400 text-sm font-bold uppercase tracking-widest max-w-xl">Gestiona carritos múltiples, atiende clientes en tienda, y asigna Créditos Geek.</p>
                             </div>
                             <div className="flex items-center gap-6">
                                 <div className="hidden lg:flex flex-col items-end">
