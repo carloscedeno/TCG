@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { fetchCart, createOrder, sendCheckoutEmailNotification } from '../utils/api';
+import { fetchCart, createOrder, sendCheckoutEmailNotification, fetchUserAddresses, saveUserAddress } from '../utils/api';
 import {
     Truck,
     MessageCircle,
@@ -28,7 +28,23 @@ export const CheckoutPage = () => {
         country: 'Venezuela',
         address: 'Tienda Geekorium (Pick Up)',
         email: '',
-        shipping_method: 'pickup' as const,
+        shipping_method: 'pickup' as 'pickup' | 'delivery',
+    });
+
+    const [savedAddresses, setSavedAddresses] = useState<any[]>([]);
+    const [selectedAddressId, setSelectedAddressId] = useState<string>('new');
+    const [saveToBook, setSaveToBook] = useState(false);
+    
+    // Billing Form
+    const [sameAsShipping, setSameAsShipping] = useState(true);
+    const [billingForm, setBillingForm] = useState({
+        full_name: '',
+        phone: '',
+        address_line1: '',
+        address_line2: '',
+        city: 'Caracas',
+        state: 'Distrito Capital',
+        cedula: '',
     });
 
     useEffect(() => {
@@ -50,6 +66,37 @@ export const CheckoutPage = () => {
         };
         loadCart();
     }, [navigate]);
+
+    const loadAddresses = async () => {
+        try {
+            const addrs = await fetchUserAddresses();
+            setSavedAddresses(addrs);
+            const defaultAddr = addrs.find((a: any) => a.is_default);
+            if (defaultAddr) {
+                setSelectedAddressId(defaultAddr.id);
+                setForm(prev => ({
+                    ...prev,
+                    address: defaultAddr.address_line1 + (defaultAddr.address_line2 ? `, ${defaultAddr.address_line2}` : ''),
+                    state: defaultAddr.state,
+                }));
+            }
+            
+            const defaultBilling = addrs.find((a: any) => a.is_billing);
+            if (defaultBilling) {
+                setBillingForm({
+                    full_name: defaultBilling.full_name,
+                    phone: defaultBilling.phone,
+                    address_line1: defaultBilling.address_line1,
+                    address_line2: defaultBilling.address_line2 || '',
+                    city: defaultBilling.city,
+                    state: defaultBilling.state,
+                    cedula: defaultBilling.zip_code || '',
+                });
+            }
+        } catch (err) {
+            console.error("Error loading addresses for checkout", err);
+        }
+    };
 
     useEffect(() => {
         const loadProfile = async () => {
@@ -73,17 +120,49 @@ export const CheckoutPage = () => {
                 } else {
                     setForm(prev => ({ ...prev, email: user.email || prev.email }));
                 }
+                loadAddresses();
             }
         };
         loadProfile();
     }, []);
+
+    const handleAddressChange = (addrId: string) => {
+        setSelectedAddressId(addrId);
+        if (addrId === 'new') {
+            setForm(prev => ({
+                ...prev,
+                address: '',
+                state: 'Distrito Capital',
+            }));
+        } else {
+            const addr = savedAddresses.find(a => a.id === addrId);
+            if (addr) {
+                setForm(prev => ({
+                    ...prev,
+                    address: addr.address_line1 + (addr.address_line2 ? `, ${addr.address_line2}` : ''),
+                    state: addr.state,
+                }));
+            }
+        }
+    };
 
     const isFormValid = () => {
         const nameValid = form.full_name.trim().length >= 3 && /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(form.full_name.trim());
         const phoneDigits = form.whatsapp.replace(/\D/g, '');
         const phoneValid = /^(0|58)?(414|424|412|416|426|2\d{2})\d{7}$/.test(phoneDigits);
         const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim());
-        return nameValid && phoneValid && emailValid;
+        
+        // Validate shipping address if delivery
+        const addressValid = form.shipping_method === 'pickup' || (form.address.trim().length > 5 && form.address !== 'Tienda Geekorium (Pick Up)');
+        
+        // Validate billing address if different
+        const billingValid = sameAsShipping || (
+            billingForm.full_name.trim().length >= 3 &&
+            billingForm.phone.replace(/\D/g, '').length >= 7 &&
+            billingForm.address_line1.trim().length > 5
+        );
+
+        return nameValid && phoneValid && emailValid && addressValid && billingValid;
     };
 
     const handleDownloadPDF = () => {
@@ -125,27 +204,79 @@ export const CheckoutPage = () => {
                 };
             });
 
-            console.log('Sending simplifiedItems:', simplifiedItems);
-
             const cedula = `${form.cedula_prefix}-${form.cedula_number || '00000000'}`;
+
+            const shippingAddressObj = {
+                full_name: form.full_name,
+                address_line1: form.address,
+                city: 'Caracas',
+                state: form.state,
+                zip_code: cedula,
+                country: 'VE',
+                email: form.email || 'guest@geekorium.com',
+                phone: form.whatsapp,
+                shipping_method: form.shipping_method,
+                billing_address: sameAsShipping ? null : {
+                    full_name: billingForm.full_name,
+                    address_line1: billingForm.address_line1,
+                    address_line2: billingForm.address_line2,
+                    city: billingForm.city,
+                    state: billingForm.state,
+                    zip_code: billingForm.cedula,
+                    phone: billingForm.phone,
+                    country: 'VE'
+                }
+            };
 
             const orderResponse = await createOrder({
                 userId: user?.id || null,
                 items: simplifiedItems,
-                shippingAddress: {
-                    full_name: form.full_name,
-                    address_line1: form.address,
-                    city: 'Caracas',
-                    state: form.state,
-                    zip_code: cedula,
-                    country: 'VE',
-                    email: form.email || 'guest@geekorium.com',
-                    phone: form.whatsapp
-                },
+                shippingAddress: shippingAddressObj,
                 totalAmount: total,
                 guestInfo: !user ? { email: form.email || 'guest@geekorium.com', phone: form.whatsapp } : undefined,
                 cartId: cartId || undefined
             });
+
+            // Save address if requested and logged in
+            if (form.shipping_method === 'delivery' && selectedAddressId === 'new' && saveToBook && user) {
+                try {
+                    await saveUserAddress({
+                        name: 'Dirección de Checkout',
+                        full_name: form.full_name,
+                        phone: form.whatsapp,
+                        address_line1: form.address,
+                        city: 'Caracas',
+                        state: form.state,
+                        zip_code: form.cedula_number,
+                        country: 'Venezuela',
+                        is_default: savedAddresses.length === 0,
+                        is_billing: sameAsShipping && savedAddresses.length === 0
+                    });
+                } catch (e) {
+                    console.error("Failed to auto-save address", e);
+                }
+            }
+
+            // Save billing address if requested and different
+            if (!sameAsShipping && saveToBook && user) {
+                try {
+                    await saveUserAddress({
+                        name: 'Facturación Checkout',
+                        full_name: billingForm.full_name,
+                        phone: billingForm.phone,
+                        address_line1: billingForm.address_line1,
+                        address_line2: billingForm.address_line2,
+                        city: billingForm.city,
+                        state: billingForm.state,
+                        zip_code: billingForm.cedula,
+                        country: 'Venezuela',
+                        is_default: false,
+                        is_billing: true
+                    });
+                } catch (e) {
+                    console.error("Failed to auto-save billing address", e);
+                }
+            }
 
             let orderIdForMsg = 'PENDIENTE';
             if (orderResponse) {
@@ -286,6 +417,36 @@ export const CheckoutPage = () => {
 
                         <div className="space-y-4">
                             <div>
+                                <label className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-1.5">Método de Entrega</label>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <button
+                                        type="button"
+                                        className={`p-4 rounded-xl border text-xs font-bold uppercase tracking-wider transition-all flex flex-col items-center gap-1 ${
+                                            form.shipping_method === 'pickup'
+                                                ? 'bg-[#0066FF]/10 border-[#0066FF] text-[#0066FF]'
+                                                : 'bg-black/40 border-white/10 text-slate-400 hover:border-white/20'
+                                        }`}
+                                        onClick={() => setForm({ ...form, shipping_method: 'pickup', address: 'Tienda Geekorium (Pick Up)' })}
+                                    >
+                                        <span>🏪 Retiro en Tienda</span>
+                                        <span className="text-[9px] lowercase font-normal opacity-70">Gratis (Pick Up)</span>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className={`p-4 rounded-xl border text-xs font-bold uppercase tracking-wider transition-all flex flex-col items-center gap-1 ${
+                                            form.shipping_method === 'delivery'
+                                                ? 'bg-[#0066FF]/10 border-[#0066FF] text-[#0066FF]'
+                                                : 'bg-black/40 border-white/10 text-slate-400 hover:border-white/20'
+                                        }`}
+                                        onClick={() => setForm({ ...form, shipping_method: 'delivery', address: '' })}
+                                    >
+                                        <span>🚀 Envío a Domicilio</span>
+                                        <span className="text-[9px] lowercase font-normal opacity-70">A coordinar por WhatsApp</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div>
                                 <label htmlFor="full_name" className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-1.5">Nombre Completo</label>
                                 <input
                                     id="full_name"
@@ -319,12 +480,151 @@ export const CheckoutPage = () => {
                                     value={form.email}
                                     onChange={(e) => setForm({ ...form, email: e.target.value })}
                                 />
-                                <p className="text-[10px] text-neutral-500 mt-1">Necesario para enviarte el resumen y notificaciones.</p>
                             </div>
 
-                            {/* Hidden legacy fields */}
-                            <div className="hidden">
-                                <input value={form.address} readOnly />
+                            <div className="grid grid-cols-3 gap-4">
+                                <div className="col-span-1">
+                                    <label htmlFor="cedula_prefix" className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-1.5">Nac.</label>
+                                    <select
+                                        id="cedula_prefix"
+                                        className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-[#0066FF] outline-none transition-colors text-white"
+                                        value={form.cedula_prefix}
+                                        onChange={(e) => setForm({ ...form, cedula_prefix: e.target.value as 'V' | 'E' })}
+                                    >
+                                        <option value="V">V</option>
+                                        <option value="E">E</option>
+                                    </select>
+                                </div>
+                                <div className="col-span-2">
+                                    <label htmlFor="cedula_number" className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-1.5">Cédula</label>
+                                    <input
+                                        id="cedula_number"
+                                        placeholder="Ej: 12345678"
+                                        className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-[#0066FF] outline-none transition-colors text-white placeholder:text-neutral-600 font-mono"
+                                        value={form.cedula_number}
+                                        onChange={(e) => setForm({ ...form, cedula_number: e.target.value.replace(/\D/g, '') })}
+                                    />
+                                </div>
+                            </div>
+
+                            {form.shipping_method === 'delivery' && (
+                                <div className="space-y-4 pt-4 border-t border-white/5 animate-in fade-in duration-200">
+                                    <h3 className="text-sm font-black uppercase tracking-tight text-white">Dirección de Envío</h3>
+                                    
+                                    {savedAddresses.length > 0 && (
+                                        <div>
+                                            <label className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-1.5">Usar Dirección Guardada</label>
+                                            <select
+                                                className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-[#0066FF] outline-none transition-colors text-white"
+                                                value={selectedAddressId}
+                                                onChange={(e) => handleAddressChange(e.target.value)}
+                                            >
+                                                <option value="new">Nueva Dirección...</option>
+                                                {savedAddresses.map(a => (
+                                                    <option key={a.id} value={a.id}>{a.name} - {a.address_line1}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    )}
+
+                                    {selectedAddressId === 'new' && (
+                                        <div className="space-y-4">
+                                            <div>
+                                                <label htmlFor="address" className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-1.5">Calle y Dirección Completa</label>
+                                                <textarea
+                                                    id="address"
+                                                    rows={3}
+                                                    placeholder="Ej: Av. Principal de Las Mercedes, Edif. Geeko, Apto 5"
+                                                    className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-[#0066FF] outline-none transition-colors text-white placeholder:text-neutral-600 resize-none text-sm"
+                                                    value={form.address}
+                                                    onChange={(e) => setForm({ ...form, address: e.target.value })}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label htmlFor="state" className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-1.5">Estado / Región</label>
+                                                <input
+                                                    id="state"
+                                                    placeholder="Ej: Distrito Capital"
+                                                    className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-[#0066FF] outline-none transition-colors text-white placeholder:text-neutral-600"
+                                                    value={form.state}
+                                                    onChange={(e) => setForm({ ...form, state: e.target.value })}
+                                                />
+                                            </div>
+
+                                            {savedAddresses.length >= 0 && (
+                                                <label className="flex items-center gap-2 cursor-pointer select-none py-1">
+                                                    <input
+                                                        type="checkbox"
+                                                        className="rounded border-white/10 bg-black/40 text-[#0066FF] focus:ring-0 focus:ring-offset-0"
+                                                        checked={saveToBook}
+                                                        onChange={(e) => setSaveToBook(e.target.checked)}
+                                                    />
+                                                    <span className="text-xs font-bold text-slate-300 uppercase tracking-wider">Guardar en mi libreta de direcciones</span>
+                                                </label>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            {/* Billing Address Section */}
+                            <div className="space-y-4 pt-4 border-t border-white/5">
+                                <div className="flex items-center justify-between">
+                                    <h3 className="text-sm font-black uppercase tracking-tight text-white">Dirección de Facturación</h3>
+                                    <label className="flex items-center gap-2 cursor-pointer select-none">
+                                        <input
+                                            type="checkbox"
+                                            className="rounded border-white/10 bg-black/40 text-[#0066FF] focus:ring-0 focus:ring-offset-0"
+                                            checked={sameAsShipping}
+                                            onChange={(e) => setSameAsShipping(e.target.checked)}
+                                        />
+                                        <span className="text-xs font-bold text-slate-300 uppercase tracking-wider">Igual al envío</span>
+                                    </label>
+                                </div>
+
+                                {!sameAsShipping && (
+                                    <div className="space-y-4 animate-in fade-in duration-200">
+                                        <div>
+                                            <label className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-1.5">Nombre / Razón Social</label>
+                                            <input
+                                                placeholder="Nombre completo o razón social"
+                                                className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-[#0066FF] outline-none transition-colors text-white placeholder:text-neutral-600 text-sm"
+                                                value={billingForm.full_name}
+                                                onChange={(e) => setBillingForm({ ...billingForm, full_name: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-1.5">WhatsApp / Contacto</label>
+                                                <input
+                                                    placeholder="Ej: 04141234567"
+                                                    className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-[#0066FF] outline-none transition-colors text-white placeholder:text-neutral-600 font-mono text-sm"
+                                                    value={billingForm.phone}
+                                                    onChange={(e) => setBillingForm({ ...billingForm, phone: e.target.value.replace(/\D/g, '') })}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-1.5">Cédula / RIF</label>
+                                                <input
+                                                    placeholder="Ej: V-12345678"
+                                                    className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-[#0066FF] outline-none transition-colors text-white placeholder:text-neutral-600 font-mono text-sm"
+                                                    value={billingForm.cedula}
+                                                    onChange={(e) => setBillingForm({ ...billingForm, cedula: e.target.value })}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-1.5">Dirección de Facturación</label>
+                                            <textarea
+                                                rows={2}
+                                                placeholder="Dirección fiscal o residencial"
+                                                className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:border-[#0066FF] outline-none transition-colors text-white placeholder:text-neutral-600 resize-none text-sm"
+                                                value={billingForm.address_line1}
+                                                onChange={(e) => setBillingForm({ ...billingForm, address_line1: e.target.value })}
+                                            />
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
 

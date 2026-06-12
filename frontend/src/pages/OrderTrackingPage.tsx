@@ -23,7 +23,8 @@ export const OrderTrackingPage = () => {
                     *,
                     order_items(
                         *,
-                        products(name, image_url, set_code)
+                        products(name, image_url, set_code, release_date),
+                        accessories(name, image_url, category, category_code, release_date)
                     )
                 `)
                 .eq('id', orderId)
@@ -195,6 +196,11 @@ export const OrderTrackingPage = () => {
                                                 {item.is_on_demand && (
                                                     <span className="text-[9px] px-1.5 py-0.5 rounded bg-orange-500/20 text-orange-400 border border-orange-500/30 font-black uppercase tracking-widest italic">
                                                         Por Encargo
+                                                    </span>
+                                                )}
+                                                {(item.products?.release_date || item.accessories?.release_date) && (
+                                                    <span className="text-[9px] px-1.5 py-0.5 rounded bg-orange-500/10 text-orange-400 border border-orange-500/20 font-black uppercase tracking-widest italic flex items-center gap-1">
+                                                        Lanzamiento: {new Date(item.products?.release_date || item.accessories?.release_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}
                                                     </span>
                                                 )}
                                             </div>

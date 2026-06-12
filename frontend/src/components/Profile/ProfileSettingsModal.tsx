@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { X, Save, User, MapPin, Phone, Hash, AlertCircle, Camera } from 'lucide-react';
-import { uploadUserAvatar } from '../../utils/api';
+import { X, Save, User, MapPin, Phone, Hash, AlertCircle, Camera, Lock, Key, Mail } from 'lucide-react';
+import { uploadUserAvatar, updateUserPassword, sendPasswordResetEmail } from '../../utils/api';
 import { supabase } from '../../utils/supabaseClient';
 import { useAuth } from '../../context/AuthContext';
 
@@ -25,8 +25,17 @@ export const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOp
         last_name: '',
         cedula: '',
         phone: '',
-        address: ''
+        address: '',
+        wizards_email: '',
+        pokemon_id: '',
+        bandai_id: ''
     });
+
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [passwordLoading, setPasswordLoading] = useState(false);
+    const [passwordSuccess, setPasswordSuccess] = useState(false);
+    const [passwordError, setPasswordError] = useState<string | null>(null);
 
     useEffect(() => {
         if (currentProfile) {
@@ -36,7 +45,10 @@ export const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOp
                 last_name: currentProfile.last_name || '',
                 cedula: currentProfile.cedula || '',
                 phone: currentProfile.phone || '',
-                address: currentProfile.address || ''
+                address: currentProfile.address || '',
+                wizards_email: currentProfile.wizards_email || '',
+                pokemon_id: currentProfile.pokemon_id || '',
+                bandai_id: currentProfile.bandai_id || ''
             });
             setAvatarPreview(currentProfile.avatar_url || null);
         }
@@ -72,11 +84,14 @@ export const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOp
                 avatarUrl = await uploadUserAvatar(avatarFile, user.id);
             }
 
-            // Nullify empty username to avoid unique constraint error on empty strings if applicable
+            // Nullify empty fields to avoid unique/validation constraint errors
             const dataToUpdate = {
                 ...formData,
                 avatar_url: avatarUrl,
-                username: formData.username.trim() === '' ? null : formData.username.trim()
+                username: formData.username.trim() === '' ? null : formData.username.trim(),
+                wizards_email: formData.wizards_email.trim() === '' ? null : formData.wizards_email.trim(),
+                pokemon_id: formData.pokemon_id.trim() === '' ? null : formData.pokemon_id.trim(),
+                bandai_id: formData.bandai_id.trim() === '' ? null : formData.bandai_id.trim()
             };
 
             const { error: updateError } = await supabase
@@ -101,6 +116,50 @@ export const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOp
             setError(err.message || 'Error al guardar los cambios.');
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handlePasswordUpdate = async (e: React.MouseEvent) => {
+        e.preventDefault();
+        if (password.length < 6) {
+            setPasswordError('La contraseña debe tener al menos 6 caracteres.');
+            return;
+        }
+        if (password !== confirmPassword) {
+            setPasswordError('Las contraseñas no coinciden.');
+            return;
+        }
+
+        setPasswordLoading(true);
+        setPasswordError(null);
+        setPasswordSuccess(false);
+
+        try {
+            await updateUserPassword(password);
+            setPasswordSuccess(true);
+            setPassword('');
+            setConfirmPassword('');
+        } catch (err: any) {
+            setPasswordError(err.message || 'Error al actualizar contraseña.');
+        } finally {
+            setPasswordLoading(false);
+        }
+    };
+
+    const handleSendResetEmail = async (e: React.MouseEvent) => {
+        e.preventDefault();
+        setPasswordLoading(true);
+        setPasswordError(null);
+        setPasswordSuccess(false);
+
+        try {
+            if (!user.email) throw new Error('No se encontró el correo del usuario.');
+            await sendPasswordResetEmail(user.email);
+            setPasswordSuccess(true);
+        } catch (err: any) {
+            setPasswordError(err.message || 'Error al enviar correo de recuperación.');
+        } finally {
+            setPasswordLoading(false);
         }
     };
 
@@ -221,6 +280,48 @@ export const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOp
                         </div>
 
                         <div className="space-y-4 pt-4">
+                            <h3 className="text-[10px] font-black text-text-low uppercase tracking-[0.2em] border-b border-white/5 pb-2">Identificaciones de Jugador TCG</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div className="space-y-1">
+                                    <label className="text-xs font-bold text-slate-400 uppercase">Wizards Account Email</label>
+                                    <input 
+                                        type="email" 
+                                        name="wizards_email"
+                                        value={formData.wizards_email}
+                                        onChange={handleChange}
+                                        placeholder="ejemplo@wizards.com"
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-4 text-sm text-white focus:outline-none focus:border-geeko-cyan transition-all"
+                                    />
+                                    <p className="text-[9px] text-slate-500 font-bold uppercase tracking-wider pl-1">Para MTG Arena / Torneos</p>
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-bold text-slate-400 uppercase">Play! Pokémon ID</label>
+                                    <input 
+                                        type="text" 
+                                        name="pokemon_id"
+                                        value={formData.pokemon_id}
+                                        onChange={handleChange}
+                                        placeholder="ej. 1234567"
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-4 text-sm text-white focus:outline-none focus:border-geeko-cyan transition-all"
+                                    />
+                                    <p className="text-[9px] text-slate-500 font-bold uppercase tracking-wider pl-1">Para Torneos Pokémon</p>
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-bold text-slate-400 uppercase">Bandai TCG+ ID</label>
+                                    <input 
+                                        type="text" 
+                                        name="bandai_id"
+                                        value={formData.bandai_id}
+                                        onChange={handleChange}
+                                        placeholder="ej. B-12345"
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 px-4 text-sm text-white focus:outline-none focus:border-geeko-cyan transition-all"
+                                    />
+                                    <p className="text-[9px] text-slate-500 font-bold uppercase tracking-wider pl-1">Para One Piece, DB, Digimon</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="space-y-4 pt-4">
                             <h3 className="text-[10px] font-black text-text-low uppercase tracking-[0.2em] border-b border-white/5 pb-2">Datos de Contacto y Envío</h3>
                             
                             <div className="space-y-1">
@@ -255,6 +356,75 @@ export const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOp
                                         placeholder="Ej. Av. Principal, Residencia Geeko, Apto 4..."
                                     />
                                 </div>
+                            </div>
+                        </div>
+
+                        <div className="space-y-4 pt-4">
+                            <h3 className="text-[10px] font-black text-text-low uppercase tracking-[0.2em] border-b border-white/5 pb-2">Seguridad y Acceso</h3>
+                            
+                            {passwordError && (
+                                <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-xs text-red-400 font-medium">
+                                    {passwordError}
+                                </div>
+                            )}
+                            {passwordSuccess && (
+                                <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-xl text-xs text-green-400 font-bold">
+                                    ¡Acción de seguridad ejecutada con éxito!
+                                </div>
+                            )}
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-1">
+                                    <label className="text-xs font-bold text-slate-400 uppercase">Nueva Contraseña</label>
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <Lock size={14} className="text-slate-500" />
+                                        </div>
+                                        <input 
+                                            type="password" 
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                            className="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 pl-9 pr-4 text-sm text-white focus:outline-none focus:border-geeko-cyan transition-all"
+                                            placeholder="Mínimo 6 caracteres"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-bold text-slate-400 uppercase">Confirmar Contraseña</label>
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <Lock size={14} className="text-slate-500" />
+                                        </div>
+                                        <input 
+                                            type="password" 
+                                            value={confirmPassword}
+                                            onChange={(e) => setConfirmPassword(e.target.value)}
+                                            className="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 pl-9 pr-4 text-sm text-white focus:outline-none focus:border-geeko-cyan transition-all"
+                                            placeholder="Repite la contraseña"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                                <button
+                                    type="button"
+                                    disabled={passwordLoading || !password}
+                                    onClick={handlePasswordUpdate}
+                                    className="flex items-center justify-center gap-2 px-4 py-2.5 bg-neutral-900 border border-white/10 hover:border-white/20 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all hover:bg-white/5 disabled:opacity-40"
+                                >
+                                    <Key size={14} />
+                                    Cambiar Contraseña
+                                </button>
+                                <button
+                                    type="button"
+                                    disabled={passwordLoading}
+                                    onClick={handleSendResetEmail}
+                                    className="flex items-center justify-center gap-2 px-4 py-2.5 bg-neutral-900 border border-white/10 hover:border-white/20 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all hover:bg-white/5 disabled:opacity-40"
+                                >
+                                    <Mail size={14} />
+                                    Enviar Enlace de Recuperación
+                                </button>
                             </div>
                         </div>
                     </form>

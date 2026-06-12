@@ -1061,7 +1061,9 @@ export const fetchUserAddresses = async () => {
   const { data, error } = await supabase
     .from('user_addresses')
     .select('*')
-    .eq('user_id', user.id);
+    .eq('user_id', user.id)
+    .order('is_default', { ascending: false })
+    .order('created_at', { ascending: false });
 
   if (error) throw error;
   return data || [];
@@ -1071,13 +1073,62 @@ export const saveUserAddress = async (address: any) => {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("User not logged in");
 
+  // Remove system fields if present
+  const { id, user_id, created_at, updated_at, ...insertData } = address;
+
   const { data, error } = await supabase
     .from('user_addresses')
-    .insert({ ...address, user_id: user.id })
+    .insert({ ...insertData, user_id: user.id })
     .select();
 
   if (error) throw error;
   return data;
+};
+
+export const deleteUserAddress = async (addressId: string) => {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("User not logged in");
+
+  const { error } = await supabase
+    .from('user_addresses')
+    .delete()
+    .eq('id', addressId)
+    .eq('user_id', user.id);
+
+  if (error) throw error;
+  return true;
+};
+
+export const updateUserAddress = async (addressId: string, address: any) => {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("User not logged in");
+
+  // Remove system fields if present
+  const { id, user_id, created_at, updated_at, ...updateData } = address;
+
+  const { data, error } = await supabase
+    .from('user_addresses')
+    .update(updateData)
+    .eq('id', addressId)
+    .eq('user_id', user.id)
+    .select();
+
+  if (error) throw error;
+  return data;
+};
+
+export const updateUserPassword = async (password: string) => {
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) throw error;
+  return true;
+};
+
+export const sendPasswordResetEmail = async (email: string) => {
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${window.location.origin}/update-password`,
+  });
+  if (error) throw error;
+  return true;
 };
 
 // Cart Management Functions

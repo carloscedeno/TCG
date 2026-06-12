@@ -6,6 +6,7 @@ import { Settings } from 'lucide-react';
 import OrdersList from '../components/Profile/OrdersList';
 import { CreditHistoryList } from '../components/Profile/CreditHistoryList';
 import { ProfileSettingsModal } from '../components/Profile/ProfileSettingsModal';
+import { AddressBook } from '../components/Profile/AddressBook';
 import { supabase } from '../utils/supabaseClient';
 import { useCart } from '../context/CartContext';
 import { Header } from '../components/Navigation/Header';
@@ -79,6 +80,39 @@ const ProfilePage: React.FC = () => {
                         </div>
                     </section>
 
+                    {/* Player IDs Grid */}
+                    {(profileData?.wizards_email || profileData?.pokemon_id || profileData?.bandai_id) && (
+                        <section className="grid grid-cols-1 sm:grid-cols-3 gap-4 animate-in slide-in-from-bottom-8 duration-700">
+                            {profileData?.wizards_email && (
+                                <div className="p-4 bg-neutral-900/40 border border-white/5 rounded-2xl flex items-center justify-between">
+                                    <div>
+                                        <p className="text-[9px] text-slate-500 font-bold uppercase tracking-wider">Wizards Account Email</p>
+                                        <p className="text-xs font-black text-white truncate max-w-[180px]">{profileData.wizards_email}</p>
+                                    </div>
+                                    <span className="text-[10px] px-2 py-0.5 rounded bg-orange-500/10 border border-orange-500/20 text-orange-400 font-black uppercase tracking-widest">MTG</span>
+                                </div>
+                            )}
+                            {profileData?.pokemon_id && (
+                                <div className="p-4 bg-neutral-900/40 border border-white/5 rounded-2xl flex items-center justify-between">
+                                    <div>
+                                        <p className="text-[9px] text-slate-500 font-bold uppercase tracking-wider">Play! Pokémon ID</p>
+                                        <p className="text-xs font-black text-white">{profileData.pokemon_id}</p>
+                                    </div>
+                                    <span className="text-[10px] px-2 py-0.5 rounded bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 font-black uppercase tracking-widest">POKÉMON</span>
+                                </div>
+                            )}
+                            {profileData?.bandai_id && (
+                                <div className="p-4 bg-neutral-900/40 border border-white/5 rounded-2xl flex items-center justify-between">
+                                    <div>
+                                        <p className="text-[9px] text-slate-500 font-bold uppercase tracking-wider">Bandai TCG+ ID</p>
+                                        <p className="text-xs font-black text-white">{profileData.bandai_id}</p>
+                                    </div>
+                                    <span className="text-[10px] px-2 py-0.5 rounded bg-blue-500/10 border border-blue-500/20 text-blue-400 font-black uppercase tracking-widest">BANDAI</span>
+                                </div>
+                            )}
+                        </section>
+                    )}
+
                     {/* Geek Credits Section */}
                     <section className="animate-in slide-in-from-bottom-8 duration-700 delay-50">
                         <div className="flex items-center gap-4 mb-8">
@@ -105,6 +139,19 @@ const ProfilePage: React.FC = () => {
                                     <CreditHistoryList />
                                 </div>
                             </div>
+                        </div>
+                    </section>
+
+                    {/* Address Book Section */}
+                    <section className="animate-in slide-in-from-bottom-8 duration-700 delay-75">
+                        <div className="flex items-center gap-4 mb-8">
+                            <h2 className="text-3xl font-black italic uppercase tracking-tighter">
+                                Libreta de <span className="text-geeko-gold">Direcciones</span>
+                            </h2>
+                            <div className="h-px flex-1 bg-gradient-to-r from-geeko-gold/50 to-transparent"></div>
+                        </div>
+                        <div className="bg-slate-900/50 border border-white/5 rounded-[2rem] p-8 backdrop-blur-md">
+                            <AddressBook />
                         </div>
                     </section>
 
