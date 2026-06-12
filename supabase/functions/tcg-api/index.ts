@@ -662,77 +662,77 @@ async function handleImportEndpoint(supabase: SupabaseClient, path: string, meth
   }
 
   if (importType === 'catalog') {
-    // Bulk import for Accessory Catalog (accessories table)
-    const errors: string[] = []
-    const failedIndices: number[] = []
-    let importedCount = 0
-
-    // Fetch categories for mapping names if only codes are provided
-    const { data: categoryList } = await supabase.from('accessory_categories').select('code, name')
-    const categoryMap = Object.fromEntries(categoryList?.map(c => [c.code, c.name]) || [])
-
-    for (let i = 0; i < importData.length; i++) {
-      const row = importData[i]
-      try {
-        const name = row[mapping?.name] || row['name'] || row['Name'] || row['Producto'];
-        const description = row[mapping?.description] || row['description'] || row['Description'] || row['Descripción'] || '';
-        const price = parseFloat(row[mapping?.price] || row['price'] || row['Price'] || row['Precio'] || '0') || 0;
-        const stock = parseInt(row[mapping?.stock] || row['stock'] || row['Stock'] || '0') || 0;
-        const categoryCode = (row[mapping?.category_code] || row['category_code'] || row['Categoría'] || '').trim();
-        const unitType = row[mapping?.unit_type] || row['unit_type'] || row['Tipo'] || 'Unidad';
-        
-        // Optional fields
-        const cost = parseFloat(row[mapping?.cost] || row['cost'] || row['Costo'] || row['costo'] || '0') || 0;
-        const suggestedPrice = parseFloat(row[mapping?.suggested_price] || row['suggested_price'] || row['Sugerido'] || row['precio_sugerido'] || '0') || 0;
-        const gameIdRaw = row[mapping?.game_id] || row['game_id'] || row['id_juego'] || row['Juego'] || null;
-        const gameId = gameIdRaw && !isNaN(parseInt(String(gameIdRaw))) ? parseInt(String(gameIdRaw)) : null;
-        const language = row[mapping?.language] || row['language'] || row['Idioma'] || 'Inglés';
-
-        if (!name || isNaN(price) || !categoryCode) {
-          errors.push(`Row ${i + 1}: Faltan campos obligatorios (Nombre, Precio o Categoría)`)
-          failedIndices.push(i)
-          continue
-        }
-
-        const categoryName = categoryMap[categoryCode] || 'Accesorios';
-
-        const { error: insertError } = await supabase
-          .from('accessories')
-          .insert({
-            name,
-            description,
-            price,
-            cost,
-            suggested_price: suggestedPrice,
-            stock,
-            category: categoryName,
-            category_code: categoryCode,
-            unit_type: unitType,
-            game_id: gameId,
-            language,
-            is_active: true
-            // Image URL omitted as per request
-          })
-
-        if (insertError) {
-          errors.push(`Row ${i + 1} (${name}): Error de inserción - ${insertError.message}`)
-          failedIndices.push(i)
-          continue
-        }
-
-        importedCount++
-      } catch (rowErr: any) {
-        errors.push(`Row ${i + 1}: Error inesperado - ${rowErr.message}`)
-        failedIndices.push(i)
+    const mappedData = importData.map((row) => {
+      const name = row[mapping?.name] || row['name'] || row['Name'] || row['producto'] || '';
+      const description = row[mapping?.description] || row['description'] || '';
+      const priceRaw = row[mapping?.price] || row['price'] || row['precio'] || '0';
+      const stockRaw = row[mapping?.stock] || row['stock'] || row['cantidad'] || '0';
+      let categoryCode = (row[mapping?.category_code] || row['category_code'] || row['categoría'] || '').toUpperCase().trim();
+      
+      const validCodes = ['SEALED', 'ACCESSORIES', 'SNACK', 'BOOSTER_PACK', 'BOOSTER_BOX', 'ETB', 'BUNDLE', 'STARTER_DECK', 'SPECIAL_SET', 'UPC', 'PROMO_PACK', 'SLEEVE', 'BINDER', 'DICE', 'PLAYMAT', 'PROTECTOR', 'DECKBOX', 'OTHER', 'PRESALE'];
+      
+      // Attempt to map common names to codes
+      if (!validCodes.includes(categoryCode)) {
+         if (categoryCode.includes('FORRO')) categoryCode = 'SLEEVE';
+         else if (categoryCode.includes('DADO')) categoryCode = 'DICE';
+         else if (categoryCode.includes('CARPETA')) categoryCode = 'BINDER';
+         else if (categoryCode.includes('ACCESORIO')) categoryCode = 'ACCESSORIES';
+         else if (categoryCode.includes('PREVENTA')) categoryCode = 'PRESALE';
+         else if (categoryCode.includes('SOBRE')) categoryCode = 'BOOSTER_PACK';
+         else if (categoryCode.includes('CAJA')) categoryCode = 'BOOSTER_BOX';
+         else categoryCode = 'OTHER';
       }
+
+      const unitType = row[mapping?.unit_type] || row['unit_type'] || 'Unit';
+      const language = row[mapping?.language] || row['language'] || 'English';
+      const costRaw = row[mapping?.cost] || row['cost'] || row['costo'] || '0';
+      const suggestedPriceRaw = row[mapping?.suggested_price] || row['suggested_price'] || row['sugerido'] || '0';
+      const gameIdRaw = row[mapping?.game_id] || row['game_id'] || '';
+
+      // Infer category display name if possible, otherwise use code
+      let categoryDisplay = categoryCode;
+      if (categoryCode === 'SLEEVE') categoryDisplay = 'Forros';
+      else if (categoryCode === 'DECKBOX') categoryDisplay = 'DeckBoxes';
+      else if (categoryCode === 'DICE') categoryDisplay = 'Dados';
+      else if (categoryCode === 'PLAYMAT') categoryDisplay = 'Playmats';
+      else if (categoryCode === 'ACCESSORIES') categoryDisplay = 'Accesorios';
+      else if (categoryCode === 'OTHER') categoryDisplay = 'Otros';
+      else if (categoryCode === 'PRESALE') categoryDisplay = 'Preventa';
+      else if (categoryCode === 'BINDER') categoryDisplay = 'Carpetas';
+
+      return {
+        name: name,
+        description: description,
+        price: parseFloat(String(priceRaw)) || 0,
+        stock: parseInt(String(stockRaw)) || 0,
+        category: categoryDisplay,
+        category_code: categoryCode,
+        unit_type: unitType,
+        language: language,
+        cost: parseFloat(String(costRaw)) || 0,
+        suggested_price: parseFloat(String(suggestedPriceRaw)) || 0,
+        game_id: parseInt(String(gameIdRaw)) || null,
+        is_active: true
+      };
+    }).filter(item => item.name);
+
+    if (mappedData.length === 0) {
+      throw new Error("No valid catalog items found to import.");
     }
 
+    const { data: result, error: insertError } = await supabase
+      .from('accessories')
+      .insert(mappedData)
+      .select();
+
+    if (insertError) throw insertError;
+    
     return {
-      imported_count: importedCount,
+      imported_count: result?.length || 0,
       total_rows: importData.length,
-      errors: errors,
-      failed_indices: failedIndices
-    }
+      errors: [],
+      failed_indices: []
+    };
   }
 
   if (importType === 'inventory') {

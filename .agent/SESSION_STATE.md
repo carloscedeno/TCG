@@ -7,7 +7,7 @@
 
 ## 📅 Última sesión: 2026-06-08
 **Rama activa:** `dev`
-**Último commit conocido:** fix de sincronizador de precios en prod
+**Último commit conocido:** fix de RLS en price_history (vía Supabase MCP)
 **En progreso:** Ninguno — sesión de setup de workflow
 
 ## 📁 Zona Caliente (archivos tocados recientemente)
