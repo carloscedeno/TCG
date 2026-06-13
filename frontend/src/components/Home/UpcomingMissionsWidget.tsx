@@ -60,7 +60,7 @@ export const UpcomingMissionsWidget: React.FC = () => {
                     return (
                         <div 
                             key={event.id}
-                            onClick={() => navigate('/arena')}
+                            onClick={() => navigate('/tournaments')}
                             className="flex items-center gap-4 bg-gradient-to-r from-neutral-900/80 to-black border border-white/5 rounded-xl p-3 cursor-pointer hover:border-white/20 transition-all hover:translate-x-1 group"
                         >
                             {/* Game Icon / Code Indicator */}

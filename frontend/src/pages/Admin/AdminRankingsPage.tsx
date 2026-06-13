@@ -19,7 +19,20 @@ const AdminRankingsPage = () => {
     const [selectedSeason, setSelectedSeason] = useState<RankingSeason | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingSeason, setEditingSeason] = useState<RankingSeason | null>(null);
-    const [formData, setFormData] = useState({ title: '', subtitle: '', game_context: 'GND' });
+    const [formData, setFormData] = useState({ title: '', subtitle: '', game_context: 'MTG' });
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+    const TCG_GAMES = [
+        { name: 'Magic', code: 'MTG', icon: '/logos/tcg/MTG.png' },
+        { name: 'Pokémon', code: 'PKM', icon: '/logos/tcg/PKM.png' },
+        { name: 'Yu-Gi-Oh!', code: 'YGO', icon: '/logos/tcg/YGO.png' },
+        { name: 'Riftbound', code: 'RFB', icon: '/logos/tcg/RFB.png' },
+        { name: 'One Piece', code: 'OPC', icon: '/logos/tcg/OPC.png' },
+        { name: 'Digimon', code: 'DGM', icon: '/logos/tcg/DGM.png' },
+        { name: 'Gundam', code: 'GND', icon: '/logos/tcg/GND.png' },
+        { name: 'Flesh and Blood', code: 'FAB', icon: '/logos/tcg/FAB.png' },
+        { name: 'Otros', code: 'OTHERS', icon: '/logos/tcg/OTHERS.png' }
+    ];
 
     useEffect(() => {
         fetchSeasons();
@@ -40,14 +53,16 @@ const AdminRankingsPage = () => {
 
     const openCreateModal = () => {
         setEditingSeason(null);
-        setFormData({ title: '', subtitle: '', game_context: 'GND' });
+        setFormData({ title: '', subtitle: '', game_context: 'MTG' });
         setIsModalOpen(true);
+        setIsDropdownOpen(false);
     };
 
     const openEditModal = (season: RankingSeason) => {
         setEditingSeason(season);
         setFormData({ title: season.title, subtitle: season.subtitle || '', game_context: season.game_context });
         setIsModalOpen(true);
+        setIsDropdownOpen(false);
     };
 
     const handleSaveSeason = async (e: React.FormEvent) => {
@@ -240,16 +255,40 @@ const AdminRankingsPage = () => {
                                     className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-[#00D1FF] outline-none transition-colors"
                                 />
                             </div>
-                            <div>
+                            <div className="relative">
                                 <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Juego / TCG</label>
-                                <input 
-                                    type="text" 
-                                    required 
-                                    value={formData.game_context} 
-                                    onChange={e => setFormData({ ...formData, game_context: e.target.value.toUpperCase() })} 
-                                    placeholder="Ej. GND, MTG, YGO"
-                                    className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-[#00D1FF] outline-none transition-colors font-mono"
-                                />
+                                <div 
+                                    className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white cursor-pointer hover:border-[#00D1FF]/50 transition-colors flex items-center justify-between"
+                                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                >
+                                    <div className="flex items-center gap-3">
+                                        {TCG_GAMES.find(g => g.code === formData.game_context)?.icon ? (
+                                            <img src={TCG_GAMES.find(g => g.code === formData.game_context)?.icon} className="w-6 h-6 object-contain" alt="Logo" />
+                                        ) : (
+                                            <div className="w-6 h-6 bg-white/10 rounded-full"></div>
+                                        )}
+                                        <span className="font-mono text-sm">{formData.game_context} - {TCG_GAMES.find(g => g.code === formData.game_context)?.name || 'Desconocido'}</span>
+                                    </div>
+                                    <span className="text-white/50 text-xs">▼</span>
+                                </div>
+                                
+                                {isDropdownOpen && (
+                                    <div className="absolute top-full left-0 right-0 mt-2 bg-slate-900 border border-white/10 rounded-xl overflow-hidden shadow-2xl z-50 max-h-48 overflow-y-auto">
+                                        {TCG_GAMES.map(game => (
+                                            <div 
+                                                key={game.code}
+                                                className="flex items-center gap-3 px-4 py-3 hover:bg-white/10 cursor-pointer transition-colors"
+                                                onClick={() => {
+                                                    setFormData({ ...formData, game_context: game.code });
+                                                    setIsDropdownOpen(false);
+                                                }}
+                                            >
+                                                <img src={game.icon} alt={game.name} className="w-6 h-6 object-contain" />
+                                                <span className="text-white font-medium">{game.name} <span className="text-white/50 text-xs ml-2 font-mono">{game.code}</span></span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                             <button type="submit" className="w-full mt-8 bg-[#00D1FF] text-black font-black uppercase tracking-widest py-4 rounded-xl hover:bg-white transition-colors shadow-[0_0_20px_rgba(0,209,255,0.2)]">
                                 {editingSeason ? 'Guardar Cambios' : 'Crear Temporada'}
