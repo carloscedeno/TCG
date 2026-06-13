@@ -16,15 +16,22 @@ interface RankingPlayer {
     player_photo_url: string | null;
 }
 
-const calculateRank = (kills: number) => {
-    if (kills >= 80) return { name: 'Almirante', icon: '/assets/ranks/almirante.png' };
-    if (kills >= 50) return { name: 'Contraalmirante', icon: '/assets/ranks/contraalmirante.png' };
-    if (kills >= 30) return { name: 'Capitán', icon: '/assets/ranks/capitan.png' };
-    if (kills >= 20) return { name: 'Comandante', icon: '/assets/ranks/comandante.png' };
-    if (kills >= 12) return { name: 'Teniente', icon: '/assets/ranks/teniente.png' };
-    if (kills >= 8) return { name: 'Insignia', icon: '/assets/ranks/insignia.png' };
-    if (kills >= 4) return { name: 'Suboficial en Jefe', icon: '/assets/ranks/suboficial_jefe.png' };
-    return { name: 'Cadete', icon: '/assets/ranks/cadete.png' };
+const calculateRank = (kills: number, faction: string) => {
+    const isZeon = faction === 'ZEON';
+    const prefix = isZeon ? 'Z' : 'F';
+    let baseName = '';
+    let displayName = '';
+    
+    if (kills >= 80) { baseName = 'ALMIRANTE'; displayName = 'Almirante'; }
+    else if (kills >= 50) { baseName = 'CONTRALMIRANTE'; displayName = 'Contraalmirante'; }
+    else if (kills >= 30) { baseName = 'CAPITAN'; displayName = 'Capitán'; }
+    else if (kills >= 20) { baseName = 'COMANDANTE'; displayName = 'Comandante'; }
+    else if (kills >= 12) { baseName = 'TENIENTE'; displayName = 'Teniente'; }
+    else if (kills >= 8) { baseName = 'INSIGNIA'; displayName = 'Insignia'; }
+    else if (kills >= 4) { baseName = 'SUBOFICIAL EN JEFE'; displayName = 'Suboficial en Jefe'; }
+    else { baseName = 'CABO'; displayName = isZeon ? 'Cadete' : 'Tripulante'; }
+    
+    return { name: displayName, icon: `/assets/ranks/${prefix} ${baseName}.png` };
 };
 
 const getFactionIcon = (faction: string) => {
@@ -135,7 +142,7 @@ const RankingsPage: React.FC = () => {
                                     </tr>
                                 ) : (
                                     players.map((player, index) => {
-                                        const rank = calculateRank(player.confirmed_kills);
+                                        const rank = calculateRank(player.confirmed_kills, player.faction);
                                         const factionIcon = getFactionIcon(player.faction);
                                         const suffix = index === 0 ? 'ero' : index === 1 ? 'do' : index === 2 ? 'ero' : index === 3 ? 'to' : index === 4 ? 'to' : index === 5 ? 'to' : index === 6 ? 'mo' : index === 7 ? 'vo' : index === 8 ? 'no' : 'mo';
                                         const isTop3 = index < 3;
