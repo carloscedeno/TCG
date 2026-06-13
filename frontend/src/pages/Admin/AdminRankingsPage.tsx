@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Shield, Plus, Edit2, Archive, CheckCircle } from 'lucide-react';
+import { Shield, Plus, Edit2, Archive, CheckCircle, Trash2, X } from 'lucide-react';
 import { supabase } from '../../utils/supabaseClient';
 import RankingSeasonManager from '../../components/Admin/RankingSeasonManager';
 
@@ -17,6 +17,9 @@ const AdminRankingsPage = () => {
     const [seasons, setSeasons] = useState<RankingSeason[]>([]);
     const [loading, setLoading] = useState(true);
     const [selectedSeason, setSelectedSeason] = useState<RankingSeason | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editingSeason, setEditingSeason] = useState<RankingSeason | null>(null);
+    const [formData, setFormData] = useState({ title: '', subtitle: '', game_context: 'GND' });
 
     useEffect(() => {
         fetchSeasons();
@@ -35,24 +38,63 @@ const AdminRankingsPage = () => {
         setLoading(false);
     };
 
-    const handleCreateSeason = async () => {
-        const title = prompt('Título de la Temporada (ej. TOP 20)');
-        if (!title) return;
-        const subtitle = prompt('Subtítulo (ej. 2025/SEASON 2)');
-        const gameContext = prompt('Juego (ej. yugioh, onepiece, pokemon)');
-        if (!gameContext) return;
+    const openCreateModal = () => {
+        setEditingSeason(null);
+        setFormData({ title: '', subtitle: '', game_context: 'GND' });
+        setIsModalOpen(true);
+    };
 
-        const { error } = await supabase
-            .from('ranking_seasons')
-            .insert([{
-                title,
-                subtitle,
-                game_context: gameContext,
-                is_active: true
-            }]);
+    const openEditModal = (season: RankingSeason) => {
+        setEditingSeason(season);
+        setFormData({ title: season.title, subtitle: season.subtitle || '', game_context: season.game_context });
+        setIsModalOpen(true);
+    };
+
+    const handleSaveSeason = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!formData.title || !formData.game_context) return;
+
+        let error;
+        if (editingSeason) {
+            const { error: updateError } = await supabase
+                .from('ranking_seasons')
+                .update({
+                    title: formData.title,
+                    subtitle: formData.subtitle,
+                    game_context: formData.game_context
+                })
+                .eq('id', editingSeason.id);
+            error = updateError;
+        } else {
+            const { error: insertError } = await supabase
+                .from('ranking_seasons')
+                .insert([{
+                    title: formData.title,
+                    subtitle: formData.subtitle,
+                    game_context: formData.game_context,
+                    is_active: true
+                }]);
+            error = insertError;
+        }
 
         if (error) {
-            alert('Error al crear: ' + error.message);
+            alert('Error al guardar: ' + error.message);
+        } else {
+            setIsModalOpen(false);
+            fetchSeasons();
+        }
+    };
+
+    const handleDeleteSeason = async (id: string) => {
+        if (!confirm('¿Estás SEGURO de que deseas eliminar esta temporada? Se perderán todos sus jugadores.')) return;
+        
+        const { error } = await supabase
+            .from('ranking_seasons')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            alert('Error al eliminar: ' + error.message);
         } else {
             fetchSeasons();
         }
@@ -102,7 +144,7 @@ const AdminRankingsPage = () => {
                 </div>
 
                 <div className="flex justify-end mb-6">
-                    <button onClick={handleCreateSeason} className="bg-[#00D1FF] text-black px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all flex items-center gap-2 shadow-[0_0_20px_rgba(0,209,255,0.2)]">
+                    <button onClick={openCreateModal} className="bg-[#00D1FF] text-black px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all flex items-center gap-2 shadow-[0_0_20px_rgba(0,209,255,0.2)]">
                         <Plus size={16} /> Nueva Temporada
                     </button>
                 </div>
@@ -144,10 +186,16 @@ const AdminRankingsPage = () => {
                                             <td className="px-6 py-4 text-right">
                                                 <div className="flex items-center justify-end gap-2">
                                                     <button onClick={() => setSelectedSeason(season)} className="p-2 bg-white/5 hover:bg-[#00D1FF]/20 rounded-lg text-white hover:text-[#00D1FF] transition-colors" title="Gestionar Jugadores">
+                                                        <Shield size={16} />
+                                                    </button>
+                                                    <button onClick={() => openEditModal(season)} className="p-2 bg-white/5 hover:bg-orange-500/20 rounded-lg text-white hover:text-orange-500 transition-colors" title="Editar Temporada">
                                                         <Edit2 size={16} />
                                                     </button>
                                                     <button onClick={() => toggleStatus(season)} className={`p-2 rounded-lg transition-colors ${season.is_active ? 'bg-rose-500/10 hover:bg-rose-500/20 text-rose-400' : 'bg-[#00FF85]/10 hover:bg-[#00FF85]/20 text-[#00FF85]'}`} title={season.is_active ? 'Desactivar' : 'Activar'}>
                                                         {season.is_active ? <Archive size={16} /> : <CheckCircle size={16} />}
+                                                    </button>
+                                                    <button onClick={() => handleDeleteSeason(season.id)} className="p-2 bg-red-500/10 hover:bg-red-500/20 rounded-lg text-red-500 transition-colors" title="Eliminar Temporada">
+                                                        <Trash2 size={16} />
                                                     </button>
                                                 </div>
                                             </td>
@@ -159,6 +207,57 @@ const AdminRankingsPage = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Form Modal */}
+            {isModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+                    <div className="bg-slate-900 border border-white/10 rounded-3xl p-8 max-w-md w-full shadow-2xl">
+                        <div className="flex justify-between items-center mb-6">
+                            <h2 className="text-xl font-black italic tracking-tighter uppercase">{editingSeason ? 'Editar Temporada' : 'Nueva Temporada'}</h2>
+                            <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-white transition-colors">
+                                <X size={24} />
+                            </button>
+                        </div>
+                        <form onSubmit={handleSaveSeason} className="space-y-4">
+                            <div>
+                                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Título</label>
+                                <input 
+                                    type="text" 
+                                    required 
+                                    value={formData.title} 
+                                    onChange={e => setFormData({ ...formData, title: e.target.value })} 
+                                    placeholder="Ej. TOP 20"
+                                    className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-[#00D1FF] outline-none transition-colors"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Subtítulo (Opcional)</label>
+                                <input 
+                                    type="text" 
+                                    value={formData.subtitle} 
+                                    onChange={e => setFormData({ ...formData, subtitle: e.target.value })} 
+                                    placeholder="Ej. 2025/SEASON 2"
+                                    className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-[#00D1FF] outline-none transition-colors"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Juego / TCG</label>
+                                <input 
+                                    type="text" 
+                                    required 
+                                    value={formData.game_context} 
+                                    onChange={e => setFormData({ ...formData, game_context: e.target.value.toUpperCase() })} 
+                                    placeholder="Ej. GND, MTG, YGO"
+                                    className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-[#00D1FF] outline-none transition-colors font-mono"
+                                />
+                            </div>
+                            <button type="submit" className="w-full mt-8 bg-[#00D1FF] text-black font-black uppercase tracking-widest py-4 rounded-xl hover:bg-white transition-colors shadow-[0_0_20px_rgba(0,209,255,0.2)]">
+                                {editingSeason ? 'Guardar Cambios' : 'Crear Temporada'}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

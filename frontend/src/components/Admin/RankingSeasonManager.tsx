@@ -24,6 +24,8 @@ const RankingSeasonManager = ({ season, onBack }: RankingSeasonManagerProps) => 
     const [players, setPlayers] = useState<PlayerRanking[]>([]);
     const [loading, setLoading] = useState(true);
     const [savingId, setSavingId] = useState<string | null>(null);
+    const [isAddingPlayer, setIsAddingPlayer] = useState(false);
+    const [newPlayerName, setNewPlayerName] = useState('');
 
     useEffect(() => {
         fetchPlayers();
@@ -43,13 +45,15 @@ const RankingSeasonManager = ({ season, onBack }: RankingSeasonManagerProps) => 
         setLoading(false);
     };
 
-    const handleAddPlayer = async () => {
-        const name = prompt('Nombre del jugador:');
-        if (!name) return;
+    const submitNewPlayer = async () => {
+        if (!newPlayerName.trim()) {
+            setIsAddingPlayer(false);
+            return;
+        }
 
         const { data, error } = await supabase
             .from('player_rankings')
-            .insert([{ season_id: season.id, name, faction: 'ZEON', conquest_points: 0, takedown_points: 0, confirmed_kills: 0 }])
+            .insert([{ season_id: season.id, name: newPlayerName.trim(), faction: 'ZEON', conquest_points: 0, takedown_points: 0, confirmed_kills: 0 }])
             .select()
             .single();
 
@@ -57,6 +61,8 @@ const RankingSeasonManager = ({ season, onBack }: RankingSeasonManagerProps) => 
             alert('Error al añadir: ' + error.message);
         } else if (data) {
             setPlayers([...players, data].sort((a, b) => b.confirmed_kills - a.confirmed_kills));
+            setNewPlayerName('');
+            setIsAddingPlayer(false);
         }
     };
 
@@ -105,7 +111,7 @@ const RankingSeasonManager = ({ season, onBack }: RankingSeasonManagerProps) => 
                         <h2 className="text-3xl font-black italic tracking-tighter uppercase">{season.title}</h2>
                         <p className="text-slate-400 font-mono text-sm">{season.subtitle} • Juego: {season.game_context}</p>
                     </div>
-                    <button onClick={handleAddPlayer} className="bg-[#00FF85] text-black px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all flex items-center gap-2">
+                    <button onClick={() => setIsAddingPlayer(true)} className="bg-[#00FF85] text-black px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all flex items-center gap-2">
                         <Plus size={16} /> Añadir Jugador
                     </button>
                 </div>
@@ -131,7 +137,35 @@ const RankingSeasonManager = ({ season, onBack }: RankingSeasonManagerProps) => 
                                 ) : players.length === 0 ? (
                                     <tr><td colSpan={7} className="px-6 py-12 text-center text-slate-500 font-bold italic tracking-widest">No hay jugadores en esta temporada.</td></tr>
                                 ) : (
-                                    players.map((player, index) => (
+                                    <>
+                                        {isAddingPlayer && (
+                                            <tr className="bg-[#00FF85]/5 border-b border-[#00FF85]/20">
+                                                <td className="px-6 py-4 font-black text-[#00FF85]">-</td>
+                                                <td className="px-6 py-4">
+                                                    <input 
+                                                        autoFocus
+                                                        type="text" 
+                                                        placeholder="Nombre del nuevo recluta"
+                                                        value={newPlayerName}
+                                                        onChange={(e) => setNewPlayerName(e.target.value)}
+                                                        onKeyDown={(e) => {
+                                                            if (e.key === 'Enter') submitNewPlayer();
+                                                            if (e.key === 'Escape') setIsAddingPlayer(false);
+                                                        }}
+                                                        className="bg-black/50 border border-[#00FF85]/50 rounded px-3 py-2 w-full focus:border-[#00FF85] outline-none transition-colors text-[#00FF85] placeholder-[#00FF85]/30"
+                                                    />
+                                                </td>
+                                                <td colSpan={5} className="px-6 py-4 text-slate-500 text-xs italic">
+                                                    Presiona Enter para guardar o Esc para cancelar
+                                                </td>
+                                                <td className="px-6 py-4 text-right">
+                                                    <button onClick={submitNewPlayer} className="p-2 bg-[#00FF85]/20 hover:bg-[#00FF85]/40 text-[#00FF85] rounded-lg transition-colors">
+                                                        <Save size={16} />
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        )}
+                                        {players.map((player, index) => (
                                         <tr key={player.id} className="hover:bg-white/5 transition-colors">
                                             <td className="px-6 py-4 font-black text-[#00D1FF]">#{index + 1}</td>
                                             <td className="px-6 py-4">
@@ -225,7 +259,8 @@ const RankingSeasonManager = ({ season, onBack }: RankingSeasonManagerProps) => 
                                                 </div>
                                             </td>
                                         </tr>
-                                    ))
+                                    ))}
+                                    </>
                                 )}
                             </tbody>
                         </table>
