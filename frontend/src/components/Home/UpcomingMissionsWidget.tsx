@@ -22,17 +22,6 @@ export const UpcomingMissionsWidget: React.FC = () => {
         loadEvents();
     }, []);
 
-    const getGameIcon = (gameCode: string) => {
-        switch (gameCode) {
-            case 'MTG': return '/assets/icons/mtg-icon.svg'; // Placeholder paths, we can use simple text or specific icons if we have them
-            case 'PKM': return '/assets/icons/pkm-icon.svg';
-            case 'YGO': return '/assets/icons/ygo-icon.svg';
-            case 'DGM': return '/assets/icons/dgm-icon.svg';
-            case 'OPC': return '/assets/icons/opc-icon.svg';
-            case 'FAB': return '/assets/icons/fab-icon.svg';
-            default: return null;
-        }
-    };
 
     const getGameColor = (gameCode: string) => {
         switch (gameCode) {
