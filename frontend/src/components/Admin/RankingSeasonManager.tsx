@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../utils/supabaseClient';
-import { Plus, Save, Trash2, ArrowLeft } from 'lucide-react';
+import { Plus, Save, Trash2, ArrowLeft, History } from 'lucide-react';
 import type { RankingSeason } from '../../pages/Admin/AdminRankingsPage';
+import { PlayerHistoryModal } from './PlayerHistoryModal';
 
 interface PlayerRanking {
     id: string;
@@ -26,6 +27,7 @@ const RankingSeasonManager = ({ season, onBack }: RankingSeasonManagerProps) => 
     const [savingId, setSavingId] = useState<string | null>(null);
     const [isAddingPlayer, setIsAddingPlayer] = useState(false);
     const [newPlayerName, setNewPlayerName] = useState('');
+    const [historyPlayer, setHistoryPlayer] = useState<{id: string, name: string} | null>(null);
 
     useEffect(() => {
         fetchPlayers();
@@ -252,9 +254,14 @@ const RankingSeasonManager = ({ season, onBack }: RankingSeasonManagerProps) => 
                                                     {savingId === player.id ? (
                                                         <span className="text-[#00FF85] animate-pulse"><Save size={16} /></span>
                                                     ) : (
-                                                        <button onClick={() => handleDeletePlayer(player.id)} className="p-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 rounded-lg transition-colors">
-                                                            <Trash2 size={16} />
-                                                        </button>
+                                                        <>
+                                                            <button onClick={() => setHistoryPlayer({ id: player.id, name: player.name })} className="p-2 bg-[#00D1FF]/10 hover:bg-[#00D1FF]/20 text-[#00D1FF] rounded-lg transition-colors" title="Ver Historial">
+                                                                <History size={16} />
+                                                            </button>
+                                                            <button onClick={() => handleDeletePlayer(player.id)} className="p-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 rounded-lg transition-colors" title="Eliminar Jugador">
+                                                                <Trash2 size={16} />
+                                                            </button>
+                                                        </>
                                                     )}
                                                 </div>
                                             </td>
@@ -267,6 +274,14 @@ const RankingSeasonManager = ({ season, onBack }: RankingSeasonManagerProps) => 
                     </div>
                 </div>
             </div>
+            
+            {historyPlayer && (
+                <PlayerHistoryModal 
+                    playerId={historyPlayer.id} 
+                    playerName={historyPlayer.name} 
+                    onClose={() => setHistoryPlayer(null)} 
+                />
+            )}
         </div>
     );
 };

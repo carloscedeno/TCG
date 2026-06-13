@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../utils/supabaseClient';
+import { History } from 'lucide-react';
+import { PlayerHistoryModal } from '../Admin/PlayerHistoryModal';
 
 interface PlayerRankingsListProps {
     userId: string;
@@ -27,6 +29,7 @@ const calculateRank = (kills: number, faction: string) => {
 export const PlayerRankingsList = ({ userId, username }: PlayerRankingsListProps) => {
     const [rankings, setRankings] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [historyPlayer, setHistoryPlayer] = useState<{id: string, name: string} | null>(null);
 
     useEffect(() => {
         const fetchRankings = async () => {
@@ -75,6 +78,16 @@ export const PlayerRankingsList = ({ userId, username }: PlayerRankingsListProps
                         {/* Glow */}
                         <div className="absolute top-0 right-0 w-32 h-32 bg-[#4B6EEB]/10 rounded-full blur-3xl group-hover:bg-[#4B6EEB]/20 transition-colors" />
                         
+                        <div className="absolute top-4 right-4 z-20">
+                            <button 
+                                onClick={() => setHistoryPlayer({ id: ranking.id, name: `${username} - ${ranking.ranking_seasons?.title}` })}
+                                className="w-8 h-8 rounded-full bg-black/50 border border-white/10 flex items-center justify-center text-slate-400 hover:text-[#4B6EEB] hover:border-[#4B6EEB]/50 transition-all hover:scale-110"
+                                title="Ver Historial"
+                            >
+                                <History size={14} />
+                            </button>
+                        </div>
+
                         <div className="flex items-center gap-4 relative z-10">
                             {/* Rank Icon */}
                             <div className="w-16 h-16 shrink-0 flex items-center justify-center">
@@ -97,6 +110,14 @@ export const PlayerRankingsList = ({ userId, username }: PlayerRankingsListProps
                     </div>
                 );
             })}
+            
+            {historyPlayer && (
+                <PlayerHistoryModal 
+                    playerId={historyPlayer.id} 
+                    playerName={historyPlayer.name} 
+                    onClose={() => setHistoryPlayer(null)} 
+                />
+            )}
         </div>
     );
 };
