@@ -33,6 +33,7 @@ import { PosSessionBanner } from './components/Admin/PosSessionBanner';
 import CategoriesPage from './pages/Admin/CategoriesPage';
 import MediaPage from './pages/Admin/MediaPage';
 import AdminRankingsPage from './pages/Admin/AdminRankingsPage';
+import RankingsPage from './pages/RankingsPage';
 import { PwaReloadPrompt } from './components/Navigation/PwaReloadPrompt';
 import { BottomNav } from './components/Navigation/BottomNav';
 
@@ -91,6 +92,7 @@ function App() {
                         <Route path="/profile" element={<Profile />} />
                         <Route path="/import" element={<ImportCollection />} />
                         <Route path="/tournaments" element={<TournamentHub />} />
+                        <Route path="/rankings" element={<RankingsPage />} />
 
                         <Route path="/help" element={<HelpPage />} />
                         <Route path="/legal" element={<LegalPage />} />

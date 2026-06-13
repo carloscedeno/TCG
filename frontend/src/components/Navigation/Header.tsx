@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 import { ShoppingCart, Search } from 'lucide-react';
 import { SearchBar } from '../SearchBar/SearchBar';
 import { UserMenu } from './UserMenu';
@@ -15,6 +15,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [query, setQuery] = useState(searchParams.get('q') || '');
     const navigate = useNavigate();
+    const location = useLocation();
 
 
 
@@ -44,8 +45,12 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
     };
 
     const navigateToGame = (gameCode: string) => {
-        const tab = gameCode === 'MTG' ? 'marketplace' : 'catalog';
-        navigate(`/?game=${gameCode}&tab=${tab}`);
+        if (location.pathname === '/rankings') {
+            navigate(`/rankings?game=${gameCode}`);
+        } else {
+            const tab = gameCode === 'MTG' ? 'marketplace' : 'catalog';
+            navigate(`/?game=${gameCode}&tab=${tab}`);
+        }
     };
 
     return (
@@ -61,7 +66,11 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                 <nav className="hidden lg:flex items-center gap-8 xl:gap-14">
                     {[
                         { name: 'Home', path: '/' },
-                        { name: 'Artilugios', path: '/?tab=catalog' }
+                        { name: 'Artilugios', path: '/?tab=catalog' },
+                        { name: 'Hechizos', path: '/?tab=marketplace' },
+                        { name: 'Misiones', path: '/tournaments' },
+                        { name: 'Rankings', path: '/rankings' },
+                        { name: 'Invócanos', path: '/help' }
                     ].map((item) => (
                         <Link 
                             key={item.name}

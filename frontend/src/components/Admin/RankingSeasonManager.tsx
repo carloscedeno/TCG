@@ -7,10 +7,11 @@ interface PlayerRanking {
     id: string;
     season_id: string;
     name: string;
-    points: number;
+    faction: string | null;
+    conquest_points: number;
+    takedown_points: number;
+    confirmed_kills: number;
     player_photo_url: string | null;
-    game_asset_url: string | null;
-    tier_icon: string | null;
     user_id: string | null;
 }
 
@@ -34,7 +35,7 @@ const RankingSeasonManager = ({ season, onBack }: RankingSeasonManagerProps) => 
             .from('player_rankings')
             .select('*')
             .eq('season_id', season.id)
-            .order('points', { ascending: false });
+            .order('confirmed_kills', { ascending: false });
 
         if (!error && data) {
             setPlayers(data);
@@ -48,14 +49,14 @@ const RankingSeasonManager = ({ season, onBack }: RankingSeasonManagerProps) => 
 
         const { data, error } = await supabase
             .from('player_rankings')
-            .insert([{ season_id: season.id, name, points: 0 }])
+            .insert([{ season_id: season.id, name, faction: 'ZEON', conquest_points: 0, takedown_points: 0, confirmed_kills: 0 }])
             .select()
             .single();
 
         if (error) {
             alert('Error al añadir: ' + error.message);
         } else if (data) {
-            setPlayers([...players, data].sort((a, b) => b.points - a.points));
+            setPlayers([...players, data].sort((a, b) => b.confirmed_kills - a.confirmed_kills));
         }
     };
 
@@ -72,7 +73,7 @@ const RankingSeasonManager = ({ season, onBack }: RankingSeasonManagerProps) => 
             // Update local state and sort again
             setPlayers(current => 
                 current.map(p => p.id === id ? { ...p, ...updates } : p)
-                .sort((a, b) => b.points - a.points)
+                .sort((a, b) => b.confirmed_kills - a.confirmed_kills)
             );
         }
         setSavingId(null);
@@ -116,10 +117,11 @@ const RankingSeasonManager = ({ season, onBack }: RankingSeasonManagerProps) => 
                                 <tr>
                                     <th className="px-6 py-4 font-black">Pos</th>
                                     <th className="px-6 py-4 font-black">Jugador</th>
-                                    <th className="px-6 py-4 font-black">Puntos</th>
+                                    <th className="px-6 py-4 font-black">Facción</th>
+                                    <th className="px-6 py-4 font-black">Conquista</th>
+                                    <th className="px-6 py-4 font-black">Derribo</th>
+                                    <th className="px-6 py-4 font-black">Kills</th>
                                     <th className="px-6 py-4 font-black">Foto URL</th>
-                                    <th className="px-6 py-4 font-black">Personaje URL</th>
-                                    <th className="px-6 py-4 font-black">Medalla URL</th>
                                     <th className="px-6 py-4 font-black text-right">Acciones</th>
                                 </tr>
                             </thead>
@@ -145,16 +147,57 @@ const RankingSeasonManager = ({ season, onBack }: RankingSeasonManagerProps) => 
                                                 />
                                             </td>
                                             <td className="px-6 py-4">
-                                                <input 
-                                                    type="number" 
-                                                    defaultValue={player.points}
+                                                <select
+                                                    defaultValue={player.faction || 'ZEON'}
                                                     onBlur={(e) => {
-                                                        const newVal = parseInt(e.target.value);
-                                                        if (!isNaN(newVal) && newVal !== player.points) {
-                                                            handleUpdatePlayer(player.id, { points: newVal });
+                                                        if (e.target.value !== player.faction) {
+                                                            handleUpdatePlayer(player.id, { faction: e.target.value });
                                                         }
                                                     }}
-                                                    className="bg-black/30 border border-white/10 rounded px-3 py-2 w-24 focus:border-[#00FF85] outline-none transition-colors font-mono"
+                                                    className="bg-black/30 border border-white/10 rounded px-3 py-2 w-full focus:border-[#00D1FF] outline-none transition-colors"
+                                                >
+                                                    <option value="ZEON">Zeon</option>
+                                                    <option value="EARTH_FEDERATION">Earth Federation</option>
+                                                    <option value="OTRA">Otra</option>
+                                                </select>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <input 
+                                                    type="number" 
+                                                    defaultValue={player.conquest_points}
+                                                    onBlur={(e) => {
+                                                        const newVal = parseInt(e.target.value);
+                                                        if (!isNaN(newVal) && newVal !== player.conquest_points) {
+                                                            handleUpdatePlayer(player.id, { conquest_points: newVal });
+                                                        }
+                                                    }}
+                                                    className="bg-black/30 border border-white/10 rounded px-3 py-2 w-20 focus:border-[#00FF85] outline-none transition-colors font-mono text-center"
+                                                />
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <input 
+                                                    type="number" 
+                                                    defaultValue={player.takedown_points}
+                                                    onBlur={(e) => {
+                                                        const newVal = parseInt(e.target.value);
+                                                        if (!isNaN(newVal) && newVal !== player.takedown_points) {
+                                                            handleUpdatePlayer(player.id, { takedown_points: newVal });
+                                                        }
+                                                    }}
+                                                    className="bg-black/30 border border-white/10 rounded px-3 py-2 w-20 focus:border-[#00FF85] outline-none transition-colors font-mono text-center"
+                                                />
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <input 
+                                                    type="number" 
+                                                    defaultValue={player.confirmed_kills}
+                                                    onBlur={(e) => {
+                                                        const newVal = parseInt(e.target.value);
+                                                        if (!isNaN(newVal) && newVal !== player.confirmed_kills) {
+                                                            handleUpdatePlayer(player.id, { confirmed_kills: newVal });
+                                                        }
+                                                    }}
+                                                    className="bg-black/30 border border-white/10 rounded px-3 py-2 w-20 focus:border-[#00FF85] outline-none transition-colors font-mono text-center text-[#00FF85]"
                                                 />
                                             </td>
                                             <td className="px-6 py-4">
@@ -165,32 +208,6 @@ const RankingSeasonManager = ({ season, onBack }: RankingSeasonManagerProps) => 
                                                     onBlur={(e) => {
                                                         if (e.target.value !== (player.player_photo_url || '')) {
                                                             handleUpdatePlayer(player.id, { player_photo_url: e.target.value });
-                                                        }
-                                                    }}
-                                                    className="bg-black/30 border border-white/10 rounded px-3 py-2 w-32 focus:border-white/30 outline-none text-[10px]"
-                                                />
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <input 
-                                                    type="text" 
-                                                    placeholder="https://"
-                                                    defaultValue={player.game_asset_url || ''}
-                                                    onBlur={(e) => {
-                                                        if (e.target.value !== (player.game_asset_url || '')) {
-                                                            handleUpdatePlayer(player.id, { game_asset_url: e.target.value });
-                                                        }
-                                                    }}
-                                                    className="bg-black/30 border border-white/10 rounded px-3 py-2 w-32 focus:border-white/30 outline-none text-[10px]"
-                                                />
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <input 
-                                                    type="text" 
-                                                    placeholder="Opcional (Auto por CSS)"
-                                                    defaultValue={player.tier_icon || ''}
-                                                    onBlur={(e) => {
-                                                        if (e.target.value !== (player.tier_icon || '')) {
-                                                            handleUpdatePlayer(player.id, { tier_icon: e.target.value });
                                                         }
                                                     }}
                                                     className="bg-black/30 border border-white/10 rounded px-3 py-2 w-32 focus:border-white/30 outline-none text-[10px]"

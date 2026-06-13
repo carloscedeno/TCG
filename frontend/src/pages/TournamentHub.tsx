@@ -6,7 +6,6 @@ import { Header } from '../components/Navigation/Header';
 import { Footer } from '../components/Navigation/Footer';
 import { CartDrawer } from '../components/Navigation/CartDrawer';
 import { PreRegistrationModal } from '../components/Modals/PreRegistrationModal';
-import { RankingWidget } from '../components/Rankings/RankingWidget';
 
 // Fallback color mapping based on game code
 const GAME_COLORS: Record<string, { border: string, text: string }> = {
@@ -81,17 +80,6 @@ const TournamentHub: React.FC = () => {
                             >
                                 <Users size={16} className="group-hover:text-white transition-colors" /> Mi Perfil de Jugador
                             </button>
-                        </div>
-                    </div>
-
-                    {/* Leaderboards Section */}
-                    <div className="space-y-8">
-                        <div className="flex items-center justify-between">
-                            <h3 className="text-2xl font-black text-white uppercase italic tracking-tighter">Ranking Oficial TCG</h3>
-                        </div>
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                            <RankingWidget gameContext="yugioh" />
-                            <RankingWidget gameContext="onepiece" />
                         </div>
                     </div>
 
