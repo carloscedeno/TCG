@@ -486,3 +486,25 @@ Siempre proveer un caso de evaluaciÃ³n estricto en sentencias SQL cuando el si
 - `CheckoutPage.tsx` → Se añadió autocompletado de datos desde el perfil.
 - `ProfileSettingsModal.tsx` & `api.ts` → Soporte para subir imágenes al bucket `avatars`.
 **Regla derivada:** Validar las columnas existentes antes de usar `.is()` en la DB. Al usar RLS, verificar que exista política UPDATE, de lo contrario devuelve "éxito" pero modifica 0 filas.
+
+## 2026-06-12 — Mejoras al Panel de Usuario (Dashboard) y Libreta de Direcciones
+
+**Qué pasó:** Implementación y despliegue en DEV remota de un conjunto integral de requerimientos para el Panel de Usuario (Dashboard - Mi Cuenta) y el flujo de Checkout:
+1. **TCG Player IDs:** Agregados campos dinámicos para Wizards Account Email, Pokémon ID y Bandai ID en perfiles del usuario con despliegue en tarjeta premium de jugador.
+2. **Seguridad del Perfil:** Añadido cambio directo de contraseña y opción para solicitar correo electrónico de recuperación en el modal de edición de perfil.
+3. **Libreta de Direcciones CRUD:** Diseñada la libreta para permitir múltiples direcciones por usuario. Un trigger a nivel de base de datos (`user_address_defaults_trigger`) garantiza la unicidad atómica de la dirección predeterminada de envío y facturación.
+4. **Checkout Integrado:** Dropdown para elegir direcciones guardadas y auto-rellenar el formulario de envío. Opción de guardar nuevas direcciones en la libreta. Soporte para dirección de facturación independiente ("Igual al envío" o formulario personalizado).
+5. **Historial de Pedidos y Preventas:** Pestañas para filtrar compras (Todos, Singles, Sellado, Preventas) y banners con fecha estimada de llegada basados en la nueva columna `release_date` agregada a accesorios y las existentes en cartas.
+
+**Lo que cambió:**
+- `supabase/migrations/20260612000000_user_dashboard_improvements.sql` → Creación de tabla `user_addresses`, trigger de exclusión mutua para predeterminados, y columnas de TCG IDs en `profiles` y `release_date` en `accessories`.
+- `frontend/src/utils/api.ts` → Incorporación de helpers CRUD para direcciones y endpoints de seguridad.
+- `frontend/src/pages/Profile.tsx`, `ProfileSettingsModal.tsx` & `AddressBook.tsx` → Integración de libreta de direcciones, TCG Player IDs, cambio de contraseña directa y solicitudes de reset.
+- `frontend/src/pages/CheckoutPage.tsx` → Dropdown de auto-relleno, checkbox para guardar dirección al confirmar pedido, e inputs de facturación condicional.
+- `frontend/src/components/Profile/OrdersList.tsx` & `OrderTrackingPage.tsx` → Filtros del historial y badges de preventa con estimaciones de liberación.
+
+**Regla derivada:**
+- Las banderas mutuamente excluyentes (como direcciones predeterminadas) deben resolverse mediante triggers en base de datos.
+- Para conservar inmutabilidad histórica, detalles transaccionales (como facturas) deben guardarse dentro de JSONB en lugar de alterar esquemas relacionales consolidados.
+- La paridad de columnas de fecha (`release_date`) entre tipos de catálogo (Singles vs Accesorios) permite reportes y filtros agregados consistentes en el frontend.
+

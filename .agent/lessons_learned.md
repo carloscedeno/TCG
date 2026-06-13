@@ -2398,3 +2398,19 @@ useEffect(() => {
 - **Solución:** Implementación de las 5 técnicas del mercado: Graphify (grafo de código local), SESSION_STATE.md, Context Budget Protocol, Spec-First Development y Browser-First Verification en el /prehook.
 - **Regla Derivada:** Queda prohibido el uso arbitrario de grep/list_dir sin antes consultar el grafo (graphify query). Obligatorio leer SESSION_STATE.md al inicio de cada sesión y actualizarlo al cierre.
 
+### 183. Unicidad de Direcciones Predeterminadas mediante Triggers Database-Level (Junio 2026)
+- **Problema:** Al permitir que los usuarios administren múltiples direcciones en su libreta, existe el riesgo de que el cliente (o peticiones concurrentes del frontend) marque más de una dirección como predeterminada de envío (`is_default`) o de facturación (`is_billing`), causando ambigüedad en procesos automatizados de despacho.
+- **Solución:** Crear un trigger a nivel de base de datos (`BEFORE INSERT OR UPDATE ON user_addresses`) que intercepte cualquier fila con la bandera activa y ejecute un `UPDATE` atómico para desmarcar todas las demás direcciones del mismo usuario. Esto garantiza la integridad referencial sin añadir lógica compleja o transacciones pesadas en el código frontend.
+- **Regla Derivada:** El manejo de estados mutuamente excluyentes (como banderas predeterminadas por usuario) debe resolverse siempre mediante triggers SQL a nivel de fila antes de la inserción/actualización, no mediante validaciones en el cliente.
+
+### 184. Persistencia de Historial en Campos Schemaless JSONB (Junio 2026)
+- **Problema:** Para cumplir con el requerimiento de soportar una dirección de facturación independiente a la de envío sin alterar o rigidizar la tabla de órdenes (`orders`), agregar múltiples columnas de facturación independientes requeriría una migración de esquema compleja y difícil de mantener.
+- **Solución:** Utilizar la flexibilidad de la columna JSONB de dirección (`shipping_address`) para almacenar la dirección física elegida y, de forma opcional y anidada, un objeto secundario `billing_address`. Esto preserva el historial de la compra de forma inmutable sin modificar las columnas estructuradas de la tabla de órdenes.
+- **Regla Derivada:** Datos transaccionales de sólo-lectura histórica y con estructura variable (como detalles de facturación/despacho) deben encapsularse dentro de columnas JSONB existentes en lugar de forzar nuevas columnas estructuradas en el modelo de datos.
+
+### 185. Fechas de Lanzamiento y Filtro de Preventas Multi-Tipo (Junio 2026)
+- **Problema:** Facilitar el filtro de "Preventas" en el historial de compras requería cruzar datos de productos cuyo origen de preventa y fechas de lanzamiento variaban según el tipo de catálogo (accesorios vs cartas). Los accesorios carecían de una columna de fecha de lanzamiento, impidiendo calcular las estimaciones de llegada de forma homogénea.
+- **Solución:** Crear la columna `release_date` en la tabla de accesorios para lograr paridad con el catálogo de cartas. En el frontend, se calcula la fecha máxima de liberación estimada iterando sobre los ítems de la orden y extrayendo el valor correspondiente, permitiendo mostrar banners de lanzamiento en el historial de órdenes y la página de tracking.
+- **Regla Derivada:** Para habilitar filtros agregados multi-tipo en el historial de pedidos, las tablas de inventario subyacentes deben mantener paridad en columnas temporales clave (`release_date` / `updated_at`).
+
+

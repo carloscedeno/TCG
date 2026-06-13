@@ -110,3 +110,5 @@ Artefactos del Compound step:
 
 - ✅ **Dev Workflow Upgrade (Junio 2026)**: Implementación de Graphify (Knowledge Graph), SESSION_STATE, Context Budget, y Spec-First para mejorar la eficiencia del desarrollo y retención de contexto.
 
+
+- ✅ **User Dashboard & Checkout Address Enhancements (Junio 2026)**: Implementacion de Wizards, Pokemon, Bandai IDs en perfil; Libreta de multiples direcciones CRUD con trigger de predeterminadas; Auto-relleno y facturacion independiente en checkout; Filtros y fechas estimadas de preventas en ordenes.

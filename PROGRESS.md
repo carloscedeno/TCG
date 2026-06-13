@@ -1,16 +1,13 @@
 # 📈 Progress Report - Geekorium Optimization
 
-**Last Updated**: 2026-05-13 11:30 (Catalog Sync & Bulk Import Remediation)
+**Last Updated**: 2026-06-12 22:40 (User Dashboard & Checkout Address Book Enhancements)
 
-**Status**: ✅ Cart Performance | ✅ Cart Context Unification | ✅ Optimistic UI | ✅ Accessories Module | ✅ Polymorphic Checkout | ✅ Public Tracking RLS | ✅ Admin Visibility | ✅ Dev Branch Recreation | ✅ Catalog & Inventory Sync | ✅ Quick Add UX Optimized | ✅ Performance Optimization (Batch Fetch) | ✅ Global 'Nuevo' Feature | ✅ Schema Fallback implemented | ✅ Strixhaven Visibility Fix | ✅ Production Checkout Restored | ✅ Pokémon PKM Standardization | ✅ Security Audit & Cleanup | ✅ Dynamic Discounts & Visual Integrity | ✅ Bulk Import Catalog Sync
-
-
+**Status**: ✅ Cart Performance | ✅ Cart Context Unification | ✅ Optimistic UI | ✅ Accessories Module | ✅ Polymorphic Checkout | ✅ Public Tracking RLS | ✅ Admin Visibility | ✅ Dev Branch Recreation | ✅ Catalog & Inventory Sync | ✅ Quick Add UX Optimized | ✅ Performance Optimization (Batch Fetch) | ✅ Global 'Nuevo' Feature | ✅ Schema Fallback implemented | ✅ Strixhaven Visibility Fix | ✅ Production Checkout Restored | ✅ Pokémon PKM Standardization | ✅ Security Audit & Cleanup | ✅ Dynamic Discounts & Visual Integrity | ✅ Bulk Import Catalog Sync | ✅ User Dashboard & TCG Player IDs | ✅ Address Book CRUD | ✅ Independent Billing Address | ✅ Order History & Pre-order Estimated Dates
 
 ---
 
+This session focused on implementing User Dashboard (Mi Cuenta) features: TCG player ID storage, multi-address book with automatic default triggers, checkout integration with auto-fill, custom billing addresses, and order history filter tabs with estimated release dates for pre-ordered items.
 
-
-This session focused on reactivating the "Fast Add to Cart" feature with a premium UX overlay and ensuring pricing consistency between the Catalog and Inventory tables. We also hardened the catalog sync scripts for cross-environment compatibility.
 
 
 
@@ -20,7 +17,13 @@ This session focused on reactivating the "Fast Add to Cart" feature with a premi
 
 ## Completed Work
 
+### ✅ User Dashboard & Checkout Addresses (Compound v64)
 
+- **Database Structure (Supabase Migrations)**: Created table `user_addresses` enabling multiple shipping and billing addresses per profile. Configured RLS policies so users only access their own. Wrote database trigger `user_address_defaults_trigger` to atomically guarantee a single default shipping address and a single default billing address. Added Wizards Email, Pokémon ID, and Bandai ID columns to `profiles` to support official TCG tournament registration. Added `release_date` to `accessories` to track pre-order arrival dates.
+- **TCG Player IDs & Security**: Integrated TCG Player IDs into user profile settings and card-style dashboard display. Implemented password update options directly in profile settings, along with a magic link recovery request option.
+- **Address Book CRUD**: Designed and built the `AddressBook.tsx` component to add, edit, delete, and set addresses as default. Features premium Geeko Noir aesthetics, hover effects, and validation indicators.
+- **Checkout Auto-Fill & Billing Address**: Integrated saved addresses directly into checkout shipping form via a dropdown selection. Added option to save a new address to the address book upon confirming the order. Implemented support for a separate billing address using a dedicated form toggle.
+- **Order Filters & Pre-order Estimates**: Added category filters (Singles, Sealed, Preventas) to the customer order list. Computed and displayed estimated release date banners on preventas under both the history tab and tracking details.
 
 ### ✅ Database Infrastructure
 
