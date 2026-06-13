@@ -7,6 +7,7 @@ import OrdersList from '../components/Profile/OrdersList';
 import { CreditHistoryList } from '../components/Profile/CreditHistoryList';
 import { ProfileSettingsModal } from '../components/Profile/ProfileSettingsModal';
 import { AddressBook } from '../components/Profile/AddressBook';
+import { PlayerRankingsList } from '../components/Profile/PlayerRankingsList';
 import { supabase } from '../utils/supabaseClient';
 import { useCart } from '../context/CartContext';
 import { Header } from '../components/Navigation/Header';
@@ -113,8 +114,19 @@ const ProfilePage: React.FC = () => {
                         </section>
                     )}
 
-                    {/* Geek Credits Section */}
+                    {/* Military Rankings Section */}
                     <section className="animate-in slide-in-from-bottom-8 duration-700 delay-50">
+                        <div className="flex items-center gap-4 mb-8">
+                            <h2 className="text-3xl font-black italic uppercase tracking-tighter">
+                                Expediente <span className="text-[#4B6EEB]">Militar</span>
+                            </h2>
+                            <div className="h-px flex-1 bg-gradient-to-r from-[#4B6EEB]/50 to-transparent"></div>
+                        </div>
+                        <PlayerRankingsList userId={user?.id || ''} username={profileData?.username || ''} />
+                    </section>
+
+                    {/* Geek Credits Section */}
+                    <section className="animate-in slide-in-from-bottom-8 duration-700 delay-75">
                         <div className="flex items-center gap-4 mb-8">
                             <h2 className="text-3xl font-black italic uppercase tracking-tighter">
                                 Créditos <span className="text-geeko-gold">Geek</span>
