@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../utils/supabaseClient';
 import { X, History, TrendingUp, TrendingDown, Minus } from 'lucide-react';
-import { format } from 'date-fns';
 
 interface PlayerHistoryEntry {
     id: string;
@@ -90,7 +89,7 @@ export const PlayerHistoryModal = ({ playerId, playerName, onClose }: PlayerHist
                                         <div className="bg-slate-900/40 border border-white/5 rounded-xl p-4 hover:bg-slate-900/80 transition-colors">
                                             <div className="flex justify-between items-start mb-3">
                                                 <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">
-                                                    {format(new Date(entry.created_at), "dd MMM yyyy • HH:mm")}
+                                                    {new Date(entry.created_at).toLocaleString('es-ES', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                                                 </div>
                                                 <div className="text-[10px] px-2 py-1 rounded bg-white/5 text-white/60 font-bold uppercase tracking-wider">
                                                     {entry.reason}
