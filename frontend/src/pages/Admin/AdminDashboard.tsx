@@ -424,6 +424,19 @@ export const AdminDashboard = () => {
                         </div>
                     </Link>
 
+                    <Link to="/admin/rankings" className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-yellow-900/50 to-slate-900 border border-white/10 p-8 hover:border-yellow-500/50 transition-all">
+                        <div className="absolute inset-0 bg-yellow-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="relative z-10 flex items-center justify-between">
+                            <div>
+                                <h3 className="text-2xl font-black italic text-white mb-2">RANKINGS TCG</h3>
+                                <p className="text-yellow-300 text-xs font-bold uppercase tracking-widest">Temporadas y ELO</p>
+                            </div>
+                            <div className="w-16 h-16 bg-yellow-500/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <Database className="text-yellow-400" size={32} />
+                            </div>
+                        </div>
+                    </Link>
+
                     <Link to="/admin/presales" className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-900/50 to-slate-900 border border-white/10 p-8 hover:border-white/50 transition-all">
                         <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
                         <div className="relative z-10 flex items-center justify-between">

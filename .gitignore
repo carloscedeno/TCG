@@ -92,3 +92,8 @@ scripts/debug/
 .cache_ggshield
 # Added by code-review-graph
 .code-review-graph/
+
+pg17/
+pg17.zip
+temp_supabase/
+scratch/

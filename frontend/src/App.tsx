@@ -32,6 +32,7 @@ import { PresalesPage } from './pages/Admin/PresalesPage';
 import { PosSessionBanner } from './components/Admin/PosSessionBanner';
 import CategoriesPage from './pages/Admin/CategoriesPage';
 import MediaPage from './pages/Admin/MediaPage';
+import AdminRankingsPage from './pages/Admin/AdminRankingsPage';
 import { PwaReloadPrompt } from './components/Navigation/PwaReloadPrompt';
 import { BottomNav } from './components/Navigation/BottomNav';
 
@@ -104,6 +105,7 @@ function App() {
                         <Route path="/admin/banners-tcg" element={<AdminRoute><TcgBannersPage /></AdminRoute>} />
                         <Route path="/admin/presales" element={<AdminRoute><PresalesPage /></AdminRoute>} />
                         <Route path="/admin/events" element={<AdminRoute><EventsPage /></AdminRoute>} />
+                        <Route path="/admin/rankings" element={<AdminRoute><AdminRankingsPage /></AdminRoute>} />
                         <Route path="/admin/media" element={<AdminRoute><MediaPage /></AdminRoute>} />
                         <Route path="/checkout" element={<CheckoutPage />} />
                         <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
