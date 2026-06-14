@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { fetchUserMissions } from '../../utils/api';
-import { Loader2, Calendar, MapPin, Tag } from 'lucide-react';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { Loader2, Calendar, Tag } from 'lucide-react';
 
 export const MyMissionsList: React.FC = () => {
     const { user } = useAuth();
@@ -96,7 +94,7 @@ export const MyMissionsList: React.FC = () => {
                             <div className="space-y-2 mt-auto">
                                 <div className="flex items-center gap-2 text-neutral-400 text-xs font-medium">
                                     <Calendar size={14} className="text-geeko-gold" />
-                                    <span>{format(eventDate, "dd 'de' MMMM 'de' yyyy", { locale: es })}</span>
+                                    <span>{eventDate.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
                                 </div>
                                 
                                 {event.format && (
