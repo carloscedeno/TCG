@@ -1535,7 +1535,7 @@ export const fetchPresales = async () => {
 };
 
 
-export const registerForEvent = async (registration: { event_id: string, full_name: string, email: string, phone: string }) => {
+export const registerForEvent = async (registration: { event_id: string, full_name: string, email: string, phone: string, user_id?: string }) => {
   const { data, error } = await supabase
     .from('event_registrations')
     .insert([registration])

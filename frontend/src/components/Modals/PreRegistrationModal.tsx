@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, CheckCircle, Loader2 } from 'lucide-react';
 import { registerForEvent } from '../../utils/api';
+import { useAuth } from '../../context/AuthContext';
 
 interface PreRegistrationModalProps {
     isOpen: boolean;
@@ -9,11 +10,7 @@ interface PreRegistrationModalProps {
 }
 
 export const PreRegistrationModal: React.FC<PreRegistrationModalProps> = ({ isOpen, onClose, event }) => {
-    const [formData, setFormData] = useState({
-        full_name: '',
-        email: '',
-        phone: ''
-    });
+    const { user, openAuthModal } = useAuth();
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -28,7 +25,10 @@ export const PreRegistrationModal: React.FC<PreRegistrationModalProps> = ({ isOp
         try {
             await registerForEvent({
                 event_id: event.id,
-                ...formData
+                full_name: user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Jugador Geekorium',
+                email: user?.email || '',
+                phone: user?.user_metadata?.phone || 'No registrado',
+                user_id: user?.id
             });
             setSuccess(true);
             // In a real app, the backend or a Supabase Edge Function would send the email here.
@@ -82,59 +82,46 @@ export const PreRegistrationModal: React.FC<PreRegistrationModalProps> = ({ isOp
                             </div>
                         )}
 
-                        <form onSubmit={handleSubmit} className="space-y-5">
-                            <div className="space-y-2">
-                                <label className="text-[10px] font-black text-neutral-500 uppercase tracking-widest">Nombre Completo</label>
-                                <input 
-                                    required
-                                    type="text"
-                                    value={formData.full_name}
-                                    onChange={(e) => setFormData({...formData, full_name: e.target.value})}
-                                    placeholder="Ej: Carlos Cedeño"
-                                    className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-sm text-white placeholder:text-neutral-700 focus:outline-none focus:border-white/50 transition-all"
-                                />
+                        {!user ? (
+                            <div className="space-y-6 text-center py-4">
+                                <p className="text-sm text-neutral-400 leading-relaxed">
+                                    Para participar en nuestras misiones y torneos debes ser un miembro registrado. Esto nos permite hacer seguimiento a tu expediente militar y ranking de la temporada.
+                                </p>
+                                <button 
+                                    onClick={() => {
+                                        onClose();
+                                        openAuthModal();
+                                    }}
+                                    className="w-full py-4 bg-white text-black font-black uppercase tracking-widest rounded-xl hover:bg-neutral-200 transition-all flex items-center justify-center"
+                                >
+                                    Iniciar Sesión / Crear Cuenta
+                                </button>
                             </div>
+                        ) : (
+                            <form onSubmit={handleSubmit} className="space-y-5">
+                                <div className="space-y-6 text-center py-4">
+                                    <p className="text-sm text-neutral-400 leading-relaxed">
+                                        Estás a punto de inscribirte como <strong className="text-white">{user.email}</strong>. Se utilizarán los datos asociados a tu perfil.
+                                    </p>
+                                </div>
 
-                            <div className="space-y-2">
-                                <label className="text-[10px] font-black text-neutral-500 uppercase tracking-widest">Correo Electrónico</label>
-                                <input 
-                                    required
-                                    type="email"
-                                    value={formData.email}
-                                    onChange={(e) => setFormData({...formData, email: e.target.value})}
-                                    placeholder="tu@email.com"
-                                    className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-sm text-white placeholder:text-neutral-700 focus:outline-none focus:border-white/50 transition-all"
-                                />
-                            </div>
-
-                            <div className="space-y-2">
-                                <label className="text-[10px] font-black text-neutral-500 uppercase tracking-widest">Teléfono / WhatsApp</label>
-                                <input 
-                                    required
-                                    type="tel"
-                                    value={formData.phone}
-                                    onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                                    placeholder="+58 412 0000000"
-                                    className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-sm text-white placeholder:text-neutral-700 focus:outline-none focus:border-white/50 transition-all"
-                                />
-                            </div>
-
-                            {error && (
-                                <p className="text-red-500 text-[10px] font-bold uppercase text-center">{error}</p>
-                            )}
-
-                            <button 
-                                type="submit"
-                                disabled={loading}
-                                className="w-full py-4 bg-white text-black font-black uppercase tracking-widest rounded-xl hover:bg-white transition-all flex items-center justify-center gap-3 disabled:opacity-50"
-                            >
-                                {loading ? (
-                                    <Loader2 size={20} className="animate-spin" />
-                                ) : (
-                                    'Completar Pre-inscripción'
+                                {error && (
+                                    <p className="text-red-500 text-[10px] font-bold uppercase text-center">{error}</p>
                                 )}
-                            </button>
-                        </form>
+
+                                <button 
+                                    type="submit"
+                                    disabled={loading}
+                                    className="w-full py-4 bg-white text-black font-black uppercase tracking-widest rounded-xl hover:bg-neutral-200 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+                                >
+                                    {loading ? (
+                                        <Loader2 size={20} className="animate-spin" />
+                                    ) : (
+                                        'Confirmar Inscripción'
+                                    )}
+                                </button>
+                            </form>
+                        )}
                     </div>
                 )}
             </div>
