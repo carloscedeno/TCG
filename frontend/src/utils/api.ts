@@ -1584,6 +1584,26 @@ export const fetchEvents = async (onlyActive: boolean = true) => {
   return data || [];
 };
 
+export const fetchUserMissions = async (userId: string, email?: string) => {
+  let query = supabase
+    .from('event_registrations')
+    .select('*, events(*)');
+  
+  if (email) {
+    query = query.or(`user_id.eq.${userId},email.eq.${email}`);
+  } else {
+    query = query.eq('user_id', userId);
+  }
+  
+  const { data, error } = await query.order('created_at', { ascending: false });
+  
+  if (error) {
+    console.error('fetchUserMissions failed:', error);
+    return [];
+  }
+  return data || [];
+};
+
 // --- ADMIN CRUD FUNCTIONS ---
 
 export const adminFetchBanners = async () => {

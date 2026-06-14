@@ -8,6 +8,7 @@ import { CreditHistoryList } from '../components/Profile/CreditHistoryList';
 import { ProfileSettingsModal } from '../components/Profile/ProfileSettingsModal';
 import { AddressBook } from '../components/Profile/AddressBook';
 import { PlayerRankingsList } from '../components/Profile/PlayerRankingsList';
+import { MyMissionsList } from '../components/Profile/MyMissionsList';
 import { supabase } from '../utils/supabaseClient';
 import { useCart } from '../context/CartContext';
 import { Header } from '../components/Navigation/Header';
@@ -165,6 +166,17 @@ const ProfilePage: React.FC = () => {
                         <div className="bg-slate-900/50 border border-white/5 rounded-[2rem] p-8 backdrop-blur-md">
                             <AddressBook />
                         </div>
+                    </section>
+
+                    {/* Missions Section */}
+                    <section className="animate-in slide-in-from-bottom-8 duration-700 delay-75">
+                        <div className="flex items-center gap-4 mb-8">
+                            <h2 className="text-3xl font-black italic uppercase tracking-tighter">
+                                Mis <span className="text-geeko-cyan">Misiones</span>
+                            </h2>
+                            <div className="h-px flex-1 bg-gradient-to-r from-geeko-cyan/50 to-transparent"></div>
+                        </div>
+                        <MyMissionsList />
                     </section>
 
                     {/* Orders Section */}
