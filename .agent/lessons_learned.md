@@ -2414,3 +2414,6 @@ useEffect(() => {
 - **Regla Derivada:** Para habilitar filtros agregados multi-tipo en el historial de pedidos, las tablas de inventario subyacentes deben mantener paridad en columnas temporales clave (`release_date` / `updated_at`).
 
 
+# #   2 0 2 6 - 0 6 - 1 7 :   C u i d a d o   c o n   V i t e P W A   a u t o U p d a t e   y   p r e c o n n e c t s   c r u d o s  
+ E l   m o d o   ' a u t o U p d a t e '   d e   V i t e P W A   p r e c a c h e a   t o d o s   l o s   a s s e t s   i n m e d i a t a m e n t e ,   l o   q u e   p u e d e   a h o g a r   l a   c o n e x i o n   W i - F i   e n   m o v i l e s   l e n t o s   y   b l o q u e a r   p e t i c i o n e s   c r i t i c a s   a   S u p a b a s e .   A d e m a s ,   e v i t e m o s   u s a r   % V I T E _ V A R S %   e n   e l   i n d e x . h t m l   p a r a   < l i n k   r e l = ' p r e c o n n e c t ' >   s i   n o   g a r a n t i z a m o s   q u e   e l   b u i l d   r e e m p l a c e   l a   v a r i a b l e ,   y a   q u e   S a f a r i   b l o q u e a r a   e l   r e n d e r i z a d o   ( h a s t a   p o r   1 4   s e g u n d o s )   e s p e r a n d o   q u e   s e   r e s u e l v a   u n   D N S   l i t e r a l   c o m o   ' % V I T E _ S U P A B A S E _ U R L % ' .  
+ 
