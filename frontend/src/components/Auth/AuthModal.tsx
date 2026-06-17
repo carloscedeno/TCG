@@ -7,7 +7,7 @@ export const AuthModal = ({ isOpen, onClose, initialMode = 'login' }: {
     onClose: () => void;
     initialMode?: 'login' | 'register' | 'forgot-password'
 }) => {
-    const [mode, setMode] = useState<'login' | 'register' | 'forgot-password'>(initialMode);
+    const [mode, setMode] = useState<'login' | 'register' | 'forgot-password' | 'success'>(initialMode);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -39,8 +39,7 @@ export const AuthModal = ({ isOpen, onClose, initialMode = 'login' }: {
                     }
                 });
                 if (error) throw error;
-                alert('¡Un paso más para unirte a la Orden!\n\nHemos enviado una misiva mágica a tu correo electrónico. Por favor, revisa tu bandeja de entrada (y tu carpeta de spam, por si los duendes la escondieron) para confirmar tu cuenta y completar tu registro en Geekorium.');
-                onClose();
+                setMode('success');
             } else if (mode === 'forgot-password') {
                 const { error } = await supabase.auth.resetPasswordForEmail(email, {
                     redirectTo: `${window.location.origin}/update-password`,
@@ -63,21 +62,39 @@ export const AuthModal = ({ isOpen, onClose, initialMode = 'login' }: {
                         <div className="w-16 h-16 bg-blue-600/20 rounded-2xl flex items-center justify-center mb-4 border border-blue-500/30">
                             {mode === 'login' ? <LogIn className="text-blue-400 w-8 h-8" /> :
                                 mode === 'register' ? <UserPlus className="text-blue-400 w-8 h-8" /> :
-                                    <Lock className="text-blue-400 w-8 h-8" />}
+                                    mode === 'success' ? <Mail className="text-green-400 w-8 h-8" /> :
+                                        <Lock className="text-blue-400 w-8 h-8" />}
                         </div>
-                        <h2 className="text-3xl font-bold text-white">
+                        <h2 className="text-3xl font-bold text-white text-center">
                             {mode === 'login' ? 'Bienvenido' :
                                 mode === 'register' ? 'Crear Cuenta' :
-                                    'Recuperar Contraseña'}
+                                    mode === 'success' ? '¡Revisa tu Correo!' :
+                                        'Recuperar Contraseña'}
                         </h2>
-                        <p className="text-slate-400 mt-2 text-center">
+                        <p className="text-slate-400 mt-2 text-center px-4">
                             {mode === 'login' ? 'Accede a tu colección TCG' :
                                 mode === 'register' ? 'Únete a la mejor comunidad TCG' :
-                                    'Te enviaremos las instrucciones a tu correo'}
+                                    mode === 'success' ? 'Hemos enviado una misiva mágica a tu correo.' :
+                                        'Te enviaremos las instrucciones a tu correo'}
                         </p>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    {mode === 'success' ? (
+                        <div className="text-center space-y-6 pb-4">
+                            <div className="bg-green-500/10 border border-green-500/20 rounded-2xl p-6 shadow-inner">
+                                <p className="text-green-400 text-sm leading-relaxed">
+                                    Por favor, revisa tu bandeja de entrada (y tu carpeta de spam, por si los duendes la escondieron) para confirmar tu cuenta y completar tu registro en <strong>Geekorium</strong>.
+                                </p>
+                            </div>
+                            <button
+                                onClick={onClose}
+                                className="w-full bg-slate-800 hover:bg-slate-700 text-white font-semibold py-3 rounded-xl transition-all border border-slate-700 hover:border-slate-600"
+                            >
+                                Entendido
+                            </button>
+                        </div>
+                    ) : (
+                        <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="space-y-2">
                             <label className="text-sm font-medium text-slate-300 ml-1">Email</label>
                             <div className="relative">
@@ -145,38 +162,41 @@ export const AuthModal = ({ isOpen, onClose, initialMode = 'login' }: {
                                         'Enviar Enlace'}
                         </button>
                     </form>
+                    )}
 
-                    <div className="mt-8 text-center text-slate-400 text-sm">
-                        {mode === 'login' ? (
-                            <>
-                                ¿No tienes cuenta?
-                                <button
-                                    onClick={() => setMode('register')}
-                                    className="text-blue-400 font-semibold ml-2 hover:underline focus:outline-none"
-                                >
-                                    Regístrate
-                                </button>
-                            </>
-                        ) : mode === 'register' ? (
-                            <>
-                                ¿Ya tienes cuenta?
+                    {mode !== 'success' && (
+                        <div className="mt-8 text-center text-slate-400 text-sm">
+                            {mode === 'login' ? (
+                                <>
+                                    ¿No tienes cuenta?
+                                    <button
+                                        onClick={() => setMode('register')}
+                                        className="text-blue-400 font-semibold ml-2 hover:underline focus:outline-none"
+                                    >
+                                        Regístrate
+                                    </button>
+                                </>
+                            ) : mode === 'register' ? (
+                                <>
+                                    ¿Ya tienes cuenta?
+                                    <button
+                                        onClick={() => setMode('login')}
+                                        className="text-blue-400 font-semibold ml-2 hover:underline focus:outline-none"
+                                    >
+                                        Inicia sesión
+                                    </button>
+                                </>
+                            ) : (
                                 <button
                                     onClick={() => setMode('login')}
-                                    className="text-blue-400 font-semibold ml-2 hover:underline focus:outline-none"
+                                    className="flex items-center justify-center gap-2 text-slate-400 hover:text-white mx-auto transition-colors"
                                 >
-                                    Inicia sesión
+                                    <ArrowLeft className="w-4 h-4" />
+                                    Volver al inicio de sesión
                                 </button>
-                            </>
-                        ) : (
-                            <button
-                                onClick={() => setMode('login')}
-                                className="flex items-center justify-center gap-2 text-slate-400 hover:text-white mx-auto transition-colors"
-                            >
-                                <ArrowLeft className="w-4 h-4" />
-                                Volver al inicio de sesión
-                            </button>
-                        )}
-                    </div>
+                            )}
+                        </div>
+                    )}
                 </div>
 
                 <div className="bg-slate-800/50 p-4 flex justify-center border-t border-slate-800">
