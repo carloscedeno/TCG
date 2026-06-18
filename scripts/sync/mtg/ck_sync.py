@@ -1,7 +1,7 @@
 import sys
 import os
 from pathlib import Path
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from functools import wraps
 import time
 
@@ -259,7 +259,6 @@ def run_ck_sync():
         
         # Failover / Self-Healing: Get ALL printing_ids modified in the last 48 hours
         logger.info("Running failover recovery: fetching recently updated prices from database...")
-        from datetime import datetime, timedelta
         
         forty_eight_hours_ago = (datetime.utcnow() - timedelta(hours=48)).isoformat()
         try:
