@@ -154,6 +154,20 @@ def update_denormalized_prices(printing_ids=None):
 def run_ck_sync():
     logger.info("--- Starting Isolated MTG CardKingdom Sync ---")
     
+    start_time = datetime.now(timezone.utc)
+    job_id = None
+    try:
+        job_res = supabase.table('price_update_jobs').insert({
+            "status": "running",
+            "started_at": start_time.isoformat(),
+            "source": "CardKingdom Sync",
+            "items_updated": 0
+        }).execute()
+        if job_res.data:
+            job_id = job_res.data[0]['id']
+    except Exception as e:
+        logger.error(f"Failed to create job record: {e}")
+        
     # Fetch source ID dynamically
     try:
         source_res = supabase.table('sources').select('source_id').eq('source_code', 'CARDKINGDOM').maybe_single().execute()
@@ -264,8 +278,34 @@ def run_ck_sync():
             
         logger.info(f"=== MTG SYNC COMPLETE: {total_updated} prices updated ===")
         
+        if job_id:
+            end_time = datetime.now(timezone.utc)
+            duration_ms = int((end_time - start_time).total_seconds() * 1000)
+            try:
+                supabase.table('price_update_jobs').update({
+                    "status": "completed",
+                    "completed_at": end_time.isoformat(),
+                    "duration_ms": duration_ms,
+                    "items_updated": total_updated
+                }).eq('id', job_id).execute()
+            except Exception as e:
+                logger.error(f"Failed to update job record: {e}")
+        
     except Exception as e:
         logger.critical(f"Critical error during sync: {e}", exc_info=True)
+        if job_id:
+            end_time = datetime.now(timezone.utc)
+            duration_ms = int((end_time - start_time).total_seconds() * 1000)
+            try:
+                supabase.table('price_update_jobs').update({
+                    "status": "failed",
+                    "completed_at": end_time.isoformat(),
+                    "duration_ms": duration_ms,
+                    "error_log": str(e),
+                    "items_updated": locals().get('total_updated', 0)
+                }).eq('id', job_id).execute()
+            except Exception as ue:
+                logger.error(f"Failed to update job record on error: {ue}")
 
 if __name__ == "__main__":
     run_ck_sync()
