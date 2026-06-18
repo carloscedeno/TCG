@@ -207,22 +207,23 @@ def run_ck_sync():
                     pricelist_map[scid] = []
                 pricelist_map[scid].append(card)
         
-        batch_size = 200
-        offset = 0
+        batch_size = 1000
+        last_id = ""
         total_updated = 0
         
         while True:
-            logger.info(f"Processing batch: offset {offset}...")
-            db_cards_query = supabase.table('card_printings').select(
-                'printing_id, scryfall_id'
-            ).not_.is_('scryfall_id', 'null').order('printing_id').range(offset, offset + batch_size - 1).execute()
+            logger.info(f"Processing batch after ID: {last_id if last_id else 'start'}...")
+            query = supabase.table('card_printings').select('printing_id, scryfall_id').not_.is_('scryfall_id', 'null').order('printing_id').limit(batch_size)
+            if last_id:
+                query = query.gt('printing_id', last_id)
+            
+            db_cards_query = query.execute()
             db_cards = db_cards_query.data
             
             if not db_cards:
                 break
             
             price_entries = []
-            current_batch_printing_ids = [c['printing_id'] for c in db_cards]
             
             for db_card in db_cards:
                 scryfall_id = db_card['scryfall_id']
@@ -253,7 +254,8 @@ def run_ck_sync():
             
             if len(db_cards) < batch_size:
                 break
-            offset += batch_size
+            
+            last_id = db_cards[-1]['printing_id']
         
         # Failover / Self-Healing: Get ALL printing_ids modified in the last 48 hours
         logger.info("Running failover recovery: fetching recently updated prices from database...")
