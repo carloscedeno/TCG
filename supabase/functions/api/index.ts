@@ -1367,7 +1367,7 @@ async function handleAdminEndpoint(supabase: SupabaseClient, path: string, metho
         price_type,
         card_printings!inner (
           set_code,
-          cards!inner ( name )
+          cards!inner ( card_name )
         )
       `)
       .gte('timestamp', job.started_at)
@@ -1386,7 +1386,7 @@ async function handleAdminEndpoint(supabase: SupabaseClient, path: string, metho
         is_foil: h.is_foil,
         price_type: h.price_type,
         condition_id: h.condition_id,
-        card_name: h.card_printings?.cards?.name || 'Unknown Card',
+        card_name: h.card_printings?.cards?.card_name || 'Unknown Card',
         set_code: h.card_printings?.set_code || 'UNK'
     })) || [];
   }
