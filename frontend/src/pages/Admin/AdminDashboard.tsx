@@ -483,6 +483,9 @@ export const AdminDashboard = () => {
                 {/* Hidden Scrapers */}
                 <div className="grid grid-cols-1 gap-8">
                     <div className="space-y-8">
+                            <div className="glass-card rounded-3xl p-8 border border-white/5 bg-slate-900/50">
+                                <h2 className="text-2xl font-black mb-6 flex items-center gap-3 italic">
+                                    <Shield className="text-white" />
                                     CONTROL DE MISIÓN
                                 </h2>
                                 <div className="space-y-4 mb-6">
@@ -572,7 +575,6 @@ export const AdminDashboard = () => {
                             </div>
                         </div>
                     </div>
-                )}
             </div>
 
             {showPriceHistory && (
