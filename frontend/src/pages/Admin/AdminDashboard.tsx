@@ -480,72 +480,9 @@ export const AdminDashboard = () => {
                     <CloudflareAnalytics session={session} apiBase={API_BASE} />
                 </div>
 
-                {(() => false)() && (
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <div className="space-y-8">
-                            <div className="glass-card rounded-3xl p-8 border border-white/5 bg-slate-900/50">
-                                <h2 className="text-2xl font-black mb-6 flex items-center gap-3 italic">
-                                    <Play className="text-white fill-white" />
-                                    EJECUTAR SCRAPERS
-                                </h2>
-                                <div className="space-y-4">
-                                    {scrapers.map((scraper) => (
-                                        <div key={scraper.id} className="bg-slate-800/20 border border-white/5 rounded-2xl p-6 flex items-center justify-between hover:bg-white/5 transition-all group">
-                                            <div className="flex items-center gap-4">
-                                                <div className="w-12 h-12 bg-black/40 rounded-xl flex items-center justify-center border border-white/5 group-hover:border-white/30">
-                                                    {scraper.icon}
-                                                </div>
-                                                <div>
-                                                    <h3 className="font-black text-lg italic uppercase">{scraper.name}</h3>
-                                                    <p className="text-slate-500 text-xs font-bold">{scraper.description}</p>
-                                                </div>
-                                            </div>
-                                            <button
-                                                onClick={() => runScraper(scraper.id)}
-                                                disabled={running[scraper.id]}
-                                                className="bg-white/20 border border-white/50 hover:bg-white/40 text-white px-6 py-2 rounded-xl font-black text-xs uppercase tracking-widest transition-all"
-                                            >
-                                                {running[scraper.id] ? 'Ejecutando...' : 'Desplegar'}
-                                            </button>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div className="glass-card rounded-3xl p-8 border border-white/5 bg-slate-900/50">
-                                <h2 className="text-2xl font-black mb-6 flex items-center gap-3 italic text-geeko-purple">
-                                    <Database className="text-geeko-purple" />
-                                    SINCRONIZACIÓN DE CATÁLOGO
-                                </h2>
-                                <div className="space-y-4">
-                                    {syncServices.map((service) => (
-                                        <div key={service.id} className="bg-slate-800/20 border border-white/5 rounded-2xl p-6 flex items-center justify-between hover:bg-white/5 transition-all group">
-                                            <div className="flex items-center gap-4">
-                                                <div className="w-12 h-12 bg-black/40 rounded-xl flex items-center justify-center border border-white/5 group-hover:border-geeko-purple/30">
-                                                    {service.icon}
-                                                </div>
-                                                <div>
-                                                    <h3 className="font-black text-lg italic uppercase">{service.name}</h3>
-                                                    <p className="text-slate-500 text-xs font-bold">{service.description}</p>
-                                                </div>
-                                            </div>
-                                            <button
-                                                onClick={() => runSync(service.id)}
-                                                disabled={running[`sync-${service.id}`]}
-                                                className="bg-geeko-purple/20 border border-geeko-purple/50 hover:bg-geeko-purple/40 text-geeko-purple px-6 py-2 rounded-xl font-black text-xs uppercase tracking-widest transition-all"
-                                            >
-                                                {running[`sync-${service.id}`] ? 'Sincronizando...' : 'Iniciar'}
-                                            </button>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="space-y-8">
-                            <div className="glass-card rounded-3xl p-8 border border-white/5 bg-slate-900/50">
-                                <h2 className="text-2xl font-black mb-6 flex items-center gap-3 italic">
-                                    <Shield className="text-white" />
+                {/* Hidden Scrapers */}
+                <div className="grid grid-cols-1 gap-8">
+                    <div className="space-y-8">
                                     CONTROL DE MISIÓN
                                 </h2>
                                 <div className="space-y-4 mb-6">
