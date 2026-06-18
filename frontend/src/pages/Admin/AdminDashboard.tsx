@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Play, Settings, Users, Database, Shield, AlertCircle, Package, ExternalLink, Image, Calendar, TrendingUp, Upload, ShoppingBag, CheckCircle, XCircle, History } from 'lucide-react';
+import { Settings, Users, Database, Shield, AlertCircle, Package, ExternalLink, Image, Calendar, TrendingUp, Upload, ShoppingBag, CheckCircle, XCircle, History } from 'lucide-react';
 
 import { supabase } from '../../utils/supabaseClient';
 import { CloudflareAnalytics } from '../../components/Admin/CloudflareAnalytics';
@@ -11,7 +11,6 @@ const API_BASE = import.meta.env.VITE_API_BASE;
 
 export const AdminDashboard = () => {
     const { user, session, isAdmin, loading } = useAuth();
-    const [running, setRunning] = useState<Record<string, boolean>>({});
     const [results, setResults] = useState<Record<string, any>>({});
     const [stats, setStats] = useState({
         total_cards: '0',
@@ -140,50 +139,6 @@ export const AdminDashboard = () => {
     };
 
 
-    const runScraper = async (source: string) => {
-        setRunning(prev => ({ ...prev, [source]: true }));
-        try {
-            const response = await fetch(`${API_BASE}/api/admin/scraper/run/${source}`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${session?.access_token}`
-                }
-            });
-            const data = await response.json();
-            setResults(prev => ({ ...prev, [source]: data }));
-            fetchStats();
-        } catch (err) {
-            console.error(err);
-            setResults(prev => ({ ...prev, [source]: { error: 'Error de conexión' } }));
-        } finally {
-            setRunning(prev => ({ ...prev, [source]: false }));
-        }
-    };
-
-    const runSync = async (gameCode: string) => {
-        const id = `sync-${gameCode}`;
-        setRunning(prev => ({ ...prev, [id]: true }));
-        try {
-            const response = await fetch(`${API_BASE}/api/admin/catalog/sync/${gameCode}`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${session?.access_token}`
-                }
-            });
-            const data = await response.json();
-            setResults(prev => ({ ...prev, [id]: data }));
-            if (data.task_id) {
-                fetchTaskLogs(data.task_id);
-            }
-            fetchStats();
-        } catch (err) {
-            console.error(err);
-            setResults(prev => ({ ...prev, [id]: { error: 'Error de conexión' } }));
-        } finally {
-            setRunning(prev => ({ ...prev, [id]: false }));
-        }
-    };
-
     const fetchTaskLogs = async (taskId: string) => {
         setIsRefreshingLogs(true);
         try {
@@ -215,16 +170,6 @@ export const AdminDashboard = () => {
             </div>
         );
     }
-
-    const scrapers = [
-        { id: 'cardkingdom', name: 'CardKingdom', description: 'Referencia de Mercado (USD)', icon: <Database className="text-white" /> },
-        { id: 'cardmarket', name: 'Cardmarket', description: 'Precios UE (EUR)', icon: <Database className="text-orange-400" /> },
-        { id: 'tcgplayer', name: 'TCGPlayer', description: 'Precios EE.UU. (USD)', icon: <Database className="text-blue-400" /> },
-    ];
-
-    const syncServices = [
-        { id: 'MTG', name: 'Scryfall (MTG)', description: 'Catálogo Magic: The Gathering', icon: <Database className="text-red-400" /> },
-    ];
 
     return (
         <div className="min-h-screen bg-slate-950 text-white p-8 font-sans">
