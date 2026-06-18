@@ -257,16 +257,19 @@ def run_ck_sync():
         
         # Failover / Self-Healing: Get ALL printing_ids modified in the last 48 hours
         logger.info("Running failover recovery: fetching recently updated prices from database...")
-        conn = get_db_connection()
-        with conn.cursor() as cur:
-            cur.execute("""
-                SELECT DISTINCT printing_id 
-                FROM price_history 
-                WHERE source_id = %s 
-                  AND timestamp >= NOW() - INTERVAL '48 hours'
-            """, (ck_source_id,))
-            recent_pids = [r[0] for r in cur.fetchall()]
-        conn.close()
+        from datetime import datetime, timedelta
+        
+        forty_eight_hours_ago = (datetime.utcnow() - timedelta(hours=48)).isoformat()
+        try:
+            res = get_supabase().table('price_history') \
+                .select('printing_id') \
+                .eq('source_id', ck_source_id) \
+                .gte('timestamp', forty_eight_hours_ago) \
+                .execute()
+            recent_pids = list(set([r['printing_id'] for r in res.data]))
+        except Exception as e:
+            logger.error(f"Failover recovery query failed via REST: {e}")
+            recent_pids = []
         
         if recent_pids:
             chunk_size = 900
