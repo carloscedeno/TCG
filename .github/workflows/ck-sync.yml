@@ -1,0 +1,47 @@
+name: MTG CardKingdom Sync
+
+on:
+  schedule:
+    # Run every day at 04:30 UTC
+    - cron: '30 4 * * *'
+  workflow_dispatch:
+    # Allow manual triggering
+  repository_dispatch:
+    types: [mtg_ck_sync_trigger]
+
+jobs:
+  sync-ck:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run MTG CardKingdom Sync
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL_PROD }}
+          PYTHONPATH: .
+        run: python scripts/sync/mtg/ck_sync.py
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ck-sync-logs
+          path: logs/sync/*.log
+          retention-days: 7
