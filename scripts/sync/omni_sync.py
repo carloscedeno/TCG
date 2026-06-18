@@ -9,7 +9,6 @@ PROJECT_ROOT = Path(__file__).parent.parent.parent
 sys.path.append(str(PROJECT_ROOT))
 sys.path.append(str(PROJECT_ROOT / "scripts" / "sync"))
 
-from mtg.ck_sync import run_ck_sync
 from pokemon.pokemon_sync import run_sync as run_pokemon_sync
 
 # Setup Master Logging
@@ -33,16 +32,8 @@ def run_omni_sync():
     
     start_time = datetime.now()
     
-    # 1. MTG Card Kingdom Sync
-    logger.info("\n--- STEP 1: MTG Card Kingdom (Retail Prices) ---")
-    try:
-        run_ck_sync()
-        logger.info("MTG Sync Completed.")
-    except Exception as e:
-        logger.error(f"MTG Sync Failed: {e}")
-    
-    # 2. Pokemon TCG API Sync
-    logger.info("\n--- STEP 2: Pokemon TCG (Market Prices) ---")
+    # 1. Pokemon TCG (Market Prices)
+    logger.info("\n--- STEP 1: Pokemon TCG (Market Prices) ---")
     try:
         # We need a list of sets to sync cards for, or just sync metadata
         # For a daily sync, we might want to sync recently updated sets or a core catalog
