@@ -549,3 +549,17 @@ Siempre proveer un caso de evaluaciÃ³n estricto en sentencias SQL cuando el si
 - Para conservar inmutabilidad histórica, detalles transaccionales (como facturas) deben guardarse dentro de JSONB en lugar de alterar esquemas relacionales consolidados.
 - La paridad de columnas de fecha (`release_date`) entre tipos de catálogo (Singles vs Accesorios) permite reportes y filtros agregados consistentes en el frontend.
 
+
+## 2026-06-22 — Sincronización Scryfall y Dinamización de Filtro de Novedades
+
+**Qué pasó:** 
+1. La carga masiva de nuevos sets (Marvel) desde Scryfall fallaba de forma silenciosa/crasheaba debido a la ausencia de una restricción UNIQUE (game_id, set_code) en la tabla sets, lo que rompía el UPSERT masivo.
+2. El filtro de NUEVO en la web estaba quemado (hardcoded) para apuntar solo a códigos de set específicos (Shadows of the Galaxy, etc.), ignorando el inventario fresco.
+
+**Lo que cambió:**
+- supabase → Añadida restricción UNIQUE en la tabla sets mediante execute_sql.
+- load_mtgs_sets_from_scryfall.py → Ahora fluye sin errores 42P10.
+- get_products_filtered (RPC) → Se reemplazó el condicional harcodeado por p.updated_at >= NOW() - INTERVAL ''14 days'' para mantener el botón de NOVEDADES dinámico.
+
+**Regla derivada:**
+Los filtros de UI basados en 'novedades' no deben hardcodearse a set_codes a menos que haya una estrategia temporal definida con caducidad. De lo contrario, se pierde el descubrimiento orgánico de catálogo.

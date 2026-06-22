@@ -7,17 +7,14 @@
 
 ## 📅 Última sesión: 2026-06-22
 **Rama activa:** `dev`
-**Último commit conocido:** `🧠 compound: corrección de zona horaria (UTC-4 Caracas) para eventos`
-**En progreso:** Ninguno — finalizando sesión (finalizado `/finalize`)
+**Último commit conocido:** 🧠 compound: Sincronización Scryfall y Dinamización de Novedades
+**En progreso:** Ninguno — finalizando sesión (finalizado /finalize)
 
 ## 📁 Zona Caliente (archivos tocados recientemente)
-- `frontend/src/pages/Admin/EventsPage.tsx` — Corrección de zona horaria (desfase 4 horas) para eventos
-- `frontend/src/pages/Profile.tsx` — Perfil y credentials
-- `frontend/src/components/Profile/AddressBook.tsx` — Libreta de direcciones CRUD
-- `frontend/src/components/Profile/ProfileSettingsModal.tsx` — Configuración de perfil y contraseña
-- `frontend/src/pages/CheckoutPage.tsx` — Integración de direcciones guardadas y facturación
-- `frontend/src/components/Profile/OrdersList.tsx` — Filtros de órdenes y estimación de preventas
-- `frontend/src/utils/api.ts` — CRUD de direcciones y endpoints de clave
+- get_products_filtered (RPC Supabase) — Actualización del filtro p_only_new a 14 días
+- sets (Tabla Supabase) — Creación del constraint UNIQUE (game_id, set_code)
+- data/loaders/load_mtgs_sets_from_scryfall.py — Ejecución de importación de sets
+- data/loaders/load_mtgs_cards_from_scryfall.py — Importación de 1795 cartas recientes (Marvel)
 
 ## ⏭️ Próxima acción recomendada
 Monitorear la carga y visualización de eventos tanto en el panel de administrador como en el TournamentHub para validar que sigan mostrando la hora exacta de Caracas (local) de forma consistente.
