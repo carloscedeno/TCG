@@ -2,7 +2,7 @@
 
 **Last Updated**: 2026-06-12 22:40 (User Dashboard & Checkout Address Book Enhancements)
 
-**Status**: ✅ Cart Performance | ✅ Cart Context Unification | ✅ Optimistic UI | ✅ Accessories Module | ✅ Polymorphic Checkout | ✅ Public Tracking RLS | ✅ Admin Visibility | ✅ Dev Branch Recreation | ✅ Catalog & Inventory Sync | ✅ Quick Add UX Optimized | ✅ Performance Optimization (Batch Fetch) | ✅ Global 'Nuevo' Feature | ✅ Schema Fallback implemented | ✅ Strixhaven Visibility Fix | ✅ Production Checkout Restored | ✅ Pokémon PKM Standardization | ✅ Security Audit & Cleanup | ✅ Dynamic Discounts & Visual Integrity | ✅ Bulk Import Catalog Sync | ✅ User Dashboard & TCG Player IDs | ✅ Address Book CRUD | ✅ Independent Billing Address | ✅ Order History & Pre-order Estimated Dates
+**Status**: ✅ Cart Performance | ✅ Cart Context Unification | ✅ Optimistic UI | ✅ Accessories Module | ✅ Polymorphic Checkout | ✅ Public Tracking RLS | ✅ Admin Visibility | ✅ Dev Branch Recreation | ✅ Catalog & Inventory Sync | ✅ Quick Add UX Optimized | ✅ Performance Optimization (Batch Fetch) | ✅ Global 'Nuevo' Feature | ✅ Schema Fallback implemented | ✅ Strixhaven Visibility Fix | ✅ Production Checkout Restored | ✅ Pokémon PKM Standardization | ✅ Security Audit & Cleanup | ✅ Dynamic Discounts & Visual Integrity | ✅ Bulk Import Catalog Sync | ✅ User Dashboard & TCG Player IDs | ✅ Address Book CRUD | ✅ Independent Billing Address | ✅ Order History & Pre-order Estimated Dates | ✅ Event Timezone Correction
 
 ---
 
@@ -13,9 +13,13 @@ This session focused on implementing User Dashboard (Mi Cuenta) features: TCG pl
 
 ---
 
-
-
 ## Completed Work
+
+### ✅ Event Timezone Correction (Compound v65)
+
+- **Timezone Normalization**: Solved a 4-hour offset discrepancy for events in Caracas (UTC-4).
+- **Date Formatting**: Added `formatToLocalDatetime` utility to `EventsPage.tsx` to handle precise conversions from UTC database strings to local `datetime-local` inputs.
+- **Data Integrity**: Ensured new and updated events are saved securely in ISO UTC format (`.toISOString()`) to maintain database integrity while displaying correctly on the local frontend.
 
 ### ✅ User Dashboard & Checkout Addresses (Compound v64)
 

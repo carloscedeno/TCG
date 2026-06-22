@@ -43,6 +43,17 @@ const GAME_OPTIONS = [
   { code: 'RFB', name: 'Riftbound' }
 ];
 
+const formatToLocalDatetime = (dateInput: string | Date | number): string => {
+  const date = new Date(dateInput);
+  if (isNaN(date.getTime())) return '';
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+};
+
 export const EventsPage: React.FC = () => {
   const navigate = useNavigate();
   const [events, setEvents] = useState<Event[]>([]);
@@ -73,7 +84,7 @@ export const EventsPage: React.FC = () => {
     setEditingEvent({
       name: '',
       game_code: 'MTG',
-      event_date: new Date().toISOString().slice(0, 16),
+      event_date: formatToLocalDatetime(new Date()),
       format: 'Standard',
       entry_fee: '$10',
       registered: 0,
@@ -87,7 +98,7 @@ export const EventsPage: React.FC = () => {
 
   const handleEdit = (event: Event) => {
     // Format date for datetime-local input
-    const formattedDate = new Date(event.event_date).toISOString().slice(0, 16);
+    const formattedDate = formatToLocalDatetime(event.event_date);
     setEditingEvent({ ...event, event_date: formattedDate });
     setIsModalOpen(true);
   };
@@ -129,6 +140,9 @@ export const EventsPage: React.FC = () => {
       
       // Auto-assign default image if none provided
       const finalEvent = { ...editingEvent };
+      if (finalEvent.event_date) {
+        finalEvent.event_date = new Date(finalEvent.event_date).toISOString();
+      }
       if (!finalEvent.image_url) {
         // Here we could have a map of default images per game
         const defaultImages: Record<string, string> = {
