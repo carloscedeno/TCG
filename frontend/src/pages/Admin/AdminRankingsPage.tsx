@@ -9,6 +9,8 @@ export interface RankingSeason {
     game_context: string;
     title: string;
     subtitle: string | null;
+    description: string | null;
+    image_url: string | null;
     is_active: boolean;
     created_at: string;
 }
@@ -19,7 +21,7 @@ const AdminRankingsPage = () => {
     const [selectedSeason, setSelectedSeason] = useState<RankingSeason | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingSeason, setEditingSeason] = useState<RankingSeason | null>(null);
-    const [formData, setFormData] = useState({ title: '', subtitle: '', game_context: 'MTG' });
+    const [formData, setFormData] = useState({ title: '', subtitle: '', description: '', image_url: '', game_context: 'MTG' });
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     const TCG_GAMES = [
@@ -53,14 +55,14 @@ const AdminRankingsPage = () => {
 
     const openCreateModal = () => {
         setEditingSeason(null);
-        setFormData({ title: '', subtitle: '', game_context: 'MTG' });
+        setFormData({ title: '', subtitle: '', description: '', image_url: '', game_context: 'MTG' });
         setIsModalOpen(true);
         setIsDropdownOpen(false);
     };
 
     const openEditModal = (season: RankingSeason) => {
         setEditingSeason(season);
-        setFormData({ title: season.title, subtitle: season.subtitle || '', game_context: season.game_context });
+        setFormData({ title: season.title, subtitle: season.subtitle || '', description: season.description || '', image_url: season.image_url || '', game_context: season.game_context });
         setIsModalOpen(true);
         setIsDropdownOpen(false);
     };
@@ -76,6 +78,8 @@ const AdminRankingsPage = () => {
                 .update({
                     title: formData.title,
                     subtitle: formData.subtitle,
+                    description: formData.description,
+                    image_url: formData.image_url,
                     game_context: formData.game_context
                 })
                 .eq('id', editingSeason.id);
@@ -86,6 +90,8 @@ const AdminRankingsPage = () => {
                 .insert([{
                     title: formData.title,
                     subtitle: formData.subtitle,
+                    description: formData.description,
+                    image_url: formData.image_url,
                     game_context: formData.game_context,
                     is_active: true
                 }]);
@@ -252,6 +258,25 @@ const AdminRankingsPage = () => {
                                     value={formData.subtitle} 
                                     onChange={e => setFormData({ ...formData, subtitle: e.target.value })} 
                                     placeholder="Ej. 2025/SEASON 2"
+                                    className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-[#00D1FF] outline-none transition-colors"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Descripción (Opcional)</label>
+                                <textarea 
+                                    value={formData.description} 
+                                    onChange={e => setFormData({ ...formData, description: e.target.value })} 
+                                    placeholder="Describe la temporada..."
+                                    className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-[#00D1FF] outline-none transition-colors min-h-[80px]"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">URL de Imagen (Opcional)</label>
+                                <input 
+                                    type="text" 
+                                    value={formData.image_url} 
+                                    onChange={e => setFormData({ ...formData, image_url: e.target.value })} 
+                                    placeholder="Ej. https://.../imagen.png"
                                     className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-[#00D1FF] outline-none transition-colors"
                                 />
                             </div>
