@@ -5,16 +5,15 @@
 
 ---
 
-## 📅 Última sesión: 2026-06-22
+## 📅 Última sesión: 2026-06-24
 **Rama activa:** `dev`
-**Último commit conocido:** 🧠 compound: Sincronización Scryfall y Dinamización de Novedades
+**Último commit conocido:** 🧠 compound: Registro UX y Navegación MTG (v66)
 **En progreso:** Ninguno — finalizando sesión (finalizado /finalize)
 
 ## 📁 Zona Caliente (archivos tocados recientemente)
-- get_products_filtered (RPC Supabase) — Actualización del filtro p_only_new a 14 días
-- sets (Tabla Supabase) — Creación del constraint UNIQUE (game_id, set_code)
-- data/loaders/load_mtgs_sets_from_scryfall.py — Ejecución de importación de sets
-- data/loaders/load_mtgs_cards_from_scryfall.py — Importación de 1795 cartas recientes (Marvel)
+- frontend/src/components/Auth/AuthModal.tsx — Expansión y campos adicionales.
+- frontend/src/components/Navigation/Header.tsx — Corrección enlace MTG.
+- PROGRESS.md — Documentación v66.
 
 ## ⏭️ Próxima acción recomendada
 Monitorear la carga y visualización de eventos tanto en el panel de administrador como en el TournamentHub para validar que sigan mostrando la hora exacta de Caracas (local) de forma consistente.

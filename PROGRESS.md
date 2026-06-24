@@ -15,6 +15,13 @@ This session focused on implementing User Dashboard (Mi Cuenta) features: TCG pl
 
 ## Completed Work
 
+### ✅ Registration UX & Top Navigation (Compound v66)
+
+- **Registration Modal Expansion**: Improved the `AuthModal` component to smoothly expand vertically (`max-h-[95vh]` with `overflow-y-auto`) when switching to registration mode, maintaining the existing fade-in/zoom-in animations.
+- **Enhanced Profile Data Collection**: Integrated new registration fields directly into the Supabase Auth `signUp` metadata payload (Document Type/Number, First/Last Name, Phone), ensuring the `profiles` table is automatically populated.
+- **Password Visibility Toggle**: Implemented eye-icon toggles (`Eye` and `EyeOff` from `lucide-react`) for password fields to enhance user experience.
+- **Navigation Routing**: Updated the "Hechizos" link in the header navigation to point directly to Magic: The Gathering Singles (`/?tab=marketplace&game=MTG&category=Singles`).
+
 ### ✅ Event Timezone Correction (Compound v65)
 
 - **Timezone Normalization**: Solved a 4-hour offset discrepancy for events in Caracas (UTC-4).
