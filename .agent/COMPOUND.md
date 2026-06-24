@@ -1,5 +1,24 @@
 # 🧠 COMPOUND: Migración a pnpm y Aislamiento de Entorno (Junio 2026)
 
+---
+
+# 🧠 COMPOUND: Corrección de Zona Horaria (UTC-4 Caracas) para Eventos
+
+**Date**: 2026-06-22 15:55
+
+## Objective
+Resolver la discrepancia de zona horaria (offset de 4 horas en Caracas, UTC-4) que ocurría al crear y editar eventos en el Panel de Administrador, donde las horas se mostraban desplazadas tras ser guardadas.
+
+## Knowledge Codification
+
+### 1. Manejo de inputs `datetime-local` y UTC
+- **Feature**: Nueva función utilitaria `formatToLocalDatetime` en `EventsPage.tsx` para forzar la conversión de fechas UTC almacenadas en la base de datos a un formato local estricto compatible con `<input type="datetime-local">` (`YYYY-MM-DDTHH:mm`).
+- **Lesson 1**: El navegador y Postgres manejan fechas asumiendo UTC si el formato ISO termina en `Z` o no especifica zona. Al pasar la hora seleccionada por el usuario (local) de vuelta a la base de datos, envolverla en `new Date()` y luego `.toISOString()` garantiza que Supabase almacene la marca de tiempo UTC que corresponde exactamente al momento seleccionado en la zona horaria del cliente.
+- **Lesson 2**: Usar `.slice(0, 16)` sobre `.toISOString()` falla en zonas horarias negativas porque devuelve la cadena UTC truncada, no la cadena local truncada. Siempre se deben extraer año, mes, día, hora y minutos usando `getFullYear()`, `getMonth()`, etc. para generar un string `datetime-local` correcto basado en la hora local del navegador.
+
+## Technical Validation
+- **Frontend**: Servidor Vite y build completado sin errores de sintaxis (`pnpm run build`).
+- **Base de Datos**: Verificado mediante la herramienta de SQL en MCP que las fechas se almacenan correctamente en UTC y la UI refleja la hora correcta en la zona local.
 **Date**: 2026-06-04 18:00
 
 ## Objective
@@ -530,3 +549,17 @@ Siempre proveer un caso de evaluaciÃ³n estricto en sentencias SQL cuando el si
 - Para conservar inmutabilidad histórica, detalles transaccionales (como facturas) deben guardarse dentro de JSONB en lugar de alterar esquemas relacionales consolidados.
 - La paridad de columnas de fecha (`release_date`) entre tipos de catálogo (Singles vs Accesorios) permite reportes y filtros agregados consistentes en el frontend.
 
+
+## 2026-06-22 — Sincronización Scryfall y Dinamización de Filtro de Novedades
+
+**Qué pasó:** 
+1. La carga masiva de nuevos sets (Marvel) desde Scryfall fallaba de forma silenciosa/crasheaba debido a la ausencia de una restricción UNIQUE (game_id, set_code) en la tabla sets, lo que rompía el UPSERT masivo.
+2. El filtro de NUEVO en la web estaba quemado (hardcoded) para apuntar solo a códigos de set específicos (Shadows of the Galaxy, etc.), ignorando el inventario fresco.
+
+**Lo que cambió:**
+- supabase → Añadida restricción UNIQUE en la tabla sets mediante execute_sql.
+- load_mtgs_sets_from_scryfall.py → Ahora fluye sin errores 42P10.
+- get_products_filtered (RPC) → Se reemplazó el condicional harcodeado por p.updated_at >= NOW() - INTERVAL ''14 days'' para mantener el botón de NOVEDADES dinámico.
+
+**Regla derivada:**
+Los filtros de UI basados en 'novedades' no deben hardcodearse a set_codes a menos que haya una estrategia temporal definida con caducidad. De lo contrario, se pierde el descubrimiento orgánico de catálogo.

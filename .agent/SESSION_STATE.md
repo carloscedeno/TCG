@@ -5,22 +5,18 @@
 
 ---
 
-## 📅 Última sesión: 2026-06-12
+## 📅 Última sesión: 2026-06-24
 **Rama activa:** `dev`
-**Último commit conocido:** `feat: user dashboard improvements including player IDs, address book, checkout selection, billing form, and order list/tracking filters with preventa estimated dates`
-**En progreso:** Ninguno — finalizando sesión (finalizado `/finalize`)
+**Último commit conocido:** 🧠 compound: Registro UX y Navegación MTG (v66)
+**En progreso:** Ninguno — finalizando sesión (finalizado /finalize)
 
 ## 📁 Zona Caliente (archivos tocados recientemente)
-- `frontend/src/pages/Profile.tsx` — Perfil y credentials
-- `frontend/src/components/Profile/AddressBook.tsx` — Libreta de direcciones CRUD
-- `frontend/src/components/Profile/ProfileSettingsModal.tsx` — Configuración de perfil y contraseña
-- `frontend/src/pages/CheckoutPage.tsx` — Integración de direcciones guardadas y facturación
-- `frontend/src/components/Profile/OrdersList.tsx` — Filtros de órdenes y estimación de preventas
-- `frontend/src/utils/api.ts` — CRUD de direcciones y endpoints de clave
-- `supabase/migrations/20260612000000_user_dashboard_improvements.sql` — Estructura de BD
+- frontend/src/components/Auth/AuthModal.tsx — Expansión y campos adicionales.
+- frontend/src/components/Navigation/Header.tsx — Corrección enlace MTG.
+- PROGRESS.md — Documentación v66.
 
 ## ⏭️ Próxima acción recomendada
-Monitorear retroalimentación del usuario y jefe en `dev.geekorium.shop` sobre las mejoras del Dashboard y Libreta de Direcciones.
+Monitorear la carga y visualización de eventos tanto en el panel de administrador como en el TournamentHub para validar que sigan mostrando la hora exacta de Caracas (local) de forma consistente.
 
 ## 🚫 Restricciones activas
 - NO usar `npm` — solo `pnpm`
@@ -37,6 +33,7 @@ Monitorear retroalimentación del usuario y jefe en `dev.geekorium.shop` sobre l
 - Comando para actualizar: `graphify update frontend/src --no-viz`
 
 ## ✅ Features estables (no tocar sin razón)
+- Corrección de zona horaria de eventos (Caracas UTC-4)
 - Checkout E2E + WhatsApp flow
 - Bulk Import (cartas y accesorios)
 - Sistema de descuentos con fechas NULL
@@ -44,4 +41,3 @@ Monitorear retroalimentación del usuario y jefe en `dev.geekorium.shop` sobre l
 - Libreta de Direcciones Múltiples (Envío/Facturación)
 - Identificadores de jugador TCG (Wizards, Pokémon, Bandai) en perfil
 - Filtros y estimaciones de preventa en el historial de órdenes
-
