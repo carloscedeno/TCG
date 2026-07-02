@@ -99,7 +99,7 @@ export function AddProductDrawer({ isOpen, onClose, onSuccess, prefillCard }: Ad
 
             let results;
             if (isSetCode) {
-                const { data } = await finalQuery.eq('sets.set_code', cardName.toUpperCase()).limit(12);
+                const { data } = await finalQuery.eq('sets.set_code', cardName.toLowerCase()).limit(12);
                 results = data;
             }
 

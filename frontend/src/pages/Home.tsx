@@ -274,7 +274,7 @@ const Home: React.FC = () => {
             cards: productRes.products.map((p: any) => ({
               card_id: p.printing_id ? `${p.printing_id}-${p.finish || 'nonfoil'}` : p.id,
               name: p.name,
-              set: p.set_code || 'Unknown',
+              set: p.set_code?.toUpperCase() || 'Unknown',
               price: Number(p.price) || 0,
               image_url: p.image_url,
               rarity: p.rarity,
