@@ -67,11 +67,13 @@ class TCGDatabaseAPI:
     
     def get_set_by_code(self, game_code: str, set_code: str) -> Optional[Dict]:
         """Obtener set por código"""
-        response = self.supabase.table('sets').select('*, games(game_name, game_code)').eq('games.game_code', game_code).eq('set_code', set_code).execute()
+        response = self.supabase.table('sets').select('*, games(game_name, game_code)').eq('games.game_code', game_code).eq('set_code', set_code.lower()).execute()
         return response.data[0] if response.data else None
     
     def create_set(self, set_data: Dict) -> Dict:
         """Crear nuevo set"""
+        if 'set_code' in set_data and set_data['set_code']:
+            set_data['set_code'] = str(set_data['set_code']).lower()
         response = self.supabase.table('sets').insert(set_data).execute()
         return response.data[0] if response.data else None
     
