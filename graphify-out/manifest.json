@@ -1,0 +1,522 @@
+{
+  "frontend/src/App.tsx": {
+    "mtime": 1781719782.5057166,
+    "ast_hash": "fabd2b3169723ba3d57457fab27f89f5",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Admin/AddAccessoryDrawer.tsx": {
+    "mtime": 1780608079.5656002,
+    "ast_hash": "a33d89b71de7ed78666ffbb77d99d980",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Admin/AddProductDrawer.tsx": {
+    "mtime": 1783017828.082579,
+    "ast_hash": "108744c3ea48a1ba6e12ca9fc86386b8",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Admin/BulkImageUploadModal.tsx": {
+    "mtime": 1780513971.879919,
+    "ast_hash": "e3ed430276e0323dcb43f091bb5b19d7",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Admin/BulkImportCatalogModal.tsx": {
+    "mtime": 1780513971.879919,
+    "ast_hash": "7cd57311c034abc7885f7cdb2278da3c",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Admin/CartManager.tsx": {
+    "mtime": 1780513971.879919,
+    "ast_hash": "4eee393e5ade0fc1492113bedcce350f",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Admin/CategoryModal.tsx": {
+    "mtime": 1780513971.8809195,
+    "ast_hash": "b98e0f15f9d28b5f75837d0e20be31a6",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Admin/CloudflareAnalytics.tsx": {
+    "mtime": 1780513971.8809195,
+    "ast_hash": "a7de15d372f394c80d496ffe23e5af98",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Admin/EditProductModal.tsx": {
+    "mtime": 1780608079.5662627,
+    "ast_hash": "40d3eec661ad74bb970714399d7d0b0b",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Admin/EgressInventoryModal.tsx": {
+    "mtime": 1780513971.883958,
+    "ast_hash": "9a7e79300144e1d1f57e080c36ee3b41",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Admin/ImportInventoryModal.tsx": {
+    "mtime": 1775966230.389188,
+    "ast_hash": "964b46eca2cf4b5dbac058041a658ecb",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Admin/ManageCreditsModal.tsx": {
+    "mtime": 1781719782.5067194,
+    "ast_hash": "f973defcee8ba322c9f2bb28c71432bd",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Admin/OfferManagementModal.tsx": {
+    "mtime": 1780596155.8069153,
+    "ast_hash": "0fd4ce5248286dc9b639fde13845ad65",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Admin/PlayerHistoryModal.tsx": {
+    "mtime": 1781719782.5067194,
+    "ast_hash": "95b6b62b02ea5f59ab06b2d7f9805932",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Admin/PosSessionBanner.tsx": {
+    "mtime": 1780513971.8849564,
+    "ast_hash": "8f95cbd4cc429e8b0be1a5e5b394adb8",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Admin/PriceUpdateHistory.tsx": {
+    "mtime": 1780813637.686204,
+    "ast_hash": "7d935d5d5d9128f351c4794543bcb48d",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Admin/RankingSeasonManager.tsx": {
+    "mtime": 1782338403.0443237,
+    "ast_hash": "ebf5437f4212640e6d9e46a91a652afe",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Admin/UserCreditsManager.tsx": {
+    "mtime": 1781719782.5087185,
+    "ast_hash": "36f4a726cd3d430f8b314c1422e4791f",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Auth/AdminRoute.tsx": {
+    "mtime": 1780513971.8849564,
+    "ast_hash": "abaaaa6d83f23f41f7a520605dd37cb2",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Auth/AuthModal.tsx": {
+    "mtime": 1782338403.0518398,
+    "ast_hash": "6c2ae98f311ee5b97dda5ca415444e7a",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Card/Card.tsx": {
+    "mtime": 1780599442.0249996,
+    "ast_hash": "fb1745f3744d49119cf59a44e9264a4b",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Card/CardGrid.tsx": {
+    "mtime": 1780513971.8859642,
+    "ast_hash": "b02bd62cd21cd76c00364d857a6d1023",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Card/CardImage.tsx": {
+    "mtime": 1780513971.8869648,
+    "ast_hash": "c0fc305911cc52d6645fbd5d8e7aa36c",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Filters/FiltersPanel.tsx": {
+    "mtime": 1780513971.8869648,
+    "ast_hash": "adf777ebbd09813f9bde21b424d0c8be",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Help/HelpIcons.tsx": {
+    "mtime": 1780513971.8879633,
+    "ast_hash": "66c797afe6f01374cb129803aa30f7ee",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Help/HelpSection.tsx": {
+    "mtime": 1780513971.8879633,
+    "ast_hash": "02303d4f201ed49baf1a0f1edab0771e",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Home/DealsCarousel.tsx": {
+    "mtime": 1780513971.8879633,
+    "ast_hash": "1d40409586b46feb8f206372cd133691",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Home/HeroSection.tsx": {
+    "mtime": 1780598027.379688,
+    "ast_hash": "5aa927ed5ea57c02896c0ea6dcff0ed5",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Home/PresaleSection.tsx": {
+    "mtime": 1780513971.8889613,
+    "ast_hash": "d69fef81cf08054552528cede081a0be",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Home/UpcomingMissionsWidget.tsx": {
+    "mtime": 1781719782.5119548,
+    "ast_hash": "23e6394767aff84a55aeadcfe8774c6f",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Mana/ManaText.tsx": {
+    "mtime": 1775966230.394226,
+    "ast_hash": "d050e76a87bba267643c25227fe28046",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Modals/PreRegistrationModal.tsx": {
+    "mtime": 1781719782.5129628,
+    "ast_hash": "8dcbc256e06a214794d5f1f3afd27ae3",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Modals/RegistrationsModal.tsx": {
+    "mtime": 1780513971.889963,
+    "ast_hash": "c8777fa215edbf5aba3600cc409127c0",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Navigation/BottomNav.tsx": {
+    "mtime": 1780599425.3055918,
+    "ast_hash": "3b37c2f26ee85bd6b2481757e8f14752",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Navigation/CartDrawer.tsx": {
+    "mtime": 1780596634.9955337,
+    "ast_hash": "ff3d1f30694d50fca7ddcd2e13472fdd",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Navigation/Footer.tsx": {
+    "mtime": 1780513971.8915918,
+    "ast_hash": "ed5694f9a4184bc3a38577664462b308",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Navigation/Header.tsx": {
+    "mtime": 1782338403.0623517,
+    "ast_hash": "9599228f606a19ddf1f839ded80461cc",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Navigation/MobileMenuDrawer.tsx": {
+    "mtime": 1781719782.5139642,
+    "ast_hash": "7f9545ad65e7dec8bf78268ff4e1718b",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Navigation/PwaReloadPrompt.tsx": {
+    "mtime": 1781720674.1250536,
+    "ast_hash": "d6d36be9f685bca464c5e74eb7964bfc",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Navigation/QuickStockItem.tsx": {
+    "mtime": 1780513971.8915918,
+    "ast_hash": "bdacd4571371012e09e4f6ffa9b3edac",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Navigation/QuickStockPanel.tsx": {
+    "mtime": 1780513971.8930998,
+    "ast_hash": "cb3250607a1fda3fe342900b69638513",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Navigation/ScrollToTop.tsx": {
+    "mtime": 1780513971.8930998,
+    "ast_hash": "c5710d0875eb206bbb110569923aa1fc",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Navigation/UserMenu.tsx": {
+    "mtime": 1780513971.8930998,
+    "ast_hash": "31fc4469e01fd82baaa4177304eb3317",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Navigation/WelcomeModal.tsx": {
+    "mtime": 1780513971.8946185,
+    "ast_hash": "3bb62c5cd1a29baf8f73eee68cefe2df",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Navigation/WhatsAppWidget.tsx": {
+    "mtime": 1780598027.3822246,
+    "ast_hash": "0738fc496cf7a647308fef4933d48b73",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Profile/AddressBook.tsx": {
+    "mtime": 1781719782.5149624,
+    "ast_hash": "7be2e95f9ed599a1e1c97a7277858c64",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Profile/CreditHistoryList.tsx": {
+    "mtime": 1781719782.5149624,
+    "ast_hash": "31c79574f6014b6a44b6c48b46b77bdc",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Profile/InventoryMovements.tsx": {
+    "mtime": 1781877000.0078866,
+    "ast_hash": "94869e73d206794945ef4b6727b38d01",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Profile/MyMissionsList.tsx": {
+    "mtime": 1781719782.5159614,
+    "ast_hash": "d878a4b75ff2ccb8c2dc853cef0a51ff",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Profile/OrdersList.tsx": {
+    "mtime": 1781719782.5159614,
+    "ast_hash": "b637e0bd220f3f7825e597f6a626b73f",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Profile/PlayerCard.tsx": {
+    "mtime": 1781719782.5174713,
+    "ast_hash": "88bc5fa846cf73c78037e0883d412bb9",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Profile/PlayerRankingsList.tsx": {
+    "mtime": 1782246483.5464237,
+    "ast_hash": "4f6f7c801ebdbadd94e32cd8af92a6ff",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Profile/PortfolioStats.tsx": {
+    "mtime": 1780513971.8966243,
+    "ast_hash": "fbe74d10a1aa0be5484a892caeab85fd",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Profile/ProfileSettingsModal.tsx": {
+    "mtime": 1781719782.5184798,
+    "ast_hash": "29fffceca5345b29cd9dd5b29f365879",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/Rankings/RankingWidget.tsx": {
+    "mtime": 1782246483.5499413,
+    "ast_hash": "1cbe1dbd2324eafc80e054c8b316b49d",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/SearchBar/SearchBar.tsx": {
+    "mtime": 1777399905.1633658,
+    "ast_hash": "e8c292b961fc7a6ce1f1a04d87928f95",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/collections/BulkImport.tsx": {
+    "mtime": 1780513971.8976247,
+    "ast_hash": "8f829bb9d5abc28bd025b1c0aedcf531",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/ui/GlassCard.tsx": {
+    "mtime": 1780513971.8976247,
+    "ast_hash": "cc55bcd093729a730155c6cb250f6110",
+    "semantic_hash": ""
+  },
+  "frontend/src/context/AuthContext.tsx": {
+    "mtime": 1781719782.5205204,
+    "ast_hash": "6ebacf185aee513add8343b7ad97e13d",
+    "semantic_hash": ""
+  },
+  "frontend/src/context/CartContext.tsx": {
+    "mtime": 1780513971.8996272,
+    "ast_hash": "4247f1328b645eac8526d08a6358dd15",
+    "semantic_hash": ""
+  },
+  "frontend/src/main.tsx": {
+    "mtime": 1767189215.9067974,
+    "ast_hash": "df3369963799e47ef5a77cdca932abf0",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/Admin/AdminDashboard.tsx": {
+    "mtime": 1781802043.4426665,
+    "ast_hash": "8da687860f5e29685f120731571290b0",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/Admin/AdminRankingsPage.tsx": {
+    "mtime": 1782338403.1444926,
+    "ast_hash": "6693405605dcb596c201fb2bf674e23e",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/Admin/BannersPage.tsx": {
+    "mtime": 1780513971.90263,
+    "ast_hash": "709bc936bf71b6a79f4862465cd11fe2",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/Admin/CatalogPage.tsx": {
+    "mtime": 1780513971.90263,
+    "ast_hash": "d65a31003970353be1eb1ae05ce2f469",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/Admin/CategoriesPage.tsx": {
+    "mtime": 1780513971.9036298,
+    "ast_hash": "6efafa9fa66a85392852b84d61fb3799",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/Admin/CustomersPage.tsx": {
+    "mtime": 1781719782.5225344,
+    "ast_hash": "a5ac7065f592043d6874391318f317c8",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/Admin/EventsPage.tsx": {
+    "mtime": 1782338403.2225096,
+    "ast_hash": "1350ff580a2e444024670908129c8076",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/Admin/InventoryPage.tsx": {
+    "mtime": 1780596634.9961054,
+    "ast_hash": "bb8e2a13d1231c9ebc2a7dbc948ab85c",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/Admin/LoginPage.tsx": {
+    "mtime": 1780513971.905647,
+    "ast_hash": "4ff4053ca739a07315ae43cc2a8d2c08",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/Admin/MediaPage.tsx": {
+    "mtime": 1780513971.905647,
+    "ast_hash": "846a01f0b9a04b30831244547cc97efd",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/Admin/OrdersPage.tsx": {
+    "mtime": 1780513971.90716,
+    "ast_hash": "483711803c33b5b9feb73eb074f57277",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/Admin/PresalesPage.tsx": {
+    "mtime": 1780513971.9076662,
+    "ast_hash": "b557623fd4c539af0ff2fcbbadbefab2",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/Admin/TcgBannersPage.tsx": {
+    "mtime": 1780513971.9076662,
+    "ast_hash": "097d1d2c12f2444e8440dc7bcb4ecf07",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/CardDetail.tsx": {
+    "mtime": 1781719782.5235348,
+    "ast_hash": "85a94e576f9d114a50d6d79cbd8f8b06",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/CheckoutPage.tsx": {
+    "mtime": 1781719782.528198,
+    "ast_hash": "6dae5c24291e3e003e82cc917a437467",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/CheckoutSuccessPage.tsx": {
+    "mtime": 1780513971.909697,
+    "ast_hash": "76eb3d47f7740e073342e584e920fac3",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/HelpPage.tsx": {
+    "mtime": 1780513971.9107046,
+    "ast_hash": "a8f68ad8b7321fccaeb4a8777e8615f0",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/Home.tsx": {
+    "mtime": 1783017828.0830956,
+    "ast_hash": "1860d6f58ed3c5bd1668607699b35a52",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/ImportCollection.tsx": {
+    "mtime": 1780513971.9117167,
+    "ast_hash": "543ff25e686d25301a6332e8970e2fe0",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/LegalPage.tsx": {
+    "mtime": 1780513971.9127228,
+    "ast_hash": "e281e37ee3a6665213bbeda01bdd87c5",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/NotFound.tsx": {
+    "mtime": 1780513971.9132276,
+    "ast_hash": "c4b8b87d497de4c0b5c0bc6bc4f84fa6",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/OrderTrackingPage.tsx": {
+    "mtime": 1781719782.5307205,
+    "ast_hash": "932d33d170027c1ca0946139f0e32c5c",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/Profile.tsx": {
+    "mtime": 1781877000.0169127,
+    "ast_hash": "d1aedefe25bea9245387104967a00522",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/RankingsPage.tsx": {
+    "mtime": 1782338403.3068082,
+    "ast_hash": "22e00314d1c947c73400e174807f5297",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/TournamentHub.tsx": {
+    "mtime": 1781372392.6681457,
+    "ast_hash": "a726398987752b9094be097d934aea2e",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/UpdatePassword.tsx": {
+    "mtime": 1780513971.915245,
+    "ast_hash": "180ee67335638f2409847458cc6b49e7",
+    "semantic_hash": ""
+  },
+  "frontend/src/services/CollectionService.ts": {
+    "mtime": 1776835834.2229974,
+    "ast_hash": "0fbb9919a7fedebc95be1091d0c71403",
+    "semantic_hash": ""
+  },
+  "frontend/src/tests/CardGrid.test.tsx": {
+    "mtime": 1780513971.9157505,
+    "ast_hash": "82bf090d6cfcc55c3de55fcabba9465a",
+    "semantic_hash": ""
+  },
+  "frontend/src/tests/txt_parser.test.ts": {
+    "mtime": 1775966230.4068751,
+    "ast_hash": "658f1c18edb5275cccf2d8004f836360",
+    "semantic_hash": ""
+  },
+  "frontend/src/types/database.types.ts": {
+    "mtime": 1782338403.3098185,
+    "ast_hash": "c5b41b4628c82aba7aa8d27ab45ef62c",
+    "semantic_hash": ""
+  },
+  "frontend/src/utils/api.ts": {
+    "mtime": 1781719782.5342524,
+    "ast_hash": "2d59b30162fcef4ec7c5127e550bbf77",
+    "semantic_hash": ""
+  },
+  "frontend/src/utils/imageOptimization.ts": {
+    "mtime": 1780118701.8459997,
+    "ast_hash": "07027d82491ca66e950f93df1d6b03ef",
+    "semantic_hash": ""
+  },
+  "frontend/src/utils/supabaseClient.ts": {
+    "mtime": 1775966230.4068751,
+    "ast_hash": "28228cc4ac6e44a2c8f223905aba818c",
+    "semantic_hash": ""
+  },
+  "frontend/src/utils/translations.ts": {
+    "mtime": 1780513971.9182906,
+    "ast_hash": "e44912885c422b149feef93620cdaca4",
+    "semantic_hash": ""
+  },
+  "frontend/src/utils/urlUtils.ts": {
+    "mtime": 1775966230.408379,
+    "ast_hash": "d29ccdbded29ef338f6c0ec861e93f9f",
+    "semantic_hash": ""
+  },
+  "frontend/src/vite-env.d.ts": {
+    "mtime": 1767189215.9218533,
+    "ast_hash": "8f68c27c3fc38817b2726b20e2d4f1ee",
+    "semantic_hash": ""
+  },
+  "frontend/src/agents.md": {
+    "mtime": 1775966230.3861554,
+    "ast_hash": "d62fec7d6c12caa2334513326562fbed",
+    "semantic_hash": ""
+  },
+  "frontend/src/assets/branding/Emporio.jpg": {
+    "mtime": 1775966230.38666,
+    "ast_hash": "7e65d90180f52e641911561be8480f2c",
+    "semantic_hash": ""
+  },
+  "frontend/src/assets/branding/Geekomunidad.jpg": {
+    "mtime": 1775966230.3871644,
+    "ast_hash": "f00db617be7297f5026035a8d8b05653",
+    "semantic_hash": ""
+  },
+  "frontend/src/assets/branding/Logo.jpg": {
+    "mtime": 1775966230.3871644,
+    "ast_hash": "d1740538dc8560f288dceb1397b0c3e5",
+    "semantic_hash": ""
+  },
+  "frontend/src/assets/branding/Misiones.jpg": {
+    "mtime": 1775966230.3871644,
+    "ast_hash": "16aad76e51924da9ab113c8f662748e8",
+    "semantic_hash": ""
+  },
+  "frontend/src/assets/branding/Nisperitas.jpg": {
+    "mtime": 1775966230.38817,
+    "ast_hash": "e564f52c8432b0026d2f4121f5212e17",
+    "semantic_hash": ""
+  },
+  "frontend/src/assets/react.svg": {
+    "mtime": 1767189215.8645897,
+    "ast_hash": "f0402b67b6ce880f65666bb49e841696",
+    "semantic_hash": ""
+  }
+}

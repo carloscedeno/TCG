@@ -11,6 +11,7 @@ import {
 import { ImportInventoryModal } from "../../components/Admin/ImportInventoryModal";
 import { EgressInventoryModal } from "../../components/Admin/EgressInventoryModal";
 import { OfferManagementModal } from "../../components/Admin/OfferManagementModal";
+import { BulkRarityOfferModal } from "../../components/Admin/BulkRarityOfferModal";
 import { useCart } from "../../context/CartContext";
 import { addProductToCart, isDiscountActive, manageProductOffer } from "../../utils/api";
 
@@ -43,6 +44,7 @@ export function InventoryPage() {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [isImportModalOpen, setIsImportModalOpen] = useState(false);
     const [isEgressModalOpen, setIsEgressModalOpen] = useState(false);
+    const [isBulkRarityModalOpen, setIsBulkRarityModalOpen] = useState(false);
 
     // Filtering & Sorting
     const [searchQuery, setSearchQuery] = useState("");
@@ -440,6 +442,16 @@ export function InventoryPage() {
                             <span className="relative z-10 flex items-center gap-3">
                                 <ArrowDownFromLine size={18} className="text-rose-500/70 group-hover:text-rose-400 transition-colors" />
                                 Egreso (Lote)
+                            </span>
+                        </button>
+
+                        <button
+                            onClick={() => setIsBulkRarityModalOpen(true)}
+                            className="group relative px-6 py-4 bg-purple-900/20 border border-purple-500/30 text-purple-400 font-black text-xs uppercase tracking-[0.2em] rounded-2xl overflow-hidden active:scale-95 transition-all w-full md:w-auto hover:border-purple-500/70 hover:bg-purple-900/40"
+                        >
+                            <span className="relative z-10 flex items-center gap-3">
+                                <Sparkles size={18} className="text-purple-400/70 group-hover:text-purple-300 transition-colors" />
+                                Ofertas (Bulk)
                             </span>
                         </button>
                     </div>
@@ -947,6 +959,14 @@ export function InventoryPage() {
             <EgressInventoryModal
                 isOpen={isEgressModalOpen}
                 onClose={() => setIsEgressModalOpen(false)}
+                onSuccess={() => {
+                    fetchInventory();
+                }}
+            />
+
+            <BulkRarityOfferModal
+                isOpen={isBulkRarityModalOpen}
+                onClose={() => setIsBulkRarityModalOpen(false)}
                 onSuccess={() => {
                     fetchInventory();
                 }}
