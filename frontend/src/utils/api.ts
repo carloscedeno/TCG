@@ -1722,6 +1722,38 @@ export const manageProductOffer = async (productId: string, discountPercentage: 
   }
 };
 
+export const adminApplyDiscountByRarity = async (rarity: string, percentage: number, endDate: string, overwrite: boolean, includeFoil: boolean, game: string = 'MTG') => {
+  try {
+    const { data, error } = await supabase.rpc('admin_apply_discount_by_rarity', {
+      p_rarity: rarity,
+      p_discount_percentage: percentage,
+      p_discount_until: endDate,
+      p_overwrite_existing: overwrite,
+      p_include_foil: includeFoil,
+      p_game: game
+    });
+    if (error) throw error;
+    return { success: true, updated_count: data?.updated_count || 0 };
+  } catch (err: any) {
+    console.error('Error applying bulk discount by rarity:', err);
+    return { success: false, message: err.message };
+  }
+};
+
+export const adminClearDiscountByRarity = async (rarity: string, game: string = 'MTG') => {
+  try {
+    const { data, error } = await supabase.rpc('admin_clear_discount_by_rarity', {
+      p_rarity: rarity,
+      p_game: game
+    });
+    if (error) throw error;
+    return { success: true, updated_count: data?.updated_count || 0 };
+  } catch (err: any) {
+    console.error('Error clearing bulk discount by rarity:', err);
+    return { success: false, message: err.message };
+  }
+};
+
 export const fetchDiscountedSingles = async (gameCode?: string, limit = 10): Promise<any[]> => {
   try {
     let query = supabase
