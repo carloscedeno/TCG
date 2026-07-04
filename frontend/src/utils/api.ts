@@ -10,7 +10,13 @@ const API_BASE = import.meta.env.VITE_API_BASE || '';
  */
 export const isDiscountActive = (discountUntil: string | null | undefined): boolean => {
     if (!discountUntil) return true; // Null date means permanent discount
-    return new Date() < new Date(discountUntil);
+    // Normalize space to 'T' for cross-browser parsing compatibility
+    const normalized = discountUntil.replace(' ', 'T');
+    const parsed = new Date(normalized);
+    if (isNaN(parsed.getTime())) {
+        return false;
+    }
+    return new Date() < parsed;
 };
 
 /**
