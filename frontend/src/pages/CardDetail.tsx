@@ -22,14 +22,16 @@ export const CardDetail: React.FC = () => {
     const location = useLocation();
     const initialImage = location.state?.initialImage as string | undefined;
     const initialCard = location.state?.initialCard as any;
-    const activeFinish = searchParams.get('finish') || 'nonfoil';
+    const baseId = id ? id.replace(/-foil$/, '').replace(/-nonfoil$/, '').replace(/-etched$/, '') : undefined;
+    const urlSuffix = id ? (id.endsWith('-foil') ? 'foil' : id.endsWith('-etched') ? 'etched' : id.endsWith('-nonfoil') ? 'nonfoil' : null) : null;
+    const activeFinish = searchParams.get('finish') || urlSuffix || 'nonfoil';
 
     // Build initial placeholder data from the Home page card data
     const getInitialDetails = () => {
         if (!initialCard) return null;
         return {
-            printing_id: initialCard.card_id,
-            card_id: initialCard.card_id,
+            printing_id: baseId || initialCard.card_id,
+            card_id: baseId || initialCard.card_id,
             name: initialCard.name,
             set: initialCard.set,
             set_code: initialCard.set_code || '',
@@ -50,7 +52,7 @@ export const CardDetail: React.FC = () => {
     const [details, setDetails] = useState<any>(getInitialDetails());
     const [loading, setLoading] = useState(!initialCard);
     const [error, setError] = useState<string | null>(null);
-    const [activePrintingId, setActivePrintingId] = useState<string | undefined>(id);
+    const [activePrintingId, setActivePrintingId] = useState<string | undefined>(baseId);
     const [currentFaceIndex, setCurrentFaceIndex] = useState(0);
     const [isAdding, setIsAdding] = useState(false);
 
@@ -59,7 +61,8 @@ export const CardDetail: React.FC = () => {
 
     useEffect(() => {
         if (id) {
-            setActivePrintingId(id);
+            const cleanId = id.replace(/-foil$/, '').replace(/-nonfoil$/, '').replace(/-etched$/, '');
+            setActivePrintingId(cleanId);
             loadDetails(id);
         }
     }, [id]);
