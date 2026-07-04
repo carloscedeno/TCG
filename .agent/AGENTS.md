@@ -33,17 +33,20 @@ Cargar según la tarea específica:
 ## ⚙️ Ciclo de Trabajo — Compounding Engineer
 
 Este proyecto sigue el framework **Compounding Engineer** (Dan Shipper / Every.to).
-Cada sesión de trabajo debe completar los 4 pasos:
+Cada sesión de trabajo debe completar los pasos en este orden:
 
 | Paso | Qué hace el agente |
 | :--- | :--- |
+| **0. Context** | Consultar el grafo MCP (`query_graph` o `/graphify .`) para aislar el contexto sin gastar tokens masivos leyendo archivos. |
 | **1. Plan** | Crear `implementation_plan.md`, revisar PRD, pedir aprobación |
 | **2. Work** | Ejecutar cambios en código, DB y scripts |
 | **3. Review** | Correr tests (`pytest`, Playwright), crear `walkthrough.md` |
 | **4. Audit** | Ejecutar `/audit` — verificar integridad: build, git, tests, docs |
 | **5. Compound** | Ejecutar `/compound` — codificar lo aprendido en archivos permanentes |
 
-> **Regla de Oro:** Si el conocimiento solo está en el historial de conversación, **no existe**.
+> **Regla de Oro de Tokens:** NUNCA leas archivos completos ni uses Grep/Glob de forma global al iniciar una tarea. Obligatoriamente debes consultar primero el Knowledge Graph (`graphify`) para entender dependencias, callers y arquitectura.
+
+> **Regla de Oro de Memoria:** Si el conocimiento solo está en el historial de conversación, **no existe**.
 > Solo cuenta lo que está escrito en los archivos del repo.
 
 Artefactos del Compound step:
