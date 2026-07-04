@@ -11,7 +11,13 @@ const API_BASE = import.meta.env.VITE_API_BASE || '';
 export const isDiscountActive = (discountUntil: string | null | undefined): boolean => {
     if (!discountUntil) return true; // Null date means permanent discount
     // Normalize space to 'T' for cross-browser parsing compatibility
-    const normalized = discountUntil.replace(' ', 'T');
+    let normalized = discountUntil.replace(' ', 'T');
+    
+    // If timezone ends with +XX or -XX (e.g. +00 or -04), append :00 to make it valid ISO-8601
+    if (/[+-]\d{2}$/.test(normalized)) {
+        normalized = normalized + ":00";
+    }
+
     const parsed = new Date(normalized);
     if (isNaN(parsed.getTime())) {
         return false;
