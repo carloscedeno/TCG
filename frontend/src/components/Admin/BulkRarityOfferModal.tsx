@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { X, Save, AlertTriangle, Zap } from 'lucide-react';
-import { adminApplyDiscountByRarity, adminClearDiscountByRarity } from '../../utils/api';
+import React, { useState, useEffect } from 'react';
+import { X, Save, AlertTriangle, Zap, RefreshCw } from 'lucide-react';
+import { adminApplyDiscountByRarity, adminClearDiscountByRarity, fetchDistinctRarities } from '../../utils/api';
 
 interface BulkRarityOfferModalProps {
   isOpen: boolean;
@@ -9,14 +9,55 @@ interface BulkRarityOfferModalProps {
   gameCode?: string;
 }
 
-export const BulkRarityOfferModal: React.FC<BulkRarityOfferModalProps> = ({ isOpen, onClose, onSuccess, gameCode = 'MTG' }) => {
+export const BulkRarityOfferModal: React.FC<BulkRarityOfferModalProps> = ({ isOpen, onClose, onSuccess, gameCode }) => {
+  const [selectedGameCode, setSelectedGameCode] = useState<string>('MTG');
   const [rarity, setRarity] = useState<string>('rare');
+  const [rarityOptions, setRarityOptions] = useState<string[]>([]);
   const [discountPercentage, setDiscountPercentage] = useState<number>(0);
   const [endDate, setEndDate] = useState<string>('');
   const [overwriteExisting, setOverwriteExisting] = useState<boolean>(false);
   const [includeFoil, setIncludeFoil] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loadingRarities, setLoadingRarities] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Sync selectedGameCode with prop when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      const initialGame = gameCode || 'MTG';
+      setSelectedGameCode(initialGame);
+    }
+  }, [isOpen, gameCode]);
+
+  // Load distinct rarities for the selected game
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const loadRarities = async () => {
+      setLoadingRarities(true);
+      setError(null);
+      try {
+        const rarities = await fetchDistinctRarities(selectedGameCode);
+        setRarityOptions(rarities);
+        
+        // Pick a default rarity from the fetched list if available
+        if (rarities.length > 0) {
+          // Try to select 'rare' or 'Rare' if it exists, otherwise the first one
+          const defaultRare = rarities.find(r => r.toLowerCase() === 'rare') || rarities[0];
+          setRarity(defaultRare);
+        } else {
+          setRarity('');
+        }
+      } catch (err: any) {
+        console.error('Failed to load rarities:', err);
+        setError('No se pudieron cargar las rarezas para este juego.');
+      } finally {
+        setLoadingRarities(false);
+      }
+    };
+
+    loadRarities();
+  }, [isOpen, selectedGameCode]);
 
   if (!isOpen) return null;
 
@@ -25,16 +66,17 @@ export const BulkRarityOfferModal: React.FC<BulkRarityOfferModalProps> = ({ isOp
       setError("El porcentaje de descuento debe ser mayor a 0 y menor o igual a 100.");
       return;
     }
-    if (!endDate) {
-      setError("Debe seleccionar una fecha de finalización.");
+    if (!rarity) {
+      setError("Debe seleccionar una rareza válida.");
       return;
     }
 
     try {
       setIsSubmitting(true);
       setError(null);
-      // Construct UTC-4 date like the individual modal does
-      const fullEndDate = `${endDate}T23:59:59.999-04:00`;
+      
+      // Construct UTC-4 date if selected, otherwise null for permanent discount
+      const fullEndDate = endDate ? `${endDate}T23:59:59.999-04:00` : null;
       
       const res = await adminApplyDiscountByRarity(
         rarity, 
@@ -42,7 +84,7 @@ export const BulkRarityOfferModal: React.FC<BulkRarityOfferModalProps> = ({ isOp
         fullEndDate, 
         overwriteExisting, 
         includeFoil, 
-        gameCode
+        selectedGameCode
       );
 
       if (!res.success) throw new Error(res.message);
@@ -59,14 +101,19 @@ export const BulkRarityOfferModal: React.FC<BulkRarityOfferModalProps> = ({ isOp
   };
 
   const handleClear = async () => {
-    if (!window.confirm(`¿Estás seguro de que deseas ELIMINAR TODOS los descuentos de las cartas de rareza ${rarity}?`)) {
+    if (!rarity) {
+      setError("Debe seleccionar una rareza válida para remover descuentos.");
+      return;
+    }
+
+    if (!window.confirm(`¿Estás seguro de que deseas ELIMINAR TODOS los descuentos de las cartas de rareza ${rarity} para el juego ${selectedGameCode}?`)) {
       return;
     }
 
     try {
       setIsSubmitting(true);
       setError(null);
-      const res = await adminClearDiscountByRarity(rarity, gameCode);
+      const res = await adminClearDiscountByRarity(rarity, selectedGameCode);
       if (!res.success) throw new Error(res.message);
       
       alert(`¡Éxito! Se eliminaron los descuentos de ${res.updated_count} cartas de rareza ${rarity}.`);
@@ -111,20 +158,45 @@ export const BulkRarityOfferModal: React.FC<BulkRarityOfferModalProps> = ({ isOp
           </div>
 
           <div className="space-y-5">
+            {/* Game Selector */}
             <div>
               <label className="block text-sm font-bold text-gray-300 mb-1">
-                Selecciona la Rareza
+                Selecciona el Juego
               </label>
               <select
                 className="w-full bg-gray-900 border border-gray-700 rounded-md p-2 text-white focus:outline-none focus:border-purple-500"
+                value={selectedGameCode}
+                onChange={(e) => setSelectedGameCode(e.target.value)}
+              >
+                <option value="MTG">Magic: The Gathering (MTG)</option>
+                <option value="POKEMON">Pokémon (PKM)</option>
+                <option value="OPC">One Piece (OPC)</option>
+              </select>
+            </div>
+
+            {/* Rarity Selector */}
+            <div>
+              <label className="block text-sm font-bold text-gray-300 mb-1 flex items-center justify-between">
+                <span>Selecciona la Rareza</span>
+                {loadingRarities && <RefreshCw className="w-3.5 h-3.5 animate-spin text-purple-400" />}
+              </label>
+              <select
+                className="w-full bg-gray-900 border border-gray-700 rounded-md p-2 text-white focus:outline-none focus:border-purple-500 disabled:opacity-50"
                 value={rarity}
                 onChange={(e) => setRarity(e.target.value)}
+                disabled={loadingRarities || rarityOptions.length === 0}
               >
-                <option value="common">Common (Común)</option>
-                <option value="uncommon">Uncommon (Infrecuente)</option>
-                <option value="rare">Rare (Rara)</option>
-                <option value="mythic">Mythic (Mítica)</option>
-                <option value="special">Special (Especial)</option>
+                {rarityOptions.length > 0 ? (
+                  rarityOptions.map((opt) => (
+                    <option key={opt} value={opt}>
+                      {opt.charAt(0).toUpperCase() + opt.slice(1)}
+                    </option>
+                  ))
+                ) : (
+                  <option value="">
+                    {loadingRarities ? 'Cargando rarezas...' : 'No hay rarezas disponibles'}
+                  </option>
+                )}
               </select>
             </div>
 
@@ -144,7 +216,7 @@ export const BulkRarityOfferModal: React.FC<BulkRarityOfferModalProps> = ({ isOp
               </div>
               <div>
                 <label className="block text-sm font-bold text-gray-300 mb-1">
-                  Fecha Finalización
+                  Fecha Finalización (Opcional)
                 </label>
                 <input
                   type="date"
@@ -207,7 +279,7 @@ export const BulkRarityOfferModal: React.FC<BulkRarityOfferModalProps> = ({ isOp
         <div className="p-4 border-t border-gray-800 bg-gray-900/50 flex justify-between items-center gap-3">
           <button
             onClick={handleClear}
-            disabled={isSubmitting}
+            disabled={isSubmitting || !rarity || loadingRarities}
             className="flex-1 py-2 bg-red-500/10 border border-red-500/50 hover:bg-red-500 hover:text-white text-red-500 rounded-md font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Quitar Descuentos
@@ -215,7 +287,7 @@ export const BulkRarityOfferModal: React.FC<BulkRarityOfferModalProps> = ({ isOp
           
           <button
             onClick={handleApply}
-            disabled={isSubmitting || discountPercentage <= 0 || !endDate}
+            disabled={isSubmitting || discountPercentage <= 0 || !rarity || loadingRarities}
             className="flex-1 flex justify-center items-center py-2 bg-geeko-cyan text-geeko-dark font-black rounded-md hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? (

@@ -1734,7 +1734,7 @@ export const manageProductOffer = async (productId: string, discountPercentage: 
   }
 };
 
-export const adminApplyDiscountByRarity = async (rarity: string, percentage: number, endDate: string, overwrite: boolean, includeFoil: boolean, game: string = 'MTG') => {
+export const adminApplyDiscountByRarity = async (rarity: string, percentage: number, endDate: string | null, overwrite: boolean, includeFoil: boolean, game: string = 'MTG') => {
   try {
     const { data, error } = await supabase.rpc('admin_apply_discount_by_rarity', {
       p_rarity: rarity,
@@ -1745,6 +1745,9 @@ export const adminApplyDiscountByRarity = async (rarity: string, percentage: num
       p_game: game
     });
     if (error) throw error;
+    if (data && data.success === false) {
+      throw new Error(data.message || 'Error al aplicar el descuento masivo');
+    }
     return { success: true, updated_count: data?.updated_count || 0 };
   } catch (err: any) {
     console.error('Error applying bulk discount by rarity:', err);
@@ -1759,10 +1762,35 @@ export const adminClearDiscountByRarity = async (rarity: string, game: string = 
       p_game: game
     });
     if (error) throw error;
+    if (data && data.success === false) {
+      throw new Error(data.message || 'Error al eliminar el descuento masivo');
+    }
     return { success: true, updated_count: data?.updated_count || 0 };
   } catch (err: any) {
     console.error('Error clearing bulk discount by rarity:', err);
     return { success: false, message: err.message };
+  }
+};
+
+export const fetchDistinctRarities = async (gameCode: string = 'MTG'): Promise<string[]> => {
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .select('rarity')
+      .eq('game', gameCode)
+      .not('rarity', 'is', null);
+      
+    if (error) throw error;
+    
+    // Extract unique, sorted values
+    const uniqueRarities = Array.from(new Set(data.map((r: any) => r.rarity)))
+      .filter(Boolean)
+      .sort((a, b) => a.localeCompare(b));
+      
+    return uniqueRarities;
+  } catch (error) {
+    console.error('Error fetching distinct rarities:', error);
+    return [];
   }
 };
 
