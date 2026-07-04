@@ -111,7 +111,8 @@ def import_manabox_csv(file_path: str, game: str = 'MTG'):
                             elif isinstance(prices, dict):
                                 market_price = prices.get('avg_market_price_usd') or 0
                         else:
-                            print(f"  ❌ No metadata found for: {name} in set {set_code}")                except Exception as e:
+                            print(f"  ❌ No metadata found for: {name} in set {set_code}")
+                except Exception as e:
                     print(f"  ⚠️ Lookup failed for {name}: {e}")
 
                 products_to_process.append({
