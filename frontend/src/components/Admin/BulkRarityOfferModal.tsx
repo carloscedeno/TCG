@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Save, AlertTriangle, Zap, Search } from 'lucide-react';
+import { X, Save, AlertTriangle, Zap } from 'lucide-react';
 import { adminApplyDiscountByRarity, adminClearDiscountByRarity } from '../../utils/api';
 
 interface BulkRarityOfferModalProps {
