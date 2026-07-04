@@ -1784,7 +1784,7 @@ export const fetchDistinctRarities = async (gameCode: string = 'MTG'): Promise<s
     
     // Extract unique, sorted values
     const uniqueRarities = Array.from(new Set(data.map((r: any) => r.rarity as string)))
-      .filter(Boolean)
+      .filter((r): r is string => !!r)
       .sort((a, b) => a.localeCompare(b));
       
     return uniqueRarities;
