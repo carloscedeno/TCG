@@ -11,14 +11,41 @@ export const UpdatePassword = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Retrieve the session to ensure the user is authenticated via the recovery link
-        supabase.auth.getSession().then(({ data: { session } }: { data: { session: any } }) => {
-            if (!session) {
-                // If there's no session, usually the recovery link handles the session set up. 
-                // However, improved security might require checking 'type=recovery' in URL fragment/query
-                // For now we assume Supabase handles the session establishment on link click
+        const handleRecoverySession = async () => {
+            const hash = window.location.hash;
+            if (hash && hash.includes('access_token=')) {
+                // Parse hash params
+                const params = new URLSearchParams(hash.replace('#', '?'));
+                const accessToken = params.get('access_token');
+                const refreshToken = params.get('refresh_token');
+                const type = params.get('type');
+                
+                if (accessToken && refreshToken && type === 'recovery') {
+                    setLoading(true);
+                    setError(null);
+                    try {
+                        const { error } = await supabase.auth.setSession({
+                            access_token: accessToken,
+                            refresh_token: refreshToken
+                        });
+                        if (error) throw error;
+                    } catch (err: any) {
+                        console.error('Error setting recovery session:', err);
+                        setError('El enlace de recuperación no es válido o ha expirado.');
+                    } finally {
+                        setLoading(false);
+                    }
+                }
+            } else {
+                // If no hash, verify if there is an active session
+                const { data: { session } } = await supabase.auth.getSession();
+                if (!session) {
+                    setError('Para actualizar tu contraseña, debes ingresar a través del enlace de recuperación enviado a tu correo.');
+                }
             }
-        });
+        };
+
+        handleRecoverySession();
     }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
