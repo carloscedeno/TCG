@@ -5,18 +5,19 @@
 
 ---
 
-## 📅 Última sesión: 2026-06-24
-**Rama activa:** `dev`
-**Último commit conocido:** 🧠 compound: Registro UX y Navegación MTG (v66)
+## 📅 Última sesión: 2026-07-04
+**Rama activa:** `main` (mezclada desde `dev`)
+**Último commit conocido:** feat: forzar limpieza de cache y unregister de Service Workers antiguos al desplegar
 **En progreso:** Ninguno — finalizando sesión (finalizado /finalize)
 
 ## 📁 Zona Caliente (archivos tocados recientemente)
-- frontend/src/components/Auth/AuthModal.tsx — Expansión y campos adicionales.
-- frontend/src/components/Navigation/Header.tsx — Corrección enlace MTG.
-- PROGRESS.md — Documentación v66.
+- frontend/index.html — Limpieza y script de limpieza de caché/Service Workers.
+- frontend/src/components/Admin/BulkRarityOfferModal.tsx — Descuentos por rareza dinámicos y opcionales.
+- frontend/src/pages/Admin/InventoryPage.tsx — Integración de gameCode en Bulk Modal.
+- frontend/src/utils/api.ts — Firma y validaciones de descuento por rareza + fetchDistinctRarities.
 
 ## ⏭️ Próxima acción recomendada
-Monitorear la carga y visualización de eventos tanto en el panel de administrador como en el TournamentHub para validar que sigan mostrando la hora exacta de Caracas (local) de forma consistente.
+Monitorear las implementaciones de descuentos por rareza en el panel administrativo de producción para verificar que funcionen con la carga dinámica de rarezas y sin fecha de finalización.
 
 ## 🚫 Restricciones activas
 - NO usar `npm` — solo `pnpm`

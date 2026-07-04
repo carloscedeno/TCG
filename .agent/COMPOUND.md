@@ -563,3 +563,18 @@ Siempre proveer un caso de evaluaciÃ³n estricto en sentencias SQL cuando el si
 
 **Regla derivada:**
 Los filtros de UI basados en 'novedades' no deben hardcodearse a set_codes a menos que haya una estrategia temporal definida con caducidad. De lo contrario, se pierde el descubrimiento orgánico de catálogo.
+
+## 2026-07-04 — Fixes de UI de Novedades y Fallbacks de Importación de Cartas
+
+**Qué pasó:** 
+1. El tag de "Nuevo" estaba hardcodeado a sets viejos (Strixhaven) y a una regla de `updated_at` que manchaba todo el catálogo tras un backfill masivo.
+2. El script de importación masiva (`import_manabox.py`) fallaba por un error `PGRST200` y `PGRST205` en Supabase al intentar hacer `JOIN` con la tabla `aggregated_prices`, dejando las cartas importadas sin precio ("MERCADO S/P") y sin imagen.
+3. El reseteo de contraseñas tenía una condición de carrera asíncrona porque React Router y la sesión asíncrona no inicializaban el token a tiempo.
+
+**Lo que cambió:**
+- `Card.tsx` y `InventoryPage.tsx` → Removida la lógica basada en fecha y limitados los tags explícitamente a sets de Marvel `['msh', 'msc', 'mar']`.
+- `import_manabox.py` → Divididas las consultas en peticiones seriales a `card_printings` y `aggregated_prices` para evadir el bug de la caché del esquema PostgREST. Añadido fallback a la columna `Purchase price` del CSV.
+- `UpdatePassword.tsx` → Extracción explícita del hash (`#access_token=`) e invocación manual de `setSession` antes de actualizar la contraseña.
+
+**Regla derivada:**
+En scripts ETL de backend, cuando Supabase/PostgREST falle por caché de relaciones de esquema, desacoplar una consulta embebida `A(B)` en dos lecturas seriales independientes evita el error sin penalización excesiva de rendimiento. Además, en flujos de OAuth o Reset, siempre extraer y asegurar la sesión desde los fragmentos de la URL local si el cliente SDK sufre race conditions.

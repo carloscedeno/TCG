@@ -51,15 +51,21 @@ def import_manabox_csv(file_path: str, game: str = 'MTG'):
             
             for row in reader:
                 name = row.get('Name') or row.get('name')
+                if not name:
+                    continue
                 set_code = row.get('Set code') or row.get('set_code')
                 quantity = int(row.get('Quantity') or row.get('quantity') or 1)
                 rarity = row.get('Rarity') or row.get('rarity')
                 condition = map_condition(row.get('Condition') or '')
                 finish = map_finish(row.get('Foil') or '')
                 scryfall_id = row.get('Scryfall ID') or row.get('scryfall_id')
-                
-                if not name:
-                    continue
+                purchase_price = 0.0
+                try:
+                    p_price = row.get('Purchase price') or row.get('purchase_price')
+                    if p_price:
+                        purchase_price = float(p_price)
+                except Exception:
+                    pass
 
                 image_url = None
                 market_price = 0
@@ -69,24 +75,22 @@ def import_manabox_csv(file_path: str, game: str = 'MTG'):
                 # First try by printing_id if we have it
                 try:
                     if printing_id:
-                        res = admin_client.table('card_printings').select(
-                            'image_url, aggregated_prices(avg_market_price_usd)'
-                        ).eq('printing_id', printing_id).limit(1).execute()
+                        res = admin_client.table('card_printings').select('image_url').eq('printing_id', printing_id).limit(1).execute()
                         
                         if res.data:
                             match = res.data[0]
                             image_url = match.get('image_url')
-                            prices = match.get('aggregated_prices') or []
-                            if isinstance(prices, list) and prices:
-                                market_price = prices[0].get('avg_market_price_usd') or 0
-                            elif isinstance(prices, dict):
-                                market_price = prices.get('avg_market_price_usd') or 0
+                            
+                            # Fetch price directly
+                            price_res = admin_client.table('aggregated_prices').select('avg_market_price_usd').eq('printing_id', printing_id).limit(1).execute()
+                            if price_res.data and price_res.data[0].get('avg_market_price_usd'):
+                                market_price = float(price_res.data[0].get('avg_market_price_usd'))
                     
                     # If we STILL don't have image/price, try name/set search
                     if not image_url:
                         print(f"🔍 Searching metadata for: {name} ({set_code or 'Unknown Set'})...")
                         query = admin_client.table('card_printings').select(
-                            'printing_id, image_url, cards!inner(card_name), sets!inner(set_code), aggregated_prices(avg_market_price_usd)'
+                            'printing_id, image_url, cards!inner(card_name), sets!inner(set_code)'
                         ).eq('cards.card_name', name)
                         
                         if set_code:
@@ -97,7 +101,7 @@ def import_manabox_csv(file_path: str, game: str = 'MTG'):
                         if not res.data:
                              # Try fuzzy search if exact name/set failed
                              res = admin_client.table('card_printings').select(
-                                'printing_id, image_url, cards!inner(card_name), sets!inner(set_code), aggregated_prices(avg_market_price_usd)'
+                                'printing_id, image_url, cards!inner(card_name), sets!inner(set_code)'
                             ).ilike('cards.card_name', f'%{name}%').limit(1).execute()
 
                         if res.data:
@@ -105,14 +109,19 @@ def import_manabox_csv(file_path: str, game: str = 'MTG'):
                             if not printing_id:
                                 printing_id = match.get('printing_id')
                             image_url = match.get('image_url')
-                            prices = match.get('aggregated_prices') or []
-                            if isinstance(prices, list) and prices:
-                                market_price = prices[0].get('avg_market_price_usd') or 0
-                            elif isinstance(prices, dict):
-                                market_price = prices.get('avg_market_price_usd') or 0
+                            
+                            if printing_id:
+                                price_res = admin_client.table('aggregated_prices').select('avg_market_price_usd').eq('printing_id', printing_id).limit(1).execute()
+                                if price_res.data and price_res.data[0].get('avg_market_price_usd'):
+                                    market_price = float(price_res.data[0].get('avg_market_price_usd'))
                         else:
-                            print(f"  ❌ No metadata found for: {name} in set {set_code}")                except Exception as e:
+                            print(f"  ❌ No metadata found for: {name} in set {set_code}")
+                except Exception as e:
                     print(f"  ⚠️ Lookup failed for {name}: {e}")
+
+                # Use CSV purchase price as fallback if no market price is found
+                if not market_price or market_price == 0:
+                    market_price = purchase_price
 
                 products_to_process.append({
                     "name": name,
