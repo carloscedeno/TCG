@@ -90,7 +90,7 @@ def import_manabox_csv(file_path: str, game: str = 'MTG'):
                     if not image_url:
                         print(f"🔍 Searching metadata for: {name} ({set_code or 'Unknown Set'})...")
                         query = admin_client.table('card_printings').select(
-                            'printing_id, image_url, cards!inner(card_name), sets!inner(set_code)'
+                            'printing_id, image_url, cards!inner(card_name, colors, type_line), sets!inner(set_code, set_name)'
                         ).eq('cards.card_name', name)
                         
                         if set_code:
@@ -101,7 +101,7 @@ def import_manabox_csv(file_path: str, game: str = 'MTG'):
                         if not res.data:
                              # Try fuzzy search if exact name/set failed
                              res = admin_client.table('card_printings').select(
-                                'printing_id, image_url, cards!inner(card_name), sets!inner(set_code)'
+                                'printing_id, image_url, cards!inner(card_name, colors, type_line), sets!inner(set_code, set_name)'
                             ).ilike('cards.card_name', f'%{name}%').limit(1).execute()
 
                         if res.data:
@@ -120,6 +120,14 @@ def import_manabox_csv(file_path: str, game: str = 'MTG'):
                             else:
                                 colors = None
                                 type_line = None
+                                
+                            sets_data = match.get('sets')
+                            if isinstance(sets_data, dict):
+                                set_name = sets_data.get('set_name')
+                            elif isinstance(sets_data, list) and len(sets_data) > 0:
+                                set_name = sets_data[0].get('set_name')
+                            else:
+                                set_name = None
                             
                             if printing_id:
                                 price_res = admin_client.table('aggregated_prices').select('avg_market_price_usd').eq('printing_id', printing_id).limit(1).execute()
@@ -127,8 +135,10 @@ def import_manabox_csv(file_path: str, game: str = 'MTG'):
                                     market_price = float(price_res.data[0].get('avg_market_price_usd'))
                         else:
                             print(f"  ❌ No metadata found for: {name} in set {set_code}")
+                            set_name = None
                 except Exception as e:
                     print(f"  ⚠️ Lookup failed for {name}: {e}")
+                    set_name = None
 
                 # Use CSV purchase price as fallback if no market price is found
                 if not market_price or market_price == 0:
@@ -138,6 +148,7 @@ def import_manabox_csv(file_path: str, game: str = 'MTG'):
                     "name": name,
                     "game": game,
                     "set_code": set_code,
+                    "set_name": set_name,
                     "stock": quantity,
                     "price": market_price,
                     "image_url": image_url,
@@ -180,6 +191,7 @@ def import_manabox_csv(file_path: str, game: str = 'MTG'):
                     "name": item['name'],
                     "game": item['game'],
                     "set_code": item['set_code'],
+                    "set_name": item['set_name'],
                     "price": item['price'],
                     "stock": item['stock'],
                     "image_url": item['image_url'],
