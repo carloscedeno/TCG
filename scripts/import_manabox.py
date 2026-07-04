@@ -110,6 +110,17 @@ def import_manabox_csv(file_path: str, game: str = 'MTG'):
                                 printing_id = match.get('printing_id')
                             image_url = match.get('image_url')
                             
+                            cards_data = match.get('cards')
+                            if isinstance(cards_data, dict):
+                                colors = cards_data.get('colors')
+                                type_line = cards_data.get('type_line')
+                            elif isinstance(cards_data, list) and len(cards_data) > 0:
+                                colors = cards_data[0].get('colors')
+                                type_line = cards_data[0].get('type_line')
+                            else:
+                                colors = None
+                                type_line = None
+                            
                             if printing_id:
                                 price_res = admin_client.table('aggregated_prices').select('avg_market_price_usd').eq('printing_id', printing_id).limit(1).execute()
                                 if price_res.data and price_res.data[0].get('avg_market_price_usd'):
@@ -130,6 +141,8 @@ def import_manabox_csv(file_path: str, game: str = 'MTG'):
                     "stock": quantity,
                     "price": market_price,
                     "image_url": image_url,
+                    "colors": colors,
+                    "type_line": type_line,
                     "rarity": rarity,
                     "printing_id": printing_id,
                     "condition": condition,
@@ -170,6 +183,8 @@ def import_manabox_csv(file_path: str, game: str = 'MTG'):
                     "price": item['price'],
                     "stock": item['stock'],
                     "image_url": item['image_url'],
+                    "colors": item['colors'],
+                    "type_line": item['type_line'],
                     "rarity": item['rarity'],
                     "condition": item['condition'],
                     "finish": item['finish']
