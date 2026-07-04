@@ -42,7 +42,10 @@ export interface CardProps {
   onClick?: () => void;
 }
 
-export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, price, original_price, discount_percentage, card_id, rarity, type, card_faces, viewMode = 'grid', total_stock, finish, is_foil, isArchive, showCartButton = false, is_accessory, accessory_id, additional_images, onClick }) => {
+export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, price, original_price, discount_percentage, card_id, rarity, type, card_faces, viewMode = 'grid', total_stock, finish, is_foil, isArchive, showCartButton = false, is_accessory, accessory_id, additional_images, onClick, updated_at }) => {
+  const isNewSet = ['sos', 'soa', 'soc', 'tsos', 'msh', 'msc', 'mar'].includes(set?.toLowerCase());
+  const isRecentlyUpdated = updated_at ? (new Date().getTime() - new Date(updated_at).getTime() < 14 * 24 * 60 * 60 * 1000) : false;
+  const isNew = isNewSet || isRecentlyUpdated;
   const [currentFaceIndex, setCurrentFaceIndex] = useState(0);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [addingToCart, setAddingToCart] = useState(false);
@@ -149,7 +152,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
             {isPresale && (
               <span className="px-1.5 py-0.5 bg-geeko-cyan text-black text-[7px] font-black uppercase rounded shadow-lg shadow-geeko-cyan/20">Preventa</span>
             )}
-            {['sos', 'soa', 'soc', 'tsos'].includes(set?.toLowerCase()) && (
+            {isNew && (
               <span className="px-1.5 py-0.5 bg-purple-600 text-[7px] font-black uppercase rounded shadow-lg shadow-purple-500/20 animate-pulse">Nuevo</span>
             )}
           </h3>
@@ -258,7 +261,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
       )}
 
       {/* NEW Badge Overlay */}
-      {['sos', 'soa', 'soc', 'tsos'].includes(set?.toLowerCase()) && (
+      {isNew && (
         <div className={`absolute ${isPresale ? 'top-10' : 'top-2'} left-2 z-10 px-2 py-1 bg-purple-600 text-white text-[8px] font-black uppercase rounded shadow-lg shadow-purple-600/30 flex items-center gap-1 animate-in zoom-in duration-300`}>
           <div className="w-1 h-1 bg-white rounded-full animate-ping" />
           Nuevo
