@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <meta charset="UTF-8" />
@@ -11,48 +11,29 @@
   <link rel="apple-touch-icon" href="/logo-emporio.png" />
   <!-- Network Optimizations -->
   <link rel="preconnect" href="https://cards.scryfall.io" />
-  <!-- SEO Meta Tags -->
-  <title>Geekorium Emporio Mágico</title>
-  <meta name="description"
-    content="Geekorium — Tu tienda de cartas coleccionables en Venezuela. Magic: The Gathering, Pokémon, Yu-Gi-Oh!, Lorcana y más." />
-  <meta name="keywords"
-    content="cartas coleccionables, Magic the Gathering, Pokémon, Yu-Gi-Oh, TCG, Venezuela, Geekorium" />
-  <meta name="author" content="Geekorium" />
-  <meta name="robots" content="%VITE_ROBOTS%" />
-  <link rel="canonical" href="https://geekorium.shop" />
+  
+  <!-- Forced Cache Clear Script -->
+  <script>
+    // Forced Cache Clear on new deployments
+    const DEPLOY_VERSION = "20260704-bulk-rarity-discount";
+    if (localStorage.getItem("GEEKO_DEPLOY_VERSION") !== DEPLOY_VERSION) {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          for(let registration of registrations) {
+            registration.unregister();
+          }
+        });
+      }
+      if ('caches' in window) {
+        caches.keys().then(function(names) {
+          for (let name of names) caches.delete(name);
+        });
+      }
+      localStorage.setItem("GEEKO_DEPLOY_VERSION", DEPLOY_VERSION);
+      console.log("Forced Cache Cleared for version: " + DEPLOY_VERSION);
+    }
+  </script>
 
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://geekorium.shop" />
-  <meta property="og:title" content="Geekorium Emporio Mágico" />
-  <meta property="og:description"
-    content="Geekorium — Tu tienda de cartas coleccionables en Venezuela. Magic: The Gathering, Pokémon, Yu-Gi-Oh!, Lorcana y más." />
-  <meta property="og:image" content="https://geekorium.shop/branding/Logo.png" />
-
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:url" content="https://geekorium.shop" />
-  <meta property="twitter:title" content="Geekorium Emporio Mágico" />
-  <meta property="twitter:description"
-    content="Geekorium — Tu tienda de cartas coleccionables en Venezuela. Magic: The Gathering, Pokémon, Yu-Gi-Oh!, Lorcana y más." />
-  <meta property="twitter:image" content="https://geekorium.shop/branding/Logo.png" />
-
-  <!-- Mana Font for MTG Symbols -->
-  <link href="https://cdn.jsdelivr.net/npm/mana-font@latest/css/mana.css" rel="stylesheet" type="text/css" />
-</head>
-<!doctype html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/jpeg" href="/favicon.jpg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="theme-color" content="#0a0a0a" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <link rel="apple-touch-icon" href="/logo-emporio.png" />
-  <!-- Network Optimizations -->
-  <link rel="preconnect" href="https://cards.scryfall.io" />
   <!-- SEO Meta Tags -->
   <title>Geekorium Emporio Mágico</title>
   <meta name="description"
@@ -88,4 +69,4 @@
   <script type="module" src="/src/main.tsx"></script>
 </body>
 
-</html><!-- Trigger rebuild for main branch -- >
+</html>
