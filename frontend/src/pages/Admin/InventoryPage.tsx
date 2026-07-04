@@ -967,6 +967,7 @@ export function InventoryPage() {
             <BulkRarityOfferModal
                 isOpen={isBulkRarityModalOpen}
                 onClose={() => setIsBulkRarityModalOpen(false)}
+                gameCode={selectedGame || undefined}
                 onSuccess={() => {
                     fetchInventory();
                 }}
