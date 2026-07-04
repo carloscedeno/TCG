@@ -689,7 +689,7 @@ export function InventoryPage() {
                                                     <div className="flex flex-col min-w-0 max-w-[200px] md:max-w-md">
                                                         <span className="text-sm font-black text-white italic tracking-tight lowercase truncate">
                                                             {item.name}
-                                                            {((item.set_code && ['sos', 'soa', 'soc', 'tsos', 'msh', 'msc', 'mar'].includes(item.set_code.toLowerCase())) || (item.updated_at && new Date().getTime() - new Date(item.updated_at).getTime() < 14 * 24 * 60 * 60 * 1000)) && (
+                                                            {item.set_code && ['msh', 'msc', 'mar'].includes(item.set_code.toLowerCase()) && (
                                                                 <span className="ml-2 items-center px-1.5 py-0.5 bg-gradient-to-r from-purple-500 to-pink-500 text-[7px] font-black uppercase rounded shadow-lg shadow-purple-500/20 animate-in fade-in zoom-in duration-500">Nuevo</span>
                                                             )}
                                                         </span>

@@ -43,9 +43,7 @@ export interface CardProps {
 }
 
 export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, price, original_price, discount_percentage, card_id, rarity, type, card_faces, viewMode = 'grid', total_stock, finish, is_foil, isArchive, showCartButton = false, is_accessory, accessory_id, additional_images, onClick, updated_at }) => {
-  const isNewSet = ['sos', 'soa', 'soc', 'tsos', 'msh', 'msc', 'mar'].includes(set?.toLowerCase());
-  const isRecentlyUpdated = updated_at ? (new Date().getTime() - new Date(updated_at).getTime() < 14 * 24 * 60 * 60 * 1000) : false;
-  const isNew = isNewSet || isRecentlyUpdated;
+  const isNew = ['msh', 'msc', 'mar'].includes(set?.toLowerCase());
   const [currentFaceIndex, setCurrentFaceIndex] = useState(0);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [addingToCart, setAddingToCart] = useState(false);
