@@ -21,7 +21,7 @@ export const UserCreditsManager: React.FC = () => {
             
             if (searchTerm.trim()) {
                 const s = `%${searchTerm.trim()}%`;
-                query = query.or(`username.ilike.${s},first_name.ilike.${s},last_name.ilike.${s},email.ilike.${s}`);
+                query = query.or(`username.ilike.${s},first_name.ilike.${s},last_name.ilike.${s},email.ilike.${s},cedula.ilike.${s}`);
             } else {
                 query = query.order('geek_credits', { ascending: false }).limit(50);
             }
@@ -106,10 +106,10 @@ export const UserCreditsManager: React.FC = () => {
                             </div>
                             <input 
                                 type="text" 
-                                placeholder="Buscar por usuario, nombre o correo..."
+                                placeholder="Buscar por usuario, nombre, correo o cédula..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="bg-black/40 border border-white/10 rounded-2xl py-3 pl-11 pr-4 text-sm text-white focus:outline-none focus:border-geeko-gold focus:ring-1 focus:ring-geeko-gold/50 transition-all w-80 placeholder:text-slate-600"
+                                className="bg-black/40 border border-white/10 rounded-2xl py-3 pl-11 pr-4 text-sm text-white focus:outline-none focus:border-geeko-gold focus:ring-1 focus:ring-geeko-gold/50 transition-all w-88 placeholder:text-slate-600"
                             />
                         </div>
                         <button 
@@ -143,7 +143,8 @@ export const UserCreditsManager: React.FC = () => {
                                                 {u.email && <div className="text-xs text-slate-500 font-normal mt-0.5">{u.email}</div>}
                                             </td>
                                             <td className="px-6 py-4 text-slate-400">
-                                                {u.first_name || u.last_name ? `${u.first_name || ''} ${u.last_name || ''}` : <span className="text-slate-600 italic">-</span>}
+                                                <div>{u.first_name || u.last_name ? `${u.first_name || ''} ${u.last_name || ''}` : <span className="text-slate-600 italic">-</span>}</div>
+                                                {u.cedula && <div className="text-xs text-slate-500 mt-0.5">C.I. {u.cedula}</div>}
                                             </td>
                                             <td className="px-6 py-4 text-right">
                                                 <span className={`font-black px-3 py-1.5 rounded-lg text-xs ${u.geek_credits > 0 ? 'bg-geeko-gold/10 text-geeko-gold border border-geeko-gold/20' : 'text-slate-500 bg-white/5 border border-white/5'}`}>
