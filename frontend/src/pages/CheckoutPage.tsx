@@ -98,6 +98,18 @@ export const CheckoutPage = () => {
         }
     };
 
+    const [showCompleteProfileModal, setShowCompleteProfileModal] = useState(false);
+    const [savingProfile, setSavingProfile] = useState(false);
+    const [profileSaveError, setProfileSaveError] = useState<string | null>(null);
+    const [profileForm, setProfileForm] = useState({
+        first_name: '',
+        last_name: '',
+        cedula_prefix: 'V',
+        cedula_number: '',
+        phone: '',
+        address: ''
+    });
+
     useEffect(() => {
         const loadProfile = async () => {
             const { data: { user } } = await supabase.auth.getUser();
@@ -109,22 +121,83 @@ export const CheckoutPage = () => {
                     .single();
 
                 if (profile) {
+                    const cedulaStr = profile.cedula || '';
+                    const parsedPrefix = cedulaStr.startsWith('E-') ? 'E' : 'V';
+                    const parsedNumber = cedulaStr.replace(/^[VE]-/, '').replace(/\D/g, '');
+
+                    setProfileForm({
+                        first_name: profile.first_name || '',
+                        last_name: profile.last_name || '',
+                        cedula_prefix: parsedPrefix,
+                        cedula_number: parsedNumber,
+                        phone: profile.phone || '',
+                        address: profile.address || ''
+                    });
+
                     setForm(prev => ({
                         ...prev,
                         full_name: profile.first_name ? `${profile.first_name} ${profile.last_name || ''}`.trim() : prev.full_name,
                         whatsapp: profile.phone || prev.whatsapp,
                         email: user.email || prev.email,
                         address: profile.address || prev.address,
-                        cedula_number: profile.cedula ? profile.cedula.replace(/\D/g, '') : prev.cedula_number,
+                        cedula_number: parsedNumber || prev.cedula_number,
+                        cedula_prefix: parsedPrefix as 'V' | 'E',
                     }));
+
+                    if (!profile.first_name || !profile.last_name || !profile.phone || !profile.cedula) {
+                        setShowCompleteProfileModal(true);
+                    }
                 } else {
                     setForm(prev => ({ ...prev, email: user.email || prev.email }));
+                    setShowCompleteProfileModal(true);
                 }
                 loadAddresses();
             }
         };
         loadProfile();
     }, []);
+
+    const handleSaveProfile = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setSavingProfile(true);
+        setProfileSaveError(null);
+
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) throw new Error("No hay un usuario activo.");
+
+            const fullCedula = `${profileForm.cedula_prefix}-${profileForm.cedula_number}`;
+
+            const { error } = await supabase
+                .from('profiles')
+                .update({
+                    first_name: profileForm.first_name.trim(),
+                    last_name: profileForm.last_name.trim(),
+                    cedula: fullCedula,
+                    phone: profileForm.phone.trim(),
+                    address: profileForm.address.trim()
+                })
+                .eq('id', user.id);
+
+            if (error) throw error;
+
+            setForm(prev => ({
+                ...prev,
+                full_name: `${profileForm.first_name.trim()} ${profileForm.last_name.trim()}`,
+                whatsapp: profileForm.phone.trim(),
+                address: profileForm.address.trim(),
+                cedula_number: profileForm.cedula_number,
+                cedula_prefix: profileForm.cedula_prefix as 'V' | 'E'
+            }));
+
+            setShowCompleteProfileModal(false);
+        } catch (err: any) {
+            console.error("Error saving profile details:", err);
+            setProfileSaveError(err.message || "Error al guardar los datos de perfil.");
+        } finally {
+            setSavingProfile(false);
+        }
+    };
 
     const handleAddressChange = (addrId: string) => {
         setSelectedAddressId(addrId);
@@ -717,6 +790,112 @@ export const CheckoutPage = () => {
                 </div>
                 </div>
             </div>
+            {showCompleteProfileModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
+                    <div className="bg-slate-900 border border-white/10 rounded-[2rem] p-6 max-w-md w-full shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="p-3 bg-gradient-to-br from-geeko-gold/20 to-orange-600/20 rounded-2xl border border-geeko-gold/30">
+                                <AlertCircle className="text-geeko-gold" size={24} />
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-black italic text-white tracking-tighter uppercase">Completa tus Datos</h3>
+                                <p className="text-xs text-slate-400">Requerimos completar tu perfil antes de continuar con la compra.</p>
+                            </div>
+                        </div>
+
+                        <form onSubmit={handleSaveProfile} className="space-y-4">
+                            <div className="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label className="block text-[10px] text-geeko-gold font-black uppercase tracking-widest mb-1.5">Nombre</label>
+                                    <input
+                                        type="text"
+                                        required
+                                        value={profileForm.first_name}
+                                        onChange={(e) => setProfileForm(prev => ({ ...prev, first_name: e.target.value }))}
+                                        className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-geeko-gold transition-all"
+                                        placeholder="Erika"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-[10px] text-geeko-gold font-black uppercase tracking-widest mb-1.5">Apellido</label>
+                                    <input
+                                        type="text"
+                                        required
+                                        value={profileForm.last_name}
+                                        onChange={(e) => setProfileForm(prev => ({ ...prev, last_name: e.target.value }))}
+                                        className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-geeko-gold transition-all"
+                                        placeholder="García"
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-[10px] text-geeko-gold font-black uppercase tracking-widest mb-1.5">Cédula</label>
+                                <div className="flex gap-2">
+                                    <select
+                                        value={profileForm.cedula_prefix}
+                                        onChange={(e) => setProfileForm(prev => ({ ...prev, cedula_prefix: e.target.value }))}
+                                        className="bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-geeko-gold"
+                                    >
+                                        <option value="V">V</option>
+                                        <option value="E">E</option>
+                                    </select>
+                                    <input
+                                        type="text"
+                                        required
+                                        value={profileForm.cedula_number}
+                                        onChange={(e) => setProfileForm(prev => ({ ...prev, cedula_number: e.target.value.replace(/\D/g, '') }))}
+                                        className="flex-1 bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-geeko-gold transition-all"
+                                        placeholder="12345678"
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-[10px] text-geeko-gold font-black uppercase tracking-widest mb-1.5">Teléfono / WhatsApp</label>
+                                <input
+                                    type="tel"
+                                    required
+                                    value={profileForm.phone}
+                                    onChange={(e) => setProfileForm(prev => ({ ...prev, phone: e.target.value }))}
+                                    className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-geeko-gold transition-all"
+                                    placeholder="04141234567"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-[10px] text-geeko-gold font-black uppercase tracking-widest mb-1.5">Dirección de Envío</label>
+                                <textarea
+                                    required
+                                    rows={2}
+                                    value={profileForm.address}
+                                    onChange={(e) => setProfileForm(prev => ({ ...prev, address: e.target.value }))}
+                                    className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-geeko-gold transition-all resize-none"
+                                    placeholder="Calle, edif, nro, apto, zona..."
+                                />
+                            </div>
+
+                            {profileSaveError && (
+                                <p className="text-xs text-rose-500 font-semibold">{profileSaveError}</p>
+                            )}
+
+                            <button
+                                type="submit"
+                                disabled={savingProfile}
+                                className="w-full mt-2 py-3 bg-geeko-gold hover:bg-yellow-500 disabled:bg-slate-700 text-black font-black uppercase tracking-widest rounded-xl transition-all text-xs flex items-center justify-center gap-2"
+                            >
+                                {savingProfile ? (
+                                    <>
+                                        <Loader2 className="animate-spin" size={14} /> Guardando...
+                                    </>
+                                ) : (
+                                    'Guardar y Continuar'
+                                )}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
