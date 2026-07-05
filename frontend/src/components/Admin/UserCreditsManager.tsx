@@ -15,11 +15,18 @@ export const UserCreditsManager: React.FC = () => {
     const fetchData = async () => {
         setLoading(true);
         if (activeTab === 'users') {
-            const { data, error } = await supabase
+            let query = supabase
                 .from('profiles')
-                .select('*')
-                .order('geek_credits', { ascending: false })
-                .limit(50);
+                .select('*');
+            
+            if (searchTerm.trim()) {
+                const s = `%${searchTerm.trim()}%`;
+                query = query.or(`username.ilike.${s},first_name.ilike.${s},last_name.ilike.${s},email.ilike.${s}`);
+            } else {
+                query = query.order('geek_credits', { ascending: false }).limit(50);
+            }
+            
+            const { data, error } = await query;
             
             if (error) console.error("Error fetching users:", error);
             if (data) setUsers(data);
@@ -31,8 +38,8 @@ export const UserCreditsManager: React.FC = () => {
                     amount,
                     reason,
                     created_at,
-                    user:profiles!credit_history_user_id_fkey ( username, first_name, last_name ),
-                    admin:profiles!credit_history_admin_id_fkey ( username, first_name, last_name )
+                    user:profiles!credit_history_user_id_fkey ( username, first_name, last_name, email ),
+                    admin:profiles!credit_history_admin_id_fkey ( username, first_name, last_name, email )
                 `)
                 .order('created_at', { ascending: false })
                 .limit(100);
@@ -44,14 +51,15 @@ export const UserCreditsManager: React.FC = () => {
     };
 
     useEffect(() => {
-        fetchData();
-    }, [activeTab]);
-
-    const filteredUsers = users.filter(u => 
-        (u.username && u.username.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (u.first_name && u.first_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (u.last_name && u.last_name.toLowerCase().includes(searchTerm.toLowerCase()))
-    );
+        if (activeTab === 'users') {
+            const delayDebounceFn = setTimeout(() => {
+                fetchData();
+            }, 300);
+            return () => clearTimeout(delayDebounceFn);
+        } else {
+            fetchData();
+        }
+    }, [activeTab, searchTerm]);
 
     const handleManage = (user: any) => {
         setSelectedUser(user);
@@ -98,10 +106,10 @@ export const UserCreditsManager: React.FC = () => {
                             </div>
                             <input 
                                 type="text" 
-                                placeholder="Buscar usuario..."
+                                placeholder="Buscar por usuario, nombre o correo..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="bg-black/40 border border-white/10 rounded-2xl py-3 pl-11 pr-4 text-sm text-white focus:outline-none focus:border-geeko-gold focus:ring-1 focus:ring-geeko-gold/50 transition-all w-72 placeholder:text-slate-600"
+                                className="bg-black/40 border border-white/10 rounded-2xl py-3 pl-11 pr-4 text-sm text-white focus:outline-none focus:border-geeko-gold focus:ring-1 focus:ring-geeko-gold/50 transition-all w-80 placeholder:text-slate-600"
                             />
                         </div>
                         <button 
@@ -125,13 +133,14 @@ export const UserCreditsManager: React.FC = () => {
                             <tbody className="divide-y divide-white/5">
                                 {loading ? (
                                     <tr><td colSpan={4} className="px-6 py-12 text-center text-slate-500 font-bold tracking-widest text-[10px]">CARGANDO USUARIOS...</td></tr>
-                                ) : filteredUsers.length === 0 ? (
+                                ) : users.length === 0 ? (
                                     <tr><td colSpan={4} className="px-6 py-12 text-center text-slate-500 font-bold tracking-widest text-[10px]">NO SE ENCONTRARON USUARIOS.</td></tr>
                                 ) : (
-                                    filteredUsers.map((u) => (
+                                    users.map((u) => (
                                         <tr key={u.id} className="hover:bg-white/5 transition-colors group">
                                             <td className="px-6 py-4 font-bold text-white">
-                                                {u.username || <span className="text-slate-600 italic">Sin username</span>}
+                                                <div>{u.username || <span className="text-slate-600 italic">Sin username</span>}</div>
+                                                {u.email && <div className="text-xs text-slate-500 font-normal mt-0.5">{u.email}</div>}
                                             </td>
                                             <td className="px-6 py-4 text-slate-400">
                                                 {u.first_name || u.last_name ? `${u.first_name || ''} ${u.last_name || ''}` : <span className="text-slate-600 italic">-</span>}
