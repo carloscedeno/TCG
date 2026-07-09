@@ -578,3 +578,22 @@ Los filtros de UI basados en 'novedades' no deben hardcodearse a set_codes a men
 
 **Regla derivada:**
 En scripts ETL de backend, cuando Supabase/PostgREST falle por cachÃ© de relaciones de esquema, desacoplar una consulta embebida `A(B)` en dos lecturas seriales independientes evita el error sin penalizaciÃ³n excesiva de rendimiento. AdemÃ¡s, en flujos de OAuth o Reset, siempre extraer y asegurar la sesiÃ³n desde los fragmentos de la URL local si el cliente SDK sufre race conditions.
+
+# ?? COMPOUND: Corrección de eliminación de órdenes y artículos (RPC)
+
+**Date**: 2026-07-09
+
+## Objective
+Resolver los errores en producción en el panel de administrador al intentar eliminar un artículo de un pedido (error al recalcular o por RPC faltante) y al hacer soft_delete del pedido entero.
+
+## Knowledge Codification
+
+### 1. Funciones RPC para Órdenes
+- **Feature**: Creación de delete_order_item_v1 y soft_delete_order para manejar la eliminación controlada de artículos y pedidos enteros, reabasteciendo el inventario automáticamente.
+- **Lesson 1**: En order_items, el precio unitario se guarda como price_at_purchase, no unit_price. El uso incorrecto del nombre de la columna en funciones PL/pgSQL generará un error ecord has no field.
+- **Lesson 2**: Al eliminar un artículo de un pedido activo (o hacer un borrado lógico del pedido a status = 'deleted'), es crucial devolver las cantidades descontadas (+ quantity) al stock original, sea producto o accesorio, para evitar inconsistencias en el inventario real.
+
+## Technical Validation
+- **Backend**: Migraciones aplicadas en producción con éxito.
+- **Frontend**: Corregido error en build sobre variable session faltante.
+
