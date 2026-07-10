@@ -6,13 +6,14 @@ import {
     ChevronUp, ChevronDown, ChevronLeft, Check,
     ArrowUpDown,
     FileUp, ArrowDownFromLine,
-    Download, ShoppingCart, Sparkles, Tag
+    Download, ShoppingCart, Sparkles, Tag, PackagePlus
 } from "lucide-react";
 import { ImportInventoryModal } from "../../components/Admin/ImportInventoryModal";
 import { EgressInventoryModal } from "../../components/Admin/EgressInventoryModal";
 import { OfferManagementModal } from "../../components/Admin/OfferManagementModal";
 import { BulkRarityOfferModal } from "../../components/Admin/BulkRarityOfferModal";
 import { useCart } from "../../context/CartContext";
+import { useAuth } from "../../context/AuthContext";
 import { addProductToCart, isDiscountActive, manageProductOffer } from "../../utils/api";
 
 interface InventoryItem {
@@ -75,6 +76,7 @@ export function InventoryPage() {
 
     // Cart Integration
     const { activeCartName, currentIsPos } = useCart();
+    const { session } = useAuth();
     const [addingId, setAddingId] = useState<string | null>(null);
 
     const pageSize = 50;
@@ -264,6 +266,40 @@ export function InventoryPage() {
             fetchInventory();
         } catch (err: any) {
             alert("Error en eliminación por lotes: " + err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleBatchOdooSync = async () => {
+        if (!confirm(`¿Estás seguro de que deseas sincronizar ${selectedIds.size} artículos con Odoo?`)) return;
+
+        setLoading(true);
+        try {
+            const selectedItems = items.filter(i => selectedIds.has(i.product_id));
+            const API_BASE = import.meta.env.VITE_API_BASE || import.meta.env.VITE_SUPABASE_URL + '/functions/v1';
+            
+            const response = await fetch(`${API_BASE}/odoo-sync`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${session?.access_token}`
+                },
+                body: JSON.stringify({
+                    action: 'sync_inventory',
+                    payload: { items: selectedItems }
+                })
+            });
+
+            if (!response.ok) {
+                const err = await response.json().catch(() => ({}));
+                throw new Error(err.error || response.statusText);
+            }
+
+            alert("¡Sincronización con Odoo completada!");
+            setSelectedIds(new Set());
+        } catch (err: any) {
+            alert("Error en sincronización Odoo: " + err.message);
         } finally {
             setLoading(false);
         }
@@ -561,6 +597,12 @@ export function InventoryPage() {
                             </div>
 
                             <div className="flex items-center gap-3">
+                                <button
+                                    onClick={handleBatchOdooSync}
+                                    className="bg-blue-500 hover:bg-blue-600 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2"
+                                >
+                                    <PackagePlus size={14} /> Sync Odoo
+                                </button>
                                 <button
                                     onClick={handleBatchDelete}
                                     className="bg-red-500 hover:bg-red-600 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2"

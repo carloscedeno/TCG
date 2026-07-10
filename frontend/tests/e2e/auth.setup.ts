@@ -4,8 +4,7 @@ setup('authenticate as admin', async ({ page }) => {
     await page.goto('/admin/inventory');
     await page.waitForLoadState('networkidle');
 
-    await expect(page.getByText('Acceso Restringido')).toBeVisible({ timeout: 10000 });
-
+    // Acceso Restringido was removed from UI, just click the login button
     await page.getByRole('button', { name: /Ingresar al Sistema/i }).click();
 
     await expect(page.locator('input[type="email"]')).toBeVisible({ timeout: 5000 });
