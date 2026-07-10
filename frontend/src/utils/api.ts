@@ -1082,7 +1082,7 @@ export const createOrder = async (orderData: {
             customer_name: orderData.customerName || 'Web Customer'
           }
         }
-      }).catch(err => console.error("Failed to sync order to Odoo:", err));
+      }).catch((err: any) => console.error("Failed to sync order to Odoo:", err));
     }
 
     return data;
