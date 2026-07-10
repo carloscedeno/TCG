@@ -1040,6 +1040,7 @@ export const createOrder = async (orderData: {
   totalAmount: number;
   guestInfo?: { email: string; phone: string };
   cartId?: string;
+  customerName?: string;
 }): Promise<any> => {
   try {
     const { data, error } = await supabase.rpc('create_order_atomic', {
@@ -1057,6 +1058,27 @@ export const createOrder = async (orderData: {
     if (!orderData.userId) {
       localStorage.removeItem('guest_cart');
       window.dispatchEvent(new Event('cart-updated'));
+    }
+
+    // Fire & Forget: Sync order to Odoo
+    if (data) {
+      let email = orderData.guestInfo?.email || 'guest@geekorium.com';
+      if (orderData.userId && !orderData.guestInfo?.email) {
+        const { data: userData } = await supabase.auth.getUser();
+        if (userData.user?.email) email = userData.user.email;
+      }
+      
+      supabase.functions.invoke('odoo-sync', {
+        body: {
+          action: 'sync_order',
+          order_data: {
+            id: data,
+            items: orderData.items,
+            customer_email: email,
+            customer_name: orderData.customerName || 'Web Customer'
+          }
+        }
+      }).catch(err => console.error("Failed to sync order to Odoo:", err));
     }
 
     return data;

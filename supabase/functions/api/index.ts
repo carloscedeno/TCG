@@ -1046,6 +1046,36 @@ async function handleCartEndpoint(supabase: any, path: string, method: string, p
     })
 
     if (error) throw error
+
+    // Silently notify odoo-sync about the new order
+    try {
+      const orderData = {
+        customer_email: user.email,
+        customer_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Web Customer',
+        items: simplifiedItems,
+        total: total
+      };
+
+      // We call the local edge function
+      const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
+      const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY') || '';
+      
+      // Fire and forget or await briefly
+      fetch(`${supabaseUrl}/functions/v1/odoo-sync`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${supabaseAnonKey}`
+        },
+        body: JSON.stringify({
+          action: 'sync_order',
+          order_data: orderData
+        })
+      }).catch(err => console.error('[Odoo Sync] Error invoking odoo-sync:', err));
+    } catch (e) {
+      console.error('[Odoo Sync] Failed to prepare odoo sync payload:', e);
+    }
+
     return data
   }
 

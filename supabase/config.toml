@@ -1,0 +1,11 @@
+
+[functions.odoo-sync]
+enabled = true
+verify_jwt = false
+import_map = "./functions/odoo-sync/deno.json"
+entrypoint = "./functions/odoo-sync/index.ts"
+
+[functions.odoo-webhook]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/odoo-webhook/index.ts"
