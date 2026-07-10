@@ -5,19 +5,19 @@
 
 ---
 
-## 📅 Última sesión: 2026-07-04
-**Rama activa:** `main` (mezclada desde `dev`)
-**Último commit conocido:** feat: forzar limpieza de cache y unregister de Service Workers antiguos al desplegar
-**En progreso:** Ninguno — finalizando sesión (finalizado /finalize)
+## 📅 Última sesión: 2026-07-10
+**Rama activa:** `dev`
+**Último commit conocido:** feat: integracion de inventario, accesorios y checkout con Odoo
+**En progreso:** Implementación completa del flujo Checkout Web -> Odoo Sales Orders -> Webhook de Confirmación.
 
 ## 📁 Zona Caliente (archivos tocados recientemente)
-- frontend/index.html — Limpieza y script de limpieza de caché/Service Workers.
-- frontend/src/components/Admin/BulkRarityOfferModal.tsx — Descuentos por rareza dinámicos y opcionales.
-- frontend/src/pages/Admin/InventoryPage.tsx — Integración de gameCode en Bulk Modal.
-- frontend/src/utils/api.ts — Firma y validaciones de descuento por rareza + fetchDistinctRarities.
+- supabase/functions/odoo-sync/index.ts — Enviar client_order_ref a Odoo y buscar accesorios por odoo_id.
+- supabase/functions/odoo-webhook/index.ts — Recibir webhooks de sale.order y actualizar status de orders en supabase.
+- frontend/src/utils/api.ts — Trigger de odoo-sync en checkout.
+- supabase/migrations/20260710185000_add_odoo_order_id.sql — Nueva columna odoo_order_id.
 
 ## ⏭️ Próxima acción recomendada
-Monitorear las implementaciones de descuentos por rareza en el panel administrativo de producción para verificar que funcionen con la carga dinámica de rarezas y sin fecha de finalización.
+Validar el nuevo webhook de sale.order desde Odoo cuando el administrador apruebe crear la Acción Automatizada en Odoo. Probar el flujo end-to-end de compras.
 
 ## 🚫 Restricciones activas
 - NO usar `npm` — solo `pnpm`
