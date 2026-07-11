@@ -25,6 +25,28 @@ async function odooJsonRpc(url: string, method: string, params: any) {
   return json.result;
 }
 
+// Helper to download image and convert to Base64
+async function imageToBase64(url: string) {
+  try {
+    const response = await fetch(url, { headers: { 'User-Agent': 'GeekoriumSync/1.0' } });
+    if (!response.ok) return null;
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.startsWith('image/')) return null;
+    const arrayBuffer = await response.arrayBuffer();
+    // Convert to base64 in Deno/Edge runtime
+    let binary = '';
+    const bytes = new Uint8Array(arrayBuffer);
+    const len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary);
+  } catch (err) {
+    console.error("Error downloading image:", err);
+    return null;
+  }
+}
+
 // Ensure category exists and return its ID
 async function ensureCategory(url: string, db: string, uid: number, apiKey: string, name: string, parentId?: number) {
   const domain = [['name', '=', name]];
@@ -121,10 +143,26 @@ Deno.serve(async (req: Request) => {
            ? item.price * (1 - item.discount_percentage / 100)
            : item.price;
 
+        let base64Image = null;
+        if (item.image_url) {
+           base64Image = await imageToBase64(item.image_url);
+        }
+
         let productId;
         if (searchResult && searchResult.length > 0) {
           // Update
           productId = searchResult[0];
+          
+          const updatePayload: any = {
+            name: name,
+            list_price: listPrice,
+            categ_id: catSinglesId,
+            type: 'consu'
+          };
+          if (base64Image) {
+            updatePayload.image_512 = base64Image;
+          }
+
           await odooJsonRpc(odooUrl, 'call', {
             service: 'object',
             method: 'execute_kw',
@@ -132,17 +170,23 @@ Deno.serve(async (req: Request) => {
               odooDb, uid, odooApiKey, 
               'product.product', 
               'write', 
-              [[productId], {
-                name: name,
-                list_price: listPrice,
-                categ_id: catSinglesId,
-                type: 'consu' // Changed to consu to avoid Odoo SaaS Inventory constraint without Inventory app installed
-              }]
+              [[productId], updatePayload]
             ]
           });
           results.push({ id: item.product_id, status: 'updated' });
         } else {
           // Create
+          const createPayload: any = {
+            name: name,
+            default_code: item.product_id,
+            list_price: listPrice,
+            categ_id: catSinglesId,
+            type: 'consu'
+          };
+          if (base64Image) {
+            createPayload.image_512 = base64Image;
+          }
+
           productId = await odooJsonRpc(odooUrl, 'call', {
             service: 'object',
             method: 'execute_kw',
@@ -150,13 +194,7 @@ Deno.serve(async (req: Request) => {
               odooDb, uid, odooApiKey, 
               'product.product', 
               'create', 
-              [{
-                name: name,
-                default_code: item.product_id,
-                list_price: listPrice,
-                categ_id: catSinglesId,
-                type: 'consu'
-              }]
+              [createPayload]
             ]
           });
           results.push({ id: item.product_id, status: 'created' });
