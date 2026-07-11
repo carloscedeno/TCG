@@ -1,7 +1,8 @@
-﻿import os
+import os
 import xmlrpc.client
 import logging
 from typing import List, Dict
+from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 
 logger = logging.getLogger("OdooClient")
 
@@ -27,6 +28,15 @@ class OdooClient:
             except Exception as e:
                 logger.error(f"Failed to connect to Odoo XMLRPC: {e}")
 
+    @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=2, max=10), retry=retry_if_exception_type(xmlrpc.client.ProtocolError))
+    def _execute_write(self, odoo_id, price):
+        self.models.execute_kw(self.db, self.uid, self.password,
+            'product.product', 'write',
+            [[odoo_id], {
+                'list_price': float(price) # Ensure float type to avoid incongruence
+            }]
+        )
+
     def update_product_prices(self, price_updates: List[Dict]):
         if not self.uid:
             logger.warning("Skipping Odoo sync because client is not authenticated.")
@@ -37,6 +47,7 @@ class OdooClient:
             return
             
         try:
+            # Search for matching products - we don't retry search as it's less critical and we can just skip if it fails once
             product_ids = self.models.execute_kw(self.db, self.uid, self.password,
                 'product.product', 'search_read',
                 [[['default_code', 'in', default_codes]]],
@@ -44,19 +55,21 @@ class OdooClient:
             )
             
             code_to_id = { p['default_code']: p['id'] for p in product_ids }
+            logger.info(f"Found {len(code_to_id)}/{len(default_codes)} matching products in Odoo.")
             
             updates = 0
+            failures = 0
+            
             for update in price_updates:
                 code = update['default_code']
                 if code in code_to_id:
-                    self.models.execute_kw(self.db, self.uid, self.password,
-                        'product.product', 'write',
-                        [[code_to_id[code]], {
-                            'list_price': update['price']
-                        }]
-                    )
-                    updates += 1
+                    try:
+                        self._execute_write(code_to_id[code], update['price'])
+                        updates += 1
+                    except Exception as we:
+                        logger.error(f"Failed to write price for {code} in Odoo: {we}")
+                        failures += 1
             
-            logger.info(f"Successfully synced {updates} prices to Odoo.")
+            logger.info(f"Odoo sync summary: {updates} success, {failures} failed.")
         except Exception as e:
-            logger.error(f"Error syncing prices to Odoo: {e}")
+            logger.error(f"Error searching products in Odoo: {e}")

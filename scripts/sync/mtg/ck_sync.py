@@ -291,7 +291,7 @@ def run_ck_sync():
                 # Fetch all products updated in this run
                 start_iso = start_time.isoformat()
                 prod_res = supabase.table('products') \
-                    .select('product_id, price') \
+                    .select('id, price') \
                     .gte('updated_at', start_iso) \
                     .gt('price', 0) \
                     .execute()
@@ -303,7 +303,7 @@ def run_ck_sync():
                     odoo_updates = []
                     for p in prod_res.data:
                         odoo_updates.append({
-                            'default_code': p['product_id'],
+                            'default_code': p['id'],
                             'price': p['price']
                         })
                     
