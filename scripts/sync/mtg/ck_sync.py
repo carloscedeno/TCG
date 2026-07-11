@@ -10,6 +10,7 @@ current_dir = Path(__file__).parent
 sys.path.append(str(current_dir.parent))
 
 from common.db import get_db_connection, get_supabase, setup_logging
+from common.odoo_client import OdooClient
 
 # Initialize
 logger = setup_logging("MTG_CK")
@@ -281,6 +282,41 @@ def run_ck_sync():
                 update_denormalized_prices(chunk)
             
         logger.info(f"=== MTG SYNC COMPLETE: {total_updated} prices updated ===")
+        
+        # --- Odoo Sync Integration ---
+        try:
+            logger.info("Syncing updated prices to Odoo...")
+            odoo_client = OdooClient()
+            if odoo_client.uid:
+                # Fetch all products updated in this run
+                start_iso = start_time.isoformat()
+                prod_res = supabase.table('products') \
+                    .select('product_id, price') \
+                    .gte('updated_at', start_iso) \
+                    .gt('price', 0) \
+                    .execute()
+                
+                if prod_res.data:
+                    logger.info(f"Found {len(prod_res.data)} products to sync to Odoo.")
+                    
+                    # Prepare batches of 500 for Odoo
+                    odoo_updates = []
+                    for p in prod_res.data:
+                        odoo_updates.append({
+                            'default_code': p['product_id'],
+                            'price': p['price']
+                        })
+                    
+                    # Process in chunks of 500
+                    chunk_size = 500
+                    for i in range(0, len(odoo_updates), chunk_size):
+                        chunk = odoo_updates[i:i + chunk_size]
+                        odoo_client.update_product_prices(chunk)
+                else:
+                    logger.info("No product prices to sync to Odoo.")
+        except Exception as oe:
+            logger.error(f"Failed during Odoo Sync phase: {oe}")
+        # -----------------------------
         
         if job_id:
             end_time = datetime.now(timezone.utc)
