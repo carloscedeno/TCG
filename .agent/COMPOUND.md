@@ -605,3 +605,12 @@ Resolver los errores en producciÛn en el panel de administrador al intentar elim
 2. **Odoo 504 Gateway Timeout en Operaciones Masivas (Bulk)**: Al intentar hacer un create masivo por XML-RPC enviando un lote de 500 productos que inclu√≠a im√°genes Base64, el servidor Nginx de Odoo arroj√≥ 504 Gateway Timeout. **Soluci√≥n**: Reducir dr√°sticamente el tama√±o del lote (Batch Size) a 25 elementos por petici√≥n cuando se env√≠an cargas pesadas (como im√°genes Base64) a trav√©s de XML-RPC.
 3. **Im√°genes en Odoo**: Odoo nativamente guarda sus im√°genes de producto (image_1920) como cadenas en base64 directamente en PostgreSQL. Para reducir el impacto en almacenamiento sin omitir im√°genes, se manipul√≥ la URL origen de Scryfall (cambiando /normal/ por /small/) para descargar, codificar e inyectar √∫nicamente el thumbnail ultra-ligero.
 4. **Protecci√≥n contra SKUs Duplicados**: Si en Odoo se crean productos manualmente clonando Referencias Internas (default_code), la respuesta del XML-RPC search_read devolver√° m√∫ltiples IDs. El script en Python debe procesarlo creando un mapa (Diccionario Python) que autom√°ticamente seleccionar√° uno solo (descartando los duplicados) para aislar la sincronizaci√≥n y prevenir errores letales en el pipeline.
+
+### Lazy Loading en Vite (React) y ChunkLoadError
+**Fecha**: 13 de Julio de 2026
+**Contexto**: Al desplegar nuevas versiones de la aplicaciÛn (SPA), los chunks antiguos son eliminados de Cloudflare. Si el usuario intenta navegar a una p·gina perezosa (lazy-loaded) antes de refrescar, ocurre un error fatal: `TypeError: Failed to fetch dynamically imported module`.
+**SoluciÛn (Cazador de Errores)**: Se implementÛ un componente especializado `ChunkErrorBoundary` que captura el `ChunkLoadError` e invoca de inmediato `window.location.reload()`. Esto garantiza que las actualizaciones de PWA/Vite sean invisibles y silenciosas, sin romper la aplicaciÛn y forzando la recarga para traer los nuevos chunks.
+
+### Landing Pages vs Modales de SelecciÛn
+**Fecha**: 13 de Julio de 2026
+**Contexto**: Se reemplazÛ un selector en modal para los rankings por una vista dedicada (Landing Page de Rankings) manejada por el valor vacÌo de query parameters. Las vistas de grid inmersivas ofrecen mejor UX para la selecciÛn de categorÌas top-level que ocultar esas opciones detr·s de clics adicionales o modales.
