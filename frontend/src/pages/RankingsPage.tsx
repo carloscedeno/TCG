@@ -63,6 +63,8 @@ const RankingsPage: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [cartCount, setCartCount] = useState(0);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [activeSeasons, setActiveSeasons] = useState<any[]>([]);
 
     useEffect(() => {
         const loadInitial = async () => {
@@ -73,6 +75,18 @@ const RankingsPage: React.FC = () => {
             setCartCount(count);
         };
         loadInitial();
+
+        const fetchActiveSeasons = async () => {
+            const { data } = await supabase
+                .from('ranking_seasons')
+                .select('*')
+                .eq('is_active', true)
+                .order('created_at', { ascending: false });
+            if (data) {
+                setActiveSeasons(data);
+            }
+        };
+        fetchActiveSeasons();
     }, []);
 
     useEffect(() => {
@@ -118,18 +132,26 @@ const RankingsPage: React.FC = () => {
             <Header onCartOpen={() => setIsCartOpen(true)} cartCount={cartCount} />
             
             <main className="flex-1 w-full max-w-[1600px] mx-auto px-4 md:px-8 py-12">
-                <div className="mb-12 text-center md:text-left flex items-center gap-6">
-                    {seasonInfo?.image_url && (
-                        <img src={seasonInfo.image_url} alt="Season Logo" className="w-24 h-24 object-contain filter drop-shadow-xl" />
-                    )}
-                    <div>
-                        <h1 className="text-5xl md:text-6xl font-black italic tracking-tighter uppercase text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.1)] mb-2">
-                            {seasonInfo?.title || 'Ranking Oficial'}
-                        </h1>
-                        <p className="text-neutral-400 font-bold tracking-widest text-sm uppercase">
-                            {seasonInfo?.subtitle || (isGundam ? 'Sistema de Clasificación Militar' : 'Clasificación de Temporada')}
-                        </p>
+                <div className="mb-12 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div className="flex items-center gap-6">
+                        {seasonInfo?.image_url && (
+                            <img src={seasonInfo.image_url} alt="Season Logo" className="w-24 h-24 object-contain filter drop-shadow-xl" />
+                        )}
+                        <div>
+                            <h1 className="text-5xl md:text-6xl font-black italic tracking-tighter uppercase text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.1)] mb-2">
+                                {seasonInfo?.title || 'Ranking Oficial'}
+                            </h1>
+                            <p className="text-neutral-400 font-bold tracking-widest text-sm uppercase">
+                                {seasonInfo?.subtitle || (isGundam ? 'Sistema de Clasificación Militar' : 'Clasificación de Temporada')}
+                            </p>
+                        </div>
                     </div>
+                    <button 
+                        onClick={() => setIsModalOpen(true)}
+                        className="px-6 py-3 bg-[#1C233A] hover:bg-[#4B6EEB] text-white font-bold tracking-widest text-sm uppercase rounded-xl transition-all border border-white/10 shadow-lg flex items-center justify-center gap-2"
+                    >
+                        Cambiar Ranking
+                    </button>
                 </div>
 
                 <div className="bg-[#0A0D18] rounded-3xl border border-[#1C233A] overflow-hidden shadow-2xl relative">
@@ -276,6 +298,53 @@ const RankingsPage: React.FC = () => {
 
             <Footer />
             <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+            
+            {isModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" onClick={() => setIsModalOpen(false)}>
+                    <div className="bg-[#0A0D18] rounded-2xl border border-[#1C233A] p-6 max-w-lg w-full shadow-2xl relative" onClick={e => e.stopPropagation()}>
+                        <button 
+                            onClick={() => setIsModalOpen(false)}
+                            className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-white/5 text-white/50 hover:bg-white/10 hover:text-white transition-colors"
+                        >
+                            ✕
+                        </button>
+                        <h2 className="text-2xl font-black italic uppercase text-white mb-6">Seleccionar Ranking</h2>
+                        <div className="grid gap-3 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
+                            {activeSeasons.map(season => (
+                                <button
+                                    key={season.id}
+                                    onClick={() => {
+                                        window.location.href = `/rankings?game=${season.game_context}`;
+                                    }}
+                                    className={`p-4 rounded-xl border transition-all text-left flex items-center gap-4 ${season.game_context === gameContext ? 'bg-[#1C233A] border-[#4B6EEB] shadow-[0_0_15px_rgba(75,110,235,0.2)]' : 'bg-[#050505] border-[#1C233A] hover:border-white/30'}`}
+                                >
+                                    {season.image_url ? (
+                                        <div className="w-16 h-16 flex-shrink-0 bg-white/5 rounded-lg p-2 flex items-center justify-center">
+                                            <img src={season.image_url} alt={season.title} className="max-w-full max-h-full object-contain filter drop-shadow-md" />
+                                        </div>
+                                    ) : (
+                                        <div className="w-16 h-16 flex-shrink-0 bg-white/5 rounded-lg p-2 flex items-center justify-center font-black text-[#5A6D93]">
+                                            {season.game_context}
+                                        </div>
+                                    )}
+                                    <div className="flex-1">
+                                        <div className="font-black text-white uppercase text-lg leading-tight mb-1">{season.title}</div>
+                                        <div className="text-xs font-bold text-[#5A6D93] tracking-widest uppercase">{season.subtitle || `Juego: ${season.game_context}`}</div>
+                                    </div>
+                                    {season.game_context === gameContext && (
+                                        <div className="w-3 h-3 rounded-full bg-[#4B6EEB] shadow-[0_0_8px_#4B6EEB]" />
+                                    )}
+                                </button>
+                            ))}
+                            {activeSeasons.length === 0 && (
+                                <div className="text-center py-8 text-[#5A6D93] italic font-bold tracking-widest text-sm uppercase">
+                                    No hay rankings activos disponibles
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
