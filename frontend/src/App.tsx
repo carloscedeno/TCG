@@ -12,6 +12,7 @@ import { WelcomeModal } from './components/Navigation/WelcomeModal';
 import { PosSessionBanner } from './components/Admin/PosSessionBanner';
 import { PwaReloadPrompt } from './components/Navigation/PwaReloadPrompt';
 import { BottomNav } from './components/Navigation/BottomNav';
+import { ChunkErrorBoundary } from './components/Navigation/ChunkErrorBoundary';
 
 // Lazy loaded routes
 const Profile = lazy(() => import('./pages/Profile'));
@@ -89,40 +90,42 @@ function App() {
                 <Router basename="/">
                     <ScrollToTop />
                     <PosSessionBanner />
-                    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-slate-950"><div className="w-12 h-12 border-4 border-geeko-cyan/20 border-t-geeko-cyan rounded-full animate-spin"></div></div>}>
-                        <Routes>
-                            <Route path="/" element={<Home />} />
-                            <Route path="/card/:id" element={<CardDetail />} />
-                            <Route path="/profile" element={<Profile />} />
-                            <Route path="/import" element={<ImportCollection />} />
-                            <Route path="/tournaments" element={<TournamentHub />} />
-                            <Route path="/rankings" element={<RankingsPage />} />
+                    <ChunkErrorBoundary>
+                        <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-slate-950"><div className="w-12 h-12 border-4 border-geeko-cyan/20 border-t-geeko-cyan rounded-full animate-spin"></div></div>}>
+                            <Routes>
+                                <Route path="/" element={<Home />} />
+                                <Route path="/card/:id" element={<CardDetail />} />
+                                <Route path="/profile" element={<Profile />} />
+                                <Route path="/import" element={<ImportCollection />} />
+                                <Route path="/tournaments" element={<TournamentHub />} />
+                                <Route path="/rankings" element={<RankingsPage />} />
 
-                            <Route path="/help" element={<HelpPage />} />
-                            <Route path="/legal" element={<LegalPage />} />
-                            <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
-                            <Route path="/admin/inventory" element={<AdminRoute><InventoryPage /></AdminRoute>} />
-                            <Route path="/admin/catalog" element={<AdminRoute><CatalogPage /></AdminRoute>} />
-                            <Route path="/admin/categories" element={<AdminRoute><CategoriesPage /></AdminRoute>} />
-                            <Route path="/admin/accessories" element={<Navigate to="/admin/catalog" replace />} />
-                            <Route path="/admin/orders" element={<AdminRoute><OrdersPage /></AdminRoute>} />
-                            <Route path="/admin/customers" element={<AdminRoute><CustomersPage /></AdminRoute>} />
-                            <Route path="/admin/banners" element={<AdminRoute><BannersPage /></AdminRoute>} />
-                            <Route path="/admin/banners-tcg" element={<AdminRoute><TcgBannersPage /></AdminRoute>} />
-                            <Route path="/admin/presales" element={<AdminRoute><PresalesPage /></AdminRoute>} />
-                            <Route path="/admin/events" element={<AdminRoute><EventsPage /></AdminRoute>} />
-                            <Route path="/admin/rankings" element={<AdminRoute><AdminRankingsPage /></AdminRoute>} />
-                            <Route path="/admin/media" element={<AdminRoute><MediaPage /></AdminRoute>} />
-                            <Route path="/checkout" element={<CheckoutPage />} />
-                            <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
-                            <Route path="/product/:id" element={<CardDetail />} />
-                            <Route path="/order/:orderId" element={<OrderTrackingPage />} />
+                                <Route path="/help" element={<HelpPage />} />
+                                <Route path="/legal" element={<LegalPage />} />
+                                <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+                                <Route path="/admin/inventory" element={<AdminRoute><InventoryPage /></AdminRoute>} />
+                                <Route path="/admin/catalog" element={<AdminRoute><CatalogPage /></AdminRoute>} />
+                                <Route path="/admin/categories" element={<AdminRoute><CategoriesPage /></AdminRoute>} />
+                                <Route path="/admin/accessories" element={<Navigate to="/admin/catalog" replace />} />
+                                <Route path="/admin/orders" element={<AdminRoute><OrdersPage /></AdminRoute>} />
+                                <Route path="/admin/customers" element={<AdminRoute><CustomersPage /></AdminRoute>} />
+                                <Route path="/admin/banners" element={<AdminRoute><BannersPage /></AdminRoute>} />
+                                <Route path="/admin/banners-tcg" element={<AdminRoute><TcgBannersPage /></AdminRoute>} />
+                                <Route path="/admin/presales" element={<AdminRoute><PresalesPage /></AdminRoute>} />
+                                <Route path="/admin/events" element={<AdminRoute><EventsPage /></AdminRoute>} />
+                                <Route path="/admin/rankings" element={<AdminRoute><AdminRankingsPage /></AdminRoute>} />
+                                <Route path="/admin/media" element={<AdminRoute><MediaPage /></AdminRoute>} />
+                                <Route path="/checkout" element={<CheckoutPage />} />
+                                <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
+                                <Route path="/product/:id" element={<CardDetail />} />
+                                <Route path="/order/:orderId" element={<OrderTrackingPage />} />
 
-                            <Route path="/update-password" element={<UpdatePassword />} />
-                            <Route path="/geeko-login" element={<LoginPage />} />
-                            <Route path="*" element={<NotFound />} />
-                        </Routes>
-                    </Suspense>
+                                <Route path="/update-password" element={<UpdatePassword />} />
+                                <Route path="/geeko-login" element={<LoginPage />} />
+                                <Route path="*" element={<NotFound />} />
+                            </Routes>
+                        </Suspense>
+                    </ChunkErrorBoundary>
                     <WelcomeModal />
                     <WhatsAppWidget />
                     <PwaReloadPrompt />
