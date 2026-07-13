@@ -597,3 +597,11 @@ Resolver los errores en producci�n en el panel de administrador al intentar elim
 - **Backend**: Migraciones aplicadas en producci�n con �xito.
 - **Frontend**: Corregido error en build sobre variable session faltante.
 
+### Odoo XML-RPC Integration and Bulk Sincronization Edge Cases
+**Fecha**: 11 de Julio de 2026
+**Contexto**: Se implementó una sincronización robusta E2E de productos desde Supabase a Odoo para Card Kingdom, utilizando XML-RPC.
+**Desafíos y Soluciones**:
+1. **Mapeo de Columnas Incorrecto (product_id vs id)**: En Supabase, la columna que mapea con el ID externo (Scryfall) y que debía usarse como default_code de Odoo es id, no product_id. Es vital verificar el esquema final con scripts de testing E2E en vivo, ya que un error de nombre de columna hubiese quebrado el Cronjob en producción.
+2. **Odoo 504 Gateway Timeout en Operaciones Masivas (Bulk)**: Al intentar hacer un create masivo por XML-RPC enviando un lote de 500 productos que incluía imágenes Base64, el servidor Nginx de Odoo arrojó 504 Gateway Timeout. **Solución**: Reducir drásticamente el tamaño del lote (Batch Size) a 25 elementos por petición cuando se envían cargas pesadas (como imágenes Base64) a través de XML-RPC.
+3. **Imágenes en Odoo**: Odoo nativamente guarda sus imágenes de producto (image_1920) como cadenas en base64 directamente en PostgreSQL. Para reducir el impacto en almacenamiento sin omitir imágenes, se manipuló la URL origen de Scryfall (cambiando /normal/ por /small/) para descargar, codificar e inyectar únicamente el thumbnail ultra-ligero.
+4. **Protección contra SKUs Duplicados**: Si en Odoo se crean productos manualmente clonando Referencias Internas (default_code), la respuesta del XML-RPC search_read devolverá múltiples IDs. El script en Python debe procesarlo creando un mapa (Diccionario Python) que automáticamente seleccionará uno solo (descartando los duplicados) para aislar la sincronización y prevenir errores letales en el pipeline.

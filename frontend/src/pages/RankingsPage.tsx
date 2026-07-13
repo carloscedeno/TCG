@@ -57,12 +57,13 @@ const getGundamFactionIcon = (faction: string) => {
 
 const RankingsPage: React.FC = () => {
     const [searchParams] = useSearchParams();
-    const gameContext = searchParams.get('game') || 'GND'; 
+    const gameContext = searchParams.get('game'); 
     const [players, setPlayers] = useState<RankingPlayer[]>([]);
     const [seasonInfo, setSeasonInfo] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [cartCount, setCartCount] = useState(0);
+    const [activeSeasons, setActiveSeasons] = useState<any[]>([]);
 
     useEffect(() => {
         const loadInitial = async () => {
@@ -73,10 +74,27 @@ const RankingsPage: React.FC = () => {
             setCartCount(count);
         };
         loadInitial();
+
+        const fetchActiveSeasons = async () => {
+            const { data } = await supabase
+                .from('ranking_seasons')
+                .select('*')
+                .eq('is_active', true)
+                .order('created_at', { ascending: false });
+            if (data) {
+                setActiveSeasons(data);
+            }
+        };
+        fetchActiveSeasons();
     }, []);
 
     useEffect(() => {
         const loadRankings = async () => {
+            if (!gameContext) {
+                setLoading(false);
+                return;
+            }
+            
             setLoading(true);
             setPlayers([]);
             
@@ -118,19 +136,82 @@ const RankingsPage: React.FC = () => {
             <Header onCartOpen={() => setIsCartOpen(true)} cartCount={cartCount} />
             
             <main className="flex-1 w-full max-w-[1600px] mx-auto px-4 md:px-8 py-12">
-                <div className="mb-12 text-center md:text-left flex items-center gap-6">
-                    {seasonInfo?.image_url && (
-                        <img src={seasonInfo.image_url} alt="Season Logo" className="w-24 h-24 object-contain filter drop-shadow-xl" />
-                    )}
-                    <div>
-                        <h1 className="text-5xl md:text-6xl font-black italic tracking-tighter uppercase text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.1)] mb-2">
-                            {seasonInfo?.title || 'Ranking Oficial'}
-                        </h1>
-                        <p className="text-neutral-400 font-bold tracking-widest text-sm uppercase">
-                            {seasonInfo?.subtitle || (isGundam ? 'Sistema de Clasificación Militar' : 'Clasificación de Temporada')}
-                        </p>
+                {!gameContext ? (
+                    <div className="flex flex-col items-center justify-center min-h-[60vh] animate-in fade-in zoom-in duration-500">
+                        <div className="mb-16 text-center">
+                            <h1 className="text-5xl md:text-7xl font-black italic tracking-tighter uppercase text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.1)] mb-4">
+                                Rankings
+                            </h1>
+                            <p className="text-[#5A6D93] font-bold tracking-widest text-sm uppercase">Elige la temporada o TCG que deseas consultar</p>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full max-w-6xl mx-auto">
+                            {activeSeasons.map(season => (
+                                <button
+                                    key={season.id}
+                                    onClick={() => {
+                                        window.location.href = `/rankings?game=${season.game_context}`;
+                                    }}
+                                    className="group flex flex-col items-center justify-center text-center p-8 rounded-3xl border-2 transition-all relative overflow-hidden bg-[#0A0D18] border-[#1C233A] hover:border-[#4B6EEB]/50 hover:bg-[#1C233A]/30 shadow-xl hover:shadow-[0_0_30px_rgba(75,110,235,0.2)]"
+                                >
+                                    <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-[#4B6EEB]/5 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    
+                                    <div className="w-32 h-32 mb-6 flex-shrink-0 flex items-center justify-center relative z-10">
+                                        {season.image_url ? (
+                                            <img 
+                                                src={season.image_url} 
+                                                alt={season.title} 
+                                                className="max-w-full max-h-full object-contain filter drop-shadow-2xl transition-transform duration-500 group-hover:scale-110" 
+                                            />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center bg-white/5 rounded-2xl font-black text-[#5A6D93] text-4xl">
+                                                {season.game_context}
+                                            </div>
+                                        )}
+                                    </div>
+                                    
+                                    <div className="relative z-10 w-full">
+                                        <h3 className="font-black uppercase text-lg md:text-xl leading-tight mb-2 text-white/90 group-hover:text-white transition-colors">
+                                            {season.title}
+                                        </h3>
+                                        <p className="text-xs font-bold text-[#4B6EEB] tracking-widest uppercase">
+                                            {season.subtitle || `Juego: ${season.game_context}`}
+                                        </p>
+                                    </div>
+                                </button>
+                            ))}
+                            
+                            {activeSeasons.length === 0 && (
+                                <div className="col-span-full flex flex-col items-center justify-center py-20 text-[#5A6D93]">
+                                    <div className="text-6xl mb-6 opacity-50 filter grayscale">🎮</div>
+                                    <p className="italic font-bold tracking-widest text-lg uppercase">No hay rankings activos disponibles</p>
+                                </div>
+                            )}
+                        </div>
                     </div>
-                </div>
+                ) : (
+                    <>
+                        <div className="mb-12 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                            <div className="flex items-center gap-6">
+                                {seasonInfo?.image_url && (
+                                    <img src={seasonInfo.image_url} alt="Season Logo" className="w-24 h-24 object-contain filter drop-shadow-xl" />
+                                )}
+                                <div>
+                                    <h1 className="text-5xl md:text-6xl font-black italic tracking-tighter uppercase text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.1)] mb-2">
+                                        {seasonInfo?.title || 'Ranking Oficial'}
+                                    </h1>
+                                    <p className="text-neutral-400 font-bold tracking-widest text-sm uppercase">
+                                        {seasonInfo?.subtitle || (isGundam ? 'Sistema de Clasificación Militar' : 'Clasificación de Temporada')}
+                                    </p>
+                                </div>
+                            </div>
+                            <button 
+                                onClick={() => { window.location.href = '/rankings'; }}
+                                className="px-6 py-3 bg-[#0A0D18] hover:bg-[#1C233A] text-white font-bold tracking-widest text-sm uppercase rounded-xl transition-all border border-[#1C233A] hover:border-white/20 shadow-lg flex items-center justify-center gap-2 group"
+                            >
+                                <span className="opacity-50 group-hover:opacity-100 transition-opacity">←</span> Volver a Rankings
+                            </button>
+                        </div>
 
                 <div className="bg-[#0A0D18] rounded-3xl border border-[#1C233A] overflow-hidden shadow-2xl relative">
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#4B6EEB] to-transparent opacity-50" />
@@ -272,6 +353,8 @@ const RankingsPage: React.FC = () => {
                         </table>
                     </div>
                 </div>
+                    </>
+                )}
             </main>
 
             <Footer />
