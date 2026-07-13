@@ -145,13 +145,21 @@ export const CardDetail: React.FC = () => {
 
     const relevantFormats = ['standard', 'pioneer', 'modern', 'legacy', 'commander', 'pauper'];
 
+    const isDFC = details?.name?.includes(' // ');
+    const hasMultipleFaces = (details?.card_faces && details.card_faces.length > 1) || isDFC;
+
     const allImages = useMemo(() => {
         const list: string[] = [];
         let mainImg = details?.image_url;
         if (details?.card_faces && details.card_faces.length > 0) {
             const face = details.card_faces[currentFaceIndex];
             mainImg = face?.image_uris?.normal || face?.image_uris?.large || face?.image_uris?.png || face?.image_url || details.image_url;
+        } else if (isDFC && currentFaceIndex === 1 && mainImg) {
+            if (mainImg.includes('/front/')) mainImg = mainImg.replace('/front/', '/back/');
+            else if (mainImg.includes('.jpg')) mainImg = mainImg.replace('.jpg', '_back.jpg');
+            else if (mainImg.includes('.png')) mainImg = mainImg.replace('.png', '_back.png');
         }
+
         if (mainImg) list.push(mainImg);
 
         if (details?.additional_images && details.additional_images.length > 0) {
@@ -160,7 +168,7 @@ export const CardDetail: React.FC = () => {
             });
         }
         return list;
-    }, [details?.card_faces, currentFaceIndex, details?.image_url, details?.additional_images]);
+    }, [details?.card_faces, currentFaceIndex, details?.image_url, details?.additional_images, isDFC]);
 
     const currentImage = allImages[currentImageIndex] || allImages[0] || '';
 
@@ -207,8 +215,6 @@ export const CardDetail: React.FC = () => {
         if (!details) return '#';
         return getCardKingdomUrl(details.name, isFoil);
     }, [details?.name, isFoil]);
-
-    const hasMultipleFaces = details?.card_faces && details.card_faces.length > 1;
 
     if (error) {
         return (

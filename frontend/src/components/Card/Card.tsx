@@ -48,12 +48,19 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [addingToCart, setAddingToCart] = useState(false);
 
-  const hasMultipleFaces = card_faces && card_faces.length > 1;
+  const isDFC = name?.includes(' // ');
+  const hasMultipleFaces = (card_faces && card_faces.length > 1) || isDFC;
 
   const allImages = React.useMemo(() => {
-    const mainImg = hasMultipleFaces 
-      ? (card_faces![currentFaceIndex].image_uris?.normal || card_faces![currentFaceIndex].image_url || imageUrl || image_url)
-      : (imageUrl || image_url);
+    let mainImg = imageUrl || image_url;
+    if (card_faces && card_faces.length > 1) {
+      mainImg = card_faces[currentFaceIndex].image_uris?.normal || card_faces[currentFaceIndex].image_url || mainImg;
+    } else if (isDFC && currentFaceIndex === 1 && mainImg) {
+      if (mainImg.includes('/front/')) mainImg = mainImg.replace('/front/', '/back/');
+      else if (mainImg.includes('.jpg')) mainImg = mainImg.replace('.jpg', '_back.jpg');
+      else if (mainImg.includes('.png')) mainImg = mainImg.replace('.png', '_back.png');
+    }
+
     const list = mainImg ? [mainImg] : [];
     if (additional_images && additional_images.length > 0) {
       additional_images.forEach(img => {
@@ -61,19 +68,19 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
       });
     }
     return list;
-  }, [hasMultipleFaces, card_faces, currentFaceIndex, imageUrl, image_url, additional_images]);
+  }, [hasMultipleFaces, isDFC, card_faces, currentFaceIndex, imageUrl, image_url, additional_images]);
 
-  const currentName = hasMultipleFaces ? card_faces![currentFaceIndex].name : name;
+  const currentName = (card_faces && card_faces.length > 1) ? card_faces[currentFaceIndex].name : (isDFC && name ? name.split(' // ')[currentFaceIndex] : name);
   const isPresale = currentName?.toLowerCase().includes('(preventa)');
   const cleanName = isPresale ? currentName.replace(/\(preventa\)/gi, '').trim() : currentName;
 
-  const currentType = hasMultipleFaces ? card_faces![currentFaceIndex].type_line || type : type;
+  const currentType = (card_faces && card_faces.length > 1) ? card_faces[currentFaceIndex].type_line || type : type;
   const imgSrc = allImages[currentImageIndex] || allImages[0] || '';
 
   const handleFlip = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
-    setCurrentFaceIndex((prev) => (prev + 1) % card_faces!.length);
+    setCurrentFaceIndex((prev) => (prev + 1) % (card_faces && card_faces.length > 1 ? card_faces.length : 2));
     setCurrentImageIndex(0);
   };
 
