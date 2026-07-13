@@ -301,44 +301,72 @@ const RankingsPage: React.FC = () => {
             
             {isModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" onClick={() => setIsModalOpen(false)}>
-                    <div className="bg-[#0A0D18] rounded-2xl border border-[#1C233A] p-6 max-w-lg w-full shadow-2xl relative" onClick={e => e.stopPropagation()}>
+                    <div className="bg-[#0A0D18] rounded-3xl border border-[#1C233A] p-6 md:p-8 max-w-4xl w-full shadow-2xl relative flex flex-col max-h-[85vh]" onClick={e => e.stopPropagation()}>
                         <button 
                             onClick={() => setIsModalOpen(false)}
-                            className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-white/5 text-white/50 hover:bg-white/10 hover:text-white transition-colors"
+                            className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center rounded-full bg-white/5 text-white/50 hover:bg-white/10 hover:text-white transition-colors"
                         >
                             ✕
                         </button>
-                        <h2 className="text-2xl font-black italic uppercase text-white mb-6">Seleccionar Ranking</h2>
-                        <div className="grid gap-3 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
-                            {activeSeasons.map(season => (
-                                <button
-                                    key={season.id}
-                                    onClick={() => {
-                                        window.location.href = `/rankings?game=${season.game_context}`;
-                                    }}
-                                    className={`p-4 rounded-xl border transition-all text-left flex items-center gap-4 ${season.game_context === gameContext ? 'bg-[#1C233A] border-[#4B6EEB] shadow-[0_0_15px_rgba(75,110,235,0.2)]' : 'bg-[#050505] border-[#1C233A] hover:border-white/30'}`}
-                                >
-                                    {season.image_url ? (
-                                        <div className="w-16 h-16 flex-shrink-0 bg-white/5 rounded-lg p-2 flex items-center justify-center">
-                                            <img src={season.image_url} alt={season.title} className="max-w-full max-h-full object-contain filter drop-shadow-md" />
+                        
+                        <div className="mb-8">
+                            <h2 className="text-3xl md:text-4xl font-black italic uppercase text-white tracking-tighter drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">Seleccionar Ranking</h2>
+                            <p className="text-[#5A6D93] font-bold tracking-widest text-xs uppercase mt-2">Elige la temporada o TCG que deseas consultar</p>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 overflow-y-auto pr-2 custom-scrollbar pb-4 flex-1">
+                            {activeSeasons.map(season => {
+                                const isSelected = season.game_context === gameContext;
+                                return (
+                                    <button
+                                        key={season.id}
+                                        onClick={() => {
+                                            window.location.href = `/rankings?game=${season.game_context}`;
+                                        }}
+                                        className={`group flex flex-col items-center justify-center text-center p-6 rounded-2xl border-2 transition-all relative overflow-hidden ${
+                                            isSelected 
+                                                ? 'bg-[#1C233A]/50 border-[#4B6EEB] shadow-[0_0_20px_rgba(75,110,235,0.3)]' 
+                                                : 'bg-[#050505] border-[#1C233A] hover:border-white/30 hover:bg-[#1C233A]/30'
+                                        }`}
+                                    >
+                                        {isSelected && (
+                                            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-[#4B6EEB]/10 to-transparent pointer-events-none" />
+                                        )}
+                                        
+                                        <div className="w-24 h-24 mb-4 flex-shrink-0 flex items-center justify-center relative z-10">
+                                            {season.image_url ? (
+                                                <img 
+                                                    src={season.image_url} 
+                                                    alt={season.title} 
+                                                    className={`max-w-full max-h-full object-contain filter drop-shadow-xl transition-transform duration-300 ${isSelected ? 'scale-110' : 'group-hover:scale-110'}`} 
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center bg-white/5 rounded-xl font-black text-[#5A6D93] text-2xl">
+                                                    {season.game_context}
+                                                </div>
+                                            )}
                                         </div>
-                                    ) : (
-                                        <div className="w-16 h-16 flex-shrink-0 bg-white/5 rounded-lg p-2 flex items-center justify-center font-black text-[#5A6D93]">
-                                            {season.game_context}
+                                        
+                                        <div className="relative z-10 w-full">
+                                            <h3 className={`font-black uppercase text-sm md:text-base leading-tight mb-1 line-clamp-2 ${isSelected ? 'text-white' : 'text-white/80 group-hover:text-white'}`}>
+                                                {season.title}
+                                            </h3>
+                                            <p className="text-[10px] md:text-xs font-bold text-[#5A6D93] tracking-widest uppercase truncate">
+                                                {season.subtitle || `Juego: ${season.game_context}`}
+                                            </p>
                                         </div>
-                                    )}
-                                    <div className="flex-1">
-                                        <div className="font-black text-white uppercase text-lg leading-tight mb-1">{season.title}</div>
-                                        <div className="text-xs font-bold text-[#5A6D93] tracking-widest uppercase">{season.subtitle || `Juego: ${season.game_context}`}</div>
-                                    </div>
-                                    {season.game_context === gameContext && (
-                                        <div className="w-3 h-3 rounded-full bg-[#4B6EEB] shadow-[0_0_8px_#4B6EEB]" />
-                                    )}
-                                </button>
-                            ))}
+
+                                        {isSelected && (
+                                            <div className="absolute top-3 right-3 w-3 h-3 rounded-full bg-[#4B6EEB] shadow-[0_0_10px_#4B6EEB] animate-pulse" />
+                                        )}
+                                    </button>
+                                );
+                            })}
+                            
                             {activeSeasons.length === 0 && (
-                                <div className="text-center py-8 text-[#5A6D93] italic font-bold tracking-widest text-sm uppercase">
-                                    No hay rankings activos disponibles
+                                <div className="col-span-full flex flex-col items-center justify-center py-12 text-[#5A6D93]">
+                                    <div className="text-4xl mb-4 opacity-50">🎮</div>
+                                    <p className="italic font-bold tracking-widest text-sm uppercase">No hay rankings activos disponibles</p>
                                 </div>
                             )}
                         </div>
