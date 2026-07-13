@@ -45,7 +45,8 @@ export const CardDetail: React.FC = () => {
             is_foil: initialCard.is_foil,
             total_stock: initialCard.total_stock || initialCard.stock || 0,
             valuation: initialCard.valuation || { market_price: initialCard.price },
-            all_versions: [] // Start empty, will be populated by fetchCardDetails
+            all_versions: [], // Start empty, will be populated by fetchCardDetails
+            card_faces: initialCard.card_faces
         };
     };
 
@@ -149,9 +150,7 @@ export const CardDetail: React.FC = () => {
         let mainImg = details?.image_url;
         if (details?.card_faces && details.card_faces.length > 0) {
             const face = details.card_faces[currentFaceIndex];
-            if (face?.image_uris) {
-                mainImg = face.image_uris.normal || face.image_uris.large || face.image_uris.png;
-            }
+            mainImg = face?.image_uris?.normal || face?.image_uris?.large || face?.image_uris?.png || face?.image_url || details.image_url;
         }
         if (mainImg) list.push(mainImg);
 

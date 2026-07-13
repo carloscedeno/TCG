@@ -5,16 +5,16 @@
 
 ---
 
-## 📅 Última sesión: 2026-07-10
+## 📅 Última sesión: 2026-07-13
 **Rama activa:** `dev`
-**Último commit conocido:** feat: integracion de inventario, accesorios y checkout con Odoo
-**En progreso:** Implementación completa del flujo Checkout Web -> Odoo Sales Orders -> Webhook de Confirmación.
+**Último commit conocido:** fix: resolve initial card flip issue on Card Details by preserving card_faces from router state
+**En progreso:** Corrección de la carga inicial de imágenes flip (Doble Cara) en los detalles de producto.
 
 ## 📁 Zona Caliente (archivos tocados recientemente)
+- frontend/src/pages/RankingsPage.tsx — Modal para selección dinámica de temporada de ranking de TCG.
 - supabase/functions/odoo-sync/index.ts — Enviar client_order_ref a Odoo y buscar accesorios por odoo_id.
 - supabase/functions/odoo-webhook/index.ts — Recibir webhooks de sale.order y actualizar status de orders en supabase.
 - frontend/src/utils/api.ts — Trigger de odoo-sync en checkout.
-- supabase/migrations/20260710185000_add_odoo_order_id.sql — Nueva columna odoo_order_id.
 
 ## ⏭️ Próxima acción recomendada
 Validar el nuevo webhook de sale.order desde Odoo cuando el administrador apruebe crear la Acción Automatizada en Odoo. Probar el flujo end-to-end de compras.
