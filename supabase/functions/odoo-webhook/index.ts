@@ -223,7 +223,6 @@ serve(async (req) => {
           const updateData: any = {};
           if (price !== undefined) updateData.price = parseFloat(price);
           if (stock !== undefined) updateData.stock = parseInt(stock, 10);
-          if (record.name) updateData.name = record.name; // Update name if provided
 
           if (Object.keys(updateData).length > 0) {
             const { error } = await supabase.from(table).update(updateData).eq('id', defaultCode);

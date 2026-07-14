@@ -1,8 +1,9 @@
-﻿import os
+import os
 import sys
 import logging
 import base64
 import requests
+import time
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -33,10 +34,19 @@ def fetch_image_b64(url: str):
     if not url: return None
     # Use lowest quality image from Scryfall to save Odoo DB space
     small_url = url.replace('/normal/', '/small/')
+    
+    headers = {
+        'User-Agent': 'TCGHub/1.0',
+        'Accept': 'image/*'
+    }
     try:
-        resp = requests.get(small_url, timeout=5)
+        # Respect Scryfall's rate limit
+        time.sleep(0.1)
+        resp = requests.get(small_url, headers=headers, timeout=10)
         if resp.status_code == 200:
             return base64.b64encode(resp.content).decode('utf-8')
+        else:
+            logger.warning(f"Failed to fetch image {small_url}: {resp.status_code} - {resp.text[:100]}")
     except Exception as e:
         logger.warning(f"Failed to fetch image {small_url}: {e}")
     return None
@@ -61,7 +71,7 @@ def run_bulk_export():
     
     while True:
         logger.info(f"Fetching Supabase products [{start} to {start + batch_size - 1}]...")
-        res = supabase.table('products').select('*').range(start, start + batch_size - 1).execute()
+        res = supabase.table('products').select('*').eq('game', 'MTG').order('id').range(start, start + batch_size - 1).execute()
         items = res.data
         if not items:
             break
@@ -94,15 +104,15 @@ def run_bulk_export():
                 'categ_id': cat_singles_id,
             }
             
-            # Fetch base64 image
-            b64_image = fetch_image_b64(item.get('image_url'))
-            if b64_image:
-                payload['image_1920'] = b64_image
-                
             code = str(item['id'])
             if code in existing_code_to_id:
-                to_update.append((existing_code_to_id[code], payload))
+                # Optimization: Skip existing products ENTIRELY to speed up sync
+                continue
             else:
+                # Fetch base64 image only for new products
+                b64_image = fetch_image_b64(item.get('image_url'))
+                if b64_image:
+                    payload['image_1920'] = b64_image
                 to_create.append(payload)
                 
         if to_create:
