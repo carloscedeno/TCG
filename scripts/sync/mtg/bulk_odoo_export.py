@@ -66,8 +66,8 @@ def run_bulk_export():
     
     # Smaller batch size to prevent 504 Gateway Timeout in Odoo XML-RPC
     batch_size = 25
-    start = 0
-    total_processed = 0
+    start = 9825
+    total_processed = 9825
     
     while True:
         logger.info(f"Fetching Supabase products [{start} to {start + batch_size - 1}]...")
@@ -106,8 +106,8 @@ def run_bulk_export():
             
             code = str(item['id'])
             if code in existing_code_to_id:
-                # Optimization: Skip existing products ENTIRELY to speed up sync
-                continue
+                # Update existing products but skip image fetch
+                to_update.append((existing_code_to_id[code], payload))
             else:
                 # Fetch base64 image only for new products
                 b64_image = fetch_image_b64(item.get('image_url'))

@@ -358,3 +358,10 @@ Resolver fallos en la carga masiva de inventario mediante la sincronización de 
 
 - **Build Verified**: Confirmed project stability with a successful production build post-fix.
 
+
+
+### 🔄 Odoo Inventory Engine & Reverse Sync (Compound v63)
+- **Real-Time Inventory Lock:** Integrated erify_stock endpoint into the checkout flow, strictly validating stock against Odoo's qty_available and enforcing the is_storable flag to prevent ghost orders.
+- **Smart Cart Auto-Adjustment:** Upgraded pi/index.ts to autonomously reconcile cart items and Supabase catalog stock upon Odoo verification failures (missing or insufficient items), preventing hard checkout errors and providing graceful UX.
+- **Reverse Sync Architecture:** Completely rebuilt the Odoo Sales Order confirmation webhook to perform a reverse synchronization. The webhook now queries the final invoice lines from Odoo via RPC and overwrites the Supabase order_items and 	otal_amount to reflect modifications (taxes, additions, removals) made at the physical store.
+- **Data Parity:** Executed a bulk injection script to set is_storable=True and migrate Supabase stock to stock.quant in Odoo for 115 products.
