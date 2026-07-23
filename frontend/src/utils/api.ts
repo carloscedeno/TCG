@@ -607,9 +607,13 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
       // Enrich all versions with stock from products table
       // Filter pIds to only include valid UUIDs to avoid 400 errors from Supabase
       const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-      const pIds = data.all_versions
-        .map((v: any) => v.printing_id)
-        .filter((id: string) => id && uuidRegex.test(id));
+      const pIds = Array.from(new Set(data.all_versions
+        .map((v: any) => {
+          const id = v.printing_id;
+          if (!id) return null;
+          return id.replace(/-foil$/, '').replace(/-nonfoil$/, '').replace(/-etched$/, '');
+        })
+        .filter((id: any) => id && uuidRegex.test(id))));
 
       if (pIds.length > 0) {
         const { data: pData } = await supabase
