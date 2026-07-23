@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchBanners } from '../../utils/api';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface Banner {
     id: string;
@@ -124,8 +125,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ gameCode }) => {
 
             {/* Banner Image — fixed 3.5:1 ratio, image fills the frame */}
             <div className="relative group rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-[#050505]">
-                <a
-                    href={currentItem.link_url || '#'}
+                <Link
+                    to={currentItem.link_url || '#'}
                     className="block w-full aspect-[2/1] sm:aspect-[3.5/1]"
                 >
                     <img
@@ -133,7 +134,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ gameCode }) => {
                         alt={currentItem.title || 'Banner'}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
                     />
-                </a>
+                </Link>
 
                 {/* Navigation arrows — subtle, inside the banner */}
                 {banners.length > 1 && (

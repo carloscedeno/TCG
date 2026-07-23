@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchPresales } from '../../utils/api';
 import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface PresaleBanner {
   id: string;
@@ -45,9 +46,9 @@ export const PresaleSection: React.FC = () => {
       {/* Grid of small banners */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {presales.map((item) => (
-          <a
+          <Link
             key={item.id}
-            href={item.link_url || '#'}
+            to={item.link_url || '#'}
             className="group relative aspect-[3.5/1] rounded-2xl overflow-hidden border border-white/10 bg-[#050505] transition-all hover:border-white/50 hover:shadow-[0_0_30px_rgba(34,211,238,0.15)]"
           >
             {/* Background Image */}
@@ -73,7 +74,7 @@ export const PresaleSection: React.FC = () => {
             <div className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white text-black flex items-center justify-center opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 shadow-lg">
               <ArrowRight size={16} strokeWidth={3} />
             </div>
-          </a>
+          </Link>
         ))}
       </div>
     </div>
