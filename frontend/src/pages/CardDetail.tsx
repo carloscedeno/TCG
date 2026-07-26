@@ -516,7 +516,7 @@ export const CardDetail: React.FC = () => {
 
                                     <div className="p-6 lg:p-8 rounded-[32px] bg-gradient-to-br from-geeko-cyan/10 via-transparent to-transparent border border-white/10 group relative overflow-hidden hover:border-geeko-cyan/30 transition-colors">
                                         <div className="absolute top-0 right-0 w-40 h-40 bg-geeko-cyan/5 rounded-full blur-[50px]" />
-                                        <div className="text-[9px] font-black uppercase text-geeko-cyan tracking-[0.2em] mb-4">Internal Store Price</div>
+                                        <div className="text-[9px] font-black uppercase text-geeko-cyan tracking-[0.2em] mb-4">Card Kingdom Price</div>
                                         <div className="flex flex-col gap-6">
                                             {/* Price + Variant Badge (horizontal layout matching CardModal) */}
                                             <div className="flex items-center justify-between">

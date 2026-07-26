@@ -480,7 +480,7 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
           const vMarketPriceFoil = v.avg_market_price_foil_usd || 0;
 
           const vFinalMarket = vMarketPrice > 0 ? vMarketPrice : vMarketPriceFoil;
-          const vFinalPrice = vStorePrice > 0 ? vStorePrice : vFinalMarket;
+          const vFinalPrice = vFinalMarket;
           const vValAvg = (vStorePrice > 0 && vFinalMarket > 0)
             ? (vStorePrice + vFinalMarket) / 2
             : (vStorePrice || vFinalMarket || 0);
