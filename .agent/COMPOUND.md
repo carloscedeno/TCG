@@ -614,3 +614,10 @@ Resolver los errores en producción en el panel de administrador al intentar elim
 ### Landing Pages vs Modales de Selección
 **Fecha**: 13 de Julio de 2026
 **Contexto**: Se reemplazó un selector en modal para los rankings por una vista dedicada (Landing Page de Rankings) manejada por el valor vacío de query parameters. Las vistas de grid inmersivas ofrecen mejor UX para la selección de categorías top-level que ocultar esas opciones detrás de clics adicionales o modales.
+
+
+### ðŸ”„ Odoo Inventory Engine & Reverse Sync (Compound v63)
+- **Real-Time Inventory Lock:** Integrated erify_stock endpoint into the checkout flow, strictly validating stock against Odoo's qty_available and enforcing the is_storable flag to prevent ghost orders.
+- **Smart Cart Auto-Adjustment:** Upgraded pi/index.ts to autonomously reconcile cart items and Supabase catalog stock upon Odoo verification failures (missing or insufficient items), preventing hard checkout errors and providing graceful UX.
+- **Reverse Sync Architecture:** Completely rebuilt the Odoo Sales Order confirmation webhook to perform a reverse synchronization. The webhook now queries the final invoice lines from Odoo via RPC and overwrites the Supabase order_items and 	otal_amount to reflect modifications (taxes, additions, removals) made at the physical store.
+- **Data Parity:** Executed a bulk injection script to set is_storable=True and migrate Supabase stock to stock.quant in Odoo for 115 products.

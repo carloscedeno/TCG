@@ -1037,6 +1037,54 @@ async function handleCartEndpoint(supabase: any, path: string, method: string, p
       price: item.products?.price || item.accessories?.price || 0
     }))
 
+    const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY') || '';
+
+    // 1. Verify stock in Odoo before proceeding
+    try {
+      const verifyRes = await fetch(`${supabaseUrl}/functions/v1/odoo-sync`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${supabaseAnonKey}` },
+        body: JSON.stringify({ action: 'verify_stock', payload: { items: simplifiedItems } })
+      });
+      const verifyJson = await verifyRes.json();
+      
+      if (!verifyJson.success && verifyJson.invalid_items) {
+         for (const i of verifyJson.invalid_items) {
+           const newStock = i.reason === 'NOT_FOUND' ? 0 : (i.available || 0);
+           
+           // 1. Update Catalog (Supabase) so nobody else can buy it
+           if (i.item.accessory_id) {
+             await supabase.from('accessories').update({ stock: newStock }).eq('id', i.item.accessory_id);
+           } else if (i.item.product_id) {
+             await supabase.from('products').update({ stock: newStock }).eq('id', i.item.product_id);
+           }
+           
+           // 2. Auto-adjust Cart
+           if (newStock === 0) {
+             if (i.item.accessory_id) {
+               await supabase.from('cart_items').delete().eq('cart_id', cart.id).eq('accessory_id', i.item.accessory_id);
+             } else {
+               await supabase.from('cart_items').delete().eq('cart_id', cart.id).eq('product_id', i.item.product_id);
+             }
+           } else {
+             if (i.item.accessory_id) {
+               await supabase.from('cart_items').update({ quantity: newStock }).eq('cart_id', cart.id).eq('accessory_id', i.item.accessory_id);
+             } else {
+               await supabase.from('cart_items').update({ quantity: newStock }).eq('cart_id', cart.id).eq('product_id', i.item.product_id);
+             }
+           }
+         }
+         
+         throw new Error("Tu carrito ha sido actualizado automáticamente porque algunos artículos cambiaron su disponibilidad en nuestro almacén. Por favor revisa las cantidades y procede al pago.");
+      }
+    } catch(e: any) {
+      if (e.message.includes('Tu carrito ha sido actualizado')) throw e;
+      if (e.message.includes('No se pudo completar')) throw e;
+      console.error("[Odoo Sync] Error verifying stock with Odoo:", e);
+      throw new Error("Error de comunicación con Odoo para verificar el inventario. Por favor intenta más tarde.");
+    }
+
     // Use the atomic RPC for consistent logic
     const { data, error } = await supabase.rpc('create_order_atomic', {
       p_user_id: user.id,
@@ -1050,6 +1098,7 @@ async function handleCartEndpoint(supabase: any, path: string, method: string, p
     // Silently notify odoo-sync about the new order
     try {
       const orderData = {
+        id: data.order_id,
         customer_email: user.email,
         customer_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Web Customer',
         items: simplifiedItems,

@@ -91,7 +91,9 @@ Deno.serve(async (req: Request) => {
       throw new Error("Missing Odoo credentials.");
     }
 
-    const { action, payload } = await req.json();
+    const reqBody = await req.json();
+    const action = reqBody.action;
+    const payload = reqBody.payload;
 
     // Authenticate
     const uid = await odooJsonRpc(odooUrl, 'call', {
@@ -157,7 +159,8 @@ Deno.serve(async (req: Request) => {
             name: name,
             list_price: listPrice,
             categ_id: catSinglesId,
-            type: 'consu'
+            type: 'consu',
+            is_storable: true
           };
           if (base64Image) {
             updatePayload.image_512 = base64Image;
@@ -181,7 +184,8 @@ Deno.serve(async (req: Request) => {
             default_code: item.product_id,
             list_price: listPrice,
             categ_id: catSinglesId,
-            type: 'consu'
+            type: 'consu',
+            is_storable: true
           };
           if (base64Image) {
             createPayload.image_512 = base64Image;
@@ -205,6 +209,72 @@ Deno.serve(async (req: Request) => {
       }
 
       return new Response(JSON.stringify({ success: true, results }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    if (action === 'verify_stock') {
+      const { items } = payload;
+      if (!items || !Array.isArray(items)) {
+        throw new Error("Missing items in payload");
+      }
+
+      const invalidItems = [];
+
+      for (const item of items) {
+        let odooDomain = [];
+        
+        if (item.accessory_id) {
+           const supabaseUrl = Deno.env.get('SUPABASE_URL') || Deno.env.get('SUPABASE_URL_OVERRIDE') || 'https://bqfkqnnostzaqueujdms.supabase.co';
+           const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || Deno.env.get('SUPABASE_ANON_KEY');
+           
+           if (supabaseUrl && supabaseKey) {
+             const accRes = await fetch(`${supabaseUrl}/rest/v1/accessories?id=eq.${item.accessory_id}&select=odoo_id`, {
+               headers: { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}` }
+             });
+             const accJson = await accRes.json();
+             if (accJson && accJson.length > 0 && accJson[0].odoo_id) {
+               odooDomain = [['id', '=', accJson[0].odoo_id]];
+             } else {
+               odooDomain = [['default_code', '=', item.accessory_id]];
+             }
+           } else {
+             odooDomain = [['default_code', '=', item.accessory_id]];
+           }
+        } else {
+           odooDomain = [['default_code', '=', item.product_id]];
+        }
+
+        const productSearch = await odooJsonRpc(odooUrl, 'call', {
+          service: 'object',
+          method: 'execute_kw',
+          args: [
+            odooDb, uid, odooApiKey, 
+            'product.product', 
+            'search_read', 
+            [odooDomain], 
+            { fields: ['name', 'qty_available', 'type', 'is_storable'], limit: 1 }
+          ]
+        });
+
+        if (!productSearch || productSearch.length === 0) {
+          invalidItems.push({ item, reason: 'NOT_FOUND' });
+        } else {
+          const odooProduct = productSearch[0];
+          // Only strictly block for out of stock if it's a storable product
+          if (odooProduct.is_storable && odooProduct.qty_available < item.quantity) {
+             invalidItems.push({ item, reason: 'OUT_OF_STOCK', available: odooProduct.qty_available });
+          }
+        }
+      }
+
+      if (invalidItems.length > 0) {
+        return new Response(JSON.stringify({ success: false, invalid_items: invalidItems }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+
+      return new Response(JSON.stringify({ success: true }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
     }
