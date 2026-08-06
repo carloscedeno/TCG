@@ -101,7 +101,11 @@ export const CardDetail: React.FC = () => {
         navigate(`/card/${printingId}${search ? `?${search}` : ''}`);
     };
 
-    const handleAddToCart = async () => {
+    const handleAddToCart = async (e?: React.MouseEvent) => {
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
         if (!user) {
             openAuthModal();
             return;
@@ -484,7 +488,7 @@ export const CardDetail: React.FC = () => {
                             </div>
 
                             <div className="p-6 lg:p-8 rounded-[32px] bg-white/5 border border-white/10 space-y-6 relative overflow-hidden group">
-                                <div className="absolute -top-24 -right-24 w-64 h-64 bg-geeko-cyan/5 rounded-full blur-[100px] group-hover:bg-geeko-cyan/10 transition-colors" />
+                                <div className="absolute -top-24 -right-24 w-64 h-64 bg-geeko-cyan/5 rounded-full blur-[100px] group-hover:bg-geeko-cyan/10 transition-colors pointer-events-none" />
                                 
                                 {details.description && (
                                     <div className="mb-6 p-4 bg-geeko-cyan/5 border border-geeko-cyan/20 rounded-2xl relative z-10">
@@ -515,7 +519,7 @@ export const CardDetail: React.FC = () => {
                                     <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-text-low pl-2">Trading Hub</h3>
 
                                     <div className="p-6 lg:p-8 rounded-[32px] bg-gradient-to-br from-geeko-cyan/10 via-transparent to-transparent border border-white/10 group relative overflow-hidden hover:border-geeko-cyan/30 transition-colors">
-                                        <div className="absolute top-0 right-0 w-40 h-40 bg-geeko-cyan/5 rounded-full blur-[50px]" />
+                                        <div className="absolute top-0 right-0 w-40 h-40 bg-geeko-cyan/5 rounded-full blur-[50px] pointer-events-none" />
                                         <div className="text-[9px] font-black uppercase text-geeko-cyan tracking-[0.2em] mb-4">Card Kingdom Price</div>
                                         <div className="flex flex-col gap-6">
                                             {/* Price + Variant Badge (horizontal layout matching CardModal) */}
@@ -583,7 +587,7 @@ export const CardDetail: React.FC = () => {
                                                     data-testid="add-to-cart-button"
                                                     onClick={handleAddToCart}
                                                     disabled={isAdding}
-                                                    className="flex-1 h-12 rounded-xl bg-geeko-cyan text-black font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0, 209, 255, 0.3)] hover:shadow-[0_0_30px_rgba(0, 209, 255, 0.5)] hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
+                                                    className="flex-1 h-12 rounded-xl bg-geeko-cyan text-black font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0, 209, 255, 0.3)] hover:shadow-[0_0_30px_rgba(0, 209, 255, 0.5)] hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 relative z-10"
                                                 >
                                                     {isAdding ? <Loader2 size={16} className="animate-spin" /> : <ShoppingCart size={16} fill="currentColor" />}
                                                     {isAdding ? '...' : ((activeVersion?.stock || 0) > 0 ? 'Agregar' : 'Encargo')}
