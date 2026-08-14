@@ -692,6 +692,89 @@ async function handleImportEndpoint(supabase: SupabaseClient, path: string, meth
       }
     })
 
+    // --- AUTO-DISCOVERY MODULE ---
+    try {
+      const uniqueScryfallIds = [...new Set(mappedData.map(item => item.scryfall_id).filter(id => id))];
+      if (uniqueScryfallIds.length > 0) {
+        const existingIds = new Set<string>();
+        const chunkSize = 500;
+        
+        for (let i = 0; i < uniqueScryfallIds.length; i += chunkSize) {
+          const chunk = uniqueScryfallIds.slice(i, i + chunkSize);
+          const { data, error } = await supabase
+            .from('card_printings')
+            .select('scryfall_id')
+            .in('scryfall_id', chunk);
+            
+          if (!error && data) {
+            data.forEach((row: any) => existingIds.add(row.scryfall_id));
+          }
+        }
+        
+        const missingIds = uniqueScryfallIds.filter(id => !existingIds.has(id));
+        
+        if (missingIds.length > 0) {
+          console.log(`[DEBUG] Auto-Discovery: Found ${missingIds.length} missing Scryfall IDs. Fetching from Scryfall...`);
+          
+          const scryfallChunkSize = 75; // Scryfall API limit per request
+          for (let i = 0; i < missingIds.length; i += scryfallChunkSize) {
+            const chunk = missingIds.slice(i, i + scryfallChunkSize);
+            const identifiers = chunk.map(id => ({ id }));
+            
+            const res = await fetch('https://api.scryfall.com/cards/collection', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ identifiers })
+            });
+            
+            if (res.ok) {
+              const scryfallData = await res.json();
+              if (scryfallData.data && scryfallData.data.length > 0) {
+                const cardsToInsert = [];
+                const printingsToInsert = [];
+                
+                for (const card of scryfallData.data) {
+                  const cardId = card.oracle_id || crypto.randomUUID();
+                  cardsToInsert.push({
+                    card_id: cardId,
+                    card_name: card.name,
+                    rarity: card.rarity
+                  });
+                  
+                  printingsToInsert.push({
+                    printing_id: card.id,
+                    card_id: cardId,
+                    set_code: card.set,
+                    scryfall_id: card.id,
+                    collector_number: card.collector_number,
+                    rarity: card.rarity,
+                    is_foil: card.finishes?.includes('foil') ?? true,
+                    image_url_small: card.image_uris?.small || '',
+                    image_url_normal: card.image_uris?.normal || '',
+                    image_url_large: card.image_uris?.large || ''
+                  });
+                }
+                
+                if (cardsToInsert.length > 0) {
+                  await supabase.from('cards').upsert(cardsToInsert, { onConflict: 'card_id', ignoreDuplicates: true });
+                }
+                if (printingsToInsert.length > 0) {
+                  await supabase.from('card_printings').upsert(printingsToInsert, { onConflict: 'printing_id', ignoreDuplicates: true });
+                }
+              }
+            }
+            // Respect Scryfall rate limit (10 requests per second, so 100ms pause is bare minimum, using 150ms to be safe)
+            await new Promise(resolve => setTimeout(resolve, 150));
+          }
+          console.log(`[DEBUG] Auto-Discovery: Finished injecting missing IDs.`);
+        }
+      }
+    } catch (discoveryError) {
+      console.error(`[DEBUG] Auto-Discovery failed:`, discoveryError);
+      // We log the error but don't fail the entire request; the RPC will simply ignore/report missing ones.
+    }
+    // -----------------------------
+
     const { data: result, error: rpcError } = await supabase.rpc('bulk_import_inventory', {
       p_items: mappedData,
       p_user_id: user.id
