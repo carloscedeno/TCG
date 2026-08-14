@@ -302,8 +302,8 @@ const handleImport = async () => {
                 return obj;
             });
 
-            // Chunks of 200 for high speed with the new v3 optimized SQL
-            const CHUNK_SIZE = 200;
+            // Chunks of 50 to prevent statement timeouts on the database side
+            const CHUNK_SIZE = 50;
             const chunks = [];
             for (let i = 0; i < importData.length; i += CHUNK_SIZE) {
                 chunks.push(importData.slice(i, i + CHUNK_SIZE));
@@ -315,8 +315,8 @@ const handleImport = async () => {
             let allErrors: string[] = [];
             let allFailedIndices: number[] = [];
 
-            // Process chunks in parallel batches of 3 for max speed
-            const CONCURRENCY = 3;
+            // Process chunks sequentially (concurrency 1) to avoid lock contention and timeouts
+            const CONCURRENCY = 1;
             for (let i = 0; i < chunks.length; i += CONCURRENCY) {
                 const batch = chunks.slice(i, i + CONCURRENCY);
                 const promises = batch.map(async (chunk, batchIdx) => {
