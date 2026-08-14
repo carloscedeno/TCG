@@ -37,6 +37,15 @@ Este documento registra los desafÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â�
 - **Regla Derivada**: Prohibido usar `npm`. Toda dependencia se maneja con `pnpm`.
 
 
+### 160. Mitigación de Vulnerabilidades en npm y Scripts de Build (Junio 2026)
+- **Problema**: Riesgo de ataques de cadena de suministro (supply chain attacks) asociados a la ejecución automática de scripts en `npm install`.
+- **Causa Raíz**: `npm` permite la ejecución de scripts de ciclo de vida (`postinstall`) sin confirmación explícita. Además, dependencias transitivas mal declaradas pueden fallar bajo resolución estricta.
+- **Solución**: 
+  1. Migrar a `pnpm` y usar `pnpm approve-builds` para autorizar scripts explícitamente (`[ERR_PNPM_IGNORED_BUILDS]`).
+  2. Al migrar a `pnpm` (que usa symlinks estrictos), paquetes con dependencias peer ocultas como `vite-plugin-pwa` (que requiere `workbox-window`) fallarán en build. Se deben instalar explícitamente (`pnpm add workbox-window`).
+- **Regla Derivada**: Prohibido usar `npm`. Toda dependencia se maneja con `pnpm`.
+
+
 ### 1. Conflictos de VersiÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â³n en CI/CD (GitHub Actions)
 
 

@@ -1,5 +1,27 @@
 # ðŸ§  COMPOUND: MigraciÃ³n a pnpm y Aislamiento de Entorno (Junio 2026)
 
+**Date**: 2026-06-04 18:00
+
+## Objective
+Erradicar el uso de `npm` para mitigar vulnerabilidades de cadena de suministro y aislar scripts de ciclo de vida.
+
+## Knowledge Codification
+
+### 1. MigraciÃ³n de Gestor de Paquetes (npm -> pnpm)
+- **Feature**: Reemplazo de `package-lock.json` por `pnpm-lock.yaml`, y actualizaciÃ³n de `deploy.yml`.
+- **Lesson 1**: `pnpm` previene ejecuciÃ³n arbitraria de scripts maliciosos, pero requiere `pnpm approve-builds`.
+- **Lesson 2**: `pnpm` revela dependencias peer faltantes que `npm` ocultaba (ej. `workbox-window` requerido por `vite-plugin-pwa`), obligando a instalarlas explÃ­citamente para el build.
+- **Lesson 3**: GitHub Actions necesita `uses: pnpm/action-setup@v4` antes de instalar dependencias.
+
+## Technical Validation
+- **CI/CD**: `deploy.yml` actualizado y merge a `main` exitoso.
+- **Frontend**: Servidor Vite y build (`workbox-window` agregado) funcionando bajo `pnpm`.
+- **Scripts**: Sincronizadores auditados y seguros.
+
+---
+
+# ðŸ§  COMPOUND: MigraciÃ³n a pnpm y Aislamiento de Entorno (Junio 2026)
+
 ---
 
 # ðŸ§  COMPOUND: CorrecciÃ³n de Zona Horaria (UTC-4 Caracas) para Eventos
@@ -579,22 +601,23 @@ Los filtros de UI basados en 'novedades' no deben hardcodearse a set_codes a men
 **Regla derivada:**
 En scripts ETL de backend, cuando Supabase/PostgREST falle por cachÃ© de relaciones de esquema, desacoplar una consulta embebida `A(B)` en dos lecturas seriales independientes evita el error sin penalizaciÃ³n excesiva de rendimiento. AdemÃ¡s, en flujos de OAuth o Reset, siempre extraer y asegurar la sesiÃ³n desde los fragmentos de la URL local si el cliente SDK sufre race conditions.
 
-# ?? COMPOUND: Corrección de eliminación de órdenes y artículos (RPC)
+# ?? COMPOUND: Correcciï¿½n de eliminaciï¿½n de ï¿½rdenes y artï¿½culos (RPC)
 
 **Date**: 2026-07-09
 
 ## Objective
-Resolver los errores en producción en el panel de administrador al intentar eliminar un artículo de un pedido (error al recalcular o por RPC faltante) y al hacer soft_delete del pedido entero.
+Resolver los errores en producciï¿½n en el panel de administrador al intentar eliminar un artï¿½culo de un pedido (error al recalcular o por RPC faltante) y al hacer soft_delete del pedido entero.
 
 ## Knowledge Codification
 
-### 1. Funciones RPC para Órdenes
-- **Feature**: Creación de delete_order_item_v1 y soft_delete_order para manejar la eliminación controlada de artículos y pedidos enteros, reabasteciendo el inventario automáticamente.
-- **Lesson 1**: En order_items, el precio unitario se guarda como price_at_purchase, no unit_price. El uso incorrecto del nombre de la columna en funciones PL/pgSQL generará un error ecord has no field.
-- **Lesson 2**: Al eliminar un artículo de un pedido activo (o hacer un borrado lógico del pedido a status = 'deleted'), es crucial devolver las cantidades descontadas (+ quantity) al stock original, sea producto o accesorio, para evitar inconsistencias en el inventario real.
+### 1. Funciones RPC para ï¿½rdenes
+- **Feature**: Creaciï¿½n de delete_order_item_v1 y soft_delete_order para manejar la eliminaciï¿½n controlada de artï¿½culos y pedidos enteros, reabasteciendo el inventario automï¿½ticamente.
+- **Lesson 1**: En order_items, el precio unitario se guarda como price_at_purchase, no unit_price. El uso incorrecto del nombre de la columna en funciones PL/pgSQL generarï¿½ un error 
+ecord has no field.
+- **Lesson 2**: Al eliminar un artï¿½culo de un pedido activo (o hacer un borrado lï¿½gico del pedido a status = 'deleted'), es crucial devolver las cantidades descontadas (+ quantity) al stock original, sea producto o accesorio, para evitar inconsistencias en el inventario real.
 
 ## Technical Validation
-- **Backend**: Migraciones aplicadas en producción con éxito.
+- **Backend**: Migraciones aplicadas en producciï¿½n con ï¿½xito.
 - **Frontend**: Corregido error en build sobre variable session faltante.
 
 ### Odoo XML-RPC Integration and Bulk Sincronization Edge Cases
@@ -608,12 +631,12 @@ Resolver los errores en producción en el panel de administrador al intentar elim
 
 ### Lazy Loading en Vite (React) y ChunkLoadError
 **Fecha**: 13 de Julio de 2026
-**Contexto**: Al desplegar nuevas versiones de la aplicación (SPA), los chunks antiguos son eliminados de Cloudflare. Si el usuario intenta navegar a una página perezosa (lazy-loaded) antes de refrescar, ocurre un error fatal: `TypeError: Failed to fetch dynamically imported module`.
-**Solución (Cazador de Errores)**: Se implementó un componente especializado `ChunkErrorBoundary` que captura el `ChunkLoadError` e invoca de inmediato `window.location.reload()`. Esto garantiza que las actualizaciones de PWA/Vite sean invisibles y silenciosas, sin romper la aplicación y forzando la recarga para traer los nuevos chunks.
+**Contexto**: Al desplegar nuevas versiones de la aplicaciï¿½n (SPA), los chunks antiguos son eliminados de Cloudflare. Si el usuario intenta navegar a una pï¿½gina perezosa (lazy-loaded) antes de refrescar, ocurre un error fatal: `TypeError: Failed to fetch dynamically imported module`.
+**Soluciï¿½n (Cazador de Errores)**: Se implementï¿½ un componente especializado `ChunkErrorBoundary` que captura el `ChunkLoadError` e invoca de inmediato `window.location.reload()`. Esto garantiza que las actualizaciones de PWA/Vite sean invisibles y silenciosas, sin romper la aplicaciï¿½n y forzando la recarga para traer los nuevos chunks.
 
-### Landing Pages vs Modales de Selección
+### Landing Pages vs Modales de Selecciï¿½n
 **Fecha**: 13 de Julio de 2026
-**Contexto**: Se reemplazó un selector en modal para los rankings por una vista dedicada (Landing Page de Rankings) manejada por el valor vacío de query parameters. Las vistas de grid inmersivas ofrecen mejor UX para la selección de categorías top-level que ocultar esas opciones detrás de clics adicionales o modales.
+**Contexto**: Se reemplazï¿½ un selector en modal para los rankings por una vista dedicada (Landing Page de Rankings) manejada por el valor vacï¿½o de query parameters. Las vistas de grid inmersivas ofrecen mejor UX para la selecciï¿½n de categorï¿½as top-level que ocultar esas opciones detrï¿½s de clics adicionales o modales.
 
 
 ### ðŸ”„ Odoo Inventory Engine & Reverse Sync (Compound v63)
