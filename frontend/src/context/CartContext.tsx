@@ -186,10 +186,20 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             console.log(`DEBUG: cart-updated event detected [v25] - refreshing...`);
             refreshCart();
         };
+        
+        const storageHandler = (e: StorageEvent) => {
+            if (e.key === 'cart_sync_timestamp' || e.key === 'guest_cart' || e.key === 'supabase.auth.token') {
+                console.log(`DEBUG: cross-tab storage event detected (${e.key}) - refreshing...`);
+                refreshCart();
+            }
+        };
+
         window.addEventListener('cart-updated', handler as any);
+        window.addEventListener('storage', storageHandler);
         
         return () => {
             window.removeEventListener('cart-updated', handler as any);
+            window.removeEventListener('storage', storageHandler);
         };
     }, [refreshCart]);
     const cartCount = Array.isArray(cartItems)

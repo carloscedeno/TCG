@@ -2432,6 +2432,30 @@ useEffect(() => {
 - **Regla Derivada:** Para habilitar filtros agregados multi-tipo en el historial de pedidos, las tablas de inventario subyacentes deben mantener paridad en columnas temporales clave (`release_date` / `updated_at`).
 
 
+### 2026-08-16: Cross-Tab Sync con localStorage `storage` Event
+
+- **Problema**: El carrito se actualizaba en la pestaña activa pero no en otras pestañas abiertas de la misma sesión.
+- **Causa Raíz**: `window.dispatchEvent(new Event('cart-updated'))` es un evento local del DOM. Solo la pestaña que lo emite lo escucha; las otras pestañas son completamente ajenas.
+- **Solución**: Usar la API nativa `localStorage` + el evento `storage` del `window`. El evento `storage` es cross-tab: se emite automáticamente en **todas las demás pestañas** (no en la propia) cuando una pestaña modifica el localStorage.
+- **Patrón Correcto**: Emitir `localStorage.setItem('cart_sync_timestamp', Date.now())` en cada mutación del carrito. En `CartContext` escuchar `window.addEventListener('storage', handler)` y llamar `refreshCart()` cuando `e.key === 'cart_sync_timestamp'`.
+- **Regla Derivada**: Para sincronización multi-pestaña, siempre usar `localStorage` events. Para sincronización dentro de la misma pestaña, usar `CustomEvent` del DOM.
+
+### 2026-08-16: add_to_cart_v2 — JOIN estricto rompe cartas sin set_id
+
+- **Problema**: Cartas inyectadas vía Auto-Discovery no podían ser añadidas al carrito. El RPC retornaba `'No se pudo identificar la entidad'` silenciosamente.
+- **Causa Raíz**: El RPC original hacía `JOIN public.sets s ON cp.set_id = s.set_id`. Las cartas de Auto-Discovery se insertaron solo con `set_code` (string), sin `set_id` (FK). El JOIN producía `v_name IS NULL`.
+- **Solución**: Eliminar el JOIN con `public.sets`. Extraer `set_code` directamente de `card_printings`. La columna `set_code` siempre existe en el catálogo. La tabla `sets` es solo un catálogo de referencia, no un requisito para operaciones de carrito.
+- **Regla Derivada**: Los RPCs de operaciones transaccionales (carrito, checkout) NO deben depender de JOINs con tablas de referencia opcionales. Siempre usar los campos más directos disponibles en la tabla principal.
+
+### 2026-08-16: QuickStockItem — condition != finish
+
+- **Problema**: Al agregar cartas desde el panel de stock rápido, todas se añadían como `nonfoil` aunque fueran foil.
+- **Causa Raíz**: `handleAddToCart` usaba `item.condition === 'Foil'` para detectar si era foil. La condición real de un producto es `NM`, `LP`, `MP`, etc., nunca `'Foil'`. El campo correcto es `finish`.
+- **Solución**: Agregar `finish?: string` a `QuickStockItemProps` y usar `item.finish?.toLowerCase() ?? 'nonfoil'`.
+- **Regla Derivada**: En Geekorium, `condition` = calidad física (NM/LP/MP) y `finish` = acabado (nonfoil/foil/etched). Son campos completamente distintos. Nunca usar `condition` para inferir `finish`.
+
+
+
 # #   2 0 2 6 - 0 6 - 1 7 :   C u i d a d o   c o n   V i t e P W A   a u t o U p d a t e   y   p r e c o n n e c t s   c r u d o s 
  
  E l   m o d o   ' a u t o U p d a t e '   d e   V i t e P W A   p r e c a c h e a   t o d o s   l o s   a s s e t s   i n m e d i a t a m e n t e ,   l o   q u e   p u e d e   a h o g a r   l a   c o n e x i o n   W i - F i   e n   m o v i l e s   l e n t o s   y   b l o q u e a r   p e t i c i o n e s   c r i t i c a s   a   S u p a b a s e .   A d e m a s ,   e v i t e m o s   u s a r   % V I T E _ V A R S %   e n   e l   i n d e x . h t m l   p a r a   < l i n k   r e l = ' p r e c o n n e c t ' >   s i   n o   g a r a n t i z a m o s   q u e   e l   b u i l d   r e e m p l a c e   l a   v a r i a b l e ,   y a   q u e   S a f a r i   b l o q u e a r a   e l   r e n d e r i z a d o   ( h a s t a   p o r   1 4   s e g u n d o s )   e s p e r a n d o   q u e   s e   r e s u e l v a   u n   D N S   l i t e r a l   c o m o   ' % V I T E _ S U P A B A S E _ U R L % ' . 

@@ -643,4 +643,39 @@ ecord has no field.
 - **Real-Time Inventory Lock:** Integrated erify_stock endpoint into the checkout flow, strictly validating stock against Odoo's qty_available and enforcing the is_storable flag to prevent ghost orders.
 - **Smart Cart Auto-Adjustment:** Upgraded pi/index.ts to autonomously reconcile cart items and Supabase catalog stock upon Odoo verification failures (missing or insufficient items), preventing hard checkout errors and providing graceful UX.
 - **Reverse Sync Architecture:** Completely rebuilt the Odoo Sales Order confirmation webhook to perform a reverse synchronization. The webhook now queries the final invoice lines from Odoo via RPC and overwrites the Supabase order_items and 	otal_amount to reflect modifications (taxes, additions, removals) made at the physical store.
+- **Reverse Sync Architecture:** Completely rebuilt the Odoo Sales Order confirmation webhook to perform a reverse synchronization. The webhook now queries the final invoice lines from Odoo via RPC and overwrites the Supabase order_items and \total_amount to reflect modifications (taxes, additions, removals) made at the physical store.
 - **Data Parity:** Executed a bulk injection script to set is_storable=True and migrate Supabase stock to stock.quant in Odoo for 115 products.
+
+---
+
+### 🛒 Cross-Tab Cart Sync + add_to_cart_v2 Fix (Compound v64)
+**Fecha**: 2026-08-16  
+**Sesión**: Corrección de bugs post-deployment en flujo de compra.
+
+#### Problemas Resueltos
+
+1. **add_to_cart_v2 — JOIN por set_id roto para cartas Auto-Discovered**
+   - **Root cause**: El RPC original hacía `JOIN public.sets s ON cp.set_id = s.set_id`, pero las 137 cartas inyectadas por Auto-Discovery en sesiones previas no tenían `set_id` asociado. Esto provocaba que `v_name IS NULL` y retornara `'No se pudo identificar la entidad'` silenciosamente.
+   - **Fix**: Eliminado el JOIN con `public.sets`. El RPC ahora extrae `cp.set_code` directamente desde `card_printings`, que siempre está disponible. Aplicado en producción vía Supabase SQL Editor.
+
+2. **Cross-Tab Cart Sync — Pestañas no se actualizaban entre sí**
+   - **Root cause**: El evento `cart-updated` es un `CustomEvent` del DOM, solo visible dentro de la pestaña que lo emite. Las otras pestañas no recibían el señal.
+   - **Fix**: Agregada emisión de `localStorage.setItem('cart_sync_timestamp', Date.now())` en **todos** los puntos de mutación del carrito en `api.ts`. En `CartContext.tsx` se suscribió al evento `storage` del navegador (nativo y cross-tab), que se dispara automáticamente en todas las pestañas abiertas cuando otra pestaña modifica el localStorage.
+   - **Clave arquitectónica**: El evento `storage` **no se dispara en la misma pestaña** que hace el `setItem`, por eso la combinación `dispatchEvent('cart-updated') + setItem(timestamp)` cubre ambos casos (misma pestaña y otras pestañas).
+
+3. **QuickStockItem — Finish hardcodeado como 'nonfoil'**
+   - **Root cause**: `handleAddToCart` determinaba el `finish` comparando `item.condition === 'Foil'`, pero la condición del producto (`NM`, `LP`, `MP`) nunca coincide con 'Foil'. Todas las cartas se añadían como `nonfoil`.
+   - **Fix**: La interfaz `QuickStockItemProps` ahora incluye el campo `finish?: string` y `handleAddToCart` usa `item.finish?.toLowerCase() ?? 'nonfoil'`.
+
+#### Archivos Modificados
+- `supabase/functions` → RPC `add_to_cart_v2` actualizado en producción (SQL directo)
+- `frontend/src/utils/api.ts` → 9 puntos de emisión de `cart_sync_timestamp`
+- `frontend/src/context/CartContext.tsx` → Listener de evento `storage` añadido
+- `frontend/src/components/Navigation/QuickStockItem.tsx` → Propiedad `finish` añadida a props
+
+#### Validación E2E
+- Corrida de compra dummy ejecutada en `geekorium.shop` (producción):
+  - Búsqueda → Add to Cart → Carrito → Checkout → **¡ORDEN RECIBIDA!** ✅
+  - Orden verificada en DB (`pending_verification`, items correctos, precio correcto)
+  - Orden de prueba eliminada limpiamente de producción
+
