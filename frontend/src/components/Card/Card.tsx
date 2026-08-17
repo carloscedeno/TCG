@@ -93,12 +93,15 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
     try {
       if (is_accessory || accessory_id) {
           // If it's an accessory, we use a specialized helper if available or pass flag
-          await addToCart(accessory_id || card_id, 1, finish, true);
+          const result = await addToCart(accessory_id || card_id, 1, finish, true);
+          if (result && !result.success) throw new Error(result.message || result.error || 'Error interno al agregar.');
       } else {
-          await addToCart(card_id, 1, finish);
+          const result = await addToCart(card_id, 1, finish);
+          if (result && !result.success) throw new Error(result.message || result.error || 'Error interno al agregar.');
       }
-    } catch {
-      alert("Error al añadir al carrito. Por favor, intenta de nuevo.");
+    } catch (err: any) {
+      console.error("Cart addition failed:", err);
+      alert(err.message || "Error al añadir al carrito. Por favor, intenta de nuevo.");
     } finally {
       setAddingToCart(false);
     }

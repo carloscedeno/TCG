@@ -236,6 +236,62 @@ serve(async (req) => {
         continue;
       }
 
+      // 2. Is it an Event?
+      if (record.date_begin !== undefined || record.is_event === true || record.model === 'event.event') {
+         const odooId = record.id;
+         if (!odooId) {
+            results.push({ status: 'ignored', reason: 'No Odoo ID provided for event' });
+            continue;
+         }
+
+         const name = record.name;
+         const eventDate = record.date_begin; 
+         const capacity = record.seats_max !== undefined ? parseInt(record.seats_max, 10) : null;
+         
+         const { data: existingEvent } = await supabase.from('events').select('id, name, event_date, capacity').eq('odoo_id', odooId).maybeSingle();
+         
+         const eventData: any = {
+           odoo_id: odooId,
+           is_active: true
+         };
+         if (name) eventData.name = name;
+         if (eventDate) eventData.event_date = eventDate;
+         if (capacity !== null) eventData.capacity = capacity;
+         
+         if (existingEvent) {
+            // Anti-loop check: only update if something actually changed
+            const nameChanged = name && existingEvent.name !== name;
+            const dateChanged = eventDate && existingEvent.event_date !== eventDate;
+            const capacityChanged = capacity !== null && existingEvent.capacity !== capacity;
+
+            if (!nameChanged && !dateChanged && !capacityChanged) {
+               results.push({ id: existingEvent.id, status: 'ignored_no_changes' });
+               continue;
+            }
+
+            const { error: eventErr } = await supabase.from('events').update(eventData).eq('id', existingEvent.id);
+            if (eventErr) {
+               results.push({ id: odooId, status: 'error_updating_event', reason: eventErr.message });
+            } else {
+               results.push({ id: existingEvent.id, status: 'updated_event_via_odoo' });
+            }
+         } else {
+            // Need a name and date_begin at least for a new event
+            if (!name || !eventDate) {
+               results.push({ id: odooId, status: 'error', reason: 'Missing name or date_begin for new event' });
+               continue;
+            }
+            const { error: eventErr } = await supabase.from('events').insert(eventData);
+            if (eventErr) {
+               results.push({ id: odooId, status: 'error_creating_event', reason: eventErr.message });
+            } else {
+               results.push({ id: odooId, status: 'created_event_via_odoo' });
+            }
+         }
+         continue;
+      }
+
+      // 3. Is it a Product/Accessory?
       const defaultCode = record.default_code || record.product?.default_code;
       const price = record.list_price ?? record.product?.list_price;
       const stock = record.qty_available ?? record.product?.qty_available;

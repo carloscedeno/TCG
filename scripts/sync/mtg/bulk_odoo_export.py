@@ -66,8 +66,8 @@ def run_bulk_export():
     
     # Smaller batch size to prevent 504 Gateway Timeout in Odoo XML-RPC
     batch_size = 25
-    start = 9825
-    total_processed = 9825
+    start = 0
+    total_processed = 0
     
     while True:
         logger.info(f"Fetching Supabase products [{start} to {start + batch_size - 1}]...")

@@ -812,7 +812,7 @@ async function handleImportEndpoint(supabase: SupabaseClient, path: string, meth
 
       let query = supabase
         .from('card_printings')
-        .select('printing_id, cards(card_name), sets(set_code), is_foil, is_non_foil, finishes')
+        .select('printing_id, cards!inner(card_name), sets!inner(set_code), is_foil, is_non_foil, finishes')
 
       if (scryfallId && String(scryfallId).trim().length > 0) {
         query = query.eq('scryfall_id', String(scryfallId).trim())
@@ -829,7 +829,7 @@ async function handleImportEndpoint(supabase: SupabaseClient, path: string, meth
       if ((!printings || printings.length === 0) && !scryfallId && !lookupError) {
         const dfQuery = supabase
           .from('card_printings')
-          .select('printing_id, cards(card_name), sets(set_code), is_foil, is_non_foil, finishes')
+          .select('printing_id, cards!inner(card_name), sets!inner(set_code), is_foil, is_non_foil, finishes')
           .ilike('cards.card_name', `${cleanName} // %`);
         
         if (cleanSet) dfQuery.ilike('sets.set_code', cleanSet);

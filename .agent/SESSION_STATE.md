@@ -8,7 +8,7 @@
 ## 📅 Última sesión: 2026-07-13
 **Rama activa:** `dev`
 **Último commit conocido:** fix: resolve initial card flip issue on Card Details by preserving card_faces from router state
-**En progreso:** Corrección de la carga inicial de imágenes flip (Doble Cara) en los detalles de producto.
+**En progreso:** Pruebas E2E (End-to-End) de integración Odoo-Supabase en el entorno DEV.
 
 ## 📁 Zona Caliente (archivos tocados recientemente)
 - frontend/src/pages/RankingsPage.tsx — Modal para selección dinámica de temporada de ranking de TCG.
@@ -17,7 +17,7 @@
 - frontend/src/utils/api.ts — Trigger de odoo-sync en checkout.
 
 ## ⏭️ Próxima acción recomendada
-Validar el nuevo webhook de sale.order desde Odoo cuando el administrador apruebe crear la Acción Automatizada en Odoo. Probar el flujo end-to-end de compras.
+Realizar compra de prueba desde el Frontend en modo local (apuntando a DEV Supabase) para probar que `odoo-sync` envíe la venta al Odoo productivo y esperar que el Reverse Webhook responda al confirmar el pedido.
 
 ## 🚫 Restricciones activas
 - NO usar `npm` — solo `pnpm`

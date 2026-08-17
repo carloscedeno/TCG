@@ -10,7 +10,9 @@ const gameNameMap: Record<string, string> = {
   'LOR': 'Lorcana',
   'YGO': 'Yu-Gi-Oh!',
   'FAB': 'Flesh and Blood',
-  'WXS': 'Wixoss'
+  'WXS': 'Wixoss',
+  'GND': 'Gundam Card Game',
+  'RFB': 'Riftbound'
 };
 
 export interface Filters {
@@ -82,6 +84,8 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
     if (selectedGame === 'OPC' || selectedGame === 'ONE PIECE') return ['Red', 'Blue', 'Green', 'Purple', 'Black', 'Yellow'];
     if (selectedGame === 'DGM' || selectedGame === 'DIGIMON') return ['Red', 'Blue', 'Yellow', 'Green', 'Black', 'Purple', 'White'];
     if (selectedGame === 'PKM' || selectedGame === 'POKEMON') return ['Grass', 'Fire', 'Water', 'Lightning', 'Psychic', 'Fighting', 'Darkness', 'Metal', 'Fairy', 'Dragon', 'Colorless'];
+    // Gundam Card Game — naciones/colores del universo Gundam
+    if (selectedGame === 'GND') return ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'White'];
     return []; // No mostrar colores si no hay juego específico o no aplica
   };
 
@@ -89,6 +93,8 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
     if (selectedGame === 'MTG') return ['Creature', 'Instant', 'Sorcery', 'Enchantment', 'Artifact', 'Planeswalker', 'Land'];
     if (selectedGame === 'PKM' || selectedGame === 'POKEMON') return ['Pokémon', 'Trainer', 'Energy'];
     if (selectedGame === 'OPC' || selectedGame === 'ONE PIECE') return ['Character', 'Event', 'Stage', 'Leader'];
+    // Gundam Card Game — tipos de carta del juego
+    if (selectedGame === 'GND') return ['Unit', 'Command', 'Resource'];
     return [];
   };
 
