@@ -37,13 +37,13 @@ export interface CardProps {
   showCartButton?: boolean;
   is_accessory?: boolean;
   accessory_id?: string;
-  updated_at?: string;
+  restocked_at?: string;
   additional_images?: string[];
   onClick?: () => void;
 }
 
-export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, price, original_price, discount_percentage, card_id, rarity, type, card_faces, viewMode = 'grid', total_stock, finish, is_foil, isArchive, showCartButton = false, is_accessory, accessory_id, additional_images, onClick }) => {
-  const isNew = ['msh', 'msc', 'mar'].includes(set?.toLowerCase());
+export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, price, original_price, discount_percentage, card_id, rarity, type, card_faces, viewMode = 'grid', total_stock, finish, is_foil, isArchive, showCartButton = false, is_accessory, accessory_id, additional_images, restocked_at, onClick }) => {
+  const isNew = restocked_at ? (Date.now() - new Date(restocked_at).getTime()) < 14 * 24 * 60 * 60 * 1000 : false;
   const [currentFaceIndex, setCurrentFaceIndex] = useState(0);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [addingToCart, setAddingToCart] = useState(false);
@@ -397,8 +397,8 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
 
         {/* Price Row */}
         <div className="mt-auto pt-3 flex items-center justify-between border-t border-white/5">
-          <div className="flex flex-col text-right w-full pr-10 relative">
-            <span className="text-[8px] uppercase text-text-low font-bold tracking-wider absolute -top-2 right-10">Mercado</span>
+          <div className="flex flex-col text-right w-full relative">
+            <span className="text-[8px] uppercase text-text-low font-bold tracking-wider absolute -top-2 right-0">Mercado</span>
             {discount_percentage && discount_percentage > 0 ? (
                 <div className="flex flex-col items-end gap-0.5">
                     <div className="flex items-center gap-1.5 justify-end">
@@ -406,14 +406,14 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
                         <span className="text-[8px] bg-purple-500/20 text-purple-400 border border-purple-500/30 px-1 rounded font-black">-{discount_percentage}%</span>
                     </div>
                     <div className="flex items-center justify-end gap-1.5">
-                      <span className="text-geeko-cyan font-mono font-bold text-lg leading-none">
+                      <span className="text-geeko-cyan font-mono font-bold text-base tracking-tight leading-none">
                         {price && price > 0 ? `$${price.toFixed(2)}` : 'S/P'}
                       </span>
                     </div>
                 </div>
             ) : (
                 <div className="flex items-center justify-end gap-1.5">
-                  <span className="text-geeko-cyan font-mono font-bold text-lg leading-none">
+                  <span className="text-geeko-cyan font-mono font-bold text-base tracking-tight leading-none">
                     {price && price > 0 ? `$${price.toFixed(2)}` : 'S/P'}
                   </span>
                   {isFoil && (

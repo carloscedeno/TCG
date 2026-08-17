@@ -37,6 +37,15 @@ Este documento registra los desafÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â�
 - **Regla Derivada**: Prohibido usar `npm`. Toda dependencia se maneja con `pnpm`.
 
 
+### 160. Mitigación de Vulnerabilidades en npm y Scripts de Build (Junio 2026)
+- **Problema**: Riesgo de ataques de cadena de suministro (supply chain attacks) asociados a la ejecución automática de scripts en `npm install`.
+- **Causa Raíz**: `npm` permite la ejecución de scripts de ciclo de vida (`postinstall`) sin confirmación explícita. Además, dependencias transitivas mal declaradas pueden fallar bajo resolución estricta.
+- **Solución**: 
+  1. Migrar a `pnpm` y usar `pnpm approve-builds` para autorizar scripts explícitamente (`[ERR_PNPM_IGNORED_BUILDS]`).
+  2. Al migrar a `pnpm` (que usa symlinks estrictos), paquetes con dependencias peer ocultas como `vite-plugin-pwa` (que requiere `workbox-window`) fallarán en build. Se deben instalar explícitamente (`pnpm add workbox-window`).
+- **Regla Derivada**: Prohibido usar `npm`. Toda dependencia se maneja con `pnpm`.
+
+
 ### 1. Conflictos de VersiÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â³n en CI/CD (GitHub Actions)
 
 
@@ -2423,8 +2432,51 @@ useEffect(() => {
 - **Regla Derivada:** Para habilitar filtros agregados multi-tipo en el historial de pedidos, las tablas de inventario subyacentes deben mantener paridad en columnas temporales clave (`release_date` / `updated_at`).
 
 
+### 2026-08-16: Cross-Tab Sync con localStorage `storage` Event
+
+- **Problema**: El carrito se actualizaba en la pestaña activa pero no en otras pestañas abiertas de la misma sesión.
+- **Causa Raíz**: `window.dispatchEvent(new Event('cart-updated'))` es un evento local del DOM. Solo la pestaña que lo emite lo escucha; las otras pestañas son completamente ajenas.
+- **Solución**: Usar la API nativa `localStorage` + el evento `storage` del `window`. El evento `storage` es cross-tab: se emite automáticamente en **todas las demás pestañas** (no en la propia) cuando una pestaña modifica el localStorage.
+- **Patrón Correcto**: Emitir `localStorage.setItem('cart_sync_timestamp', Date.now())` en cada mutación del carrito. En `CartContext` escuchar `window.addEventListener('storage', handler)` y llamar `refreshCart()` cuando `e.key === 'cart_sync_timestamp'`.
+- **Regla Derivada**: Para sincronización multi-pestaña, siempre usar `localStorage` events. Para sincronización dentro de la misma pestaña, usar `CustomEvent` del DOM.
+
+### 2026-08-16: add_to_cart_v2 — JOIN estricto rompe cartas sin set_id
+
+- **Problema**: Cartas inyectadas vía Auto-Discovery no podían ser añadidas al carrito. El RPC retornaba `'No se pudo identificar la entidad'` silenciosamente.
+- **Causa Raíz**: El RPC original hacía `JOIN public.sets s ON cp.set_id = s.set_id`. Las cartas de Auto-Discovery se insertaron solo con `set_code` (string), sin `set_id` (FK). El JOIN producía `v_name IS NULL`.
+- **Solución**: Eliminar el JOIN con `public.sets`. Extraer `set_code` directamente de `card_printings`. La columna `set_code` siempre existe en el catálogo. La tabla `sets` es solo un catálogo de referencia, no un requisito para operaciones de carrito.
+- **Regla Derivada**: Los RPCs de operaciones transaccionales (carrito, checkout) NO deben depender de JOINs con tablas de referencia opcionales. Siempre usar los campos más directos disponibles en la tabla principal.
+
+### 2026-08-16: QuickStockItem — condition != finish
+
+- **Problema**: Al agregar cartas desde el panel de stock rápido, todas se añadían como `nonfoil` aunque fueran foil.
+- **Causa Raíz**: `handleAddToCart` usaba `item.condition === 'Foil'` para detectar si era foil. La condición real de un producto es `NM`, `LP`, `MP`, etc., nunca `'Foil'`. El campo correcto es `finish`.
+- **Solución**: Agregar `finish?: string` a `QuickStockItemProps` y usar `item.finish?.toLowerCase() ?? 'nonfoil'`.
+- **Regla Derivada**: En Geekorium, `condition` = calidad física (NM/LP/MP) y `finish` = acabado (nonfoil/foil/etched). Son campos completamente distintos. Nunca usar `condition` para inferir `finish`.
+
+
+
 # #   2 0 2 6 - 0 6 - 1 7 :   C u i d a d o   c o n   V i t e P W A   a u t o U p d a t e   y   p r e c o n n e c t s   c r u d o s 
  
  E l   m o d o   ' a u t o U p d a t e '   d e   V i t e P W A   p r e c a c h e a   t o d o s   l o s   a s s e t s   i n m e d i a t a m e n t e ,   l o   q u e   p u e d e   a h o g a r   l a   c o n e x i o n   W i - F i   e n   m o v i l e s   l e n t o s   y   b l o q u e a r   p e t i c i o n e s   c r i t i c a s   a   S u p a b a s e .   A d e m a s ,   e v i t e m o s   u s a r   % V I T E _ V A R S %   e n   e l   i n d e x . h t m l   p a r a   < l i n k   r e l = ' p r e c o n n e c t ' >   s i   n o   g a r a n t i z a m o s   q u e   e l   b u i l d   r e e m p l a c e   l a   v a r i a b l e ,   y a   q u e   S a f a r i   b l o q u e a r a   e l   r e n d e r i z a d o   ( h a s t a   p o r   1 4   s e g u n d o s )   e s p e r a n d o   q u e   s e   r e s u e l v a   u n   D N S   l i t e r a l   c o m o   ' % V I T E _ S U P A B A S E _ U R L % ' . 
  
  
+### 161. Bulk Import Set Name Resolution (Aug 2026)
+- **Problema**: El filtro por Set en el catálogo ('The Hobbit') no devolvía resultados para cartas recién importadas, aunque el código del set ('HOB') era correcto.
+- **Causa Raíz**: El importador masivo (bulk_upload) dejaba la columna set_name en NULL. El filtro del frontend enviaba el nombre completo del set al RPC get_products_filtered, el cual intentaba hacer match directo contra p.set_name o p.set_code. Al ser NULL, fallaba silenciosamente.
+- **Solución**: 
+  1. **En la base de datos (Diseño Relacional)**: Se actualizó get_products_filtered para que busque el código correcto haciendo un subquery a la tabla sets como fuente de la verdad: OR p.set_code IN (SELECT set_code FROM sets WHERE set_name = ANY(set_filter)).
+  2. **En el Importador**: Se modificó el RPC ulk_import_inventory para que siempre rellene set_name consultando la tabla sets durante la inserción.
+- **Lección**: Nunca depender de datos denormalizados (como set_name en la tabla products) para filtros críticos. Usar subqueries a las tablas de referencia (sets) garantiza robustez incluso si los scripts de importación fallan en guardar el dato redundante.
+
+### 162. CSS Flexbox Inverse Overflow en Precios (Aug 2026)
+- **Problema**: El precio de las cartas FOIL en la vista de cuadrícula (Grid) se veía cortado por la izquierda (ej: '79.99' en lugar de '.99'), perdiendo el símbolo de moneda.
+- **Causa Raíz**: En contenedores flex con justify-end, si el contenido (el string del precio + el badge FOIL) es más ancho que el espacio disponible de la tarjeta (muy angosta en pantallas de 6 columnas), el desbordamiento ocurre hacia la izquierda, no hacia la derecha, ocultando los primeros caracteres.
+- **Solución**: Reducir el tamaño de fuente de 	ext-lg a 	ext-base y añadir 	racking-tight al precio en el componente Card.tsx (vista grid) para asegurar que quepa sin desbordarse.
+- **Lección**: Siempre probar los componentes de precio con strings anchos (ej: valores de 3 dígitos + FOIL badge) en las columnas más estrechas del grid responsivo. El justify-end puede ocultar fallas de responsive design comiéndose el contenido por la izquierda.
+
+### 163. Ordenamiento Híbrido por Fecha de Carga (Aug 2026)
+- **Problema**: El filtro 'NUEVO' agrupaba las cartas recién cargadas en pequeños bloques separados por microsegundos, lo que impedía que el usuario pudiera ordenarlas por precio globalmente (ej: veía puras cartas azules baratas primero, luego rojas, etc.).
+- **Causa Raíz**: El RPC forzaba un ORDER BY restocked_at DESC como primer criterio para separar lo nuevo de lo viejo. Como el importador las subía secuencialmente en milisegundos distintos, el orden por precio se volvía secundario e inútil.
+- **Solución**: Eliminar el ORDER BY restocked_at DESC forzado para el filtro NUEVO. En su lugar, el RPC calcula dinámicamente el último día de carga (MAX(restocked_at)) y define una ventana de 7 días. Todo lo que cae en esa ventana se filtra en el WHERE, permitiendo que el ORDER BY sea exclusivamente el que el usuario eligió (ej: price DESC), mezclando así todas las cartas de esa semana por precio.
+- **Lección**: Separar el concepto de 'Selección' (WHERE) del concepto de 'Orden' (ORDER BY). Si el usuario quiere ver lo nuevo ordenado por precio, la novedad debe ser un filtro, no un criterio de ordenamiento forzado.

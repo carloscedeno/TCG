@@ -284,7 +284,7 @@ const Home: React.FC = () => {
               is_foil: p.finish === 'foil' || p.finish === 'etched',
               original_price: p.original_price,
               discount_percentage: p.discount_percentage,
-              updated_at: p.updated_at
+              restocked_at: p.restocked_at
             })),
             total_count: productRes.total_count
           };

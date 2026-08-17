@@ -941,6 +941,7 @@ export const addToCart = async (printingId: string, quantity: number = 1, finish
           });
           if (error) throw error;
           window.dispatchEvent(new Event('cart-updated'));
+          localStorage.setItem('cart_sync_timestamp', Date.now().toString());
           
           if (typeof data === 'string') {
               return { success: true, cart_id: data };
@@ -967,6 +968,7 @@ export const addToCart = async (printingId: string, quantity: number = 1, finish
 
       // Dispatch event to update cart drawer
       window.dispatchEvent(new Event('cart-updated'));
+      localStorage.setItem('cart_sync_timestamp', Date.now().toString());
 
       return data || { success: true };
     }
@@ -991,6 +993,7 @@ export const addToCart = async (printingId: string, quantity: number = 1, finish
     localStorage.setItem('guest_cart', JSON.stringify(guestCart));
     // Dispatch event to update cart drawer if open
     window.dispatchEvent(new Event('cart-updated'));
+    localStorage.setItem('cart_sync_timestamp', Date.now().toString());
 
     return { success: true, message: "Added to guest cart" };
 

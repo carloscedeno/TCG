@@ -1,5 +1,27 @@
 # 🧠 COMPOUND: Migración a pnpm y Aislamiento de Entorno (Junio 2026)
 
+**Date**: 2026-06-04 18:00
+
+## Objective
+Erradicar el uso de `npm` para mitigar vulnerabilidades de cadena de suministro y aislar scripts de ciclo de vida.
+
+## Knowledge Codification
+
+### 1. Migración de Gestor de Paquetes (npm -> pnpm)
+- **Feature**: Reemplazo de `package-lock.json` por `pnpm-lock.yaml`, y actualización de `deploy.yml`.
+- **Lesson 1**: `pnpm` previene ejecución arbitraria de scripts maliciosos, pero requiere `pnpm approve-builds`.
+- **Lesson 2**: `pnpm` revela dependencias peer faltantes que `npm` ocultaba (ej. `workbox-window` requerido por `vite-plugin-pwa`), obligando a instalarlas explícitamente para el build.
+- **Lesson 3**: GitHub Actions necesita `uses: pnpm/action-setup@v4` antes de instalar dependencias.
+
+## Technical Validation
+- **CI/CD**: `deploy.yml` actualizado y merge a `main` exitoso.
+- **Frontend**: Servidor Vite y build (`workbox-window` agregado) funcionando bajo `pnpm`.
+- **Scripts**: Sincronizadores auditados y seguros.
+
+---
+
+# 🧠 COMPOUND: Migración a pnpm y Aislamiento de Entorno (Junio 2026)
+
 ---
 
 # 🧠 COMPOUND: Corrección de Zona Horaria (UTC-4 Caracas) para Eventos
@@ -579,22 +601,23 @@ Los filtros de UI basados en 'novedades' no deben hardcodearse a set_codes a men
 **Regla derivada:**
 En scripts ETL de backend, cuando Supabase/PostgREST falle por caché de relaciones de esquema, desacoplar una consulta embebida `A(B)` en dos lecturas seriales independientes evita el error sin penalización excesiva de rendimiento. Además, en flujos de OAuth o Reset, siempre extraer y asegurar la sesión desde los fragmentos de la URL local si el cliente SDK sufre race conditions.
 
-# ?? COMPOUND: Correcci�n de eliminaci�n de �rdenes y art�culos (RPC)
+# ?? COMPOUND: Correcci�n de eliminaci�n de �rdenes y art�culos (RPC)
 
 **Date**: 2026-07-09
 
 ## Objective
-Resolver los errores en producci�n en el panel de administrador al intentar eliminar un art�culo de un pedido (error al recalcular o por RPC faltante) y al hacer soft_delete del pedido entero.
+Resolver los errores en producci�n en el panel de administrador al intentar eliminar un art�culo de un pedido (error al recalcular o por RPC faltante) y al hacer soft_delete del pedido entero.
 
 ## Knowledge Codification
 
-### 1. Funciones RPC para �rdenes
-- **Feature**: Creaci�n de delete_order_item_v1 y soft_delete_order para manejar la eliminaci�n controlada de art�culos y pedidos enteros, reabasteciendo el inventario autom�ticamente.
-- **Lesson 1**: En order_items, el precio unitario se guarda como price_at_purchase, no unit_price. El uso incorrecto del nombre de la columna en funciones PL/pgSQL generar� un error ecord has no field.
-- **Lesson 2**: Al eliminar un art�culo de un pedido activo (o hacer un borrado l�gico del pedido a status = 'deleted'), es crucial devolver las cantidades descontadas (+ quantity) al stock original, sea producto o accesorio, para evitar inconsistencias en el inventario real.
+### 1. Funciones RPC para �rdenes
+- **Feature**: Creaci�n de delete_order_item_v1 y soft_delete_order para manejar la eliminaci�n controlada de art�culos y pedidos enteros, reabasteciendo el inventario autom�ticamente.
+- **Lesson 1**: En order_items, el precio unitario se guarda como price_at_purchase, no unit_price. El uso incorrecto del nombre de la columna en funciones PL/pgSQL generar� un error 
+ecord has no field.
+- **Lesson 2**: Al eliminar un art�culo de un pedido activo (o hacer un borrado l�gico del pedido a status = 'deleted'), es crucial devolver las cantidades descontadas (+ quantity) al stock original, sea producto o accesorio, para evitar inconsistencias en el inventario real.
 
 ## Technical Validation
-- **Backend**: Migraciones aplicadas en producci�n con �xito.
+- **Backend**: Migraciones aplicadas en producci�n con �xito.
 - **Frontend**: Corregido error en build sobre variable session faltante.
 
 ### Odoo XML-RPC Integration and Bulk Sincronization Edge Cases
@@ -608,16 +631,56 @@ Resolver los errores en producci�n en el panel de administrador al intentar elim
 
 ### Lazy Loading en Vite (React) y ChunkLoadError
 **Fecha**: 13 de Julio de 2026
-**Contexto**: Al desplegar nuevas versiones de la aplicaci�n (SPA), los chunks antiguos son eliminados de Cloudflare. Si el usuario intenta navegar a una p�gina perezosa (lazy-loaded) antes de refrescar, ocurre un error fatal: `TypeError: Failed to fetch dynamically imported module`.
-**Soluci�n (Cazador de Errores)**: Se implement� un componente especializado `ChunkErrorBoundary` que captura el `ChunkLoadError` e invoca de inmediato `window.location.reload()`. Esto garantiza que las actualizaciones de PWA/Vite sean invisibles y silenciosas, sin romper la aplicaci�n y forzando la recarga para traer los nuevos chunks.
+**Contexto**: Al desplegar nuevas versiones de la aplicaci�n (SPA), los chunks antiguos son eliminados de Cloudflare. Si el usuario intenta navegar a una p�gina perezosa (lazy-loaded) antes de refrescar, ocurre un error fatal: `TypeError: Failed to fetch dynamically imported module`.
+**Soluci�n (Cazador de Errores)**: Se implement� un componente especializado `ChunkErrorBoundary` que captura el `ChunkLoadError` e invoca de inmediato `window.location.reload()`. Esto garantiza que las actualizaciones de PWA/Vite sean invisibles y silenciosas, sin romper la aplicaci�n y forzando la recarga para traer los nuevos chunks.
 
-### Landing Pages vs Modales de Selecci�n
+### Landing Pages vs Modales de Selecci�n
 **Fecha**: 13 de Julio de 2026
-**Contexto**: Se reemplaz� un selector en modal para los rankings por una vista dedicada (Landing Page de Rankings) manejada por el valor vac�o de query parameters. Las vistas de grid inmersivas ofrecen mejor UX para la selecci�n de categor�as top-level que ocultar esas opciones detr�s de clics adicionales o modales.
+**Contexto**: Se reemplaz� un selector en modal para los rankings por una vista dedicada (Landing Page de Rankings) manejada por el valor vac�o de query parameters. Las vistas de grid inmersivas ofrecen mejor UX para la selecci�n de categor�as top-level que ocultar esas opciones detr�s de clics adicionales o modales.
 
 
 ### 🔄 Odoo Inventory Engine & Reverse Sync (Compound v63)
 - **Real-Time Inventory Lock:** Integrated erify_stock endpoint into the checkout flow, strictly validating stock against Odoo's qty_available and enforcing the is_storable flag to prevent ghost orders.
 - **Smart Cart Auto-Adjustment:** Upgraded pi/index.ts to autonomously reconcile cart items and Supabase catalog stock upon Odoo verification failures (missing or insufficient items), preventing hard checkout errors and providing graceful UX.
 - **Reverse Sync Architecture:** Completely rebuilt the Odoo Sales Order confirmation webhook to perform a reverse synchronization. The webhook now queries the final invoice lines from Odoo via RPC and overwrites the Supabase order_items and 	otal_amount to reflect modifications (taxes, additions, removals) made at the physical store.
+- **Reverse Sync Architecture:** Completely rebuilt the Odoo Sales Order confirmation webhook to perform a reverse synchronization. The webhook now queries the final invoice lines from Odoo via RPC and overwrites the Supabase order_items and \total_amount to reflect modifications (taxes, additions, removals) made at the physical store.
 - **Data Parity:** Executed a bulk injection script to set is_storable=True and migrate Supabase stock to stock.quant in Odoo for 115 products.
+
+---
+
+### 🛒 Cross-Tab Cart Sync + add_to_cart_v2 Fix (Compound v64)
+**Fecha**: 2026-08-16  
+**Sesión**: Corrección de bugs post-deployment en flujo de compra.
+
+#### Problemas Resueltos
+
+1. **add_to_cart_v2 — JOIN por set_id roto para cartas Auto-Discovered**
+   - **Root cause**: El RPC original hacía `JOIN public.sets s ON cp.set_id = s.set_id`, pero las 137 cartas inyectadas por Auto-Discovery en sesiones previas no tenían `set_id` asociado. Esto provocaba que `v_name IS NULL` y retornara `'No se pudo identificar la entidad'` silenciosamente.
+   - **Fix**: Eliminado el JOIN con `public.sets`. El RPC ahora extrae `cp.set_code` directamente desde `card_printings`, que siempre está disponible. Aplicado en producción vía Supabase SQL Editor.
+
+2. **Cross-Tab Cart Sync — Pestañas no se actualizaban entre sí**
+   - **Root cause**: El evento `cart-updated` es un `CustomEvent` del DOM, solo visible dentro de la pestaña que lo emite. Las otras pestañas no recibían el señal.
+   - **Fix**: Agregada emisión de `localStorage.setItem('cart_sync_timestamp', Date.now())` en **todos** los puntos de mutación del carrito en `api.ts`. En `CartContext.tsx` se suscribió al evento `storage` del navegador (nativo y cross-tab), que se dispara automáticamente en todas las pestañas abiertas cuando otra pestaña modifica el localStorage.
+   - **Clave arquitectónica**: El evento `storage` **no se dispara en la misma pestaña** que hace el `setItem`, por eso la combinación `dispatchEvent('cart-updated') + setItem(timestamp)` cubre ambos casos (misma pestaña y otras pestañas).
+
+3. **QuickStockItem — Finish hardcodeado como 'nonfoil'**
+   - **Root cause**: `handleAddToCart` determinaba el `finish` comparando `item.condition === 'Foil'`, pero la condición del producto (`NM`, `LP`, `MP`) nunca coincide con 'Foil'. Todas las cartas se añadían como `nonfoil`.
+   - **Fix**: La interfaz `QuickStockItemProps` ahora incluye el campo `finish?: string` y `handleAddToCart` usa `item.finish?.toLowerCase() ?? 'nonfoil'`.
+
+#### Archivos Modificados
+- `supabase/functions` → RPC `add_to_cart_v2` actualizado en producción (SQL directo)
+- `frontend/src/utils/api.ts` → 9 puntos de emisión de `cart_sync_timestamp`
+- `frontend/src/context/CartContext.tsx` → Listener de evento `storage` añadido
+- `frontend/src/components/Navigation/QuickStockItem.tsx` → Propiedad `finish` añadida a props
+
+#### Validación E2E
+- Corrida de compra dummy ejecutada en `geekorium.shop` (producción):
+  - Búsqueda → Add to Cart → Carrito → Checkout → **¡ORDEN RECIBIDA!** ✅
+  - Orden verificada en DB (`pending_verification`, items correctos, precio correcto)
+  - Orden de prueba eliminada limpiamente de producción
+
+
+- **2026-08-17**: 
+  - **Filtro NUEVO**: Refactorización del RPC get_products_filtered para usar una ventana dinámica de 7 días basada en el último restock (MAX(restocked_at)). Se eliminó el ordenamiento forzado por fecha para permitir que el filtro de precio funcione correctamente sobre el lote completo de novedades.
+  - **Filtros de Set**: Se implementó una resolución relacional de nombres de sets en get_products_filtered mediante subqueries a la tabla sets, previniendo fallos cuando las cartas importadas carecen del set_name. Se actualizó el RPC ulk_import_inventory para prevenir el problema a futuro.
+  - **UI/UX**: Corrección de 'Flexbox Inverse Overflow' en Card.tsx que causaba que el signo de dólar se cortara en cartas con precios anchos y etiqueta FOIL en pantallas con muchas columnas.

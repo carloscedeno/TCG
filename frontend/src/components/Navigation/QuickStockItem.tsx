@@ -10,6 +10,7 @@ interface QuickStockItemProps {
         product_id: string;
         name: string;
         condition: string;
+        finish?: string;
         price: number;
         stock: number;
         image_url: string;
@@ -55,11 +56,10 @@ export const QuickStockItem: React.FC<QuickStockItemProps> = ({ item }) => {
         e.stopPropagation();
         setIsAddingToCart(true);
         try {
-            // Determine finish from condition (simplification)
-            const finish = item.condition === 'Foil' ? 'foil' : 'nonfoil';
+            const finish = item.finish ? item.finish.toLowerCase() : 'nonfoil';
             const result = await addToCart(item.product_id, 1, finish);
             if (result && !result.success) {
-                alert(result.message || 'Error al agregar');
+                alert(result.error || result.message || 'Error al agregar');
             } else {
                 await refreshCart();
                 // We could show a tiny success animation here too
