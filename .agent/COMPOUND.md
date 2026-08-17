@@ -679,3 +679,8 @@ ecord has no field.
   - Orden verificada en DB (`pending_verification`, items correctos, precio correcto)
   - Orden de prueba eliminada limpiamente de producción
 
+
+- **2026-08-17**: 
+  - **Filtro NUEVO**: Refactorización del RPC get_products_filtered para usar una ventana dinámica de 7 días basada en el último restock (MAX(restocked_at)). Se eliminó el ordenamiento forzado por fecha para permitir que el filtro de precio funcione correctamente sobre el lote completo de novedades.
+  - **Filtros de Set**: Se implementó una resolución relacional de nombres de sets en get_products_filtered mediante subqueries a la tabla sets, previniendo fallos cuando las cartas importadas carecen del set_name. Se actualizó el RPC ulk_import_inventory para prevenir el problema a futuro.
+  - **UI/UX**: Corrección de 'Flexbox Inverse Overflow' en Card.tsx que causaba que el signo de dólar se cortara en cartas con precios anchos y etiqueta FOIL en pantallas con muchas columnas.
