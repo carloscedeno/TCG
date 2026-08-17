@@ -37,13 +37,13 @@ export interface CardProps {
   showCartButton?: boolean;
   is_accessory?: boolean;
   accessory_id?: string;
-  updated_at?: string;
+  restocked_at?: string;
   additional_images?: string[];
   onClick?: () => void;
 }
 
-export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, price, original_price, discount_percentage, card_id, rarity, type, card_faces, viewMode = 'grid', total_stock, finish, is_foil, isArchive, showCartButton = false, is_accessory, accessory_id, additional_images, updated_at, onClick }) => {
-  const isNew = updated_at ? (Date.now() - new Date(updated_at).getTime()) < 14 * 24 * 60 * 60 * 1000 : false;
+export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, price, original_price, discount_percentage, card_id, rarity, type, card_faces, viewMode = 'grid', total_stock, finish, is_foil, isArchive, showCartButton = false, is_accessory, accessory_id, additional_images, restocked_at, onClick }) => {
+  const isNew = restocked_at ? (Date.now() - new Date(restocked_at).getTime()) < 14 * 24 * 60 * 60 * 1000 : false;
   const [currentFaceIndex, setCurrentFaceIndex] = useState(0);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [addingToCart, setAddingToCart] = useState(false);
