@@ -102,9 +102,9 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
   const currentTypes = getGameSpecificTypes();
 
   return (
-    <aside className="w-full glass-panel border border-white/5 p-8 rounded-[32px] shadow-2xl space-y-10">
+    <aside className="w-full glass-panel border border-neutral-200 dark:border-white/5 p-8 rounded-[32px] shadow-2xl space-y-10">
       <div className="flex items-center justify-between mb-2">
-        <h2 className="text-sm md:text-lg font-black italic tracking-tighter text-white flex items-center gap-2">
+        <h2 className="text-sm md:text-lg font-black italic tracking-tighter text-black dark:text-white flex items-center gap-2">
           <Sliders size={18} className="text-geeko-cyan" />
           FILTROS
         </h2>
@@ -121,10 +121,10 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
 
       {/* Juegos - Ocultar si ya hay uno seleccionado */}
       {!selectedGame && (
-        <section className="border-b border-white/5 pb-6">
+        <section className="border-b border-neutral-200 dark:border-white/5 pb-6">
           <button 
             onClick={() => toggleSection('games')}
-            className="w-full flex items-center justify-between text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] text-text-low mb-2 hover:text-text-high transition-colors"
+            className="w-full flex items-center justify-between text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 dark:text-text-low mb-2 hover:text-black dark:hover:text-text-high transition-colors"
           >
             <div className="flex items-center gap-2">
               <div className="w-1.5 h-1.5 bg-geeko-cyan rounded-full shadow-[0_0_10px_rgba(0, 209, 255, 0.8)]"></div>
@@ -142,8 +142,8 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
                     key={game}
                     onClick={() => handleCheckbox('games', game)}
                     className={`px-4 py-2 rounded-xl text-[11px] md:text-[12px] font-bold transition-all border ${isSelected
-                      ? 'bg-geeko-violet-accent/20 border-geeko-cyan/40 text-geeko-cyan shadow-lg shadow-geeko-cyan/10'
-                      : 'bg-neutral-900/50 border-neutral-800 text-text-low hover:border-neutral-700 hover:text-text-high'
+                      ? 'bg-geeko-violet-accent/10 dark:bg-geeko-violet-accent/20 border-geeko-cyan/40 text-geeko-cyan shadow-lg shadow-geeko-cyan/10'
+                      : 'bg-white dark:bg-neutral-900/50 border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-text-low hover:border-neutral-400 dark:hover:border-neutral-700 hover:text-black dark:hover:text-text-high'
                       }`}
                   >
                     {gameNameMap[game] || game}
@@ -157,10 +157,10 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
 
       {/* Sets - Solo Singles */}
       {!isAccessoryMode && (
-        <section className="border-b border-white/5 pb-6">
+        <section className="border-b border-neutral-200 dark:border-white/5 pb-6">
           <button 
             onClick={() => toggleSection('sets')}
-            className="w-full flex items-center justify-between text-[11px] font-black uppercase tracking-[0.2em] text-text-low mb-2 hover:text-text-high transition-colors"
+            className="w-full flex items-center justify-between text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 dark:text-text-low mb-2 hover:text-black dark:hover:text-text-high transition-colors"
           >
             <div className="flex items-center gap-2">
               <div className="w-1.5 h-1.5 bg-geeko-violet-accent rounded-full shadow-[0_0_10px_rgba(55,50,102,0.9)]"></div>
@@ -172,13 +172,13 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
           {expandedSections.sets && (
             <div className="pt-3 animate-in fade-in slide-in-from-top-1 duration-200">
               <div className="relative mb-3">
-                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-low" />
+                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 dark:text-text-low" />
                 <input
                   type="text"
                   placeholder="Buscar sets..."
                   value={setSearch}
                   onChange={(e) => setSetSearch(e.target.value)}
-                  className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2.5 pl-9 pr-4 text-xs text-text-high placeholder:text-text-low/50 focus:outline-none focus:border-purple-500/50 transition-all font-medium"
+                  className="w-full bg-white dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 rounded-xl py-2.5 pl-9 pr-4 text-xs text-black dark:text-text-high placeholder:text-neutral-400 dark:placeholder:text-text-low/50 focus:outline-none focus:border-purple-500/50 transition-all font-medium"
                 />
               </div>
               <div className="max-h-52 overflow-y-auto pr-2 custom-scrollbar space-y-1">
@@ -189,7 +189,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
                       onClick={() => handleCheckbox('sets', setName)}
                       className={`flex items-center justify-between w-full px-3 py-2 rounded-lg text-left text-[11px] md:text-[12px] font-medium transition-all ${selected.sets?.includes(setName)
                         ? 'bg-geeko-cyan/10 text-geeko-cyan'
-                        : 'text-text-low hover:bg-white/5 hover:text-text-high'
+                        : 'text-neutral-600 dark:text-text-low hover:bg-black/5 dark:hover:bg-white/5 hover:text-black dark:hover:text-text-high'
                         }`}
                     >
                       <span className="truncate pr-4">{setName}</span>
@@ -248,10 +248,10 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
 
       {/* Rareza - Solo para Cartas */}
       {!isAccessoryMode && filters.rarities && (
-        <section className="border-b border-white/5 pb-6">
+        <section className="border-b border-neutral-200 dark:border-white/5 pb-6">
           <button 
             onClick={() => toggleSection('rarities')}
-            className="w-full flex items-center justify-between text-[11px] font-black uppercase tracking-[0.2em] text-text-low mb-2 hover:text-text-high transition-colors"
+            className="w-full flex items-center justify-between text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 dark:text-text-low mb-2 hover:text-black dark:hover:text-text-high transition-colors"
           >
             <div className="flex items-center gap-2">
               <div className="w-1.5 h-1.5 bg-geeko-gold rounded-full shadow-[0_0_10px_rgba(255,215,0,0.8)]"></div>
@@ -270,7 +270,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
                     onClick={() => handleCheckbox('rarities', rarity)}
                     className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border transition-all ${isSelected
                       ? 'bg-geeko-gold/10 border-geeko-gold/40 text-geeko-gold shadow-lg shadow-geeko-gold/5'
-                      : 'bg-neutral-900/50 border-neutral-800 text-text-low hover:border-neutral-700'
+                      : 'bg-white dark:bg-neutral-900/50 border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-text-low hover:border-neutral-400 dark:hover:border-neutral-700'
                       }`}
                   >
                     <div className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-geeko-gold animate-pulse' : 'bg-neutral-700'}`} />
@@ -285,10 +285,10 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
 
       {/* Colores Contextuales */}
       {!isAccessoryMode && currentColors.length > 0 && (
-        <section className="border-b border-white/5 pb-6">
+        <section className="border-b border-neutral-200 dark:border-white/5 pb-6">
           <button 
             onClick={() => toggleSection('colors')}
-            className="w-full flex items-center justify-between text-[11px] font-black uppercase tracking-[0.2em] text-text-low mb-2 hover:text-text-high transition-colors"
+            className="w-full flex items-center justify-between text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 dark:text-text-low mb-2 hover:text-black dark:hover:text-text-high transition-colors"
           >
             <div className="flex items-center gap-2">
               <div className="w-1.5 h-1.5 bg-geeko-cyan rounded-full shadow-[0_0_10px_rgba(0, 209, 255, 0.8)]"></div>
@@ -322,7 +322,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
                     title={colorMap[color] || color}
                     className={`relative group w-full aspect-square rounded-xl border flex items-center justify-center transition-all ${isSelected
                       ? 'border-geeko-cyan/50 bg-geeko-cyan/10'
-                      : 'border-neutral-800 bg-neutral-900/50 hover:border-neutral-600'
+                      : 'border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/50 hover:border-neutral-400 dark:hover:border-neutral-600'
                       }`}
                   >
                     <div className={`w-4 h-4 rounded-full ${colorClassMap[color] || 'bg-neutral-500'} ${isSelected ? 'scale-125' : 'opacity-80 group-hover:opacity-100'} transition-all`} />
@@ -337,10 +337,10 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
 
       {/* Tipos Contextuales */}
       {!isAccessoryMode && currentTypes.length > 0 && (
-        <section className="border-b border-white/5 pb-6">
+        <section className="border-b border-neutral-200 dark:border-white/5 pb-6">
           <button 
             onClick={() => toggleSection('types')}
-            className="w-full flex items-center justify-between text-[11px] font-black uppercase tracking-widest text-text-low mb-2 hover:text-text-high transition-colors"
+            className="w-full flex items-center justify-between text-[11px] font-black uppercase tracking-widest text-neutral-500 dark:text-text-low mb-2 hover:text-black dark:hover:text-text-high transition-colors"
           >
             <div className="flex items-center gap-2">
               <div className="w-1 h-3 bg-red-600 rounded-full"></div>
@@ -359,7 +359,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
                     onClick={() => handleCheckbox('types', type)}
                     className={`px-3 py-1.5 rounded-lg text-[10px] md:text-[11px] font-bold transition-all border ${isSelected
                       ? 'bg-red-600/10 border-red-500/50 text-red-400'
-                      : 'bg-neutral-900/50 border-neutral-800 text-text-low hover:text-text-high'
+                      : 'bg-white dark:bg-neutral-900/50 border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-text-low hover:text-black dark:hover:text-text-high hover:border-neutral-400 dark:hover:border-neutral-700'
                       }`}
                   >
                     {typeMap[type] || type}
@@ -372,8 +372,8 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
       )}
 
       {/* Promociones y Ofertas */}
-      <section className="border-b border-white/5 pb-6 space-y-3">
-        <div className="flex items-center justify-between text-[11px] font-black uppercase tracking-[0.2em] text-text-low mb-2">
+      <section className="border-b border-neutral-200 dark:border-white/5 pb-6 space-y-3">
+        <div className="flex items-center justify-between text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 dark:text-text-low mb-2">
           <div className="flex items-center gap-2">
             <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full shadow-[0_0_10px_rgba(52,211,153,0.8)]"></div>
             Promociones
@@ -386,7 +386,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
             className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold transition-all border ${
               selected.only_discount
                 ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.2)]'
-                : 'bg-neutral-900/50 border-neutral-800 text-text-low hover:border-neutral-700 hover:text-text-high'
+                : 'bg-white dark:bg-neutral-900/50 border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-text-low hover:border-neutral-400 dark:hover:border-neutral-700 hover:text-black dark:hover:text-text-high'
             }`}
           >
             <div className={`w-3.5 h-3.5 rounded flex items-center justify-center border ${selected.only_discount ? 'bg-emerald-500 border-emerald-400 text-black' : 'border-neutral-700 bg-neutral-800'}`}>
@@ -400,7 +400,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
             className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold transition-all border ${
               selected.only_presale
                 ? 'bg-purple-500/20 border-purple-500/50 text-purple-400 shadow-[0_0_15px_rgba(168,85,247,0.2)]'
-                : 'bg-neutral-900/50 border-neutral-800 text-text-low hover:border-neutral-700 hover:text-text-high'
+                : 'bg-white dark:bg-neutral-900/50 border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-text-low hover:border-neutral-400 dark:hover:border-neutral-700 hover:text-black dark:hover:text-text-high'
             }`}
           >
             <div className={`w-3.5 h-3.5 rounded flex items-center justify-center border ${selected.only_presale ? 'bg-purple-500 border-purple-400 text-white' : 'border-neutral-700 bg-neutral-800'}`}>
@@ -412,10 +412,10 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
       </section>
 
       {/* Rango de Precio */}
-      <section className="border-b border-white/5 pb-6">
+        <section className="border-b border-neutral-200 dark:border-white/5 pb-6">
         <button 
           onClick={() => toggleSection('price')}
-          className="w-full flex items-center justify-between text-[11px] font-black uppercase tracking-[0.2em] text-text-low mb-2 hover:text-text-high transition-colors"
+          className="w-full flex items-center justify-between text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 dark:text-text-low mb-2 hover:text-black dark:hover:text-text-high transition-colors"
         >
           <div className="flex items-center gap-2">
             <div className="w-1.5 h-1.5 bg-geeko-gold rounded-full shadow-[0_0_10px_rgba(255,215,0,0.8)]"></div>
@@ -434,9 +434,9 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
                 const val = e.target.value === '' ? undefined : parseFloat(e.target.value);
                 onChange({ ...selected, priceRange: [val, selected.priceRange?.[1]] });
               }}
-              className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-geeko-gold/50"
+              className="w-full bg-white dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-black dark:text-white focus:outline-none focus:border-geeko-gold/50 focus:ring-1 focus:ring-geeko-gold/20"
             />
-            <span className="text-neutral-700">→</span>
+            <span className="text-neutral-400 dark:text-neutral-700">→</span>
             <input
               type="number"
               placeholder="Máx"
@@ -445,7 +445,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
                 const val = e.target.value === '' ? undefined : parseFloat(e.target.value);
                 onChange({ ...selected, priceRange: [selected.priceRange?.[0], val] });
               }}
-              className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-geeko-gold/50"
+              className="w-full bg-white dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-black dark:text-white focus:outline-none focus:border-geeko-gold/50 focus:ring-1 focus:ring-geeko-gold/20"
             />
           </div>
         )}
@@ -456,7 +456,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
         <section className="pb-6">
           <button 
             onClick={() => toggleSection('year')}
-            className="w-full flex items-center justify-between text-[11px] font-black uppercase tracking-[0.2em] text-text-low mb-2 hover:text-text-high transition-colors"
+            className="w-full flex items-center justify-between text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 dark:text-text-low mb-2 hover:text-black dark:hover:text-text-high transition-colors"
           >
           <div className="flex items-center gap-2">
             <div className="w-1.5 h-1.5 bg-geeko-cyan rounded-full shadow-[0_0_10px_rgba(0, 209, 255, 0.8)]"></div>
@@ -472,27 +472,27 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
               placeholder="Desde"
               value={selected.yearRange?.[0] || ''}
               onChange={(e) => onChange({ ...selected, yearRange: [parseInt(e.target.value) || 1993, selected.yearRange?.[1] || 2026] })}
-              className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-geeko-cyan/50"
+              className="w-full bg-white dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-black dark:text-white focus:outline-none focus:border-geeko-cyan/50 focus:ring-1 focus:ring-geeko-cyan/20"
             />
-            <span className="text-neutral-700">→</span>
+            <span className="text-neutral-400 dark:text-neutral-700">→</span>
             <input
               type="number"
               placeholder="Hasta"
               value={selected.yearRange?.[1] || ''}
               onChange={(e) => onChange({ ...selected, yearRange: [selected.yearRange?.[0] || 1993, parseInt(e.target.value) || 2026] })}
-              className="w-full bg-neutral-900/50 border border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-white focus:outline-none focus:border-geeko-cyan/50"
+              className="w-full bg-white dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 rounded-xl py-2 px-3 text-[11px] text-black dark:text-white focus:outline-none focus:border-geeko-cyan/50 focus:ring-1 focus:ring-geeko-cyan/20"
             />
             </div>
           )}
         </section>
       )}
 
-      <div className="pt-6 mt-10 border-t border-white/5">
-        <div className="bg-neutral-900/50 rounded-2xl p-5 border border-white/5 relative overflow-hidden group">
-          <p className="text-[10px] font-bold text-text-low mb-2 leading-relaxed relative z-10 uppercase tracking-tight">
+      <div className="pt-6 mt-10 border-t border-neutral-200 dark:border-white/5">
+        <div className="bg-neutral-100 dark:bg-neutral-900/50 rounded-2xl p-5 border border-neutral-200 dark:border-white/5 relative overflow-hidden group">
+          <p className="text-[10px] font-bold text-neutral-500 dark:text-text-low mb-2 leading-relaxed relative z-10 uppercase tracking-tight">
             Sincronizador de precios con CardKingdom
           </p>
-          <div className="flex items-center gap-2 text-[9px] font-medium text-text-low relative z-10">
+          <div className="flex items-center gap-2 text-[9px] font-medium text-neutral-400 dark:text-text-low relative z-10">
             <Filter size={10} />
             Precios referenciales, puede haber varianza de precios
           </div>

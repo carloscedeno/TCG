@@ -431,10 +431,10 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[100dvh] flex flex-col bg-geeko-black text-text-high font-sans relative selection:bg-white/30">
-
-      {/* Background Layer */}
-      <div className="fixed inset-0 z-0 bg-geeko-black">
+    <div className="min-h-[100dvh] flex flex-col bg-neutral-50 dark:bg-geeko-black text-black dark:text-text-high font-sans relative selection:bg-black/20 dark:selection:bg-white/30">
+      
+      {/* Background decoration */}
+      <div className="fixed inset-0 z-0 bg-neutral-50 dark:bg-geeko-black">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-white/5 rounded-full blur-[120px]" />
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-geeko-purple-vibrant/5 rounded-full blur-[100px]" />
       </div>
@@ -463,10 +463,10 @@ const Home: React.FC = () => {
           </div>
         )}
 
-        {/* Rarity Filter Tabs & Sort */}
-        <div className="bg-[#0a0a0a]/95 border-b border-neutral-800 sticky top-[60px] lg:top-[156px] z-40 backdrop-blur-md">
-            <div className="max-w-[1600px] mx-auto px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="flex bg-neutral-900/50 p-1 rounded-full border border-neutral-800">
+        {/* Search & Utility Bar - Sticky */}
+        <div className="bg-white/95 dark:bg-[#0a0a0a]/95 border-b border-neutral-200 dark:border-neutral-800 sticky top-[60px] lg:top-[156px] z-40 backdrop-blur-md">
+            <div className="max-w-[1600px] mx-auto px-4 py-3 flex items-center justify-between gap-4">
+                <div className="flex bg-neutral-100 dark:bg-neutral-900/50 p-1 rounded-full border border-neutral-200 dark:border-neutral-800">
                   {filters.games && filters.games.length > 0 && inventoryPresence.hasSingles && (
                   <button
                     onClick={() => handleTabChange('marketplace')}
@@ -498,10 +498,10 @@ const Home: React.FC = () => {
 
 
             <div className="flex items-center gap-2 md:gap-4">
-              <button
+                <button 
                 onClick={() => setIsMobileFiltersOpen(true)}
-                className="lg:hidden p-2.5 bg-neutral-900 border border-white/5 rounded-xl hover:bg-neutral-800 transition-all text-text-low flex items-center gap-2"
-              >
+                className="lg:hidden p-2.5 bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-white/5 rounded-xl hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-all text-neutral-600 dark:text-text-low flex items-center gap-2"
+                >
                 <div className="relative">
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" /></svg>
                   {Object.values(filters).some(v => v && (typeof v === 'boolean' ? v : (v as any).length > 0)) && (
@@ -541,7 +541,9 @@ const Home: React.FC = () => {
                 </button>
               </div>
 
-              <div className="flex bg-neutral-900/50 p-1 rounded-lg border border-neutral-800">
+                {/* Desktop Utilities */}
+              <div className="hidden lg:flex items-center gap-4">
+                <div className="flex bg-neutral-100 dark:bg-neutral-900/50 p-1 rounded-full border border-neutral-200 dark:border-neutral-800">
                 <button
                   onClick={() => setViewMode('grid')}
                   className={`p-2 rounded-md transition-all ${viewMode === 'grid' ? 'bg-neutral-800 text-text-high shadow-inner' : 'text-text-low hover:text-neutral-300'}`}
@@ -557,6 +559,7 @@ const Home: React.FC = () => {
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" /><line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" /></svg>
                 </button>
               </div>
+            </div>
             </div>
           </div>
         </div>
@@ -682,12 +685,11 @@ const Home: React.FC = () => {
 
         <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
 
-        {/* Mobile Filters Drawer */}
-        {
-          isMobileFiltersOpen && (
-            <div className="fixed inset-0 z-[100] lg:hidden">
+            {/* Mobile Filters Drawer */}
+            {isMobileFiltersOpen && (
+              <div className="fixed inset-0 z-[100] lg:hidden">
               <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setIsMobileFiltersOpen(false)} />
-              <div className="absolute inset-y-0 right-0 w-full max-w-xs bg-[#0a0a0a] border-l border-white/5 p-6 shadow-2xl overflow-y-auto animate-in slide-in-from-right duration-300">
+              <div className="absolute inset-y-0 right-0 w-full max-w-xs bg-white dark:bg-[#0a0a0a] border-l border-neutral-200 dark:border-white/5 p-6 shadow-2xl overflow-y-auto animate-in slide-in-from-right duration-300">
                 <div className="flex items-center justify-between mb-8">
                   <h2 className="text-xl font-black tracking-tighter">FILTROS</h2>
                   <button onClick={() => setIsMobileFiltersOpen(false)} className="p-2 bg-white/5 rounded-lg text-neutral-400">

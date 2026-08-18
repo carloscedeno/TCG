@@ -140,9 +140,9 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         }}
         onMouseEnter={handlePreFetch}
         data-testid="product-card"
-        className="flex items-center gap-4 px-4 py-3 bg-black/40 hover:bg-neutral-900 border border-white/5 hover:border-geeko-cyan/30 rounded-xl transition-all cursor-pointer group"
+        className="flex items-center gap-4 px-4 py-3 bg-white dark:bg-black/40 hover:bg-neutral-50 dark:hover:bg-neutral-900 border border-neutral-200 dark:border-white/5 hover:border-geeko-cyan/50 dark:hover:border-geeko-cyan/30 rounded-xl transition-all cursor-pointer group shadow-sm dark:shadow-none"
       >
-        <div className="w-12 h-16 bg-[#1a1a1a] rounded-md overflow-hidden flex-shrink-0 relative">
+        <div className="w-12 h-16 bg-neutral-200 dark:bg-[#1a1a1a] rounded-md overflow-hidden flex-shrink-0 relative">
           <CardImage src={imgSrc} alt={currentName} size="small" fallbackIconSize={20} className="rounded-md" />
           {!!hasMultipleFaces && (
             <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -154,8 +154,8 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
           )}
         </div>
 
-        <div className="flex-1 min-w-0">
-          <h3 className="text-white font-bold text-sm group-hover:text-geeko-cyan transition-colors break-words whitespace-normal leading-snug flex items-center gap-2">
+        <div className="mt-4 flex-1 flex flex-col min-w-0">
+        <h3 className="text-black dark:text-white font-bold text-sm sm:text-base leading-tight group-hover:text-geeko-cyan transition-colors break-words whitespace-normal relative z-10 flex flex-wrap items-center gap-2">
             {cleanName}
             {isPresale && (
               <span className="px-1.5 py-0.5 bg-geeko-cyan text-black text-[7px] font-black uppercase rounded shadow-lg shadow-geeko-cyan/20">Preventa</span>
@@ -165,7 +165,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
             )}
           </h3>
           <div className="flex items-center gap-2 mt-0.5">
-            <span className="text-[10px] text-text-low font-bold uppercase tracking-wider px-1.5 py-0.5 bg-white/5 rounded">{set}</span>
+            <span className="text-[10px] text-neutral-600 dark:text-text-low font-bold uppercase tracking-wider px-1.5 py-0.5 bg-black/5 dark:bg-white/5 rounded">{set}</span>
             {!is_accessory && rarity && (
               <span className={`text-[9px] font-black uppercase tracking-widest ${rarity.toLowerCase() === 'mythic' ? 'text-orange-400' :
                 rarity.toLowerCase() === 'rare' ? 'text-geeko-gold' : 'text-text-low'
@@ -248,8 +248,10 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
       }}
       onMouseEnter={handlePreFetch}
       data-testid="product-card"
-      className={`flex flex-col glass-card rounded-2xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 group relative ${!is_accessory ? getRarityStyle(rarity) : 'border border-white/10 hover:border-white/30'} cursor-pointer h-full`}
+      className="relative group p-2 sm:p-4 bg-white dark:bg-neutral-900/40 border border-neutral-200 dark:border-white/5 rounded-[1.5rem] hover:bg-neutral-50 dark:hover:bg-neutral-900/80 transition-all cursor-pointer flex flex-col h-full hover:border-geeko-cyan/50 dark:hover:border-geeko-cyan/30 shadow-sm dark:shadow-none"
     >
+      <div className="relative aspect-[63/88] w-full rounded-lg overflow-hidden bg-neutral-200 dark:bg-neutral-800 shadow-lg">
+
       {/* Flip Button overlay */}
       {!!hasMultipleFaces && (
         <button
@@ -390,8 +392,10 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
           {cleanName}
         </h3>
 
-        <div className="flex items-center justify-between text-[10px] text-text-low font-medium">
-          <span className="truncate max-w-[65%] opacity-70 italic" title={set}>{set}</span>
+        <div className="text-xs text-neutral-500 dark:text-neutral-400 mt-2 truncate flex items-center gap-1.5 font-medium">
+          <span className="px-1.5 py-0.5 bg-black/5 dark:bg-white/5 rounded text-[10px] font-black uppercase tracking-widest text-neutral-600 dark:text-text-low">
+            {set}
+          </span>
           {currentType && <span className="truncate max-w-[30%] opacity-50 text-right">{currentType.split('—')[0].trim()}</span>}
         </div>
 
