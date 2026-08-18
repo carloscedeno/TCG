@@ -282,7 +282,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10" />
 
       {/* Card Image */}
-      <div className={`relative aspect-[2.5/3.5] w-full bg-[#1a1a1a] overflow-hidden ${isFoil ? 'holo-effect' : ''}`}>
+      <div className={`relative aspect-[2.5/3.5] w-full bg-neutral-100 dark:bg-[#1a1a1a] overflow-hidden ${isFoil ? 'holo-effect' : ''}`}>
         {isFoil && (
           <div className="absolute inset-0 z-20 foil-shimmer opacity-30 mix-blend-overlay pointer-events-none" />
         )}
