@@ -89,10 +89,9 @@
 
 :root {
   font-family: 'Rubik', system-ui, Avenir, Helvetica, Arial, sans-serif;
-  /* Rubik cargado localmente */
   line-height: 1.5;
   font-weight: 400;
-  color-scheme: dark;
+  color-scheme: dark light;
 }
 
 body {
@@ -103,6 +102,29 @@ body {
   color: var(--color-text-high);
   font-family: var(--font-body);
   overscroll-behavior-y: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.light body {
+  background-color: var(--color-neutral-white);
+  color: var(--color-neutral-black);
+}
+
+.light .glass-card,
+.light .glass-panel,
+.light .glass-sidebar {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+}
+
+.light header {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-bottom-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.light .text-outline {
+  -webkit-text-stroke: 1.5px black;
 }
 
 /* Custom scrollbar for a premium feel */
