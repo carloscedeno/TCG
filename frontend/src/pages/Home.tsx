@@ -652,15 +652,15 @@ const Home: React.FC = () => {
                           <button
                             onClick={() => setPage((p: number) => p + 1)}
                             disabled={loading}
-                            className="group relative overflow-hidden px-12 py-5 bg-neutral-900 border border-neutral-800 rounded-full font-black text-[11px] tracking-[0.2em] uppercase hover:border-white/50 transition-all flex items-center gap-4 disabled:opacity-50 shadow-2xl"
+                            className="group relative overflow-hidden px-12 py-5 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-full font-black text-[11px] tracking-[0.2em] uppercase hover:border-neutral-300 dark:hover:border-white/50 transition-all flex items-center gap-4 disabled:opacity-50 shadow-lg dark:shadow-2xl text-black dark:text-white"
                           >
-                            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                            <div className="absolute inset-0 bg-gradient-to-r from-neutral-200/0 via-neutral-200/50 dark:from-white/0 dark:via-white/10 dark:to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
                             {loading ? (
-                              <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+                              <div className="w-4 h-4 border-2 border-black/20 dark:border-white/20 border-t-black dark:border-t-white rounded-full animate-spin"></div>
                             ) : (
                               activeTab === 'catalog' ? 'Cargar Más Productos' : 'Cargar Más Cartas'
                             )}
-                            {!loading && <span className="text-text-low bg-neutral-800 px-2 py-0.5 rounded-md">[{totalCount - cards.length}]</span>}
+                            {!loading && <span className="text-neutral-500 dark:text-text-low bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded-md">[{totalCount - cards.length}]</span>}
                           </button>
                         </div>
                       )}
