@@ -325,9 +325,9 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
           </>
         )}
 
-        {/* Stock display - Repositioned & Darker as requested */}
+        {/* Stock display - Repositioned to bottom-left to avoid overlap with cart button */}
         {total_stock !== undefined && total_stock > 0 && (
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-20 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest backdrop-blur-md border border-white/10 bg-black/95 text-white shadow-lg">
+          <div className="absolute bottom-3 left-3 z-20 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest backdrop-blur-md border border-white/20 dark:border-white/10 bg-black/80 dark:bg-black/95 text-white shadow-lg">
             DISP: {total_stock}
           </div>
         )}
@@ -336,7 +336,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         {!is_accessory && rarity && type?.toLowerCase() !== 'sealed product' && type?.toLowerCase() !== 'sealed' && rarity.toLowerCase() !== 'común' && rarity.toLowerCase() !== 'comun' && rarity.toLowerCase() !== 'common' && (
           <div className={`absolute top-2 right-2 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider backdrop-blur-md border border-white/10 z-10 ${rarity.toLowerCase() === 'mythic' ? 'bg-orange-500/20 text-orange-400 border-orange-500/30' :
             rarity.toLowerCase() === 'rare' ? 'bg-geeko-gold/20 text-geeko-gold border-geeko-gold/30' :
-              'bg-black/60 text-text-low'
+              'bg-black/10 dark:bg-black/60 text-neutral-700 dark:text-text-low'
             }`}>
             {rarity}
           </div>
@@ -378,9 +378,9 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
       </div>
 
       {/* Card Info */}
-      <div className="p-4 flex flex-col gap-1 z-20 bg-[#0a0a0a]/90 backdrop-blur-md border-t border-white/5 flex-grow">
+      <div className="p-4 flex flex-col gap-1 z-20 bg-neutral-50 dark:bg-[#0a0a0a]/90 backdrop-blur-md border-t border-neutral-200 dark:border-white/5 flex-grow">
         {/* Fix text overlap: Truncate + Title */}
-        <h3 className="text-white text-sm font-bold truncate leading-snug group-hover:text-geeko-cyan transition-colors" title={cleanName}>
+        <h3 className="text-black dark:text-white text-sm font-bold truncate leading-snug group-hover:text-geeko-cyan transition-colors" title={cleanName}>
           {cleanName}
         </h3>
 
@@ -392,14 +392,14 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         </div>
 
         {/* Price Row */}
-        <div className="mt-auto pt-3 flex items-center justify-between border-t border-white/5">
+        <div className="mt-auto pt-3 flex items-center justify-between border-t border-neutral-200 dark:border-white/5">
           <div className="flex flex-col text-right w-full relative">
-            <span className="text-[8px] uppercase text-text-low font-bold tracking-wider absolute -top-2 right-0">Mercado</span>
+            <span className="text-[8px] uppercase text-neutral-500 dark:text-text-low font-bold tracking-wider absolute -top-2 right-0">Mercado</span>
             {discount_percentage && discount_percentage > 0 ? (
                 <div className="flex flex-col items-end gap-0.5">
                     <div className="flex items-center gap-1.5 justify-end">
-                        <span className="text-[9px] text-text-low font-bold line-through">${original_price?.toFixed(2)}</span>
-                        <span className="text-[8px] bg-purple-500/20 text-purple-400 border border-purple-500/30 px-1 rounded font-black">-{discount_percentage}%</span>
+                        <span className="text-[9px] text-neutral-400 dark:text-text-low font-bold line-through">${original_price?.toFixed(2)}</span>
+                        <span className="text-[8px] bg-purple-500/10 dark:bg-purple-500/20 text-purple-600 dark:text-purple-400 border border-purple-500/20 dark:border-purple-500/30 px-1 rounded font-black">-{discount_percentage}%</span>
                     </div>
                     <div className="flex items-center justify-end gap-1.5">
                       <span className="text-geeko-cyan font-mono font-bold text-base tracking-tight leading-none">
