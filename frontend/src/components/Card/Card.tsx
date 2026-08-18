@@ -107,15 +107,6 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
     }
   };
 
-  // Neon rarity colors & Border Styles
-  const getRarityStyle = (rarity?: string) => {
-    switch (rarity?.toLowerCase()) {
-      case 'mythic': return 'border-orange-500/50 shadow-[0_0_15px_rgba(249,115,22,0.15)]';
-      case 'rare': return 'border-geeko-gold/50 shadow-[0_0_10px_rgba(255,193,7,0.1)]';
-      case 'uncommon': return 'border-geeko-blue/30';
-      default: return 'border-white/10';
-    }
-  };
 
   const isFoil = is_foil === true || finish === 'foil' || name.toLowerCase().includes(' foil ') || (type?.toLowerCase().includes('foil')); // Simple heuristic if finish prop not fully populated yet
 
@@ -381,8 +372,9 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
                 Añadir al carrito
               </span>
             </div>
-          </button>
-        )}
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Card Info */}
