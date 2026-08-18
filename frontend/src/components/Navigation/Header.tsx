@@ -59,7 +59,8 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
             {/* Top Bar: Logo & Search & User */}
             <div className="max-w-[1600px] mx-auto px-4 h-14 lg:h-[60px] flex items-center justify-between gap-12">
                 <Link to="/" className="flex-shrink-0 group relative">
-                    <img src="/branding/Logo.png" alt="Geekorium" className="w-28 sm:w-40 object-contain group-hover:scale-105 transition-transform" />
+                    <img src="/branding/Logo.png" alt="Geekorium" className="hidden dark:block w-28 sm:w-40 object-contain group-hover:scale-105 transition-transform" />
+                    <img src="/branding/Logo-Light.png" alt="Geekorium" className="block dark:hidden w-28 sm:w-40 object-contain group-hover:scale-105 transition-transform" />
                     <span className="absolute -top-1 -right-4 bg-red-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded-md rotate-12 shadow-lg">BETA</span>
                 </Link>
 
