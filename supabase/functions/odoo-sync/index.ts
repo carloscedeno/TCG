@@ -14,15 +14,24 @@ async function odooJsonRpc(url: string, method: string, params: any) {
 
   const response = await fetch(`${url}/jsonrpc`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 GeekoriumSync/1.0'
+    },
     body: JSON.stringify(payload)
   });
 
-  const json = await response.json();
-  if (json.error) {
-    throw new Error(`Odoo RPC Error: ${json.error.data?.message || json.error.message}`);
+  let text;
+  try {
+    text = await response.text();
+    const json = JSON.parse(text);
+    if (json.error) {
+      throw new Error(`Odoo RPC Error: ${json.error.data?.message || json.error.message}`);
+    }
+    return json.result;
+  } catch (err: any) {
+    throw new Error(`Failed to parse Odoo response from ${url}/jsonrpc: ${err.message}. Response: ${text ? text.substring(0, 100) : ''}`);
   }
-  return json.result;
 }
 
 // Helper to download image and convert to Base64
@@ -102,7 +111,7 @@ Deno.serve(async (req: Request) => {
       args: [odooDb, odooUsername, odooApiKey, {}]
     });
 
-    if (!uid) throw new Error("Authentication failed with Odoo.");
+    if (!uid) throw new Error(`Authentication failed with Odoo. DB: ${odooDb}, User: ${odooUsername}, KeyLen: ${odooApiKey?.length}, URL: ${odooUrl}`);
 
     if (action === 'ping') {
       return new Response(JSON.stringify({ success: true, message: "Odoo Connection OK" }), {

@@ -43,33 +43,33 @@
 
 @theme {
   /* Core Palette Mapped to Geekorium Identity (Premium Canva Style) */
-  --color-geeko-black: #000000;
-  --color-geeko-surface: #0B0E11;
-  --color-geeko-cyan: #00D1FF;
-  --color-geeko-gold: #F9AE00;
-  --color-geeko-cyan-neon: #00D1FF;
-  --color-geeko-purple-vibrant: #A020F0;
-  --color-geeko-gold-premium: #F9AE00;
+  --color-geeko-black: var(--token-geeko-black);
+  --color-geeko-surface: var(--token-geeko-surface);
+  --color-geeko-cyan: var(--token-geeko-cyan);
+  --color-geeko-gold: var(--token-geeko-gold);
+  --color-geeko-cyan-neon: var(--token-geeko-cyan);
+  --color-geeko-purple-vibrant: var(--token-geeko-purple);
+  --color-geeko-gold-premium: var(--token-geeko-gold);
   
   /* Legacy/Support Colors */
-  --color-geeko-violet-dark: #000000;
-  --color-geeko-turquoise: #00D1FF;
-  --color-geeko-violet-medium: #0B0E11;
-  --color-geeko-violet-accent: #1A1A1A;
+  --color-geeko-violet-dark: var(--token-geeko-black);
+  --color-geeko-turquoise: var(--token-geeko-cyan);
+  --color-geeko-violet-medium: var(--token-geeko-surface);
+  --color-geeko-violet-accent: var(--token-geeko-surface-accent);
   
   --color-geeko-red: #E1306C;
   --color-geeko-blue: #405DE6;
-  --color-geeko-purple: #A020F0;
+  --color-geeko-purple: var(--token-geeko-purple);
   --color-geeko-orange: #F77737;
-  --color-geeko-yellow: #F9AE00;
+  --color-geeko-yellow: var(--token-geeko-gold);
   --color-geeko-green: #00FF85;
 
   --color-neutral-white: #FFFFFF;
   --color-neutral-black: #000000;
 
   /* UI Tokens */
-  --color-text-high: #FFFFFF;
-  --color-text-low: #B7B7B7;
+  --color-text-high: var(--token-text-high);
+  --color-text-low: var(--token-text-low);
   --color-geeko-glass: rgba(11, 14, 17, 0.6);
 
   /* Fonts */
@@ -94,6 +94,28 @@
   line-height: 1.5;
   font-weight: 400;
   color-scheme: light dark;
+
+  /* LIGHT MODE TOKENS (Premium High Contrast) */
+  --token-geeko-black: #F8FAFC;
+  --token-geeko-surface: #FFFFFF;
+  --token-geeko-surface-accent: #F1F5F9;
+  --token-geeko-cyan: #0082A8; /* WCAG AA legible cyan */
+  --token-geeko-gold: #C28400; /* Deep amber */
+  --token-geeko-purple: #8618C3;
+  --token-text-high: #0F172A; /* Slate 900 */
+  --token-text-low: #64748B; /* Slate 500 */
+}
+
+.dark {
+  /* DARK MODE TOKENS (Neon Originals) */
+  --token-geeko-black: #000000;
+  --token-geeko-surface: #0B0E11;
+  --token-geeko-surface-accent: #1A1A1A;
+  --token-geeko-cyan: #00D1FF;
+  --token-geeko-gold: #F9AE00;
+  --token-geeko-purple: #A020F0;
+  --token-text-high: #FFFFFF;
+  --token-text-low: #B7B7B7;
 }
 
 body {
@@ -184,7 +206,7 @@ body {
   }
 
   .neon-glow-cyan {
-    box-shadow: 0 0 20px rgba(0, 209, 255, 0.4), 0 0 30px rgba(0, 209, 255, 0.2);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--token-geeko-cyan) 40%, transparent), 0 0 30px color-mix(in srgb, var(--token-geeko-cyan) 20%, transparent);
   }
 
   .no-scrollbar::-webkit-scrollbar {
@@ -200,27 +222,27 @@ body {
   }
 
   .neon-glow-purple {
-    box-shadow: 0 0 15px rgba(160, 32, 240, 0.4), 0 0 30px rgba(160, 32, 240, 0.2);
+    box-shadow: 0 0 15px color-mix(in srgb, var(--token-geeko-purple) 40%, transparent), 0 0 30px color-mix(in srgb, var(--token-geeko-purple) 20%, transparent);
   }
 
   .neon-border-cyan {
-    box-shadow: 0 0 10px rgba(0, 209, 255, 0.3);
-    border: 1px solid rgba(0, 209, 255, 0.5);
+    box-shadow: 0 0 10px color-mix(in srgb, var(--token-geeko-cyan) 30%, transparent);
+    border: 1px solid color-mix(in srgb, var(--token-geeko-cyan) 50%, transparent);
   }
 
   .neon-border-gold {
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
-    border: 1px solid rgba(255, 215, 0, 0.5);
+    box-shadow: 0 0 10px color-mix(in srgb, var(--token-geeko-gold) 30%, transparent);
+    border: 1px solid color-mix(in srgb, var(--token-geeko-gold) 50%, transparent);
   }
 
   .text-gradient-gold {
-    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    background: linear-gradient(135deg, var(--token-geeko-gold) 0%, #FFA500 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
   .text-gradient-cyan {
-    background: linear-gradient(135deg, #00D1FF 0%, #0066FF 100%);
+    background: linear-gradient(135deg, var(--token-geeko-cyan) 0%, #0066FF 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
