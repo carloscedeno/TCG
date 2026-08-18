@@ -111,7 +111,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
         {hasActiveFilters && (
           <button
             onClick={clearFilters}
-            className="text-[10px] font-bold uppercase tracking-widest text-text-low hover:text-red-400 transition-colors flex items-center gap-1 group"
+            className="text-[10px] font-bold uppercase tracking-widest text-neutral-500 dark:text-text-low hover:text-red-500 dark:hover:text-red-400 transition-colors flex items-center gap-1 group"
           >
             <X size={10} className="group-hover:rotate-90 transition-transform" />
             Reiniciar
@@ -385,11 +385,11 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
             onClick={() => onChange({ ...selected, only_discount: !selected.only_discount })}
             className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold transition-all border ${
               selected.only_discount
-                ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.2)]'
-                : 'bg-white dark:bg-neutral-900/50 border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-text-low hover:border-neutral-400 dark:hover:border-neutral-700 hover:text-black dark:hover:text-text-high'
+                ? 'bg-emerald-500/10 dark:bg-emerald-500/20 border-emerald-400/50 dark:border-emerald-500/50 text-emerald-600 dark:text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.1)] dark:shadow-[0_0_15px_rgba(16,185,129,0.2)]'
+                : 'bg-neutral-50 dark:bg-neutral-900/50 border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-text-low hover:border-neutral-300 dark:hover:border-neutral-700 hover:text-black dark:hover:text-text-high'
             }`}
           >
-            <div className={`w-3.5 h-3.5 rounded flex items-center justify-center border ${selected.only_discount ? 'bg-emerald-500 border-emerald-400 text-black' : 'border-neutral-700 bg-neutral-800'}`}>
+            <div className={`w-3.5 h-3.5 rounded flex items-center justify-center border ${selected.only_discount ? 'bg-emerald-500 border-emerald-400 text-white dark:text-black' : 'border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800'}`}>
               {selected.only_discount && <Check size={10} strokeWidth={3} />}
             </div>
             En Descuento
@@ -399,11 +399,11 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
             onClick={() => onChange({ ...selected, only_presale: !selected.only_presale })}
             className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-bold transition-all border ${
               selected.only_presale
-                ? 'bg-purple-500/20 border-purple-500/50 text-purple-400 shadow-[0_0_15px_rgba(168,85,247,0.2)]'
-                : 'bg-white dark:bg-neutral-900/50 border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-text-low hover:border-neutral-400 dark:hover:border-neutral-700 hover:text-black dark:hover:text-text-high'
+                ? 'bg-purple-500/10 dark:bg-purple-500/20 border-purple-400/50 dark:border-purple-500/50 text-purple-600 dark:text-purple-400 shadow-[0_0_15px_rgba(168,85,247,0.1)] dark:shadow-[0_0_15px_rgba(168,85,247,0.2)]'
+                : 'bg-neutral-50 dark:bg-neutral-900/50 border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-text-low hover:border-neutral-300 dark:hover:border-neutral-700 hover:text-black dark:hover:text-text-high'
             }`}
           >
-            <div className={`w-3.5 h-3.5 rounded flex items-center justify-center border ${selected.only_presale ? 'bg-purple-500 border-purple-400 text-white' : 'border-neutral-700 bg-neutral-800'}`}>
+            <div className={`w-3.5 h-3.5 rounded flex items-center justify-center border ${selected.only_presale ? 'bg-purple-500 border-purple-400 text-white' : 'border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800'}`}>
               {selected.only_presale && <Check size={10} strokeWidth={3} />}
             </div>
             Preventa

@@ -513,16 +513,16 @@ const Home: React.FC = () => {
 
               <div className="flex items-center gap-2">
                 <span className="text-[11px] font-black uppercase tracking-tighter text-text-low hidden sm:inline">Ordenar:</span>
-                <div className="flex bg-neutral-900/50 p-1 rounded-full border border-neutral-800">
+                <div className="flex bg-white dark:bg-neutral-900/50 p-1 rounded-full border border-neutral-200 dark:border-neutral-800 shadow-sm dark:shadow-none">
                   <button
                     onClick={() => updateURL({ sort: sortBy === 'name' ? 'name_desc' : 'name' })}
-                    className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase transition-all ${sortBy.includes('name') ? 'bg-neutral-700 text-text-high' : 'text-text-low hover:text-neutral-300'}`}
+                    className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase transition-all ${sortBy.includes('name') ? 'bg-neutral-200 dark:bg-neutral-700 text-black dark:text-text-high' : 'text-neutral-500 dark:text-text-low hover:text-black dark:hover:text-neutral-300'}`}
                   >
                     Nombre {sortBy === 'name' ? '↓' : (sortBy === 'name_desc' ? '↑' : '⇅')}
                   </button>
                   <button
                     onClick={() => updateURL({ sort: sortBy === 'price_asc' ? 'price_desc' : 'price_asc' })}
-                    className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase transition-all ${sortBy.includes('price') ? 'bg-neutral-700 text-text-high' : 'text-text-low hover:text-neutral-300'}`}
+                    className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase transition-all ${sortBy.includes('price') ? 'bg-neutral-200 dark:bg-neutral-700 text-black dark:text-text-high' : 'text-neutral-500 dark:text-text-low hover:text-black dark:hover:text-neutral-300'}`}
                   >
                     Precio {sortBy === 'price_asc' ? '↑' : (sortBy === 'price_desc' ? '↓' : '⇅')}
                   </button>
@@ -533,7 +533,7 @@ const Home: React.FC = () => {
                   className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase transition-all flex items-center gap-2 ${
                     filters.only_new
                       ? 'bg-geeko-purple-vibrant text-white shadow-[0_0_15px_rgba(168,85,247,0.4)] ring-2 ring-purple-500/50'
-                      : 'bg-neutral-900/50 text-text-low hover:text-neutral-300 border border-neutral-800'
+                      : 'bg-white dark:bg-neutral-900/50 text-neutral-500 dark:text-text-low hover:text-black dark:hover:text-neutral-300 border border-neutral-200 dark:border-neutral-800 shadow-sm dark:shadow-none'
                   }`}
                 >
                   <Sparkles size={12} className={filters.only_new ? 'text-white' : 'text-geeko-purple-vibrant'} />
@@ -546,14 +546,14 @@ const Home: React.FC = () => {
                 <div className="flex bg-neutral-100 dark:bg-neutral-900/50 p-1 rounded-full border border-neutral-200 dark:border-neutral-800">
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={`p-2 rounded-md transition-all ${viewMode === 'grid' ? 'bg-neutral-800 text-text-high shadow-inner' : 'text-text-low hover:text-neutral-300'}`}
+                  className={`p-2 rounded-md transition-all ${viewMode === 'grid' ? 'bg-neutral-200 dark:bg-neutral-800 text-black dark:text-text-high shadow-inner' : 'text-neutral-500 dark:text-text-low hover:text-black dark:hover:text-neutral-300'}`}
                   title="Grid View"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" /></svg>
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
-                  className={`p-2 rounded-md transition-all ${viewMode === 'list' ? 'bg-neutral-800 text-text-high shadow-inner' : 'text-text-low hover:text-neutral-300'}`}
+                  className={`p-2 rounded-md transition-all ${viewMode === 'list' ? 'bg-neutral-200 dark:bg-neutral-800 text-black dark:text-text-high shadow-inner' : 'text-neutral-500 dark:text-text-low hover:text-black dark:hover:text-neutral-300'}`}
                   title="List View"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" /><line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" /></svg>

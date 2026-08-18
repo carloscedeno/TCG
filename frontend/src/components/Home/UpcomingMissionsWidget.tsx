@@ -47,8 +47,8 @@ export const UpcomingMissionsWidget: React.FC = () => {
 
     return (
         <div className="w-full flex flex-col gap-3">
-            <div className="border border-[#00D1FF]/30 rounded-lg p-3 text-center bg-gradient-to-r from-transparent via-[#00D1FF]/5 to-transparent mb-2">
-                <h3 className="text-white text-xs font-black uppercase tracking-widest">Próximas Misiones</h3>
+            <div className="border border-geeko-cyan/30 rounded-lg p-3 text-center bg-gradient-to-r from-transparent via-geeko-cyan/5 to-transparent mb-2">
+                <h3 className="text-black dark:text-white text-xs font-black uppercase tracking-widest">Próximas Misiones</h3>
             </div>
             
             <div className="flex flex-col gap-2">
@@ -61,18 +61,18 @@ export const UpcomingMissionsWidget: React.FC = () => {
                         <div 
                             key={event.id}
                             onClick={() => navigate('/tournaments')}
-                            className="flex items-center gap-4 bg-gradient-to-r from-neutral-900/80 to-black border border-white/5 rounded-xl p-3 cursor-pointer hover:border-white/20 transition-all hover:translate-x-1 group"
+                            className="flex items-center gap-4 bg-white dark:bg-gradient-to-r from-neutral-900/80 to-black border border-neutral-200 dark:border-white/5 shadow-sm dark:shadow-none rounded-xl p-3 cursor-pointer hover:border-neutral-300 dark:hover:border-white/20 transition-all hover:translate-x-1 group"
                         >
                             {/* Game Icon / Code Indicator */}
-                            <div className={`w-8 h-8 rounded-full bg-white/5 flex items-center justify-center font-black text-[9px] border border-white/10 group-hover:bg-white/10 ${getGameColor(event.game_code)}`}>
+                            <div className={`w-8 h-8 rounded-full bg-neutral-100 dark:bg-white/5 flex items-center justify-center font-black text-[9px] border border-neutral-200 dark:border-white/10 group-hover:bg-neutral-200 dark:group-hover:bg-white/10 ${getGameColor(event.game_code)}`}>
                                 {event.game_code}
                             </div>
                             
                             <div className="flex flex-col">
-                                <span className="text-white font-black text-[10px] uppercase tracking-wider">
+                                <span className="text-black dark:text-white font-black text-[10px] uppercase tracking-wider">
                                     {dayName} {dateString}
                                 </span>
-                                <span className="text-neutral-400 text-[11px] font-medium leading-tight group-hover:text-white transition-colors">
+                                <span className="text-neutral-500 dark:text-neutral-400 text-[11px] font-medium leading-tight group-hover:text-black dark:group-hover:text-white transition-colors">
                                     {event.name}
                                 </span>
                             </div>
