@@ -222,7 +222,7 @@ export const CardDetail: React.FC = () => {
 
     if (error) {
         return (
-            <div className="min-h-screen bg-[#050505] text-white flex flex-col items-center justify-center p-6 text-center">
+            <div className="min-h-screen bg-neutral-50 dark:bg-[#050505] text-black dark:text-white flex flex-col items-center justify-center p-6 text-center">
                 <AlertCircle size={64} className="text-red-500 mb-6" />
                 <h1 className="text-3xl font-black mb-4">Error loading card</h1>
                 <p className="text-text-low max-w-md mb-8">{error}</p>
@@ -234,7 +234,7 @@ export const CardDetail: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen flex flex-col bg-[#050505] text-white font-sans selection:bg-geeko-cyan/30">
+        <div className="min-h-screen flex flex-col bg-neutral-50 dark:bg-[#050505] text-black dark:text-white font-sans selection:bg-geeko-cyan/30">
             {/* Ambient Background */}
             <div className="fixed inset-0 z-0 pointer-events-none">
                 <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-purple-600/5 rounded-full blur-[150px]" />
@@ -255,9 +255,9 @@ export const CardDetail: React.FC = () => {
                         <p className="text-text-low font-bold tracking-widest uppercase text-xs">Loading Card Data...</p>
                     </div>
                 ) : details ? (
-                    <div data-testid="card-modal" className="w-full glass-panel rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0, 209, 255, 0.15)] flex flex-col lg:flex-row overflow-hidden lg:min-h-[calc(100vh-220px)] relative">
+                    <div data-testid="card-modal" className="w-full glass-panel rounded-[32px] border border-neutral-200 dark:border-white/10 shadow-[0_0_100px_rgba(0,0,0,0.05)] dark:shadow-[0_0_100px_rgba(0,209,255,0.15)] flex flex-col lg:flex-row overflow-hidden lg:min-h-[calc(100vh-220px)] relative">
                         {/* LEFT: IMAGE & VERSIONS LIST */}
-                        <div className="w-full lg:w-[340px] bg-[#0c0c0c] flex flex-col lg:border-r border-b lg:border-b-0 border-white/5 shrink-0 relative">
+                        <div className="w-full lg:w-[340px] bg-neutral-100 dark:bg-[#0c0c0c] flex flex-col lg:border-r border-b lg:border-b-0 border-neutral-200 dark:border-white/5 shrink-0 relative">
                             <div className="flex-1 min-h-[350px] lg:min-h-[250px] p-6 sm:p-8 md:p-10 relative bg-gradient-to-b from-white/[0.04] to-transparent overflow-hidden">
                                 <div className={`absolute inset-6 sm:inset-8 md:inset-10 flex items-center justify-center ${isFoil ? 'holo-effect' : ''} group`}>
                                     <div className="absolute inset-0 bg-geeko-cyan/25 blur-[120px] rounded-full opacity-40 group-hover:opacity-60 transition-opacity duration-700 animate-pulse pointer-events-none" />
@@ -326,7 +326,7 @@ export const CardDetail: React.FC = () => {
 
                             {/* MOXFIELD-STYLE VERSIONS LIST */}
                             {!details?.is_accessory && (
-                                <div className="min-h-[150px] max-h-[250px] border-t border-white/5 bg-[#080808] flex flex-col shrink-0 overflow-hidden rounded-bl-[32px]">
+                                <div className="min-h-[150px] max-h-[250px] border-t border-neutral-200 dark:border-white/5 bg-white dark:bg-[#080808] flex flex-col shrink-0 overflow-hidden rounded-bl-[32px]">
                                     <div className="px-6 py-4 flex items-center justify-between border-b border-white/5">
                                         <h3 className="text-xs font-black uppercase tracking-widest text-text-low">Edition / Printings</h3>
                                         <span className="text-[10px] text-text-low font-bold">{details.all_versions?.length || 0} Versions</span>
@@ -449,7 +449,7 @@ export const CardDetail: React.FC = () => {
                         </div>
 
                         {/* RIGHT: CARD TEXT & ACTIONS */}
-                        <div className="flex-1 lg:overflow-y-auto lg:max-h-[calc(100vh-140px)] custom-scrollbar bg-[#050505] p-6 lg:p-12 space-y-8 lg:space-y-10 relative">
+                        <div className="flex-1 lg:overflow-y-auto lg:max-h-[calc(100vh-140px)] custom-scrollbar bg-white dark:bg-[#050505] p-6 lg:p-12 space-y-8 lg:space-y-10 relative">
                             <button
                                 onClick={() => navigate(-1)}
                                 className="absolute top-6 right-6 p-2 rounded-full bg-neutral-900/80 hover:bg-white/10 text-text-low hover:text-white transition-colors z-50 border border-white/10"
@@ -473,7 +473,7 @@ export const CardDetail: React.FC = () => {
                                                 </div>
                                             </div>
                                         )}
-                                        <h2 className="text-3xl lg:text-5xl font-web-titles font-normal tracking-tight text-white group-hover/title:text-geeko-cyan transition-colors text-gradient-cyan capitalize leading-tight">
+                                        <h2 className="text-3xl lg:text-5xl font-web-titles font-normal tracking-tight text-black dark:text-white group-hover/title:text-geeko-cyan transition-colors text-gradient-cyan capitalize leading-tight">
                                             {details.name?.replace(/\(preventa\)/gi, '').trim()}
                                         </h2>
                                     </div>
@@ -481,7 +481,7 @@ export const CardDetail: React.FC = () => {
                                 <div className="flex flex-wrap items-center gap-3 text-base lg:text-lg font-medium text-text-low">
                                     <span><ManaText text={details.mana_cost || ''} /></span>
                                     {details.mana_cost && <span className="opacity-30">•</span>}
-                                    <span className="text-white/80">{details.type}</span>
+                                    <span className="text-black/80 dark:text-white/80">{details.type}</span>
                                     <span className="text-neutral-700">/</span>
                                     <span className="text-geeko-gold uppercase text-[10px] font-black tracking-[0.2em]">{details.rarity}</span>
                                 </div>
@@ -508,7 +508,7 @@ export const CardDetail: React.FC = () => {
                                     </p>
                                 )}
                                 <div className="pt-2 flex flex-wrap gap-8 text-[10px] font-black text-text-low uppercase tracking-[0.2em]">
-                                    <div>Artist <span className="text-white ml-2">{details.artist}</span></div>
+                                    <div>Artist <span className="text-black dark:text-white ml-2">{details.artist}</span></div>
                                     <div>Set <span className="text-geeko-cyan ml-2">{details.set} ({details.set_code?.toUpperCase()})</span></div>
                                 </div>
                             </div>
@@ -531,7 +531,7 @@ export const CardDetail: React.FC = () => {
                                                         </span>
                                                     )}
                                                     <div className="flex items-center gap-2">
-                                                        <div className="text-4xl lg:text-5xl font-black text-white font-mono tracking-tighter leading-none">
+                                                        <div className="text-4xl lg:text-5xl font-black text-black dark:text-white font-mono tracking-tighter leading-none">
                                                             ${(activeVersion?.price || details.price || 0) > 0 ? Number(activeVersion?.price || details.price).toFixed(2) : '---'}
                                                         </div>
                                                         {activeVersion?.discount_percentage > 0 && (
@@ -608,7 +608,7 @@ export const CardDetail: React.FC = () => {
                                                 <span className="text-lg font-bold">Standard @ CK</span>
                                             </div>
                                             <div className="flex items-center gap-4">
-                                                <span className="text-2xl font-mono font-black text-white">$ {details.valuation?.market_price ? Number(details.valuation?.market_price).toFixed(2) : '---'}</span>
+                                                <span className="text-2xl font-mono font-black text-black dark:text-white">$ {details.valuation?.market_price ? Number(details.valuation?.market_price).toFixed(2) : '---'}</span>
                                                 <div className="p-2 rounded-full bg-white/5 group-hover:bg-geeko-cyan group-hover:text-black transition-colors">
                                                     <ExternalLink size={14} />
                                                 </div>
