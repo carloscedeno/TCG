@@ -103,7 +103,6 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
 
                 <div className="flex items-center gap-4 md:gap-6">
                     <div className="flex items-center gap-3">
-                        <ThemeToggle />
                         <button onClick={onCartOpen} data-testid="cart-button" className="hidden lg:flex relative p-2 text-text-low hover:text-text-high transition-all">
                             <ShoppingCart size={22} />
                             {cartCount > 0 && (
@@ -117,7 +116,6 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                                 <UserMenu />
                             ) : (
                                 <button 
-
                                     onClick={openAuthModal}
                                     className="px-4 py-2 bg-white text-black font-black text-[11px] uppercase tracking-widest rounded-xl hover:scale-105 transition-transform"
                                 >
@@ -125,6 +123,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                                 </button>
                             )}
                         </div>
+                        <ThemeToggle />
                     </div>
                 </div>
             </div>
