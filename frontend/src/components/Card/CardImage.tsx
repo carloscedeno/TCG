@@ -16,9 +16,10 @@ interface CardImageProps {
 export const CardImage: React.FC<CardImageProps> = ({ src, alt, className = '', testId = 'product-image', size = 'normal', fallbackIconSize = 40, objectFit = 'cover', placeholderSrc }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [useFallback, setUseFallback] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
   
-  const optimizedSrc = getOptimizedScryfallUrl(src, size);
+  const optimizedSrc = useFallback ? src : getOptimizedScryfallUrl(src, size);
 
   // Auto-generate a small placeholder for progressive loading if requesting a larger image
   const autoPlaceholderSrc = placeholderSrc || (size !== 'small' ? getOptimizedScryfallUrl(src, 'small') : undefined);
@@ -27,13 +28,22 @@ export const CardImage: React.FC<CardImageProps> = ({ src, alt, className = '', 
   useEffect(() => {
     setIsLoaded(false);
     setHasError(false);
-  }, [optimizedSrc]);
+    setUseFallback(false);
+  }, [src]); // Depender de src en vez de optimizedSrc para evitar loops
 
   useEffect(() => {
     if (imgRef.current?.complete && imgRef.current.naturalWidth > 0) {
       setIsLoaded(true);
     }
   }, [optimizedSrc]);
+
+  const handleError = () => {
+    if (!useFallback && src !== optimizedSrc) {
+      setUseFallback(true);
+    } else {
+      setHasError(true);
+    }
+  };
 
   if (!optimizedSrc || hasError) {
     return (
@@ -49,7 +59,7 @@ export const CardImage: React.FC<CardImageProps> = ({ src, alt, className = '', 
       {/* Skeleton Shimmer Overlay */}
       {!isLoaded && (
         autoPlaceholderSrc ? (
-            <img src={autoPlaceholderSrc} alt={alt} className={`absolute inset-0 w-full h-full object-${objectFit} opacity-50 blur-sm z-0`} />
+            <img src={autoPlaceholderSrc} alt={alt} referrerPolicy="no-referrer" className={`absolute inset-0 w-full h-full object-${objectFit} opacity-50 blur-sm z-0`} />
         ) : (
             <div className="absolute inset-0 z-0 bg-slate-800/50 animate-pulse flex items-center justify-center">
               <Shield size={fallbackIconSize} className="opacity-10" />
@@ -66,9 +76,10 @@ export const CardImage: React.FC<CardImageProps> = ({ src, alt, className = '', 
         className={`w-full h-full object-${objectFit} transition-opacity duration-500 ease-in-out absolute inset-0 z-10 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
         loading="lazy"
         decoding="async"
+        referrerPolicy="no-referrer"
         data-testid={testId}
         onLoad={() => setIsLoaded(true)}
-        onError={() => setHasError(true)}
+        onError={handleError}
       />
     </div>
   );
