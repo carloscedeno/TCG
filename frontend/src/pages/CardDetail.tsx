@@ -520,7 +520,9 @@ export const CardDetail: React.FC = () => {
 
                                     <div className="p-6 lg:p-8 rounded-[32px] bg-gradient-to-br from-geeko-cyan/10 via-transparent to-transparent border border-white/10 group relative overflow-hidden hover:border-geeko-cyan/30 transition-colors">
                                         <div className="absolute top-0 right-0 w-40 h-40 bg-geeko-cyan/5 rounded-full blur-[50px] pointer-events-none" />
-                                        <div className="text-[9px] font-black uppercase text-geeko-cyan tracking-[0.2em] mb-4">Card Kingdom Price</div>
+                                        <div className="text-[9px] font-black uppercase text-geeko-cyan tracking-[0.2em] mb-4">
+                                            {details?.game === 'GND' ? 'Geekorium Price' : 'Card Kingdom Price'}
+                                        </div>
                                         <div className="flex flex-col gap-6">
                                             {/* Price + Variant Badge (horizontal layout matching CardModal) */}
                                             <div className="flex items-center justify-between">
@@ -598,14 +600,16 @@ export const CardDetail: React.FC = () => {
 
                                     {!details?.is_accessory && (
                                         <a
-                                            href={ckUrl}
+                                            href={details?.game === 'GND' ? `https://www.cardtrader.com/search?search_text=${encodeURIComponent(details?.name || '')}` : ckUrl}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="w-full flex items-center justify-between p-6 rounded-2xl bg-neutral-900/30 hover:bg-geeko-cyan/5 border border-white/5 hover:border-geeko-cyan/30 transition-all group"
                                         >
                                             <div className="flex flex-col">
                                                 <span className="text-[9px] font-black uppercase text-text-low tracking-[0.2em] mb-1">Market Price</span>
-                                                <span className="text-lg font-bold">Standard @ CK</span>
+                                                <span className="text-lg font-bold">
+                                                    {details?.game === 'GND' ? 'Standard @ CT' : 'Standard @ CK'}
+                                                </span>
                                             </div>
                                             <div className="flex items-center gap-4">
                                                 <span className="text-2xl font-mono font-black text-black dark:text-white">$ {details.valuation?.market_price ? Number(details.valuation?.market_price).toFixed(2) : '---'}</span>

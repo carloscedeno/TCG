@@ -684,3 +684,18 @@ ecord has no field.
   - **Filtro NUEVO**: Refactorización del RPC get_products_filtered para usar una ventana dinámica de 7 días basada en el último restock (MAX(restocked_at)). Se eliminó el ordenamiento forzado por fecha para permitir que el filtro de precio funcione correctamente sobre el lote completo de novedades.
   - **Filtros de Set**: Se implementó una resolución relacional de nombres de sets en get_products_filtered mediante subqueries a la tabla sets, previniendo fallos cuando las cartas importadas carecen del set_name. Se actualizó el RPC ulk_import_inventory para prevenir el problema a futuro.
   - **UI/UX**: Corrección de 'Flexbox Inverse Overflow' en Card.tsx que causaba que el signo de dólar se cortara en cartas con precios anchos y etiqueta FOIL en pantallas con muchas columnas.
+
+## 2026-08-19 — Pivote a CardTrader y Multi-Game UI
+
+**Qué pasó:** 
+Terminamos la reescritura del script de sincronización de precios de Gundam (price_sync.py) para consumir la API v2 de CardTrader en lugar de JustTCG. También poblamos la tabla products de DEV con stock real simulado para validar el UI, y refactorizamos el frontend (CardDetail.tsx) para aislar MTG de Gundam en los labels de precio y enlaces de mercado.
+
+**Lo que cambió:**
+- lessons_learned.md → Lección #50 (CardTrader Disconnects), Lección #51 (UI Multi-Game Isolation), Lección #52 (Integridad Referencial en Stock Dummy).
+- rontend/src/pages/CardDetail.tsx → Aislamiento visual para Gundam (Geekorium Price y CardTrader Market).
+- scripts/sync/gundam/price_sync.py → Refactor final con try/except para tolerancia a caídas.
+- scripts/sync/gundam/insert_real_dummies.py → Script de utilidad creado para inyectar stock funcional de prueba.
+
+**Artefacto creado:** insert_real_dummies.py guardado en tools de scripts.
+**Regla derivada:** Validar siempre details.game en componentes de precio, y usar 	ry/except en web scraping/API syncs gratuitas.
+

@@ -2480,3 +2480,22 @@ useEffect(() => {
 - **Causa Raíz**: El RPC forzaba un ORDER BY restocked_at DESC como primer criterio para separar lo nuevo de lo viejo. Como el importador las subía secuencialmente en milisegundos distintos, el orden por precio se volvía secundario e inútil.
 - **Solución**: Eliminar el ORDER BY restocked_at DESC forzado para el filtro NUEVO. En su lugar, el RPC calcula dinámicamente el último día de carga (MAX(restocked_at)) y define una ventana de 7 días. Todo lo que cae en esa ventana se filtra en el WHERE, permitiendo que el ORDER BY sea exclusivamente el que el usuario eligió (ej: price DESC), mezclando así todas las cartas de esa semana por precio.
 - **Lección**: Separar el concepto de 'Selección' (WHERE) del concepto de 'Orden' (ORDER BY). Si el usuario quiere ver lo nuevo ordenado por precio, la novedad debe ser un filtro, no un criterio de ordenamiento forzado.
+
+### 50. CardTrader API V2 Disconnects — 2026-08-19
+- **Problema:** El endpoint de CardTrader (/marketplace/products) desconecta la conexión de manera abrupta en iteraciones continuas (arroja HTTPX RemoteProtocolError).
+- **Causa Raíz:** Rate Limiting no documentado o inestabilidad del servidor de CardTrader al procesar cientos de consultas en serie.
+- **Solución:** Envolver la petición GET en un bloque try/except para capturar la excepción y evitar que el loop entero de actualización de precios se rompa.
+- **Regla Derivada:** En scripts de sync de APIs de TCG gratuitos, siempre blindar las peticiones de red para que el proceso sea resiliente. Codificado en price_sync.py.
+
+### 51. UI Multi-Game Isolation en Trading Hub — 2026-08-19
+- **Problema:** El componente de la tienda detallada mostraba 'Card Kingdom Price' y enlaces de CK para cartas de Gundam.
+- **Causa Raíz:** Diseño y copy originales hardcodeados estrictamente para Magic the Gathering.
+- **Solución:** Condicionar los labels (Card Kingdom Price vs Geekorium Price) y los hipervínculos del Market Price (Standard @ CK vs Standard @ CT) verificando details?.game === 'GND'.
+- **Regla Derivada:** Cualquier UI genérico que muestre precios o links de mercado debe verificar primero el juego de la carta (details.game).
+
+### 52. Integridad Referencial al inyectar Stock Dummy — 2026-08-19
+- **Problema:** Al inyectar stock temporal de Gundam en la tabla products reutilizando un printing_id arbitrario (ej. Bloodline Culling de MTG), la UI crasheó mostrando 'IMAGEN NO DISPONIBLE' y '99 Versions'.
+- **Causa Raíz:** El componente CardDetail colapsa los productos agrupando por printing_id. Inyectar 100 productos bajo la misma ID rompió la lógica visual.
+- **Solución:** Para testear catálogos en frontend, inyectar stock de forma estricta recuperando printing_id e image_url reales del juego (game_id = 17) en la tabla card_printings.
+- **Regla Derivada:** Nunca inventar o reciclar FKs de printing_id en products. Siempre hacer JOIN o un IN query contra card_printings validando el juego.
+
