@@ -600,7 +600,7 @@ export const CardDetail: React.FC = () => {
 
                                     {!details?.is_accessory && (
                                         <a
-                                            href={details?.game === 'GND' ? `https://www.cardtrader.com/search?search_text=${encodeURIComponent((details?.name || '').replace(/[^a-zA-Z0-9 ]/g, ''))}&game_id=23` : ckUrl}
+                                            href={details?.game === 'GND' ? (details.related_uris?.cardtrader || `https://www.cardtrader.com/search?search_text=${encodeURIComponent((details?.name || '').replace(/[^a-zA-Z0-9 ]/g, ''))}&game_id=23`) : ckUrl}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="w-full flex items-center justify-between p-6 rounded-2xl bg-neutral-900/30 hover:bg-geeko-cyan/5 border border-white/5 hover:border-geeko-cyan/30 transition-all group"
