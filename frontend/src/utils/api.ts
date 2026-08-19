@@ -391,6 +391,8 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
           rarity: sbData.rarity,
           set: sbData.sets?.set_name || '',
           set_code: sbData.sets?.set_code || '',
+          game_id: sbData.cards?.game_id || sbData.sets?.game_id,
+          game: (sbData.cards?.game_id === 17 || sbData.sets?.game_id === 17) ? 'GND' : 'MTG',
           collector_number: sbData.collector_number,
           image_url: sbData.image_url,
           price: marketPrice,

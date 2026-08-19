@@ -622,7 +622,7 @@ export const CardDetail: React.FC = () => {
                                 </div>
 
                                 {/* Legality */}
-                                {!details?.is_accessory && (
+                                {!details?.is_accessory && details?.game !== 'GND' && (
                                     <div className="space-y-6">
                                         <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-text-low pl-2">Format Legality</h3>
                                         <div className="grid grid-cols-2 gap-3">
