@@ -16,7 +16,7 @@ SUPABASE_KEY = os.environ.get('DEV_SUPABASE_SERVICE_ROLE_KEY')
 # Entra a tu cuenta en CardTrader -> Settings -> API -> Generate Token
 # O ponlo en tu archivo .env como CARDTRADER_API_TOKEN=xxx
 # ==============================================================================
-CARDTRADER_API_TOKEN = os.environ.get('CARDTRADER_API_TOKEN', 'TU_TOKEN_AQUI')
+CARDTRADER_API_TOKEN = os.environ.get('CARDTRADER_API_KEY', '')
 
 CT_HEADERS = {
     'Authorization': f'Bearer {CARDTRADER_API_TOKEN}',
@@ -27,8 +27,8 @@ CT_HEADERS = {
 CT_GUNDAM_GAME_ID = 23
 
 def main():
-    if CARDTRADER_API_TOKEN == 'TU_TOKEN_AQUI' or not CARDTRADER_API_TOKEN:
-        print("❌ ERROR: Necesitas colocar tu Token de API de CardTrader en el archivo .env (CARDTRADER_API_TOKEN=xxx).")
+    if not CARDTRADER_API_TOKEN:
+        print("❌ ERROR: Necesitas colocar tu Token de API de CardTrader en el archivo .env (CARDTRADER_API_KEY=xxx).")
         print("Consíguelo gratis en tu cuenta: https://www.cardtrader.com/en/users/api")
         return
 
@@ -38,7 +38,7 @@ def main():
     # 1. Obtener 100 cartas random de Gundam desde Supabase
     print("📦 Buscando 100 cartas aleatorias de Gundam (game_id = 17) en Supabase...")
     # Buscamos en 'cards' que sean Gundam y unimos con 'card_printings'
-    cards_response = supabase.table('cards').select('id, card_name, game_id, card_printings(*)').eq('game_id', 17).limit(500).execute()
+    cards_response = supabase.table('cards').select('card_id, card_name, game_id, card_printings(*)').eq('game_id', 17).limit(500).execute()
     
     if not cards_response.data:
         print("❌ No se encontraron cartas de Gundam en la base de datos.")
@@ -54,17 +54,24 @@ def main():
     sample_printings = random.sample(all_printings, min(100, len(all_printings)))
     print(f"✅ Seleccionadas {len(sample_printings)} cartas para actualizar desde CardTrader.")
 
-    # 2. Descargar el catálogo de Blueprints de Gundam desde CardTrader
-    # El endpoint /api/v2/blueprints/export?game_id=23 nos da el JSON de TODO el catálogo de Gundam
-    print("🌐 Descargando catálogo oficial de Gundam desde la API de CardTrader (esto puede tardar unos segundos)...")
-    bp_resp = requests.get(f'https://api.cardtrader.com/api/v2/blueprints/export?game_id={CT_GUNDAM_GAME_ID}', headers=CT_HEADERS)
-    if bp_resp.status_code != 200:
-        print(f"❌ Error al consultar la API de CardTrader: {bp_resp.status_code}")
-        print(bp_resp.text)
+    # 2. Obtener todas las expansiones de Gundam y sus blueprints
+    print("🌐 Descargando expansiones y blueprints desde CardTrader...")
+    exp_resp = requests.get('https://api.cardtrader.com/api/v2/expansions', headers=CT_HEADERS)
+    if exp_resp.status_code != 200:
+        print(f"❌ Error al consultar expansiones: {exp_resp.status_code}")
         return
+        
+    gundam_expansions = [e for e in exp_resp.json() if e.get('game_id') == CT_GUNDAM_GAME_ID]
+    print(f"✅ Se encontraron {len(gundam_expansions)} expansiones de Gundam.")
     
-    ct_blueprints = bp_resp.json()
-    print(f"✅ Descargados {len(ct_blueprints)} blueprints de Gundam desde CardTrader.")
+    ct_blueprints = []
+    for exp in gundam_expansions:
+        b_resp = requests.get(f"https://api.cardtrader.com/api/v2/expansions/{exp['id']}/blueprints", headers=CT_HEADERS)
+        if b_resp.status_code == 200:
+            ct_blueprints.extend(b_resp.json())
+        time.sleep(0.1) # Respetar rate limits
+        
+    print(f"✅ Descargados {len(ct_blueprints)} blueprints de Gundam en total.")
 
     # 3. Match y Actualización en Base de Datos
     match_count = 0

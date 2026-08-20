@@ -378,7 +378,7 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
 
       if (sbData) {
         // Build or supplement data
-        const marketPrice = 0; 
+        const marketPrice = Number(sbData.avg_market_price_usd || 0); 
         const baseData = {
           printing_id: sbData.printing_id,
           card_id: sbData.card_id,
@@ -407,6 +407,8 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
           legalities: sbData.cards?.legalities,
           colors: sbData.cards?.colors,
           card_faces: sbData.card_faces || sbData.cards?.card_faces,
+          related_uris: sbData.related_uris || {},
+          avg_market_price_usd: sbData.avg_market_price_usd || 0,
           all_versions: []
         };
         data = { ...baseData, ...data };
