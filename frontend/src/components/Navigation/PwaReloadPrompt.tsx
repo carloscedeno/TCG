@@ -1,5 +1,5 @@
 import React from 'react';
-// @ts-ignore - plugin-pwa type definitions might not be instantly available
+// @ts-expect-error - plugin-pwa type definitions might not be instantly available
 import { useRegisterSW } from 'virtual:pwa-register/react';
 import { RefreshCw, X } from 'lucide-react';
 

@@ -9,7 +9,9 @@ test.describe('Gundam UI Isolation', () => {
             const welcomeButton = page.getByRole('button', { name: /Comenzar Misión/i });
             await welcomeButton.waitFor({ state: 'visible', timeout: 3000 });
             await welcomeButton.click();
-        } catch { }
+        } catch (e) { 
+            void e; // ignore timeout
+        }
         await page.waitForTimeout(2000);
     });
 

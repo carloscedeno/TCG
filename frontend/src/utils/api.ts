@@ -1119,7 +1119,7 @@ export const saveUserAddress = async (address: any) => {
   if (!user) throw new Error("User not logged in");
 
   // Remove system fields if present
-  const { id, user_id, created_at, updated_at, ...insertData } = address;
+  const { id: _id, user_id: _user_id, created_at: _created_at, updated_at: _updated_at, ...insertData } = address;
 
   const { data, error } = await supabase
     .from('user_addresses')
@@ -1149,7 +1149,7 @@ export const updateUserAddress = async (addressId: string, address: any) => {
   if (!user) throw new Error("User not logged in");
 
   // Remove system fields if present
-  const { id, user_id, created_at, updated_at, ...updateData } = address;
+  const { id: _id, user_id: _user_id, created_at: _created_at, updated_at: _updated_at, ...updateData } = address;
 
   const { data, error } = await supabase
     .from('user_addresses')
