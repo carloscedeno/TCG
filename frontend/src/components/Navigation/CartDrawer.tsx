@@ -9,7 +9,7 @@ interface CartDrawerProps {
     onClose: () => void;
 }
 
-export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
+export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => { const formatPrice = (p) => { const n = Number(p); return (n && n > 0) ? String.fromCharCode(36) + n.toFixed(2) : 'S/P'; };
     const { cartItems, isLoading, refreshCart } = useCart();
     const [updating, setUpdating] = useState<string | null>(null);
     const [optimisticItems, setOptimisticItems] = useState<any[] | null>(null);
@@ -144,10 +144,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                                         </div>
                                         <div className="flex items-center justify-between">
                                             <div className="flex flex-col">
-                                                <span className="text-sm font-mono font-black text-geeko-cyan">${(Number(item.price || item.products?.price) || 0).toFixed(2)}</span>
+                                                <span className="text-sm font-mono font-black text-geeko-cyan">{formatPrice(item.price || item.products?.price)}</span>
                                                 {((item.original_price || item.products?.original_price || 0) > (item.price || item.products?.price || 0)) && (
                                                     <span className="text-[10px] text-text-low line-through decoration-red-500/50">
-                                                        ${(Number(item.original_price || item.products?.original_price) || 0).toFixed(2)}
+                                                        {formatPrice(item.original_price || item.products?.original_price)}
                                                     </span>
                                                 )}
                                             </div>
@@ -218,7 +218,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                             <div className="space-y-3">
                                 <div className="flex justify-between text-xs font-bold text-text-low uppercase tracking-widest">
                                     <span>Subtotal</span>
-                                    <span>${(Number(subtotal) || 0).toFixed(2)}</span>
+                                    <span>{formatPrice(subtotal)}</span>
                                 </div>
                                 <div className="flex justify-between text-xs font-bold text-text-low uppercase tracking-widest">
                                     <span>Envío</span>
@@ -227,7 +227,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                                 <div className="h-px bg-white/5 my-4" />
                                 <div className="flex justify-between items-end">
                                     <span className="text-sm font-black uppercase tracking-widest">Total</span>
-                                    <span className="text-3xl font-black text-white font-mono leading-none">${(Number(subtotal) || 0).toFixed(2)}</span>
+                                    <span className="text-3xl font-black text-white font-mono leading-none">{formatPrice(subtotal)}</span>
                                 </div>
                             </div>
 
