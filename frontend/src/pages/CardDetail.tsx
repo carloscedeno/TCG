@@ -35,6 +35,8 @@ export const CardDetail: React.FC = () => {
             name: initialCard.name,
             set: initialCard.set,
             set_code: initialCard.set_code || '',
+            game_id: initialCard.game_id,
+            game: initialCard.game || (initialCard.game_id === 17 ? 'GND' : 'MTG'),
             image_url: initialCard.image_url || initialImage,
             price: initialCard.price,
             original_price: initialCard.original_price,
@@ -598,18 +600,36 @@ export const CardDetail: React.FC = () => {
                                         </div>
                                     </div>
 
-                                    {!details?.is_accessory && (
+                                    {!details?.is_accessory && details?.game === 'GND' && (
                                         <a
-                                            href={details?.game === 'GND' ? (details.related_uris?.cardtrader || `https://www.cardtrader.com/search?search_text=${encodeURIComponent((details?.name || '').replace(/[^a-zA-Z0-9 ]/g, ''))}&game_id=23`) : ckUrl}
+                                            href={details.related_uris?.cardtrader || `https://www.cardtrader.com/search?search_text=${encodeURIComponent((details?.name || '').replace(/[^a-zA-Z0-9 ]/g, ''))}&game_id=23`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="w-full flex items-center justify-between p-6 rounded-2xl bg-neutral-900/30 hover:bg-red-500/10 border border-white/5 hover:border-red-500/30 transition-all group"
+                                        >
+                                            <div className="flex flex-col">
+                                                <span className="text-[9px] font-black uppercase text-text-low tracking-[0.2em] mb-1">Market Price</span>
+                                                <span className="text-lg font-bold">Standard @ CardTrader</span>
+                                            </div>
+                                            <div className="flex items-center gap-4">
+                                                <span className="text-2xl font-mono font-black text-black dark:text-white">$ {details.valuation?.market_price ? Number(details.valuation?.market_price).toFixed(2) : '---'}</span>
+                                                <div className="p-2 rounded-full bg-white/5 group-hover:bg-red-500 group-hover:text-white transition-colors">
+                                                    <ExternalLink size={14} />
+                                                </div>
+                                            </div>
+                                        </a>
+                                    )}
+
+                                    {!details?.is_accessory && details?.game !== 'GND' && (
+                                        <a
+                                            href={ckUrl}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="w-full flex items-center justify-between p-6 rounded-2xl bg-neutral-900/30 hover:bg-geeko-cyan/5 border border-white/5 hover:border-geeko-cyan/30 transition-all group"
                                         >
                                             <div className="flex flex-col">
                                                 <span className="text-[9px] font-black uppercase text-text-low tracking-[0.2em] mb-1">Market Price</span>
-                                                <span className="text-lg font-bold">
-                                                    {details?.game === 'GND' ? 'Standard @ CT' : 'Standard @ CK'}
-                                                </span>
+                                                <span className="text-lg font-bold">Standard @ CardKingdom</span>
                                             </div>
                                             <div className="flex items-center gap-4">
                                                 <span className="text-2xl font-mono font-black text-black dark:text-white">$ {details.valuation?.market_price ? Number(details.valuation?.market_price).toFixed(2) : '---'}</span>

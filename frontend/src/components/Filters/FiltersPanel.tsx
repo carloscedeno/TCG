@@ -94,7 +94,7 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
     if (selectedGame === 'PKM' || selectedGame === 'POKEMON') return ['Pokémon', 'Trainer', 'Energy'];
     if (selectedGame === 'OPC' || selectedGame === 'ONE PIECE') return ['Character', 'Event', 'Stage', 'Leader'];
     // Gundam Card Game — tipos de carta del juego
-    if (selectedGame === 'GND') return ['Unit', 'Command', 'Resource'];
+    if (selectedGame === 'GND') return ['Unit', 'Command', 'Resource', 'Pilot', 'Base'];
     return [];
   };
 
