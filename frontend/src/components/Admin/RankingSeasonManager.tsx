@@ -64,7 +64,7 @@ const RankingSeasonManager = ({ season, onBack }: RankingSeasonManagerProps) => 
 
     const [historyPlayer, setHistoryPlayer] = useState<{id: string, name: string} | null>(null);
 
-    const isGundam = season.game_context === 'GND';
+    const isGundam = season.ranking_type === 'gundam';
 
     useEffect(() => {
         fetchData();

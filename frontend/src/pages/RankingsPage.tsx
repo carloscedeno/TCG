@@ -55,6 +55,22 @@ const getGundamFactionIcon = (faction: string) => {
     return `/assets/factions/${slug}.png`;
 };
 
+const TCG_GAMES = [
+    { name: 'Magic', code: 'MTG', icon: '/logos/tcg/MTG.png' },
+    { name: 'Pokémon', code: 'PKM', icon: '/logos/tcg/PKM.png' },
+    { name: 'Yu-Gi-Oh!', code: 'YGO', icon: '/logos/tcg/YGO.png' },
+    { name: 'Riftbound', code: 'RFB', icon: '/logos/tcg/RFB.png' },
+    { name: 'One Piece', code: 'OPC', icon: '/logos/tcg/OPC.png' },
+    { name: 'Digimon', code: 'DGM', icon: '/logos/tcg/DGM.png' },
+    { name: 'Gundam', code: 'GND', icon: '/logos/tcg/GND.png' },
+    { name: 'Flesh and Blood', code: 'FAB', icon: '/logos/tcg/FAB.png' },
+    { name: 'Otros', code: 'OTHERS', icon: '/logos/tcg/OTHERS.png' }
+];
+
+const getGameIcon = (code: string) => {
+    return TCG_GAMES.find(g => g.code === code)?.icon || null;
+};
+
 const RankingsPage: React.FC = () => {
     const [searchParams] = useSearchParams();
     const gameContext = searchParams.get('game'); 
@@ -129,7 +145,7 @@ const RankingsPage: React.FC = () => {
         loadRankings();
     }, [gameContext]);
 
-    const isGundam = gameContext === 'GND';
+    const isGundam = seasonInfo?.ranking_type === 'gundam';
 
     return (
         <div className="min-h-screen bg-[#050505] text-white font-sans flex flex-col selection:bg-white/30">
@@ -157,9 +173,9 @@ const RankingsPage: React.FC = () => {
                                     <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-[#4B6EEB]/5 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
                                     
                                     <div className="w-32 h-32 mb-6 flex-shrink-0 flex items-center justify-center relative z-10">
-                                        {season.image_url ? (
+                                        {season.image_url || getGameIcon(season.game_context) ? (
                                             <img 
-                                                src={season.image_url} 
+                                                src={season.image_url || getGameIcon(season.game_context)!} 
                                                 alt={season.title} 
                                                 className="max-w-full max-h-full object-contain filter drop-shadow-2xl transition-transform duration-500 group-hover:scale-110" 
                                             />
@@ -193,8 +209,8 @@ const RankingsPage: React.FC = () => {
                     <>
                         <div className="mb-12 flex flex-col md:flex-row md:items-center justify-between gap-6">
                             <div className="flex items-center gap-6">
-                                {seasonInfo?.image_url && (
-                                    <img src={seasonInfo.image_url} alt="Season Logo" className="w-24 h-24 object-contain filter drop-shadow-xl" />
+                                {(seasonInfo?.image_url || (seasonInfo && getGameIcon(seasonInfo.game_context))) && (
+                                    <img src={seasonInfo.image_url || getGameIcon(seasonInfo.game_context)!} alt="Season Logo" className="w-24 h-24 object-contain filter drop-shadow-xl" />
                                 )}
                                 <div>
                                     <h1 className="text-5xl md:text-6xl font-black italic tracking-tighter uppercase text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.1)] mb-2">

@@ -13,6 +13,7 @@ export interface RankingSeason {
     image_url: string | null;
     is_active: boolean;
     created_at: string;
+    ranking_type: string;
 }
 
 const AdminRankingsPage = () => {
@@ -21,7 +22,7 @@ const AdminRankingsPage = () => {
     const [selectedSeason, setSelectedSeason] = useState<RankingSeason | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingSeason, setEditingSeason] = useState<RankingSeason | null>(null);
-    const [formData, setFormData] = useState({ title: '', subtitle: '', description: '', image_url: '', game_context: 'MTG' });
+    const [formData, setFormData] = useState({ title: '', subtitle: '', description: '', image_url: '', game_context: 'MTG', ranking_type: 'standard' });
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     const TCG_GAMES = [
@@ -55,14 +56,14 @@ const AdminRankingsPage = () => {
 
     const openCreateModal = () => {
         setEditingSeason(null);
-        setFormData({ title: '', subtitle: '', description: '', image_url: '', game_context: 'MTG' });
+        setFormData({ title: '', subtitle: '', description: '', image_url: '', game_context: 'MTG', ranking_type: 'standard' });
         setIsModalOpen(true);
         setIsDropdownOpen(false);
     };
 
     const openEditModal = (season: RankingSeason) => {
         setEditingSeason(season);
-        setFormData({ title: season.title, subtitle: season.subtitle || '', description: season.description || '', image_url: season.image_url || '', game_context: season.game_context });
+        setFormData({ title: season.title, subtitle: season.subtitle || '', description: season.description || '', image_url: season.image_url || '', game_context: season.game_context, ranking_type: season.ranking_type || 'standard' });
         setIsModalOpen(true);
         setIsDropdownOpen(false);
     };
@@ -80,7 +81,8 @@ const AdminRankingsPage = () => {
                     subtitle: formData.subtitle,
                     description: formData.description,
                     image_url: formData.image_url,
-                    game_context: formData.game_context
+                    game_context: formData.game_context,
+                    ranking_type: formData.ranking_type
                 })
                 .eq('id', editingSeason.id);
             error = updateError;
@@ -93,6 +95,7 @@ const AdminRankingsPage = () => {
                     description: formData.description,
                     image_url: formData.image_url,
                     game_context: formData.game_context,
+                    ranking_type: formData.ranking_type,
                     is_active: true
                 }]);
             error = insertError;
@@ -314,6 +317,17 @@ const AdminRankingsPage = () => {
                                         ))}
                                     </div>
                                 )}
+                            </div>
+                            <div>
+                                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Tipo de Ranking</label>
+                                <select 
+                                    value={formData.ranking_type}
+                                    onChange={e => setFormData({ ...formData, ranking_type: e.target.value })}
+                                    className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-[#00D1FF] outline-none transition-colors"
+                                >
+                                    <option value="standard">Estándar (Puntos, Equipos, Rangos Libres)</option>
+                                    <option value="gundam">Militar / Gundam (Conquista, Derribo, Kills)</option>
+                                </select>
                             </div>
                             <button type="submit" className="w-full mt-8 bg-[#00D1FF] text-black font-black uppercase tracking-widest py-4 rounded-xl hover:bg-white transition-colors shadow-[0_0_20px_rgba(0,209,255,0.2)]">
                                 {editingSeason ? 'Guardar Cambios' : 'Crear Temporada'}
