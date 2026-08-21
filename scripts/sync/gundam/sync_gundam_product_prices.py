@@ -1,6 +1,10 @@
 import os
+import sys
 from dotenv import load_dotenv
 from supabase import create_client
+
+if sys.stdout.encoding.lower() != 'utf-8':
+    sys.stdout.reconfigure(encoding='utf-8')
 
 load_dotenv('.env')
 SUPABASE_URL = os.environ.get('DEV_SUPABASE_URL')

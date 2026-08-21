@@ -8,12 +8,16 @@ para obtener el precio de mercado real (mediana de listings Near Mint).
 Guarda el resultado en avg_market_price_usd de card_printings.
 """
 import os
+import sys
 import re
 import time
 import statistics
 import requests
 from dotenv import load_dotenv
 from supabase import create_client
+
+if sys.stdout.encoding.lower() != 'utf-8':
+    sys.stdout.reconfigure(encoding='utf-8')
 
 load_dotenv('.env')
 SUPABASE_URL = os.environ.get('DEV_SUPABASE_URL')
@@ -67,20 +71,21 @@ def main():
     print("Descargando printings con link de CardTrader desde Supabase...")
     all_printings = []
     page = 0
-    page_size = 500
+    page_size = 1000
     while True:
         res = (supabase.table('card_printings')
-               .select('printing_id, related_uris, avg_market_price_usd, cards(card_name, game_id)')
+               .select('printing_id, related_uris, avg_market_price_usd, cards!inner(card_name, game_id)')
+               .eq('cards.game_id', 17)
                .range(page * page_size, (page + 1) * page_size - 1)
                .execute())
+        if not res.data:
+            break
+        # Solo procesamos si tiene related_uris y cardtrader link
         batch = [
             p for p in res.data
-            if p.get('cards') and p['cards'].get('game_id') == 17
-            and p.get('related_uris') and p['related_uris'].get('cardtrader')
+            if p.get('related_uris') and p['related_uris'].get('cardtrader')
         ]
         all_printings.extend(batch)
-        if len(res.data) < page_size:
-            break
         page += 1
 
     print(f"  -> {len(all_printings)} printings de Gundam con link de CT para actualizar.")
@@ -95,6 +100,10 @@ def main():
         blueprint_id = get_blueprint_id_from_url(ct_url)
         
         if not blueprint_id:
+            if printing.get('avg_market_price_usd') is not None:
+                supabase.table('card_printings').update({
+                    'avg_market_price_usd': None
+                }).eq('printing_id', printing['printing_id']).execute()
             no_price += 1
             continue
         
