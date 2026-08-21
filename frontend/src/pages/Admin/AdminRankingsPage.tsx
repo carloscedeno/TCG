@@ -22,7 +22,7 @@ const AdminRankingsPage = () => {
     const [selectedSeason, setSelectedSeason] = useState<RankingSeason | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingSeason, setEditingSeason] = useState<RankingSeason | null>(null);
-    const [formData, setFormData] = useState({ title: '', subtitle: '', description: '', image_url: '', game_context: 'MTG', ranking_type: 'standard' });
+    const [formData, setFormData] = useState({ title: '', subtitle: '', description: '', image_url: '', game_context: 'MTG', ranking_type: 'gundam' });
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     const TCG_GAMES = [
