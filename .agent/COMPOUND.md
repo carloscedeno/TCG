@@ -699,3 +699,9 @@ Terminamos la reescritura del script de sincronización de precios de Gundam (pr
 **Artefacto creado:** insert_real_dummies.py guardado en tools de scripts.
 **Regla derivada:** Validar siempre details.game en componentes de precio, y usar 	ry/except en web scraping/API syncs gratuitas.
 
+# #   2 0 2 6 - 0 8 - 2 1 :   U n i f i e d   G u n d a m   R a n k i n g   S y s t e m   &   B u i l d   F i x e s 
+ -   F i x e d   V e r c e l   b u i l d   f a i l u r e s   b y   r e s o l v i n g   s t r i c t   E S L i n t   e r r o r s   ( m i s s i n g   \ @ t s - e x p e c t - e r r o r \ ,   R e a c t   F a s t   R e f r e s h   r u l e s )   a n d   c o r r e c t i n g   U T F - 1 6   e n c o d i n g   o n   \ d a t a b a s e . t y p e s . t s \ . 
+ -   S y n c h r o n i z e d   \ p n p m - l o c k . y a m l \   t o   r e s o l v e   \ E R R _ P N P M _ O U T D A T E D _ L O C K F I L E \   d e p l o y m e n t   b l o c k e r . 
+ -   A p p l i e d   \  a n k i n g _ t y p e \   s c h e m a   c h a n g e s   t o   t h e   P r o d u c t i o n   d a t a b a s e   ( i t   w a s   o n l y   i n   D e v ) ,   a n d   r e l o a d e d   t h e   P o s t g R E S T   c a c h e . 
+ -   S e t   t h e   d e f a u l t   \  a n k i n g _ t y p e \   t o   \ g u n d a m \   a c r o s s   t h e   p l a t f o r m   ( d a t a b a s e   a n d   a d m i n   p a n e l )   t o   s a t i s f y   t h e   c l i e n t ' s   r e q u e s t   t o   u s e   t h e   3 - p o i n t   s y s t e m   ( C o n q u i s t a ,   D e r r i b o ,   K i l l s )   f o r   a l l   T C G s .  
+ 

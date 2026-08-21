@@ -2499,3 +2499,8 @@ useEffect(() => {
 - **Solución:** Para testear catálogos en frontend, inyectar stock de forma estricta recuperando printing_id e image_url reales del juego (game_id = 17) en la tabla card_printings.
 - **Regla Derivada:** Nunca inventar o reciclar FKs de printing_id en products. Siempre hacer JOIN o un IN query contra card_printings validando el juego.
 
+# #   2 0 2 6 - 0 8 - 2 1 :   V e r c e l   S c h e m a   D e s y n c 
+ -   W h e n   m o d i f y i n g   d a t a b a s e   s c h e m a s   v i a   S u p a b a s e ,   e n s u r e   t h a t   t h e   m o d i f i c a t i o n s   a r e   a p p l i e d   t o   B O T H   t h e   d e v e l o p m e n t   A N D   p r o d u c t i o n   e n v i r o n m e n t s   i f   t h e   f r o n t e n d   d e p e n d s   o n   t h e m . 
+ -   S u p a b a s e   c a c h e s   t h e   s c h e m a   u s i n g   P o s t g R E S T .   R u n   \ N O T I F Y   p g r s t ,   ' r e l o a d   s c h e m a ' \   v i a   S Q L   t o   e n s u r e   n e w   c o l u m n s   a r e   a v a i l a b l e   i n   t h e   A P I   i m m e d i a t e l y . 
+ -   T h e   c l i e n t   r e q u e s t e d   t h e   G u n d a m   3 - p o i n t   s y s t e m   ( C o n q u i s t a ,   D e r r i b o ,   K i l l s )   t o   b e   u s e d   a c r o s s   A L L   g a m e s ,   n o t   j u s t   G u n d a m .   R e m o v e d   t h e   s i n g l e - p o i n t   f a l l b a c k   t o   u n i f y   t h e   s c o r i n g   s y s t e m .  
+ 
