@@ -9,7 +9,7 @@ interface CartDrawerProps {
     onClose: () => void;
 }
 
-export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => { const formatPrice = (p) => { const n = Number(p); return (n && n > 0) ? String.fromCharCode(36) + n.toFixed(2) : 'S/P'; };
+export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => { const formatPrice = (p: any) => { const n = Number(p); return (n && n > 0) ? String.fromCharCode(36) + n.toFixed(2) : 'S/P'; };
     const { cartItems, isLoading, refreshCart } = useCart();
     const [updating, setUpdating] = useState<string | null>(null);
     const [optimisticItems, setOptimisticItems] = useState<any[] | null>(null);
