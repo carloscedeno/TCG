@@ -371,3 +371,8 @@ Resolver fallos en la carga masiva de inventario mediante la sincronización de 
 - **Odoo Image Sync**: Se activó un script daemon para subir las miniaturas de Scryfall (16,309 imágenes) al campo image_1920 de Odoo.
 - **Saneamiento de Categorías**: Se corrigieron duplicidades de la categoría Singles, fusionando Magic: The Gathering con MTG y eliminando la carpeta redundante Juegos TCG.
 - **Saneamiento de Catálogo**: Se implementó script de limpieza selectiva para archivar 125 productos sellados intrusos/antiguos en Odoo y Supabase, dejando el catálogo de preventa/sellado 100% paritario con el listado oficial de Erika.
+
+### v65: Odoo Webhook Auth and Email Templates (2026-08-23)
+- Fixed Odoo Webhook payload by ensuring webhook_field_ids contains partner fields.
+- Bypassed Supabase Kong edge function auth block by switching pikey query param to custom secret.
+- Debugged Supabase Email templates silently reverting to default due to Custom SMTP/DEV project discrepancy.

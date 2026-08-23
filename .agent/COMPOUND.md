@@ -710,3 +710,11 @@ Terminamos la reescritura del script de sincronización de precios de Gundam (pr
 - **Odoo Image Synchronization Engine**: Modificado Supabase edge function odoo-polling para actualizar automáticamente las imágenes 512 de Odoo hacia Supabase Storage y de Supabase Scryfall hacia Odoo image_1920.
 - **Category Reorganization**: Script merge_categories.py y dedup_cats.py para limpiar el árbol bajo la raíz TCG.
 - **Targeted Inventory Cleanup**: Ejecutado archivo de limpieza exacta para eliminar productos que no estuvieran en el archivo Excel maestro validado por Erika.
+
+## 2026-08-23 — Odoo to Supabase Invitation Webhook y eWallet sync check
+
+**Qué pasó:** Depuramos el webhook de Odoo que dispara Supabase Edge Functions para invitar usuarios de la tienda física a la web. Superamos problemas de payload, Kong blocking de apikey y confusión de entornos DEV/PROD para plantillas HTML de Auth.
+**Lo que cambió:**
+- lessons_learned.md → Lección #54 (Webhooks y envs).
+- supabase/functions/odoo-invite/index.ts → Actualizado para usar un secret query param en lugar de pikey.
+**Siguiente paso (Next session):** Crear y sincronizar el Monedero Electrónico (loyalty.card program_type=ewallet) de Odoo a geek_credits de Supabase.

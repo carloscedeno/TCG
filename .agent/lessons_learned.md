@@ -2504,3 +2504,8 @@ useEffect(() => {
  -   S u p a b a s e   c a c h e s   t h e   s c h e m a   u s i n g   P o s t g R E S T .   R u n   \ N O T I F Y   p g r s t ,   ' r e l o a d   s c h e m a ' \   v i a   S Q L   t o   e n s u r e   n e w   c o l u m n s   a r e   a v a i l a b l e   i n   t h e   A P I   i m m e d i a t e l y . 
  -   T h e   c l i e n t   r e q u e s t e d   t h e   G u n d a m   3 - p o i n t   s y s t e m   ( C o n q u i s t a ,   D e r r i b o ,   K i l l s )   t o   b e   u s e d   a c r o s s   A L L   g a m e s ,   n o t   j u s t   G u n d a m .   R e m o v e d   t h e   s i n g l e - p o i n t   f a l l b a c k   t o   u n i f y   t h e   s c o r i n g   s y s t e m .  
  
+### 54. Supabase Webhooks and Env Mixed-up — 2026-08-23
+- **Problema:** Los webhooks nativos de Odoo (ir.actions.server state=webhook) no enviaban los campos esperados y la función de Supabase devolvía error de Auth con la apikey.
+- **Causa Raíz:** Odoo no envía campos a menos que se definan en webhook_field_ids. Además, Supabase/Kong filtra los parámetros de URL llamados apikey, y el usuario editaba plantillas en PROD mientras operaba en DEV.
+- **Solución:** 1. Usar un query param personalizado (?secret=...) en lugar de apikey. 2. Añadir los ids de res.partner a webhook_field_ids en Odoo. 3. Identificar el proyecto (DEV vs PROD) para las plantillas.
+- **Regla Derivada:** Usar query parameters customizados para secrets en Supabase Edge Functions que se llaman desde Webhooks externos. Validar siempre que el entorno (Project Ref) de Supabase coincide con donde se edita.
