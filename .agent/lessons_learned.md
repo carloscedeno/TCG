@@ -2509,3 +2509,10 @@ useEffect(() => {
 - **Causa RaÃ­z:** Odoo no envÃ­a campos a menos que se definan en webhook_field_ids. AdemÃ¡s, Supabase/Kong filtra los parÃ¡metros de URL llamados apikey, y el usuario editaba plantillas en PROD mientras operaba en DEV.
 - **SoluciÃ³n:** 1. Usar un query param personalizado (?secret=...) en lugar de apikey. 2. AÃ±adir los ids de res.partner a webhook_field_ids en Odoo. 3. Identificar el proyecto (DEV vs PROD) para las plantillas.
 - **Regla Derivada:** Usar query parameters customizados para secrets en Supabase Edge Functions que se llaman desde Webhooks externos. Validar siempre que el entorno (Project Ref) de Supabase coincide con donde se edita.
+
+### 55. Fallo de Scraping BCV por SSL Gubernamental (Aug 2026)
+- **Problema:** Al intentar hacer scraping con Deno/Node a bcv.org.ve para obtener la tasa oficial, el sistema lanzaba 'invalid peer certificate: UnknownIssuer'.
+- **Causa Raíz:** Las entidades del gobierno venezolano frecuentemente tienen certificados SSL autofirmados o vencidos que bloquean a los runtimes modernos.
+- **Solución:** No hacer scraping directo. Utilizar el API público 've.dolarapi.com/v1/dolares/oficial' o el API de Binance P2P ('p2p.binance.com') para asegurar estabilidad a largo plazo.
+- **Regla Derivada:** Nunca usar web scraping tradicional contra páginas web gubernamentales de LATAM para procesos automatizados sin control de SSL; usar siempre intermediarios o APIs públicos comprobados.
+
