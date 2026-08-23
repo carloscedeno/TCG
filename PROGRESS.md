@@ -365,3 +365,9 @@ Resolver fallos en la carga masiva de inventario mediante la sincronización de 
 - **Smart Cart Auto-Adjustment:** Upgraded pi/index.ts to autonomously reconcile cart items and Supabase catalog stock upon Odoo verification failures (missing or insufficient items), preventing hard checkout errors and providing graceful UX.
 - **Reverse Sync Architecture:** Completely rebuilt the Odoo Sales Order confirmation webhook to perform a reverse synchronization. The webhook now queries the final invoice lines from Odoo via RPC and overwrites the Supabase order_items and 	otal_amount to reflect modifications (taxes, additions, removals) made at the physical store.
 - **Data Parity:** Executed a bulk injection script to set is_storable=True and migrate Supabase stock to stock.quant in Odoo for 115 products.
+
+
+### 📦 Saneamiento de Inventario y Sync de Imágenes Odoo (Compound v64)
+- **Odoo Image Sync**: Se activó un script daemon para subir las miniaturas de Scryfall (16,309 imágenes) al campo image_1920 de Odoo.
+- **Saneamiento de Categorías**: Se corrigieron duplicidades de la categoría Singles, fusionando Magic: The Gathering con MTG y eliminando la carpeta redundante Juegos TCG.
+- **Saneamiento de Catálogo**: Se implementó script de limpieza selectiva para archivar 125 productos sellados intrusos/antiguos en Odoo y Supabase, dejando el catálogo de preventa/sellado 100% paritario con el listado oficial de Erika.

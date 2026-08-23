@@ -705,3 +705,8 @@ Terminamos la reescritura del script de sincronización de precios de Gundam (pr
  -   A p p l i e d   \  a n k i n g _ t y p e \   s c h e m a   c h a n g e s   t o   t h e   P r o d u c t i o n   d a t a b a s e   ( i t   w a s   o n l y   i n   D e v ) ,   a n d   r e l o a d e d   t h e   P o s t g R E S T   c a c h e . 
  -   S e t   t h e   d e f a u l t   \  a n k i n g _ t y p e \   t o   \ g u n d a m \   a c r o s s   t h e   p l a t f o r m   ( d a t a b a s e   a n d   a d m i n   p a n e l )   t o   s a t i s f y   t h e   c l i e n t ' s   r e q u e s t   t o   u s e   t h e   3 - p o i n t   s y s t e m   ( C o n q u i s t a ,   D e r r i b o ,   K i l l s )   f o r   a l l   T C G s .  
  
+
+## Compound v64: Odoo Catalog & Images Sync Cleanup
+- **Odoo Image Synchronization Engine**: Modificado Supabase edge function odoo-polling para actualizar automáticamente las imágenes 512 de Odoo hacia Supabase Storage y de Supabase Scryfall hacia Odoo image_1920.
+- **Category Reorganization**: Script merge_categories.py y dedup_cats.py para limpiar el árbol bajo la raíz TCG.
+- **Targeted Inventory Cleanup**: Ejecutado archivo de limpieza exacta para eliminar productos que no estuvieran en el archivo Excel maestro validado por Erika.

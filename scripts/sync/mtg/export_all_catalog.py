@@ -52,7 +52,7 @@ def run_export_all():
         logger.error("Odoo authentication failed. Cannot proceed.")
         return
         
-    cat_juegos_id = ensure_category(odoo, "Juegos TCG")
+    cat_juegos_id = ensure_category(odoo, "TCG")
     cat_accesorios_gen_id = ensure_category(odoo, "Accesorios Generales")
     
     # 1. Fetch Games from Supabase

@@ -156,7 +156,7 @@ serve(async (req) => {
         'product.product', 
         'search_read', 
         [[['write_date', '>=', timeString]]],
-        { fields: ['id', 'name', 'display_name', 'default_code', 'list_price', 'qty_available'] }
+        { fields: ['id', 'name', 'display_name', 'default_code', 'list_price', 'qty_available', 'image_512'] }
       ]
     });
 
@@ -166,6 +166,35 @@ serve(async (req) => {
       const stock = record.qty_available;
       const name = record.display_name || record.name;
       const odooId = record.id;
+      const imageB64 = record.image_512;
+      let imageUrl = null;
+
+      // Handle Image from Odoo -> Supabase
+      if (imageB64) {
+        try {
+          const byteCharacters = atob(imageB64);
+          const byteNumbers = new Array(byteCharacters.length);
+          for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+          }
+          const byteArray = new Uint8Array(byteNumbers);
+          const fileName = `accessories/${odooId}-${Date.now()}.jpg`;
+          
+          const { data: uploadData, error: uploadErr } = await supabase.storage
+            .from('public_assets')
+            .upload(fileName, byteArray, { contentType: 'image/jpeg', upsert: true });
+            
+          if (!uploadErr && uploadData) {
+             const { data: { publicUrl } } = supabase.storage.from('public_assets').getPublicUrl(fileName);
+             imageUrl = publicUrl.replace('?format=json', '');
+          }
+        } catch (e) {
+          console.error("Error uploading Odoo image:", e);
+        }
+      }
+
+      const updatePayload: any = { price: price !== undefined ? parseFloat(price) : 0, stock: stock !== undefined ? parseInt(stock, 10) : 0, name: name };
+      if (imageUrl) updatePayload.image_url = imageUrl;
 
       if (!defaultCode) {
         // Create new accessory if it has no default_code yet
@@ -177,9 +206,7 @@ serve(async (req) => {
           await supabase.from('accessories').insert({
             id: targetUuid,
             odoo_id: parseInt(odooId, 10),
-            name: name,
-            price: price !== undefined ? parseFloat(price) : 0,
-            stock: stock !== undefined ? parseInt(stock, 10) : 0,
+            ...updatePayload,
             category: 'Accesorios',
             is_active: true,
             unit_type: 'Unidad',
@@ -198,7 +225,7 @@ serve(async (req) => {
              } catch(e) {}
           })();
         } else {
-          await supabase.from('accessories').update({ price: parseFloat(price), stock: parseInt(stock, 10), name: name }).eq('id', targetUuid);
+          await supabase.from('accessories').update(updatePayload).eq('id', targetUuid);
           results.products.push({ action: 'updated', id: targetUuid });
         }
       } else {
@@ -213,7 +240,7 @@ serve(async (req) => {
         }
 
         if (item) {
-          await supabase.from(table).update({ price: parseFloat(price), stock: parseInt(stock, 10) }).eq('id', defaultCode);
+          await supabase.from(table).update(updatePayload).eq('id', defaultCode);
           results.products.push({ action: 'updated', id: defaultCode, table });
         }
       }
@@ -228,7 +255,7 @@ serve(async (req) => {
 
     const { data: updatedSingles, error: singlesErr } = await supabase
       .from('products')
-      .select('id, name, set_code, finish, condition, price, stock, discount_percentage')
+      .select('id, name, set_code, finish, condition, price, stock, discount_percentage, image_url')
       .gte('updated_at', supaTimeString);
 
     if (singlesErr) {
@@ -258,7 +285,7 @@ serve(async (req) => {
         });
       };
 
-      const catJuegosId = await ensureCategory("Juegos TCG");
+      const catJuegosId = await ensureCategory("TCG");
       const catMtgId = await ensureCategory("MTG", catJuegosId);
       const catSinglesId = await ensureCategory("Singles", catMtgId);
 
@@ -268,6 +295,26 @@ serve(async (req) => {
         const listPrice = item.discount_percentage && item.discount_percentage > 0 
            ? item.price * (1 - item.discount_percentage / 100)
            : item.price;
+           
+        // Fetch Image for Odoo (Thumbnail)
+        let odooImageB64 = false;
+        if (item.image_url) {
+           try {
+              const smallUrl = item.image_url.replace('/normal/', '/small/');
+              const imgRes = await fetch(smallUrl);
+              if (imgRes.ok) {
+                 const arrayBuffer = await imgRes.arrayBuffer();
+                 const uint8Array = new Uint8Array(arrayBuffer);
+                 const chunks = [];
+                 for (let i = 0; i < uint8Array.length; i += 8192) {
+                     chunks.push(String.fromCharCode.apply(null, uint8Array.subarray(i, i + 8192) as any));
+                 }
+                 odooImageB64 = btoa(chunks.join(''));
+              }
+           } catch(e) {
+              console.error("Error fetching thumbnail for Odoo:", e);
+           }
+        }
 
         const searchResult = await odooJsonRpc(odooUrl, 'call', {
           service: 'object',
@@ -281,6 +328,16 @@ serve(async (req) => {
           ]
         });
 
+        const odooPayload: any = {
+           list_price: listPrice,
+           name: name,
+           detailed_type: 'product',
+           is_storable: true
+        };
+        if (odooImageB64) {
+           odooPayload.image_1920 = odooImageB64;
+        }
+
         if (searchResult && searchResult.length > 0) {
           // Update existing
           await odooJsonRpc(odooUrl, 'call', {
@@ -290,12 +347,7 @@ serve(async (req) => {
               odooDb, uid, odooApiKey, 
               'product.product', 
               'write', 
-              [[searchResult[0]], { 
-                 list_price: listPrice,
-                 name: name,
-                 detailed_type: 'product',
-                 is_storable: true
-              }]
+              [[searchResult[0]], odooPayload]
             ]
           });
           
@@ -328,19 +380,14 @@ serve(async (req) => {
           }
         } else {
           // Create new
-          const createData: any = {
-            name: name,
-            default_code: item.id,
-            list_price: listPrice,
-            detailed_type: 'product',
-            is_storable: true,
-            categ_id: catSinglesId,
-            description_sale: "Single importado automáticamente desde Web",
-          };
+          odooPayload.default_code = item.id;
+          odooPayload.categ_id = catSinglesId;
+          odooPayload.description_sale = "Single importado automáticamente desde Web";
+          
           const newId = await odooJsonRpc(odooUrl, 'call', {
             service: 'object',
             method: 'execute_kw',
-            args: [odooDb, uid, odooApiKey, 'product.product', 'create', [createData]]
+            args: [odooDb, uid, odooApiKey, 'product.product', 'create', [odooPayload]]
           });
 
           // Set initial stock
