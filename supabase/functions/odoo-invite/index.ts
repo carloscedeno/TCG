@@ -22,7 +22,8 @@ serve(async (req) => {
     const urlObj = new URL(req.url)
     const urlSecret = urlObj.searchParams.get('secret')
     
-    const WEBHOOK_SECRET = 'geekorium_odoo_secret_2026'
+    // IMPORTANTE: Se ha eliminado el secreto estático por alerta de seguridad (GitGuardian)
+    const WEBHOOK_SECRET = Deno.env.get('ODOO_WEBHOOK_SECRET')
 
     let isAuthorized = false
     if (authHeader && authHeader === `Bearer ${supabaseKey}`) {
