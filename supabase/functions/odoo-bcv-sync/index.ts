@@ -45,14 +45,14 @@ Deno.serve(async (req: Request) => {
     const dataOficial = await oficialResponse.json();
     const rateOficial = parseFloat(dataOficial.promedio);
 
-    // 2. Obtener tasa Binance Real (P2P USDT/VES)
+    // 2. Obtener tasa Binance Real (Promedio de la primera página P2P USDT/VES)
     const binanceResponse = await fetch("https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         proMerchantAds: false,
         page: 1,
-        rows: 1,
+        rows: 10, // Pedimos 10 resultados para promediar
         payTypes: [],
         countries: [],
         publisherType: null,
@@ -64,9 +64,14 @@ Deno.serve(async (req: Request) => {
     if (!binanceResponse.ok) throw new Error("Fallo API Binance P2P");
     const dataBinance = await binanceResponse.json();
     if (!dataBinance.data || dataBinance.data.length === 0) throw new Error("No hay anuncios en Binance P2P");
-    const rateParalelo = parseFloat(dataBinance.data[0].adv.price);
+    
+    // Binance ordena de menor a mayor en BUY.
+    // Tomamos la más baja (el primer resultado) y la más alta de la primera página (el último resultado)
+    const lowestPrice = parseFloat(dataBinance.data[0].adv.price);
+    const highestPrice = parseFloat(dataBinance.data[dataBinance.data.length - 1].adv.price);
+    const rateParalelo = (lowestPrice + highestPrice) / 2;
 
-    console.log(`Tasas obtenidas -> Oficial (BCV): ${rateOficial} | Real (Binance P2P): ${rateParalelo}`);
+    console.log(`Tasas obtenidas -> Oficial (BCV): ${rateOficial} | Real (Binance P2P Promedio - Min: ${lowestPrice}, Max: ${highestPrice}): ${rateParalelo}`);
 
     // 3. Conectar a Odoo
     const odooUrl = Deno.env.get('ODOO_URL');
