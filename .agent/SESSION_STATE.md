@@ -5,15 +5,15 @@
 
 ---
 
-## 📅 Última sesión: 2026-08-23
+## 📅 Última sesión: 2026-08-25
 **Rama activa:** `dev`
-**Último commit conocido:** feat(odoo): add Edge Function odoo-bcv-sync for automated dual-rate BCV/Binance synchronization
-**En progreso:** Automatizaciones de Odoo, Sincronización de Tasas.
+**Último commit conocido:** feat(cron): update Odoo sync schedule to 8am, 11am, 1pm, and 5pm VET
+**En progreso:** Automatizaciones de Odoo, Sincronización de Tasas Múltiples (BCV/Binance).
 
 ## 📁 Zona Caliente (archivos tocados recientemente)
+- supabase/functions/odoo-invite/index.ts — Corrección de seguridad (eliminado webhook secret quemado)
+- supabase/migrations/20260825002900_update_bcv_cron.sql — Cron job para sincronización en horario comercial
 - supabase/functions/odoo-bcv-sync/index.ts — Sincronizador de tasas Oficial/Binance con Odoo
-- supabase/migrations/20260823024800_bcv_cron.sql — Tarea programada (pg_cron)
-- supabase/functions/odoo-sync/index.ts — Lógica base de conexión Odoo RPC
 
 ## ⏭️ Próxima acción recomendada
 Realizar compra de prueba desde el Frontend en modo local asegurando que la tasa USB y USD se apliquen correctamente tras la sincronización del Odoo.
