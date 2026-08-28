@@ -10,8 +10,9 @@ export const Footer: React.FC = () => {
                         <img src="/branding/Logo.png" alt="Logo Geekorium" className="w-32 object-contain group-hover:scale-105 transition-transform" />
                     </Link>
                     <div className="flex flex-col gap-3 text-sm font-medium text-text-low">
-                        <a href="https://wa.me/584128042832" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">WhatsApp Principal: +58 412-8042832</a>
+                        <a href="https://wa.me/584128042832" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">WhatsApp Ventas: +58 412-8042832</a>
                         <a href="https://wa.me/584242507802" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">WhatsApp Singles: +58 424-2507802</a>
+                        <a href="https://wa.me/584149124523" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors text-amber-500/80 hover:text-amber-400">WhatsApp Soporte Técnico: +58 414-9124523</a>
                     </div>
                     <div className="flex flex-wrap gap-4 justify-center md:justify-start mt-6">
                         <a href="https://instagram.com/geekorium/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center text-text-low hover:bg-white hover:text-black transition-all shadow-lg hover:shadow-white/20">
@@ -43,6 +44,7 @@ export const Footer: React.FC = () => {
                     © 2025 Geekorium El Emporio. Plataforma Avanzada de TCG.
                 </div>
                 <div className="flex gap-8 text-text-low text-xs font-bold uppercase tracking-widest justify-center md:justify-end">
+                    <a href="https://wa.me/584149124523" target="_blank" rel="noopener noreferrer" className="hover:text-amber-400 text-amber-500/80 transition-colors">Soporte Técnico</a>
                     <Link to="/legal" className="hover:text-white transition-colors">Aviso Legal</Link>
                     <Link to="/help" className="hover:text-white transition-colors">¿Cómo Comprar?</Link>
                 </div>
