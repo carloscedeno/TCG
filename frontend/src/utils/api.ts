@@ -978,24 +978,48 @@ export const addToCart = async (printingId: string, quantity: number = 1, finish
     }
 
     // Guest Cart Logic
-    const guestCart = JSON.parse(localStorage.getItem('guest_cart') || '[]');
-    const existingItemIndex = guestCart.findIndex((item: any) => 
-      item.printing_id === printingId && item.is_accessory === isAccessory
+    const currentCart = JSON.parse(localStorage.getItem('guest_cart') || '[]');
+    const explicitFinish = (finish || 'nonfoil').toLowerCase();
+
+    // Validate Stock for Guest
+    if (!isAccessory) {
+        const { data: stockData } = await supabase
+            .from('products')
+            .select('stock')
+            .or(`id.eq.${printingId},printing_id.eq.${printingId}`)
+            .ilike('finish', explicitFinish)
+            .order('stock', { ascending: false })
+            .limit(1)
+            .maybeSingle();
+            
+        const existingItem = currentCart.find((i: any) => !i.is_accessory && i.printing_id === printingId && i.finish === explicitFinish);
+        const existingQty = existingItem ? existingItem.quantity : 0;
+        const availableStock = stockData?.stock || 0;
+        
+        if (existingQty + quantity > availableStock && availableStock > 0) { 
+            return { success: false, message: 'No hay suficiente stock disponible' };
+        }
+    }
+
+    const existingItemIndex = currentCart.findIndex((i: any) => 
+      (isAccessory && i.accessory_id === printingId) ||
+      (!isAccessory && i.printing_id === printingId && i.finish === explicitFinish)
     );
 
     if (existingItemIndex >= 0) {
-      guestCart[existingItemIndex].quantity += quantity;
+      currentCart[existingItemIndex].quantity += quantity;
     } else {
-      guestCart.push({ 
-        printing_id: printingId, 
+      currentCart.push({ 
+        id: `guest-${printingId}`,
+        printing_id: !isAccessory ? printingId : undefined,
+        accessory_id: isAccessory ? printingId : undefined,
         quantity, 
-        is_accessory: isAccessory,
-        accessory_id: isAccessory ? printingId : null
+        finish: explicitFinish,
+        is_accessory: isAccessory 
       });
     }
 
-    localStorage.setItem('guest_cart', JSON.stringify(guestCart));
-    // Dispatch event to update cart drawer if open
+    localStorage.setItem('guest_cart', JSON.stringify(currentCart));
     window.dispatchEvent(new Event('cart-updated'));
     localStorage.setItem('cart_sync_timestamp', Date.now().toString());
 
