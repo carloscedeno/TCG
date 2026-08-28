@@ -92,8 +92,16 @@ export class ChunkErrorBoundary extends Component<Props, State> {
             >
               Solucionar Problema
             </button>
+            <a 
+              href="https://wa.me/584149124523" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="w-full py-3 bg-green-600 hover:bg-green-500 text-white font-bold uppercase tracking-wider rounded transition-colors block text-center"
+            >
+              Contactar Soporte (WhatsApp)
+            </a>
             <p className="text-xs text-white/40">
-              Este botón limpiará el caché temporal de la página e intentará recargar desde cero.
+              El primer botón limpiará el caché temporal de la página e intentará recargar desde cero.
             </p>
           </div>
         </div>

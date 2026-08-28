@@ -270,7 +270,7 @@ export const CheckoutSuccessPage = () => {
                     <div className="p-4 bg-amber-500/5 border border-amber-500/20 rounded-xl mb-8 flex items-start gap-3 text-left">
                         <AlertCircle className="text-amber-500 shrink-0 mt-0.5" size={16} />
                         <p className="text-[11px] text-amber-500/80 leading-relaxed font-medium">
-                            No se generó un ID de seguimiento único. Puedes revisar tus pedidos en tu perfil o contactar a soporte si es necesario.
+                            No se generó un ID de seguimiento único. Puedes revisar tus pedidos en tu perfil o <a href="https://wa.me/584149124523" target="_blank" rel="noopener noreferrer" className="underline hover:text-amber-400">contactar a soporte</a> si es necesario.
                         </p>
                     </div>
                 )}
