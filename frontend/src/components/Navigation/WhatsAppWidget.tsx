@@ -16,6 +16,12 @@ export const WhatsAppWidget: React.FC = () => {
             number: '584242507802',
             description: 'Compra y venta de cartas sueltas',
             color: 'bg-geeko-purple'
+        },
+        {
+            name: 'Soporte Técnico',
+            number: '584149124523',
+            description: 'Ayuda técnica y reporte de errores',
+            color: 'bg-amber-400'
         }
     ];
 
