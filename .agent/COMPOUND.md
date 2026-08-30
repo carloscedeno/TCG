@@ -718,3 +718,17 @@ Terminamos la reescritura del script de sincronización de precios de Gundam (pr
 - lessons_learned.md → Lección #54 (Webhooks y envs).
 - supabase/functions/odoo-invite/index.ts → Actualizado para usar un secret query param en lugar de pikey.
 **Siguiente paso (Next session):** Crear y sincronizar el Monedero Electrónico (loyalty.card program_type=ewallet) de Odoo a geek_credits de Supabase.
+
+### Odoo eWallet Migration and ERP Customer Ingestion (v66)
+**Fecha**: 26 de Agosto de 2026
+**Contexto**: Se requería migrar e integrar el sistema de créditos (eWallet) de Odoo con Supabase para mostrar saldos en la web, así como importar clientes de un ERP anterior (con sus saldos).
+**Desafíos y Soluciones**:
+1. **Odoo XML-RPC vs Frontend Validation**: La UI de Odoo impide cambiar la moneda de un programa de lealtad (loyalty.program) si ya tiene tarjetas asociadas. Sin embargo, utilizar la API XML-RPC permite modificar el registro saltándose las restricciones del frontend.
+2. **Supabase Edge Functions Auth**: Para webhook calls desde Odoo a Supabase, enviar la API key vía el query param ?apikey= fallaba porque el Kong Gateway de Supabase extrae y consume ese parámetro antes de llegar a la función. **Solución**: Usar un parámetro personalizado (ej. ?secret=) y validarlo manualmente dentro del código de Deno.
+3. **Data Scrubbing en Migraciones**: Al importar listas legacy (CSV del ERP), los formatos de identificación varían (ej. V-18.357.478). Odoo permite guardar esto en el campo at sin fallar (si no hay validaciones estrictas de localización activa), pero mantener el estándar numérico requiere ejecutar scripts secundarios de limpieza usando expresiones regulares (
+e.sub) a través de la interfaz XML-RPC para limpiar los registros existentes.
+
+## 2026-08-30 — Sincronización de Eventos Odoo + Cuentas por Pagar (Deudas) + Fixes UI
+- **Odoo Events Integration**: Se instaló el módulo event en Odoo y se inyectaron campos personalizados (x_game_code, x_format, x_entry_fee, x_image_url). Se desplegó el Edge Function odoo-event-sync en DEV apuntando a Supabase.
+- **Vista de Cuentas por Pagar (Deudas)**: Se implementó la sección **Cuentas Pendientes** en el perfil de usuario reutilizando la estética de Créditos Geek y enlazando cada tarjeta al detalle interactivo del pedido (/order/:id).
+- **Limpieza UI & RPC Fixes**: Se corrigieron los colores en modo claro en la página de Eventos (TournamentHub.tsx), se corrigieron los tipos de retorno (TEXT/NUMERIC) de la función RPC get_inventory_movements y se retiró la sección sin uso del perfil.

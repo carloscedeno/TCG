@@ -7,16 +7,17 @@
 
 ## 📅 Última sesión: 2026-08-30
 **Rama activa:** `dev`
-**Último commit conocido:** feat(cron): update Odoo sync schedule to 8am, 11am, 1pm, and 5pm VET
-**En progreso:** Eventos Odoo <-> Web Sync, Vista Informativa de Cuentas por Pagar (Deudas).
+**Último commit conocido:** ed9166cf (style: remove inventory movements from profile view)
+**En progreso:** Sesión finalizada con éxito. Todos los cambios probados y desplegados en `dev`.
 
 ## 📁 Zona Caliente (archivos tocados recientemente)
-- frontend/src/components/Profile/OrdersList.tsx — Filtro de Cuentas por Pagar (Pendientes)
-- frontend/src/pages/TournamentHub.tsx — Fix visual de modo claro para eventos/misiones
-- supabase/functions/odoo-event-sync/index.ts — Sincronizador de eventos Odoo a Supabase DEV
+- frontend/src/components/Profile/DebtsList.tsx — Vista interactiva de Cuentas Pendientes
+- frontend/src/pages/Profile.tsx — Integración de Cuentas por Pagar y remoción de movimientos
+- frontend/src/pages/TournamentHub.tsx — Corrección de contraste en modo claro
+- supabase/functions/odoo-event-sync/index.ts — Webhook sincronizador Odoo -> Supabase DEV
 
 ## ⏭️ Próxima acción recomendada
-Probar sincronización de pedidos a crédito desde Odoo para validar el flujo informativo en la pestaña Cuentas por Pagar.
+Realizar pruebas de usuario en la Preview de `dev` (Cloudflare Pages) sobre la creación de eventos en Odoo y consulta de deudas en perfil.
 
 ## 🚫 Restricciones activas
 - NO usar `npm` — solo `pnpm`
