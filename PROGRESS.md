@@ -376,3 +376,17 @@ Resolver fallos en la carga masiva de inventario mediante la sincronización de 
 - Fixed Odoo Webhook payload by ensuring webhook_field_ids contains partner fields.
 - Bypassed Supabase Kong edge function auth block by switching pikey query param to custom secret.
 - Debugged Supabase Email templates silently reverting to default due to Custom SMTP/DEV project discrepancy.
+
+### ✅ Odoo eWallet Migration and ERP Customer Ingestion (Compound v66)
+- **eWallet Edge Function**: Deployed odoo-ewallet-sync to synchronize Odoo loyalty.card balances to Supabase profiles.geek_credits and track history in credit_history.
+- **Odoo Enhancements**: Created a global smart button on 
+es.partner for quick eWallet access and a Python automation rule to sync manual cashier descriptions to the webhook.
+- **Bulk Customer Ingestion**: Ingested >300 customers from a legacy ERP CSV into Odoo via XML-RPC, automatically assigning eWallet balances to those with debt.
+- **Data Standardization**: Executed an XML-RPC script to sanitize all customer VAT (cedula) records, removing non-numeric characters (like 'V-' and dots).
+
+- **Smart Webhook Redirection**: Added dynamic environment detection to Edge Functions (odoo-invite, odoo-ewallet-sync). If a delayed/legacy webhook hits the DEV project, it automatically proxies the JSON payload to the PROD equivalent, preventing lost webhooks from Odoo's queue and resolving the misdirected invitations issue.
+
+### ✅ Odoo Events & Marketing Synchronization (v67)
+- **Installed Event Module**: Ensured the standard event module is active in Odoo.
+- **Odoo to Web Sync**: Deployed odoo-event-sync Edge Function and configured an Odoo webhook on event.event (create, write, unlink) to push event details (name, date, capacity) to the public.events table in Supabase.
+- **Web to Odoo Registrations**: Deployed sync-event-registration Edge Function and a Database Webhook on event_registrations so that every new web registration automatically creates an event.registration record in Odoo, linking the attendee to their CRM profile via email.

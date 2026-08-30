@@ -5,6 +5,7 @@ import { Settings } from 'lucide-react';
 
 import OrdersList from '../components/Profile/OrdersList';
 import { CreditHistoryList } from '../components/Profile/CreditHistoryList';
+import { DebtsList } from '../components/Profile/DebtsList';
 import { ProfileSettingsModal } from '../components/Profile/ProfileSettingsModal';
 import { AddressBook } from '../components/Profile/AddressBook';
 import { PlayerRankingsList } from '../components/Profile/PlayerRankingsList';
@@ -21,6 +22,7 @@ const ProfilePage: React.FC = () => {
     const [profileData, setProfileData] = useState<any>(null);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [isCartOpen, setIsCartOpen] = useState(false);
+    const [totalDebt, setTotalDebt] = useState<number>(0);
 
     const loadProfileData = async () => {
         if (!user) return;
@@ -151,6 +153,35 @@ const ProfilePage: React.FC = () => {
                                 <div className="bg-slate-900/50 border border-white/5 rounded-[2rem] p-6 backdrop-blur-md h-full">
                                     <h3 className="text-white text-sm font-black uppercase tracking-[0.2em] mb-6">Historial de Movimientos</h3>
                                     <CreditHistoryList />
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Pending Debts Section */}
+                    <section className="animate-in slide-in-from-bottom-8 duration-700 delay-75">
+                        <div className="flex items-center gap-4 mb-8">
+                            <h2 className="text-3xl font-black italic uppercase tracking-tighter">
+                                Cuentas <span className="text-red-500">Pendientes</span>
+                            </h2>
+                            <div className="h-px flex-1 bg-gradient-to-r from-red-500/50 to-transparent"></div>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            <div className="lg:col-span-1">
+                                <div className="bg-gradient-to-br from-red-500/20 to-orange-600/10 border border-red-500/30 rounded-[2rem] p-8 text-center backdrop-blur-md shadow-[0_0_30px_rgba(239,68,68,0.15)] relative overflow-hidden">
+                                    <div className="absolute inset-0 bg-red-500/5 opacity-20 mix-blend-overlay"></div>
+                                    <h3 className="text-red-400 text-xs font-black uppercase tracking-[0.3em] mb-2 relative z-10">Deuda Total</h3>
+                                    <div className="text-5xl lg:text-6xl font-black text-white italic tracking-tighter relative z-10">
+                                        ${totalDebt.toFixed(2)} <span className="text-red-400 text-2xl font-mono">USD</span>
+                                    </div>
+                                    <p className="text-red-400/80 text-xs mt-4 uppercase tracking-widest font-bold relative z-10">Por Cobrar en Caja</p>
+                                </div>
+                            </div>
+                            <div className="lg:col-span-2">
+                                <div className="bg-slate-900/50 border border-white/5 rounded-[2rem] p-6 backdrop-blur-md h-full">
+                                    <h3 className="text-white text-sm font-black uppercase tracking-[0.2em] mb-6">Cuentas por Cobrar (Odoo)</h3>
+                                    <DebtsList onTotalCalculated={(t) => setTotalDebt(t)} />
                                 </div>
                             </div>
                         </div>

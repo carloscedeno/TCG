@@ -65,9 +65,9 @@ const TournamentHub: React.FC = () => {
                     {/* Header Section */}
                     <div className="flex flex-col md:flex-row justify-between items-end gap-6 border-b border-white/5 pb-12">
                         <div className="space-y-4">
-                            <h2 className="text-xs font-black text-white uppercase tracking-[0.4em]">Próximas Misiones</h2>
-                            <h1 className="text-5xl md:text-7xl font-black text-white italic tracking-tighter uppercase leading-[0.85]">
-                                Geekorium <br /><span className="text-white">Arena</span>
+                            <h2 className="text-xs font-black text-black dark:text-white uppercase tracking-[0.4em]">Próximas Misiones</h2>
+                            <h1 className="text-5xl md:text-7xl font-black text-black dark:text-white italic tracking-tighter uppercase leading-[0.85]">
+                                Geekorium <br /><span className="text-black dark:text-white">Arena</span>
                             </h1>
                             <p className="text-neutral-500 max-w-xl font-medium">
                                 Únete a la experiencia competitiva definitiva. Gana puntos, sube en el ranking y obtén premios exclusivos en nuestros eventos oficiales.
@@ -76,9 +76,9 @@ const TournamentHub: React.FC = () => {
                         <div className="flex gap-4">
                             <button
                                 onClick={() => navigate('/profile')}
-                                className="px-8 py-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-white font-black uppercase tracking-widest text-[10px] flex items-center gap-3 group"
+                                className="px-8 py-4 rounded-xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 hover:bg-black/10 dark:hover:bg-white/10 transition-all text-black dark:text-white font-black uppercase tracking-widest text-[10px] flex items-center gap-3 group"
                             >
-                                <Users size={16} className="group-hover:text-white transition-colors" /> Mi Perfil de Jugador
+                                <Users size={16} className="group-hover:text-black dark:group-hover:text-white transition-colors" /> Mi Perfil de Jugador
                             </button>
                         </div>
                     </div>
@@ -86,7 +86,7 @@ const TournamentHub: React.FC = () => {
                     {/* Events Grid */}
                     <div className="space-y-8">
                         <div className="flex items-center justify-between">
-                            <h3 className="text-2xl font-black text-white uppercase italic tracking-tighter">Calendario de Torneos</h3>
+                            <h3 className="text-2xl font-black text-black dark:text-white uppercase italic tracking-tighter">Calendario de Torneos</h3>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -119,43 +119,43 @@ const TournamentHub: React.FC = () => {
                                             
                                             <div className="p-8 space-y-6">
                                                 <div>
-                                                    <h3 className="text-2xl font-black italic tracking-tighter uppercase line-clamp-2 group-hover:text-white transition-colors duration-300">
+                                                    <h3 className="text-2xl font-black italic tracking-tighter uppercase line-clamp-2 text-black dark:text-white group-hover:text-neutral-600 dark:group-hover:text-white transition-colors duration-300">
                                                         {tournament.name}
                                                     </h3>
                                                     <div className="flex items-center gap-3 text-neutral-500 text-[10px] font-black uppercase tracking-widest mt-3">
-                                                        <Calendar size={14} className="text-white" />
+                                                        <Calendar size={14} className="text-black dark:text-white" />
                                                         {new Date(tournament.event_date).toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }).toUpperCase()}
                                                     </div>
                                                 </div>
 
                                                 {tournament.description && (
-                                                    <p className="text-xs text-neutral-400 font-medium line-clamp-3 leading-relaxed">
+                                                    <p className="text-xs text-neutral-500 dark:text-neutral-400 font-medium line-clamp-3 leading-relaxed">
                                                         {tournament.description}
                                                     </p>
                                                 )}
 
-                                                <div className="grid grid-cols-2 gap-6 py-6 border-y border-white/5">
+                                                <div className="grid grid-cols-2 gap-6 py-6 border-y border-black/5 dark:border-white/5">
                                                     <div className="space-y-1">
                                                         <div className="text-[10px] text-neutral-600 font-black uppercase tracking-widest flex items-center gap-2">
                                                             <Swords size={12} /> Formato
                                                         </div>
-                                                        <div className="text-[13px] font-black text-white uppercase">{tournament.format}</div>
+                                                        <div className="text-[13px] font-black text-black dark:text-white uppercase">{tournament.format}</div>
                                                     </div>
                                                     <div className="space-y-1">
                                                         <div className="text-[10px] text-neutral-600 font-black uppercase tracking-widest flex items-center gap-2">
                                                             <Users size={12} /> Jugadores
                                                         </div>
-                                                        <div className="text-[13px] font-black text-white uppercase">{tournament.registered || 0} / {tournament.capacity || 64}</div>
+                                                        <div className="text-[13px] font-black text-black dark:text-white uppercase">{tournament.registered || 0} / {tournament.capacity || 64}</div>
                                                     </div>
                                                 </div>
 
                                                 <div className="flex items-center justify-between gap-4">
-                                                    <div className="text-3xl font-black italic text-white leading-none">
+                                                    <div className="text-3xl font-black italic text-black dark:text-white leading-none">
                                                         {tournament.entry_fee}
                                                     </div>
                                                     <button 
                                                         onClick={() => setSelectedEvent(tournament)}
-                                                        className="flex-1 bg-white hover:bg-white text-black px-6 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all transform active:scale-95 shadow-lg shadow-white/10"
+                                                        className="flex-1 bg-black dark:bg-white hover:bg-neutral-800 dark:hover:bg-white text-white dark:text-black px-6 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all transform active:scale-95 shadow-lg shadow-black/10 dark:shadow-white/10"
                                                     >
                                                         Pre-inscribirme
                                                     </button>
@@ -165,8 +165,8 @@ const TournamentHub: React.FC = () => {
                                     );
                                 })
                             ) : (
-                                <div className="col-span-full py-32 text-center bg-white/[0.02] rounded-3xl border border-dashed border-white/10 space-y-6">
-                                    <Calendar className="w-20 h-20 text-neutral-800 mx-auto" />
+                                <div className="col-span-full py-32 text-center bg-black/[0.02] dark:bg-white/[0.02] rounded-3xl border border-dashed border-black/10 dark:border-white/10 space-y-6">
+                                    <Calendar className="w-20 h-20 text-neutral-400 dark:text-neutral-800 mx-auto" />
                                     <div className="space-y-2">
                                         <h3 className="text-2xl font-black text-neutral-500 uppercase italic tracking-tighter">No hay eventos próximos</h3>
                                         <p className="text-neutral-600 text-sm font-medium">Estamos preparando nuevas misiones. ¡Vuelve pronto!</p>

@@ -35,7 +35,7 @@ const OrdersList: React.FC = () => {
     const { user } = useAuth();
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState<'all' | 'singles' | 'sealed' | 'presales'>('all');
+    const [activeTab, setActiveTab] = useState<'all' | 'debts' | 'singles' | 'sealed' | 'presales'>('all');
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -110,6 +110,7 @@ const OrdersList: React.FC = () => {
     const filteredOrders = orders.filter(order => {
         const items = order.order_items || [];
         if (activeTab === 'all') return true;
+        if (activeTab === 'debts') return ['pending_payment', 'awaiting_payment', 'pending_verification'].includes(order.status);
         if (activeTab === 'singles') return items.some(isSingle);
         if (activeTab === 'sealed') return items.some(isAccessoryOrSealed);
         if (activeTab === 'presales') return items.some(isPreventa);
@@ -145,6 +146,7 @@ const OrdersList: React.FC = () => {
             <div className="flex flex-wrap gap-2 pb-2 border-b border-white/5">
                 {[
                     { id: 'all', label: 'Todos' },
+                    { id: 'debts', label: '🔴 Cuentas por Pagar (Pendientes)' },
                     { id: 'singles', label: 'Singles (Cartas)' },
                     { id: 'sealed', label: 'Sellado / Accesorios' },
                     { id: 'presales', label: 'Preventas (Pre-orders)' },

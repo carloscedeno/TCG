@@ -5,18 +5,18 @@
 
 ---
 
-## 📅 Última sesión: 2026-08-25
+## 📅 Última sesión: 2026-08-30
 **Rama activa:** `dev`
 **Último commit conocido:** feat(cron): update Odoo sync schedule to 8am, 11am, 1pm, and 5pm VET
-**En progreso:** Automatizaciones de Odoo, Sincronización de Tasas Múltiples (BCV/Binance).
+**En progreso:** Eventos Odoo <-> Web Sync, Vista Informativa de Cuentas por Pagar (Deudas).
 
 ## 📁 Zona Caliente (archivos tocados recientemente)
-- supabase/functions/odoo-invite/index.ts — Corrección de seguridad (eliminado webhook secret quemado)
-- supabase/migrations/20260825002900_update_bcv_cron.sql — Cron job para sincronización en horario comercial
-- supabase/functions/odoo-bcv-sync/index.ts — Sincronizador de tasas Oficial/Binance con Odoo
+- frontend/src/components/Profile/OrdersList.tsx — Filtro de Cuentas por Pagar (Pendientes)
+- frontend/src/pages/TournamentHub.tsx — Fix visual de modo claro para eventos/misiones
+- supabase/functions/odoo-event-sync/index.ts — Sincronizador de eventos Odoo a Supabase DEV
 
 ## ⏭️ Próxima acción recomendada
-Realizar compra de prueba desde el Frontend en modo local asegurando que la tasa USB y USD se apliquen correctamente tras la sincronización del Odoo.
+Probar sincronización de pedidos a crédito desde Odoo para validar el flujo informativo en la pestaña Cuentas por Pagar.
 
 ## 🚫 Restricciones activas
 - NO usar `npm` — solo `pnpm`
