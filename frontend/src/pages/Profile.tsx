@@ -10,7 +10,6 @@ import { ProfileSettingsModal } from '../components/Profile/ProfileSettingsModal
 import { AddressBook } from '../components/Profile/AddressBook';
 import { PlayerRankingsList } from '../components/Profile/PlayerRankingsList';
 import { MyMissionsList } from '../components/Profile/MyMissionsList';
-import { InventoryMovements } from '../components/Profile/InventoryMovements';
 import { supabase } from '../utils/supabaseClient';
 import { useCart } from '../context/CartContext';
 import { Header } from '../components/Navigation/Header';
@@ -187,16 +186,7 @@ const ProfilePage: React.FC = () => {
                         </div>
                     </section>
 
-                    {/* Inventory Movements Section */}
-                    <section className="animate-in slide-in-from-bottom-8 duration-700 delay-75">
-                        <div className="flex items-center gap-4 mb-8">
-                            <h2 className="text-3xl font-black italic uppercase tracking-tighter">
-                                Movimientos <span className="text-[#00D1FF]">Inventario</span>
-                            </h2>
-                            <div className="h-px flex-1 bg-gradient-to-r from-[#00D1FF]/50 to-transparent"></div>
-                        </div>
-                        <InventoryMovements />
-                    </section>
+
 
                     {/* Address Book Section */}
                     <section className="animate-in slide-in-from-bottom-8 duration-700 delay-75">
