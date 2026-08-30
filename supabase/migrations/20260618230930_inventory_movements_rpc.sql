@@ -4,11 +4,11 @@ CREATE OR REPLACE FUNCTION get_inventory_movements(p_user_id UUID)
 RETURNS TABLE (
     printing_id UUID,
     condition_id INTEGER,
-    card_name VARCHAR,
-    set_code VARCHAR,
-    previous_price DECIMAL,
-    current_price DECIMAL,
-    price_delta DECIMAL,
+    card_name TEXT,
+    set_code TEXT,
+    previous_price NUMERIC,
+    current_price NUMERIC,
+    price_delta NUMERIC,
     last_updated TIMESTAMPTZ,
     quantity INTEGER
 ) AS $$
