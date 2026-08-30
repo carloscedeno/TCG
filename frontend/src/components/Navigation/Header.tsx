@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams, useNavigate, useLocation } from 'react-router-dom';
-import { ShoppingCart, Search } from 'lucide-react';
+import { ShoppingCart } from 'lucide-react';
 import { SearchBar } from '../SearchBar/SearchBar';
 import { UserMenu } from './UserMenu';
 import { useAuth } from '../../context/AuthContext';
@@ -90,16 +90,12 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
 
                 {/* Search & Cart & Auth */}
                 <div className="flex-1 max-w-2xl hidden lg:block mx-auto transition-all duration-500">
-                    <div className="relative group">
-                        <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500 dark:text-text-low group-focus-within:text-geeko-cyan transition-colors" />
-                        <input 
-                            type="text"
-                            value={query}
-                            onChange={(e) => handleSearch(e.target.value)}
-                            placeholder="Buscar..."
-                            className="w-full bg-neutral-100 dark:bg-neutral-900/50 border border-neutral-300 dark:border-white/10 rounded-full py-2.5 pl-10 pr-4 text-[11px] text-black dark:text-white placeholder:text-neutral-500 dark:placeholder:text-neutral-600 focus:outline-none focus:border-geeko-cyan/50 focus:ring-1 focus:ring-geeko-cyan/20 transition-all shadow-inner"
-                        />
-                    </div>
+                    <SearchBar
+                        value={query}
+                        onChange={handleSearch}
+                        onSelect={(item) => handleSearch(item.name)}
+                        placeholder="Buscar cualquier carta o producto..."
+                    />
                 </div>
 
                 <div className="flex items-center gap-4 md:gap-6">

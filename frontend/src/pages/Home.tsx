@@ -248,78 +248,98 @@ const Home: React.FC = () => {
       try {
         let result: { cards: (CardProps & { card_id: string })[], total_count: number };
 
-        if (activeTab === 'marketplace') {
-          const mappedGame = debouncedFilters.games?.[0] || undefined;
+        const mappedGame = debouncedFilters.games?.[0] || undefined;
+        const selectedCategory = searchParams.get('category') || (debouncedFilters.categories && debouncedFilters.categories.length > 0 ? debouncedFilters.categories[0] : undefined);
+        const hasQuery = !!(debouncedQuery && debouncedQuery.trim());
+        const hasCategoryFilter = !!(debouncedFilters.categories && debouncedFilters.categories.length > 0);
 
-          const productRes = await fetchProducts({
-            q: debouncedQuery || undefined,
-            game: mappedGame,
-            set: debouncedFilters.sets && debouncedFilters.sets.length > 0 ? debouncedFilters.sets.join(',') : undefined,
-            rarity: (debouncedFilters.rarities && debouncedFilters.rarities.length > 0 ? debouncedFilters.rarities.join(',') : undefined),
-            color: debouncedFilters.colors && debouncedFilters.colors.length > 0 ? debouncedFilters.colors.map(c => colorCodeMap[c] || c) : undefined,
-            type: debouncedFilters.types && debouncedFilters.types.length > 0 ? debouncedFilters.types : undefined,
-            year_from: debouncedFilters.yearRange ? debouncedFilters.yearRange[0] : undefined,
-            year_to: debouncedFilters.yearRange ? debouncedFilters.yearRange[1] : undefined,
-            price_min: debouncedFilters.priceRange ? debouncedFilters.priceRange[0] : undefined,
-            price_max: debouncedFilters.priceRange ? debouncedFilters.priceRange[1] : undefined,
-            only_new: debouncedFilters.only_new,
-            only_discount: debouncedFilters.only_discount,
-            only_presale: debouncedFilters.only_presale,
-            limit: LIMIT,
-            offset,
-            sort: sortBy
-          }, controller.signal);
+        if (activeTab === 'marketplace' || activeTab === 'catalog') {
+          const isMarketplace = (activeTab as string) === 'marketplace';
+          const isCatalog = (activeTab as string) === 'catalog';
+
+          const fetchProd = isMarketplace || hasQuery;
+          const fetchAcc = isCatalog || hasQuery || hasCategoryFilter;
+
+          const [productRes, accRes] = await Promise.all([
+            fetchProd ? fetchProducts({
+              q: debouncedQuery || undefined,
+              game: mappedGame,
+              set: debouncedFilters.sets && debouncedFilters.sets.length > 0 ? debouncedFilters.sets.join(',') : undefined,
+              rarity: (debouncedFilters.rarities && debouncedFilters.rarities.length > 0 ? debouncedFilters.rarities.join(',') : undefined),
+              color: debouncedFilters.colors && debouncedFilters.colors.length > 0 ? debouncedFilters.colors.map(c => colorCodeMap[c] || c) : undefined,
+              type: debouncedFilters.types && debouncedFilters.types.length > 0 ? debouncedFilters.types : undefined,
+              year_from: debouncedFilters.yearRange ? debouncedFilters.yearRange[0] : undefined,
+              year_to: debouncedFilters.yearRange ? debouncedFilters.yearRange[1] : undefined,
+              price_min: debouncedFilters.priceRange ? debouncedFilters.priceRange[0] : undefined,
+              price_max: debouncedFilters.priceRange ? debouncedFilters.priceRange[1] : undefined,
+              only_new: debouncedFilters.only_new,
+              only_discount: debouncedFilters.only_discount,
+              only_presale: debouncedFilters.only_presale,
+              limit: fetchAcc && hasQuery ? Math.ceil(LIMIT / 2) : LIMIT,
+              offset,
+              sort: sortBy
+            }, controller.signal).catch(() => ({ products: [], total_count: 0 })) : Promise.resolve({ products: [], total_count: 0 }),
+
+            fetchAcc ? fetchAccessories({
+              q: debouncedQuery || undefined,
+              game: mappedGame,
+              category: selectedCategory,
+              price_min: debouncedFilters.priceRange ? debouncedFilters.priceRange[0] : undefined,
+              price_max: debouncedFilters.priceRange ? debouncedFilters.priceRange[1] : undefined,
+              only_discount: debouncedFilters.only_discount,
+              only_presale: debouncedFilters.only_presale,
+              sort: sortBy,
+              limit: fetchProd && hasQuery ? Math.ceil(LIMIT / 2) : LIMIT,
+              offset
+            }).catch(() => ({ accessories: [], total_count: 0 })) : Promise.resolve({ accessories: [], total_count: 0 })
+          ]);
+
+          const mappedProducts = (productRes.products || []).map((p: any) => ({
+            card_id: p.printing_id ? `${p.printing_id}-${p.finish || 'nonfoil'}` : p.id,
+            name: p.name,
+            set: p.set_code?.toUpperCase() || 'Unknown',
+            price: Number(p.price) || 0,
+            image_url: p.image_url,
+            rarity: p.rarity,
+            type: p.type_line,
+            total_stock: Number(p.stock) || 0,
+            finish: p.finish,
+            is_foil: p.finish === 'foil' || p.finish === 'etched',
+            original_price: p.original_price,
+            discount_percentage: p.discount_percentage,
+            restocked_at: p.restocked_at
+          }));
+
+          const mappedAccessories = (accRes.accessories || []).map((a: any) => ({
+            card_id: a.id,
+            accessory_id: a.id,
+            name: a.name,
+            set: a.category, 
+            price: Number(a.price) || 0,
+            original_price: Number(a.original_price) || Number(a.price) || 0,
+            discount_percentage: Number(a.discount_percentage) || 0,
+            image_url: a.image_url,
+            rarity: 'Common',
+            total_stock: Number(a.stock) || 0,
+            is_accessory: true,
+            updated_at: a.updated_at
+          }));
+
+          let combined = [...mappedProducts, ...mappedAccessories];
+
+          if (sortBy === 'price_asc') {
+            combined.sort((a, b) => a.price - b.price);
+          } else if (sortBy === 'price_desc') {
+            combined.sort((a, b) => b.price - a.price);
+          } else if (sortBy === 'name') {
+            combined.sort((a, b) => a.name.localeCompare(b.name));
+          } else if (sortBy === 'name_desc') {
+            combined.sort((a, b) => b.name.localeCompare(a.name));
+          }
 
           result = {
-            cards: productRes.products.map((p: any) => ({
-              card_id: p.printing_id ? `${p.printing_id}-${p.finish || 'nonfoil'}` : p.id,
-              name: p.name,
-              set: p.set_code?.toUpperCase() || 'Unknown',
-              price: Number(p.price) || 0,
-              image_url: p.image_url,
-              rarity: p.rarity,
-              type: p.type_line,
-              total_stock: Number(p.stock) || 0,
-              finish: p.finish,
-              is_foil: p.finish === 'foil' || p.finish === 'etched',
-              original_price: p.original_price,
-              discount_percentage: p.discount_percentage,
-              restocked_at: p.restocked_at
-            })),
-            total_count: productRes.total_count
-          };
-        } else if (activeTab === 'catalog') {
-          const mappedGame = debouncedFilters.games?.[0] || undefined;
-
-          const accRes = await fetchAccessories({
-            q: debouncedQuery || undefined,
-            game: mappedGame,
-            category: searchParams.get('category') || (debouncedFilters.categories && debouncedFilters.categories.length > 0 ? debouncedFilters.categories[0] : undefined),
-            price_min: debouncedFilters.priceRange ? debouncedFilters.priceRange[0] : undefined,
-            price_max: debouncedFilters.priceRange ? debouncedFilters.priceRange[1] : undefined,
-            only_discount: debouncedFilters.only_discount,
-            only_presale: debouncedFilters.only_presale,
-            sort: sortBy,
-            limit: LIMIT,
-            offset
-          });
-
-          result = {
-            cards: accRes.accessories.map((a: any) => ({
-              card_id: a.id,
-              accessory_id: a.id,
-              name: a.name,
-              set: a.category, 
-              price: Number(a.price) || 0,
-              original_price: Number(a.original_price) || Number(a.price) || 0,
-              discount_percentage: Number(a.discount_percentage) || 0,
-              image_url: a.image_url,
-              rarity: 'Common',
-              total_stock: Number(a.stock) || 0,
-              is_accessory: true,
-              updated_at: a.updated_at
-            })),
-            total_count: accRes.total_count
+            cards: combined,
+            total_count: Number(productRes.total_count || 0) + Number(accRes.total_count || 0)
           };
         } else {
           const cardRes = await fetchCards({
