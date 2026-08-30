@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../utils/supabaseClient';
 import { useAuth } from '../../context/AuthContext';
-import { Clock, AlertCircle, DollarSign } from 'lucide-react';
+import { Clock, AlertCircle, DollarSign, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface DebtItem {
     id: string;
@@ -83,9 +84,13 @@ export const DebtsList: React.FC<DebtsListProps> = ({ onTotalCalculated }) => {
                 const refCode = record.odoo_order_id ? `#${record.odoo_order_id}` : `#${record.id.slice(0, 8)}`;
 
                 return (
-                    <div key={record.id} className="bg-red-950/20 border border-red-500/20 rounded-xl p-4 flex items-center justify-between hover:bg-red-900/20 transition-colors">
+                    <Link 
+                        key={record.id} 
+                        to={`/order/${record.id}`}
+                        className="group block bg-red-950/20 border border-red-500/20 rounded-xl p-4 flex items-center justify-between hover:bg-red-900/30 hover:border-red-500/40 transition-all cursor-pointer"
+                    >
                         <div className="flex items-center gap-4">
-                            <div className="p-3 rounded-xl bg-red-500/20 text-red-400 border border-red-500/30">
+                            <div className="p-3 rounded-xl bg-red-500/20 text-red-400 border border-red-500/30 group-hover:scale-105 transition-transform">
                                 <AlertCircle size={20} />
                             </div>
                             <div>
@@ -93,7 +98,7 @@ export const DebtsList: React.FC<DebtsListProps> = ({ onTotalCalculated }) => {
                                     <span className="text-xs font-mono font-black text-red-400 bg-red-500/10 px-2 py-0.5 rounded border border-red-500/20">
                                         {refCode}
                                     </span>
-                                    <p className="text-white font-bold text-sm line-clamp-1">{titleItem}</p>
+                                    <p className="text-white font-bold text-sm line-clamp-1 group-hover:text-red-300 transition-colors">{titleItem}</p>
                                 </div>
                                 <div className="flex items-center gap-3 text-slate-400 text-xs mt-1">
                                     <span className="flex items-center gap-1">
@@ -106,15 +111,20 @@ export const DebtsList: React.FC<DebtsListProps> = ({ onTotalCalculated }) => {
                                 </div>
                             </div>
                         </div>
-                        <div className="text-right">
-                            <div className="font-black text-xl text-red-400 italic">
-                                ${Number(record.total_amount).toFixed(2)}
+                        <div className="flex items-center gap-4">
+                            <div className="text-right">
+                                <div className="font-black text-xl text-red-400 italic">
+                                    ${Number(record.total_amount).toFixed(2)}
+                                </div>
+                                <span className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">
+                                    Ver Detalle ➔
+                                </span>
                             </div>
-                            <span className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">
-                                Por Pagar
-                            </span>
+                            <div className="p-2 rounded-lg bg-white/5 text-slate-500 group-hover:text-red-400 group-hover:bg-red-500/10 transition-all">
+                                <ChevronRight size={18} />
+                            </div>
                         </div>
-                    </div>
+                    </Link>
                 );
             })}
         </div>
