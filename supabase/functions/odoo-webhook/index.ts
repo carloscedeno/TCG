@@ -42,7 +42,11 @@ serve(async (req) => {
     const authHeader = req.headers.get('Authorization') || req.headers.get('X-Odoo-Token');
     const token = authHeader?.replace('Bearer ', '')?.trim() || url.searchParams.get('token');
 
-    if (token !== EXPECTED_TOKEN) {
+    const envSecret = Deno.env.get('ODOO_WEBHOOK_SECRET');
+    const validTokens = ['geekorium_secret_2026', 'geekorium_odoo_secret_2026'];
+    if (envSecret) validTokens.push(envSecret);
+
+    if (!token || !validTokens.includes(token)) {
       console.error("Unauthorized webhook attempt");
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
@@ -59,6 +63,32 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    // Dual-Sync Architecture (Prevent infinite loops via x-forwarded-sync header)
+    const isForwarded = req.headers.get('x-forwarded-sync') === 'true';
+    const isDev = supabaseUrl.includes('bqfkqnnostzaqueujdms');
+    const isProd = supabaseUrl.includes('sxuotvogwvmxuvwbsscv');
+
+    if (!isForwarded) {
+        let targetUrl = '';
+        if (isDev) {
+            targetUrl = `https://sxuotvogwvmxuvwbsscv.supabase.co/functions/v1/odoo-webhook?token=${EXPECTED_TOKEN}`;
+        } else if (isProd) {
+            targetUrl = `https://bqfkqnnostzaqueujdms.supabase.co/functions/v1/odoo-webhook?token=${EXPECTED_TOKEN}`;
+        }
+
+        if (targetUrl) {
+            try {
+                fetch(targetUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'x-forwarded-sync': 'true' },
+                    body: JSON.stringify(body)
+                }).catch(err => console.error("Async forward error:", err.message));
+            } catch (fwdError: any) {
+                console.error("Error initiating forward:", fwdError.message);
+            }
+        }
+    }
 
     // Odoo credentials for call-back
     const odooUrl = Deno.env.get('ODOO_URL');
@@ -97,18 +127,18 @@ serve(async (req) => {
         });
       } catch (e) {}
 
-      // 1. Is it a Sales Order confirmation?
-      if (record.client_order_ref && record.state === 'sale') {
+      // 1. Is it a Sales Order (from Web or Odoo)?
+      if (record.amount_total !== undefined || record.order_line !== undefined || record.model === 'sale.order' || (record.name && record.name.startsWith('S'))) {
         const odooOrderName = record.name;
         const webOrderId = record.client_order_ref;
         const odooOrderId = record.id;
         
-        console.log(`[Odoo Webhook] Sales Order Confirmed: ${odooOrderName} for Web Order ${webOrderId}`);
+        console.log(`[Odoo Webhook] Processing Sales Order: ${odooOrderName} (Web ID: ${webOrderId || 'None - Created in Odoo'})`);
         
         try {
           const uid = await getOdooUid();
           
-          // A) Fetch the full Sales Order from Odoo to get total and line IDs
+          // A) Fetch full Sales Order from Odoo
           const soResult = await odooJsonRpc(odooUrl!, 'call', {
             service: 'object',
             method: 'execute_kw',
@@ -117,7 +147,7 @@ serve(async (req) => {
               'sale.order', 
               'search_read', 
               [[['id', '=', odooOrderId]]],
-              { fields: ['amount_total', 'order_line'], limit: 1 }
+              { fields: ['amount_total', 'order_line', 'partner_id', 'state', 'invoice_status', 'name'], limit: 1 }
             ]
           });
           
@@ -129,7 +159,82 @@ serve(async (req) => {
           const so = soResult[0];
           const amountTotal = so.amount_total;
           const lineIds = so.order_line || [];
+          const partnerId = so.partner_id ? so.partner_id[0] : null;
           
+          // Determine status
+          let newStatus = 'pending_payment';
+          if (so.state === 'cancel') {
+            newStatus = 'cancelled';
+          } else if (so.invoice_status === 'invoiced') {
+            newStatus = 'paid';
+          }
+
+          let targetWebOrderId = webOrderId;
+
+          // If no webOrderId, this order originated in Odoo!
+          if (!targetWebOrderId) {
+            if (!partnerId) {
+              console.warn(`[Odoo Webhook] SO ${odooOrderName} has no partner_id. Skipping.`);
+              continue;
+            }
+
+            // Fetch partner email
+            const partnerResult = await odooJsonRpc(odooUrl!, 'call', {
+              service: 'object',
+              method: 'execute_kw',
+              args: [
+                odooDb, uid, odooApiKey, 
+                'res.partner', 
+                'search_read', 
+                [[['id', '=', partnerId]]],
+                { fields: ['email'], limit: 1 }
+              ]
+            });
+
+            const partnerEmail = partnerResult?.[0]?.email;
+            if (!partnerEmail) {
+              console.warn(`[Odoo Webhook] Partner ID ${partnerId} has no email. Skipping.`);
+              continue;
+            }
+
+            // Look up Supabase user by email
+            const { data: usersData } = await supabase.auth.admin.listUsers();
+            const matchingUser = usersData?.users?.find((u: any) => u.email?.toLowerCase() === partnerEmail.toLowerCase());
+
+            if (!matchingUser) {
+              console.warn(`[Odoo Webhook] No Supabase user found for email ${partnerEmail}. Skipping.`);
+              continue;
+            }
+
+            // Check if order already exists in Supabase by odoo_order_id
+            const { data: existingOrder } = await supabase
+              .from('orders')
+              .select('id')
+              .eq('odoo_order_id', odooOrderName)
+              .maybeSingle();
+
+            if (existingOrder) {
+              targetWebOrderId = existingOrder.id;
+              await supabase.from('orders').update({
+                total_amount: amountTotal,
+                status: newStatus
+              }).eq('id', targetWebOrderId);
+            } else {
+              targetWebOrderId = crypto.randomUUID();
+              const { error: insErr } = await supabase.from('orders').insert({
+                id: targetWebOrderId,
+                user_id: matchingUser.id,
+                total_amount: amountTotal,
+                status: newStatus,
+                odoo_order_id: odooOrderName
+              });
+              if (insErr) {
+                console.error("[Odoo Webhook] Failed to insert new order:", insErr.message);
+                continue;
+              }
+            }
+          }
+
           // B) Fetch the SO Lines to get products and quantities
           let lines: any[] = [];
           if (lineIds.length > 0) {
@@ -141,13 +246,13 @@ serve(async (req) => {
                 'sale.order.line', 
                 'search_read', 
                 [[['id', 'in', lineIds]]],
-                { fields: ['product_id', 'product_uom_qty', 'price_unit'] }
+                { fields: ['product_id', 'product_uom_qty', 'price_unit', 'name'] }
               ]
             });
           }
           
-          // C) Delete existing order_items for this web order
-          await supabase.from('order_items').delete().eq('order_id', webOrderId);
+          // C) Delete existing order_items for this order
+          await supabase.from('order_items').delete().eq('order_id', targetWebOrderId);
           
           // D) Rebuild order_items from Odoo lines
           const productIdsInLines = lines.map((l: any) => l.product_id[0]);
@@ -161,76 +266,71 @@ serve(async (req) => {
                 'product.product', 
                 'search_read', 
                 [[['id', 'in', productIdsInLines]]],
-                { fields: ['id', 'default_code'] }
+                { fields: ['id', 'default_code', 'name'] }
               ]
             });
           }
           
           const odooProductMap = new Map();
           for (const p of odooProducts) {
-             odooProductMap.set(p.id, p.default_code);
+             odooProductMap.set(p.id, { default_code: p.default_code, name: p.name });
           }
           
           const newOrderItems = [];
           for (const line of lines) {
              const odooProdId = line.product_id[0];
-             const defaultCode = odooProductMap.get(odooProdId);
+             const prodInfo = odooProductMap.get(odooProdId);
+             const defaultCode = prodInfo?.default_code;
+             const productName = line.name || prodInfo?.name || "Producto de Odoo";
              
-             if (!defaultCode) continue; // Si no tiene default_code (ej. cargo de envio), lo saltamos
-             
-             // En Supabase, usamos el UUID. Validamos si esta en products o accessories.
              let productId = null;
              let accessoryId = null;
              
-             const { data: prodData } = await supabase.from('products').select('id').eq('id', defaultCode).maybeSingle();
-             if (prodData) {
-               productId = defaultCode;
-             } else {
-               const { data: accData } = await supabase.from('accessories').select('id').eq('id', defaultCode).maybeSingle();
-               if (accData) {
-                 accessoryId = defaultCode;
+             if (defaultCode) {
+               const { data: prodData } = await supabase.from('products').select('id').eq('id', defaultCode).maybeSingle();
+               if (prodData) {
+                 productId = defaultCode;
                } else {
-                 // Si fue creado directamente en Odoo, la base de datos asume accesorio temporalmente
-                 accessoryId = defaultCode; 
+                 const { data: accData } = await supabase.from('accessories').select('id').eq('id', defaultCode).maybeSingle();
+                 if (accData) {
+                   accessoryId = defaultCode;
+                 } else {
+                   accessoryId = defaultCode; 
+                 }
                }
              }
              
              newOrderItems.push({
-               order_id: webOrderId,
+               order_id: targetWebOrderId,
                product_id: productId,
                accessory_id: accessoryId,
-               quantity: line.product_uom_qty,
-               price: line.price_unit
+               product_name: productName,
+               quantity: Math.round(line.product_uom_qty),
+               price_at_purchase: line.price_unit
              });
           }
           
           if (newOrderItems.length > 0) {
              const { error: insertErr } = await supabase.from('order_items').insert(newOrderItems);
              if (insertErr) {
-               console.error("[Odoo Webhook] Failed to insert new order_items:", insertErr);
+               console.error("[Odoo Webhook] Failed to insert new order_items:", insertErr.message);
              }
           }
           
-          // E) Update the main order total_amount and status
-          const { error: orderErr } = await supabase
-            .from('orders')
-            .update({ 
-              status: 'paid', 
+          // E) Update total_amount and status for web-origin order if applicable
+          if (webOrderId) {
+            await supabase.from('orders').update({ 
+              status: newStatus, 
               odoo_order_id: odooOrderName,
               total_amount: amountTotal
-            })
-            .eq('id', webOrderId);
-            
-          if (orderErr) {
-            console.error("Failed to update web order:", orderErr);
-            results.push({ id: webOrderId, status: 'error', reason: orderErr.message });
-          } else {
-            results.push({ id: webOrderId, status: 'confirmed_and_synced_via_odoo' });
+            }).eq('id', webOrderId);
           }
           
+          results.push({ id: targetWebOrderId, odoo_order_id: odooOrderName, status: 'synced_successfully' });
+          
         } catch(e: any) {
-          console.error("[Odoo Webhook] Reverse sync failed:", e.message);
-          results.push({ id: webOrderId, status: 'error', reason: e.message });
+          console.error("[Odoo Webhook] Order sync failed:", e.message);
+          results.push({ odoo_order: odooOrderName, status: 'error', reason: e.message });
         }
         
         continue;
@@ -324,7 +424,8 @@ serve(async (req) => {
             category: 'Accesorios', // Default category
             is_active: true,
             unit_type: 'Unidad',
-            language: 'Spanish'
+            language: 'Spanish',
+            image_url: `https://geekorium1.odoo.com/web/image/product.product/${odooId}/image_1024`
           };
 
           const { error: insertErr } = await supabase.from('accessories').insert(insertData);
