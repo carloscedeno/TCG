@@ -2,6 +2,9 @@
 -- Date: 2026-08-31
 -- Description: Applies the fixes to add_to_cart_v2 and get_user_cart to production.
 
+DROP FUNCTION IF EXISTS public.add_to_cart_v2(text, integer, text, uuid);
+DROP FUNCTION IF EXISTS public.get_user_cart(uuid);
+
 CREATE OR REPLACE FUNCTION public.add_to_cart_v2(p_identifier text, p_quantity integer, p_finish text DEFAULT 'nonfoil'::text)
  RETURNS jsonb
  LANGUAGE plpgsql
