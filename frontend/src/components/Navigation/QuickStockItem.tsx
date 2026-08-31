@@ -59,7 +59,7 @@ export const QuickStockItem: React.FC<QuickStockItemProps> = ({ item }) => {
             const finish = item.finish ? item.finish.toLowerCase() : 'nonfoil';
             const result = await addToCart(item.product_id, 1, finish);
             if (result && !result.success) {
-                alert(result.error || result.message || 'Error al agregar');
+                console.error("ADD TO CART FAILED:", result.error || result.message);
             } else {
                 await refreshCart();
                 // We could show a tiny success animation here too

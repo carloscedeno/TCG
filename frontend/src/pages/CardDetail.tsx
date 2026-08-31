@@ -122,7 +122,6 @@ export const CardDetail: React.FC = () => {
 
             if (result && !result.success) {
                 console.error("ADD TO CART FAILED:", result);
-                alert(`Error al agregar al carrito: ${result.message || result.error || JSON.stringify(result)}`);
                 return;
             }
 
@@ -130,7 +129,6 @@ export const CardDetail: React.FC = () => {
             setIsCartOpen(true);
         } catch (err: any) {
             console.error('Error adding to cart:', err);
-            alert(err.message || 'Error al agregar al carrito');
         } finally {
             setIsAdding(false);
         }
