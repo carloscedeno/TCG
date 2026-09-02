@@ -52,6 +52,8 @@ export function InventoryPage() {
     const [page, setPage] = useState(0);
     const [selectedCondition, setSelectedCondition] = useState<string | null>(null);
     const [selectedGame, setSelectedGame] = useState<string | null>(null);
+    const [selectedRarity, setSelectedRarity] = useState<string | null>(null);
+    const [selectedType, setSelectedType] = useState<string | null>(null);
     const [sortBy, setSortBy] = useState<SortField>('name');
     const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
     const [isNewFilterActive, setIsNewFilterActive] = useState(false);
@@ -92,7 +94,9 @@ export function InventoryPage() {
                 p_condition: selectedCondition || null,
                 p_sort_by: sortBy,
                 p_sort_order: sortOrder,
-                p_only_new: isNewFilterActive
+                p_only_new: isNewFilterActive,
+                p_rarity: selectedRarity || null,
+                p_card_type: selectedType || null
             });
 
             if (error) throw error;
@@ -135,7 +139,7 @@ export function InventoryPage() {
         } else {
             setCatalogResults([]);
         }
-    }, [page, searchQuery, selectedGame, selectedCondition, sortBy, sortOrder]);
+    }, [page, searchQuery, selectedGame, selectedCondition, selectedRarity, selectedType, sortBy, sortOrder, isNewFilterActive]);
 
     useEffect(() => {
         const debounce = setTimeout(fetchInventory, 300);
@@ -525,8 +529,61 @@ export function InventoryPage() {
                         */}
 
                         <select
+                            value={selectedGame || ""}
+                            onChange={(e) => {
+                                setSelectedGame(e.target.value || null);
+                                setPage(0);
+                            }}
+                            className="flex-1 lg:flex-none bg-black/40 border border-white/5 rounded-2xl px-4 py-4 text-[10px] font-black uppercase tracking-widest text-neutral-400 focus:outline-none focus:border-purple-500/50"
+                        >
+                            <option value="">Juego: Todos</option>
+                            <option value="MTG">Magic: The Gathering (MTG)</option>
+                            <option value="POKEMON">Pokémon (PKM)</option>
+                            <option value="OPC">One Piece (OPC)</option>
+                            <option value="GND">Gundam (GND)</option>
+                        </select>
+
+                        <select
+                            value={selectedRarity || ""}
+                            onChange={(e) => {
+                                setSelectedRarity(e.target.value || null);
+                                setPage(0);
+                            }}
+                            className="flex-1 lg:flex-none bg-black/40 border border-white/5 rounded-2xl px-4 py-4 text-[10px] font-black uppercase tracking-widest text-neutral-400 focus:outline-none focus:border-purple-500/50"
+                        >
+                            <option value="">Rareza: Todas</option>
+                            <option value="common">Common</option>
+                            <option value="uncommon">Uncommon</option>
+                            <option value="rare">Rare</option>
+                            <option value="mythic">Mythic</option>
+                            <option value="special">Special</option>
+                        </select>
+
+                        <select
+                            value={selectedType || ""}
+                            onChange={(e) => {
+                                setSelectedType(e.target.value || null);
+                                setPage(0);
+                            }}
+                            className="flex-1 lg:flex-none bg-black/40 border border-white/5 rounded-2xl px-4 py-4 text-[10px] font-black uppercase tracking-widest text-neutral-400 focus:outline-none focus:border-purple-500/50"
+                        >
+                            <option value="">Tipo: Todos</option>
+                            <option value="Creature">Creature</option>
+                            <option value="Instant">Instant</option>
+                            <option value="Sorcery">Sorcery</option>
+                            <option value="Artifact">Artifact</option>
+                            <option value="Enchantment">Enchantment</option>
+                            <option value="Planeswalker">Planeswalker</option>
+                            <option value="Land">Land</option>
+                            <option value="Battle">Battle</option>
+                        </select>
+
+                        <select
                             value={selectedCondition || ""}
-                            onChange={(e) => setSelectedCondition(e.target.value || null)}
+                            onChange={(e) => {
+                                setSelectedCondition(e.target.value || null);
+                                setPage(0);
+                            }}
                             className="flex-1 lg:flex-none bg-black/40 border border-white/5 rounded-2xl px-4 py-4 text-[10px] font-black uppercase tracking-widest text-neutral-400 focus:outline-none focus:border-purple-500/50"
                         >
                             <option value="">Estado: Todas las Condiciones</option>
@@ -557,6 +614,8 @@ export function InventoryPage() {
                                 setSearchQuery("");
                                 setSelectedGame(null);
                                 setSelectedCondition(null);
+                                setSelectedRarity(null);
+                                setSelectedType(null);
                                 setIsNewFilterActive(false);
                                 setPage(0);
                             }}
