@@ -281,10 +281,12 @@ export const fetchProducts = async (params: any = {}, signal?: AbortSignal): Pro
     };
 
   } catch (error: any) {
-    if (error?.name !== 'AbortError') {
+    const isAbort = error?.name === 'AbortError' || 
+                    error?.message?.includes('aborted') || 
+                    error?.details?.includes('aborted');
+    if (!isAbort) {
       console.error('Fetch Products Failed:', error);
     }
-    // Fallback: try old endpoint if RPC fails? No, simpler to fail gracefully or empty.
     return { products: [], total_count: 0 };
   }
 };
