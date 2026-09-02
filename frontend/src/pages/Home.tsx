@@ -6,7 +6,7 @@ import { fetchCards, fetchSets, fetchProducts, fetchCart, fetchAccessories, fetc
 import { FiltersPanel } from '../components/Filters/FiltersPanel';
 import type { Filters } from '../components/Filters/FiltersPanel';
 import { useAuth } from '../context/AuthContext';
-import { X, Sparkles, Search } from 'lucide-react';
+import { X, Sparkles, Search, Zap } from 'lucide-react';
 
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { CartDrawer } from '../components/Navigation/CartDrawer';
