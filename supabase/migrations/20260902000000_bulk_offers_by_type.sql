@@ -1,6 +1,9 @@
 -- Migration: Bulk Offers by Rarity and/or Card Type
 -- Description: Extends RPCs for applying and clearing discounts in bulk by rarity, card type, or both.
 
+-- 0. Ensure end_date can be NULL in product_offers_history (for permanent discounts)
+ALTER TABLE public.product_offers_history ALTER COLUMN end_date DROP NOT NULL;
+
 -- 1. Updated RPC to apply discount by rarity and/or card type
 CREATE OR REPLACE FUNCTION public.admin_apply_discount_by_rarity(
     p_rarity text DEFAULT NULL,
