@@ -430,13 +430,18 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
 
             if (versionsData) {
               const expandedVersions: any[] = [];
-              const printingIds = versionsData.map((v: any) => v.printing_id);
+              const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+              const printingIds = versionsData
+                .map((v: any) => typeof v.printing_id === 'string' ? v.printing_id.replace(/_old$/i, '') : v.printing_id)
+                .filter((id: any) => typeof id === 'string' && uuidRegex.test(id));
 
               // Fetch stock for all these printings from products
-              const { data: productsData } = await supabase
-                .from('products')
-                .select('printing_id, finish, stock, price, discount_percentage, discount_end_date')
-                .in('printing_id', printingIds);
+              const { data: productsData } = printingIds.length > 0
+                ? await supabase
+                    .from('products')
+                    .select('printing_id, finish, stock, price, discount_percentage, discount_end_date')
+                    .in('printing_id', printingIds)
+                : { data: [] };
 
               const stockMap = new Map();
               const productMap = new Map();
