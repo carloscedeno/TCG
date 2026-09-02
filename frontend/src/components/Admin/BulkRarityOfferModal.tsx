@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Save, AlertTriangle, Zap, RefreshCw } from 'lucide-react';
-import { adminApplyDiscountByRarity, adminClearDiscountByRarity, fetchDistinctRarities } from '../../utils/api';
+import { adminApplyDiscountByRarity, adminClearDiscountByRarity, fetchDistinctRarities, fetchDistinctCardTypes } from '../../utils/api';
 
 interface BulkRarityOfferModalProps {
   isOpen: boolean;
@@ -11,14 +11,17 @@ interface BulkRarityOfferModalProps {
 
 export const BulkRarityOfferModal: React.FC<BulkRarityOfferModalProps> = ({ isOpen, onClose, onSuccess, gameCode }) => {
   const [selectedGameCode, setSelectedGameCode] = useState<string>('MTG');
-  const [rarity, setRarity] = useState<string>('rare');
+  const [rarity, setRarity] = useState<string>('ALL');
   const [rarityOptions, setRarityOptions] = useState<string[]>([]);
+  const [cardType, setCardType] = useState<string>('ALL');
+  const [cardTypeOptions, setCardTypeOptions] = useState<string[]>([]);
+  
   const [discountPercentage, setDiscountPercentage] = useState<number>(0);
   const [endDate, setEndDate] = useState<string>('');
   const [overwriteExisting, setOverwriteExisting] = useState<boolean>(false);
   const [includeFoil, setIncludeFoil] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [loadingRarities, setLoadingRarities] = useState(false);
+  const [loadingOptions, setLoadingOptions] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Sync selectedGameCode with prop when modal opens
@@ -29,45 +32,54 @@ export const BulkRarityOfferModal: React.FC<BulkRarityOfferModalProps> = ({ isOp
     }
   }, [isOpen, gameCode]);
 
-  // Load distinct rarities for the selected game
+  // Load distinct rarities and card types for the selected game
   useEffect(() => {
     if (!isOpen) return;
 
-    const loadRarities = async () => {
-      setLoadingRarities(true);
+    const loadOptions = async () => {
+      setLoadingOptions(true);
       setError(null);
       try {
-        const rarities = await fetchDistinctRarities(selectedGameCode);
+        const [rarities, types] = await Promise.all([
+          fetchDistinctRarities(selectedGameCode),
+          fetchDistinctCardTypes(selectedGameCode)
+        ]);
         setRarityOptions(rarities);
+        setCardTypeOptions(types);
         
-        // Pick a default rarity from the fetched list if available
-        if (rarities.length > 0) {
-          // Try to select 'rare' or 'Rare' if it exists, otherwise the first one
-          const defaultRare = rarities.find(r => r.toLowerCase() === 'rare') || rarities[0];
-          setRarity(defaultRare);
-        } else {
-          setRarity('');
-        }
+        // Reset selections to ALL by default
+        setRarity('ALL');
+        setCardType('ALL');
       } catch (err: any) {
-        console.error('Failed to load rarities:', err);
-        setError('No se pudieron cargar las rarezas para este juego.');
+        console.error('Failed to load options:', err);
+        setError('No se pudieron cargar las opciones para este juego.');
       } finally {
-        setLoadingRarities(false);
+        setLoadingOptions(false);
       }
     };
 
-    loadRarities();
+    loadOptions();
   }, [isOpen, selectedGameCode]);
 
   if (!isOpen) return null;
+
+  const isFilterValid = (rarity && rarity !== 'ALL') || (cardType && cardType !== 'ALL');
+
+  const getTargetDescription = () => {
+    const parts = [];
+    if (rarity && rarity !== 'ALL') parts.push(`rareza "${rarity}"`);
+    if (cardType && cardType !== 'ALL') parts.push(`tipo "${cardType}"`);
+    if (parts.length === 0) return 'todas las cartas';
+    return parts.join(' y ');
+  };
 
   const handleApply = async () => {
     if (discountPercentage <= 0 || discountPercentage > 100) {
       setError("El porcentaje de descuento debe ser mayor a 0 y menor o igual a 100.");
       return;
     }
-    if (!rarity) {
-      setError("Debe seleccionar una rareza válida.");
+    if (!isFilterValid) {
+      setError("Debe seleccionar al menos una Rareza o un Tipo de Carta específico.");
       return;
     }
 
@@ -79,17 +91,18 @@ export const BulkRarityOfferModal: React.FC<BulkRarityOfferModalProps> = ({ isOp
       const fullEndDate = endDate ? `${endDate}T23:59:59.999-04:00` : null;
       
       const res = await adminApplyDiscountByRarity(
-        rarity, 
+        rarity === 'ALL' ? null : rarity, 
         discountPercentage, 
         fullEndDate, 
         overwriteExisting, 
         includeFoil, 
-        selectedGameCode
+        selectedGameCode,
+        cardType === 'ALL' ? null : cardType
       );
 
       if (!res.success) throw new Error(res.message);
       
-      alert(`¡Éxito! Se actualizaron ${res.updated_count} cartas de rareza ${rarity}.`);
+      alert(`¡Éxito! Se actualizaron ${res.updated_count} cartas con ${getTargetDescription()}.`);
       onSuccess();
       onClose();
     } catch (err: any) {
@@ -101,22 +114,26 @@ export const BulkRarityOfferModal: React.FC<BulkRarityOfferModalProps> = ({ isOp
   };
 
   const handleClear = async () => {
-    if (!rarity) {
-      setError("Debe seleccionar una rareza válida para remover descuentos.");
+    if (!isFilterValid) {
+      setError("Debe seleccionar al menos una Rareza o un Tipo de Carta específico para remover descuentos.");
       return;
     }
 
-    if (!window.confirm(`¿Estás seguro de que deseas ELIMINAR TODOS los descuentos de las cartas de rareza ${rarity} para el juego ${selectedGameCode}?`)) {
+    if (!window.confirm(`¿Estás seguro de que deseas ELIMINAR TODOS los descuentos para las cartas de ${getTargetDescription()} en ${selectedGameCode}?`)) {
       return;
     }
 
     try {
       setIsSubmitting(true);
       setError(null);
-      const res = await adminClearDiscountByRarity(rarity, selectedGameCode);
+      const res = await adminClearDiscountByRarity(
+        rarity === 'ALL' ? null : rarity, 
+        selectedGameCode,
+        cardType === 'ALL' ? null : cardType
+      );
       if (!res.success) throw new Error(res.message);
       
-      alert(`¡Éxito! Se eliminaron los descuentos de ${res.updated_count} cartas de rareza ${rarity}.`);
+      alert(`¡Éxito! Se eliminaron los descuentos de ${res.updated_count} cartas (${getTargetDescription()}).`);
       onSuccess();
       onClose();
     } catch (err: any) {
@@ -135,7 +152,7 @@ export const BulkRarityOfferModal: React.FC<BulkRarityOfferModalProps> = ({ isOp
           <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-blue-500/10 opacity-50"></div>
           <h2 className="text-xl font-black text-white flex items-center relative z-10">
             <Zap className="w-5 h-5 mr-2 text-yellow-400" />
-            Ofertas por Rareza (Masivo)
+            Ofertas por Rareza / Tipo (Masivo)
           </h2>
           <button onClick={onClose} className="text-gray-400 hover:text-white relative z-10">
             <X className="w-5 h-5" />
@@ -153,7 +170,7 @@ export const BulkRarityOfferModal: React.FC<BulkRarityOfferModalProps> = ({ isOp
 
           <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-800 mb-6">
             <p className="text-gray-300 text-sm">
-              Aplica un descuento simultáneo a <strong>todas las cartas</strong> que coincidan con la rareza elegida.
+              Aplica un descuento simultáneo a las cartas filtrando por <strong>rareza</strong>, <strong>tipo de carta</strong> o una combinación de ambos.
             </p>
           </div>
 
@@ -174,30 +191,47 @@ export const BulkRarityOfferModal: React.FC<BulkRarityOfferModalProps> = ({ isOp
               </select>
             </div>
 
-            {/* Rarity Selector */}
-            <div>
-              <label className="block text-sm font-bold text-gray-300 mb-1 flex items-center justify-between">
-                <span>Selecciona la Rareza</span>
-                {loadingRarities && <RefreshCw className="w-3.5 h-3.5 animate-spin text-purple-400" />}
-              </label>
-              <select
-                className="w-full bg-gray-900 border border-gray-700 rounded-md p-2 text-white focus:outline-none focus:border-purple-500 disabled:opacity-50"
-                value={rarity}
-                onChange={(e) => setRarity(e.target.value)}
-                disabled={loadingRarities || rarityOptions.length === 0}
-              >
-                {rarityOptions.length > 0 ? (
-                  rarityOptions.map((opt) => (
+            {/* Rarity & Card Type Selectors */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-bold text-gray-300 mb-1 flex items-center justify-between">
+                  <span>Rareza</span>
+                  {loadingOptions && <RefreshCw className="w-3.5 h-3.5 animate-spin text-purple-400" />}
+                </label>
+                <select
+                  className="w-full bg-gray-900 border border-gray-700 rounded-md p-2 text-white focus:outline-none focus:border-purple-500 disabled:opacity-50 text-sm"
+                  value={rarity}
+                  onChange={(e) => setRarity(e.target.value)}
+                  disabled={loadingOptions}
+                >
+                  <option value="ALL">-- Todas las rarezas --</option>
+                  {rarityOptions.map((opt) => (
                     <option key={opt} value={opt}>
                       {opt.charAt(0).toUpperCase() + opt.slice(1)}
                     </option>
-                  ))
-                ) : (
-                  <option value="">
-                    {loadingRarities ? 'Cargando rarezas...' : 'No hay rarezas disponibles'}
-                  </option>
-                )}
-              </select>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-gray-300 mb-1 flex items-center justify-between">
+                  <span>Tipo de Carta</span>
+                  {loadingOptions && <RefreshCw className="w-3.5 h-3.5 animate-spin text-purple-400" />}
+                </label>
+                <select
+                  className="w-full bg-gray-900 border border-gray-700 rounded-md p-2 text-white focus:outline-none focus:border-purple-500 disabled:opacity-50 text-sm"
+                  value={cardType}
+                  onChange={(e) => setCardType(e.target.value)}
+                  disabled={loadingOptions}
+                >
+                  <option value="ALL">-- Todos los tipos --</option>
+                  {cardTypeOptions.map((opt) => (
+                    <option key={opt} value={opt}>
+                      {opt}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -245,7 +279,7 @@ export const BulkRarityOfferModal: React.FC<BulkRarityOfferModalProps> = ({ isOp
                     Sobreescribir Ofertas Individuales
                   </span>
                   <span className="block text-xs text-gray-400 mt-0.5">
-                    Si se marca, eliminará las ofertas manuales que ya tengan cartas de esta rareza.
+                    Si se marca, eliminará las ofertas manuales que ya tengan cartas seleccionadas.
                   </span>
                 </div>
               </label>
@@ -279,16 +313,16 @@ export const BulkRarityOfferModal: React.FC<BulkRarityOfferModalProps> = ({ isOp
         <div className="p-4 border-t border-gray-800 bg-gray-900/50 flex justify-between items-center gap-3">
           <button
             onClick={handleClear}
-            disabled={isSubmitting || !rarity || loadingRarities}
-            className="flex-1 py-2 bg-red-500/10 border border-red-500/50 hover:bg-red-500 hover:text-white text-red-500 rounded-md font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={isSubmitting || !isFilterValid || loadingOptions}
+            className="flex-1 py-2 bg-red-500/10 border border-red-500/50 hover:bg-red-500 hover:text-white text-red-500 rounded-md font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
           >
             Quitar Descuentos
           </button>
           
           <button
             onClick={handleApply}
-            disabled={isSubmitting || discountPercentage <= 0 || !rarity || loadingRarities}
-            className="flex-1 flex justify-center items-center py-2 bg-geeko-cyan text-geeko-dark font-black rounded-md hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={isSubmitting || discountPercentage <= 0 || !isFilterValid || loadingOptions}
+            className="flex-1 flex justify-center items-center py-2 bg-geeko-cyan text-geeko-dark font-black rounded-md hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
           >
             {isSubmitting ? (
               <span className="animate-pulse">Procesando...</span>
@@ -304,3 +338,4 @@ export const BulkRarityOfferModal: React.FC<BulkRarityOfferModalProps> = ({ isOp
     </div>
   );
 };
+

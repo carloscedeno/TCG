@@ -6,7 +6,7 @@ import { fetchCards, fetchSets, fetchProducts, fetchCart, fetchAccessories, fetc
 import { FiltersPanel } from '../components/Filters/FiltersPanel';
 import type { Filters } from '../components/Filters/FiltersPanel';
 import { useAuth } from '../context/AuthContext';
-import { X, Sparkles, Search } from 'lucide-react';
+import { X, Sparkles, Search, Zap } from 'lucide-react';
 
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { CartDrawer } from '../components/Navigation/CartDrawer';
@@ -568,6 +568,18 @@ const Home: React.FC = () => {
                 >
                   <Sparkles size={12} className={filters.only_new ? 'text-white' : 'text-geeko-purple-vibrant'} />
                   Nuevo
+                </button>
+
+                <button
+                  onClick={() => updateURL({ only_discount: filters.only_discount ? undefined : 'true' })}
+                  className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase transition-all flex items-center gap-2 ${
+                    filters.only_discount
+                      ? 'bg-emerald-500 text-white dark:text-black shadow-[0_0_15px_rgba(16,185,129,0.4)] ring-2 ring-emerald-500/50'
+                      : 'bg-white dark:bg-neutral-900/50 text-neutral-500 dark:text-text-low hover:text-black dark:hover:text-neutral-300 border border-neutral-200 dark:border-neutral-800 shadow-sm dark:shadow-none'
+                  }`}
+                >
+                  <Zap size={12} className={filters.only_discount ? 'text-white dark:text-black' : 'text-emerald-400'} />
+                  % Oferta
                 </button>
               </div>
 
