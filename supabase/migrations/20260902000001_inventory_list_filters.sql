@@ -1,6 +1,8 @@
 -- Migration: Add rarity and card type filtering to get_inventory_list RPC
 -- Description: Extends get_inventory_list to filter by p_rarity and p_card_type.
 
+DROP FUNCTION IF EXISTS public.get_inventory_list(integer, integer, text, text, text, text, text, boolean, text);
+
 CREATE OR REPLACE FUNCTION public.get_inventory_list(
     p_page integer,
     p_page_size integer,
