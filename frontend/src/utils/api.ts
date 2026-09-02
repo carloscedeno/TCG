@@ -295,8 +295,8 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
   try {
     let data: any = null;
     
-    // 1. Sanitize the ID
-    const sanitizedId = printingId.replace('-foil', '').replace('-nonfoil', '').replace('-etched', '');
+    // 1. Sanitize the ID (strip finish suffixes and _old tag)
+    const sanitizedId = printingId.replace(/-foil|-nonfoil|-etched|_old/gi, '');
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     
     // 2. Check Accessories FIRST if it's a UUID (Common for store-specific products)
