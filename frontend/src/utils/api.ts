@@ -1791,15 +1791,24 @@ export const manageProductOffer = async (productId: string, discountPercentage: 
   }
 };
 
-export const adminApplyDiscountByRarity = async (rarity: string, percentage: number, endDate: string | null, overwrite: boolean, includeFoil: boolean, game: string = 'MTG') => {
+export const adminApplyDiscountByRarity = async (
+  rarity: string | null,
+  percentage: number,
+  endDate: string | null,
+  overwrite: boolean,
+  includeFoil: boolean,
+  game: string = 'MTG',
+  cardType?: string | null
+) => {
   try {
     const { data, error } = await supabase.rpc('admin_apply_discount_by_rarity', {
-      p_rarity: rarity,
+      p_rarity: rarity || null,
       p_discount_percentage: percentage,
       p_discount_until: endDate,
       p_overwrite_existing: overwrite,
       p_include_foil: includeFoil,
-      p_game: game
+      p_game: game,
+      p_card_type: cardType || null
     });
     if (error) throw error;
     if (data && data.success === false) {
@@ -1807,16 +1816,21 @@ export const adminApplyDiscountByRarity = async (rarity: string, percentage: num
     }
     return { success: true, updated_count: data?.updated_count || 0 };
   } catch (err: any) {
-    console.error('Error applying bulk discount by rarity:', err);
+    console.error('Error applying bulk discount by rarity/type:', err);
     return { success: false, message: err.message };
   }
 };
 
-export const adminClearDiscountByRarity = async (rarity: string, game: string = 'MTG') => {
+export const adminClearDiscountByRarity = async (
+  rarity: string | null,
+  game: string = 'MTG',
+  cardType?: string | null
+) => {
   try {
     const { data, error } = await supabase.rpc('admin_clear_discount_by_rarity', {
-      p_rarity: rarity,
-      p_game: game
+      p_rarity: rarity || null,
+      p_game: game,
+      p_card_type: cardType || null
     });
     if (error) throw error;
     if (data && data.success === false) {
@@ -1824,7 +1838,7 @@ export const adminClearDiscountByRarity = async (rarity: string, game: string = 
     }
     return { success: true, updated_count: data?.updated_count || 0 };
   } catch (err: any) {
-    console.error('Error clearing bulk discount by rarity:', err);
+    console.error('Error clearing bulk discount by rarity/type:', err);
     return { success: false, message: err.message };
   }
 };
@@ -1848,6 +1862,40 @@ export const fetchDistinctRarities = async (gameCode: string = 'MTG'): Promise<s
   } catch (error) {
     console.error('Error fetching distinct rarities:', error);
     return [];
+  }
+};
+
+export const fetchDistinctCardTypes = async (gameCode: string = 'MTG'): Promise<string[]> => {
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .select('type_line')
+      .eq('game', gameCode)
+      .not('type_line', 'is', null);
+      
+    if (error) throw error;
+
+    const baseTypes = ['Creature', 'Instant', 'Sorcery', 'Artifact', 'Enchantment', 'Planeswalker', 'Land', 'Battle'];
+    const foundTypes = new Set<string>();
+
+    (data || []).forEach((row: any) => {
+      const typeLine = row.type_line as string;
+      if (!typeLine) return;
+      baseTypes.forEach(bType => {
+        if (new RegExp(`\\b${bType}\\b`, 'i').test(typeLine)) {
+          foundTypes.add(bType);
+        }
+      });
+    });
+
+    if (foundTypes.size === 0) {
+      return baseTypes;
+    }
+
+    return Array.from(foundTypes).sort((a, b) => a.localeCompare(b));
+  } catch (error) {
+    console.error('Error fetching distinct card types:', error);
+    return ['Creature', 'Instant', 'Sorcery', 'Artifact', 'Enchantment', 'Planeswalker', 'Land', 'Battle'];
   }
 };
 
