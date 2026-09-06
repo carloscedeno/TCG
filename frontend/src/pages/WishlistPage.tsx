@@ -9,100 +9,184 @@ interface WishlistItem {
     card_name: string;
     game: string;
     game_code: string;
-    set_name: string;
-    set_code: string;
-    rarity: string;
+    set_name?: string;
+    set_code?: string;
+    type?: string;
+    color?: string;
+    deck_category?: string;
     condition_needed: string;
-    buying_price?: number;
+    quantity_needed: number;
     notes?: string;
     image_url: string;
     priority: 'HIGH' | 'MEDIUM' | 'LOW';
 }
 
 const MOCK_WISHLIST: WishlistItem[] = [
+    // MONO-BLUE TEMPO
     {
         id: '1',
-        card_name: 'Sheoldred, the Apocalypse',
+        card_name: 'Delver of Secrets',
         game: 'Magic: The Gathering',
         game_code: 'MTG',
-        set_name: 'Dominaria United',
-        set_code: 'DMU',
-        rarity: 'Mythic',
+        deck_category: 'Mono-Blue Tempo',
+        type: 'Criatura',
+        color: 'Blue',
         condition_needed: 'NM / SP',
-        buying_price: 65.00,
-        notes: 'Buscamos copias normales y foil.',
-        image_url: 'https://cards.scryfall.io/normal/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg',
+        quantity_needed: 4,
+        image_url: 'https://cards.scryfall.io/normal/front/a/b/ab9e640d-9014-4375-9a70-4c797c036177.jpg',
         priority: 'HIGH'
     },
     {
         id: '2',
-        card_name: 'Orcish Bowmasters',
+        card_name: 'Tolarian Terror',
         game: 'Magic: The Gathering',
         game_code: 'MTG',
-        set_name: 'The Lord of the Rings: Tales of Middle-earth',
-        set_code: 'LTR',
-        rarity: 'Rare',
-        condition_needed: 'NM',
-        buying_price: 38.00,
-        notes: 'Alta demanda en tienda.',
-        image_url: 'https://cards.scryfall.io/normal/front/7/c/7c024bae-5631-4e20-ac69-df392ac9e109.jpg',
+        deck_category: 'Mono-Blue Tempo',
+        type: 'Criatura',
+        color: 'Blue',
+        condition_needed: 'NM / SP',
+        quantity_needed: 4,
+        image_url: 'https://cards.scryfall.io/normal/front/4/2/42f01cba-43d4-46ad-b7a5-d7631b0e1347.jpg',
         priority: 'HIGH'
     },
     {
         id: '3',
-        card_name: 'The One Ring',
+        card_name: 'Brainstorm',
         game: 'Magic: The Gathering',
         game_code: 'MTG',
-        set_name: 'The Lord of the Rings: Tales of Middle-earth',
-        set_code: 'LTR',
-        rarity: 'Mythic',
+        deck_category: 'Mono-Blue Tempo',
+        type: 'Instant',
+        color: 'Blue',
         condition_needed: 'NM / SP',
-        buying_price: 85.00,
-        notes: 'Compramos en cualquier versión.',
-        image_url: 'https://cards.scryfall.io/normal/front/d/5/d584568f-a6dd-448f-88a6-88133f894596.jpg',
+        quantity_needed: 4,
+        image_url: 'https://cards.scryfall.io/normal/front/4/8/48070240-8b6c-4da7-b615-24263c2514bf.jpg',
         priority: 'HIGH'
     },
     {
         id: '4',
-        card_name: 'Charizard ex',
-        game: 'Pokémon TCG',
-        game_code: 'PKM',
-        set_name: '151',
-        set_code: 'MEW',
-        rarity: 'Special Illustration Rare',
-        condition_needed: 'NM',
-        buying_price: 110.00,
-        notes: 'Solo versión en español o inglés.',
-        image_url: 'https://images.pokemontcg.io/sv3pt5/199_hires.png',
-        priority: 'MEDIUM'
+        card_name: 'Counterspell',
+        game: 'Magic: The Gathering',
+        game_code: 'MTG',
+        deck_category: 'Mono-Blue Tempo',
+        type: 'Instant',
+        color: 'Blue',
+        condition_needed: 'NM / SP',
+        quantity_needed: 4,
+        image_url: 'https://cards.scryfall.io/normal/front/a/9/a978f40e-6821-48ed-a9d0-f55d7743d262.jpg',
+        priority: 'HIGH'
     },
+
+    // MONORED MADNESS BURN
     {
         id: '5',
-        card_name: 'Monkey.D.Luffy (Parallel)',
-        game: 'One Piece TCG',
-        game_code: 'OPC',
-        set_name: 'Awakening of the New Era',
-        set_code: 'OP-05',
-        rarity: 'Secret Rare',
-        condition_needed: 'NM',
-        buying_price: 140.00,
-        notes: 'Manga Art o AA.',
-        image_url: 'https://s3.ap-northeast-1.amazonaws.com/onepiece-cardgame.com/images/cardlist/card/OP05-119.png',
+        card_name: 'Lightning Bolt',
+        game: 'Magic: The Gathering',
+        game_code: 'MTG',
+        deck_category: 'Monored Madness Burn',
+        type: 'Instant',
+        color: 'Red',
+        condition_needed: 'NM / SP',
+        quantity_needed: 4,
+        image_url: 'https://cards.scryfall.io/normal/front/f/2/f2aadd2f-9277-4b7e-97ec-03a111a84f3c.jpg',
         priority: 'HIGH'
     },
     {
         id: '6',
-        card_name: 'Sol Ring (Borderless)',
+        card_name: 'Voldaren Epicure',
         game: 'Magic: The Gathering',
         game_code: 'MTG',
-        set_name: 'Commander Masters',
-        set_code: 'CMM',
-        rarity: 'Uncommon',
-        condition_needed: 'NM / SP / MP',
-        buying_price: 12.00,
-        notes: 'Cualquier versión especial.',
-        image_url: 'https://cards.scryfall.io/normal/front/a/0/a0dc0226-5d5e-4052-9694-171f6d306591.jpg',
-        priority: 'LOW'
+        deck_category: 'Monored Madness Burn',
+        type: 'Criatura',
+        color: 'Red',
+        condition_needed: 'NM',
+        quantity_needed: 4,
+        image_url: 'https://cards.scryfall.io/normal/front/a/e/ae487210-9983-4127-9538-9e6717a61d42.jpg',
+        priority: 'MEDIUM'
+    },
+    {
+        id: '7',
+        card_name: 'Faithless Looting',
+        game: 'Magic: The Gathering',
+        game_code: 'MTG',
+        deck_category: 'Monored Madness Burn',
+        type: 'Sorcery',
+        color: 'Red',
+        condition_needed: 'NM / SP',
+        quantity_needed: 4,
+        image_url: 'https://cards.scryfall.io/normal/front/1/d/1d6e5c8e-5b12-40f4-a09b-640a32491a92.jpg',
+        priority: 'HIGH'
+    },
+
+    // GRIXIS AFFINITY / JUND WILDFIRE
+    {
+        id: '8',
+        card_name: 'Refurbished Familiar',
+        game: 'Magic: The Gathering',
+        game_code: 'MTG',
+        deck_category: 'Grixis Affinity / Jund Wildfire',
+        type: 'Criatura',
+        color: 'Black',
+        condition_needed: 'NM',
+        quantity_needed: 4,
+        image_url: 'https://cards.scryfall.io/normal/front/b/3/b338b05c-f965-4927-9252-824c9657b9dd.jpg',
+        priority: 'HIGH'
+    },
+    {
+        id: '9',
+        card_name: 'Writhing Chrysalis',
+        game: 'Magic: The Gathering',
+        game_code: 'MTG',
+        deck_category: 'Jund Wildfire / Gruul Ponza',
+        type: 'Criatura',
+        color: 'Red/Green',
+        condition_needed: 'NM',
+        quantity_needed: 4,
+        image_url: 'https://cards.scryfall.io/normal/front/f/5/f54dbeb1-51f6-4032-9027-0a4242657e2a.jpg',
+        priority: 'HIGH'
+    },
+
+    // FLESH AND BLOOD
+    {
+        id: '10',
+        card_name: 'Command and Conquer',
+        game: 'Flesh and Blood',
+        game_code: 'FAB',
+        deck_category: 'Genéricos Más Usados',
+        type: 'Attack Action',
+        color: 'Generic',
+        condition_needed: 'NM',
+        quantity_needed: 3,
+        notes: 'Generic staple prioritario',
+        image_url: 'https://d233fqh3x7w6t5.cloudfront.net/card/HP1/HP1001.png',
+        priority: 'HIGH'
+    },
+    {
+        id: '11',
+        card_name: "Fyendal's Spring Tunic",
+        game: 'Flesh and Blood',
+        game_code: 'FAB',
+        deck_category: 'Genéricos Más Usados',
+        type: 'Equipment',
+        color: 'Generic',
+        condition_needed: 'NM / SP',
+        quantity_needed: 2,
+        notes: 'Legendary Equipment',
+        image_url: 'https://d233fqh3x7w6t5.cloudfront.net/card/WTR/WTR149.png',
+        priority: 'HIGH'
+    },
+    {
+        id: '12',
+        card_name: 'Crown of Providence',
+        game: 'Flesh and Blood',
+        game_code: 'FAB',
+        deck_category: 'Genéricos Más Usados',
+        type: 'Equipment',
+        color: 'Generic',
+        condition_needed: 'NM',
+        quantity_needed: 2,
+        notes: 'Legendary Head Equipment',
+        image_url: 'https://d233fqh3x7w6t5.cloudfront.net/card/UPR/UPR001.png',
+        priority: 'HIGH'
     }
 ];
 
@@ -114,8 +198,8 @@ export const WishlistPage: React.FC = () => {
 
     const filteredItems = MOCK_WISHLIST.filter(item => {
         const matchesSearch = item.card_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                              item.set_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                              item.set_code.toLowerCase().includes(searchTerm.toLowerCase());
+                              (item.deck_category && item.deck_category.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                              (item.type && item.type.toLowerCase().includes(searchTerm.toLowerCase()));
         const matchesGame = selectedGame === 'ALL' || item.game_code === selectedGame;
         return matchesSearch && matchesGame;
     });
@@ -123,7 +207,7 @@ export const WishlistPage: React.FC = () => {
     const handleOfferClick = (item: WishlistItem) => {
         const phone = '584242507802';
         const text = encodeURIComponent(
-            `¡Hola Geekorium! Vi en su lista "Geeko Buscamos" que están buscando: *${item.card_name}* (${item.set_code}) [${item.condition_needed}]. Tengo disponible para vender/cambiar. ¿Podemos revisar?`
+            `¡Hola Geekorium! Vi en su lista "Geeko Buscamos" que están buscando: *${item.card_name}* (${item.game}) [Cant: ${item.quantity_needed}]. Tengo copias disponibles. ¿Podemos acordar la entrega/compra?`
         );
         window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
     };
@@ -238,28 +322,26 @@ export const WishlistPage: React.FC = () => {
                                     <div className="p-5 space-y-3">
                                         <div>
                                             <div className="text-[10px] font-black uppercase tracking-widest text-purple-400">
-                                                {item.game} • {item.set_code}
+                                                {item.game} {item.deck_category ? `• ${item.deck_category}` : ''}
                                             </div>
                                             <h3 className="text-base font-black text-white group-hover:text-purple-300 transition-colors line-clamp-1 mt-0.5">
                                                 {item.card_name}
                                             </h3>
                                             <p className="text-xs text-neutral-400 font-medium line-clamp-1">
-                                                {item.set_name} ({item.rarity})
+                                                {item.type || 'Carta'} {item.color ? `(${item.color})` : ''}
                                             </p>
                                         </div>
 
                                         {/* Requirements Pill */}
                                         <div className="bg-white/5 rounded-xl p-3 border border-white/5 space-y-1.5">
                                             <div className="flex justify-between items-center text-xs">
+                                                <span className="text-neutral-400 font-medium">Cantidad necesitada:</span>
+                                                <span className="font-black text-purple-300 bg-purple-500/20 px-2 py-0.5 rounded-md text-xs">{item.quantity_needed} copias</span>
+                                            </div>
+                                            <div className="flex justify-between items-center text-xs pt-1 border-t border-white/5">
                                                 <span className="text-neutral-400 font-medium">Estado requerido:</span>
                                                 <span className="font-bold text-white bg-white/10 px-2 py-0.5 rounded-md text-[11px]">{item.condition_needed}</span>
                                             </div>
-                                            {item.buying_price && (
-                                                <div className="flex justify-between items-center text-xs pt-1 border-t border-white/5">
-                                                    <span className="text-neutral-400 font-medium">Pago estimado:</span>
-                                                    <span className="font-black text-green-400 text-sm">${item.buying_price.toFixed(2)}</span>
-                                                </div>
-                                            )}
                                         </div>
 
                                         {item.notes && (
