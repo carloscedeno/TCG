@@ -70,6 +70,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                         { name: 'Home', path: '/' },
                         { name: 'Artilugios', path: '/?tab=catalog' },
                         { name: 'Hechizos', path: '/?tab=marketplace&game=MTG&category=Singles' },
+                        { name: 'Buscamos', path: '/buscamos' },
                         { name: 'Misiones', path: '/tournaments' },
                         { name: 'Rankings', path: '/rankings' },
                         { name: 'Invócanos', path: '/help' }

@@ -40,6 +40,7 @@ const CategoriesPage = lazy(() => import('./pages/Admin/CategoriesPage'));
 const MediaPage = lazy(() => import('./pages/Admin/MediaPage'));
 const AdminRankingsPage = lazy(() => import('./pages/Admin/AdminRankingsPage'));
 const RankingsPage = lazy(() => import('./pages/RankingsPage'));
+const WishlistPage = lazy(() => import('./pages/WishlistPage'));
 
 const isSupabaseConfigured = !!import.meta.env.VITE_SUPABASE_URL && !!import.meta.env.VITE_SUPABASE_ANON_KEY;
 
@@ -99,6 +100,7 @@ function App() {
                                 <Route path="/import" element={<ImportCollection />} />
                                 <Route path="/tournaments" element={<TournamentHub />} />
                                 <Route path="/rankings" element={<RankingsPage />} />
+                                <Route path="/buscamos" element={<WishlistPage />} />
 
                                 <Route path="/help" element={<HelpPage />} />
                                 <Route path="/legal" element={<LegalPage />} />
