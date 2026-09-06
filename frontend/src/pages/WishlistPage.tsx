@@ -3,7 +3,7 @@ import { Header } from '../components/Navigation/Header';
 import { Footer } from '../components/Navigation/Footer';
 import { CartDrawer } from '../components/Navigation/CartDrawer';
 import { CardImage } from '../components/Card/CardImage';
-import { Search, Sparkles, MessageCircle, AlertCircle, ArrowRight } from 'lucide-react';
+import { Search, Sparkles, MessageCircle, AlertCircle } from 'lucide-react';
 import { WISHLIST_DATA, type WishlistItem } from './wishlist_data';
 
 export const WishlistPage: React.FC = () => {
@@ -101,7 +101,7 @@ export const WishlistPage: React.FC = () => {
             </div>
 
             {/* Cards Grid Section */}
-            <div className="max-w-7xl mx-auto px-4 py-10 flex-1 w-full">
+            <div className="max-w-7xl mx-auto px-4 py-8 flex-1 w-full">
                 {filteredItems.length === 0 ? (
                     <div className="text-center py-20 border border-dashed border-white/10 rounded-3xl bg-white/[0.02]">
                         <AlertCircle className="mx-auto text-neutral-500 mb-3" size={40} />
@@ -109,76 +109,55 @@ export const WishlistPage: React.FC = () => {
                         <p className="text-neutral-400 text-sm mt-1">Prueba buscando con otro término o seleccionando otro juego.</p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
                         {filteredItems.map((item) => (
                             <div
                                 key={item.id}
-                                className="group relative bg-[#0f1117] border border-white/10 rounded-3xl overflow-hidden hover:border-purple-500/50 transition-all duration-300 flex flex-col justify-between hover:shadow-[0_10px_30px_rgba(147,51,234,0.15)]"
+                                className="group relative bg-[#0f1117] border border-white/10 rounded-2xl overflow-hidden hover:border-purple-500/50 transition-all duration-300 flex flex-col justify-between hover:shadow-[0_8px_20px_rgba(147,51,234,0.15)] p-2 sm:p-3"
                             >
                                 {/* Priority Badge */}
-                                <div className="absolute top-3 left-3 z-10">
-                                    {item.priority === 'HIGH' && (
-                                        <span className="px-2.5 py-1 rounded-lg bg-red-500/80 backdrop-blur-md text-white text-[10px] font-black uppercase tracking-wider shadow-lg">
-                                            Alta Prioridad
+                                {item.priority === 'HIGH' && (
+                                    <div className="absolute top-3 left-3 z-10">
+                                        <span className="px-1.5 py-0.5 rounded-md bg-red-500/80 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-wider shadow-lg">
+                                            Buscada
                                         </span>
-                                    )}
-                                </div>
+                                    </div>
+                                )}
 
                                 <div>
-                                    {/* Card Image Container */}
-                                    <div className="relative aspect-[3/4] overflow-hidden bg-black/40 p-2 flex items-center justify-center">
+                                    {/* Card Image Container - Compact */}
+                                    <div className="relative aspect-[3/4] overflow-hidden bg-black/40 rounded-xl flex items-center justify-center p-1">
                                         <CardImage
                                             src={item.image_url}
                                             alt={item.card_name}
-                                            size="normal"
+                                            size="small"
                                             objectFit="contain"
-                                            className="h-full w-full rounded-xl"
+                                            className="h-full w-full rounded-lg"
                                         />
                                     </div>
 
-                                    {/* Card Info */}
-                                    <div className="p-5 space-y-3">
-                                        <div>
-                                            <div className="text-[10px] font-black uppercase tracking-widest text-purple-400">
-                                                {item.game} {item.deck_category ? `• ${item.deck_category}` : ''}
-                                            </div>
-                                            <h3 className="text-base font-black text-white group-hover:text-purple-300 transition-colors line-clamp-1 mt-0.5">
-                                                {item.card_name}
-                                            </h3>
-                                            <p className="text-xs text-neutral-400 font-medium line-clamp-1">
-                                                {item.type || 'Carta'} {item.color ? `(${item.color})` : ''}
-                                            </p>
+                                    {/* Card Info - Compact */}
+                                    <div className="pt-2 pb-1 space-y-1">
+                                        <div className="text-[9px] font-black uppercase tracking-wider text-purple-400 truncate">
+                                            {item.deck_category || item.game}
                                         </div>
-
-                                        {/* Requirements Pill */}
-                                        <div className="bg-white/5 rounded-xl p-3 border border-white/5 space-y-1.5">
-                                            <div className="flex justify-between items-center text-xs">
-                                                <span className="text-neutral-400 font-medium">Cantidad necesitada:</span>
-                                                <span className="font-black text-purple-300 bg-purple-500/20 px-2 py-0.5 rounded-md text-xs">{item.quantity_needed} copias</span>
-                                            </div>
-                                            <div className="flex justify-between items-center text-xs pt-1 border-t border-white/5">
-                                                <span className="text-neutral-400 font-medium">Estado requerido:</span>
-                                                <span className="font-bold text-white bg-white/10 px-2 py-0.5 rounded-md text-[11px]">{item.condition_needed}</span>
-                                            </div>
-                                        </div>
-
-                                        {item.notes && (
-                                            <p className="text-[11px] text-neutral-500 italic">
-                                                * {item.notes}
-                                            </p>
-                                        )}
+                                        <h3 className="text-xs sm:text-sm font-black text-white group-hover:text-purple-300 transition-colors line-clamp-1 leading-tight">
+                                            {item.card_name}
+                                        </h3>
+                                        <p className="text-[10px] text-neutral-400 font-medium truncate">
+                                            {item.type || 'Carta'} {item.color ? `• ${item.color}` : ''}
+                                        </p>
                                     </div>
                                 </div>
 
-                                {/* Action Button */}
-                                <div className="p-5 pt-0">
+                                {/* Action Button - Compact */}
+                                <div className="pt-1">
                                     <button
                                         onClick={() => handleOfferClick(item)}
-                                        className="w-full py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white font-black text-xs uppercase tracking-wider rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-green-950/40 transition-all transform active:scale-95 group/btn"
+                                        className="w-full py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white font-black text-[10px] uppercase tracking-wider rounded-xl flex items-center justify-center gap-1 shadow-md transition-all transform active:scale-95 group/btn"
                                     >
-                                        <MessageCircle size={16} />
-                                        Tengo esta carta
-                                        <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
+                                        <MessageCircle size={13} />
+                                        Tengo esta
                                     </button>
                                 </div>
                             </div>
