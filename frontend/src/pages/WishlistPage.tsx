@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Header } from '../components/Navigation/Header';
 import { Footer } from '../components/Navigation/Footer';
 import { CartDrawer } from '../components/Navigation/CartDrawer';
+import { CardImage } from '../components/Card/CardImage';
 import { Search, Sparkles, MessageCircle, AlertCircle, ArrowRight } from 'lucide-react';
 import { WISHLIST_DATA, type WishlistItem } from './wishlist_data';
 
@@ -125,11 +126,13 @@ export const WishlistPage: React.FC = () => {
 
                                 <div>
                                     {/* Card Image Container */}
-                                    <div className="relative aspect-[3/4] overflow-hidden bg-black/40 p-4 flex items-center justify-center">
-                                        <img
+                                    <div className="relative aspect-[3/4] overflow-hidden bg-black/40 p-2 flex items-center justify-center">
+                                        <CardImage
                                             src={item.image_url}
                                             alt={item.card_name}
-                                            className="h-full object-contain transition-transform duration-500 group-hover:scale-105"
+                                            size="normal"
+                                            objectFit="contain"
+                                            className="h-full w-full rounded-xl"
                                         />
                                     </div>
 

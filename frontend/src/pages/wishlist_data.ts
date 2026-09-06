@@ -26,7 +26,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Delver%20of%20Secrets&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Delver+of+Secrets&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -39,7 +39,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Cryptic%20Serpent&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Cryptic+Serpent&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -52,7 +52,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Tolarian%20Terror&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Tolarian+Terror&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -65,7 +65,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Ponder&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Ponder&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -78,7 +78,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Sleep%20of%20the%20Dead&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Sleep+of+the+Dead&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -91,7 +91,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Deem%20Inferior&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Deem+Inferior&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -104,7 +104,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Deep%20Analysis&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Deep+Analysis&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -117,7 +117,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Lorien%20Revealed&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Lorien+Revealed&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -130,7 +130,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Brainstorm&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Brainstorm&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -143,7 +143,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Dispel&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Dispel&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -156,7 +156,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Mental%20Note&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Mental+Note&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -169,7 +169,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Spell%20Pierce&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Spell+Pierce&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -182,7 +182,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Thought%20Scour&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Thought+Scour&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -195,7 +195,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Counterspell&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Counterspell&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -208,7 +208,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 16,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Island&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Island&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -221,7 +221,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Blue%20Elemental%20Blast&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Blue+Elemental+Blast&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -234,7 +234,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Envelop&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Envelop&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -247,7 +247,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Gut%20Shot&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Gut+Shot&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -260,7 +260,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Hydroblast&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Hydroblast&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -273,7 +273,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Steel%20Sabotage&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Steel+Sabotage&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -286,7 +286,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLACK",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Faerie%20Macabre&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Faerie+Macabre&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -299,7 +299,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Murmuring%20Mystic&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Murmuring+Mystic&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -312,7 +312,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Voldaren%20Epicure&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Voldaren+Epicure&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -325,7 +325,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Kessig%20Flamebreather&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Kessig+Flamebreather&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -338,7 +338,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE/BLACK",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Sneaky%20Snacker&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Sneaky+Snacker&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -351,7 +351,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Guttersnipe&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Guttersnipe&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -364,7 +364,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Faithless%20Looting&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Faithless+Looting&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -377,7 +377,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Grab%20the%20Prize&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Grab+the+Prize&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -390,7 +390,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Highway%20Robbery&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Highway+Robbery&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -403,7 +403,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Lava%20Dart&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Lava+Dart&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -416,7 +416,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Lightning%20Bolt&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Lightning+Bolt&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -429,7 +429,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Fiery%20Temper&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Fiery+Temper&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -442,7 +442,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Fireblast&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Fireblast&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -455,7 +455,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 18,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Mountain&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Mountain&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -468,7 +468,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Pyroblast&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Pyroblast&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -481,7 +481,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Relic%20of%20Progenitus&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Relic+of+Progenitus&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -494,7 +494,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Cast%20into%20the%20Fire&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Cast+into+the+Fire&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -507,7 +507,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Searing%20Blaze&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Searing+Blaze&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -520,7 +520,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Smash%20to%20Smithereens&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Smash+to+Smithereens&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -533,7 +533,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Rooftop%20Percher&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Rooftop+Percher&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -546,7 +546,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Generous%20Ent&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Generous+Ent&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -559,7 +559,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Boulderbranch%20Golem&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Boulderbranch+Golem&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -572,7 +572,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Bramble%20Wurm&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Bramble+Wurm&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -585,7 +585,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Maelstrom%20Colossus&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Maelstrom+Colossus&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -598,7 +598,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Ancient%20Stirrings&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Ancient+Stirrings&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -611,7 +611,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Kaervek%27s%20Torch&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Kaervek's+Torch&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -624,7 +624,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Crop%20Rotation&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Crop+Rotation&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -637,7 +637,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Unfathomable%20Truths&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Unfathomable+Truths&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -650,7 +650,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Barrels%20of%20Blasting%20Jelly&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Barrels+of+Blasting+Jelly&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -663,7 +663,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Expedition%20Map&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Expedition+Map&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -676,7 +676,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Giant%27s%20Boulder&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Giant's+Boulder&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -689,7 +689,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Bonder%27s%20Ornament&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Bonder's+Ornament&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -702,7 +702,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Pinnacle%20Kill-Ship&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Pinnacle+Kill-Ship&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -715,7 +715,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Bojuka%20Bog&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Bojuka+Bog&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -728,7 +728,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Forest&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Forest&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -741,7 +741,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Haunted%20Fengraf&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Haunted+Fengraf&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -754,7 +754,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Surveillance%20Room&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Surveillance+Room&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -767,7 +767,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Urza%27s%20Mine&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Urza's+Mine&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -780,7 +780,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Urza%27s%20Power%20Plant&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Urza's+Power+Plant&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -793,7 +793,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Urza%27s%20Tower&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Urza's+Tower&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -806,7 +806,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Hydroblast&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Hydroblast&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -819,7 +819,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Relic%20of%20Progenitus&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Relic+of+Progenitus&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -832,7 +832,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Call%20Damage%20Control&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Call+Damage+Control&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -845,7 +845,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Breath%20Weapon&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Breath+Weapon&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -858,7 +858,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Scour%20from%20Existence&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Scour+from+Existence&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -871,7 +871,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Kenku%20Artificer&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Kenku+Artificer&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -884,7 +884,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLACK",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Refurbished%20Familiar&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Refurbished+Familiar&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -897,7 +897,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Utrom%20Monitor&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Utrom+Monitor&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -910,7 +910,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Myr%20Enforcer&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Myr+Enforcer&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -923,7 +923,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Thoughtcast&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Thoughtcast&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -936,7 +936,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Galvanic%20Blast&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Galvanic+Blast&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -949,7 +949,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLACK",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Reckoner%27s%20Bargain&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Reckoner's+Bargain&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -962,7 +962,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLACK",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Blood%20Fountain&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Blood+Fountain&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -975,7 +975,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Chromatic%20Star&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Chromatic+Star&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -988,7 +988,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Nihil%20Spellbomb&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Nihil+Spellbomb&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1001,7 +1001,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Ichor%20Wellspring&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Ichor+Wellspring&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1014,7 +1014,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Makeshift%20Munitions&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Makeshift+Munitions&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1027,7 +1027,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Drossforge%20Bridge&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Drossforge+Bridge&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1040,7 +1040,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Great%20Furnace&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Great+Furnace&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -1053,7 +1053,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Mistvault%20Bridge&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Mistvault+Bridge&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -1066,7 +1066,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Seat%20of%20the%20Synod&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Seat+of+the+Synod&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -1079,7 +1079,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Silverbluff%20Bridge&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Silverbluff+Bridge&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1092,7 +1092,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Vault%20of%20Whispers&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Vault+of+Whispers&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -1105,7 +1105,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Hydroblast&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Hydroblast&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1118,7 +1118,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Krark-Clan%20Shaman&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Krark-Clan+Shaman&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1131,7 +1131,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Nihil%20Spellbomb&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Nihil+Spellbomb&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1144,7 +1144,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Red%20Elemental%20Blast&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Red+Elemental+Blast&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1157,7 +1157,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Steel%20Sabotage&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Steel+Sabotage&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1170,7 +1170,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLACK",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Cast%20Down&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Cast+Down&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1183,7 +1183,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLACK",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Eviscerator%27s%20Insight&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Eviscerator's+Insight&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1196,7 +1196,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLACK",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Extract%20a%20Confession&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Extract+a+Confession&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1209,7 +1209,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Krark-Clan%20Shaman&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Krark-Clan+Shaman&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1222,7 +1222,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Nyxborn%20Hydra&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Nyxborn+Hydra&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1235,7 +1235,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLACK",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Refurbished%20Familiar&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Refurbished+Familiar&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -1248,7 +1248,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED/GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Writhing%20Chrysalis&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Writhing+Chrysalis&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -1261,7 +1261,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Cleansing%20Wildfire&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Cleansing+Wildfire&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -1274,7 +1274,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLACK",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Toxin%20Analysis&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Toxin+Analysis&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1287,7 +1287,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLACK",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Cast%20Down&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Cast+Down&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1300,7 +1300,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLACK",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Eviscerator%27s%20Insight&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Eviscerator's+Insight&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1313,7 +1313,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLACK",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Fanatical%20Offering&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Fanatical+Offering&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -1326,7 +1326,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Terminate&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Terminate&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1339,7 +1339,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Pulse%20of%20Murasa&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Pulse+of+Murasa&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1352,7 +1352,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLACK",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Blood%20Fountain&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Blood+Fountain&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1365,7 +1365,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Nihil%20Spellbomb&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Nihil+Spellbomb&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1378,7 +1378,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Ichor%20Wellspring&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Ichor+Wellspring&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -1391,7 +1391,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Lembas&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Lembas&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1404,7 +1404,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Makeshift%20Munitions&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Makeshift+Munitions&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1417,7 +1417,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Drossforge%20Bridge&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Drossforge+Bridge&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -1430,7 +1430,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Forest&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Forest&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1443,7 +1443,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Mountain&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Mountain&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1456,7 +1456,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Slagwoods%20Bridge&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Slagwoods+Bridge&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -1469,7 +1469,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Swamp&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Swamp&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1482,7 +1482,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Twisted%20Landscape&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Twisted+Landscape&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -1495,7 +1495,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Vault%20of%20Whispers&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Vault+of+Whispers&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1508,7 +1508,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLACK",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Duress&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Duress&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1521,7 +1521,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Nihil%20Spellbomb&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Nihil+Spellbomb&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1534,7 +1534,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Pyroblast&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Pyroblast&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1547,7 +1547,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLACK/RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Terminate&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Terminate&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1560,7 +1560,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Troublemaker%20Ouphe&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Troublemaker+Ouphe&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1573,7 +1573,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Weather%20the%20Storm&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Weather+the+Storm&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1586,7 +1586,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Breath%20Weapon&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Breath+Weapon&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1599,7 +1599,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Elvish%20Mystic&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Elvish+Mystic&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1612,7 +1612,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Fyndhorn%20Elves&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Fyndhorn+Elves&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -1625,7 +1625,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Llanowar%20Elves&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Llanowar+Elves&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -1638,7 +1638,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Nyxborn%20Hydra&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Nyxborn+Hydra&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -1651,7 +1651,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Quirion%20Ranger&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Quirion+Ranger&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -1664,7 +1664,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Masked%20Vandal&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Masked+Vandal&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -1677,7 +1677,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Priest%20of%20Titania&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Priest+of+Titania&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -1690,7 +1690,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Timberwatch%20Elf&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Timberwatch+Elf&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -1703,7 +1703,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Avenging%20Hunter&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Avenging+Hunter&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -1716,7 +1716,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Sagu%20Wildling&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Sagu+Wildling&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1729,7 +1729,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Generous%20Ent&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Generous+Ent&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -1742,7 +1742,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Land%20Grant&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Land+Grant&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1755,7 +1755,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Winding%20Way&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Winding+Way&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -1768,7 +1768,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Lead%20the%20Stampede&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Lead+the+Stampede&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -1781,7 +1781,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Gingerbread%20Cabin&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Gingerbread+Cabin&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1794,7 +1794,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 11,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Snow-Covered%20Forest&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Snow-Covered+Forest&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -1807,7 +1807,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Scattershot%20Archer&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Scattershot+Archer&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1820,7 +1820,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Monstrous%20Emergence&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Monstrous+Emergence&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -1833,7 +1833,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Vitu-Ghazi%20Inspector&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Vitu-Ghazi+Inspector&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1846,7 +1846,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLACK",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Faerie%20Macabre&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Faerie+Macabre&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1859,7 +1859,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Spinewoods%20Paladin&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Spinewoods+Paladin&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1872,7 +1872,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Arbor%20Elf&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Arbor+Elf&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -1885,7 +1885,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Eldrazi%20Repurposer&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Eldrazi+Repurposer&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1898,7 +1898,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED/GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Writhing%20Chrysalis&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Writhing+Chrysalis&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -1911,7 +1911,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Avenging%20Hunter&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Avenging+Hunter&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1924,7 +1924,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Sagu%20Wildling&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Sagu+Wildling&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1937,7 +1937,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Boarding%20Party&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Boarding+Party&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -1950,7 +1950,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Annoyed%20Altisaur&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Annoyed+Altisaur&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -1963,7 +1963,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Thermokarst&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Thermokarst&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -1976,7 +1976,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Mwonvuli%20Acid-Moss&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Mwonvuli+Acid-Moss&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -1989,7 +1989,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Structural%20Distortion&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Structural+Distortion&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2002,7 +2002,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Skred&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Skred&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2015,7 +2015,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Bonder%27s%20Ornament&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Bonder's+Ornament&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2028,7 +2028,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Utopia%20Sprawl&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Utopia+Sprawl&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -2041,7 +2041,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Wild%20Growth&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Wild+Growth&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2054,7 +2054,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Highland%20Forest&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Highland+Forest&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2067,7 +2067,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 14,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Snow-Covered%20Forest&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Snow-Covered+Forest&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -2080,7 +2080,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Snow-Covered%20Mountain&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Snow-Covered+Mountain&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2093,7 +2093,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Gorilla%20Shaman&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Gorilla+Shaman&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2106,7 +2106,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Relic%20of%20Progenitus&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Relic+of+Progenitus&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2119,7 +2119,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Cast%20into%20the%20Fire&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Cast+into+the+Fire&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2132,7 +2132,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Deglamer&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Deglamer&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2145,7 +2145,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Monstrous%20Emergence&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Monstrous+Emergence&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2158,7 +2158,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Suplex&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Suplex&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2171,7 +2171,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Weather%20the%20Storm&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Weather+the+Storm&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2184,7 +2184,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Breath%20Weapon&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Breath+Weapon&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2197,7 +2197,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Elves%20of%20Deep%20Shadow&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Elves+of+Deep+Shadow&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2210,7 +2210,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Quirion%20Ranger&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Quirion+Ranger&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2223,7 +2223,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Saruli%20Caretaker&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Saruli+Caretaker&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -2236,7 +2236,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Gatecreeper%20Vine&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Gatecreeper+Vine&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2249,7 +2249,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Masked%20Vandal&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Masked+Vandal&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2262,7 +2262,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLACK",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Mesmeric%20Fiend&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Mesmeric+Fiend&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2275,7 +2275,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Overgrown%20Battlement&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Overgrown+Battlement&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -2288,7 +2288,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Wall%20of%20Roots&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Wall+of+Roots&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -2301,7 +2301,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLACK",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Balustrade%20Spy&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Balustrade+Spy&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -2314,7 +2314,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Avenging%20Hunter&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Avenging+Hunter&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2327,7 +2327,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Sagu%20Wildling&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Sagu+Wildling&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -2340,7 +2340,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Generous%20Ent&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Generous+Ent&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -2353,7 +2353,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLACK",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Lotleth%20Giant&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Lotleth+Giant&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2366,7 +2366,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Land%20Grant&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Land+Grant&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -2379,7 +2379,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Winding%20Way&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Winding+Way&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -2392,7 +2392,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Lead%20the%20Stampede&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Lead+the+Stampede&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -2405,7 +2405,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLACK",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Dread%20Return&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Dread+Return&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2418,7 +2418,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Lotus%20Petal&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Lotus+Petal&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2431,7 +2431,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Forest&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Forest&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2444,7 +2444,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Swamp&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Swamp&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2457,7 +2457,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Mountain&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Mountain&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2470,7 +2470,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Jack-o%27-Lantern&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Jack-o'-Lantern&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2483,7 +2483,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Flaring%20Pain&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Flaring+Pain&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2496,7 +2496,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Masked%20Vandal&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Masked+Vandal&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2509,7 +2509,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLACK",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Mesmeric%20Fiend&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Mesmeric+Fiend&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2522,7 +2522,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Vitu-Ghazi%20Inspector&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Vitu-Ghazi+Inspector&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2535,7 +2535,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLACK",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Faerie%20Macabre&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Faerie+Macabre&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2548,7 +2548,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Nylea%27s%20Disciple&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Nylea's+Disciple&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2561,7 +2561,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED/GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Writhing%20Chrysalis&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Writhing+Chrysalis&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -2574,7 +2574,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Clockwork%20Percussionist&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Clockwork+Percussionist&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -2587,7 +2587,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Gingerbrute&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Gingerbrute&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2600,7 +2600,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Goblin%20Bushwhacker&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Goblin+Bushwhacker&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -2613,7 +2613,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Goblin%20Tomb%20Raider&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Goblin+Tomb+Raider&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -2626,7 +2626,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Voldaren%20Epicure&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Voldaren+Epicure&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -2639,7 +2639,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED/GREEN",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Burning-Tree%20Emissary&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Burning-Tree+Emissary&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -2652,7 +2652,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Rally%20at%20the%20Hornburg&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Rally+at+the+Hornburg&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -2665,7 +2665,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Reckless%20Impulse&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Reckless+Impulse&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2678,7 +2678,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Galvanic%20Blast&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Galvanic+Blast&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -2691,7 +2691,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Lightning%20Bolt&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Lightning+Bolt&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -2704,7 +2704,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Inventor%27s%20Axe&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Inventor's+Axe&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -2717,7 +2717,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Great%20Furnace&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Great+Furnace&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -2730,7 +2730,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 14,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Mountain&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Mountain&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -2743,7 +2743,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=End%20the%20Festivities&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=End+the+Festivities&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2756,7 +2756,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Raze&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Raze&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2769,7 +2769,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Red%20Elemental%20Blast&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Red+Elemental+Blast&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -2782,7 +2782,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Cast%20into%20the%20Fire&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Cast+into+the+Fire&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2795,7 +2795,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Flaring%20Pain&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Flaring+Pain&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2808,7 +2808,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Brinebarrow%20Intruder&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Brinebarrow+Intruder&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2821,7 +2821,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Faerie%20Miscreant&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Faerie+Miscreant&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -2834,7 +2834,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Faerie%20Seer&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Faerie+Seer&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -2847,7 +2847,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Humbling%20Elder&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Humbling+Elder&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2860,7 +2860,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Moon-Circuit%20Hacker&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Moon-Circuit+Hacker&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -2873,7 +2873,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Spellstutter%20Sprite&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Spellstutter+Sprite&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -2886,7 +2886,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Ninja%20of%20the%20Deep%20Hours&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Ninja+of+the+Deep+Hours&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -2899,7 +2899,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Of%20One%20Mind&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Of+One+Mind&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2912,7 +2912,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Dispel&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Dispel&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2925,7 +2925,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Force%20Spike&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Force+Spike&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2938,7 +2938,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Counterspell&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Counterspell&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -2951,7 +2951,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Snap&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Snap&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2964,7 +2964,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Bind%20the%20Monster&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Bind+the+Monster&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2977,7 +2977,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Weakstone%27s%20Subjugation&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Weakstone's+Subjugation&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -2990,7 +2990,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Writ%20of%20Passage&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Writ+of+Passage&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3003,7 +3003,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 18,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Island&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Island&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -3016,7 +3016,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Annul&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Annul&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3029,7 +3029,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Blue%20Elemental%20Blast&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Blue+Elemental+Blast&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3042,7 +3042,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Campfire&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Campfire&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3055,7 +3055,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Hydroblast&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Hydroblast&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3068,7 +3068,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Relic%20of%20Progenitus&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Relic+of+Progenitus&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3081,7 +3081,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Steel%20Sabotage&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Steel+Sabotage&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3094,7 +3094,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Unable%20to%20Scream&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Unable+to+Scream&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3107,7 +3107,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Azure%20Fleet%20Admiral&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Azure+Fleet+Admiral&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3120,7 +3120,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Augur%20of%20Bolas&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Augur+of+Bolas&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -3133,7 +3133,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Archaeomancer&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Archaeomancer&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3146,7 +3146,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Murmuring%20Mystic&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Murmuring+Mystic&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3159,7 +3159,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Mulldrifter&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Mulldrifter&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3172,7 +3172,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Preordain&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Preordain&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3185,7 +3185,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Fanged%20Flames&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Fanged+Flames&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3198,7 +3198,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Lorien%20Revealed&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Lorien+Revealed&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -3211,7 +3211,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Brainstorm&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Brainstorm&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3224,7 +3224,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Dispel&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Dispel&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3237,7 +3237,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "WHITE",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Ephemerate&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Ephemerate&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3250,7 +3250,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Skred&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Skred&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -3263,7 +3263,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Counterspell&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Counterspell&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -3276,7 +3276,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "WHITE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Union%20of%20the%20Third%20Path&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Union+of+the+Third+Path&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3289,7 +3289,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "WHITE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Ride%27s%20End&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Ride's+End&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3302,7 +3302,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Bender%27s%20Waterskin&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Bender's+Waterskin&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3315,7 +3315,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Glacial%20Floodplain&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Glacial+Floodplain&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3328,7 +3328,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Perilous%20Landscape&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Perilous+Landscape&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -3341,7 +3341,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 7,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Snow-Covered%20Island&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Snow-Covered+Island&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -3354,7 +3354,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Snow-Covered%20Mountain&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Snow-Covered+Mountain&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3367,7 +3367,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Snow-Covered%20Plains&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Snow-Covered+Plains&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3380,7 +3380,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "INCOLORO",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Volatile%20Fjord&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Volatile+Fjord&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3393,7 +3393,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Envelop&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Envelop&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3406,7 +3406,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "BLUE",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Hydroblast&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Hydroblast&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -3419,7 +3419,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Pyroblast&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Pyroblast&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -3432,7 +3432,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "RED",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Breath%20Weapon&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Breath+Weapon&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3445,7 +3445,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "WHITE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Dust%20to%20Dust&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Dust+to+Dust&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3458,7 +3458,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "WHITE",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Goliath%20Paladin&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Goliath+Paladin&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3471,7 +3471,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "WHITE",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Elite%20Interceptor&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Elite+Interceptor&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3484,7 +3484,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "WHITE",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Lunarch%20Veteran&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Lunarch+Veteran&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -3497,7 +3497,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "WHITE",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Novice%20Inspector&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Novice+Inspector&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -3510,7 +3510,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "WHITE",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Thraben%20Inspector&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Thraben+Inspector&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -3523,7 +3523,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "WHITE",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Kor%20Skyfisher&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Kor+Skyfisher&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -3536,7 +3536,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "WHITE",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Raffine%27s%20Informant&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Raffine's+Informant&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -3549,7 +3549,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "WHITE",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Leonardo%2C%20Big%20Brother&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Leonardo,+Big+Brother&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3562,7 +3562,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "WHITE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Spider-Man%2C%20Web-Slinger&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Spider-Man,+Web-Slinger&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3575,7 +3575,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "WHITE",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Battle%20Screech&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Battle+Screech&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -3588,7 +3588,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "WHITE",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Thraben%20Charm&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Thraben+Charm&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -3601,7 +3601,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "WHITE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Guardians%27%20Pledge&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Guardians'+Pledge&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3614,7 +3614,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "WHITE",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Prismatic%20Strands&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Prismatic+Strands&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -3627,7 +3627,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "WHITE",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Ramosian%20Rally&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Ramosian+Rally&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3640,7 +3640,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "WHITE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Idyllic%20Grange&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Idyllic+Grange&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3653,7 +3653,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "WHITE",
     "condition_needed": "NM / SP",
     "quantity_needed": 17,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Plains&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Plains&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -3666,7 +3666,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "WHITE",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Martyr%20of%20Sands&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Martyr+of+Sands&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3679,7 +3679,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "WHITE",
     "condition_needed": "NM / SP",
     "quantity_needed": 1,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Destroy%20Evil&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Destroy+Evil&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3692,7 +3692,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "WHITE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Journey%20to%20Nowhere&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Journey+to+Nowhere&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3705,7 +3705,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "WHITE",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Standard%20Bearer&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Standard+Bearer&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3718,7 +3718,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "WHITE",
     "condition_needed": "NM / SP",
     "quantity_needed": 4,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Dust%20to%20Dust&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Dust+to+Dust&format=image&version=art_crop",
     "priority": "HIGH"
   },
   {
@@ -3731,7 +3731,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "WHITE",
     "condition_needed": "NM / SP",
     "quantity_needed": 2,
-    "image_url": "https://api.scryfall.com/cards/named?exact=Holy%20Light&format=image",
+    "image_url": "https://api.scryfall.com/cards/named?exact=Holy+Light&format=image&version=art_crop",
     "priority": "MEDIUM"
   },
   {
@@ -3744,7 +3744,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "Generic",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://d233fqh3x7w6t5.cloudfront.net/card/HP1/HP1001.png",
+    "image_url": "https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg",
     "priority": "HIGH"
   },
   {
@@ -3757,7 +3757,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "Generic",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://d233fqh3x7w6t5.cloudfront.net/card/HP1/HP1001.png",
+    "image_url": "https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg",
     "priority": "HIGH"
   },
   {
@@ -3770,7 +3770,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "Generic",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://d233fqh3x7w6t5.cloudfront.net/card/HP1/HP1001.png",
+    "image_url": "https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg",
     "priority": "HIGH"
   },
   {
@@ -3783,7 +3783,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "Generic",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://d233fqh3x7w6t5.cloudfront.net/card/HP1/HP1001.png",
+    "image_url": "https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg",
     "priority": "HIGH"
   },
   {
@@ -3796,7 +3796,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "Generic",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://d233fqh3x7w6t5.cloudfront.net/card/HP1/HP1001.png",
+    "image_url": "https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg",
     "priority": "HIGH"
   },
   {
@@ -3809,7 +3809,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "Generic",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://d233fqh3x7w6t5.cloudfront.net/card/HP1/HP1001.png",
+    "image_url": "https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg",
     "priority": "HIGH"
   },
   {
@@ -3822,7 +3822,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "Generic",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://d233fqh3x7w6t5.cloudfront.net/card/HP1/HP1001.png",
+    "image_url": "https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg",
     "priority": "HIGH"
   },
   {
@@ -3835,7 +3835,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "Generic",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://d233fqh3x7w6t5.cloudfront.net/card/HP1/HP1001.png",
+    "image_url": "https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg",
     "priority": "HIGH"
   },
   {
@@ -3848,7 +3848,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "Generic",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://d233fqh3x7w6t5.cloudfront.net/card/HP1/HP1001.png",
+    "image_url": "https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg",
     "priority": "HIGH"
   },
   {
@@ -3861,7 +3861,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "Generic",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://d233fqh3x7w6t5.cloudfront.net/card/HP1/HP1001.png",
+    "image_url": "https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg",
     "priority": "HIGH"
   },
   {
@@ -3874,7 +3874,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "Generic",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://d233fqh3x7w6t5.cloudfront.net/card/HP1/HP1001.png",
+    "image_url": "https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg",
     "priority": "HIGH"
   },
   {
@@ -3887,7 +3887,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "Generic",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://d233fqh3x7w6t5.cloudfront.net/card/HP1/HP1001.png",
+    "image_url": "https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg",
     "priority": "HIGH"
   },
   {
@@ -3900,7 +3900,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "Generic",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://d233fqh3x7w6t5.cloudfront.net/card/HP1/HP1001.png",
+    "image_url": "https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg",
     "priority": "HIGH"
   },
   {
@@ -3913,7 +3913,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "Generic",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://d233fqh3x7w6t5.cloudfront.net/card/HP1/HP1001.png",
+    "image_url": "https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg",
     "priority": "HIGH"
   },
   {
@@ -3926,7 +3926,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "Generic",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://d233fqh3x7w6t5.cloudfront.net/card/HP1/HP1001.png",
+    "image_url": "https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg",
     "priority": "HIGH"
   },
   {
@@ -3939,7 +3939,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "Generic",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://d233fqh3x7w6t5.cloudfront.net/card/HP1/HP1001.png",
+    "image_url": "https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg",
     "priority": "HIGH"
   },
   {
@@ -3952,7 +3952,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "Generic",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://d233fqh3x7w6t5.cloudfront.net/card/HP1/HP1001.png",
+    "image_url": "https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg",
     "priority": "HIGH"
   },
   {
@@ -3965,7 +3965,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "Generic",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://d233fqh3x7w6t5.cloudfront.net/card/HP1/HP1001.png",
+    "image_url": "https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg",
     "priority": "HIGH"
   },
   {
@@ -3978,7 +3978,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "Generic",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://d233fqh3x7w6t5.cloudfront.net/card/HP1/HP1001.png",
+    "image_url": "https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg",
     "priority": "HIGH"
   },
   {
@@ -3991,7 +3991,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "Generic",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://d233fqh3x7w6t5.cloudfront.net/card/HP1/HP1001.png",
+    "image_url": "https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg",
     "priority": "HIGH"
   },
   {
@@ -4004,7 +4004,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "Generic",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://d233fqh3x7w6t5.cloudfront.net/card/HP1/HP1001.png",
+    "image_url": "https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg",
     "priority": "HIGH"
   },
   {
@@ -4017,7 +4017,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "Generic",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://d233fqh3x7w6t5.cloudfront.net/card/HP1/HP1001.png",
+    "image_url": "https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg",
     "priority": "HIGH"
   },
   {
@@ -4030,7 +4030,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "Generic",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://d233fqh3x7w6t5.cloudfront.net/card/HP1/HP1001.png",
+    "image_url": "https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg",
     "priority": "HIGH"
   },
   {
@@ -4043,7 +4043,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "Generic",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://d233fqh3x7w6t5.cloudfront.net/card/HP1/HP1001.png",
+    "image_url": "https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg",
     "priority": "HIGH"
   },
   {
@@ -4056,7 +4056,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "Generic",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://d233fqh3x7w6t5.cloudfront.net/card/HP1/HP1001.png",
+    "image_url": "https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg",
     "priority": "HIGH"
   },
   {
@@ -4069,7 +4069,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "Generic",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://d233fqh3x7w6t5.cloudfront.net/card/HP1/HP1001.png",
+    "image_url": "https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg",
     "priority": "HIGH"
   },
   {
@@ -4082,7 +4082,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "Generic",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://d233fqh3x7w6t5.cloudfront.net/card/HP1/HP1001.png",
+    "image_url": "https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg",
     "priority": "HIGH"
   },
   {
@@ -4095,7 +4095,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "Generic",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://d233fqh3x7w6t5.cloudfront.net/card/HP1/HP1001.png",
+    "image_url": "https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg",
     "priority": "HIGH"
   },
   {
@@ -4108,7 +4108,7 @@ export const WISHLIST_DATA: WishlistItem[] = [
     "color": "Generic",
     "condition_needed": "NM / SP",
     "quantity_needed": 3,
-    "image_url": "https://d233fqh3x7w6t5.cloudfront.net/card/HP1/HP1001.png",
+    "image_url": "https://cards.scryfall.io/art_crop/front/d/1/d13cb0d3-3452-4c1f-81ec-024b4c45bbad.jpg",
     "priority": "HIGH"
   }
 ];
