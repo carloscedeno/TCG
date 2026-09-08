@@ -732,3 +732,8 @@ e.sub) a través de la interfaz XML-RPC para limpiar los registros existentes.
 - **Odoo Events Integration**: Se instaló el módulo event en Odoo y se inyectaron campos personalizados (x_game_code, x_format, x_entry_fee, x_image_url). Se desplegó el Edge Function odoo-event-sync en DEV apuntando a Supabase.
 - **Vista de Cuentas por Pagar (Deudas)**: Se implementó la sección **Cuentas Pendientes** en el perfil de usuario reutilizando la estética de Créditos Geek y enlazando cada tarjeta al detalle interactivo del pedido (/order/:id).
 - **Limpieza UI & RPC Fixes**: Se corrigieron los colores en modo claro en la página de Eventos (TournamentHub.tsx), se corrigieron los tipos de retorno (TEXT/NUMERIC) de la función RPC get_inventory_movements y se retiró la sección sin uso del perfil.
+
+## 2026-09-08 — Resolució de "Unknown Set" en Impresiones y Ediciones de Catálogo (Prod & Dev)
+- **Extracción de la relación PostgREST/Supabase (`sets`)**: Supabase devolvía la relación `sets` en algunos casos como un arreglo de objetos (`[{ set_name: '...', set_code: '...' }]`) en lugar de un objeto único. El acceso directo `v.sets?.set_name` retornaba `undefined`, lo que activaba el fallback predeterminado `'Unknown Set'` y `'??'`.
+- **Resiliencia de `all_versions`**: Se implementaron las funciones auxiliares `getSetName` y `getSetCode` en `frontend/src/utils/api.ts` para extraer de forma segura los nombres y códigos de edición desde arreglos o u objetos embebidos de PostgREST, manteniendo los metadatos devueltos por la API si la consulta de Supabase retornaba datos incompletos.
+- **Despliegue a Producción**: Cambios agregados y empujados a `dev` y `main` con verificación previa de compilación local y grafo de conocimiento.
