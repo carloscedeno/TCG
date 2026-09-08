@@ -151,6 +151,11 @@ class CardService:
                     ).eq('card_id', oracle_id).limit(50).execute()
                     
                     p_data = p_query.data or []
+                    p_data = [
+                        x for x in p_data 
+                        if (x.get('sets', {}).get('set_code') or '').lower() not in ['prm', 'td0', 'vma', 'pz1', 'pz2', 'me1', 'me2', 'me3', 'me4', 'akr', 'klr', 'j21', 'hbg', 'sir']
+                        and not x.get('sets', {}).get('is_digital')
+                    ]
                     p_data.sort(key=lambda x: (x.get('sets', {}).get('release_date') or '0000-00-00'), reverse=True)
                     
                     for p in p_data:

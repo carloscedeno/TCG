@@ -499,7 +499,14 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                 }
               }
 
-              versionsData.forEach((v: any) => {
+              versionsData
+                .filter((v: any) => {
+                  const s = Array.isArray(v.sets) ? v.sets[0] : v.sets;
+                  const setCode = (s?.set_code || v.set_code || '').toLowerCase();
+                  const digitalSetCodes = ['prm', 'td0', 'vma', 'pz1', 'pz2', 'me1', 'me2', 'me3', 'me4', 'akr', 'klr', 'j21', 'hbg', 'sir'];
+                  return !s?.is_digital && !digitalSetCodes.includes(setCode);
+                })
+                .forEach((v: any) => {
                 const apiVer = initialVersionsMap.get(v.printing_id);
                 const resolvedSetName = getSetName(v) || getSetName(apiVer) || data.set || 'Unknown Set';
                 const resolvedSetCode = getSetCode(v) || getSetCode(apiVer) || data.set_code || '??';
@@ -629,8 +636,12 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
       if (!data.set || data.set === 'Unknown Set') data.set = getSetName(data) || 'Unknown Set';
       if (!data.set_code || data.set_code === '??') data.set_code = getSetCode(data) || '??';
 
-      // Ensure all_versions exists
-      if (!data.all_versions) data.all_versions = [];
+      // Ensure all_versions exists and filter out digital/MTGO set codes
+      const digitalCodes = ['prm', 'td0', 'vma', 'pz1', 'pz2', 'me1', 'me2', 'me3', 'me4', 'akr', 'klr', 'j21', 'hbg', 'sir'];
+      data.all_versions = (data.all_versions || []).filter((v: any) => {
+        const code = (v.set_code || '').toLowerCase();
+        return !digitalCodes.includes(code);
+      });
 
       // Ensure each version in all_versions has resolved set_name and set_code
       data.all_versions.forEach((v: any) => {
