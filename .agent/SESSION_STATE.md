@@ -5,22 +5,17 @@
 
 ---
 
-## 📅 Última sesión: 2026-09-02
-**Rama activa:** `dev` (sincronizada con `main` producida)
-**Último commit conocido:** de5ca997 (fix: silence harmless AbortError logs) y 5a49fb18 (merge main release)
-**En progreso:** Sesión finalizada con éxito. Descuentos masivos por Tipo/Rareza probados y desplegados a producción.
+## 📅 Última sesión: 2026-09-08
+**Rama activa:** `dev` (sincronizada y subida a `dev` y `main` producida)
+**Último commit conocido:** 634e41ae (fix: resolve Unknown Set issue in edition printings display)
+**En progreso:** Sesión finalizada con éxito. Solucionado error de "Unknown Set" en el panel de impresiones/ediciones de cartas y desplegado a dev y produccion.
 
 ## 📁 Zona Caliente (archivos tocados recientemente)
-- frontend/src/components/Admin/BulkRarityOfferModal.tsx — Rediseño para soporte de filtro por Tipo de Carta y Rareza
-- frontend/src/pages/Admin/InventoryPage.tsx — Controles de filtrado por Rareza y Tipo en barra de administración
-- frontend/src/pages/Home.tsx — Acceso rápido % Oferta y manejo de iconos
-- frontend/src/utils/api.ts — Actualización de RPCs, sanitización de UUIDs e ignorado de AbortError
-- supabase/migrations/20260902000000_bulk_offers_by_type.sql — Migración RPC ofertas masivas por tipo
-- supabase/migrations/20260902000001_inventory_list_filters.sql — Migración RPC filtro inventario
-- supabase/migrations/20260902000002_fix_get_products_filtered_null_end_date.sql — Migración RPC catálogo con ofertas permanentes
+- frontend/src/utils/api.ts — Helper functions getSetName/getSetCode y preservación de versiones de API
+- frontend/src/pages/CardDetail.tsx — Fallbacks resilientes en versionGroups y renderizado de número de coleccionista
 
 ## ⏭️ Próxima acción recomendada
-Monitorear el uso de ofertas masivas en producción y continuar con las siguientes características planificadas.
+Verificar el despliegue automático en Cloudflare Pages / Vercel para dev y prod.
 
 ## 🚫 Restricciones activas
 - NO usar `npm` — solo `pnpm`
