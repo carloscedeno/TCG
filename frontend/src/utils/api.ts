@@ -26,6 +26,35 @@ export const isDiscountActive = (discountUntil: string | null | undefined): bool
 };
 
 /**
+ * Safely extracts set_name from an object, handling PostgREST joined objects or arrays.
+ */
+export const getSetName = (obj: any): string => {
+  if (!obj) return '';
+  if (typeof obj.set_name === 'string' && obj.set_name && obj.set_name !== 'Unknown Set') return obj.set_name;
+  if (typeof obj.set === 'string' && obj.set && obj.set !== 'Unknown Set') return obj.set;
+  const s = Array.isArray(obj.sets) ? obj.sets[0] : obj.sets;
+  if (s) {
+    if (typeof s.set_name === 'string' && s.set_name) return s.set_name;
+    if (typeof s.name === 'string' && s.name) return s.name;
+  }
+  return '';
+};
+
+/**
+ * Safely extracts set_code from an object, handling PostgREST joined objects or arrays.
+ */
+export const getSetCode = (obj: any): string => {
+  if (!obj) return '';
+  if (typeof obj.set_code === 'string' && obj.set_code && obj.set_code !== '??') return obj.set_code;
+  const s = Array.isArray(obj.sets) ? obj.sets[0] : obj.sets;
+  if (s) {
+    if (typeof s.set_code === 'string' && s.set_code) return s.set_code;
+    if (typeof s.code === 'string' && s.code) return s.code;
+  }
+  return '';
+};
+
+/**
  * Helper to construct API URLs from API_BASE correctly handling paths and trailing slashes.
  * Ensures consistent use of the '/api' segment if not already in base.
  */
@@ -391,10 +420,10 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
           flavor_text: sbData.flavor_text || sbData.cards?.flavor_text,
           artist: sbData.artist,
           rarity: sbData.rarity,
-          set: sbData.sets?.set_name || '',
-          set_code: sbData.sets?.set_code || '',
-          game_id: sbData.cards?.game_id || sbData.sets?.game_id,
-          game: (sbData.cards?.game_id === 17 || sbData.sets?.game_id === 17) ? 'GND' : 'MTG',
+          set: getSetName(sbData) || data?.set || '',
+          set_code: getSetCode(sbData) || data?.set_code || '',
+          game_id: sbData.cards?.game_id || (Array.isArray(sbData.sets) ? sbData.sets[0]?.game_id : sbData.sets?.game_id),
+          game: (sbData.cards?.game_id === 17 || (Array.isArray(sbData.sets) ? sbData.sets[0]?.game_id : sbData.sets?.game_id) === 17) ? 'GND' : 'MTG',
           collector_number: sbData.collector_number,
           image_url: sbData.image_url,
           price: marketPrice,
@@ -413,10 +442,16 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
           avg_market_price_usd: sbData.avg_market_price_usd || 0,
           all_versions: []
         };
+        const initialApiVersions = data?.all_versions || [];
         data = { ...baseData, ...data };
+        if (!data.set) data.set = baseData.set;
+        if (!data.set_code) data.set_code = baseData.set_code;
 
-        // If the API provided incomplete version data (missing foil prices/finishes), discard it 
-        // to force the subsequent Supabase fetch to retrieve the complete data.
+        // If the API provided incomplete version data (missing foil prices/finishes), save it before clearing
+        const initialVersionsMap = new Map<string, any>(
+          initialApiVersions.map((iv: any) => [iv.printing_id, iv])
+        );
+
         if (apiVersionsLackFinishData) {
           data.all_versions = [];
         }
@@ -430,8 +465,9 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
               .select('*, sets(*)')
               .eq('card_id', cardIdForVersions);
 
-            if (versionsData) {
-              const expandedVersions: any[] = [];
+            const expandedVersions: any[] = [];
+
+            if (versionsData && versionsData.length > 0) {
               const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
               const printingIds = versionsData
                 .map((v: any) => typeof v.printing_id === 'string' ? v.printing_id.replace(/_old$/i, '') : v.printing_id)
@@ -464,13 +500,17 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
               }
 
               versionsData.forEach((v: any) => {
+                const apiVer = initialVersionsMap.get(v.printing_id);
+                const resolvedSetName = getSetName(v) || getSetName(apiVer) || data.set || 'Unknown Set';
+                const resolvedSetCode = getSetCode(v) || getSetCode(apiVer) || data.set_code || '??';
+
                 const baseVersion = {
                   printing_id: v.printing_id,
-                  set_name: v.sets?.set_name || 'Unknown Set',
-                  set_code: v.sets?.set_code || '??',
-                  collector_number: v.collector_number,
-                  rarity: v.rarity,
-                  image_url: v.image_url,
+                  set_name: resolvedSetName,
+                  set_code: resolvedSetCode,
+                  collector_number: v.collector_number || apiVer?.collector_number,
+                  rarity: v.rarity || apiVer?.rarity,
+                  image_url: v.image_url || apiVer?.image_url,
                   prices: v.prices
                 };
 
@@ -490,7 +530,7 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                 if (pushesNonFoil) {
                   const isSynthetic = baseIsFoil && (pushesFoil || pushesEtched);
                   const prodDataNormal = productMap.get(`${v.printing_id}-nonfoil`);
-                  let finalPriceNormal = Number(v.avg_market_price_usd || 0);
+                  let finalPriceNormal = Number(v.avg_market_price_usd || apiVer?.price || 0);
                   let originalPriceNormal = finalPriceNormal;
                   let discountNormal = 0;
                   
@@ -519,7 +559,7 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                 if (pushesFoil) {
                   const isSynthetic = !baseIsFoil && (pushesNonFoil || pushesEtched);
                   const prodDataFoil = productMap.get(`${v.printing_id}-foil`);
-                  let finalPriceFoil = Number(v.avg_market_price_foil_usd || 0);
+                  let finalPriceFoil = Number(v.avg_market_price_foil_usd || apiVer?.price || 0);
                   let originalPriceFoil = finalPriceFoil;
                   let discountFoil = 0;
                   
@@ -560,6 +600,23 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
                 }
               });
               data.all_versions = expandedVersions;
+            } else if (initialVersionsMap.size > 0) {
+              // Fallback to initial API versions if Supabase versions query returned empty
+              for (const apiVer of initialVersionsMap.values()) {
+                expandedVersions.push({
+                  printing_id: apiVer.printing_id,
+                  set_name: getSetName(apiVer) || data.set || 'Unknown Set',
+                  set_code: getSetCode(apiVer) || data.set_code || '??',
+                  collector_number: apiVer.collector_number || '',
+                  rarity: apiVer.rarity || '',
+                  price: apiVer.price || 0,
+                  image_url: apiVer.image_url,
+                  stock: apiVer.stock || 0,
+                  finish: apiVer.finish || 'nonfoil',
+                  is_foil: !!apiVer.is_foil
+                });
+              }
+              data.all_versions = expandedVersions;
             }
           }
         }
@@ -568,8 +625,18 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
 
     // 3. Post-processing: Ensure stock, final fallbacks and FIX FINISHES
     if (data) {
+      // Ensure set and set_code on root data object are filled
+      if (!data.set || data.set === 'Unknown Set') data.set = getSetName(data) || 'Unknown Set';
+      if (!data.set_code || data.set_code === '??') data.set_code = getSetCode(data) || '??';
+
       // Ensure all_versions exists
       if (!data.all_versions) data.all_versions = [];
+
+      // Ensure each version in all_versions has resolved set_name and set_code
+      data.all_versions.forEach((v: any) => {
+        if (!v.set_name || v.set_name === 'Unknown Set') v.set_name = getSetName(v) || data.set || 'Unknown Set';
+        if (!v.set_code || v.set_code === '??') v.set_code = getSetCode(v) || data.set_code || '??';
+      });
 
       // DEDUPLICATE AND FIX FINISHES: 
       // If we have two printings for the same set+number and both are 'nonfoil', 

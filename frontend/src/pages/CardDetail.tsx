@@ -179,8 +179,16 @@ export const CardDetail: React.FC = () => {
     const versionGroups = useMemo(() => {
         if (!details?.all_versions) return [];
 
-        const groups = (Array.isArray(details.all_versions) ? details.all_versions : []).reduce((acc: any, v: any) => {
-            const key = `${v.set_code}-${v.collector_number}`;
+        const groups = (Array.isArray(details.all_versions) ? details.all_versions : []).reduce((acc: any, rawV: any) => {
+            const setCode = rawV.set_code || details?.set_code || '??';
+            const setName = rawV.set_name || details?.set || 'Unknown Set';
+            const v = {
+                ...rawV,
+                set_code: setCode,
+                set_name: setName
+            };
+            const key = `${setCode}-${v.collector_number || v.printing_id}`;
+
             if (!acc[key]) {
                 acc[key] = {
                     base: v,
@@ -190,14 +198,17 @@ export const CardDetail: React.FC = () => {
             } else {
                 if (!(v.is_foil || v.finish === 'foil')) acc[key].normal = v;
                 else acc[key].foil = v;
+                if (acc[key].base.set_name === 'Unknown Set' && v.set_name !== 'Unknown Set') {
+                    acc[key].base = v;
+                }
             }
             return acc;
         }, {} as Record<string, any>);
 
         return Object.values(groups).sort((a: any, b: any) => {
-            return a.base.set_name.localeCompare(b.base.set_name);
+            return (a.base?.set_name || '').localeCompare(b.base?.set_name || '');
         });
-    }, [details?.all_versions]);
+    }, [details?.all_versions, details?.set, details?.set_code]);
 
     const activeGroup = useMemo<any>(() => {
         return versionGroups.find((g: any) => g.normal?.printing_id === activePrintingId || g.foil?.printing_id === activePrintingId);
@@ -370,7 +381,7 @@ export const CardDetail: React.FC = () => {
                                                                 {group.base.set_name}
                                                             </div>
                                                             <div className="text-[10px] text-text-low font-bold flex items-center gap-2">
-                                                                <span>#{group.base.collector_number} • {group.base.rarity}</span>
+                                                                 <span>{group.base.collector_number ? `#${group.base.collector_number} • ` : ''}{group.base.rarity}</span>
                                                             </div>
                                                         </div>
                                                     </div>
