@@ -6,9 +6,9 @@
 ---
 
 ## 📅 Última sesión: 2026-09-09
-**Rama activa:** `dev`
-**Último commit conocido:** 634e41ae (fix: resolve Unknown Set issue in edition printings display)
-**En progreso:** Blindaje total del sincronizador de precios y stock de CardKingdom. Eliminado el bug de 800 cartas en `ck_sync.py`, creados índices en `price_history`, implementado Direct Values Engine (16s de ejecución), saneados 4,361 precios de tienda y añadido Canary Health Check en GitHub Actions.
+**Rama activa:** `dev` (sincronizada y desplegada a `dev` y `main`)
+**Último commit conocido:** 85f512ad (fix(sync): bulletproof CardKingdom price sync and add automated canary health check)
+**En progreso:** Sincronizador de precios y stock blindado y desplegado a producción (`main`). Eliminado el bug de 800 cartas en `ck_sync.py`, creados índices en `price_history`, implementado Direct Values Engine (16s de ejecución), saneados 4,361 precios de tienda y añadido Canary Health Check en GitHub Actions.
 
 ## 📁 Zona Caliente (archivos tocados recientemente)
 - `scripts/sync/mtg/ck_sync.py` — Motor Direct Values, circuit breakers anti-cero, sin cuellos de botella.
