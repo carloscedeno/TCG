@@ -1,6 +1,6 @@
 import React from 'react';
-// @ts-expect-error - plugin-pwa type definitions might not be instantly available
 import { useRegisterSW } from 'virtual:pwa-register/react';
+
 import { RefreshCw, X } from 'lucide-react';
 
 export const PwaReloadPrompt: React.FC = () => {
