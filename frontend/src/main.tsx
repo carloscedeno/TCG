@@ -8,7 +8,7 @@ import { registerSW } from 'virtual:pwa-register'
 // Automatically check for new versions every 60s and reload seamlessly
 registerSW({
   immediate: true,
-  onRegisteredSW(_swUrl, r) {
+  onRegisteredSW(_swUrl?: string, r?: ServiceWorkerRegistration) {
     if (r) {
       setInterval(async () => {
         if (!(!r.installing && navigator)) {
