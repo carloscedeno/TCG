@@ -1,20 +1,28 @@
 import sys
 import os
 from pathlib import Path
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone
 from functools import wraps
 import time
+from psycopg2.extras import execute_values
 
-# Add common directory to path
+# Add common and project directories to path
 current_dir = Path(__file__).parent
 sys.path.append(str(current_dir.parent))
+PROJECT_ROOT = current_dir.parent.parent.parent
+sys.path.append(str(PROJECT_ROOT))
+sys.path.append(str(PROJECT_ROOT / "data" / "scrapers" / "shared"))
 
 from common.db import get_db_connection, get_supabase, setup_logging
 from common.odoo_client import OdooClient
+from scrapers.cardkingdom_api import CardKingdomAPI
 
 # Initialize
 logger = setup_logging("MTG_CK")
 supabase = get_supabase()
+
+# Circuit Breaker Constants
+MIN_EXPECTED_CK_CARDS = 50000  # Abort if CardKingdom returns fewer than 50k cards
 
 def retry(max_attempts=3, delay=1):
     def decorator(func):
@@ -36,316 +44,289 @@ def retry(max_attempts=3, delay=1):
     return decorator
 
 @retry(max_attempts=3)
-def update_denormalized_prices(printing_ids=None):
-    """Update denormalized pricing columns in card_printings via direct SQL."""
-    logger.info("--- Updating Denormalized Pricing Columns ---")
-    
-    try:
-        source_res = supabase.table('sources').select('source_id').eq('source_code', 'CARDKINGDOM').maybe_single().execute()
-        if not source_res.data:
-            logger.warning("Source CARDKINGDOM not found, skipping denormalized update.")
-            return
-        ck_source_id = source_res.data['source_id']
-        
-        condition_res = supabase.table('conditions').select('condition_id').eq('condition_code', 'NM').maybe_single().execute()
-        if not condition_res.data:
-            logger.warning("Condition NM not found, skipping denormalized update.")
-            return
-        nm_condition_id = condition_res.data['condition_id']
-    except Exception as e:
-        logger.error(f"Failed to fetch metadata IDs: {e}")
+def update_denormalized_prices(conn, price_entries):
+    """Update denormalized pricing columns directly from the evaluated price entries in milliseconds."""
+    logger.info("--- Updating Denormalized Pricing Columns (Direct Values Engine) ---")
+    if not price_entries:
         return
 
-    try:
-        conn = get_db_connection()
-        with conn.cursor() as cur:
-            logger.info(f"Updating denormalized columns using source_id {ck_source_id}...")
-            
-            if printing_ids and len(printing_ids) <= 1000:
-                where_clause = "AND ph.printing_id IN %s"
-                params_non_foil = (ck_source_id, nm_condition_id, tuple(printing_ids))
-                params_foil = (ck_source_id, nm_condition_id, tuple(printing_ids))
-                prod_where_clause = "AND p.printing_id IN %s"
-                prod_params = (tuple(printing_ids),)
-            else:
-                logger.info("Updating all cards (or >1000 changed), omitting IN clause for performance.")
-                where_clause = ""
-                params_non_foil = (ck_source_id, nm_condition_id)
-                params_foil = (ck_source_id, nm_condition_id)
-                prod_where_clause = ""
-                prod_params = ()
+    non_foil_updates = [(price, pid) for pid, _, _, price, is_foil, _, _ in price_entries if not is_foil]
+    foil_updates = [(price, pid) for pid, _, _, price, is_foil, _, _ in price_entries if is_foil]
+    changed_pids = list(set([pid for pid, _, _, _, _, _, _ in price_entries]))
 
-            update_non_foil_sql = f"""
-            WITH latest_non_foil AS (
-                SELECT DISTINCT ON (ph.printing_id) ph.printing_id, ph.price_usd
-                FROM public.price_history ph
-                WHERE ph.source_id = %s
-                AND ph.condition_id = %s -- NM
-                AND ph.is_foil = FALSE
-                {where_clause}
-                ORDER BY ph.printing_id, ph.timestamp DESC
-            )
-            UPDATE public.card_printings cp
-            SET 
-                avg_market_price_usd = lnf.price_usd,
-                non_foil_price = lnf.price_usd,
-                updated_at = NOW()
-            FROM latest_non_foil lnf
-            WHERE cp.printing_id = lnf.printing_id;
-            """
-            cur.execute(update_non_foil_sql, params_non_foil)
-            logger.info(f"Non-foil prices updated ({cur.rowcount} cards affected).")
+    with conn.cursor() as cur:
+        # Update non-foil prices directly in card_printings
+        if non_foil_updates:
+            execute_values(cur, """
+                UPDATE public.card_printings AS cp
+                SET 
+                    avg_market_price_usd = v.price,
+                    non_foil_price = v.price,
+                    updated_at = NOW()
+                FROM (VALUES %s) AS v(price, pid)
+                WHERE cp.printing_id = v.pid::uuid
+            """, non_foil_updates)
+            logger.info(f"Non-foil prices updated directly ({len(non_foil_updates)} printings).")
 
-            update_foil_sql = f"""
-            WITH latest_foil AS (
-                SELECT DISTINCT ON (ph.printing_id) ph.printing_id, ph.price_usd
-                FROM public.price_history ph
-                WHERE ph.source_id = %s
-                AND ph.condition_id = %s -- NM
-                AND ph.is_foil = TRUE
-                {where_clause}
-                ORDER BY ph.printing_id, ph.timestamp DESC
-            )
-            UPDATE public.card_printings cp
-            SET 
-                avg_market_price_foil_usd = lf.price_usd,
-                foil_price = lf.price_usd,
-                updated_at = NOW()
-            FROM latest_foil lf
-            WHERE cp.printing_id = lf.printing_id;
-            """
-            cur.execute(update_foil_sql, params_foil)
-            logger.info(f"Foil prices updated ({cur.rowcount} cards affected).")
-            conn.commit()
-            
-            # Sync product prices to match the freshly updated card_printings
-            logger.info("Syncing product prices to match CardKingdom...")
-                
-            prod_update_sql = f"""
-            UPDATE public.products p
-            SET 
-              price_usd = COALESCE(
-                  CASE WHEN LOWER(COALESCE(p.finish, 'nonfoil')) IN ('foil', 'etched') THEN cp.avg_market_price_foil_usd 
-                       ELSE cp.avg_market_price_usd 
-                  END, 
-                  p.price_usd, p.price, 0),
-              price = COALESCE(
-                  CASE WHEN LOWER(COALESCE(p.finish, 'nonfoil')) IN ('foil', 'etched') THEN cp.avg_market_price_foil_usd 
-                       ELSE cp.avg_market_price_usd 
-                  END, 
-                  p.price, p.price_usd, 0),
-              updated_at = NOW()
-            FROM public.card_printings cp
-            WHERE p.printing_id = cp.printing_id {prod_where_clause}
-              AND (
-                 COALESCE(p.price_usd, 0) != COALESCE(CASE WHEN LOWER(COALESCE(p.finish, 'nonfoil')) IN ('foil', 'etched') THEN cp.avg_market_price_foil_usd ELSE cp.avg_market_price_usd END, p.price_usd, 0)
-                 OR
-                 COALESCE(p.price, 0) != COALESCE(CASE WHEN LOWER(COALESCE(p.finish, 'nonfoil')) IN ('foil', 'etched') THEN cp.avg_market_price_foil_usd ELSE cp.avg_market_price_usd END, p.price, 0)
-              );
-            """
-            cur.execute(prod_update_sql, prod_params)
-            conn.commit()
-            logger.info(f"Product prices synced successfully ({cur.rowcount} products affected).")
-            
-        conn.close()
-    except Exception as e:
-        logger.error(f"Failed to update denormalized columns (SQL Error): {e}")
-        raise
+        # Update foil prices directly in card_printings
+        if foil_updates:
+            execute_values(cur, """
+                UPDATE public.card_printings AS cp
+                SET 
+                    avg_market_price_foil_usd = v.price,
+                    foil_price = v.price,
+                    updated_at = NOW()
+                FROM (VALUES %s) AS v(price, pid)
+                WHERE cp.printing_id = v.pid::uuid
+            """, foil_updates)
+            logger.info(f"Foil prices updated directly ({len(foil_updates)} printings).")
+
+        # Update store products for affected printing IDs
+        if changed_pids:
+            logger.info(f"Syncing prices to products table for {len(changed_pids)} printings...")
+            cur.execute("""
+                UPDATE public.products p
+                SET 
+                    price_usd = CASE 
+                        WHEN LOWER(COALESCE(p.finish, 'nonfoil')) IN ('foil', 'etched') THEN COALESCE(cp.avg_market_price_foil_usd, p.price_usd)
+                        ELSE COALESCE(cp.avg_market_price_usd, p.price_usd)
+                    END,
+                    price = CASE 
+                        WHEN LOWER(COALESCE(p.finish, 'nonfoil')) IN ('foil', 'etched') THEN COALESCE(cp.avg_market_price_foil_usd, p.price)
+                        ELSE COALESCE(cp.avg_market_price_usd, p.price)
+                    END,
+                    updated_at = NOW()
+                FROM public.card_printings cp
+                WHERE p.printing_id = cp.printing_id
+                AND p.printing_id IN %s
+                AND (
+                    COALESCE(p.price, 0) != COALESCE(CASE WHEN LOWER(COALESCE(p.finish, 'nonfoil')) IN ('foil', 'etched') THEN cp.avg_market_price_foil_usd ELSE cp.avg_market_price_usd END, p.price, 0)
+                    OR
+                    COALESCE(p.price_usd, 0) != COALESCE(CASE WHEN LOWER(COALESCE(p.finish, 'nonfoil')) IN ('foil', 'etched') THEN cp.avg_market_price_foil_usd ELSE cp.avg_market_price_usd END, p.price_usd, 0)
+                );
+            """, (tuple(changed_pids),))
+            logger.info(f"Store prices synced successfully ({cur.rowcount} products affected).")
+
+        conn.commit()
 
 def run_ck_sync():
-    logger.info("--- Starting Isolated MTG CardKingdom Sync ---")
+    logger.info("==================================================")
+    logger.info("--- Starting Bulletproof MTG CardKingdom Sync ---")
+    logger.info("==================================================")
     
     start_time = datetime.now(timezone.utc)
+    conn = None
     job_id = None
-    try:
-        job_res = supabase.table('price_update_jobs').insert({
-            "status": "running",
-            "started_at": start_time.isoformat(),
-            "source": "CardKingdom Sync",
-            "items_updated": 0
-        }).execute()
-        if job_res.data:
-            job_id = job_res.data[0]['id']
-    except Exception as e:
-        logger.error(f"Failed to create job record: {e}")
-        
-    # Fetch source ID dynamically
-    try:
-        source_res = supabase.table('sources').select('source_id').eq('source_code', 'CARDKINGDOM').maybe_single().execute()
-        if not source_res.data:
-            logger.error("Source CARDKINGDOM not found in DB")
-            return
-        ck_source_id = source_res.data['source_id']
-        
-        condition_res = supabase.table('conditions').select('condition_id').eq('condition_code', 'NM').maybe_single().execute()
-        nm_condition_id = condition_res.data['condition_id'] if condition_res.data else 16
-    except Exception as e:
-        logger.error(f"Failed to fetch metadata IDs: {e}")
-        return
+    total_inserted = 0
     
     try:
-        # Import scraper from existing project structure
-        PROJECT_ROOT = current_dir.parent.parent.parent
-        sys.path.append(str(PROJECT_ROOT / "data" / "scrapers" / "shared"))
-        from scrapers.cardkingdom_api import CardKingdomAPI
-        ck_client = CardKingdomAPI()
-        
-        logger.info("Downloading full pricelist from CardKingdom...")
-        pricelist = ck_client.fetch_full_pricelist()
-        
-        if not pricelist:
-            logger.error("Failed to download pricelist from CardKingdom API")
-            return
-        
-        logger.info(f"Pricelist downloaded: {len(pricelist)} items.")
-        
-        # Mapping logic (simplified for brevity, keeping same logic as original)
-        pricelist_map = {}
-        for card in pricelist:
-            scid = card.get('scryfall_id')
-            if scid:
-                if scid not in pricelist_map:
-                    pricelist_map[scid] = []
-                pricelist_map[scid].append(card)
-        
-        batch_size = 1000
-        last_id = ""
-        total_updated = 0
-        
-        while True:
-            logger.info(f"Processing batch after ID: {last_id if last_id else 'start'}...")
-            query = supabase.table('card_printings').select('printing_id, scryfall_id').not_.is_('scryfall_id', 'null').order('printing_id').limit(batch_size)
-            if last_id:
-                query = query.gt('printing_id', last_id)
+        conn = get_db_connection()
+        if not conn:
+            raise ConnectionError("Failed to obtain database connection.")
+
+        with conn.cursor() as cur:
+            # 0. Job tracking initialization
+            try:
+                cur.execute(
+                    "INSERT INTO public.price_update_jobs (status, started_at, source, items_updated) "
+                    "VALUES (%s, %s, %s, %s) RETURNING id;",
+                    ('running', start_time, 'CardKingdom Sync', 0)
+                )
+                job_id = cur.fetchone()[0]
+                conn.commit()
+            except Exception as je:
+                logger.warning(f"Failed to create job tracking record in DB: {je}")
+
+            # 1. Fetch metadata IDs
+            cur.execute("SELECT source_id FROM sources WHERE source_code = 'CARDKINGDOM'")
+            row = cur.fetchone()
+            if not row:
+                raise ValueError("Source CARDKINGDOM not found in DB.")
+            ck_source_id = row[0]
+
+            cur.execute("SELECT condition_id FROM conditions WHERE condition_code = 'NM'")
+            row = cur.fetchone()
+            nm_condition_id = row[0] if row else 16
+
+            # 2. Download CK Pricelist
+            ck_client = CardKingdomAPI()
+            logger.info("Downloading full pricelist from CardKingdom...")
+            pricelist = ck_client.fetch_full_pricelist()
             
-            db_cards_query = query.execute()
-            db_cards = db_cards_query.data
+            # Circuit Breaker 1: Threshold check
+            if not pricelist or len(pricelist) < MIN_EXPECTED_CK_CARDS:
+                raise ValueError(
+                    f"CIRCUIT BREAKER TRIGGERED: Pricelist contains {len(pricelist) if pricelist else 0} items "
+                    f"(expected >= {MIN_EXPECTED_CK_CARDS}). Aborting to protect existing catalog prices."
+                )
             
-            if not db_cards:
-                break
-            
+            logger.info(f"Pricelist downloaded: {len(pricelist)} items.")
+
+            # 3. Load DB mapping & current reference prices in a single efficient query
+            logger.info("Fetching mapping & reference prices from DB...")
+            cur.execute(
+                "SELECT printing_id, scryfall_id, avg_market_price_usd, avg_market_price_foil_usd "
+                "FROM card_printings WHERE scryfall_id IS NOT NULL"
+            )
+            rows = cur.fetchall()
+            id_map = {}
+            price_map = {}
+            for pid, scid, p_nf, p_f in rows:
+                scid_str = str(scid)
+                id_map[scid_str] = pid
+                price_map[pid] = {
+                    False: float(p_nf) if p_nf is not None else None,
+                    True: float(p_f) if p_f is not None else None
+                }
+
+            # 4. In-Memory Matching & Diffing (Filter only genuinely changed prices)
             price_entries = []
-            
-            for db_card in db_cards:
-                scryfall_id = db_card['scryfall_id']
-                matching_cards = pricelist_map.get(scryfall_id, [])
-                
-                for card in matching_cards:
-                    is_foil = card.get('is_foil') == 'true' or card.get('is_foil') is True
-                    price = float(card.get('price_retail', 0))
-                    
-                    if price > 0:
-                        price_entries.append({
-                            "printing_id": db_card['printing_id'],
-                            "source_id": ck_source_id,
-                            "condition_id": nm_condition_id,
-                            "price_usd": price,
-                            "is_foil": is_foil,
-                            "price_type": "retail",
-                            "timestamp": datetime.now(timezone.utc).isoformat()
-                        })
-            
+            changed_printing_ids = set()
+            now = datetime.now(timezone.utc)
+            matched_items = 0
+            out_of_stock_count = 0
+
+            for item in pricelist:
+                scid = str(item.get('scryfall_id') or '')
+                if scid in id_map:
+                    pid = id_map[scid]
+                    # Robust price extraction: check NM price, fallback to retail
+                    price_val = item.get('condition_values', {}).get('nm_price') or item.get('price_retail') or 0
+                    qty_val = item.get('qty_retail', 0)
+                    if not qty_val:
+                        out_of_stock_count += 1
+
+                    if price_val:
+                        try:
+                            price = float(price_val)
+                            # Circuit Breaker 2: Price must be strictly positive
+                            if price > 0:
+                                raw_foil = item.get('is_foil')
+                                is_foil = str(raw_foil).lower() == 'true' or raw_foil is True
+                                matched_items += 1
+
+                                last_price = price_map.get(pid, {}).get(is_foil)
+                                # Append only if price differs by more than 0.1 cent or is new
+                                if last_price is None or abs(price - last_price) > 0.001:
+                                    price_entries.append((
+                                        pid, ck_source_id, nm_condition_id,
+                                        price, is_foil, now, 'market'
+                                    ))
+                                    changed_printing_ids.add(pid)
+                        except (ValueError, TypeError):
+                            continue
+
+            logger.info(
+                f"Matched {matched_items} card prices ({out_of_stock_count} out of stock at CK). "
+                f"Found {len(price_entries)} price changes across {len(changed_printing_ids)} cards."
+            )
+
+            # 5. Fast Batch Insert of changed prices into price_history
+            batch_size = 5000
             if price_entries:
-                # Insert price history
+                logger.info(f"Inserting {len(price_entries)} changed price entries in batches of {batch_size}...")
+                insert_sql = """
+                INSERT INTO public.price_history (printing_id, source_id, condition_id, price_usd, is_foil, timestamp, price_type)
+                VALUES %s
+                """
+                for i in range(0, len(price_entries), batch_size):
+                    chunk = price_entries[i:i + batch_size]
+                    execute_values(cur, insert_sql, chunk)
+                    total_inserted += len(chunk)
+                    logger.info(f"Progress: {min(i + batch_size, len(price_entries))}/{len(price_entries)} inserted.")
+                    conn.commit()
+
+            # 6. Update Denormalized Prices in card_printings & products
+            if total_inserted > 0:
+                update_denormalized_prices(conn, price_entries)
+            else:
+                logger.info("No prices changed. Skipping denormalization update.")
+
+            # 7. Refresh Materialized Views with transaction rollback safety
+            logger.info("Refreshing Materialized Views...")
+            try:
+                cur.execute("REFRESH MATERIALIZED VIEW CONCURRENTLY public.mv_unique_cards")
+                conn.commit()
+                logger.info("Materialized view mv_unique_cards refreshed concurrently.")
+            except Exception as ve:
+                conn.rollback()
                 try:
-                    supabase.table('price_history').insert(price_entries).execute()
-                    total_updated += len(price_entries)
-                except Exception as ie:
-                    logger.error(f"Failed to insert price history batch: {ie}")
-            
-            if len(db_cards) < batch_size:
-                break
-            
-            last_id = db_cards[-1]['printing_id']
-        
-        # Failover / Self-Healing: Get ALL printing_ids modified in the last 48 hours
-        logger.info("Running failover recovery: fetching recently updated prices from database...")
-        
-        forty_eight_hours_ago = (datetime.utcnow() - timedelta(hours=48)).isoformat()
+                    cur.execute("REFRESH MATERIALIZED VIEW public.mv_unique_cards")
+                    conn.commit()
+                    logger.info("Materialized view mv_unique_cards refreshed.")
+                except Exception as ve2:
+                    conn.rollback()
+                    logger.warning(f"Materialized view refresh skipped: {ve2}")
+
+            # 8. Check updated products for Odoo Sync via direct SQL
+            modified_products = []
+            try:
+                cur.execute(
+                    "SELECT id, price FROM public.products "
+                    "WHERE updated_at >= %s AND price > 0",
+                    (start_time,)
+                )
+                modified_products = cur.fetchall()
+            except Exception as pe:
+                logger.warning(f"Failed to query modified products for Odoo: {pe}")
+
+        conn.commit()
+
+        # 9. Odoo Sync Integration for products modified during this run
         try:
-            res = get_supabase().table('price_history') \
-                .select('printing_id') \
-                .eq('source_id', ck_source_id) \
-                .gte('timestamp', forty_eight_hours_ago) \
-                .execute()
-            recent_pids = list(set([r['printing_id'] for r in res.data]))
-        except Exception as e:
-            logger.error(f"Failover recovery query failed via REST: {e}")
-            recent_pids = []
-        
-        if recent_pids:
-            chunk_size = 900
-            logger.info(f"Self-Healing found {len(recent_pids)} unique cards with recent price updates.")
-            for i in range(0, len(recent_pids), chunk_size):
-                chunk = recent_pids[i:i + chunk_size]
-                logger.info(f"Updating denormalized prices for chunk {i} to {i + len(chunk)} of {len(recent_pids)}...")
-                update_denormalized_prices(chunk)
-            
-        logger.info(f"=== MTG SYNC COMPLETE: {total_updated} prices updated ===")
-        
-        # --- Odoo Sync Integration ---
-        try:
-            logger.info("Syncing updated prices to Odoo...")
+            logger.info("--- Checking Products for Odoo Sync ---")
             odoo_client = OdooClient()
             if odoo_client.uid:
-                # Fetch all products updated in this run
-                start_iso = start_time.isoformat()
-                prod_res = supabase.table('products') \
-                    .select('id, price') \
-                    .gte('updated_at', start_iso) \
-                    .gt('price', 0) \
-                    .execute()
-                
-                if prod_res.data:
-                    logger.info(f"Found {len(prod_res.data)} products to sync to Odoo.")
-                    
-                    # Prepare batches of 500 for Odoo
-                    odoo_updates = []
-                    for p in prod_res.data:
-                        odoo_updates.append({
-                            'default_code': p['id'],
-                            'price': p['price']
-                        })
-                    
-                    # Process in chunks of 500
+                if modified_products:
+                    logger.info(f"Found {len(modified_products)} products to sync to Odoo.")
+                    odoo_updates = [{'default_code': str(p[0]), 'price': float(p[1])} for p in modified_products]
                     chunk_size = 500
                     for i in range(0, len(odoo_updates), chunk_size):
                         chunk = odoo_updates[i:i + chunk_size]
                         odoo_client.update_product_prices(chunk)
                 else:
-                    logger.info("No product prices to sync to Odoo.")
+                    logger.info("No product prices changed; nothing to sync to Odoo.")
+            else:
+                logger.info("Odoo credentials not configured or authentication inactive. Skipping Odoo sync.")
         except Exception as oe:
-            logger.error(f"Failed during Odoo Sync phase: {oe}")
-        # -----------------------------
+            logger.error(f"Error during Odoo sync phase: {oe}", exc_info=True)
+
+        # 10. Update price_update_jobs record on success via direct SQL
+        end_time = datetime.now(timezone.utc)
+        duration_ms = int((end_time - start_time).total_seconds() * 1000)
+        logger.info(f"=== MTG CARDKINGDOM SYNC COMPLETED in {duration_ms / 1000:.2f}s: {total_inserted} prices updated ===")
         
         if job_id:
-            end_time = datetime.now(timezone.utc)
-            duration_ms = int((end_time - start_time).total_seconds() * 1000)
             try:
-                supabase.table('price_update_jobs').update({
-                    "status": "completed",
-                    "completed_at": end_time.isoformat(),
-                    "duration_ms": duration_ms,
-                    "items_updated": total_updated
-                }).eq('id', job_id).execute()
-            except Exception as e:
-                logger.error(f"Failed to update job record: {e}")
-        
+                with conn.cursor() as cur:
+                    cur.execute(
+                        "UPDATE public.price_update_jobs SET status = 'completed', "
+                        "completed_at = %s, duration_ms = %s, items_updated = %s WHERE id = %s",
+                        (end_time, duration_ms, total_inserted, job_id)
+                    )
+                    conn.commit()
+            except Exception as je:
+                logger.warning(f"Failed to mark job as completed in DB: {je}")
+
     except Exception as e:
-        logger.critical(f"Critical error during sync: {e}", exc_info=True)
-        if job_id:
-            end_time = datetime.now(timezone.utc)
-            duration_ms = int((end_time - start_time).total_seconds() * 1000)
+        logger.critical(f"Critical error during CardKingdom sync: {e}", exc_info=True)
+        if job_id and conn and not conn.closed:
             try:
-                supabase.table('price_update_jobs').update({
-                    "status": "failed",
-                    "completed_at": end_time.isoformat(),
-                    "duration_ms": duration_ms,
-                    "error_log": str(e),
-                    "items_updated": locals().get('total_updated', 0)
-                }).eq('id', job_id).execute()
-            except Exception as ue:
-                logger.error(f"Failed to update job record on error: {ue}")
+                end_time = datetime.now(timezone.utc)
+                duration_ms = int((end_time - start_time).total_seconds() * 1000)
+                with conn.cursor() as cur:
+                    cur.execute(
+                        "UPDATE public.price_update_jobs SET status = 'failed', "
+                        "completed_at = %s, duration_ms = %s, error_log = %s, items_updated = %s WHERE id = %s",
+                        (end_time, duration_ms, str(e), total_inserted, job_id)
+                    )
+                    conn.commit()
+            except Exception as je:
+                logger.error(f"Failed to record job failure in DB: {je}")
+        raise
+    finally:
+        if conn and not conn.closed:
+            conn.close()
 
 if __name__ == "__main__":
     run_ck_sync()

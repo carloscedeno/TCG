@@ -13,23 +13,28 @@ if env_path.exists():
     load_dotenv(env_path, override=False)
 
 def get_db_connection():
-    """Get a direct psycopg2 connection to the database."""
-    # Priority: 
-    # 1. DATABASE_URL (explicit)
-    # 2. DATABASE_URL_PROD (if specified)
-    # 3. DATABASE_URL_DEV (if specified)
-    db_url = os.getenv('DATABASE_URL') or os.getenv('DATABASE_URL_PROD') or os.getenv('DATABASE_URL_DEV')
+    """Get a direct psycopg2 connection to the database with resilient fallback."""
+    urls = [
+        os.getenv('DATABASE_URL'),
+        os.getenv('DATABASE_URL_PROD'),
+        os.getenv('PROD_DATABASE_URL'),
+        os.getenv('DATABASE_URL_DEV'),
+    ]
+    db_urls = [u.strip().replace('"', '').replace("'", "") for u in urls if u]
     
-    if not db_url:
-        raise ValueError("No database connection string found (DATABASE_URL, DATABASE_URL_PROD, or DATABASE_URL_DEV).")
+    if not db_urls:
+        raise ValueError("No database connection string found in environment.")
     
-    db_url = db_url.strip().replace('"', '').replace("'", "")
-    
-    # Clean URL if it has pooler params that might cause issues with psycopg2
-    if db_url and "?" in db_url:
-        db_url = db_url.split("?")[0]
-        
-    return psycopg2.connect(db_url)
+    last_error = None
+    for url in db_urls:
+        try:
+            clean_url = url.split("?")[0] if "?" in url else url
+            return psycopg2.connect(clean_url, connect_timeout=10)
+        except Exception as e:
+            last_error = e
+            continue
+            
+    raise last_error
 
 def get_supabase():
     """Get the Supabase admin client."""
