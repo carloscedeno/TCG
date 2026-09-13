@@ -5,19 +5,18 @@
 
 ---
 
-## 📅 Última sesión: 2026-09-09
-**Rama activa:** `dev` (sincronizada y desplegada a `dev` y `main`)
-**Último commit conocido:** 85f512ad (fix(sync): bulletproof CardKingdom price sync and add automated canary health check)
-**En progreso:** Sincronizador de precios y stock blindado y desplegado a producción (`main`). Eliminado el bug de 800 cartas en `ck_sync.py`, creados índices en `price_history`, implementado Direct Values Engine (16s de ejecución), saneados 4,361 precios de tienda y añadido Canary Health Check en GitHub Actions.
+## 📅 Última sesión: 2026-09-13
+**Rama activa:** `dev` (sincronizada con `main`)
+**Último commit conocido:** e734a2d0
+**En progreso:** Resolución de alerta en GitHub Actions (#88). La sincronización funcionó correctamente (3,956 ítems actualizados en 68s), pero el Canary Check detectó 3 productos nuevos agregados manualmente sin la columna `price_usd`. Se aplicó trigger de base de datos `trg_sync_product_prices` para mantener sincronizados `price` y `price_usd` permanentemente, y paso de auto-sanación en `ck_sync.py`.
 
 ## 📁 Zona Caliente (archivos tocados recientemente)
-- `scripts/sync/mtg/ck_sync.py` — Motor Direct Values, circuit breakers anti-cero, sin cuellos de botella.
-- `scripts/sync/verify_sync_health.py` — Auditoría automática Canary Check (exit code 0).
-- `.github/workflows/ck-sync.yml` — Flujo de GitHub Actions con canary audit automático.
-- `scripts/sync_cardkingdom_api.py` — Delegación unificada a `ck_sync.py`.
+- `scripts/sync/mtg/ck_sync.py` — Auto-sanación integrada de consistencia `price`/`price_usd`.
+- `supabase/migrations/20260913094500_sync_product_prices_trigger.sql` — Trigger Postgres en `products`.
+- `scripts/sync/verify_sync_health.py` — Canary Check verificado (100% pasando).
 
 ## ⏭️ Próxima acción recomendada
-Realizar commit y push de las mejoras a la rama `dev` para que el flujo de GitHub Actions quede actualizado.
+Desplegar commit a `dev` y `main` y re-ejecutar el workflow de GitHub Actions.
 
 ## 🚫 Restricciones activas
 - NO usar `npm` — solo `pnpm`

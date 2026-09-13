@@ -258,7 +258,23 @@ def run_ck_sync():
                     conn.rollback()
                     logger.warning(f"Materialized view refresh skipped: {ve2}")
 
-            # 8. Check updated products for Odoo Sync via direct SQL
+            # 8. Self-heal price/price_usd consistency on store products
+            try:
+                cur.execute("""
+                    UPDATE public.products 
+                    SET price_usd = price 
+                    WHERE (price_usd IS NULL OR price_usd <= 0) AND price > 0;
+
+                    UPDATE public.products 
+                    SET price = price_usd 
+                    WHERE (price IS NULL OR price <= 0) AND price_usd > 0;
+                """)
+                if cur.rowcount > 0:
+                    logger.info(f"Self-healed {cur.rowcount} products with missing price/price_usd.")
+            except Exception as se:
+                logger.warning(f"Self-healing query skipped: {se}")
+
+            # 9. Check updated products for Odoo Sync via direct SQL
             modified_products = []
             try:
                 cur.execute(
