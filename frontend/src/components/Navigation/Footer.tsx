@@ -10,7 +10,7 @@ export const Footer: React.FC = () => {
                         <img src="/branding/Logo.png" alt="Logo Geekorium" className="w-32 object-contain group-hover:scale-105 transition-transform" />
                     </Link>
                     <div className="flex flex-col gap-3 text-sm font-medium text-text-low">
-                        <a href="https://wa.me/584128042832" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">WhatsApp Ventas: +58 412-8042832</a>
+                        <a href="https://wa.me/584242507802" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">WhatsApp Ventas: +58 424-2507802</a>
                         <a href="https://wa.me/584242507802" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">WhatsApp Singles: +58 424-2507802</a>
                         <a href="https://wa.me/584149124523" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors text-amber-500/80 hover:text-amber-400">WhatsApp Soporte Técnico: +58 414-9124523</a>
                     </div>

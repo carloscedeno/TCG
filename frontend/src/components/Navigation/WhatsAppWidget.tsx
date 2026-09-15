@@ -7,7 +7,7 @@ export const WhatsAppWidget: React.FC = () => {
     const contactChannels = [
         {
             name: 'Atención Principal',
-            number: '584128042832',
+            number: '584242507802',
             description: 'Consultas generales y envíos',
             color: 'bg-white'
         },
