@@ -30,7 +30,7 @@ const HelpPage: React.FC = () => {
                     <h3 className="text-3xl font-web-titles font-black text-white uppercase tracking-tighter mb-6">¿Aún tienes dudas?</h3>
                     <div className="flex justify-center gap-4">
                         <a href="https://wa.me/584242507802" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-6 py-3 bg-white hover:bg-[#009297] text-black font-bold rounded-full transition-colors shadow-lg">
-                            <Phone size={18} /> Contactar Ventas
+                            <Phone size={18} /> Contactar Atención Principal
                         </a>
                     </div>
                 </div>
