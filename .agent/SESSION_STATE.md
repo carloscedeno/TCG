@@ -5,18 +5,18 @@
 
 ---
 
-## 📅 Última sesión: 2026-09-13
-**Rama activa:** `dev` (sincronizada con `main`)
-**Último commit conocido:** e734a2d0
-**En progreso:** Resolución de alerta en GitHub Actions (#88). La sincronización funcionó correctamente (3,956 ítems actualizados en 68s), pero el Canary Check detectó 3 productos nuevos agregados manualmente sin la columna `price_usd`. Se aplicó trigger de base de datos `trg_sync_product_prices` para mantener sincronizados `price` y `price_usd` permanentemente, y paso de auto-sanación en `ck_sync.py`.
+## 📅 Última sesión: 2026-10-26
+**Rama activa:** `dev`
+**Último commit conocido:** 7f001361
+**En progreso:** Endurecimiento de Seguridad (Security Hardening). Neutralizadas RPCs críticas `run_migration_sql` y `make_admin_by_email` en DEV y PROD. RLS forzado en `user_collections`. Parcheadas vulnerabilidades críticas en frontend (`handlebars@4.7.10`, `vite@7.3.7`). Desindexado `.env.prod` de Git y reforzado `.gitignore`.
 
 ## 📁 Zona Caliente (archivos tocados recientemente)
-- `scripts/sync/mtg/ck_sync.py` — Auto-sanación integrada de consistencia `price`/`price_usd`.
-- `supabase/migrations/20260913094500_sync_product_prices_trigger.sql` — Trigger Postgres en `products`.
-- `scripts/sync/verify_sync_health.py` — Canary Check verificado (100% pasando).
+- `frontend/package.json` & `frontend/pnpm-lock.yaml` — Parches de dependencias críticas y overrides.
+- `supabase/migrations/20261026013000_security_hardening_drop_dangerous_rpcs.sql` — Migración de neutralización RPC.
+- `.gitignore` — Protección estricta de `.env.*`.
 
 ## ⏭️ Próxima acción recomendada
-Desplegar commit a `dev` y `main` y re-ejecutar el workflow de GitHub Actions.
+Rotar la contraseña de base de datos de DEV en el dashboard de Supabase y continuar con el roadmap.
 
 ## 🚫 Restricciones activas
 - NO usar `npm` — solo `pnpm`
