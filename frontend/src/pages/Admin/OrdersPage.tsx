@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'; // v2.2.1 support for accessories
 import { supabase } from '../../utils/supabaseClient';
 import { useAuth } from '../../context/AuthContext';
-import { Package, ChevronDown, X, User, Calendar, AlertCircle, FileDown, Trash2, Loader2, Check } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Package, ChevronDown, X, User, Calendar, AlertCircle, FileDown, Trash2, Loader2, Check, Search } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface OrderItem {
     id: string;
@@ -13,7 +13,8 @@ interface OrderItem {
         name: string;
         image_url: string;
         set_code: string;
-        collector_number: string;
+        collector_number?: string;
+        printing_id?: string;
     } | null;
     accessory: {
         id: string;
@@ -167,6 +168,8 @@ function generateOrderReceiptHTML(order: Order) {
 }
 
 const OrdersPage = () => {
+    const navigate = useNavigate();
+    const isDev = import.meta.env.DEV || (typeof window !== 'undefined' && (window.location.hostname.includes('dev') || window.location.hostname.includes('localhost')));
     const { isAdmin } = useAuth();
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
@@ -210,7 +213,8 @@ const OrdersPage = () => {
                             id,
                             name,
                             image_url,
-                            set_code
+                            set_code,
+                            printing_id
                         ),
                         finish,
                         is_on_demand
@@ -569,17 +573,49 @@ const OrdersPage = () => {
                                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                                     {order.order_items.map((item) => (
                                                         <div key={item.id} className="flex gap-4 p-4 bg-white/5 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
-                                                            {(item.product?.image_url || item.accessory?.image_url) ? (
-                                                                <img
-                                                                    src={item.product?.image_url || item.accessory?.image_url}
-                                                                    alt={item.product?.name || item.accessory?.name}
-                                                                    className="w-16 h-24 object-cover rounded-lg shadow-lg"
-                                                                />
-                                                            ) : (
-                                                                <div className="w-16 h-24 bg-neutral-800 rounded-lg flex items-center justify-center text-neutral-600">
-                                                                    <Package size={20} />
-                                                                </div>
-                                                            )}
+                                                            <div className="relative group shrink-0">
+                                                                {(item.product?.image_url || item.accessory?.image_url) ? (
+                                                                    <img
+                                                                        src={item.product?.image_url || item.accessory?.image_url}
+                                                                        alt={item.product?.name || item.accessory?.name}
+                                                                        className="w-16 h-24 object-cover rounded-lg shadow-lg"
+                                                                    />
+                                                                ) : (
+                                                                    <div className="w-16 h-24 bg-neutral-800 rounded-lg flex items-center justify-center text-neutral-600">
+                                                                        <Package size={20} />
+                                                                    </div>
+                                                                )}
+                                                                {isDev && (item.product || item.accessory) && (
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            if (item.product) {
+                                                                                const cardId = item.product.printing_id || item.product.id;
+                                                                                navigate(`/card/${cardId}`, {
+                                                                                    state: {
+                                                                                        initialImage: item.product.image_url,
+                                                                                        initialCard: item.product
+                                                                                    }
+                                                                                });
+                                                                            } else if (item.accessory) {
+                                                                                navigate(`/product/${item.accessory.id}`, {
+                                                                                    state: {
+                                                                                        initialImage: item.accessory.image_url,
+                                                                                        initialCard: item.accessory
+                                                                                    }
+                                                                                });
+                                                                            }
+                                                                        }}
+                                                                        className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center rounded-lg transition-all text-[#00D1FF] hover:scale-105"
+                                                                        title="Ver detalle del hechizo (DEV)"
+                                                                    >
+                                                                        <div className="p-2 bg-neutral-900/90 border border-[#00D1FF]/40 rounded-full shadow-lg shadow-[#00D1FF]/20 text-[#00D1FF] hover:bg-[#00D1FF] hover:text-black transition-all">
+                                                                            <Search size={16} />
+                                                                        </div>
+                                                                    </button>
+                                                                )}
+                                                            </div>
                                                             <div className="flex flex-col justify-between py-1">
                                                                 <div>
                                                                     <h5 className="font-bold text-sm text-white line-clamp-1">{item.product?.name || item.accessory?.name || 'Cargando...'}</h5>
