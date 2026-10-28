@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react'; // v2.2.1 support for accessories
 import { supabase } from '../../utils/supabaseClient';
 import { useAuth } from '../../context/AuthContext';
 import { Package, ChevronDown, X, User, Calendar, AlertCircle, FileDown, Trash2, Loader2, Check, Search } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { CardModal } from '../../components/Card/CardModal';
 
 interface OrderItem {
     id: string;
@@ -168,12 +169,16 @@ function generateOrderReceiptHTML(order: Order) {
 }
 
 const OrdersPage = () => {
-    const navigate = useNavigate();
     const isDev = import.meta.env.DEV || (typeof window !== 'undefined' && (window.location.hostname.includes('dev') || window.location.hostname.includes('localhost')));
     const { isAdmin } = useAuth();
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
     const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
+
+    // Modal state for DEV card preview
+    const [inspectedCardId, setInspectedCardId] = useState<string | null>(null);
+    const [inspectedCardImage, setInspectedCardImage] = useState<string | undefined>(undefined);
+    const [inspectedCardData, setInspectedCardData] = useState<any>(undefined);
 
 
     const [updatingId, setUpdatingId] = useState<string | null>(null);
@@ -592,19 +597,13 @@ const OrdersPage = () => {
                                                                             e.stopPropagation();
                                                                             if (item.product) {
                                                                                 const cardId = item.product.printing_id || item.product.id;
-                                                                                navigate(`/card/${cardId}`, {
-                                                                                    state: {
-                                                                                        initialImage: item.product.image_url,
-                                                                                        initialCard: item.product
-                                                                                    }
-                                                                                });
+                                                                                setInspectedCardId(cardId);
+                                                                                setInspectedCardImage(item.product.image_url);
+                                                                                setInspectedCardData(item.product);
                                                                             } else if (item.accessory) {
-                                                                                navigate(`/product/${item.accessory.id}`, {
-                                                                                    state: {
-                                                                                        initialImage: item.accessory.image_url,
-                                                                                        initialCard: item.accessory
-                                                                                    }
-                                                                                });
+                                                                                setInspectedCardId(item.accessory.id);
+                                                                                setInspectedCardImage(item.accessory.image_url);
+                                                                                setInspectedCardData({ ...item.accessory, is_accessory: true });
                                                                             }
                                                                         }}
                                                                         className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center rounded-lg transition-all text-[#00D1FF] hover:scale-105"
@@ -705,6 +704,22 @@ const OrdersPage = () => {
                     )}
                 </div>
             </div>
+
+            {/* In-page Modal for DEV card inspection (no page reload or navigation) */}
+            {isDev && (
+                <CardModal
+                    isOpen={!!inspectedCardId}
+                    cardId={inspectedCardId}
+                    initialImage={inspectedCardImage}
+                    initialData={inspectedCardData}
+                    isArchive={true}
+                    onClose={() => {
+                        setInspectedCardId(null);
+                        setInspectedCardImage(undefined);
+                        setInspectedCardData(undefined);
+                    }}
+                />
+            )}
         </div>
     );
 };
