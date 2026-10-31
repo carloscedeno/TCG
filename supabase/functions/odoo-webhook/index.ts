@@ -127,6 +127,173 @@ serve(async (req) => {
         });
       } catch (e) {}
 
+            // 0. Is it a Stock Picking (Transfers / Inventory Deliveries)?
+      if (record._model === 'stock.picking' || record.model === 'stock.picking' || (record.name && record.name.startsWith('WH/'))) {
+        const pickingId = record.id;
+        const pickingName = record.name;
+        const pickingState = record.state;
+        console.log(`[Odoo Webhook] Processing Stock Picking: ${pickingName} (State: ${pickingState})`);
+
+        try {
+          const uid = await getOdooUid();
+          const pickingDetails = await odooJsonRpc(odooUrl!, 'call', {
+            service: 'object',
+            method: 'execute_kw',
+            args: [
+              odooDb, uid, odooApiKey,
+              'stock.picking',
+              'read',
+              [[pickingId]],
+              { fields: ['id', 'name', 'state', 'move_ids', 'origin'] }
+            ]
+          });
+
+          if (pickingDetails && pickingDetails.length > 0) {
+            const moveIds = pickingDetails[0].move_ids || [];
+            if (moveIds.length > 0) {
+              const moves = await odooJsonRpc(odooUrl!, 'call', {
+                service: 'object',
+                method: 'execute_kw',
+                args: [
+                  odooDb, uid, odooApiKey,
+                  'stock.move',
+                  'read',
+                  [moveIds],
+                  { fields: ['product_id', 'quantity', 'product_uom_qty'] }
+                ]
+              });
+
+              const prodIds = moves.map((m: any) => m.product_id && m.product_id[0]).filter(Boolean);
+              if (prodIds.length > 0) {
+                const prods = await odooJsonRpc(odooUrl!, 'call', {
+                  service: 'object',
+                  method: 'execute_kw',
+                  args: [
+                    odooDb, uid, odooApiKey,
+                    'product.product',
+                    'read',
+                    [prodIds],
+                    { fields: ['id', 'default_code', 'qty_available', 'is_storable'] }
+                  ]
+                });
+
+                for (const p of prods) {
+                  if (p.default_code && p.is_storable) {
+                    const newStock = Math.max(0, Math.round(p.qty_available));
+                    console.log(`[Odoo Webhook] Syncing stock for ${p.default_code} to ${newStock} via Picking ${pickingName}`);
+                    await supabase.from('products').update({ stock: newStock }).eq('id', p.default_code);
+                    await supabase.from('accessories').update({ stock: newStock }).eq('id', p.default_code);
+                  }
+                }
+              }
+            }
+          }
+          results.push({ picking: pickingName, state: pickingState, status: 'synced_stock' });
+        } catch (err: any) {
+          console.error('[Odoo Webhook] Error processing stock picking:', err.message);
+          results.push({ picking: pickingName, status: 'error', reason: err.message });
+        }
+        continue;
+      }
+
+      // 0.5 Is it an Invoice or Credit Note / Refund (account.move)?
+      if (record._model === 'account.move' || record.model === 'account.move' || (record.name && (record.name.startsWith('INV/') || record.name.startsWith('RINV/')))) {
+        const moveId = record.id;
+        const moveName = record.name;
+        console.log(`[Odoo Webhook] Processing Invoice/Refund: ${moveName}`);
+
+        try {
+          const uid = await getOdooUid();
+          const moveDetails = await odooJsonRpc(odooUrl!, 'call', {
+            service: 'object',
+            method: 'execute_kw',
+            args: [
+              odooDb, uid, odooApiKey,
+              'account.move',
+              'read',
+              [[moveId]],
+              { fields: ['id', 'name', 'move_type', 'state', 'payment_state', 'invoice_line_ids', 'invoice_origin'] }
+            ]
+          });
+
+          if (moveDetails && moveDetails.length > 0) {
+            const m = moveDetails[0];
+            const isRefund = m.move_type === 'out_refund';
+            const isPaid = m.payment_state === 'paid' || m.payment_state === 'in_payment';
+            const isCancelled = m.state === 'cancel';
+            const originSO = m.invoice_origin;
+
+            const lineIds = m.invoice_line_ids || [];
+            if (lineIds.length > 0) {
+              const lines = await odooJsonRpc(odooUrl!, 'call', {
+                service: 'object',
+                method: 'execute_kw',
+                args: [
+                  odooDb, uid, odooApiKey,
+                  'account.move.line',
+                  'read',
+                  [lineIds],
+                  { fields: ['product_id', 'quantity'] }
+                ]
+              });
+
+              const validLines = lines.filter((l: any) => l.product_id && l.product_id[0]);
+              const prodIds = validLines.map((l: any) => l.product_id[0]);
+
+              if (prodIds.length > 0) {
+                const prods = await odooJsonRpc(odooUrl!, 'call', {
+                  service: 'object',
+                  method: 'execute_kw',
+                  args: [
+                    odooDb, uid, odooApiKey,
+                    'product.product',
+                    'read',
+                    [prodIds],
+                    { fields: ['id', 'default_code', 'qty_available', 'is_storable'] }
+                  ]
+                });
+
+                for (const p of prods) {
+                  if (!p.default_code) continue;
+
+                  if (p.is_storable) {
+                    const newStock = Math.max(0, Math.round(p.qty_available));
+                    console.log(`[Odoo Webhook] Syncing stock for ${p.default_code} to ${newStock} via Invoice/Refund ${moveName}`);
+                    await supabase.from('products').update({ stock: newStock }).eq('id', p.default_code);
+                    await supabase.from('accessories').update({ stock: newStock }).eq('id', p.default_code);
+                  } else if (isRefund || isCancelled) {
+                    // Fallback for non-storable products: add back returned quantity
+                    const line = validLines.find((l: any) => l.product_id[0] === p.id);
+                    const qty = Math.round(line?.quantity || 1);
+                    console.log(`[Odoo Webhook] Reversing non-storable item: returning ${qty} of ${p.default_code}`);
+                    const { data: curProd } = await supabase.from('products').select('stock').eq('id', p.default_code).maybeSingle();
+                    if (curProd) {
+                      await supabase.from('products').update({ stock: (curProd.stock || 0) + qty }).eq('id', p.default_code);
+                    }
+                  }
+                }
+              }
+            }
+
+            // Sync Order status in Supabase if linked to an origin SO
+            if (originSO) {
+              if (isRefund) {
+                await supabase.from('orders').update({ status: 'refunded' }).eq('odoo_order_id', originSO);
+              } else if (isPaid) {
+                await supabase.from('orders').update({ status: 'paid' }).eq('odoo_order_id', originSO);
+              } else if (isCancelled) {
+                await supabase.from('orders').update({ status: 'cancelled' }).eq('odoo_order_id', originSO);
+              }
+            }
+          }
+          results.push({ move: moveName, status: 'processed_invoice' });
+        } catch (err: any) {
+          console.error('[Odoo Webhook] Error processing invoice:', err.message);
+          results.push({ move: moveName, status: 'error', reason: err.message });
+        }
+        continue;
+      }
+
       // 1. Is it a Sales Order (from Web or Odoo)?
       if (record.amount_total !== undefined || record.order_line !== undefined || record.model === 'sale.order' || (record.name && record.name.startsWith('S'))) {
         const odooOrderName = record.name;
@@ -272,7 +439,7 @@ serve(async (req) => {
                 'product.product', 
                 'search_read', 
                 [[['id', 'in', productIdsInLines]]],
-                { fields: ['id', 'default_code', 'name'] }
+                { fields: ['id', 'default_code', 'name', 'qty_available', 'is_storable'] }
               ]
             });
           }
@@ -340,6 +507,25 @@ serve(async (req) => {
             }
           }
           
+          // Sync physical stock for all storable products in this SO
+          for (const p of odooProducts) {
+            if (p.default_code && p.is_storable) {
+              const newStock = Math.max(0, Math.round(p.qty_available));
+              console.log(`[Odoo Webhook] Syncing stock for ${p.default_code} to ${newStock} via SO ${odooOrderName}`);
+              await supabase.from('products').update({ stock: newStock }).eq('id', p.default_code);
+              await supabase.from('accessories').update({ stock: newStock }).eq('id', p.default_code);
+            } else if (newStatus === 'cancelled') {
+              // Return non-storable products back to stock
+              const line = lines.find((l: any) => l.product_id[0] === p.id);
+              const qty = Math.round(line?.product_uom_qty || 1);
+              console.log(`[Odoo Webhook] SO cancelled: returning ${qty} of ${p.default_code} to inventory`);
+              const { data: curProd } = await supabase.from('products').select('stock').eq('id', p.default_code).maybeSingle();
+              if (curProd) {
+                await supabase.from('products').update({ stock: (curProd.stock || 0) + qty }).eq('id', p.default_code);
+              }
+            }
+          }
+
           results.push({ id: targetWebOrderId, odoo_order_id: odooOrderName, status: 'synced_successfully' });
           
         } catch(e: any) {
