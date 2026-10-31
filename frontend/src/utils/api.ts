@@ -1186,7 +1186,7 @@ export const createOrder = async (orderData: {
         body: {
           action: 'sync_order',
           order_data: {
-            id: data,
+            id: (typeof data === 'object' && data !== null && 'order_id' in data) ? (data as any).order_id : data,
             items: orderData.items,
             customer_email: email,
             customer_name: orderData.customerName || 'Web Customer'

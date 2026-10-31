@@ -225,6 +225,7 @@ export const CardDetail: React.FC = () => {
     }, [activeGroup, activeFinish]);
 
     const isFoil = activeVersion ? (activeVersion.is_foil || activeVersion.finish === 'foil') : !!(details?.is_foil || details?.finish === 'foil');
+    const currentStock = (activeVersion?.stock ?? details?.stock ?? details?.total_stock ?? 0);
 
     const ckUrl = useMemo(() => {
         if (!details) return '#';
@@ -370,80 +371,51 @@ export const CardDetail: React.FC = () => {
                                                             if (targetPrintingId) handleVersionClick(targetPrintingId);
                                                         }
                                                     }}
-                                                    className={`w-full flex flex-col md:flex-row items-stretch md:items-center gap-2 md:gap-4 px-6 py-4 hover:bg-white/10 transition-colors border-b border-white/5 group text-left cursor-pointer outline-none focus-visible:bg-white/10 ${isGroupActive ? 'bg-geeko-cyan/10' : ''}`}
+                                                    className={`w-full px-4 py-3 hover:bg-white/10 transition-colors border-b border-white/5 group text-left cursor-pointer outline-none focus-visible:bg-white/10 ${isGroupActive ? 'bg-geeko-cyan/15 border-l-2 border-l-geeko-cyan' : ''}`}
                                                 >
-                                                    <div className="flex items-center gap-3 md:gap-4 flex-1">
-                                                        <div className="w-8 h-8 rounded bg-neutral-900 flex items-center justify-center text-[10px] font-black group-hover:text-geeko-cyan transition-colors shrink-0">
-                                                            {group.base.set_code?.toUpperCase()}
-                                                        </div>
-                                                        <div className="flex-1 text-left min-w-[120px]">
-                                                            <div className={`text-xs font-bold font-web-titles tracking-tight leading-tight truncate ${isGroupActive ? 'text-geeko-cyan' : 'text-text-low'}`}>
-                                                                {group.base.set_name}
+                                                    <div className="flex items-center justify-between gap-2.5">
+                                                        {/* Left: Set Code & Name */}
+                                                        <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                                                            <div className={`w-7 h-7 rounded bg-neutral-900 border border-white/10 flex items-center justify-center text-[10px] font-black shrink-0 transition-colors ${isGroupActive ? 'text-geeko-cyan border-geeko-cyan/40' : 'group-hover:text-geeko-cyan'}`}>
+                                                                {group.base.set_code?.toUpperCase()}
                                                             </div>
-                                                            <div className="text-[10px] text-text-low font-bold flex items-center gap-2">
-                                                                 <span>{group.base.collector_number ? `#${group.base.collector_number} • ` : ''}{group.base.rarity}</span>
+                                                            <div className="min-w-0 flex-1">
+                                                                <div className={`text-xs font-bold leading-snug truncate ${isGroupActive ? 'text-geeko-cyan' : 'text-neutral-200'}`}>
+                                                                    {group.base.set_name}
+                                                                </div>
+                                                                <div className="text-[10px] text-text-low font-medium">
+                                                                    {group.base.collector_number ? `#${group.base.collector_number} • ` : ''}{group.base.rarity}
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
 
-                                                    <div className="flex items-center justify-between md:justify-end gap-6 shrink-0">
-                                                        <div className="flex flex-col items-end gap-1">
-                                                            {group.normal && (
-                                                                <div className="flex items-center gap-2">
-                                                                    <span className="text-[10px] text-text-low font-bold uppercase tracking-widest leading-none">Normal</span>
-                                                                     <span className={`text-[11px] font-black ${group.normal.stock > 0 ? 'text-white' : 'text-neutral-600'}`}>
-                                                                        {group.normal.discount_percentage > 0 && (
-                                                                            <span className="text-[9px] text-text-low line-through mr-1.5 opacity-60">
-                                                                                ${Number(group.normal.original_price).toFixed(2)}
-                                                                            </span>
-                                                                        )}
+                                                        {/* Right: Prices & Stock */}
+                                                        <div className="flex flex-col items-end shrink-0 gap-0.5">
+                                                            <div className="flex items-center gap-2 text-[11px] font-black">
+                                                                {group.normal && (
+                                                                    <span className={group.normal.stock > 0 ? 'text-white' : 'text-neutral-500'}>
                                                                         ${group.normal.price.toFixed(2)}
-                                                                        {group.normal.discount_percentage > 0 && (
-                                                                            <span className="ml-1.5 px-1.5 py-0.5 bg-purple-500/20 text-purple-400 text-[9px] font-black rounded border border-purple-500/20">
-                                                                                -{group.normal.discount_percentage}%
-                                                                            </span>
-                                                                        )}
-                                                                        {group.normal.stock <= 0 && <span className="ml-1.5 text-[9px] text-orange-500/80 italic font-medium">(P/E)</span>}
                                                                     </span>
-                                                                </div>
-                                                            )}
-                                                            {group.foil && (
-                                                                <div className="flex items-center gap-2">
-                                                                    <span className="text-[10px] text-purple-400 font-bold uppercase tracking-widest flex items-center gap-1 leading-none">
-                                                                        <svg width="8" height="8" viewBox="0 0 10 12" fill="none">
-                                                                            <rect x="0.5" y="0.5" width="9" height="11" rx="1.5" stroke="currentColor" strokeWidth="1" />
-                                                                            <path d="M2 3 L8 3" stroke="currentColor" strokeWidth="1" />
-                                                                        </svg>
-                                                                        Foil
-                                                                    </span>
-                                                                    <span className={`text-[11px] font-black ${group.foil.stock > 0 ? 'text-geeko-cyan' : 'text-neutral-600'}`}>
-                                                                        {group.foil.discount_percentage > 0 && (
-                                                                            <span className="text-[9px] text-text-low line-through mr-1.5 opacity-60">
-                                                                                ${Number(group.foil.original_price).toFixed(2)}
-                                                                            </span>
-                                                                        )}
+                                                                )}
+                                                                {group.foil && (
+                                                                    <span className={`flex items-center gap-0.5 ${group.foil.stock > 0 ? 'text-geeko-cyan' : 'text-neutral-500'}`}>
+                                                                        <span className="text-[8px] text-purple-400 font-bold">F</span>
                                                                         ${group.foil.price.toFixed(2)}
-                                                                        {group.foil.discount_percentage > 0 && (
-                                                                            <span className="ml-1.5 px-1.5 py-0.5 bg-purple-500/20 text-purple-400 text-[9px] font-black rounded border border-purple-500/20">
-                                                                                -{group.foil.discount_percentage}%
-                                                                            </span>
-                                                                        )}
-                                                                        {group.foil.stock <= 0 && <span className="ml-1.5 text-[9px] text-orange-500/80 italic font-medium">(P/E)</span>}
                                                                     </span>
-                                                                </div>
-                                                            )}
-                                                        </div>
-
-                                                        <div className="flex items-center gap-4">
-                                                            {rowActiveVersion?.stock > 0 ? (
-                                                                <span className="text-[9px] font-black text-geeko-cyan bg-geeko-cyan/10 px-2 py-0.5 rounded-full border border-geeko-cyan/20 uppercase tracking-tight">
-                                                                    En Stock
-                                                                </span>
-                                                            ) : (
-                                                                <span className="text-[9px] font-bold text-text-low bg-neutral-900 px-2 py-0.5 rounded-full border border-white/5 uppercase tracking-tight">
-                                                                    Por Encargo
-                                                                </span>
-                                                            )}
+                                                                )}
+                                                            </div>
+                                                            <div>
+                                                                {(rowActiveVersion?.stock ?? 0) > 0 ? (
+                                                                    <span className="inline-flex items-center gap-1 text-[9px] font-black text-geeko-green bg-geeko-green/10 px-2 py-0.5 rounded border border-geeko-green/20 uppercase tracking-tight whitespace-nowrap">
+                                                                        <span className="w-1.5 h-1.5 rounded-full bg-geeko-green" />
+                                                                        {rowActiveVersion?.stock} disp.
+                                                                    </span>
+                                                                ) : (
+                                                                    <span className="inline-flex items-center text-[9px] font-bold text-neutral-400 bg-neutral-900 px-2 py-0.5 rounded border border-white/5 uppercase tracking-tight whitespace-nowrap">
+                                                                        Por Encargo
+                                                                    </span>
+                                                                )}
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -460,7 +432,7 @@ export const CardDetail: React.FC = () => {
                         </div>
 
                         {/* RIGHT: CARD TEXT & ACTIONS */}
-                        <div className="flex-1 lg:overflow-y-auto lg:max-h-[calc(100vh-140px)] custom-scrollbar bg-white dark:bg-[#050505] p-6 lg:p-12 space-y-8 lg:space-y-10 relative">
+                        <div className="flex-1 lg:overflow-y-auto lg:max-h-[calc(100vh-140px)] custom-scrollbar bg-white dark:bg-[#050505] p-6 lg:p-12 space-y-8 relative">
                             <button
                                 onClick={() => navigate(-1)}
                                 className="absolute top-6 right-6 p-2 rounded-full bg-neutral-900/80 hover:bg-white/10 text-text-low hover:text-white transition-colors z-50 border border-white/10"
@@ -468,6 +440,8 @@ export const CardDetail: React.FC = () => {
                             >
                                 <X size={20} />
                             </button>
+                            
+                            {/* TITLE & HEADER */}
                             <div className="space-y-4">
                                 <a
                                     href={`card/${activePrintingId}`}
@@ -496,34 +470,24 @@ export const CardDetail: React.FC = () => {
                                     <span className="text-neutral-700">/</span>
                                     <span className="text-geeko-gold uppercase text-[10px] font-black tracking-[0.2em]">{details.rarity}</span>
                                 </div>
-                            </div>
 
-                            <div className="p-6 lg:p-8 rounded-[32px] bg-white/5 border border-white/10 space-y-6 relative overflow-hidden group">
-                                <div className="absolute -top-24 -right-24 w-64 h-64 bg-geeko-cyan/5 rounded-full blur-[100px] group-hover:bg-geeko-cyan/10 transition-colors pointer-events-none" />
-                                
-                                {details.description && (
-                                    <div className="mb-6 p-4 bg-geeko-cyan/5 border border-geeko-cyan/20 rounded-2xl relative z-10">
-                                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-geeko-cyan mb-2">Descripción del Producto</h4>
-                                        <p className="text-sm text-neutral-300 leading-relaxed">
-                                            {details.description}
-                                        </p>
-                                    </div>
-                                )}
-
-                                <div className="text-base lg:text-lg leading-relaxed text-neutral-200 font-medium relative z-10">
-                                    {details.oracle_text?.split('\n').map((line: string, i: number) => <p key={i} className="mb-3"><ManaText text={line} /></p>)}
-                                </div>
-                                {details.flavor_text && (
-                                    <p className="text-md italic text-text-low font-serif border-t border-white/10 pt-6 relative z-10">
-                                        "{details.flavor_text}"
-                                    </p>
-                                )}
-                                <div className="pt-2 flex flex-wrap gap-8 text-[10px] font-black text-text-low uppercase tracking-[0.2em]">
-                                    <div>Artist <span className="text-black dark:text-white ml-2">{details.artist}</span></div>
-                                    <div>Set <span className="text-geeko-cyan ml-2">{details.set} ({details.set_code?.toUpperCase()})</span></div>
+                                {/* Prominent Stock Status Badge */}
+                                <div className="flex items-center gap-3 pt-1">
+                                    {currentStock > 0 ? (
+                                        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-geeko-green/10 border border-geeko-green/30 text-geeko-green text-xs font-black tracking-wide shadow-[0_0_20px_rgba(0,255,133,0.15)]">
+                                            <span className="w-2 h-2 rounded-full bg-geeko-green animate-pulse" />
+                                            <span>EN STOCK: {currentStock} {currentStock === 1 ? 'unidad disponible' : 'unidades disponibles'}</span>
+                                        </div>
+                                    ) : (
+                                        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-bold tracking-wide">
+                                            <span className="w-2 h-2 rounded-full bg-orange-400" />
+                                            <span>DISPONIBLE POR ENCARGO (0 en stock inmediato)</span>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 
+                            {/* BUY BOX & LEGALITY GRID (PLACED FIRST FOR INSTANT ACCESS) */}
                             <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 items-start">
                                 {/* Marketplace */}
                                 <div className="space-y-6">
@@ -535,7 +499,7 @@ export const CardDetail: React.FC = () => {
                                             {details?.game === 'GND' ? 'Geekorium Price' : 'Card Kingdom Price'}
                                         </div>
                                         <div className="flex flex-col gap-6">
-                                            {/* Price + Variant Badge (horizontal layout matching CardModal) */}
+                                            {/* Price + Variant Badge */}
                                             <div className="flex items-center justify-between">
                                                 <div className="flex flex-col">
                                                     {activeVersion?.discount_percentage > 0 && (
@@ -558,6 +522,22 @@ export const CardDetail: React.FC = () => {
                                                     {activeFinish === 'foil' ? 'FOIL' : 'NONFOIL'}
                                                 </span>
                                             </div>
+
+                                            {/* Stock Availability Row inside Trading Hub */}
+                                            <div className="flex items-center justify-between text-xs font-bold py-2.5 px-3 rounded-xl bg-white/[0.03] border border-white/5">
+                                                <span className="text-text-low uppercase tracking-wider text-[10px]">Disponibilidad</span>
+                                                {currentStock > 0 ? (
+                                                    <span className="text-geeko-green font-black flex items-center gap-1.5 text-xs">
+                                                        <span className="w-2 h-2 rounded-full bg-geeko-green animate-pulse" />
+                                                        {currentStock} {currentStock === 1 ? 'unidad en stock' : 'unidades en stock'}
+                                                    </span>
+                                                ) : (
+                                                    <span className="text-orange-400 font-bold flex items-center gap-1.5 text-xs">
+                                                        <span className="w-2 h-2 rounded-full bg-orange-400" />
+                                                        0 en stock (Por Encargo)
+                                                    </span>
+                                                )}
+                                            </div>
                                             
                                             <div className="flex items-center justify-between gap-4">
                                                 {/* Finish Toggle */}
@@ -576,6 +556,7 @@ export const CardDetail: React.FC = () => {
                                                                 }`}
                                                         >
                                                             Normal
+                                                            {(activeGroup.normal?.stock ?? 0) > 0 && <span className="ml-1 text-[8px] opacity-75">({activeGroup.normal.stock})</span>}
                                                         </button>
                                                     )}
                                                     {activeGroup?.foil && (
@@ -592,6 +573,7 @@ export const CardDetail: React.FC = () => {
                                                                 }`}
                                                         >
                                                             Foil
+                                                            {(activeGroup.foil?.stock ?? 0) > 0 && <span className="ml-1 text-[8px] opacity-75">({activeGroup.foil.stock})</span>}
                                                         </button>
                                                     )}
                                                 </div>
@@ -603,7 +585,7 @@ export const CardDetail: React.FC = () => {
                                                     className="flex-1 h-12 rounded-xl bg-geeko-cyan text-black font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0, 209, 255, 0.3)] hover:shadow-[0_0_30px_rgba(0, 209, 255, 0.5)] hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 relative z-10"
                                                 >
                                                     {isAdding ? <Loader2 size={16} className="animate-spin" /> : <ShoppingCart size={16} fill="currentColor" />}
-                                                    {isAdding ? '...' : ((activeVersion?.stock || 0) > 0 ? 'Agregar' : 'Encargo')}
+                                                    {isAdding ? '...' : (currentStock > 0 ? `Agregar (${currentStock} disp.)` : 'Pedir por Encargo')}
                                                 </button>
                                             </div>
                                         </div>
@@ -666,6 +648,33 @@ export const CardDetail: React.FC = () => {
                                         </div>
                                     </div>
                                 )}
+                            </div>
+
+                            {/* CARD ORACLE TEXT & DETAILS (BELOW BUY BOX) */}
+                            <div className="p-6 lg:p-8 rounded-[32px] bg-white/5 border border-white/10 space-y-6 relative overflow-hidden group">
+                                <div className="absolute -top-24 -right-24 w-64 h-64 bg-geeko-cyan/5 rounded-full blur-[100px] group-hover:bg-geeko-cyan/10 transition-colors pointer-events-none" />
+                                
+                                {details.description && (
+                                    <div className="mb-6 p-4 bg-geeko-cyan/5 border border-geeko-cyan/20 rounded-2xl relative z-10">
+                                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-geeko-cyan mb-2">Descripción del Producto</h4>
+                                        <p className="text-sm text-neutral-300 leading-relaxed">
+                                            {details.description}
+                                        </p>
+                                    </div>
+                                )}
+
+                                <div className="text-base lg:text-lg leading-relaxed text-neutral-200 font-medium relative z-10">
+                                    {details.oracle_text?.split('\n').map((line: string, i: number) => <p key={i} className="mb-3"><ManaText text={line} /></p>)}
+                                </div>
+                                {details.flavor_text && (
+                                    <p className="text-md italic text-text-low font-serif border-t border-white/10 pt-6 relative z-10">
+                                        "{details.flavor_text}"
+                                    </p>
+                                )}
+                                <div className="pt-2 flex flex-wrap gap-8 text-[10px] font-black text-text-low uppercase tracking-[0.2em]">
+                                    <div>Artist <span className="text-black dark:text-white ml-2">{details.artist}</span></div>
+                                    <div>Set <span className="text-geeko-cyan ml-2">{details.set} ({details.set_code?.toUpperCase()})</span></div>
+                                </div>
                             </div>
                         </div>
                     </div>

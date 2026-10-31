@@ -42,3 +42,36 @@ entrypoint = "./functions/odoo-invite/index.ts"
 # Specifies static files to be bundled with the function. Supports glob patterns.
 # For example, if you want to serve static HTML pages in your function:
 # static_files = [ "./functions/odoo-invite/*.html" ]
+
+[functions.odoo-ewallet-sync]
+enabled = true
+verify_jwt = false
+import_map = "./functions/odoo-ewallet-sync/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/odoo-ewallet-sync/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/odoo-ewallet-sync/*.html" ]
+
+[functions.odoo-event-sync]
+enabled = true
+verify_jwt = true
+import_map = "./functions/odoo-event-sync/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/odoo-event-sync/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/odoo-event-sync/*.html" ]
+
+[functions.sync-event-registration]
+enabled = true
+verify_jwt = true
+import_map = "./functions/sync-event-registration/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/sync-event-registration/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/sync-event-registration/*.html" ]

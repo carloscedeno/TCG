@@ -130,7 +130,13 @@ serve(async (req) => {
       // 1. Is it a Sales Order (from Web or Odoo)?
       if (record.amount_total !== undefined || record.order_line !== undefined || record.model === 'sale.order' || (record.name && record.name.startsWith('S'))) {
         const odooOrderName = record.name;
-        const webOrderId = record.client_order_ref;
+        let webOrderId = record.client_order_ref;
+        if (typeof webOrderId === 'string') {
+          const uuidMatch = webOrderId.match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i);
+          if (uuidMatch) {
+            webOrderId = uuidMatch[0];
+          }
+        }
         const odooOrderId = record.id;
         
         console.log(`[Odoo Webhook] Processing Sales Order: ${odooOrderName} (Web ID: ${webOrderId || 'None - Created in Odoo'})`);
@@ -319,11 +325,19 @@ serve(async (req) => {
           
           // E) Update total_amount and status for web-origin order if applicable
           if (webOrderId) {
-            await supabase.from('orders').update({ 
-              status: newStatus, 
+            const { data: updatedRows } = await supabase.from('orders').update({
+              status: newStatus,
               odoo_order_id: odooOrderName,
               total_amount: amountTotal
-            }).eq('id', webOrderId);
+            }).eq('id', webOrderId).select('id');
+            
+            // Fallback: If no row updated by ID, match by odoo_order_id
+            if (!updatedRows || updatedRows.length === 0) {
+              await supabase.from('orders').update({
+                status: newStatus,
+                total_amount: amountTotal
+              }).eq('odoo_order_id', odooOrderName);
+            }
           }
           
           results.push({ id: targetWebOrderId, odoo_order_id: odooOrderName, status: 'synced_successfully' });

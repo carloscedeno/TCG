@@ -43,6 +43,29 @@ serve(async (req) => {
     const rawBody = await req.json()
     console.log("Raw Odoo Webhook Payload:", JSON.stringify(rawBody))
 
+    // SMART REDIRECT: If we are running in the DEV project, forward to PROD
+    if (supabaseUrl.includes('bqfkqnnostzaqueujdms')) {
+        console.log("DEV Environment detected. Forwarding webhook to PROD...");
+        const prodUrl = `https://sxuotvogwvmxuvwbsscv.supabase.co/functions/v1/odoo-invite?secret=${WEBHOOK_SECRET}`;
+        try {
+            const prodResponse = await fetch(prodUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(rawBody)
+            });
+            const prodResponseText = await prodResponse.text();
+            console.log("Forwarded to PROD. Response:", prodResponseText);
+            return new Response(prodResponseText, {
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+                status: prodResponse.status
+            });
+        } catch (fwdError: any) {
+            console.error("Error forwarding to PROD:", fwdError.message);
+        }
+    }
+
     let email = ''
     let name = ''
 

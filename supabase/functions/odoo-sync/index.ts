@@ -385,6 +385,16 @@ Deno.serve(async (req: Request) => {
         throw new Error("No mappable products found for this order in Odoo.");
       }
 
+      // Sanitize client_order_ref defensively
+      let cleanRef = order_data.id;
+      if (typeof cleanRef === 'object' && cleanRef !== null) {
+        cleanRef = (cleanRef as any).order_id || JSON.stringify(cleanRef);
+      }
+      if (typeof cleanRef === 'string') {
+        const uuidMatch = cleanRef.match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i);
+        if (uuidMatch) cleanRef = uuidMatch[0];
+      }
+
       const orderId = await odooJsonRpc(odooUrl, 'call', {
         service: 'object',
         method: 'execute_kw',
@@ -395,10 +405,41 @@ Deno.serve(async (req: Request) => {
           [{
             partner_id: partnerId,
             order_line: orderLines,
-            client_order_ref: order_data.id
+            client_order_ref: cleanRef
           }]
         ]
       });
+
+      // Immediately link odoo_order_id to Supabase
+      try {
+        const soDetails = await odooJsonRpc(odooUrl, 'call', {
+          service: 'object',
+          method: 'execute_kw',
+          args: [
+            odooDb, uid, odooApiKey,
+            'sale.order',
+            'read',
+            [[orderId]],
+            { fields: ['name'] }
+          ]
+        });
+        const soName = soDetails?.[0]?.name;
+        const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
+        const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
+        if (soName && cleanRef && supabaseUrl && supabaseKey) {
+          await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${cleanRef}`, {
+            method: 'PATCH',
+            headers: {
+              'apikey': supabaseKey,
+              'Authorization': `Bearer ${supabaseKey}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ odoo_order_id: soName })
+          });
+        }
+      } catch (linkErr) {
+        console.error('[Odoo Sync] Error linking odoo_order_id in orders:', linkErr);
+      }
 
       return new Response(JSON.stringify({ success: true, order_id: orderId }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
