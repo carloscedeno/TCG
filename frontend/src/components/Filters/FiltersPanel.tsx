@@ -1,19 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import { Search, X, Sliders, Filter, Check, Package, ChevronDown, ChevronUp } from 'lucide-react';
 import { rarityMap, typeMap, colorMap } from '../../utils/translations';
+import { TCG_REGISTRY, getTcgConfig } from '../../config/tcgRegistry';
 
-const gameNameMap: Record<string, string> = {
-  'MTG': 'Magic: The Gathering',
-  'PKM': 'Pokémon',
-  'OPC': 'One Piece',
-  'DGM': 'Digimon',
-  'LOR': 'Lorcana',
-  'YGO': 'Yu-Gi-Oh!',
-  'FAB': 'Flesh and Blood',
-  'WXS': 'Wixoss',
-  'GND': 'Gundam Card Game',
-  'RFB': 'Riftbound'
-};
+const gameNameMap: Record<string, string> = Object.fromEntries(
+  Object.values(TCG_REGISTRY).map(tcg => [tcg.gameCode, tcg.gameName])
+);
 
 export interface Filters {
   games: string[];
@@ -79,27 +71,9 @@ export const FiltersPanel: React.FC<FiltersPanelProps> = ({ filters, selected, o
 
   const selectedGame = selected.games && selected.games.length === 1 ? selected.games[0] : null;
 
-  const getGameSpecificColors = () => {
-    if (selectedGame === 'MTG') return ['White', 'Blue', 'Black', 'Red', 'Green', 'Colorless', 'Multicolor'];
-    if (selectedGame === 'OPC' || selectedGame === 'ONE PIECE') return ['Red', 'Blue', 'Green', 'Purple', 'Black', 'Yellow'];
-    if (selectedGame === 'DGM' || selectedGame === 'DIGIMON') return ['Red', 'Blue', 'Yellow', 'Green', 'Black', 'Purple', 'White'];
-    if (selectedGame === 'PKM' || selectedGame === 'POKEMON') return ['Grass', 'Fire', 'Water', 'Lightning', 'Psychic', 'Fighting', 'Darkness', 'Metal', 'Fairy', 'Dragon', 'Colorless'];
-    // Gundam Card Game — naciones/colores del universo Gundam
-    if (selectedGame === 'GND') return ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'White'];
-    return []; // No mostrar colores si no hay juego específico o no aplica
-  };
-
-  const getGameSpecificTypes = () => {
-    if (selectedGame === 'MTG') return ['Creature', 'Instant', 'Sorcery', 'Enchantment', 'Artifact', 'Planeswalker', 'Land'];
-    if (selectedGame === 'PKM' || selectedGame === 'POKEMON') return ['Pokémon', 'Trainer', 'Energy'];
-    if (selectedGame === 'OPC' || selectedGame === 'ONE PIECE') return ['Character', 'Event', 'Stage', 'Leader'];
-    // Gundam Card Game — tipos de carta del juego
-    if (selectedGame === 'GND') return ['Unit', 'Command', 'Resource', 'Pilot', 'Base'];
-    return [];
-  };
-
-  const currentColors = getGameSpecificColors();
-  const currentTypes = getGameSpecificTypes();
+  const selectedTcg = selectedGame ? getTcgConfig(selectedGame) : null;
+  const currentColors = selectedTcg ? selectedTcg.colorsOrDomains : [];
+  const currentTypes = selectedTcg ? selectedTcg.types : [];
 
   return (
     <aside className="w-full glass-panel border border-neutral-200 dark:border-white/5 p-8 rounded-[32px] shadow-2xl space-y-10">

@@ -423,7 +423,14 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
           set: getSetName(sbData) || data?.set || '',
           set_code: getSetCode(sbData) || data?.set_code || '',
           game_id: sbData.cards?.game_id || (Array.isArray(sbData.sets) ? sbData.sets[0]?.game_id : sbData.sets?.game_id),
-          game: (sbData.cards?.game_id === 17 || (Array.isArray(sbData.sets) ? sbData.sets[0]?.game_id : sbData.sets?.game_id) === 17) ? 'GND' : 'MTG',
+          game: (() => {
+            const gid = sbData.cards?.game_id || (Array.isArray(sbData.sets) ? sbData.sets[0]?.game_id : sbData.sets?.game_id);
+            const GAME_MAP: Record<number, string> = { 16: 'RFB', 17: 'GND', 18: 'DGM', 22: 'MTG', 23: 'PKM', 13: 'OPC', 25: 'FAB', 12: 'LOR', 26: 'YGO', 27: 'WXS' };
+            return (gid && GAME_MAP[gid]) || 'MTG';
+          })(),
+          tcg_specific_attributes: sbData.cards?.tcg_specific_attributes || {},
+          external_id: sbData.tcg_specific_printing_attributes?.tcgplayer_id || sbData.tcg_specific_printing_attributes?.sortswift_raw_id,
+          tcgplayer_id: sbData.tcg_specific_printing_attributes?.tcgplayer_id,
           collector_number: sbData.collector_number,
           image_url: sbData.image_url,
           price: marketPrice,

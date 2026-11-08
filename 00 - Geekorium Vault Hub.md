@@ -53,7 +53,9 @@
 - 🏛️ **Decisiones de Arquitectura (ADRs)**:
   - [[docs/architecture/adr/ADR-001-obsidian-pkm-integration|ADR-001: Integración de Obsidian PKM]]
   - [[docs/architecture/adr/ADR-002-tripartite-inventory-sortswift-odoo-web|ADR-002: Arquitectura Tripartita de Inventario (Web -> SortSwift -> Odoo)]]
+  - [[docs/architecture/adr/ADR-003-omni-tcg-dynamic-registry-and-riftbound-sortswift|ADR-003: Omni-TCG Dynamic Registry & Ingesta Integral SortSwift-First para Riftbound TCG]]
 - 📅 **Bitácora Reciente de Desarrollo**:
+  - [[docs/daily-logs/2026-11-08|Daily Log 2026-11-08: Ingesta Riftbound SortSwift-First y Registry Dinámico Omni-TCG]]
   - [[docs/daily-logs/2026-11-07|Daily Log 2026-11-07: Sincronización SortSwift, Resolución de Carrera en Odoo y Suite E2E]]
   - [[docs/daily-logs/2026-10-05|Daily Log 2026-10-05: Puesta en marcha del Vault]]
 - 🗺️ **Grafo AST de Código**:

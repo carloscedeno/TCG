@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { X, ShoppingCart, ExternalLink, RotateCw, Loader2 } from 'lucide-react';
 import { fetchCardDetails, addToCart } from '../../utils/api';
-import { getCardKingdomUrl } from '../../utils/urlUtils';
+import { getTcgConfig, getExternalMarketplaceLink } from '../../config/tcgRegistry';
 import { ManaText } from '../Mana/ManaText';
 import { CardImage } from './CardImage';
 
@@ -76,6 +76,10 @@ interface CardDetails {
     card_faces?: CardFace[];
     all_versions?: Version[];
     is_accessory?: boolean;
+    game?: string;
+    external_id?: string;
+    tcgplayer_id?: string;
+    tcg_specific_attributes?: Record<string, any>;
 }
 
 export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, initialImage, initialData, onAddToCartSuccess, isArchive }) => {
@@ -301,7 +305,8 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
 
     // Removal of icon-based legality indicators in favor of color-coded boxes.
 
-    const relevantFormats = ['standard', 'pioneer', 'modern', 'legacy', 'commander', 'pauper'];
+    const tcgConfig = useMemo(() => getTcgConfig(details?.game), [details?.game]);
+    const relevantFormats = useMemo(() => tcgConfig.formats || [], [tcgConfig]);
 
     const versionGroups = useMemo(() => {
         if (!details?.all_versions) return [];
@@ -364,11 +369,18 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
     const currentFace = hasMultipleFaces ? (details?.card_faces?.[currentFaceIndex] || {}) : details;
     const currentImage = (currentFace as any)?.image_url || (currentFace as any)?.image_uris?.normal || (currentFace as any)?.image_uris?.large || (currentFace as any)?.image_uris?.png || initialImage;
 
-    const ckUrl = useMemo(() => {
-        if (!details) return '#';
+    const externalMarket = useMemo(() => {
+        if (!details || details.is_accessory) return null;
         const isFoil = activeVersion ? (activeVersion.is_foil || activeVersion.finish === 'foil') : !!(details.is_foil || details.finish === 'foil');
-        return getCardKingdomUrl(details.name, isFoil);
-    }, [details?.name, activeVersion]);
+        const extId = (activeVersion as any)?.external_id || (details as any)?.external_id || (activeVersion as any)?.tcgplayer_id || (details as any)?.tcgplayer_id;
+        return getExternalMarketplaceLink(details.game, {
+            name: details.name,
+            isFoil,
+            externalId: extId,
+            setCode: details.set_code,
+            collectorNumber: activeVersion?.collector_number || details.collector_number
+        });
+    }, [details, activeVersion]);
 
     const marketPrice = useMemo(() => {
         if (!activeVersion || !details) return details?.valuation?.market_price || 0;
@@ -746,6 +758,21 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                                     {details.mana_cost && <span className="opacity-30">•</span>}
                                     <span>{details.type}</span>
                                 </div>
+                                {tcgConfig.specificAttributes && tcgConfig.specificAttributes.length > 0 && (
+                                    <div className="flex flex-wrap items-center gap-2 pt-1">
+                                        {tcgConfig.specificAttributes.map(attr => {
+                                            const attrsObj = (details as any).tcg_specific_attributes || {};
+                                            const val = attrsObj[attr.key] ?? (details as any)[attr.key];
+                                            if (val === undefined || val === null || val === '') return null;
+                                            const displayVal = Array.isArray(val) ? val.join(', ') : String(val);
+                                            return (
+                                                <span key={attr.key} className={`text-[10px] px-2.5 py-0.5 rounded-full border font-black uppercase tracking-wider ${attr.badgeBg || 'bg-white/5 border-white/10'} ${attr.badgeTextColor || 'text-white'}`}>
+                                                    {attr.label}: {displayVal}
+                                                </span>
+                                            );
+                                        })}
+                                    </div>
+                                )}
                             </div>
 
                             <div className="p-4 md:p-6 rounded-2xl bg-white/[0.03] border border-white/5 space-y-3">
@@ -760,7 +787,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                             </div>
 
                             <div className="space-y-6 pt-2">
-                                {!details?.is_accessory && (
+                                {!details?.is_accessory && relevantFormats.length > 0 && (
                                     <div className="space-y-4 pt-2">
                                         <h3 className="text-xs font-web-titles font-normal uppercase tracking-widest text-neutral-500 flex items-center justify-between">
                                             Legalidad de Formato
@@ -790,7 +817,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                                 )}
 
                                 {/* Marketplace Actions - Optimized side-by-side layout */}
-                                <div className={`grid grid-cols-1 ${details?.is_accessory ? '' : 'md:grid-cols-2'} gap-4 items-stretch`}>
+                                <div className={`grid grid-cols-1 ${(!details?.is_accessory && externalMarket) ? 'md:grid-cols-2' : ''} gap-4 items-stretch`}>
                                     {/* Left Column: Local Inventory & Actions */}
                                     <div className="flex flex-col gap-3">
                                         {/* GK Price Box */}
@@ -877,10 +904,10 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                                         )}
                                     </div>
 
-                                    {/* Right Column: External Market */}
-                                    {!details?.is_accessory && (
+                                    {/* Right Column: External Market (Dynamic per TCG) */}
+                                    {!details?.is_accessory && externalMarket && (
                                         <a
-                                            href={ckUrl}
+                                            href={externalMarket.url}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="flex flex-col justify-between p-5 md:p-6 rounded-2xl bg-neutral-900 hover:bg-geeko-cyan/10 border border-white/5 hover:border-geeko-cyan transition-all group relative overflow-hidden gap-4"
@@ -888,7 +915,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                                             <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity" />
                                             <div className="space-y-1 relative z-10">
                                                 <span className="text-[10px] font-semibold uppercase text-neutral-500 tracking-widest group-hover:text-geeko-cyan transition-colors">Mercado Externo</span>
-                                                <div className="text-base md:text-lg font-web-titles font-normal leading-tight">Comprar @ CardKingdom</div>
+                                                <div className="text-base md:text-lg font-web-titles font-normal leading-tight">{externalMarket.label}</div>
                                             </div>
                                             <div className="flex items-center justify-between gap-3 w-full relative z-10 mt-auto">
                                                 <span className="text-xl md:text-3xl font-titles font-medium text-white group-hover:text-geeko-cyan transition-colors">

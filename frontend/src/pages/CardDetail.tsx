@@ -4,7 +4,7 @@ import {
     X, ShoppingCart, RotateCw, ExternalLink, Loader2,
     ArrowLeft, CheckCircle2, AlertCircle, ChevronLeft, ChevronRight
 } from 'lucide-react';
-import { getCardKingdomUrl } from '../utils/urlUtils';
+import { getTcgConfig, getExternalMarketplaceLink } from '../config/tcgRegistry';
 import { fetchCardDetails, addToCart } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import { Header } from '../components/Navigation/Header';
@@ -147,7 +147,8 @@ export const CardDetail: React.FC = () => {
         }
     };
 
-    const relevantFormats = ['standard', 'pioneer', 'modern', 'legacy', 'commander', 'pauper'];
+    const tcgConfig = useMemo(() => getTcgConfig(details?.game), [details?.game]);
+    const relevantFormats = useMemo(() => tcgConfig.formats || [], [tcgConfig]);
 
     const isDFC = details?.name?.includes(' // ');
     const hasMultipleFaces = (details?.card_faces && details.card_faces.length > 1) || isDFC;
@@ -227,10 +228,17 @@ export const CardDetail: React.FC = () => {
     const isFoil = activeVersion ? (activeVersion.is_foil || activeVersion.finish === 'foil') : !!(details?.is_foil || details?.finish === 'foil');
     const currentStock = (activeVersion?.stock ?? details?.stock ?? details?.total_stock ?? 0);
 
-    const ckUrl = useMemo(() => {
-        if (!details) return '#';
-        return getCardKingdomUrl(details.name, isFoil);
-    }, [details?.name, isFoil]);
+    const externalMarket = useMemo(() => {
+        if (!details || details.is_accessory) return null;
+        const extId = (activeVersion as any)?.external_id || (details as any)?.external_id || (activeVersion as any)?.tcgplayer_id || (details as any)?.tcgplayer_id;
+        return getExternalMarketplaceLink(details.game, {
+            name: details.name,
+            isFoil,
+            externalId: extId,
+            setCode: details.set_code,
+            collectorNumber: activeVersion?.collector_number || details.collector_number
+        });
+    }, [details, isFoil, activeVersion]);
 
     if (error) {
         return (
@@ -470,6 +478,21 @@ export const CardDetail: React.FC = () => {
                                     <span className="text-neutral-700">/</span>
                                     <span className="text-geeko-gold uppercase text-[10px] font-black tracking-[0.2em]">{details.rarity}</span>
                                 </div>
+                                {tcgConfig.specificAttributes && tcgConfig.specificAttributes.length > 0 && (
+                                    <div className="flex flex-wrap items-center gap-2 pt-1">
+                                        {tcgConfig.specificAttributes.map(attr => {
+                                            const attrsObj = (details as any).tcg_specific_attributes || {};
+                                            const val = attrsObj[attr.key] ?? (details as any)[attr.key];
+                                            if (val === undefined || val === null || val === '') return null;
+                                            const displayVal = Array.isArray(val) ? val.join(', ') : String(val);
+                                            return (
+                                                <span key={attr.key} className={`text-[10px] px-2.5 py-0.5 rounded-full border font-black uppercase tracking-wider ${attr.badgeBg || 'bg-white/5 border-white/10'} ${attr.badgeTextColor || 'text-white'}`}>
+                                                    {attr.label}: {displayVal}
+                                                </span>
+                                            );
+                                        })}
+                                    </div>
+                                )}
 
                                 {/* Prominent Stock Status Badge */}
                                 <div className="flex items-center gap-3 pt-1">
@@ -488,7 +511,7 @@ export const CardDetail: React.FC = () => {
                             </div>
 
                             {/* BUY BOX & LEGALITY GRID (PLACED FIRST FOR INSTANT ACCESS) */}
-                            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 items-start">
+                            <div className={`grid grid-cols-1 ${(!details?.is_accessory && relevantFormats.length > 0) ? 'xl:grid-cols-2' : ''} gap-8 items-start`}>
                                 {/* Marketplace */}
                                 <div className="space-y-6">
                                     <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-text-low pl-2">Trading Hub</h3>
@@ -496,7 +519,7 @@ export const CardDetail: React.FC = () => {
                                     <div className="p-6 lg:p-8 rounded-[32px] bg-gradient-to-br from-geeko-cyan/10 via-transparent to-transparent border border-white/10 group relative overflow-hidden hover:border-geeko-cyan/30 transition-colors">
                                         <div className="absolute top-0 right-0 w-40 h-40 bg-geeko-cyan/5 rounded-full blur-[50px] pointer-events-none" />
                                         <div className="text-[9px] font-black uppercase text-geeko-cyan tracking-[0.2em] mb-4">
-                                            {details?.game === 'GND' ? 'Geekorium Price' : 'Card Kingdom Price'}
+                                            {details?.game === 'MTG' ? 'Card Kingdom Price' : 'Geekorium Price'}
                                         </div>
                                         <div className="flex flex-col gap-6">
                                             {/* Price + Variant Badge */}
@@ -611,16 +634,16 @@ export const CardDetail: React.FC = () => {
                                         </a>
                                     )}
 
-                                    {!details?.is_accessory && details?.game !== 'GND' && (
+                                    {!details?.is_accessory && externalMarket && (
                                         <a
-                                            href={ckUrl}
+                                            href={externalMarket.url}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="w-full flex items-center justify-between p-6 rounded-2xl bg-neutral-900/30 hover:bg-geeko-cyan/5 border border-white/5 hover:border-geeko-cyan/30 transition-all group"
                                         >
                                             <div className="flex flex-col">
                                                 <span className="text-[9px] font-black uppercase text-text-low tracking-[0.2em] mb-1">Market Price</span>
-                                                <span className="text-lg font-bold">Standard @ CardKingdom</span>
+                                                <span className="text-lg font-bold">{externalMarket.label}</span>
                                             </div>
                                             <div className="flex items-center gap-4">
                                                 <span className="text-2xl font-mono font-black text-black dark:text-white">$ {details.valuation?.market_price ? Number(details.valuation?.market_price).toFixed(2) : '---'}</span>
@@ -632,8 +655,8 @@ export const CardDetail: React.FC = () => {
                                     )}
                                 </div>
 
-                                {/* Legality */}
-                                {!details?.is_accessory && details?.game !== 'GND' && (
+                                {/* Legality (Dynamic per TCG) */}
+                                {!details?.is_accessory && relevantFormats.length > 0 && (
                                     <div className="space-y-6">
                                         <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-text-low pl-2">Format Legality</h3>
                                         <div className="grid grid-cols-2 gap-3">
