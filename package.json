@@ -1,5 +1,7 @@
 {
   "scripts": {
-    "dev:all": "concurrently \"supabase start\" \"cd frontend && pnpm install && pnpm run dev\""
+    "dev:all": "concurrently \"supabase start\" \"cd frontend && pnpm install && pnpm run dev\"",
+    "graph:update": "python -m graphify update .",
+    "types:db": "npx supabase gen types typescript --local > frontend/src/types/database.types.ts"
   }
 } 

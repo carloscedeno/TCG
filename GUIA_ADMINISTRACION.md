@@ -60,6 +60,7 @@ Accede mediante la tarjeta **"Inventory Terminal"** o navegando a `/admin/invent
 ### 1. Lista de Productos
 
 - Muestra todos los productos disponibles con su imagen, nombre, set y precio.
+- **Ubicación Física en Tienda**: Para la correspondencia de coordenadas (estanterías, ficheros y carpetas), consultar [[docs/reference/ESTRUCTURA_UBICACION_FISICA_SINGLES|Estructura de Ubicación Física de Singles]].
 
 ### 2. Edición Rápida de Stock (Quick Edit)
 

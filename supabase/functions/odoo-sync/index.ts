@@ -1,3 +1,6 @@
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.47.10';
+
+import { reserveSortSwiftCard } from './sortswift.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -288,7 +291,7 @@ Deno.serve(async (req: Request) => {
       });
     }
 
-    if (action === 'sync_order') {
+    if (action === 'sync_order' || action === 'create_order') {
       const { order_data } = reqBody;
       if (!order_data || !order_data.items) {
         throw new Error("Missing order_data in request");
@@ -439,6 +442,44 @@ Deno.serve(async (req: Request) => {
         }
       } catch (linkErr) {
         console.error('[Odoo Sync] Error linking odoo_order_id in orders:', linkErr);
+      }
+
+      // Step 4: Hold physical MTG cards on SortSwift for items in this order
+      try {
+        const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
+        const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
+        if (cleanRef && supabaseUrl && supabaseKey) {
+          const supabase = createClient(supabaseUrl, supabaseKey);
+          const { data: orderItems } = await supabase
+            .from('order_items')
+            .select('id, product_id')
+            .eq('order_id', cleanRef);
+
+          if (Array.isArray(orderItems)) {
+            for (const oi of orderItems) {
+              if (oi.product_id) {
+                const { data: prod } = await supabase
+                  .from('products')
+                  .select('sortswift_id')
+                  .eq('id', oi.product_id)
+                  .maybeSingle();
+
+                if (prod?.sortswift_id) {
+                  const hold = await reserveSortSwiftCard(prod.sortswift_id, oi.id, 60);
+                  if (hold && hold.id) {
+                    await supabase
+                      .from('order_items')
+                      .update({ sortswift_reservation_id: hold.id })
+                      .eq('id', oi.id);
+                    console.log(`[SortSwift Hold] Attached reservation ${hold.id} to order_item ${oi.id}`);
+                  }
+                }
+              }
+            }
+          }
+        }
+      } catch (ssErr: any) {
+        console.error('[SortSwift Hold] Non-fatal error reserving cards on SortSwift:', ssErr.message);
       }
 
       return new Response(JSON.stringify({ success: true, order_id: orderId }), {

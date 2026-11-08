@@ -737,3 +737,19 @@ e.sub) a través de la interfaz XML-RPC para limpiar los registros existentes.
 - **Extracción de la relación PostgREST/Supabase (`sets`)**: Supabase devolvía la relación `sets` en algunos casos como un arreglo de objetos (`[{ set_name: '...', set_code: '...' }]`) en lugar de un objeto único. El acceso directo `v.sets?.set_name` retornaba `undefined`, lo que activaba el fallback predeterminado `'Unknown Set'` y `'??'`.
 - **Resiliencia de `all_versions`**: Se implementaron las funciones auxiliares `getSetName` y `getSetCode` en `frontend/src/utils/api.ts` para extraer de forma segura los nombres y códigos de edición desde arreglos o u objetos embebidos de PostgREST, manteniendo los metadatos devueltos por la API si la consulta de Supabase retornaba datos incompletos.
 - **Despliegue a Producción**: Cambios agregados y empujados a `dev` y `main` con verificación previa de compilación local y grafo de conocimiento.
+
+## Sesión 2026-11-07: Pruebas E2E Tripartitas y Estabilización SortSwift-Odoo-Web
+
+### 44. Integración Tripartita E2E (Web -> SortSwift -> Odoo) & Prevención de Sobreescritura de Items Web
+- **Contexto**: Al crear una orden en el flujo de checkout asistido, la web gobierna la transacción: bloquea el stock web a 0, crea la orden en Odoo via odoo-sync, y coloca un hold temporal de 60 minutos en SortSwift sobre la carta física (order_items.sortswift_reservation_id).
+- **Problema Descubierto**:
+  1. Odoo configurado con acciones automatizadas dispara inmediatamente un webhook de sale.order hacia odoo-webhook. En la implementación anterior, odoo-webhook ejecutaba DELETE FROM order_items WHERE order_id = targetWebOrderId y reconstruía las líneas desde Odoo, borrando el sortswift_reservation_id que odoo-sync acababa de asociar.
+  2. En el sandbox de SortSwift, invocar POST /raw-cards/{id}/return sobre una carta que ya tiene estado vailable incrementa su cantidad física (+1). Si la cantidad era 1, pasa a 2, por lo que un commit posterior reduce la cantidad a 1 y la carta sigue apareciendo como vailable.
+  3. Al consultar pedidos en PostgREST (orders), combinar id.eq.<val>,odoo_order_id.eq.<val> en .or() cuando <val> no es un UUID válido causa invalid input syntax for type uuid en PostgreSQL.
+- **Solución Implementada**:
+  1. En odoo-webhook/index.ts, aislar la reconstrucción de order_items únicamente para pedidos creados de origen en Odoo (if (!webOrderId)). Para pedidos originados en la web, odoo-webhook solo actualiza el estado (status), monto y odoo_order_id, preservando intactos los items y reservas web.
+  2. En odoo-webhook/index.ts, validar con regex UUID antes de consultar por id en .or(). Si es string normal, consultar estrictamente por odoo_order_id.
+  3. En SortSwiftClient y tests, condicionar 
+eturn_card_to_sandbox para que solo se invoque si el estado de la carta es 'removed' o su cantidad es 0, evitando inflar el inventario artificialmente.
+- **Resultado**: Suite de pruebas E2E automatizada (scripts/tests/e2e_full_checkout_sortswift_test.py) con 3 escenarios críticos (Checkout con Commit, Checkout con Cancelación y Venta Directa POS en tienda) pasando al 100%.
+

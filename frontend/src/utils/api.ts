@@ -485,11 +485,11 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
               const productMap = new Map();
               if (productsData) {
                 for (const p of productsData) {
-                  const safeFinish = (p.finish || 'nonfoil').toLowerCase();
+                  const safeFinish = (p.finish || 'nonfoil').toLowerCase().replace('_old', '');
                   const key = `${p.printing_id}-${safeFinish}`;
                   stockMap.set(key, (stockMap.get(key) || 0) + (p.stock || 0));
                   
-                  if (!productMap.has(key) && p.price) {
+                  if ((!productMap.has(key) || (p.stock && p.stock > 0)) && p.price) {
                       productMap.set(key, { 
                           price: p.price, 
                           discount_percentage: p.discount_percentage, 

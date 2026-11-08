@@ -109,7 +109,7 @@ Artefactos del Compound step:
 - ✅ **Gestión Avanzada de Descripciones y UX Premium (Mayo 2026)**: Restauración completa de la visibilidad de descripciones para productos y eventos. Implementación de un **Modal de Edición Full** en el panel administrativo, eliminando la edición inline inestable. Optimización de la navegación mediante redirección directa a páginas de detalle y garantía de scroll al inicio (`ScrollToTop`) en cada cambio de ruta.
 - ✅ **Prevención de Deadlocks y Concurrencia en Checkout (Mayo 2026)**: Refactorización total del RPC `create_order_atomic` para implementar ordenación canónica por tipo e ID de ítem antes de reservar stock, eliminando interbloqueos mutuos en transacciones simultáneas durante picos de tráfico en producción.
 
-- ? **Sincron�a UI/DB de Filtros (Mayo 2026)**: Desbloqueo del l�mite de filtros de precio y conexi�n funcional de los toggles de Ofertas, Preventas y la categor�a 'Otros' hacia los RPC de Supabase. Eliminaci�n de insignias residuales ('Com�n') en productos sellados.
+- ? **Sincronía UI/DB de Filtros (Mayo 2026)**: Desbloqueo del límite de filtros de precio y conexión funcional de los toggles de Ofertas, Preventas y la categoría 'Otros' hacia los RPC de Supabase. Eliminación de insignias residuales ('Común') en productos sellados.
 
 - ✅ **Dev Workflow Upgrade (Junio 2026)**: Implementación de Graphify (Knowledge Graph), SESSION_STATE, Context Budget, y Spec-First para mejorar la eficiencia del desarrollo y retención de contexto.
 

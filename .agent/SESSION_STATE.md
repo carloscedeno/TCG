@@ -5,19 +5,24 @@
 
 ---
 
-## 📅 Última sesión: 2026-10-26
-**Rama activa:** `dev`
-**Último commit conocido:** 7f001361
-**En progreso:** Endurecimiento de Seguridad (Security Hardening). Neutralizadas RPCs críticas `run_migration_sql` y `make_admin_by_email` en DEV y PROD. RLS forzado en `user_collections`. Parcheadas vulnerabilidades críticas en frontend (`handlebars@4.7.10`, `vite@7.3.7`). Desindexado `.env.prod` de Git y reforzado `.gitignore`.
+## 📅 Última sesión: 2026-11-07
+**Rama activa:** dev
+**En progreso:** Suite E2E completa de 3 tests completada y verificada al 100% en DEV (`scripts/tests/e2e_full_checkout_sortswift_test.py`). Flujo gobernado por la Web:
+1. Web Checkout -> Hold temporal 60m en SortSwift (`order_items.sortswift_reservation_id`) -> Bloqueo web stock a 0 -> Odoo SO creada.
+2. Odoo Factura Pagada/Entrega -> Webhook confirma en DB -> Commit permanente en SortSwift (carta removida de inventario físico).
+3. Odoo Cancelación -> Webhook libera hold en SortSwift (`reservedQuantity` vuelve a 0) -> Orden cancelada en DB.
+4. Venta Directa en Tienda (POS Odoo) -> Picking Done -> Deducción directa física inmediata en SortSwift.
+Solucionada condición de carrera en webhook de `sale.order` para proteger items y reservas web. Build de frontend verificado sin errores.
 
 ## 📁 Zona Caliente (archivos tocados recientemente)
-- `frontend/package.json` & `frontend/pnpm-lock.yaml` — Parches de dependencias críticas y overrides.
-- `supabase/migrations/20261026013000_security_hardening_drop_dangerous_rpcs.sql` — Migración de neutralización RPC.
-- `.gitignore` — Protección estricta de `.env.*`.
+- supabase/functions/odoo-sync/index.ts — Hook de reserva física en SortSwift al crear orden de compra web.
+- supabase/functions/odoo-webhook/index.ts — Protección de items web frente a sobreescritura de Odoo; Hooks de commit y release de SortSwift.
+- scripts/sync/common/sortswift_client.py — Cliente SortSwift Python con métodos `reserve_card`, `commit_reservation`, `release_reservation`, `deduct_card`, `reset_sandbox`.
+- scripts/tests/e2e_full_checkout_sortswift_test.py — Suite automatizada de pruebas E2E (3/3 pasando 100%).
+- frontend/src/utils/api.ts — Normalización de variantes y sanitización de finish.
 
 ## ⏭️ Próxima acción recomendada
-Rotar la contraseña de base de datos de DEV en el dashboard de Supabase y continuar con el roadmap.
-
+Verificar en el catálogo/admin de DEV (dev.geekorium.shop / /admin/inventory) la visualización de las cartas sincronizadas con su coordenada física y costo.
 ## 🚫 Restricciones activas
 - NO usar `npm` — solo `pnpm`
 - NO modificar PROD sin backup explícito

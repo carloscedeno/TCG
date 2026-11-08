@@ -37,7 +37,7 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    console.log("Iniciando sincronización BCV...");
+    console.log("Iniciando sincronización BCV y Binance...");
     
     // 1. Obtener tasa del BCV (Oficial)
     const oficialResponse = await fetch("https://ve.dolarapi.com/v1/dolares/oficial");
@@ -95,8 +95,8 @@ Deno.serve(async (req: Request) => {
     const today = new Date().toISOString().split('T')[0];
     const results = [];
 
-    // Función auxiliar para procesar una moneda
-    async function updateOdooCurrency(currencyName: string, bcvRate: number) {
+    // Función auxiliar para procesar una moneda con tasa respecto a moneda principal (USD)
+    async function updateOdooCurrency(currencyName: string, odooRate: number) {
       const searchCurrency = await odooJsonRpc(odooUrl, 'call', {
         service: 'object',
         method: 'execute_kw',
@@ -109,7 +109,6 @@ Deno.serve(async (req: Request) => {
       }
 
       const currencyId = searchCurrency[0];
-      const odooRate = 1 / bcvRate;
 
       const searchRate = await odooJsonRpc(odooUrl, 'call', {
         service: 'object',
@@ -123,24 +122,32 @@ Deno.serve(async (req: Request) => {
           method: 'execute_kw',
           args: [odooDb, uid, odooApiKey, 'res.currency.rate', 'write', [searchRate, { rate: odooRate }]]
         });
-        return { currency: currencyName, status: 'Updated', rate: bcvRate, odooRate };
+        return { currency: currencyName, status: 'Updated', rate: odooRate };
       } else {
         await odooJsonRpc(odooUrl, 'call', {
           service: 'object',
           method: 'execute_kw',
           args: [odooDb, uid, odooApiKey, 'res.currency.rate', 'create', [{ currency_id: currencyId, name: today, rate: odooRate }]]
         });
-        return { currency: currencyName, status: 'Created', rate: bcvRate, odooRate };
+        return { currency: currencyName, status: 'Created', rate: odooRate };
       }
     }
 
-    // 4. Actualizar USD (Oficial) y USB (Binance/Paralelo)
-    results.push(await updateOdooCurrency('USD', rateOficial));
-    results.push(await updateOdooCurrency('USB', rateParalelo));
+    // 4. Actualizar tasas relativas a USD (Moneda Principal = USD = 1.0)
+    // Para VEF y VES (Bolívares Oficial BCV): 1 USD = rateOficial Bolívares
+    results.push(await updateOdooCurrency('VEF', rateOficial));
+    results.push(await updateOdooCurrency('VES', rateOficial));
+
+    // Para USB (Dólar Binance USDT): paridad Oficial / Paralelo -> 1 USD = (rateOficial / rateParalelo) USB
+    const rateUsb = rateOficial / rateParalelo;
+    results.push(await updateOdooCurrency('USB', rateUsb));
+
+    // Si existe VEB (Bolívar Paralelo), actualizar con tasa de Binance directa (1 USD = rateParalelo Bs)
+    results.push(await updateOdooCurrency('VEB', rateParalelo));
 
     return new Response(JSON.stringify({ 
       success: true, 
-      message: "Sincronización completada.",
+      message: "Sincronización completada exitosamente.",
       details: results
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

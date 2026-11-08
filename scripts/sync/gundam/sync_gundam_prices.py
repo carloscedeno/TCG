@@ -68,25 +68,29 @@ def main():
     supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
     # Traemos todas las card_printings de Gundam que ya tienen link de CT en related_uris
+    print("Obteniendo IDs de cartas de Gundam...")
+    cards_res = supabase.table('cards').select('card_id, card_name').eq('game_id', 17).execute()
+    gundam_cards = {c['card_id']: c['card_name'] for c in cards_res.data}
+    gundam_card_ids = list(gundam_cards.keys())
+
     print("Descargando printings con link de CardTrader desde Supabase...")
     all_printings = []
-    page = 0
-    page_size = 1000
-    while True:
+    chunk_size = 100
+    for i in range(0, len(gundam_card_ids), chunk_size):
+        chunk_ids = gundam_card_ids[i:i+chunk_size]
         res = (supabase.table('card_printings')
-               .select('printing_id, related_uris, avg_market_price_usd, cards!inner(card_name, game_id)')
-               .eq('cards.game_id', 17)
-               .range(page * page_size, (page + 1) * page_size - 1)
+               .select('printing_id, related_uris, avg_market_price_usd, card_id')
+               .in_('card_id', chunk_ids)
                .execute())
-        if not res.data:
-            break
-        # Solo procesamos si tiene related_uris y cardtrader link
-        batch = [
-            p for p in res.data
-            if p.get('related_uris') and p['related_uris'].get('cardtrader')
-        ]
-        all_printings.extend(batch)
-        page += 1
+        
+        if res.data:
+            batch = [
+                p for p in res.data
+                if p.get('related_uris') and p['related_uris'].get('cardtrader')
+            ]
+            for p in batch:
+                p['cards'] = {'card_name': gundam_cards[p['card_id']], 'game_id': 17}
+            all_printings.extend(batch)
 
     print(f"  -> {len(all_printings)} printings de Gundam con link de CT para actualizar.")
 

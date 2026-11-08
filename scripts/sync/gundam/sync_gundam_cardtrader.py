@@ -149,7 +149,7 @@ def main():
     gundam_card_ids = list(gundam_cards.keys())
     
     # 3.2 Fetch printings for those cards in chunks
-    chunk_size = 200
+    chunk_size = 100
     for i in range(0, len(gundam_card_ids), chunk_size):
         chunk_ids = gundam_card_ids[i:i+chunk_size]
         res = (supabase.table('card_printings')

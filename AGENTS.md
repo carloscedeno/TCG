@@ -32,7 +32,19 @@ Fall back to Grep/Glob/Read **only** when the graph doesn't cover what you need.
 
 ### Workflow
 
-1. The graph auto-updates on file changes (via hooks).
+1. The graph auto-updates on file changes (via git hooks: `post-commit`).
 2. Use `detect_changes` for code review.
 3. Use `get_affected_flows` to understand impact.
 4. Use `query_graph` pattern="tests_for" to check coverage.
+
+---
+
+## Engineering Knowledge Vault (Obsidian PKM)
+
+This project maintains an integrated **Obsidian Knowledge Vault** in `docs/` and root `00 - Geekorium Vault Hub.md`.
+
+### Agent Rules for Documentation:
+1. **System Design & ADRs**: Record major architectural decisions in `docs/architecture/adr/ADR-XXX.md`.
+2. **Session Memory**: Document complex tasks, bug investigations, and modifications in `docs/daily-logs/YYYY-MM-DD.md` or `docs/incident_reports/`.
+3. **Canonical Patterns**: Document reusable patterns in `docs/patterns/` and connect them with `[[wikilinks]]`.
+4. **Graphify Bridge**: Consult `docs/architecture/Graphify_Code_Map.md` to navigate high-level code communities.

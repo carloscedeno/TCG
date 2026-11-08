@@ -8,8 +8,21 @@ from concurrent.futures import ThreadPoolExecutor
 load_dotenv('.env')
 supabase = create_client(os.environ['DEV_SUPABASE_URL'], os.environ['DEV_SUPABASE_SERVICE_ROLE_KEY'])
 
-res = supabase.table('card_printings').select('printing_id, image_url').like('image_url', '%exburst.dev%').execute()
-printings = res.data
+print("Obteniendo IDs de cartas de Gundam...")
+cards_res = supabase.table('cards').select('card_id').eq('game_id', 17).execute()
+gundam_card_ids = [c['card_id'] for c in cards_res.data]
+
+printings = []
+chunk_size = 100
+for i in range(0, len(gundam_card_ids), chunk_size):
+    chunk_ids = gundam_card_ids[i:i+chunk_size]
+    res = (supabase.table('card_printings')
+           .select('printing_id, image_url')
+           .in_('card_id', chunk_ids)
+           .like('image_url', '%exburst.dev%')
+           .execute())
+    if res.data:
+        printings.extend(res.data)
 
 def test_url(url):
     try:
@@ -31,8 +44,8 @@ def heal_printing(p):
             base = base[:-len(s)]
             break
             
-    for i in range(1, 15):
-        guess = f"{base}_p{i}.webp"
+    guesses = [f"{base}.webp"] + [f"{base}_p{i}.webp" for i in range(1, 15)]
+    for guess in guesses:
         if test_url(guess):
             return {'printing_id': p['printing_id'], 'image_url': guess, 'old': url}
             

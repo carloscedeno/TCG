@@ -1,5 +1,11 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.47.10';
+import {
+  commitSortSwiftReservation,
+  releaseSortSwiftReservation,
+  deductSortSwiftDirectSale
+} from './sortswift.ts';
+
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -97,7 +103,59 @@ serve(async (req) => {
     const odooApiKey = Deno.env.get('ODOO_API_KEY');
 
     const results = [];
-    let odooUid: number | null = null;
+    
+// Helper to commit or release SortSwift reservations for an order
+async function processSortSwiftOrderCommit(supabase: any, orderRef: string, isCancel: boolean = false) {
+  if (!orderRef) return;
+  try {
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(orderRef);
+    let ordersQuery = supabase.from('orders').select('id, odoo_order_id');
+    if (isUuid) {
+      ordersQuery = ordersQuery.or(`id.eq.${orderRef},odoo_order_id.eq.${orderRef}`);
+    } else {
+      ordersQuery = ordersQuery.eq('odoo_order_id', orderRef);
+    }
+    const { data: orders, error: oErr } = await ordersQuery;
+    if (oErr) {
+      console.error('[SortSwift Hook] Error querying order:', oErr);
+      return;
+    }
+
+    if (!orders || orders.length === 0) {
+      console.log(`[SortSwift Hook] No order found matching reference: ${orderRef}`);
+      return;
+    }
+    const order = orders[0];
+
+    const { data: items, error: iErr } = await supabase
+      .from('order_items')
+      .select('id, product_id, quantity, sortswift_reservation_id')
+      .eq('order_id', order.id);
+
+    if (iErr) {
+      console.error('[SortSwift Hook] Error querying items:', iErr);
+      return;
+    }
+
+    if (Array.isArray(items)) {
+      for (const item of items) {
+        if (item.sortswift_reservation_id) {
+          if (isCancel) {
+            console.log(`[SortSwift Hook] Releasing reservation ${item.sortswift_reservation_id} for order ${order.id}`);
+            await releaseSortSwiftReservation(item.sortswift_reservation_id);
+          } else {
+            console.log(`[SortSwift Hook] Committing reservation ${item.sortswift_reservation_id} for order ${order.id}`);
+            await commitSortSwiftReservation(item.sortswift_reservation_id);
+          }
+        }
+      }
+    }
+  } catch (err: any) {
+    console.error('[SortSwift Hook] Error processing order reservation:', err.message);
+  }
+}
+
+let odooUid: number | null = null;
 
     // Helper to authenticate to Odoo if needed
     const getOdooUid = async () => {
@@ -183,10 +241,25 @@ serve(async (req) => {
                     console.log(`[Odoo Webhook] Syncing stock for ${p.default_code} to ${newStock} via Picking ${pickingName}`);
                     await supabase.from('products').update({ stock: newStock }).eq('id', p.default_code);
                     await supabase.from('accessories').update({ stock: newStock }).eq('id', p.default_code);
+
+                    if (newStock === 0) {
+                      const { data: pData } = await supabase.from('products').select('sortswift_id').eq('id', p.default_code).maybeSingle();
+                      if (pData?.sortswift_id) {
+                        console.log(`[SortSwift Direct Sale] Deducting physical card ${pData.sortswift_id} via picking ${pickingName}`);
+                        await deductSortSwiftDirectSale(pData.sortswift_id, pickingName);
+                      }
+                    }
                   }
+                }
+                if (pickingDetails && pickingDetails[0]?.origin) {
+                  await processSortSwiftOrderCommit(supabase, pickingDetails[0].origin, false);
                 }
               }
             }
+          }
+          const pickingOrigin = (pickingDetails && pickingDetails[0]?.origin) || record.origin;
+          if (pickingOrigin && (pickingState === 'done' || record.state === 'done')) {
+            await processSortSwiftOrderCommit(supabase, pickingOrigin, false);
           }
           results.push({ picking: pickingName, state: pickingState, status: 'synced_stock' });
         } catch (err: any) {
@@ -203,28 +276,34 @@ serve(async (req) => {
         console.log(`[Odoo Webhook] Processing Invoice/Refund: ${moveName}`);
 
         try {
-          const uid = await getOdooUid();
-          const moveDetails = await odooJsonRpc(odooUrl!, 'call', {
-            service: 'object',
-            method: 'execute_kw',
-            args: [
-              odooDb, uid, odooApiKey,
-              'account.move',
-              'read',
-              [[moveId]],
-              { fields: ['id', 'name', 'move_type', 'state', 'payment_state', 'invoice_line_ids', 'invoice_origin'] }
-            ]
-          });
+          let moveDetails: any[] = [];
+          try {
+            const uid = await getOdooUid();
+            moveDetails = await odooJsonRpc(odooUrl!, 'call', {
+              service: 'object',
+              method: 'execute_kw',
+              args: [
+                odooDb, uid, odooApiKey,
+                'account.move',
+                'read',
+                [[moveId]],
+                { fields: ['id', 'name', 'move_type', 'state', 'payment_state', 'invoice_line_ids', 'invoice_origin'] }
+              ]
+            });
+          } catch (rpcErr: any) {
+            console.warn(`[Odoo Webhook] Odoo RPC read for move ${moveId} skipped:`, rpcErr.message);
+          }
 
-          if (moveDetails && moveDetails.length > 0) {
-            const m = moveDetails[0];
-            const isRefund = m.move_type === 'out_refund';
-            const isPaid = m.payment_state === 'paid' || m.payment_state === 'in_payment';
-            const isCancelled = m.state === 'cancel';
-            const originSO = m.invoice_origin;
+          const m = (moveDetails && moveDetails.length > 0) ? moveDetails[0] : null;
+          const isRefund = m ? m.move_type === 'out_refund' : (record.move_type === 'out_refund');
+          const isPaid = m ? (m.payment_state === 'paid' || m.payment_state === 'in_payment') : (record.payment_state === 'paid' || record.payment_state === 'in_payment');
+          const isCancelled = m ? m.state === 'cancel' : (record.state === 'cancel');
+          const originSO = m?.invoice_origin || record.invoice_origin || record.origin || record.client_order_ref;
 
+          if (m) {
             const lineIds = m.invoice_line_ids || [];
             if (lineIds.length > 0) {
+              const uid = await getOdooUid();
               const lines = await odooJsonRpc(odooUrl!, 'call', {
                 service: 'object',
                 method: 'execute_kw',
@@ -262,7 +341,6 @@ serve(async (req) => {
                     await supabase.from('products').update({ stock: newStock }).eq('id', p.default_code);
                     await supabase.from('accessories').update({ stock: newStock }).eq('id', p.default_code);
                   } else if (isRefund || isCancelled) {
-                    // Fallback for non-storable products: add back returned quantity
                     const line = validLines.find((l: any) => l.product_id[0] === p.id);
                     const qty = Math.round(line?.quantity || 1);
                     console.log(`[Odoo Webhook] Reversing non-storable item: returning ${qty} of ${p.default_code}`);
@@ -274,16 +352,28 @@ serve(async (req) => {
                 }
               }
             }
+          }
 
-            // Sync Order status in Supabase if linked to an origin SO
-            if (originSO) {
-              if (isRefund) {
-                await supabase.from('orders').update({ status: 'refunded' }).eq('odoo_order_id', originSO);
-              } else if (isPaid) {
-                await supabase.from('orders').update({ status: 'paid' }).eq('odoo_order_id', originSO);
-              } else if (isCancelled) {
-                await supabase.from('orders').update({ status: 'cancelled' }).eq('odoo_order_id', originSO);
+          // Sync Order status in Supabase if linked to an origin SO
+          if (originSO) {
+            const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(originSO);
+            const updateOrder = (status: string) => {
+              if (isUuid) {
+                return supabase.from('orders').update({ status }).or(`id.eq.${originSO},odoo_order_id.eq.${originSO}`);
+              } else {
+                return supabase.from('orders').update({ status }).eq('odoo_order_id', originSO);
               }
+            };
+
+            if (isRefund) {
+              await updateOrder('refunded');
+              await processSortSwiftOrderCommit(supabase, originSO, true);
+            } else if (isPaid) {
+              await updateOrder('paid');
+              await processSortSwiftOrderCommit(supabase, originSO, false);
+            } else if (isCancelled) {
+              await updateOrder('cancelled');
+              await processSortSwiftOrderCommit(supabase, originSO, true);
             }
           }
           results.push({ move: moveName, status: 'processed_invoice' });
@@ -408,90 +498,90 @@ serve(async (req) => {
             }
           }
 
-          // B) Fetch the SO Lines to get products and quantities
-          let lines: any[] = [];
-          if (lineIds.length > 0) {
-            lines = await odooJsonRpc(odooUrl!, 'call', {
-              service: 'object',
-              method: 'execute_kw',
-              args: [
-                odooDb, uid, odooApiKey, 
-                'sale.order.line', 
-                'search_read', 
-                [[['id', 'in', lineIds]]],
-                { fields: ['product_id', 'product_uom_qty', 'price_unit', 'name'] }
-              ]
-            });
-          }
-          
-          // C) Delete existing order_items for this order
-          await supabase.from('order_items').delete().eq('order_id', targetWebOrderId);
-          
-          // D) Rebuild order_items from Odoo lines
-          const productIdsInLines = lines.map((l: any) => l.product_id[0]);
           let odooProducts: any[] = [];
-          if (productIdsInLines.length > 0) {
-            odooProducts = await odooJsonRpc(odooUrl!, 'call', {
-              service: 'object',
-              method: 'execute_kw',
-              args: [
-                odooDb, uid, odooApiKey, 
-                'product.product', 
-                'search_read', 
-                [[['id', 'in', productIdsInLines]]],
-                { fields: ['id', 'default_code', 'name', 'qty_available', 'is_storable'] }
-              ]
-            });
-          }
-          
-          const odooProductMap = new Map();
-          for (const p of odooProducts) {
-             odooProductMap.set(p.id, { default_code: p.default_code, name: p.name });
-          }
-          
-          const newOrderItems = [];
-          for (const line of lines) {
-             const odooProdId = line.product_id[0];
-             const prodInfo = odooProductMap.get(odooProdId);
-             const defaultCode = prodInfo?.default_code;
-             const productName = line.name || prodInfo?.name || "Producto de Odoo";
-             
-             let productId = null;
-             let accessoryId = null;
-             
-             if (defaultCode) {
-               const { data: prodData } = await supabase.from('products').select('id').eq('id', defaultCode).maybeSingle();
-               if (prodData) {
-                 productId = defaultCode;
-               } else {
-                 const { data: accData } = await supabase.from('accessories').select('id').eq('id', defaultCode).maybeSingle();
-                 if (accData) {
-                   accessoryId = defaultCode;
+          if (!webOrderId) {
+            // Only rebuild order_items if the order was created inside Odoo without a web origin
+            let lines: any[] = [];
+            if (lineIds.length > 0) {
+              lines = await odooJsonRpc(odooUrl!, 'call', {
+                service: 'object',
+                method: 'execute_kw',
+                args: [
+                  odooDb, uid, odooApiKey, 
+                  'sale.order.line', 
+                  'search_read', 
+                  [[['id', 'in', lineIds]]],
+                  { fields: ['product_id', 'product_uom_qty', 'price_unit', 'name'] }
+                ]
+              });
+            }
+            
+            // Delete existing order_items for this Odoo-origin order
+            await supabase.from('order_items').delete().eq('order_id', targetWebOrderId);
+            
+            // Rebuild order_items from Odoo lines
+            const productIdsInLines = lines.map((l: any) => l.product_id[0]);
+            if (productIdsInLines.length > 0) {
+              odooProducts = await odooJsonRpc(odooUrl!, 'call', {
+                service: 'object',
+                method: 'execute_kw',
+                args: [
+                  odooDb, uid, odooApiKey, 
+                  'product.product', 
+                  'search_read', 
+                  [[['id', 'in', productIdsInLines]]],
+                  { fields: ['id', 'default_code', 'name', 'qty_available', 'is_storable'] }
+                ]
+              });
+            }
+            
+            const odooProductMap = new Map();
+            for (const p of odooProducts) {
+               odooProductMap.set(p.id, { default_code: p.default_code, name: p.name });
+            }
+            
+            const newOrderItems = [];
+            for (const line of lines) {
+               const odooProdId = line.product_id[0];
+               const prodInfo = odooProductMap.get(odooProdId);
+               const defaultCode = prodInfo?.default_code;
+               const productName = line.name || prodInfo?.name || "Producto de Odoo";
+               
+               let productId = null;
+               let accessoryId = null;
+               
+               if (defaultCode) {
+                 const { data: prodData } = await supabase.from('products').select('id').eq('id', defaultCode).maybeSingle();
+                 if (prodData) {
+                   productId = defaultCode;
                  } else {
-                   accessoryId = defaultCode; 
+                   const { data: accData } = await supabase.from('accessories').select('id').eq('id', defaultCode).maybeSingle();
+                   if (accData) {
+                     accessoryId = defaultCode;
+                   } else {
+                     accessoryId = defaultCode; 
+                   }
                  }
                }
-             }
-             
-             newOrderItems.push({
-               order_id: targetWebOrderId,
-               product_id: productId,
-               accessory_id: accessoryId,
-               product_name: productName,
-               quantity: Math.round(line.product_uom_qty),
-               price_at_purchase: line.price_unit
-             });
-          }
-          
-          if (newOrderItems.length > 0) {
-             const { error: insertErr } = await supabase.from('order_items').insert(newOrderItems);
-             if (insertErr) {
-               console.error("[Odoo Webhook] Failed to insert new order_items:", insertErr.message);
-             }
-          }
-          
-          // E) Update total_amount and status for web-origin order if applicable
-          if (webOrderId) {
+               
+               newOrderItems.push({
+                 order_id: targetWebOrderId,
+                 product_id: productId,
+                 accessory_id: accessoryId,
+                 product_name: productName,
+                 quantity: Math.round(line.product_uom_qty),
+                 price_at_purchase: line.price_unit
+               });
+            }
+            
+            if (newOrderItems.length > 0) {
+               const { error: insertErr } = await supabase.from('order_items').insert(newOrderItems);
+               if (insertErr) {
+                 console.error("[Odoo Webhook] Failed to insert new order_items:", insertErr.message);
+               }
+            }
+          } else {
+            // E) Update total_amount, status and odoo_order_id for web-origin order, preserving web items & reservations
             const { data: updatedRows } = await supabase.from('orders').update({
               status: newStatus,
               odoo_order_id: odooOrderName,
@@ -504,6 +594,12 @@ serve(async (req) => {
                 status: newStatus,
                 total_amount: amountTotal
               }).eq('odoo_order_id', odooOrderName);
+            }
+
+            if (newStatus === 'paid') {
+              await processSortSwiftOrderCommit(supabase, webOrderId, false);
+            } else if (newStatus === 'cancelled') {
+              await processSortSwiftOrderCommit(supabase, webOrderId, true);
             }
           }
           

@@ -57,6 +57,7 @@ Thumbs.db
 
 # Supabase
 .supabase/
+supabase/.temp/
 
 # Frontend
 frontend/node_modules/

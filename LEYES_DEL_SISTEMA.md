@@ -50,14 +50,15 @@
 
 ---
 
-### Ley 4: DocumentaciÃ³n Obligatoria
+### Ley 4: Documentación Obligatoria (Obsidian PKM & Graphify)
 
 **Siempre** documentar:
 
-- Cambios significativos en cÃ³digo
-- Bugs encontrados y sus soluciones
-- Decisiones de diseÃ±o importantes
-- Sesiones de trabajo en `SESION_*.md`
+- Cambios significativos y decisiones de diseño en `docs/architecture/adr/ADR-XXX.md`
+- Bugs complejos y soluciones en `docs/incident_reports/`
+- Bitácoras y avance de sesión en `docs/daily-logs/YYYY-MM-DD.md`
+- Patrones canónicos de código en `docs/patterns/`
+- Actualizar el grafo AST con `graphify update .` tras cambios estructurales de código
 
 **Excepciones**: Cambios triviales (typos, formatting)
 
