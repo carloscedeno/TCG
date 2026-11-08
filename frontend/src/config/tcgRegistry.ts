@@ -52,7 +52,8 @@ export const TCG_REGISTRY: Record<string, TCGConfig> = {
       name: 'TCGplayer',
       label: 'Ver en TCGplayer',
       buildUrl: (card) => {
-        if (card.externalId) {
+        const isNumeric = /^\d+$/.test(String(card.externalId || '').trim());
+        if (isNumeric) {
           return `https://www.tcgplayer.com/product/${card.externalId}`;
         }
         return `https://www.tcgplayer.com/search/all/product?q=${encodeURIComponent(card.name)}`;
@@ -88,7 +89,8 @@ export const TCG_REGISTRY: Record<string, TCGConfig> = {
       name: 'TCGplayer',
       label: 'Ver en TCGplayer',
       buildUrl: (card) => {
-        if (card.externalId) {
+        const isNumeric = /^\d+$/.test(String(card.externalId || '').trim());
+        if (isNumeric) {
           return `https://www.tcgplayer.com/product/${card.externalId}`;
         }
         return `https://www.tcgplayer.com/search/all/product?q=${encodeURIComponent(card.name)}`;
@@ -108,7 +110,8 @@ export const TCG_REGISTRY: Record<string, TCGConfig> = {
       name: 'TCGplayer',
       label: 'Ver en TCGplayer',
       buildUrl: (card) => {
-        if (card.externalId) {
+        const isNumeric = /^\d+$/.test(String(card.externalId || '').trim());
+        if (isNumeric) {
           return `https://www.tcgplayer.com/product/${card.externalId}`;
         }
         return `https://www.tcgplayer.com/search/all/product?q=${encodeURIComponent(card.name)}`;

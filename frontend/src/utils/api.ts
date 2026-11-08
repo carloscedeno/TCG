@@ -768,6 +768,39 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
       }
     }
 
+    // Defensive guarantee: Always ensure game & omni-tcg attributes are accurately resolved
+    if (data) {
+      if (!data.game || data.game === 'MTG') {
+        try {
+          const { data: cpRow } = await supabase
+            .from('card_printings')
+            .select('tcg_specific_printing_attributes, cards(game_id, tcg_specific_attributes), sets(game_id)')
+            .eq('printing_id', sanitizedId)
+            .maybeSingle();
+
+          if (cpRow) {
+            const gid = cpRow.cards?.game_id || (Array.isArray(cpRow.sets) ? cpRow.sets[0]?.game_id : cpRow.sets?.game_id);
+            const GAME_MAP: Record<number, string> = { 16: 'RFB', 17: 'GND', 18: 'DGM', 22: 'MTG', 23: 'PKM', 13: 'OPC', 25: 'FAB', 12: 'LOR', 26: 'YGO', 27: 'WXS' };
+            if (gid && GAME_MAP[gid]) {
+              data.game = GAME_MAP[gid];
+              data.game_id = gid;
+            }
+            if (!data.tcg_specific_attributes || Object.keys(data.tcg_specific_attributes).length === 0) {
+              data.tcg_specific_attributes = cpRow.cards?.tcg_specific_attributes || {};
+            }
+            if (!data.tcgplayer_id) {
+              data.tcgplayer_id = cpRow.tcg_specific_printing_attributes?.tcgplayer_id;
+            }
+            if (!data.external_id) {
+              data.external_id = cpRow.tcg_specific_printing_attributes?.tcgplayer_id || cpRow.tcg_specific_printing_attributes?.sortswift_raw_id;
+            }
+          }
+        } catch (e) {
+          console.warn('[fetchCardDetails] Game enrichment check failed:', e);
+        }
+      }
+    }
+
     return data;
   } catch (error) {
     console.error('Fatal error in fetchCardDetails:', error);

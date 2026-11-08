@@ -36,7 +36,14 @@ export const CardDetail: React.FC = () => {
             set: initialCard.set,
             set_code: initialCard.set_code || '',
             game_id: initialCard.game_id,
-            game: initialCard.game || (initialCard.game_id === 17 ? 'GND' : 'MTG'),
+            game: initialCard.game || (() => {
+                const gid = initialCard.game_id;
+                const GAME_MAP: Record<number, string> = { 16: 'RFB', 17: 'GND', 18: 'DGM', 22: 'MTG', 23: 'PKM', 13: 'OPC', 25: 'FAB', 12: 'LOR', 26: 'YGO', 27: 'WXS' };
+                return (gid && GAME_MAP[gid]) || 'MTG';
+            })(),
+            tcg_specific_attributes: initialCard.tcg_specific_attributes,
+            external_id: initialCard.external_id || initialCard.tcgplayer_id,
+            tcgplayer_id: initialCard.tcgplayer_id,
             image_url: initialCard.image_url || initialImage,
             price: initialCard.price,
             original_price: initialCard.original_price,

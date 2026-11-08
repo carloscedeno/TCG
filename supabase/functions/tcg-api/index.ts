@@ -445,8 +445,18 @@ async function handleCardsEndpoint(supabase: SupabaseClient, path: string, metho
       const finalPrice = marketPrice > 0 ? marketPrice : marketPriceFoil;
       const valuationAvg = finalPrice;
 
+      const gid = cardData.game_id || setData.game_id;
+      const GAME_MAP: Record<number, string> = { 16: 'RFB', 17: 'GND', 18: 'DGM', 22: 'MTG', 23: 'PKM', 13: 'OPC', 25: 'FAB', 12: 'LOR', 26: 'YGO', 27: 'WXS' };
+      const resolvedGame = (gid && GAME_MAP[gid]) || 'MTG';
+      const extId = printing.tcg_specific_printing_attributes?.tcgplayer_id || printing.tcg_specific_printing_attributes?.sortswift_raw_id;
+
       return {
         card_id: printing.printing_id,
+        game_id: gid,
+        game: resolvedGame,
+        tcg_specific_attributes: cardData.tcg_specific_attributes || {},
+        external_id: extId,
+        tcgplayer_id: printing.tcg_specific_printing_attributes?.tcgplayer_id,
         name: cardData.card_name,
         mana_cost: cardData.mana_cost || '',
         type: cardData.type_line || '',
