@@ -50,6 +50,12 @@
 - 🔄 **Scripts & Sync Scrapers (Python)**:
   - `src/`: Scrapers de Scryfall / TCGPlayer y sincronizadores de stock/precios.
   - [[HANDOVER_PRICING]]: Mecánica de cálculo de precios y conversiones.
+- 🏛️ **Decisiones de Arquitectura (ADRs)**:
+  - [[docs/architecture/adr/ADR-001-obsidian-pkm-integration|ADR-001: Integración de Obsidian PKM]]
+  - [[docs/architecture/adr/ADR-002-tripartite-inventory-sortswift-odoo-web|ADR-002: Arquitectura Tripartita de Inventario (Web -> SortSwift -> Odoo)]]
+- 📅 **Bitácora Reciente de Desarrollo**:
+  - [[docs/daily-logs/2026-11-07|Daily Log 2026-11-07: Sincronización SortSwift, Resolución de Carrera en Odoo y Suite E2E]]
+  - [[docs/daily-logs/2026-10-05|Daily Log 2026-10-05: Puesta en marcha del Vault]]
 - 🗺️ **Grafo AST de Código**:
   - [[docs/architecture/Graphify_Code_Map|Mapa de Código & Comunidades Graphify]]: Puente entre el análisis AST de 5,400+ nodos y la arquitectura del proyecto.
   - [[graphify-out/GRAPH_REPORT.md|Graph Report Completo de Graphify]].
