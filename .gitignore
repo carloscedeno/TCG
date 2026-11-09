@@ -105,3 +105,5 @@ pg17/
 pg17.zip
 temp_supabase/
 scratch/
+
+scripts/sync/sortswift/*.json

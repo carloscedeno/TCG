@@ -753,3 +753,10 @@ e.sub) a través de la interfaz XML-RPC para limpiar los registros existentes.
 eturn_card_to_sandbox para que solo se invoque si el estado de la carta es 'removed' o su cantidad es 0, evitando inflar el inventario artificialmente.
 - **Resultado**: Suite de pruebas E2E automatizada (scripts/tests/e2e_full_checkout_sortswift_test.py) con 3 escenarios críticos (Checkout con Commit, Checkout con Cancelación y Venta Directa POS en tienda) pasando al 100%.
 
+
+### 2026-11-09: SortSwift Prod Inventory DEV Reset & Ingestion
+- Wiped test orders, cart items, and products in DEV (qfkqnnostzaqueujdms).
+- Synced 152 raw cards from SortSwift production across 7 TCGs (MTG, PKM, RFB, DGM, GND, OPC, FAB).
+- Guaranteed compliance with PostgreSQL trigger n_validate_tcg_attributes for all games.
+- Aggregated duplicate SKUs to respect products_unique_item constraint.
+- Preserved robot intake scans in image_url and linked TCGplayer IDs.
