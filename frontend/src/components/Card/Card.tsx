@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { RotateCw, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
+import { RotateCw, Plus, ChevronLeft, ChevronRight, ShoppingCart } from 'lucide-react';
 import { fetchCardDetails, addToCart } from '../../utils/api';
+import { isSinglesPurchaseDisabled, SINGLES_CLOSED_MESSAGE } from '../../utils/singlesConfig';
 import { CardImage } from './CardImage';
 
 export interface CardFace {
@@ -47,6 +48,8 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
   const [currentFaceIndex, setCurrentFaceIndex] = useState(0);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [addingToCart, setAddingToCart] = useState(false);
+  const isSingleCard = !is_accessory && !accessory_id;
+  const singlesDisabled = isSingleCard && isSinglesPurchaseDisabled();
 
   const isDFC = name?.includes(' // ');
   const hasMultipleFaces = (card_faces && card_faces.length > 1) || isDFC;
@@ -87,7 +90,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
   const handleQuickAdd = async (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
-    if (addingToCart) return;
+    if (addingToCart || singlesDisabled) return;
 
     setAddingToCart(true);
     try {
@@ -215,9 +218,16 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
 
         {showCartButton && !isArchive && (
           <button
-            onClick={handleQuickAdd}
-            className={`ml-4 w-9 h-9 rounded-full flex items-center justify-center transition-all border border-white/5 ${addingToCart ? 'bg-geeko-cyan text-black' : 'bg-white/5 text-text-low hover:bg-geeko-cyan hover:text-black hover:scale-110'}`}
-            title={(total_stock || 0) > 0 ? "Agregar al Carrito Rápido" : "Por encargo"}
+            disabled={singlesDisabled}
+            onClick={singlesDisabled ? (e) => { e.preventDefault(); e.stopPropagation(); } : handleQuickAdd}
+            className={`ml-4 w-9 h-9 rounded-full flex items-center justify-center transition-all border border-white/5 ${
+              singlesDisabled
+                ? 'bg-neutral-800 text-neutral-600 cursor-not-allowed opacity-50'
+                : addingToCart 
+                  ? 'bg-geeko-cyan text-black' 
+                  : 'bg-white/5 text-text-low hover:bg-geeko-cyan hover:text-black hover:scale-110'
+            }`}
+            title={singlesDisabled ? SINGLES_CLOSED_MESSAGE : ((total_stock || 0) > 0 ? "Agregar al Carrito Rápido" : "Por encargo")}
           >
             {addingToCart ? <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /> : <Plus size={20} strokeWidth={3} />}
           </button>
@@ -354,25 +364,31 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
 
         {showCartButton && (
           <button
-            onClick={handleQuickAdd}
+            disabled={singlesDisabled}
+            onClick={singlesDisabled ? (e) => { e.preventDefault(); e.stopPropagation(); } : handleQuickAdd}
             className={`absolute bottom-3 right-3 h-12 lg:h-10 rounded-full flex items-center justify-center transition-all duration-300 shadow-2xl z-20 group/addbtn ${
-              addingToCart 
-                ? 'w-12 lg:w-10 bg-white text-black scale-100 opacity-100' 
-                : 'w-12 lg:w-10 hover:w-[140px] bg-geeko-cyan text-black border border-white/20 shadow-[0_0_15px_rgba(0, 209, 255, 0.4)] opacity-100 translate-y-0 scale-100'
+              singlesDisabled
+                ? 'w-12 lg:w-10 hover:w-[195px] bg-neutral-900 text-neutral-400 border border-white/10 cursor-not-allowed opacity-80'
+                : addingToCart 
+                  ? 'w-12 lg:w-10 bg-white text-black scale-100 opacity-100' 
+                  : 'w-12 lg:w-10 hover:w-[140px] bg-geeko-cyan text-black border border-white/20 shadow-[0_0_15px_rgba(0, 209, 255, 0.4)] opacity-100 translate-y-0 scale-100'
             }`}
+            title={singlesDisabled ? SINGLES_CLOSED_MESSAGE : undefined}
           >
             <div className="flex items-center gap-2 whitespace-nowrap overflow-hidden px-1">
-              {addingToCart ? (
+              {singlesDisabled ? (
+                <ShoppingCart size={18} className="flex-shrink-0 opacity-40" />
+              ) : addingToCart ? (
                 <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin flex-shrink-0" />
               ) : (
                 <Plus size={22} strokeWidth={3.5} className="flex-shrink-0" />
               )}
               <span className="text-[10px] font-black uppercase tracking-tight opacity-0 group-hover/addbtn:opacity-100 transition-opacity duration-300 pointer-events-none">
-                Añadir al carrito
+                {singlesDisabled ? SINGLES_CLOSED_MESSAGE : 'Añadir al carrito'}
               </span>
             </div>
-            </button>
-          )}
+          </button>
+        )}
         </div>
       </div>
 

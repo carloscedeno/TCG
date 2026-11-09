@@ -1,5 +1,6 @@
 import { supabase } from './supabaseClient';
 import { getCardKingdomUrl } from './urlUtils';
+import { isSinglesPurchaseDisabled } from './singlesConfig';
 
 const API_BASE = import.meta.env.VITE_API_BASE || '';
 
@@ -1012,6 +1013,9 @@ export const fetchCart = async (): Promise<any> => {
 };
 
 export const addToCart = async (printingId: string, quantity: number = 1, finish: string = 'nonfoil', isAccessory: boolean = false): Promise<any> => {
+  if (!isAccessory && isSinglesPurchaseDisabled()) {
+    return { success: false, message: 'La compra de cartas está cerrada hasta nuevo aviso.' };
+  }
   try {
     const session = await supabase.auth.getSession();
 

@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { getCardKingdomUrl } from '../utils/urlUtils';
 import { fetchCardDetails, addToCart } from '../utils/api';
+import { isSinglesPurchaseDisabled, SINGLES_CLOSED_MESSAGE } from '../utils/singlesConfig';
 import { useAuth } from '../context/AuthContext';
 import { Header } from '../components/Navigation/Header';
 import { useCart } from '../context/CartContext';
@@ -104,6 +105,7 @@ export const CardDetail: React.FC = () => {
     };
 
     const handleAddToCart = async (e?: React.MouseEvent) => {
+        if (!details?.is_accessory && isSinglesPurchaseDisabled()) return;
         if (e) {
             e.preventDefault();
             e.stopPropagation();
@@ -596,15 +598,27 @@ export const CardDetail: React.FC = () => {
                                                     )}
                                                 </div>
 
-                                                <button
-                                                    data-testid="add-to-cart-button"
-                                                    onClick={handleAddToCart}
-                                                    disabled={isAdding}
-                                                    className="flex-1 h-12 rounded-xl bg-geeko-cyan text-black font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0, 209, 255, 0.3)] hover:shadow-[0_0_30px_rgba(0, 209, 255, 0.5)] hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 relative z-10"
-                                                >
-                                                    {isAdding ? <Loader2 size={16} className="animate-spin" /> : <ShoppingCart size={16} fill="currentColor" />}
-                                                    {isAdding ? '...' : ((activeVersion?.stock || 0) > 0 ? 'Agregar' : 'Encargo')}
-                                                </button>
+                                                {!details?.is_accessory && isSinglesPurchaseDisabled() ? (
+                                                    <button
+                                                        data-testid="add-to-cart-button"
+                                                        disabled={true}
+                                                        className="flex-1 h-12 rounded-xl bg-neutral-900 text-neutral-400 border border-white/10 font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 cursor-not-allowed opacity-80 relative z-10 shadow-none"
+                                                        title={SINGLES_CLOSED_MESSAGE}
+                                                    >
+                                                        <ShoppingCart size={16} className="opacity-40" />
+                                                        {SINGLES_CLOSED_MESSAGE}
+                                                    </button>
+                                                ) : (
+                                                    <button
+                                                        data-testid="add-to-cart-button"
+                                                        onClick={handleAddToCart}
+                                                        disabled={isAdding}
+                                                        className="flex-1 h-12 rounded-xl bg-geeko-cyan text-black font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0, 209, 255, 0.3)] hover:shadow-[0_0_30px_rgba(0, 209, 255, 0.5)] hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 relative z-10"
+                                                    >
+                                                        {isAdding ? <Loader2 size={16} className="animate-spin" /> : <ShoppingCart size={16} fill="currentColor" />}
+                                                        {isAdding ? '...' : ((activeVersion?.stock || 0) > 0 ? 'Agregar' : 'Encargo')}
+                                                    </button>
+                                                )}
                                             </div>
                                         </div>
                                     </div>
