@@ -232,11 +232,11 @@ def run_sync(dry_run=False):
         bin_name = it.get("inventory", {}).get("bin") or ""
         physical_loc = map_bin_to_store_location(bin_name, condition=condition, finish=finish)
         
-        # Images
+        # Images: Official catalog first, then TCGplayer CDN, fallback to robot scan
         imgs = it.get("images") or {}
         front_img = (imgs.get("front") or {}).get("url")
         cat_img = (imgs.get("catalog") or {}).get("url")
-        best_img = front_img or cat_img
+        official_img = cat_img or (f"https://tcgplayer-cdn.tcgplayer.com/product/{pid}_in_1000x1000.jpg" if pid else None) or front_img
         
         # Details from TCGplayer
         details = tcg_details.get(str(pid), {})
@@ -359,16 +359,22 @@ def run_sync(dry_run=False):
             
         if print_chk:
             printing_id = print_chk[0]["printing_id"]
-            # Update image_url to best scan and api_source_id
+            # Update image_url to official catalog image and preserve scan url
             if not dry_run:
+                existing_rel = print_chk[0].get("related_uris") or {}
+                if front_img:
+                    existing_rel["raw_scan_url"] = front_img
                 sb.table("card_printings").update({
-                    "image_url": best_img,
-                    "image_url_normal": cat_img or best_img,
+                    "image_url": official_img,
+                    "image_url_normal": official_img,
+                    "image_url_small": cat_img or (f"https://tcgplayer-cdn.tcgplayer.com/product/{pid}_200w.jpg" if pid else None) or official_img,
                     "api_source_id": str(pid),
+                    "related_uris": existing_rel,
                     "tcg_specific_printing_attributes": {
                         "tcgplayer_id": str(pid),
                         "sortswift_raw_id": ss_id,
-                        "sortswift_bin": bin_name
+                        "sortswift_bin": bin_name,
+                        "raw_scan_url": front_img
                     }
                 }).eq("printing_id", printing_id).execute()
         else:
@@ -382,14 +388,17 @@ def run_sync(dry_run=False):
                 "rarity": rarity,
                 "is_foil": is_foil,
                 "is_non_foil": not is_foil,
-                "image_url": best_img,
-                "image_url_normal": cat_img or best_img,
+                "image_url": official_img,
+                "image_url_normal": official_img,
+                "image_url_small": cat_img or (f"https://tcgplayer-cdn.tcgplayer.com/product/{pid}_200w.jpg" if pid else None) or official_img,
                 "api_source_id": str(pid),
                 "avg_market_price_usd": price_val,
+                "related_uris": {"raw_scan_url": front_img} if front_img else {},
                 "tcg_specific_printing_attributes": {
                     "tcgplayer_id": str(pid),
                     "sortswift_raw_id": ss_id,
-                    "sortswift_bin": bin_name
+                    "sortswift_bin": bin_name,
+                    "raw_scan_url": front_img
                 }
             }
             if not dry_run:
@@ -424,7 +433,7 @@ def run_sync(dry_run=False):
                 "price_usd": price_val,
                 "stock": qty,
                 "cost": cost_val,
-                "image_url": best_img,
+                "image_url": official_img,
                 "rarity": rarity,
                 "printing_id": printing_id,
                 "condition": condition,
