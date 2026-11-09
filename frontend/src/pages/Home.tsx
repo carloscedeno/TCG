@@ -478,16 +478,12 @@ const Home: React.FC = () => {
         {/* SINGLES Header (Production Style) */}
         {activeTab === 'marketplace' && (
           <>
-            {filters.games?.includes('MTG') && (
+            {filters.games && filters.games.length > 0 && (
               <div className="max-w-[1600px] mx-auto px-6 pt-6 flex items-center gap-2">
                 <Sparkles size={18} className="text-geeko-cyan fill-current" />
-                <span className="text-xs font-black uppercase tracking-[0.2em] text-text-high">SINGLES - MTG</span>
-              </div>
-            )}
-            {filters.games?.includes('GND') && (
-              <div className="max-w-[1600px] mx-auto px-6 pt-6 flex items-center gap-2">
-                <Sparkles size={18} className="text-red-500 fill-current" />
-                <span className="text-xs font-black uppercase tracking-[0.2em] text-text-high">SINGLES - GUNDAM</span>
+                <span className="text-xs font-black uppercase tracking-[0.2em] text-text-high">
+                  SINGLES - {filters.games.join(', ')}
+                </span>
               </div>
             )}
           </>

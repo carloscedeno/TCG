@@ -37,7 +37,7 @@ export const MobileMenuDrawer: React.FC<MobileMenuDrawerProps> = ({ isOpen, onCl
     }, [isOpen]);
 
     const navigateToGame = (gameCode: string) => {
-        const tab = gameCode === 'MTG' ? 'marketplace' : 'catalog';
+        const tab = ['MTG', 'GND', 'RFB', 'PKM', 'OPC', 'DGM', 'FAB'].includes(gameCode) ? 'marketplace' : 'catalog';
         navigate(`/?game=${gameCode}&tab=${tab}`);
         onClose();
     };
@@ -120,7 +120,7 @@ export const MobileMenuDrawer: React.FC<MobileMenuDrawerProps> = ({ isOpen, onCl
                                         <div className="flex flex-col">
                                             <span className="font-bold text-sm">{game.name}</span>
                                             <span className="text-[10px] text-text-low uppercase tracking-widest">
-                                                {game.code === 'MTG' ? 'Ver Stock' : 'Ver Catálogo'}
+                                                {['MTG', 'GND', 'RFB', 'PKM', 'OPC', 'DGM', 'FAB'].includes(game.code) ? 'Ver Stock' : 'Ver Catálogo'}
                                             </span>
                                         </div>
                                     </button>

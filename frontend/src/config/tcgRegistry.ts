@@ -72,7 +72,17 @@ export const TCG_REGISTRY: Record<string, TCGConfig> = {
     types: ['Unit', 'Command', 'Resource', 'Pilot', 'Base'],
     // Gundam no maneja formatos de legalidad MTG
     formats: undefined,
-    externalMarketplace: undefined,
+    externalMarketplace: {
+      name: 'TCGplayer',
+      label: 'Ver en TCGplayer',
+      buildUrl: (card) => {
+        const isNumeric = /^\d+$/.test(String(card.externalId || '').trim());
+        if (isNumeric) {
+          return `https://www.tcgplayer.com/product/${card.externalId}`;
+        }
+        return `https://www.tcgplayer.com/search/all/product?q=${encodeURIComponent(card.name)}`;
+      },
+    },
     specificAttributes: [
       { key: 'cost_level', label: 'Cost/Level', badgeBg: 'bg-blue-500/20 border-blue-500/30', badgeTextColor: 'text-blue-400' },
       { key: 'ap', label: 'AP', badgeBg: 'bg-amber-500/20 border-amber-500/30', badgeTextColor: 'text-amber-400' },

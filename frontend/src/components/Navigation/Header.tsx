@@ -49,7 +49,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
         if (location.pathname === '/rankings') {
             navigate(`/rankings?game=${gameCode}`);
         } else {
-            const tab = (gameCode === 'MTG' || gameCode === 'GND') ? 'marketplace' : 'catalog';
+            const tab = ['MTG', 'GND', 'RFB', 'PKM', 'OPC', 'DGM', 'FAB'].includes(gameCode) ? 'marketplace' : 'catalog';
             navigate(`/?game=${gameCode}&tab=${tab}`);
         }
     };
