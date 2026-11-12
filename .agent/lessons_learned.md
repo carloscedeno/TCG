@@ -2536,3 +2536,18 @@ useEffect(() => {
   3. En SortSwiftClient y tests, condicionar 
 eturn_card_to_sandbox para que solo se invoque si el estado de la carta es 'removed' o su cantidad es 0, evitando inflar el inventario artificialmente.
 - **Resultado**: Suite de pruebas E2E automatizada (scripts/tests/e2e_full_checkout_sortswift_test.py) con 3 escenarios críticos (Checkout con Commit, Checkout con Cancelación y Venta Directa POS en tienda) pasando al 100%.
+
+## Sesión 2026-11-12: Optimización Moxfield Modal, Jerarquía de Precios y Fix DFC Multi-TCG
+
+### Problemas Detectados
+1. **Recorte de Precio y CTA de Compra**: Al abrir el modal de carta, el precio ($), selector de acabado (Normal/Foil) y botón 'Agregar al Carrito' estaban ubicados debajo del texto de reglas y de las cajas de legalidad de formato. Cuando una carta (como Cerberusmon en Digimon o cartas complejas de MTG/YGO) tiene 10+ líneas de texto, empujaba el precio fuera de la ventana en laptops y monitores estándar, recortándolo.
+2. **Error de Imagen 'No Disponible' en Cartas con '//'**: La lógica 
+ame.includes(' // ') asumía erróneamente que cualquier carta con barras dobles era DFC con dos caras físicas. En Digimon y otros TCGs, card_faces no existe para cartas split, por lo que currentFace evaluaba a {} y perdía la imagen oficial.
+3. **Etiquetas HTML Crudas en Reglas**: Textos de SortSwift y APIs de Bandai contenían etiquetas HTML (<br>, <em>, <strong>) que se mostraban como texto plano no renderizado.
+
+### Soluciones Implementadas
+1. **Prioridad Comercial al Top**: Se reestructuró el panel derecho para colocar Geekorium Price, acabado Normal/Foil, botón 'Agregar al Carrito' y 'Mercado Externo' en la parte superior, directamente debajo del título y atributos.
+2. **DFC Condicional Estricto**: Se aseguró que hasMultipleFaces requiera details?.card_faces && details.card_faces.length > 1, y siempre tenga fallback a details.image_url.
+3. **Parser de Texto de Reglas**: Se implementó 
+enderOracleText que convierte <br> en saltos de línea limpios, remueve etiquetas HTML crudas y aplica tipografía compacta (	ext-xs md:text-sm).
+4. **Modal Viewport & Scroll**: Modal con md:h-[660px] max-h-[94vh] y contenedor interno con min-h-0 overflow-y-auto custom-scrollbar.
