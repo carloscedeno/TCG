@@ -161,7 +161,7 @@ export const CardDetail: React.FC = () => {
     const relevantFormats = useMemo(() => tcgConfig.formats || [], [tcgConfig]);
 
     const isDFC = details?.name?.includes(' // ');
-    const hasMultipleFaces = (details?.card_faces && details.card_faces.length > 1) || isDFC;
+    const hasMultipleFaces = !!(details?.card_faces && details.card_faces.length > 1);
 
     const allImages = useMemo(() => {
         const list: string[] = [];

@@ -362,12 +362,10 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
         return activeGroup.normal || activeGroup.foil || activeGroup.etched || activeGroup.base;
     }, [activeGroup, selectedFinish]);
 
-    // Detect DFC from card name (e.g. "Aang, at the Crossroads // Aang, Destined Savior")
-    const isDFC = details?.name?.includes(' // ');
-
-    const hasMultipleFaces = (details?.card_faces && details.card_faces.length > 1) || isDFC;
+    // Detect DFC only if multiple faces actually exist in card data
+    const hasMultipleFaces = !!(details?.card_faces && details.card_faces.length > 1);
     const currentFace = hasMultipleFaces ? (details?.card_faces?.[currentFaceIndex] || {}) : details;
-    const currentImage = (currentFace as any)?.image_url || (currentFace as any)?.image_uris?.normal || (currentFace as any)?.image_uris?.large || (currentFace as any)?.image_uris?.png || initialImage;
+    const currentImage = (currentFace as any)?.image_url || (currentFace as any)?.image_uris?.normal || (currentFace as any)?.image_uris?.large || (currentFace as any)?.image_uris?.png || details?.image_url || initialImage;
 
     const externalMarket = useMemo(() => {
         if (!details || details.is_accessory) return null;
@@ -395,6 +393,28 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
         return resolvedPrice;
     }, [activeVersion, details]);
 
+    // Cleanly parse oracle / rules text (handles <br>, <em>, <strong> from external TCGs without raw HTML)
+    const renderOracleText = (rawText: string) => {
+        if (!rawText) return null;
+        const withNewlines = rawText.replace(/<br\s*\/?>/gi, '\n');
+        const lines = withNewlines.split('\n');
+
+        return (
+            <div className="space-y-1.5 text-xs md:text-sm leading-relaxed text-neutral-300">
+                {lines.map((line, idx) => {
+                    const trimmed = line.trim();
+                    if (!trimmed) return null;
+                    const cleanLine = trimmed.replace(/<[^>]+>/g, '');
+                    return (
+                        <p key={idx} className="whitespace-pre-wrap">
+                            <ManaText text={cleanLine} />
+                        </p>
+                    );
+                })}
+            </div>
+        );
+    };
+
     if (!isOpen) return null;
 
     return (
@@ -407,7 +427,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                 data-testid="card-modal"
                 role="dialog"
                 aria-modal="true"
-                className="glass-panel w-full max-w-6xl max-h-[95vh] md:max-h-[90vh] rounded-t-[32px] md:rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0,0,0,0.8)] flex flex-col md:flex-row overflow-hidden relative bg-[#0a0a0a]"
+                className="glass-panel w-full max-w-5xl h-[94vh] md:h-[660px] max-h-[94vh] rounded-t-[32px] md:rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0,0,0,0.8)] flex flex-col md:flex-row overflow-hidden relative bg-[#0a0a0a]"
                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
             >
                 {/* Swipe indicator handle for mobile */}
@@ -538,7 +558,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                 ──────────────────────────────────────── */
                 <>
                     {/* LEFT: IMAGE & VERSIONS LIST */}
-                    <div className="w-full md:w-[350px] lg:w-[380px] bg-[#09090b] flex flex-col border-r border-white/5 shrink-0 overflow-hidden h-auto md:h-[var(--modal-height,700px)]">
+                    <div className="w-full md:w-[320px] lg:w-[360px] bg-[#09090b] flex flex-col border-r border-white/5 shrink-0 overflow-hidden h-auto md:h-full">
                     <div className="flex-1 min-h-[300px] relative flex items-center justify-center p-4 sm:p-6 bg-gradient-to-b from-white/[0.04] to-transparent">
                         {loading && !currentImage ? (
                             <div className="w-56 aspect-[5/7] rounded-xl bg-white/5 animate-pulse flex flex-col items-center justify-center gap-2">
@@ -558,7 +578,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                                         size="normal"
                                         objectFit="contain"
                                         fallbackIconSize={80}
-                                        className="w-auto max-w-[240px] sm:max-w-[270px] max-h-[360px] object-contain rounded-xl relative z-10 transition-transform duration-500 group-hover/card:scale-[1.02]"
+                                        className="w-auto max-w-[210px] sm:max-w-[240px] max-h-[310px] object-contain rounded-xl relative z-10 transition-transform duration-500 group-hover/card:scale-[1.02]"
                                     />
                                 </div>
                             </div>
@@ -704,7 +724,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                 </div> {/* end card left column */}
 
                 {/* RIGHT: CARD TEXT & ACTIONS */}
-                <div className="flex-1 h-auto md:h-[var(--modal-height,700px)] overflow-y-auto custom-scrollbar bg-[#050505] p-4 sm:p-6 md:p-8 pb-32 md:pb-40 space-y-4 md:space-y-6">
+                <div className="flex-1 h-full min-h-0 overflow-y-auto custom-scrollbar bg-[#050505] p-4 sm:p-6 md:p-8 space-y-4 flex flex-col">
 
                     {loading && !details ? (
                         <div className="flex flex-col items-center justify-center h-full min-h-[350px] space-y-4">
@@ -771,117 +791,73 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                                 )}
                             </div>
 
-                            <div className="p-4 md:p-6 rounded-2xl bg-white/[0.03] border border-white/5 space-y-3">
-                                <div className="text-sm md:text-base leading-relaxed text-neutral-300 whitespace-pre-wrap">
-                                    <ManaText text={details.oracle_text} />
-                                </div>
-                                {details.flavor_text && (
-                                    <p className="text-xs italic text-neutral-500 border-t border-white/10 pt-3">
-                                        "{details.flavor_text}"
-                                    </p>
-                                )}
-                            </div>
-
-                            <div className="space-y-6 pt-2">
-                                {!details?.is_accessory && relevantFormats.length > 0 && (
-                                    <div className="space-y-4 pt-2">
-                                        <h3 className="text-xs font-web-titles font-normal uppercase tracking-widest text-neutral-500 flex items-center justify-between">
-                                            Legalidad de Formato
-                                            {details.total_stock > 0 && (
-                                                <span className="text-[10px] text-geeko-cyan bg-geeko-cyan/10 px-3 py-1 rounded-full border border-geeko-cyan/20">
-                                                    Existencia Total: {details.total_stock}
-                                                </span>
-                                            )}
-                                        </h3>
-                                        <div className="grid grid-cols-2 xs:grid-cols-3 md:grid-cols-6 gap-2">
-                                            {relevantFormats.map(fmt => {
-                                                const isLegal = details.legalities?.[fmt] === 'legal';
-                                                return (
-                                                    <div
-                                                        key={fmt}
-                                                        className={`flex items-center justify-center p-2.5 rounded-lg border transition-all duration-300 ${isLegal
-                                                            ? 'bg-geeko-gold/10 border-geeko-gold/40 text-geeko-gold shadow-[0_0_20px_rgba(249,174,0,0.1)]'
-                                                            : 'bg-neutral-900/40 border-white/5 text-neutral-600 opacity-60'
-                                                            }`}
-                                                    >
-                                                        <span className="text-[9px] md:text-[10px] font-web-titles font-normal uppercase tracking-widest">{fmt}</span>
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Marketplace Actions - Optimized side-by-side layout */}
-                                <div className={`grid grid-cols-1 ${(!details?.is_accessory && externalMarket) ? 'md:grid-cols-2' : ''} gap-4 items-stretch`}>
-                                    {/* Left Column: Local Inventory & Actions */}
-                                    <div className="flex flex-col gap-3">
-                                        {/* GK Price Box */}
-                                        <div className="p-5 md:p-6 rounded-2xl bg-gradient-to-br from-geeko-cyan/10 via-transparent to-transparent border border-white/10 group relative overflow-hidden flex flex-col justify-between gap-4 flex-1">
-                                            <div className="absolute top-0 right-0 w-32 h-32 bg-geeko-cyan/5 rounded-full blur-[40px]" />
-                                            <div className="space-y-1 relative z-10">
-                                                <div className="text-[10px] font-semibold uppercase text-geeko-cyan tracking-widest flex items-center justify-between">
-                                                    <span>Geekorium Price</span>
-                                                    {marketPrice > 0 && (activeVersion?.price || details.price || 0) > 0 && (activeVersion?.price || details.price || 0) < marketPrice ? (
-                                                        <span className="text-[9px] text-geeko-green bg-geeko-green/10 px-2 py-0.5 rounded-full border border-geeko-green/20">
-                                                            Ahorro: ${(marketPrice - (activeVersion?.price || details.price || 0)).toFixed(2)}
-                                                        </span>
-                                                    ) : null}
-                                                </div>
-                                                <div className="flex flex-col gap-2">
-                                                    {/* Current Selected Price */}
-                                                    <div className="flex items-center gap-2">
-                                                        <div className="text-3xl md:text-plus font-medium text-white font-titles tracking-tighter">
-                                                            ${(activeVersion?.price || details.price || 0) > 0 ? (activeVersion?.price || details.price).toFixed(2) : '---'}
-                                                        </div>
-                                                        <span className={`text-[10px] px-2 py-0.5 rounded-full font-black tracking-widest shadow-sm ${selectedFinish === 'foil' ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white animate-pulse' : 'bg-white text-black'}`}>
-                                                            {selectedFinish?.toUpperCase()}
-                                                        </span>
-                                                    </div>
-
-                                                    {/* Finish Toggle Switch */}
-                                                    <div className="flex bg-neutral-900/80 p-1 rounded-xl border border-white/5 w-fit mt-1">
-                                                        {activeGroup?.normal && (
-                                                            <button
-                                                                onClick={() => {
-                                                                    const targetId = activeGroup?.normal?.printing_id;
-                                                                    if (targetId) handleVersionClick(targetId, 'nonfoil');
-                                                                }}
-                                                                className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-1 ${selectedFinish === 'nonfoil'
-                                                                    ? 'bg-white text-black shadow-lg scale-[1.05]'
-                                                                    : (activeGroup.normal?.stock || 0) === 0
-                                                                        ? 'text-neutral-500 opacity-60'
-                                                                        : 'text-neutral-500 hover:text-white'
-                                                                    }`}
-                                                            >
-                                                                Normal {(activeGroup.normal?.stock || 0) <= 0 && <span className="text-[8px] opacity-70 tracking-tighter">(P/E)</span>}
-                                                            </button>
-                                                        )}
-                                                        {activeGroup?.foil && (
-                                                            <button
-                                                                onClick={() => {
-                                                                    const targetId = activeGroup?.foil?.printing_id;
-                                                                    if (targetId) handleVersionClick(targetId, 'foil');
-                                                                }}
-                                                                className={`px-3 py-1 rounded text-[8px] font-black uppercase tracking-widest transition-all flex items-center gap-1 ${selectedFinish === 'foil'
-                                                                    ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 border-transparent text-white shadow-lg'
-                                                                    : (activeGroup.foil?.stock || 0) === 0
-                                                                        ? 'text-neutral-500 opacity-60'
-                                                                        : 'text-neutral-500 hover:text-white'
-                                                                    }`}
-                                                            >
-                                                                Foil {(activeGroup.foil?.stock || 0) <= 0 && <span className="text-[8px] opacity-70 tracking-tighter">(P/E)</span>}
-                                                            </button>
-                                                        )}
-                                                    </div>
-                                                </div>
-
-                                                {!details?.is_accessory && marketPrice > 0 && (activeVersion?.price || details.price || 0) > 0 && (activeVersion?.price || details.price || 0) < marketPrice ? (
-                                                    <div className="text-sm font-bold text-neutral-600 line-through decoration-red-500/50 mt-1">
-                                                        MKT: ${Number(marketPrice).toFixed(2)}
-                                                    </div>
+                            {/* 1. PRICE & PURCHASE ACTIONS - PROMINENT AT TOP, NEVER CUT OFF */}
+                            <div className="space-y-3 pt-1">
+                                <div className={`grid grid-cols-1 ${(!details?.is_accessory && externalMarket) ? 'sm:grid-cols-2' : ''} gap-3 items-stretch`}>
+                                    {/* Left: Local Price + Cart */}
+                                    <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-geeko-cyan/15 via-white/[0.02] to-transparent border border-white/10 group relative overflow-hidden flex flex-col justify-between gap-3">
+                                        <div className="absolute top-0 right-0 w-32 h-32 bg-geeko-cyan/10 rounded-full blur-[40px] pointer-events-none" />
+                                        <div className="space-y-1 relative z-10">
+                                            <div className="text-[10px] font-semibold uppercase text-geeko-cyan tracking-widest flex items-center justify-between">
+                                                <span>Geekorium Price</span>
+                                                {marketPrice > 0 && (activeVersion?.price || details.price || 0) > 0 && (activeVersion?.price || details.price || 0) < marketPrice ? (
+                                                    <span className="text-[9px] text-geeko-green bg-geeko-green/10 px-2 py-0.5 rounded-full border border-geeko-green/20">
+                                                        Ahorro: ${(marketPrice - (activeVersion?.price || details.price || 0)).toFixed(2)}
+                                                    </span>
                                                 ) : null}
                                             </div>
+
+                                            <div className="flex flex-wrap items-baseline gap-2 pt-1">
+                                                <div className="text-2xl sm:text-3xl font-medium text-white font-titles tracking-tighter">
+                                                    ${(activeVersion?.price || details.price || 0) > 0 ? (activeVersion?.price || details.price).toFixed(2) : '---'}
+                                                </div>
+                                                <span className={`text-[10px] px-2 py-0.5 rounded-full font-black tracking-widest shadow-sm ${selectedFinish === 'foil' ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white animate-pulse' : 'bg-white text-black'}`}>
+                                                    {selectedFinish?.toUpperCase()}
+                                                </span>
+                                                {!details?.is_accessory && marketPrice > 0 && (activeVersion?.price || details.price || 0) > 0 && (activeVersion?.price || details.price || 0) < marketPrice ? (
+                                                    <span className="text-xs font-bold text-neutral-500 line-through decoration-red-500/50">
+                                                        MKT: ${Number(marketPrice).toFixed(2)}
+                                                    </span>
+                                                ) : null}
+                                            </div>
+
+                                            {/* Finish Toggle Switch */}
+                                            {(activeGroup?.normal || activeGroup?.foil) && (
+                                                <div className="flex bg-neutral-900/90 p-1 rounded-xl border border-white/5 w-fit mt-1 gap-1">
+                                                    {activeGroup?.normal && (
+                                                        <button
+                                                            onClick={() => {
+                                                                const targetId = activeGroup?.normal?.printing_id;
+                                                                if (targetId) handleVersionClick(targetId, 'nonfoil');
+                                                            }}
+                                                            className={`px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-1 ${selectedFinish === 'nonfoil'
+                                                                ? 'bg-white text-black shadow-lg scale-[1.03]'
+                                                                : (activeGroup.normal?.stock || 0) === 0
+                                                                    ? 'text-neutral-500 opacity-60'
+                                                                    : 'text-neutral-400 hover:text-white'
+                                                                }`}
+                                                        >
+                                                            Normal {(activeGroup.normal?.stock || 0) <= 0 && <span className="text-[8px] opacity-70 tracking-tighter">(P/E)</span>}
+                                                        </button>
+                                                    )}
+                                                    {activeGroup?.foil && (
+                                                        <button
+                                                            onClick={() => {
+                                                                const targetId = activeGroup?.foil?.printing_id;
+                                                                if (targetId) handleVersionClick(targetId, 'foil');
+                                                            }}
+                                                            className={`px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-1 ${selectedFinish === 'foil'
+                                                                ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white shadow-lg scale-[1.03]'
+                                                                : (activeGroup.foil?.stock || 0) === 0
+                                                                    ? 'text-neutral-500 opacity-60'
+                                                                    : 'text-neutral-400 hover:text-white'
+                                                                }`}
+                                                        >
+                                                            Foil {(activeGroup.foil?.stock || 0) <= 0 && <span className="text-[8px] opacity-70 tracking-tighter">(P/E)</span>}
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            )}
                                         </div>
 
                                         {!isArchive && (
@@ -889,7 +865,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                                                 onClick={handleAddToCart}
                                                 disabled={isAdding}
                                                 data-testid="add-to-cart-button"
-                                                className={`w-full h-12 rounded-xl font-web-titles font-normal text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 shrink-0 relative z-10 ${addedSuccess
+                                                className={`w-full h-11 rounded-xl font-web-titles font-normal text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 shrink-0 relative z-10 ${addedSuccess
                                                     ? 'bg-geeko-green text-black shadow-[0_0_20px_rgba(0,255,133,0.4)]'
                                                     : 'bg-geeko-cyan text-black shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_40px_rgba(0,229,255,0.6)]'
                                                     }`}
@@ -900,31 +876,74 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                                         )}
                                     </div>
 
-                                    {/* Right Column: External Market (Dynamic per TCG) */}
+                                    {/* Right: External Market (Dynamic per TCG) */}
                                     {!details?.is_accessory && externalMarket && (
                                         <a
                                             href={externalMarket.url}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex flex-col justify-between p-5 md:p-6 rounded-2xl bg-neutral-900 hover:bg-geeko-cyan/10 border border-white/5 hover:border-geeko-cyan transition-all group relative overflow-hidden gap-4"
+                                            className="flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-neutral-900/60 hover:bg-geeko-cyan/10 border border-white/5 hover:border-geeko-cyan/40 transition-all group relative overflow-hidden gap-3"
                                         >
                                             <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity" />
                                             <div className="space-y-1 relative z-10">
                                                 <span className="text-[10px] font-semibold uppercase text-neutral-500 tracking-widest group-hover:text-geeko-cyan transition-colors">Mercado Externo</span>
-                                                <div className="text-base md:text-lg font-web-titles font-normal leading-tight">{externalMarket.label}</div>
+                                                <div className="text-sm sm:text-base font-web-titles font-normal leading-tight text-white">{externalMarket.label}</div>
                                             </div>
                                             <div className="flex items-center justify-between gap-3 w-full relative z-10 mt-auto">
-                                                <span className="text-xl md:text-3xl font-titles font-medium text-white group-hover:text-geeko-cyan transition-colors">
+                                                <span className="text-xl sm:text-2xl font-titles font-medium text-white group-hover:text-geeko-cyan transition-colors">
                                                     {marketPrice > 0 ? `$${Number(marketPrice).toFixed(2)}` : 'Ver en Sitio'}
                                                 </span>
-                                                <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-geeko-cyan group-hover:text-black transition-all">
-                                                    <ExternalLink size={18} />
+                                                <div className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-geeko-cyan group-hover:text-black transition-all">
+                                                    <ExternalLink size={16} />
                                                 </div>
                                             </div>
                                         </a>
                                     )}
                                 </div>
                             </div>
+
+                            {/* 2. RULES / ORACLE TEXT (CLEAN & COMPACT) */}
+                            {details.oracle_text && (
+                                <div className="p-3.5 sm:p-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-1.5">
+                                    <div className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">Texto de la Carta</div>
+                                    {renderOracleText(details.oracle_text)}
+                                    {details.flavor_text && (
+                                        <p className="text-[11px] italic text-neutral-500 border-t border-white/5 pt-2">
+                                            "{details.flavor_text}"
+                                        </p>
+                                    )}
+                                </div>
+                            )}
+
+                            {/* 3. FORMAT LEGALITY */}
+                            {!details?.is_accessory && relevantFormats.length > 0 && (
+                                <div className="space-y-2 pt-1 pb-4">
+                                    <h3 className="text-[10px] font-web-titles font-normal uppercase tracking-widest text-neutral-500 flex items-center justify-between">
+                                        Legalidad de Formato
+                                        {details.total_stock > 0 && (
+                                            <span className="text-[9px] text-geeko-cyan bg-geeko-cyan/10 px-2.5 py-0.5 rounded-full border border-geeko-cyan/20">
+                                                Existencia Total: {details.total_stock}
+                                            </span>
+                                        )}
+                                    </h3>
+                                    <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5">
+                                        {relevantFormats.map(fmt => {
+                                            const isLegal = details.legalities?.[fmt] === 'legal';
+                                            return (
+                                                <div
+                                                    key={fmt}
+                                                    className={`flex items-center justify-center p-2 rounded-lg border transition-all duration-300 ${isLegal
+                                                        ? 'bg-geeko-gold/10 border-geeko-gold/40 text-geeko-gold shadow-[0_0_15px_rgba(249,174,0,0.1)]'
+                                                        : 'bg-neutral-900/40 border-white/5 text-neutral-600 opacity-60'
+                                                        }`}
+                                                >
+                                                    <span className="text-[9px] font-web-titles font-normal uppercase tracking-widest">{fmt}</span>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            )}
                         </>
                     ) : null}
                 </div>
