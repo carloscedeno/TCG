@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { X, ShoppingCart, ExternalLink, RotateCw, Loader2 } from 'lucide-react';
 import { fetchCardDetails, addToCart } from '../../utils/api';
 import { getTcgConfig, getExternalMarketplaceLink } from '../../config/tcgRegistry';
@@ -415,11 +416,147 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
         );
     };
 
+        const renderVersionsContent = () => (
+        <div className="flex flex-col h-full w-full">
+            <div className="px-4 md:px-6 py-2.5 md:py-3 flex items-center justify-between border-b border-white/5 bg-[#0a0a0a]/50">
+                <h3 className="text-[10px] font-web-titles font-normal uppercase tracking-widest text-neutral-500">Edición / Impresiones</h3>
+                <span className="text-[10px] text-neutral-400 font-normal">
+                    {loading && versionGroups.length === 0 ? (
+                        <span className="inline-flex items-center gap-1.5 text-geeko-cyan animate-pulse">
+                            <Loader2 size={10} className="animate-spin" /> Cargando...
+                        </span>
+                    ) : (
+                        `${versionGroups.length} ${versionGroups.length === 1 ? 'Versión' : 'Versiones'}`
+                    )}
+                </span>
+            </div>
+            <div
+                data-testid="versions-list-container"
+                className="flex-1 overflow-y-auto custom-scrollbar relative flex flex-col p-1 md:p-0 max-h-[260px] md:max-h-none"
+            >
+                {loading ? (
+                    // Versions Skeleton
+                    [...Array(3)].map((_, i) => (
+                        <div key={i} className="flex items-center gap-4 px-4 md:px-6 py-3 border-b border-white/5 animate-pulse">
+                            <div className="w-8 h-8 rounded bg-white/5 shrink-0" />
+                            <div className="flex-1 space-y-2">
+                                <div className="h-3 w-32 bg-white/5 rounded" />
+                                <div className="h-2 w-16 bg-white/5 rounded" />
+                            </div>
+                        </div>
+                    ))
+                ) : (
+                    <>
+                        {versionGroups.map((group: any) => {
+                            const isGroupActive = activePrintingId === group.base.printing_id;
+                            const rowActiveVersion = (isGroupActive && selectedFinish === 'foil' && group.foil) ? group.foil : (group.normal || group.base);
+
+                            return (
+                                <div
+                                    key={`${group.base.set_code}-${group.base.collector_number}`}
+                                    role="button"
+                                    tabIndex={0}
+                                    onClick={() => {
+                                        const isCurrentlyFoil = !!(details?.is_foil || details?.finish === 'foil');
+                                        const targetPrintingId = isCurrentlyFoil
+                                            ? (group.foil?.printing_id || group.normal?.printing_id)
+                                            : (group.normal?.printing_id || group.foil?.printing_id);
+                                        if (targetPrintingId) handleVersionClick(targetPrintingId);
+                                    }}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' || e.key === ' ') {
+                                            const isCurrentlyFoil = !!(details?.is_foil || details?.finish === 'foil');
+                                            const targetPrintingId = isCurrentlyFoil
+                                                ? (group.foil?.printing_id || group.normal?.printing_id)
+                                                : (group.normal?.printing_id || group.foil?.printing_id);
+                                            if (targetPrintingId) handleVersionClick(targetPrintingId);
+                                        }
+                                    }}
+                                    data-testid="edition-link"
+                                    className={`flex items-center justify-between gap-3 px-4 md:px-6 py-3 hover:bg-white/10 transition-colors border-b border-white/5 group w-full text-left cursor-pointer outline-none focus-visible:bg-white/10 ${isGroupActive ? 'bg-geeko-cyan/10 border-geeko-cyan/20' : ''}`}
+                                >
+                                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                                        <div className="w-8 h-8 rounded bg-neutral-900 flex items-center justify-center text-xs font-web-titles group-hover:text-geeko-cyan transition-colors shrink-0">
+                                            {group.base.set_code?.toUpperCase()}
+                                        </div>
+                                        <div className="flex-1 text-left min-w-0">
+                                            <div className={`text-xs font-semibold leading-tight truncate ${isGroupActive ? 'text-geeko-cyan' : 'text-neutral-300'}`}>
+                                                {group.base.set_name}
+                                            </div>
+                                            <div className="text-[10px] text-neutral-500 font-normal truncate">#{group.base.collector_number} • {group.base.rarity}</div>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center gap-3 shrink-0">
+                                        <div className="flex flex-col items-end gap-0.5">
+                                            {group.normal && (
+                                                <div className="flex items-center gap-1.5">
+                                                    <span className="text-[9px] text-neutral-500 font-bold uppercase tracking-wider">Norm</span>
+                                                    <span className={`text-[11px] font-black ${group.normal.stock > 0 ? 'text-white' : 'text-neutral-600'}`}>
+                                                        ${group.normal.price.toFixed(2)}
+                                                        {group.normal.stock <= 0 && <span className="ml-1 text-[8px] text-orange-500/80 italic font-medium">(P/E)</span>}
+                                                    </span>
+                                                </div>
+                                            )}
+                                            {group.foil && (
+                                                <div className="flex items-center gap-1.5">
+                                                    <span className="text-[9px] text-purple-400 font-bold uppercase tracking-wider flex items-center gap-0.5">
+                                                        <svg width="7" height="7" viewBox="0 0 10 12" fill="none">
+                                                            <rect x="0.5" y="0.5" width="9" height="11" rx="1.5" stroke="currentColor" strokeWidth="1" />
+                                                            <path d="M2 3 L8 3" stroke="currentColor" strokeWidth="1" />
+                                                        </svg>
+                                                        Foil
+                                                    </span>
+                                                    <span className={`text-[11px] font-black ${group.foil.stock > 0 ? 'text-geeko-cyan' : 'text-neutral-600'}`}>
+                                                        ${group.foil.price.toFixed(2)}
+                                                        {group.foil.stock <= 0 && <span className="ml-1 text-[8px] text-orange-500/80 italic font-medium">(P/E)</span>}
+                                                    </span>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="flex items-center gap-2">
+                                            {(rowActiveVersion?.stock ?? 0) > 0 ? (
+                                                <span className="text-[8px] font-black text-geeko-green bg-geeko-green/10 px-1.5 py-0.5 rounded-full border border-geeko-green/20 uppercase tracking-tight whitespace-nowrap">
+                                                    Stock
+                                                </span>
+                                            ) : (
+                                                <span className="text-[8px] font-bold text-neutral-600 bg-neutral-900 px-1.5 py-0.5 rounded-full border border-white/5 uppercase tracking-tight whitespace-nowrap">
+                                                    P/E
+                                                </span>
+                                            )}
+                                            {!isArchive && (
+                                                <div
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        e.stopPropagation();
+                                                        if (rowActiveVersion) handleVersionAddToCart(rowActiveVersion);
+                                                    }}
+                                                    className={`p-1.5 rounded-lg transition-all shrink-0 ${!rowActiveVersion?.stock || rowActiveVersion.stock === 0
+                                                        ? 'text-neutral-800 cursor-not-allowed'
+                                                        : 'text-neutral-500 hover:text-geeko-cyan hover:bg-geeko-cyan/10'
+                                                        }`}
+                                                >
+                                                    <ShoppingCart size={13} />
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                        <div className="sticky bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-[#080808] to-transparent pointer-events-none hidden md:block" />
+                    </>
+                )}
+            </div>
+        </div>
+    );
+
     if (!isOpen) return null;
 
-    return (
+    const modalNode = (
         <div
-            className="fixed inset-0 z-[200] flex items-end md:items-center justify-center bg-black/75 backdrop-blur-md p-0 md:p-6 animate-in fade-in duration-200 overflow-hidden"
+            className="fixed inset-0 z-[300] flex items-end md:items-center justify-center bg-black/75 backdrop-blur-md p-0 md:p-6 animate-in fade-in duration-200 overflow-hidden"
             onClick={handleBackdropClick}
         >
             {/* Modal Content */}
@@ -427,7 +564,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                 data-testid="card-modal"
                 role="dialog"
                 aria-modal="true"
-                className="glass-panel w-full max-w-5xl h-[94vh] md:h-[660px] max-h-[94vh] rounded-t-[32px] md:rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0,0,0,0.8)] flex flex-col md:flex-row overflow-hidden relative bg-[#0a0a0a]"
+                className="glass-panel w-full max-w-5xl h-[94vh] md:h-[660px] max-h-[94vh] rounded-t-[32px] md:rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0,0,0,0.8)] flex flex-col md:flex-row overflow-y-auto md:overflow-hidden relative bg-[#0a0a0a]"
                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
             >
                 {/* Swipe indicator handle for mobile */}
@@ -435,15 +572,25 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                     <div className="w-12 h-1.5 bg-white/20 rounded-full" />
                 </div>
 
-                {/* Sticky Header: Card name + close button always visible on mobile */}
-                <div className="flex items-center justify-between px-6 py-3 border-b border-white/5 bg-[#0a0a0a]/95 backdrop-blur-md sticky top-0 z-50 md:hidden">
-                    <h2 className="text-sm font-web-titles font-normal text-white truncate pr-4">{details?.name || 'Cargando...'}</h2>
+                {/* Sticky Header: Card name + TCG logo + close button always visible on mobile */}
+                <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/5 bg-[#0a0a0a]/95 backdrop-blur-md sticky top-0 z-50 md:hidden shrink-0">
+                    <div className="flex items-center gap-2 min-w-0 flex-1 pr-3">
+                        <div className="w-5 h-5 rounded-full bg-white/10 p-0.5 flex items-center justify-center border border-white/10 shrink-0">
+                            <img
+                                src={`/logos/tcg/${details?.game || initialData?.game || 'MTG'}.png`}
+                                alt={details?.game || initialData?.game || 'TCG'}
+                                className="w-3.5 h-3.5 object-contain"
+                                onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
+                            />
+                        </div>
+                        <h2 className="text-sm font-web-titles font-normal text-white truncate">{details?.name || 'Cargando...'}</h2>
+                    </div>
                     <button
                         onClick={onClose}
-                        className="flex-shrink-0 w-11 h-11 flex items-center justify-center bg-white/10 hover:bg-white/20 rounded-full transition-colors text-neutral-400 hover:text-white"
+                        className="flex-shrink-0 w-9 h-9 flex items-center justify-center bg-white/10 hover:bg-white/20 active:scale-95 rounded-full transition-all text-neutral-300 hover:text-white"
                         aria-label="Cerrar"
                     >
-                        <X size={20} />
+                        <X size={18} />
                     </button>
                 </div>
 
@@ -559,15 +706,15 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                 <>
                     {/* LEFT: IMAGE & VERSIONS LIST */}
                     <div className="w-full md:w-[320px] lg:w-[360px] bg-[#09090b] flex flex-col border-r border-white/5 shrink-0 overflow-hidden h-auto md:h-full">
-                    <div className="flex-1 min-h-[300px] relative flex items-center justify-center p-4 sm:p-6 bg-gradient-to-b from-white/[0.04] to-transparent">
+                    <div className="min-h-[220px] md:min-h-[300px] relative flex items-center justify-center p-3 sm:p-6 bg-gradient-to-b from-white/[0.04] to-transparent shrink-0">
                         {loading && !currentImage ? (
-                            <div className="w-[210px] sm:w-[240px] aspect-[5/7] rounded-2xl bg-white/5 border border-white/10 animate-pulse flex flex-col items-center justify-center gap-3 shadow-2xl">
-                                <Loader2 size={32} className="text-geeko-cyan animate-spin" />
-                                <span className="text-xs font-black text-geeko-cyan uppercase tracking-widest animate-pulse">Cargando Información...</span>
+                            <div className="w-[170px] xs:w-[190px] sm:w-[220px] md:w-[240px] aspect-[5/7] rounded-2xl bg-white/5 border border-white/10 animate-pulse flex flex-col items-center justify-center gap-2.5 shadow-2xl">
+                                <Loader2 size={28} className="text-geeko-cyan animate-spin" />
+                                <span className="text-[10px] sm:text-xs font-black text-geeko-cyan uppercase tracking-widest animate-pulse">Cargando Información...</span>
                             </div>
                         ) : (
-                            <div className="relative w-[210px] sm:w-[240px] aspect-[5/7] flex items-center justify-center group/card my-auto">
-                                <div className="absolute inset-0 bg-geeko-cyan/25 blur-[100px] rounded-full opacity-40 animate-pulse pointer-events-none" />
+                            <div className="relative w-[170px] xs:w-[190px] sm:w-[220px] md:w-[240px] aspect-[5/7] flex items-center justify-center group/card my-auto">
+                                <div className="absolute inset-0 bg-geeko-cyan/25 blur-[80px] rounded-full opacity-40 animate-pulse pointer-events-none" />
                                 <div className={`relative w-full h-full flex items-center justify-center drop-shadow-[0_25px_60px_rgba(0,0,0,0.95)] ${selectedFinish === 'foil' ? 'holo-effect' : ''}`}>
                                     {selectedFinish === 'foil' && (
                                         <div className="absolute inset-0 z-20 foil-shimmer opacity-30 mix-blend-overlay pointer-events-none rounded-[10%] scale-[0.95]" />
@@ -593,146 +740,14 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                         )}
                     </div>
 
-                    {/* VERSIONS LIST */}
-                    <div className="h-auto md:flex-[0_0_35%] md:min-h-[200px] border-t border-white/5 bg-[#080808] flex flex-col shrink-0">
-                        <div className="px-6 py-3 flex items-center justify-between border-b border-white/5 bg-[#0a0a0a]/50">
-                            <h3 className="text-[10px] font-web-titles font-normal uppercase tracking-widest text-neutral-500">Edición / Impresiones</h3>
-                            <span className="text-[10px] text-neutral-400 font-normal">
-                                {loading && versionGroups.length === 0 ? (
-                                    <span className="inline-flex items-center gap-1.5 text-geeko-cyan animate-pulse">
-                                        <Loader2 size={10} className="animate-spin" /> Cargando...
-                                    </span>
-                                ) : (
-                                    `${versionGroups.length} ${versionGroups.length === 1 ? 'Versión' : 'Versiones'}`
-                                )}
-                            </span>
-                        </div>
-                        <div
-                            data-testid="versions-list-container"
-                            className="flex-1 overflow-x-auto md:overflow-y-auto md:overflow-x-hidden custom-scrollbar relative flex md:block whitespace-nowrap md:whitespace-normal p-2 md:p-0 max-h-[35vh] md:max-h-none"
-                        >
-                            {loading ? (
-                                // Versions Skeleton
-                                [...Array(5)].map((_, i) => (
-                                    <div key={i} className="inline-flex md:flex items-center gap-4 px-6 py-3 border-b border-white/5 animate-pulse">
-                                        <div className="w-8 h-8 rounded bg-white/5" />
-                                        <div className="flex-1 space-y-2">
-                                            <div className="h-3 w-32 bg-white/5 rounded" />
-                                            <div className="h-2 w-16 bg-white/5 rounded" />
-                                        </div>
-                                    </div>
-                                ))
-                            ) : (
-                                <>
-                                    {versionGroups.map((group: any) => {
-                                        const isGroupActive = activePrintingId === group.base.printing_id;
-                                        const rowActiveVersion = (isGroupActive && selectedFinish === 'foil' && group.foil) ? group.foil : (group.normal || group.base);
-
-                                        return (
-                                            <div
-                                                key={`${group.base.set_code}-${group.base.collector_number}`}
-                                                role="button"
-                                                tabIndex={0}
-                                                onClick={() => {
-                                                    const isCurrentlyFoil = !!(details?.is_foil || details?.finish === 'foil');
-                                                    const targetPrintingId = isCurrentlyFoil
-                                                        ? (group.foil?.printing_id || group.normal?.printing_id)
-                                                        : (group.normal?.printing_id || group.foil?.printing_id);
-                                                    if (targetPrintingId) handleVersionClick(targetPrintingId);
-                                                }}
-                                                onKeyDown={(e) => {
-                                                    if (e.key === 'Enter' || e.key === ' ') {
-                                                        const isCurrentlyFoil = !!(details?.is_foil || details?.finish === 'foil');
-                                                        const targetPrintingId = isCurrentlyFoil
-                                                            ? (group.foil?.printing_id || group.normal?.printing_id)
-                                                            : (group.normal?.printing_id || group.foil?.printing_id);
-                                                        if (targetPrintingId) handleVersionClick(targetPrintingId);
-                                                    }
-                                                }}
-                                                data-testid="edition-link"
-                                                className={`flex flex-col md:flex-row items-stretch md:items-center gap-2 md:gap-4 px-4 md:px-6 py-3 md:py-4 hover:bg-white/10 transition-colors border-r md:border-r-0 md:border-b border-white/5 group rounded-lg md:rounded-none w-full text-left cursor-pointer outline-none focus-visible:bg-white/10 ${isGroupActive ? 'bg-geeko-cyan/10 border-geeko-cyan/20' : ''}`}
-                                            >
-                                                <div className="flex items-center gap-3 md:gap-4 flex-1">
-                                                    <div className="w-8 h-8 rounded bg-neutral-900 flex items-center justify-center text-xs font-web-titles group-hover:text-geeko-cyan transition-colors shrink-0">
-                                                        {group.base.set_code?.toUpperCase()}
-                                                    </div>
-                                                    <div className="flex-1 text-left min-w-[120px] md:min-w-0">
-                                                        <div className={`text-[10px] md:text-xs font-semibold leading-tight truncate ${isGroupActive ? 'text-geeko-cyan' : 'text-neutral-300'}`}>
-                                                            {group.base.set_name}
-                                                        </div>
-                                                        <div className="text-[9px] md:text-[10px] text-neutral-600 font-normal">#{group.base.collector_number} • {group.base.rarity}</div>
-                                                    </div>
-                                                </div>
-
-                                                <div className="flex items-center justify-between md:justify-end gap-6 shrink-0">
-                                                    <div className="flex flex-col items-end gap-1">
-                                                        {group.normal && (
-                                                            <div className="flex items-center gap-2">
-                                                                <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-widest">Normal</span>
-                                                                <span className={`text-[11px] font-black ${group.normal.stock > 0 ? 'text-white' : 'text-neutral-600'}`}>
-                                                                    ${group.normal.price.toFixed(2)}
-                                                                    {group.normal.stock <= 0 && <span className="ml-1.5 text-[9px] text-orange-500/80 italic font-medium">(P/E)</span>}
-                                                                </span>
-                                                            </div>
-                                                        )}
-                                                        {group.foil && (
-                                                            <div className="flex items-center gap-2">
-                                                                <span className="text-[10px] text-purple-400 font-bold uppercase tracking-widest flex items-center gap-1">
-                                                                    <svg width="8" height="8" viewBox="0 0 10 12" fill="none">
-                                                                        <rect x="0.5" y="0.5" width="9" height="11" rx="1.5" stroke="currentColor" strokeWidth="1" />
-                                                                        <path d="M2 3 L8 3" stroke="currentColor" strokeWidth="1" />
-                                                                    </svg>
-                                                                    Foil
-                                                                </span>
-                                                                <span className={`text-[11px] font-black ${group.foil.stock > 0 ? 'text-geeko-cyan' : 'text-neutral-600'}`}>
-                                                                    ${group.foil.price.toFixed(2)}
-                                                                    {group.foil.stock <= 0 && <span className="ml-1.5 text-[9px] text-orange-500/80 italic font-medium">(P/E)</span>}
-                                                                </span>
-                                                            </div>
-                                                        )}
-                                                    </div>
-
-                                                    <div className="flex items-center gap-3">
-                                                        {/* Stock Label */}
-                                                        {(rowActiveVersion?.stock ?? 0) > 0 ? (
-                                                            <span className="text-[9px] font-black text-geeko-green bg-geeko-green/10 px-2 py-0.5 rounded-full border border-geeko-green/20 uppercase tracking-tight whitespace-nowrap">
-                                                                En Stock
-                                                            </span>
-                                                        ) : (
-                                                            <span className="text-[9px] font-bold text-neutral-600 bg-neutral-900 px-2 py-0.5 rounded-full border border-white/5 uppercase tracking-tight whitespace-nowrap">
-                                                                Por Encargo
-                                                            </span>
-                                                        )}
-                                                        {!isArchive && (
-                                                            <div
-                                                                onClick={(e) => {
-                                                                    e.preventDefault();
-                                                                    e.stopPropagation();
-                                                                    if (rowActiveVersion) handleVersionAddToCart(rowActiveVersion);
-                                                                }}
-                                                                className={`p-2 rounded-lg transition-all shrink-0 ${!rowActiveVersion?.stock || rowActiveVersion.stock === 0
-                                                                    ? 'text-neutral-800 cursor-not-allowed'
-                                                                    : 'text-neutral-500 hover:text-geeko-cyan hover:bg-geeko-cyan/10'
-                                                                    }`}
-                                                            >
-                                                                <ShoppingCart size={14} />
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
-                                    <div className="sticky bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-[#080808] to-transparent pointer-events-none hidden md:block" />
-                                </>
-                            )
-                            }
-                        </div>
+                    {/* VERSIONS LIST (DESKTOP ONLY) */}
+                    <div className="hidden md:flex h-auto md:flex-[0_0_35%] md:min-h-[200px] border-t border-white/5 bg-[#080808] flex-col shrink-0">
+                        {renderVersionsContent()}
                     </div>
                 </div> {/* end card left column */}
 
                 {/* RIGHT: CARD TEXT & ACTIONS */}
-                <div className="flex-1 h-full min-h-0 overflow-y-auto custom-scrollbar bg-[#050505] p-4 sm:p-6 md:p-8 space-y-4 flex flex-col">
+                <div className="flex-1 h-auto md:h-full md:min-h-0 md:overflow-y-auto custom-scrollbar bg-[#050505] p-4 sm:p-6 md:p-8 space-y-4 flex flex-col">
 
                     {loading && !details ? (
                         <div className="flex flex-col items-center justify-center h-full min-h-[350px] space-y-4">
@@ -976,6 +991,11 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                                     </div>
                                 </div>
                             )}
+
+                            {/* 4. VERSIONS LIST (MOBILE ONLY - AT BOTTOM OF FLOW) */}
+                            <div className="md:hidden border-t border-white/5 bg-[#080808] -mx-4 -mb-4 pt-1 rounded-b-[24px] overflow-hidden">
+                                {renderVersionsContent()}
+                            </div>
                         </>
                     ) : null}
                 </div>
@@ -984,4 +1004,6 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
             </div>
         </div>
     );
+
+    return typeof document !== 'undefined' ? createPortal(modalNode, document.body) : modalNode;
 };
