@@ -290,20 +290,22 @@ export const CardDetail: React.FC = () => {
                         {/* LEFT: IMAGE & VERSIONS LIST */}
                         <div className="w-full lg:w-[340px] bg-neutral-100 dark:bg-[#0c0c0c] flex flex-col lg:border-r border-b lg:border-b-0 border-neutral-200 dark:border-white/5 shrink-0 relative">
                             <div className="flex-1 min-h-[350px] lg:min-h-[250px] p-4 sm:p-6 relative flex items-center justify-center bg-gradient-to-b from-white/[0.04] to-transparent">
-                                <div className={`relative flex items-center justify-center ${isFoil ? 'holo-effect' : ''} group my-auto drop-shadow-[0_25px_60px_rgba(0,0,0,0.95)]`}>
+                                <div className="relative w-[210px] sm:w-[240px] aspect-[5/7] flex items-center justify-center group my-auto">
                                     <div className="absolute inset-0 bg-geeko-cyan/25 blur-[100px] rounded-full opacity-40 group-hover:opacity-60 transition-opacity duration-700 animate-pulse pointer-events-none" />
-                                    {isFoil && (
-                                        <div className="absolute inset-0 z-20 foil-shimmer opacity-30 mix-blend-overlay pointer-events-none rounded-[10%] scale-[0.95]" />
-                                    )}
-                                    <CardImage
-                                        src={currentImage}
-                                        alt={details.name}
-                                        size="normal"
-                                        objectFit="contain"
-                                        placeholderSrc={initialImage}
-                                        fallbackIconSize={80}
-                                        className="w-auto max-w-[240px] sm:max-w-[270px] max-h-[360px] object-contain rounded-xl z-10 hover:scale-[1.02] transition-all duration-500 !bg-transparent"
-                                    />
+                                    <div className={`relative w-full h-full flex items-center justify-center drop-shadow-[0_25px_60px_rgba(0,0,0,0.95)] ${isFoil ? 'holo-effect' : ''}`}>
+                                        {isFoil && (
+                                            <div className="absolute inset-0 z-20 foil-shimmer opacity-30 mix-blend-overlay pointer-events-none rounded-[10%] scale-[0.95]" />
+                                        )}
+                                        <CardImage
+                                            src={currentImage}
+                                            alt={details.name}
+                                            size="normal"
+                                            objectFit="contain"
+                                            placeholderSrc={initialImage}
+                                            fallbackIconSize={80}
+                                            className="w-full h-full object-contain rounded-xl z-10 hover:scale-[1.02] transition-all duration-500 !bg-transparent"
+                                        />
+                                    </div>
                                 </div>
                                 
                                 {/* Carousel Navigation */}

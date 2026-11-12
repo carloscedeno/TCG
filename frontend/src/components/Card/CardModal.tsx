@@ -365,7 +365,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
     // Detect DFC only if multiple faces actually exist in card data
     const hasMultipleFaces = !!(details?.card_faces && details.card_faces.length > 1);
     const currentFace = hasMultipleFaces ? (details?.card_faces?.[currentFaceIndex] || {}) : details;
-    const currentImage = (currentFace as any)?.image_url || (currentFace as any)?.image_uris?.normal || (currentFace as any)?.image_uris?.large || (currentFace as any)?.image_uris?.png || details?.image_url || initialImage;
+    const currentImage = (currentFace as any)?.image_url || (currentFace as any)?.image_uris?.normal || (currentFace as any)?.image_uris?.large || (currentFace as any)?.image_uris?.png || details?.image_url || initialImage || (initialData as any)?.image_url;
 
     const externalMarket = useMemo(() => {
         if (!details || details.is_accessory) return null;
@@ -419,7 +419,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
 
     return (
         <div
-            className="fixed inset-0 z-[200] flex items-end md:items-center justify-center bg-black/95 backdrop-blur-xl p-0 md:p-6 animate-in fade-in duration-300 overflow-hidden"
+            className="fixed inset-0 z-[200] flex items-end md:items-center justify-center bg-black/75 backdrop-blur-md p-0 md:p-6 animate-in fade-in duration-200 overflow-hidden"
             onClick={handleBackdropClick}
         >
             {/* Modal Content */}
@@ -561,14 +561,14 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                     <div className="w-full md:w-[320px] lg:w-[360px] bg-[#09090b] flex flex-col border-r border-white/5 shrink-0 overflow-hidden h-auto md:h-full">
                     <div className="flex-1 min-h-[300px] relative flex items-center justify-center p-4 sm:p-6 bg-gradient-to-b from-white/[0.04] to-transparent">
                         {loading && !currentImage ? (
-                            <div className="w-56 aspect-[5/7] rounded-xl bg-white/5 animate-pulse flex flex-col items-center justify-center gap-2">
-                                <Loader2 size={24} className="text-geeko-cyan animate-spin" />
-                                <span className="text-[10px] font-bold text-geeko-cyan uppercase tracking-wider animate-pulse">Cargando...</span>
+                            <div className="w-[210px] sm:w-[240px] aspect-[5/7] rounded-2xl bg-white/5 border border-white/10 animate-pulse flex flex-col items-center justify-center gap-3 shadow-2xl">
+                                <Loader2 size={32} className="text-geeko-cyan animate-spin" />
+                                <span className="text-xs font-black text-geeko-cyan uppercase tracking-widest animate-pulse">Cargando Información...</span>
                             </div>
                         ) : (
-                            <div className="relative w-full flex items-center justify-center group/card my-auto">
-                                <div className="absolute inset-0 bg-geeko-cyan/20 blur-[100px] rounded-full opacity-40 animate-pulse pointer-events-none" />
-                                <div className={`relative flex items-center justify-center drop-shadow-[0_25px_60px_rgba(0,0,0,0.95)] ${selectedFinish === 'foil' ? 'holo-effect' : ''}`}>
+                            <div className="relative w-[210px] sm:w-[240px] aspect-[5/7] flex items-center justify-center group/card my-auto">
+                                <div className="absolute inset-0 bg-geeko-cyan/25 blur-[100px] rounded-full opacity-40 animate-pulse pointer-events-none" />
+                                <div className={`relative w-full h-full flex items-center justify-center drop-shadow-[0_25px_60px_rgba(0,0,0,0.95)] ${selectedFinish === 'foil' ? 'holo-effect' : ''}`}>
                                     {selectedFinish === 'foil' && (
                                         <div className="absolute inset-0 z-20 foil-shimmer opacity-30 mix-blend-overlay pointer-events-none rounded-[10%] scale-[0.95]" />
                                     )}
@@ -578,7 +578,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                                         size="normal"
                                         objectFit="contain"
                                         fallbackIconSize={80}
-                                        className="w-auto max-w-[210px] sm:max-w-[240px] max-h-[310px] object-contain rounded-xl relative z-10 transition-transform duration-500 group-hover/card:scale-[1.02]"
+                                        className="w-full h-full object-contain rounded-xl relative z-10 transition-transform duration-500 group-hover/card:scale-[1.02]"
                                     />
                                 </div>
                             </div>
@@ -597,7 +597,15 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                     <div className="h-auto md:flex-[0_0_35%] md:min-h-[200px] border-t border-white/5 bg-[#080808] flex flex-col shrink-0">
                         <div className="px-6 py-3 flex items-center justify-between border-b border-white/5 bg-[#0a0a0a]/50">
                             <h3 className="text-[10px] font-web-titles font-normal uppercase tracking-widest text-neutral-500">Edición / Impresiones</h3>
-                            <span className="text-[10px] text-neutral-600 font-normal">{versionGroups.length} {versionGroups.length === 1 ? 'Versión' : 'Versiones'}</span>
+                            <span className="text-[10px] text-neutral-400 font-normal">
+                                {loading && versionGroups.length === 0 ? (
+                                    <span className="inline-flex items-center gap-1.5 text-geeko-cyan animate-pulse">
+                                        <Loader2 size={10} className="animate-spin" /> Cargando...
+                                    </span>
+                                ) : (
+                                    `${versionGroups.length} ${versionGroups.length === 1 ? 'Versión' : 'Versiones'}`
+                                )}
+                            </span>
                         </div>
                         <div
                             data-testid="versions-list-container"
@@ -747,7 +755,30 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                         </div>
                     ) : details ? (
                         <>
-                            <div className="space-y-2">
+                            <div className="space-y-2.5">
+                                {/* TCG Icon + Game & Set Metadata */}
+                                <div className="flex items-center gap-2">
+                                    <div className="w-5 h-5 rounded-full bg-white/10 p-0.5 flex items-center justify-center border border-white/15 shrink-0 shadow-sm">
+                                        <img
+                                            src={`/logos/tcg/${details?.game || initialData?.game || 'MTG'}.png`}
+                                            alt={details?.game || initialData?.game || 'TCG'}
+                                            className="w-3.5 h-3.5 object-contain"
+                                            onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
+                                        />
+                                    </div>
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-geeko-cyan">
+                                        {tcgConfig?.gameName || details?.game || initialData?.game || 'TCG'}
+                                    </span>
+                                    {details?.set && (
+                                        <>
+                                            <span className="text-white/20">•</span>
+                                            <span className="text-[10px] font-bold text-neutral-400 truncate max-w-[200px]">
+                                                {details.set}
+                                            </span>
+                                        </>
+                                    )}
+                                </div>
+
                                 <div className="flex flex-wrap items-center justify-between gap-4">
                                     <a
                                         href={`/card/${details.card_id}`}
@@ -762,13 +793,14 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                                             {details.name}
                                         </h2>
                                     </a>
-                                    {loading && (
-                                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-geeko-cyan/15 border border-geeko-cyan/40 text-geeko-cyan text-xs font-black uppercase tracking-wider animate-pulse shrink-0">
-                                            <Loader2 size={13} className="animate-spin text-geeko-cyan" />
-                                            <span>Cargando Información...</span>
-                                        </div>
-                                    )}
                                 </div>
+
+                                {loading && (
+                                    <div className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-geeko-cyan/15 border border-geeko-cyan/40 text-geeko-cyan animate-pulse shadow-sm">
+                                        <Loader2 size={15} className="animate-spin text-geeko-cyan shrink-0" />
+                                        <span className="text-xs font-black uppercase tracking-wider">Cargando Información...</span>
+                                    </div>
+                                )}
                                 <div className="flex flex-wrap items-center gap-2 text-sm md:text-base font-semibold text-neutral-400">
                                     <span className="text-white/80"><ManaText text={details.mana_cost || ''} /></span>
                                     {details.mana_cost && <span className="opacity-30">•</span>}
