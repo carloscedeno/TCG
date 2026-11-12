@@ -16,6 +16,7 @@ import { HeroSection } from '../components/Home/HeroSection';
 import { PresaleSection } from '../components/Home/PresaleSection';
 import { DealsCarousel } from '../components/Home/DealsCarousel';
 import { UpcomingMissionsWidget } from '../components/Home/UpcomingMissionsWidget';
+import { CardModal } from '../components/Card/CardModal';
 
 
 const mockFilters: Filters = {
@@ -79,6 +80,10 @@ const Home: React.FC = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+  const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
+  const [selectedCardImage, setSelectedCardImage] = useState<string | undefined>(undefined);
+  const [selectedCardData, setSelectedCardData] = useState<any>(null);
+  const [isCardModalOpen, setIsCardModalOpen] = useState(false);
   const LIMIT = 50;
 
 
@@ -448,11 +453,40 @@ const Home: React.FC = () => {
     setPage(0);
   };
 
+  // Deep link sync (?card=<id>)
+  useEffect(() => {
+    const cardParam = searchParams.get('card');
+    if (cardParam) {
+      setSelectedCardId(cardParam);
+      setIsCardModalOpen(true);
+    } else {
+      setIsCardModalOpen(false);
+    }
+  }, [searchParams]);
+
   const handleCardClick = (id: string, isArchive: boolean = false, imageUrl?: string, fullCard?: any) => {
     if (isArchive) {
       navigate(`/product/${id}?archive=true`, { state: { initialImage: imageUrl, initialCard: fullCard } });
     } else {
-      navigate(`/card/${id}`, { state: { initialImage: imageUrl, initialCard: fullCard } });
+      setSelectedCardId(id);
+      setSelectedCardImage(imageUrl);
+      setSelectedCardData(fullCard);
+      setIsCardModalOpen(true);
+      const newParams = new URLSearchParams(searchParams);
+      newParams.set('card', id);
+      setSearchParams(newParams, { replace: false });
+    }
+  };
+
+  const handleCloseCardModal = () => {
+    setIsCardModalOpen(false);
+    setSelectedCardId(null);
+    setSelectedCardImage(undefined);
+    setSelectedCardData(null);
+    const newParams = new URLSearchParams(searchParams);
+    if (newParams.has('card')) {
+      newParams.delete('card');
+      setSearchParams(newParams, { replace: true });
     }
   };
 
@@ -728,6 +762,17 @@ const Home: React.FC = () => {
         <Footer />
 
         <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+
+        <CardModal
+          isOpen={isCardModalOpen}
+          onClose={handleCloseCardModal}
+          cardId={selectedCardId}
+          initialImage={selectedCardImage}
+          initialData={selectedCardData}
+          onAddToCartSuccess={() => {
+            window.dispatchEvent(new Event('cart-updated'));
+          }}
+        />
 
             {/* Mobile Filters Drawer */}
             {isMobileFiltersOpen && (

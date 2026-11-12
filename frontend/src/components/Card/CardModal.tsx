@@ -428,7 +428,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                 </div>
 
                 {/* Desktop close button */}
-                <button onClick={onClose} className="absolute top-6 right-6 z-50 p-2 hover:bg-white/10 rounded-full transition-colors text-neutral-400 hidden md:flex"><X size={24} /></button>
+                <button onClick={onClose} className="absolute top-5 right-6 z-50 px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-white text-xs font-black uppercase tracking-wider hidden md:flex items-center gap-1.5 transition-all hover:scale-105 active:scale-95 shadow-lg backdrop-blur-md"><X size={15} /><span>Cerrar</span></button>
 
                 {details?.is_accessory ? (
                     /* ────────────────────────────────────────
@@ -538,16 +538,17 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                 ──────────────────────────────────────── */
                 <>
                     {/* LEFT: IMAGE & VERSIONS LIST */}
-                    <div className="w-full md:w-[420px] lg:w-[480px] bg-[#0c0c0c] flex flex-col border-r border-white/5 overflow-hidden shrink-0 h-auto md:h-[var(--modal-height,700px)] min-h-[500px] md:min-h-0">
-                    <div className="flex-1 min-h-[300px] md:min-h-0 relative flex items-center justify-center p-4 sm:p-6 md:p-10 bg-gradient-to-b from-white/[0.04] to-transparent overflow-hidden">
+                    <div className="w-full md:w-[350px] lg:w-[380px] bg-[#09090b] flex flex-col border-r border-white/5 shrink-0 overflow-hidden h-auto md:h-[var(--modal-height,700px)]">
+                    <div className="flex-1 min-h-[300px] relative flex items-center justify-center p-4 sm:p-6 bg-gradient-to-b from-white/[0.04] to-transparent">
                         {loading && !currentImage ? (
-                            <div className="w-64 aspect-[5/7] rounded-xl bg-white/5 animate-pulse flex items-center justify-center">
-                                <div className="w-10 h-10 border-4 border-t-geeko-cyan border-white/10 rounded-full animate-spin" />
+                            <div className="w-56 aspect-[5/7] rounded-xl bg-white/5 animate-pulse flex flex-col items-center justify-center gap-2">
+                                <Loader2 size={24} className="text-geeko-cyan animate-spin" />
+                                <span className="text-[10px] font-bold text-geeko-cyan uppercase tracking-wider animate-pulse">Cargando...</span>
                             </div>
                         ) : (
-                            <div className="relative w-full h-full flex items-center justify-center group/card">
-                                <div className="absolute inset-0 bg-geeko-cyan/20 blur-[120px] rounded-full opacity-40 animate-pulse pointer-events-none" />
-                                <div className={`relative w-full h-full flex items-center justify-center drop-shadow-[0_45px_100px_rgba(0,0,0,0.95)] ${selectedFinish === 'foil' ? 'holo-effect' : ''}`}>
+                            <div className="relative w-full flex items-center justify-center group/card my-auto">
+                                <div className="absolute inset-0 bg-geeko-cyan/20 blur-[100px] rounded-full opacity-40 animate-pulse pointer-events-none" />
+                                <div className={`relative flex items-center justify-center drop-shadow-[0_25px_60px_rgba(0,0,0,0.95)] ${selectedFinish === 'foil' ? 'holo-effect' : ''}`}>
                                     {selectedFinish === 'foil' && (
                                         <div className="absolute inset-0 z-20 foil-shimmer opacity-30 mix-blend-overlay pointer-events-none rounded-[10%] scale-[0.95]" />
                                     )}
@@ -556,8 +557,8 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                                         alt={details?.name || 'Card Image'}
                                         size="normal"
                                         objectFit="contain"
-                                        fallbackIconSize={100}
-                                        className="max-w-[90%] max-h-[95%] md:max-w-full md:max-h-full object-contain relative z-10 transition-transform duration-700 group-hover/card:scale-[1.03]"
+                                        fallbackIconSize={80}
+                                        className="w-auto max-w-[240px] sm:max-w-[270px] max-h-[360px] object-contain rounded-xl relative z-10 transition-transform duration-500 group-hover/card:scale-[1.02]"
                                     />
                                 </div>
                             </div>
@@ -705,23 +706,10 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                 {/* RIGHT: CARD TEXT & ACTIONS */}
                 <div className="flex-1 h-auto md:h-[var(--modal-height,700px)] overflow-y-auto custom-scrollbar bg-[#050505] p-4 sm:p-6 md:p-8 pb-32 md:pb-40 space-y-4 md:space-y-6">
 
-                    {loading ? (
-                        <div className="space-y-12 animate-pulse">
-                            <div className="space-y-4">
-                                <div className="h-16 w-3/4 bg-white/5 rounded-2xl" />
-                                <div className="h-6 w-1/2 bg-white/5 rounded-lg" />
-                            </div>
-                            <div className="h-48 w-full bg-white/5 rounded-[32px]" />
-                            <div className="space-y-4">
-                                <div className="h-4 w-32 bg-white/5 rounded" />
-                                <div className="grid grid-cols-6 gap-3">
-                                    {[...Array(6)].map((_, i) => <div key={i} className="h-12 bg-white/5 rounded-xl" />)}
-                                </div>
-                            </div>
-                            <div className="grid grid-cols-2 gap-6 pt-4">
-                                <div className="h-40 bg-white/5 rounded-[32px]" />
-                                <div className="h-40 bg-white/5 rounded-[32px]" />
-                            </div>
+                    {loading && !details ? (
+                        <div className="flex flex-col items-center justify-center h-full min-h-[350px] space-y-4">
+                            <Loader2 size={36} className="text-geeko-cyan animate-spin" />
+                            <p className="text-sm font-black text-geeko-cyan uppercase tracking-widest animate-pulse">Cargando Información...</p>
                         </div>
                     ) : error ? (
                         <div className="flex flex-col items-center justify-center h-full text-center p-8 space-y-4 animate-in fade-in">
@@ -740,19 +728,27 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                     ) : details ? (
                         <>
                             <div className="space-y-2">
-                                <a
-                                    href={`/card/${details.card_id}`}
-                                    className="block group/title"
-                                    onClick={(e) => {
-                                        if (!e.ctrlKey && !e.metaKey) {
-                                            e.preventDefault();
-                                        }
-                                    }}
-                                >
-                                    <h2 className="text-xl sm:text-2xl md:text-3xl font-web-titles font-normal tracking-tight text-white text-gradient-cyan group-hover/title:brightness-125 transition-all leading-tight">
-                                        {details.name}
-                                    </h2>
-                                </a>
+                                <div className="flex flex-wrap items-center justify-between gap-4">
+                                    <a
+                                        href={`/card/${details.card_id}`}
+                                        className="block group/title flex-1 min-w-0"
+                                        onClick={(e) => {
+                                            if (!e.ctrlKey && !e.metaKey) {
+                                                e.preventDefault();
+                                            }
+                                        }}
+                                    >
+                                        <h2 className="text-xl sm:text-2xl md:text-3xl font-web-titles font-normal tracking-tight text-white text-gradient-cyan group-hover/title:brightness-125 transition-all leading-tight">
+                                            {details.name}
+                                        </h2>
+                                    </a>
+                                    {loading && (
+                                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-geeko-cyan/15 border border-geeko-cyan/40 text-geeko-cyan text-xs font-black uppercase tracking-wider animate-pulse shrink-0">
+                                            <Loader2 size={13} className="animate-spin text-geeko-cyan" />
+                                            <span>Cargando Información...</span>
+                                        </div>
+                                    )}
+                                </div>
                                 <div className="flex flex-wrap items-center gap-2 text-sm md:text-base font-semibold text-neutral-400">
                                     <span className="text-white/80"><ManaText text={details.mana_cost || ''} /></span>
                                     {details.mana_cost && <span className="opacity-30">•</span>}
@@ -825,7 +821,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                                             <div className="absolute top-0 right-0 w-32 h-32 bg-geeko-cyan/5 rounded-full blur-[40px]" />
                                             <div className="space-y-1 relative z-10">
                                                 <div className="text-[10px] font-semibold uppercase text-geeko-cyan tracking-widest flex items-center justify-between">
-                                                    <span>GK Price</span>
+                                                    <span>Geekorium Price</span>
                                                     {marketPrice > 0 && (activeVersion?.price || details.price || 0) > 0 && (activeVersion?.price || details.price || 0) < marketPrice ? (
                                                         <span className="text-[9px] text-geeko-green bg-geeko-green/10 px-2 py-0.5 rounded-full border border-geeko-green/20">
                                                             Ahorro: ${(marketPrice - (activeVersion?.price || details.price || 0)).toFixed(2)}

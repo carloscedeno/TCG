@@ -276,21 +276,22 @@ export const CardDetail: React.FC = () => {
 
             <main className="relative z-10 w-full max-w-[1600px] mx-auto p-4 lg:p-8 flex-1 flex flex-col items-center">
                 {loading && !details ? (
-                    <div className="flex flex-col items-center justify-center h-[60vh]">
+                    <div className="flex flex-col items-center justify-center h-[60vh] space-y-4">
                         {initialImage ? (
-                            <img src={initialImage} alt="Loading..." className="w-[300px] rounded-xl object-contain opacity-50 blur-sm animate-pulse mb-4" />
-                        ) : (
-                            <Loader2 size={48} className="text-geeko-cyan animate-spin mb-4" />
-                        )}
-                        <p className="text-text-low font-bold tracking-widest uppercase text-xs">Loading Card Data...</p>
+                            <img src={initialImage} alt="Cargando..." className="w-[260px] rounded-xl object-contain opacity-50 blur-sm animate-pulse mb-2" />
+                        ) : null}
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-geeko-cyan/15 border border-geeko-cyan/40 text-geeko-cyan text-sm font-black uppercase tracking-wider animate-pulse">
+                            <Loader2 size={18} className="animate-spin text-geeko-cyan" />
+                            <span>Cargando Información...</span>
+                        </div>
                     </div>
                 ) : details ? (
                     <div data-testid="card-modal" className="w-full glass-panel rounded-[32px] border border-neutral-200 dark:border-white/10 shadow-[0_0_100px_rgba(0,0,0,0.05)] dark:shadow-[0_0_100px_rgba(0,209,255,0.15)] flex flex-col lg:flex-row overflow-hidden lg:min-h-[calc(100vh-220px)] relative">
                         {/* LEFT: IMAGE & VERSIONS LIST */}
                         <div className="w-full lg:w-[340px] bg-neutral-100 dark:bg-[#0c0c0c] flex flex-col lg:border-r border-b lg:border-b-0 border-neutral-200 dark:border-white/5 shrink-0 relative">
-                            <div className="flex-1 min-h-[350px] lg:min-h-[250px] p-6 sm:p-8 md:p-10 relative bg-gradient-to-b from-white/[0.04] to-transparent overflow-hidden">
-                                <div className={`absolute inset-6 sm:inset-8 md:inset-10 flex items-center justify-center ${isFoil ? 'holo-effect' : ''} group`}>
-                                    <div className="absolute inset-0 bg-geeko-cyan/25 blur-[120px] rounded-full opacity-40 group-hover:opacity-60 transition-opacity duration-700 animate-pulse pointer-events-none" />
+                            <div className="flex-1 min-h-[350px] lg:min-h-[250px] p-4 sm:p-6 relative flex items-center justify-center bg-gradient-to-b from-white/[0.04] to-transparent">
+                                <div className={`relative flex items-center justify-center ${isFoil ? 'holo-effect' : ''} group my-auto drop-shadow-[0_25px_60px_rgba(0,0,0,0.95)]`}>
+                                    <div className="absolute inset-0 bg-geeko-cyan/25 blur-[100px] rounded-full opacity-40 group-hover:opacity-60 transition-opacity duration-700 animate-pulse pointer-events-none" />
                                     {isFoil && (
                                         <div className="absolute inset-0 z-20 foil-shimmer opacity-30 mix-blend-overlay pointer-events-none rounded-[10%] scale-[0.95]" />
                                     )}
@@ -300,7 +301,8 @@ export const CardDetail: React.FC = () => {
                                         size="normal"
                                         objectFit="contain"
                                         placeholderSrc={initialImage}
-                                        className="drop-shadow-[0_45px_100px_rgba(0,0,0,0.95)] z-10 hover:scale-[1.03] transition-all duration-700 !bg-transparent"
+                                        fallbackIconSize={80}
+                                        className="w-auto max-w-[240px] sm:max-w-[270px] max-h-[360px] object-contain rounded-xl z-10 hover:scale-[1.02] transition-all duration-500 !bg-transparent"
                                     />
                                 </div>
                                 
@@ -470,34 +472,43 @@ export const CardDetail: React.FC = () => {
                         <div className="flex-1 lg:overflow-y-auto lg:max-h-[calc(100vh-140px)] custom-scrollbar bg-white dark:bg-[#050505] p-6 lg:p-12 space-y-8 relative">
                             <button
                                 onClick={() => navigate(-1)}
-                                className="absolute top-6 right-6 p-2 rounded-full bg-neutral-900/80 hover:bg-white/10 text-text-low hover:text-white transition-colors z-50 border border-white/10"
+                                className="absolute top-6 right-6 z-50 px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-white text-xs font-black uppercase tracking-wider flex items-center gap-1.5 transition-all hover:scale-105 active:scale-95 shadow-lg backdrop-blur-md"
                                 aria-label="Cerrar modal"
                             >
-                                <X size={20} />
+                                <X size={15} />
+                                <span>Cerrar</span>
                             </button>
                             
                             {/* TITLE & HEADER */}
                             <div className="space-y-4">
-                                <a
-                                    href={`card/${activePrintingId}`}
-                                    onClick={(e) => {
-                                        if (!e.ctrlKey && !e.metaKey) e.preventDefault();
-                                    }}
-                                    className="block group/title"
-                                >
-                                    <div className="flex flex-col gap-2">
-                                        {(details.name?.toLowerCase().includes('(preventa)') || details.is_presale) && (
-                                            <div className="flex items-center gap-2">
-                                                <div className="px-3 py-1 bg-geeko-cyan/20 text-geeko-cyan text-[10px] font-black rounded-lg border border-geeko-cyan/30 shadow-[0_0_15px_rgba(0,209,255,0.2)] animate-pulse uppercase tracking-[0.2em]">
-                                                    Preventa
+                                <div className="flex flex-wrap items-center justify-between gap-4">
+                                    <a
+                                        href={`card/${activePrintingId}`}
+                                        onClick={(e) => {
+                                            if (!e.ctrlKey && !e.metaKey) e.preventDefault();
+                                        }}
+                                        className="block group/title flex-1 min-w-0"
+                                    >
+                                        <div className="flex flex-col gap-2">
+                                            {(details.name?.toLowerCase().includes('(preventa)') || details.is_presale) && (
+                                                <div className="flex items-center gap-2">
+                                                    <div className="px-3 py-1 bg-geeko-cyan/20 text-geeko-cyan text-[10px] font-black rounded-lg border border-geeko-cyan/30 shadow-[0_0_15px_rgba(0,209,255,0.2)] animate-pulse uppercase tracking-[0.2em]">
+                                                        Preventa
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        )}
-                                        <h2 className="text-3xl lg:text-5xl font-web-titles font-normal tracking-tight text-black dark:text-white group-hover/title:text-geeko-cyan transition-colors text-gradient-cyan capitalize leading-tight">
-                                            {details.name?.replace(/\(preventa\)/gi, '').trim()}
-                                        </h2>
-                                    </div>
-                                </a>
+                                            )}
+                                            <h2 className="text-3xl lg:text-5xl font-web-titles font-normal tracking-tight text-black dark:text-white group-hover/title:text-geeko-cyan transition-colors text-gradient-cyan capitalize leading-tight">
+                                                {details.name?.replace(/\(preventa\)/gi, '').trim()}
+                                            </h2>
+                                        </div>
+                                    </a>
+                                    {loading && (
+                                        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-geeko-cyan/15 border border-geeko-cyan/40 text-geeko-cyan text-xs font-black uppercase tracking-wider animate-pulse shrink-0">
+                                            <Loader2 size={14} className="animate-spin text-geeko-cyan" />
+                                            <span>Cargando Información...</span>
+                                        </div>
+                                    )}
+                                </div>
                                 <div className="flex flex-wrap items-center gap-3 text-base lg:text-lg font-medium text-text-low">
                                     {details.mana_cost && (
                                         <>
