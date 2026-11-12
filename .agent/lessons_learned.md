@@ -2551,3 +2551,14 @@ ame.includes(' // ') asumía erróneamente que cualquier carta con barras dobles
 3. **Parser de Texto de Reglas**: Se implementó 
 enderOracleText que convierte <br> en saltos de línea limpios, remueve etiquetas HTML crudas y aplica tipografía compacta (	ext-xs md:text-sm).
 4. **Modal Viewport & Scroll**: Modal con md:h-[660px] max-h-[94vh] y contenedor interno con min-h-0 overflow-y-auto custom-scrollbar.
+
+### 57. Modal TCG Estilo Moxfield & Optimización Mobile-First (Nov 2026)
+- **Problema:** En el modal de producto, el precio ($), selector de acabado (Normal/Foil) y botón 'Agregar al Carrito' se ubicaban debajo del texto de reglas y legalidades, quedando recortados en cartas con oráculos extensos. En dispositivos móviles, la columna izquierda de versiones se apilaba entre la imagen y el precio, obligando a scroll forzado para comprar. Además, BottomNav y WhatsAppWidget colisionaban visualmente sobre el pie del modal, y cartas con  //  en el nombre (como split cards o Digimon) perdían su arte oficial al forzar lógica DFC inexistente.
+- **Causa Raíz:** 1) Jerarquía visual invertida: contenido informativo (reglas) antes que acciones comerciales primarias. 2) Orden flexbox colapsado en mobile sin control condicional de componentes. 3) Modals renderizados dentro del DOM local de la página atrapados en stacking contexts frente a elementos fijos globales. 4) DFC check basado en substring del nombre en lugar de presencia de card_faces.
+- **Solución:** 
+  1. Reordenamiento visual prioritario: TCG Badge + Geekorium Price + Selector Normal/Foil + 'Agregar al Carrito' al tope del panel comercial.
+  2. Arquitectura condicional de versiones: en desktop (md:) viven bajo el arte; en mobile (< md) se trasladan al pie del flujo (
+enderVersionsContent), garantizando experiencia *Above the Fold* en smartphones.
+  3. Aislamiento de capas con React Portal: createPortal(modalNode, document.body) con z-[300] y g-black/75 backdrop-blur-md, cubriendo limpiamente barras de navegación fijas y widgets de chat.
+  4. Lógica DFC estricta: hasMultipleFaces = !!(details?.card_faces && details.card_faces.length > 1) con fallback garantizado a details.image_url.
+- **Regla Derivada:** En todo marketplace mobile-first, el precio y el botón de añadir al carrito jamás deben depender del scroll ni de la longitud del texto oráculo del producto. Los modales globales a pantalla completa deben portarse siempre a document.body para no heredar z-indexes locales.

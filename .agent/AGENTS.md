@@ -115,3 +115,6 @@ Artefactos del Compound step:
 
 
 - ✅ **User Dashboard & Checkout Address Enhancements (Junio 2026)**: Implementacion de Wizards, Pokemon, Bandai IDs en perfil; Libreta de multiples direcciones CRUD con trigger de predeterminadas; Auto-relleno y facturacion independiente en checkout; Filtros y fechas estimadas de preventas en ordenes.
+
+- ✅ **Modal TCG Estilo Moxfield & Optimización Mobile-First (Nov 2026)**: Apertura in-page sin recargas, jerarquía comercial con Geekorium Price, acabado Normal/Foil y "Agregar al Carrito" en el tope (*above the fold*) para desktop y smartphones. Logos oficiales TCG en sticky header, aislamiento de capa con React Portal (`createPortal` con `z-[300]`), badges de carga visual "Cargando Información..." y corrección DFC estricta para evitar imágenes rotas en cartas split y Digimon.
+

@@ -60,7 +60,7 @@ hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
 <div class="container">
 
 <h1>TCG Web App — Complete Call Flow &amp; Architecture Documentation</h1>
-<p class="subtitle">Generated from graphify knowledge graph: 5427 nodes, 6294 edges, 604 communities. Commit: 8fec443</p>
+<p class="subtitle">Generated from graphify knowledge graph: 5433 nodes, 6530 edges, 600 communities. Commit: 441872e</p>
 
 <div class="nav">
     <a href="#overview">Architecture Overview</a>
@@ -72,12 +72,12 @@ hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
     <a href="#ingest-cache-update">Ingestion &amp; Updates</a>
     <a href="#serve-api">Serving API</a>
     <a href="#tests-fixtures">Tests &amp; Fixtures</a>
-    <a href="#admin-dashboard-orders">Admin Dashboard &amp; Orders</a>
     <a href="#checkout-pwa-flow">Checkout &amp; PWA Flow</a>
     <a href="#community-17">Community 17</a>
     <a href="#community-18">Community 18</a>
     <a href="#community-19">Community 19</a>
     <a href="#community-30">Community 30</a>
+    <a href="#community-31">Community 31</a>
     <a href="#other">Other</a>
 </div>
 
@@ -90,23 +90,21 @@ hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
 flowchart LR
     EXTRACT_PIPELINE_5F350230("Extraction Pipeline<br/><small>6 nodes</small>")
     class EXTRACT_PIPELINE_5F350230 module;
-    BUILD_GRAPH_321CBB04("Graph Build<br/><small>738 nodes</small>")
+    BUILD_GRAPH_321CBB04("Graph Build<br/><small>959 nodes</small>")
     class BUILD_GRAPH_321CBB04 module;
     ANALYSIS_CLUSTERING_C79796DA("Analysis &amp; Clustering<br/><small>105 nodes</small>")
     class ANALYSIS_CLUSTERING_C79796DA module;
-    OUTPUTS_DOCS_ED82387C("Outputs &amp; Docs<br/><small>132 nodes</small>")
+    OUTPUTS_DOCS_ED82387C("Outputs &amp; Docs<br/><small>149 nodes</small>")
     class OUTPUTS_DOCS_ED82387C module;
-    CLI_SKILLS_9964CBB8("CLI &amp; Skill Installers<br/><small>637 nodes</small>")
+    CLI_SKILLS_9964CBB8("CLI &amp; Skill Installers<br/><small>212 nodes</small>")
     class CLI_SKILLS_9964CBB8 module;
-    INGEST_CACHE_UPDATE_FF457338("Ingestion &amp; Updates<br/><small>155 nodes</small>")
+    INGEST_CACHE_UPDATE_FF457338("Ingestion &amp; Updates<br/><small>147 nodes</small>")
     class INGEST_CACHE_UPDATE_FF457338 module;
-    SERVE_API_35EC8E86("Serving API<br/><small>857 nodes</small>")
+    SERVE_API_35EC8E86("Serving API<br/><small>881 nodes</small>")
     class SERVE_API_35EC8E86 module;
-    TESTS_FIXTURES_B84B1DCC("Tests &amp; Fixtures<br/><small>796 nodes</small>")
+    TESTS_FIXTURES_B84B1DCC("Tests &amp; Fixtures<br/><small>799 nodes</small>")
     class TESTS_FIXTURES_B84B1DCC module;
-    ADMIN_DASHBOARD_ORDERS_4BD30AA7("Admin Dashboard &amp; Orders<br/><small>63 nodes</small>")
-    class ADMIN_DASHBOARD_ORDERS_4BD30AA7 module;
-    CHECKOUT_PWA_FLOW_DA8DC32A("Checkout &amp; PWA Flow<br/><small>48 nodes</small>")
+    CHECKOUT_PWA_FLOW_DA8DC32A("Checkout &amp; PWA Flow<br/><small>49 nodes</small>")
     class CHECKOUT_PWA_FLOW_DA8DC32A module;
     COMMUNITY_17_648F8D7C("Community 17<br/><small>45 nodes</small>")
     class COMMUNITY_17_648F8D7C module;
@@ -116,20 +114,22 @@ flowchart LR
     class COMMUNITY_19_9462A0B9 module;
     COMMUNITY_30_9CA2CA2E("Community 30<br/><small>39 nodes</small>")
     class COMMUNITY_30_9CA2CA2E module;
-    OTHER_D0941E68("Other<br/><small>1716 nodes</small>")
+    COMMUNITY_31_2075BEB2("Community 31<br/><small>37 nodes</small>")
+    class COMMUNITY_31_2075BEB2 module;
+    OTHER_D0941E68("Other<br/><small>1915 nodes</small>")
     class OTHER_D0941E68 module;
-    ADMIN_DASHBOARD_ORDERS_4BD30AA7 -->|imports x37| SERVE_API_35EC8E86
-    SERVE_API_35EC8E86 -->|imports x21| ADMIN_DASHBOARD_ORDERS_4BD30AA7
-    SERVE_API_35EC8E86 -->|imports x15| OTHER_D0941E68
-    TESTS_FIXTURES_B84B1DCC -->|imports x11| SERVE_API_35EC8E86
-    SERVE_API_35EC8E86 -->|imports x11| TESTS_FIXTURES_B84B1DCC
-    TESTS_FIXTURES_B84B1DCC -->|contains x10| OTHER_D0941E68
-    TESTS_FIXTURES_B84B1DCC -->|imports x10| INGEST_CACHE_UPDATE_FF457338
-    ADMIN_DASHBOARD_ORDERS_4BD30AA7 -->|imports x10| OTHER_D0941E68
-    OTHER_D0941E68 -->|imports x9| TESTS_FIXTURES_B84B1DCC
+    SERVE_API_35EC8E86 -->|imports x46| OTHER_D0941E68
+    OTHER_D0941E68 -->|imports x43| SERVE_API_35EC8E86
+    TESTS_FIXTURES_B84B1DCC -->|imports x20| SERVE_API_35EC8E86
+    TESTS_FIXTURES_B84B1DCC -->|imports x16| OTHER_D0941E68
+    CHECKOUT_PWA_FLOW_DA8DC32A -->|imports x14| SERVE_API_35EC8E86
     TESTS_FIXTURES_B84B1DCC -->|method x9| CLI_SKILLS_9964CBB8
-    CHECKOUT_PWA_FLOW_DA8DC32A -->|imports x9| SERVE_API_35EC8E86
-    CHECKOUT_PWA_FLOW_DA8DC32A -->|imports x7| ADMIN_DASHBOARD_ORDERS_4BD30AA7
+    SERVE_API_35EC8E86 -->|imports x9| TESTS_FIXTURES_B84B1DCC
+    OTHER_D0941E68 -->|imports x8| TESTS_FIXTURES_B84B1DCC
+    TESTS_FIXTURES_B84B1DCC -->|imports x8| INGEST_CACHE_UPDATE_FF457338
+    TESTS_FIXTURES_B84B1DCC -->|imports x7| ANALYSIS_CLUSTERING_C79796DA
+    SERVE_API_35EC8E86 -->|imports x6| ANALYSIS_CLUSTERING_C79796DA
+    CLI_SKILLS_9964CBB8 -->|imports x4| TESTS_FIXTURES_B84B1DCC
     classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
     classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
     classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
@@ -146,24 +146,24 @@ flowchart LR
     <h4>Architecture Layers</h4>
     <table style="width:100%;font-size:0.85rem;">
       <tr><th>Layer</th><th>Nodes</th><th>Communities</th></tr>
-      <tr><td>Extraction Pipeline</td><td>6</td><td><code>356, 359, 362</code></td></tr><tr><td>Graph Build</td><td>738</td><td><code>12, 13, 27, 33, 40, 42, 44, 47, 50, 55, 67, 68, 72, 82, 84, 86, 100, 96, 120, 127, 154, 162, 167, 222, 223, 224, 227, 228, 231, 237, 256, 264, 270, 282, 285, 289, 294, 295, 296, 297, 298, 302, 303, 314, 315, 325, 326, 330, 331, 355, 360, 361, 366, 370, 371, 401, 429, 437, 461, 477, 483, 534, 535, 540, 542, 549, 558</code></td></tr><tr><td>Analysis &amp; Clustering</td><td>105</td><td><code>48, 70, 93, 110, 165, 280, 312, 557</code></td></tr><tr><td>Outputs &amp; Docs</td><td>132</td><td><code>22, 58, 66, 87, 176, 273, 277, 430</code></td></tr><tr><td>CLI &amp; Skill Installers</td><td>637</td><td><code>7, 26, 32, 34, 61, 76, 79, 83, 101, 102, 132, 151, 152, 161, 172, 183, 184, 185, 198, 199, 200, 204, 207, 214, 215, 216, 217, 218, 219, 220, 243, 244, 245, 246, 254, 255, 259, 260, 261, 262, 263, 272, 278, 287, 288, 374, 571</code></td></tr><tr><td>Ingestion &amp; Updates</td><td>155</td><td><code>21, 52, 98, 137, 166, 181, 205, 311, 335, 353, 365, 453, 454, 455, 456, 457, 458, 490, 566, 567, 579</code></td></tr><tr><td>Serving API</td><td>857</td><td><code>0, 20, 23, 2, 25, 28, 8, 45, 54, 57, 62, 4, 71, 3, 73, 77, 78, 80, 88, 90, 91, 95, 114, 118, 119, 125, 133, 135, 149, 164, 182, 210, 221, 257, 265, 276, 283, 290, 291, 292, 293, 319, 320, 321, 322, 323, 345, 346, 354, 390, 448, 459, 460, 469, 470, 471, 472, 473, 474, 475, 476, 480, 508, 528, 548, 552, 562, 584, 585, 586</code></td></tr><tr><td>Tests &amp; Fixtures</td><td>796</td><td><code>11, 14, 15, 16, 24, 29, 39, 41, 43, 53, 56, 59, 63, 74, 81, 89, 97, 105, 113, 117, 128, 134, 138, 148, 157, 163, 173, 175, 186, 193, 195, 196, 201, 209, 213, 286, 9, 351, 352, 443, 444, 445, 446, 447, 449, 450, 484, 485, 573, 574, 575, 576, 577, 578, 600, 601</code></td></tr><tr><td>Admin Dashboard &amp; Orders</td><td>63</td><td><code>1</code></td></tr><tr><td>Checkout &amp; PWA Flow</td><td>48</td><td><code>5</code></td></tr><tr><td>Community 17</td><td>45</td><td><code>17</code></td></tr><tr><td>Community 18</td><td>45</td><td><code>18</code></td></tr><tr><td>Community 19</td><td>45</td><td><code>19</code></td></tr><tr><td>Community 30</td><td>39</td><td><code>30</code></td></tr><tr><td>Other</td><td>1716</td><td><code>31, 35, 36, 37, 38, 46, 49, 51, 60, 64, 65, 69, 75, 85, 92, 94, 99, 103, 104, 106, 107, 108, 109, 111, 112, 115, 116, 121, 122, 123, 124, 126, 129, 130, 131, 136, 139, 140, 141, 142, 143, 144, 145, 146, 147, 150, 153, 155, 156, 158, 159, 160, 168, 169, 170, 171, 174, 177, 178, 179, 180, 6, 187, 188, 189, 190, 191, 192, 194, 197, 202, 203, 206, 208, 211, 212, 225, 226, 229, 230, 232, 233, 234, 235, 236, 238, 239, 240, 241, 242, 247, 248, 249, 250, 251, 252, 253, 258, 266, 267, 268, 269, 271, 274, 275, 279, 281, 284, 299, 300, 301, 304, 305, 306, 307, 308, 309, 310, 313, 316, 317, 318, 324, 327, 328, 329, 332, 333, 334, 336, 337, 338, 339, 340, 341, 342, 343, 344, 347, 348, 349, 350, 357, 358, 363, 364, 367, 368, 369, 372, 373, 375, 376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 391, 392, 393, 394, 395, 396, 397, 398, 399, 400, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422, 423, 424, 425, 426, 427, 428, 431, 432, 433, 434, 435, 436, 438, 439, 440, 441, 442, 451, 452, 462, 463, 464, 465, 466, 467, 468, 478, 479, 481, 482, 486, 487, 10, 488, 489, 491, 492, 493, 494, 495, 496, 497, 498, 499, 500, 501, 502, 503, 504, 505, 506, 507, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 529, 530, 531, 532, 533, 536, 537, 538, 539, 541, 543, 544, 545, 546, 547, 550, 551, 553, 554, 555, 556, 559, 560, 561, 563, 564, 565, 568, 569, 570, 572, 580, 581, 582, 583, 587, 588, 589, 590, 591, 592, 593, 594, 595, 596, 597, 598, 599, 602, 603</code></td></tr>
+      <tr><td>Extraction Pipeline</td><td>6</td><td><code>356, 359, 362</code></td></tr><tr><td>Graph Build</td><td>959</td><td><code>12, 13, 27, 7, 33, 40, 61, 42, 101, 44, 118, 47, 50, 55, 67, 68, 132, 72, 82, 84, 86, 100, 96, 172, 183, 120, 127, 198, 154, 207, 162, 167, 227, 222, 223, 224, 228, 231, 237, 244, 264, 256, 270, 282, 331, 277, 289, 294, 295, 296, 297, 298, 302, 303, 314, 315, 325, 326, 330, 355, 360, 361, 366, 370, 371, 401, 429, 437, 461, 477, 483, 471, 473, 474, 534, 535, 540, 542, 549, 558</code></td></tr><tr><td>Analysis &amp; Clustering</td><td>105</td><td><code>48, 70, 93, 110, 165, 280, 312, 557</code></td></tr><tr><td>Outputs &amp; Docs</td><td>149</td><td><code>22, 58, 66, 87, 176, 219, 220, 259, 262, 430</code></td></tr><tr><td>CLI &amp; Skill Installers</td><td>212</td><td><code>26, 32, 34, 76, 79, 83, 152, 204, 161, 272, 374, 571</code></td></tr><tr><td>Ingestion &amp; Updates</td><td>147</td><td><code>21, 52, 98, 166, 181, 205, 311, 335, 353, 365, 453, 454, 456, 457, 458, 475, 566, 567, 579</code></td></tr><tr><td>Serving API</td><td>881</td><td><code>0, 1, 23, 25, 28, 62, 2, 8, 102, 45, 54, 4, 57, 71, 125, 73, 77, 78, 80, 88, 90, 91, 95, 114, 119, 133, 149, 164, 182, 135, 210, 221, 257, 265, 283, 263, 290, 291, 292, 293, 319, 320, 321, 322, 323, 345, 346, 288, 329, 351, 354, 390, 427, 448, 455, 459, 460, 469, 470, 472, 480, 508, 528, 548, 552, 562, 584, 585, 586</code></td></tr><tr><td>Tests &amp; Fixtures</td><td>799</td><td><code>11, 15, 63, 14, 16, 29, 43, 24, 53, 56, 59, 41, 74, 137, 81, 89, 138, 151, 97, 105, 113, 117, 128, 134, 148, 163, 173, 175, 186, 193, 195, 196, 201, 209, 213, 286, 278, 9, 352, 443, 444, 445, 446, 447, 449, 450, 484, 485, 573, 574, 575, 576, 577, 578, 600, 601</code></td></tr><tr><td>Checkout &amp; PWA Flow</td><td>49</td><td><code>5</code></td></tr><tr><td>Community 17</td><td>45</td><td><code>17</code></td></tr><tr><td>Community 18</td><td>45</td><td><code>18</code></td></tr><tr><td>Community 19</td><td>45</td><td><code>19</code></td></tr><tr><td>Community 30</td><td>39</td><td><code>30</code></td></tr><tr><td>Community 31</td><td>37</td><td><code>31</code></td></tr><tr><td>Other</td><td>1915</td><td><code>36, 35, 39, 37, 38, 20, 46, 49, 51, 60, 64, 65, 69, 75, 85, 92, 94, 99, 103, 104, 106, 107, 108, 109, 111, 112, 115, 116, 184, 121, 122, 123, 124, 126, 129, 130, 131, 185, 136, 139, 140, 141, 142, 143, 144, 145, 146, 147, 150, 155, 156, 158, 159, 160, 199, 200, 274, 168, 169, 170, 171, 174, 177, 178, 179, 180, 214, 6, 153, 187, 188, 189, 190, 191, 192, 194, 197, 215, 216, 217, 218, 3, 202, 203, 206, 208, 211, 212, 243, 157, 225, 226, 229, 230, 232, 233, 234, 235, 236, 238, 239, 240, 241, 242, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 258, 260, 261, 266, 267, 268, 269, 271, 275, 279, 281, 284, 273, 276, 285, 299, 300, 301, 304, 305, 306, 307, 308, 309, 310, 313, 316, 317, 318, 324, 327, 328, 332, 333, 334, 336, 337, 338, 339, 340, 341, 342, 343, 344, 347, 348, 349, 350, 287, 357, 358, 363, 364, 367, 368, 369, 372, 373, 375, 376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 391, 392, 393, 394, 395, 396, 397, 398, 399, 400, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422, 423, 424, 425, 426, 428, 431, 432, 433, 434, 435, 436, 438, 439, 440, 441, 442, 451, 452, 462, 463, 464, 465, 466, 467, 468, 478, 479, 481, 482, 486, 487, 10, 491, 492, 493, 494, 495, 496, 497, 498, 499, 500, 501, 502, 503, 504, 505, 506, 507, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 529, 530, 531, 532, 533, 536, 537, 538, 539, 541, 543, 544, 545, 546, 547, 550, 551, 553, 554, 555, 556, 559, 560, 561, 563, 564, 565, 568, 569, 570, 572, 580, 581, 582, 583, 587, 588, 589, 590, 591, 592, 593, 594, 595, 596, 597, 598, 599, 602, 603</code></td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Core Flow</h4>
-    <div class="arrow-chain">Extraction Pipeline -&gt; Graph Build -&gt; Analysis &amp; Clustering -&gt; Serving API -&gt; Admin Dashboard &amp; Orders -&gt; Other -&gt; Tests &amp; Fixtures</div>
+    <div class="arrow-chain">Extraction Pipeline -&gt; Graph Build -&gt; Analysis &amp; Clustering -&gt; Serving API -&gt; Other -&gt; Tests &amp; Fixtures -&gt; CLI &amp; Skill Installers</div>
   </div>
 </div>
 <div class="grid">
   <div class="card">
     <h4>Graph Report Highlights</h4>
     <ul>
-      <li>5427 nodes · 6294 edges · 604 communities (548 shown, 56 thin omitted)</li>
-      <li>Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 398 edges (avg confidence: 0.55)</li>
+      <li>5433 nodes · 6530 edges · 600 communities (545 shown, 55 thin omitted)</li>
+      <li>Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 409 edges (avg confidence: 0.55)</li>
       <li>Token cost: 0 input · 0 output</li>
-      <li>1. `ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âª Testing` - 150 edges</li>
-      <li>2. `datetime` - 53 edges</li>
-      <li>3. `useAuth()` - 47 edges</li>
+      <li>1. `datetime` - 56 edges</li>
+      <li>2. `useAuth()` - 47 edges</li>
+      <li>3. `TCGDatabaseAPI` - 47 edges</li>
     </ul>
   </div>
 </div>
@@ -287,12 +287,12 @@ flowchart LR
 
 <!-- ====== 3. Graph Build ====== -->
 <h2 id="build-graph">3. Graph Build</h2>
-<p>Graph Build groups implementation around data, docs, scryfall, ecl, mostly in data/scryfall_ecl_265.json, data/scryfall_ecl_347.json, frontend/package.json. This section covers 738 nodes and 708 internal edges; the diagram shows only representative relationships to stay readable.</p>
+<p>Graph Build groups implementation around data, docs, scryfall, ecl, mostly in sortswift_openapi.json, data/scryfall_ecl_265.json, data/scryfall_ecl_347.json. This section covers 959 nodes and 1051 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
 %%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
 flowchart LR
-    %% Section: Graph Build (738 nodes, 708 edges)
+    %% Section: Graph Build (959 nodes, 1051 edges)
     subgraph build_graph_backup_before_restructure_scripts_se_76d73279["backup_before_restructure/scripts/setup.py"]
         backup_before_restructure_scripts_setup_py_scrip_0f659330("CompleteSystemSetup<br/><small>backup_before_restructure/scripts/setup.py</small>")
         backup_before_restructure_scripts_setup_py_scrip_aa1aa95f("check_prerequisites()<br/><small>backup_before_restructure/scripts/setup.py</small>")
@@ -337,7 +337,7 @@ flowchart LR
     scripts_full_ck_sync_all_sets_build_full_ck_map_f5f82859 -->|calls| scripts_full_ck_sync_all_sets_main_748e9fc8
     scripts_phase23_sync_strixhaven_ck_load_pricelis_2b76fbc2 -->|calls| scripts_phase23_sync_strixhaven_ck_main_32f51473
     scripts_phase23_sync_strixhaven_ck_build_ck_maps_3952ccc3 -->|calls| scripts_phase23_sync_strixhaven_ck_main_32f51473
-    %% Omitted for readability: 720 nodes, 0 edges
+    %% Omitted for readability: 941 nodes, 0 edges
     class backup_before_restructure_scripts_setup_py_scrip_0f659330 klass;
     class backup_before_restructure_scripts_setup_py_scrip_aa1aa95f function;
     class backup_before_restructure_scripts_setup_py_scrip_2ff83b40 function;
@@ -624,19 +624,19 @@ flowchart LR
     <h4>Key Files</h4>
     <table style="width:100%;font-size:0.85rem;">
       <tr><th>File</th><th>Coverage</th></tr>
-      <tr><td><code>data/scryfall_ecl_265.json</code></td><td>104 nodes</td></tr>
+      <tr><td><code>sortswift_openapi.json</code></td><td>114 nodes</td></tr>
+<tr><td><code>data/scryfall_ecl_265.json</code></td><td>104 nodes</td></tr>
 <tr><td><code>data/scryfall_ecl_347.json</code></td><td>89 nodes</td></tr>
-<tr><td><code>frontend/package.json</code></td><td>51 nodes</td></tr>
+<tr><td><code>frontend/package.json</code></td><td>57 nodes</td></tr>
 <tr><td><code>data/gundam/cgs.json</code></td><td>50 nodes</td></tr>
 <tr><td><code>TechDocs/supabase/README.md</code></td><td>40 nodes</td></tr>
 <tr><td><code>archive/reports/DIAGNOSTICO_DEPLOYMENT.md</code></td><td>37 nodes</td></tr>
-<tr><td><code>archive/sessions/SESION_MODAL_FIX.md</code></td><td>31 nodes</td></tr>
-<tr><td><code>biome.json</code></td><td>30 nodes</td></tr>
+<tr><td><code>.obsidian/core-plugins.json</code></td><td>32 nodes</td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: contains x652, calls x23, explains x17, method x16. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x995, calls x23, explains x17, method x16. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
   </div>
 </div>
 <hr>
@@ -992,17 +992,16 @@ flowchart LR
 
 <!-- ====== 5. Outputs & Docs ====== -->
 <h2 id="outputs-docs">5. Outputs &amp; Docs</h2>
-<p>Outputs &amp; Docs groups implementation around mcp, tools, scripts, server, mostly in tools/mcp/MCP_SERVER_README.md, archive/reports/VERIFICATION_REPORT.md, tools/scripts/restructure_project.py. This section covers 132 nodes and 142 internal edges; the diagram shows only representative relationships to stay readable.</p>
+<p>Outputs &amp; Docs groups implementation around mcp, tools, scripts, server, mostly in tools/mcp/MCP_SERVER_README.md, archive/reports/VERIFICATION_REPORT.md, tools/scripts/restructure_project.py. This section covers 149 nodes and 159 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
 %%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
 flowchart LR
-    %% Section: Outputs &amp; Docs (132 nodes, 142 edges)
+    %% Section: Outputs &amp; Docs (149 nodes, 159 edges)
     subgraph outputs_docs_tools_scripts_restructure_project_p_30b9ad5a["tools/scripts/restructure_project.py"]
         scripts_restructure_project_projectrestructurer_bab9e8c2("ProjectRestructurer<br/><small>tools/scripts/restructure_project.py</small>")
         scripts_restructure_project_create_development_f_86e472c4("create_development_files()<br/><small>tools/scripts/restructure_project.py</small>")
         scripts_restructure_project_create_dockerfile_251f332e("create_dockerfile()<br/><small>tools/scripts/restructure_project.py</small>")
-        scripts_restructure_project_create_initial_files_32ea3c35("create_initial_files()<br/><small>tools/scripts/restructure_project.py</small>")
         scripts_restructure_project_projectrestructurer_de470a9e("create_backup()<br/><small>tools/scripts/restructure_project.py</small>")
         scripts_restructure_project_projectrestructurer_fb63f8b3("create_configuration_files()<br/><small>tools/scripts/restructure_project.py</small>")
         scripts_restructure_project_projectrestructurer_aa1d3f6a("create_directory_structure()<br/><small>tools/scripts/restructure_project.py</small>")
@@ -1010,20 +1009,25 @@ flowchart LR
         scripts_restructure_project_projectrestructurer_652d443c("move_existing_files()<br/><small>tools/scripts/restructure_project.py</small>")
         scripts_restructure_project_run_8e95fe85("run()<br/><small>tools/scripts/restructure_project.py</small>")
         scripts_restructure_project_create_readme_files_ad3209ed("create_readme_files()<br/><small>tools/scripts/restructure_project.py</small>")
-        scripts_restructure_project_create_project_struc_b6145a88("project structure documentation()<br/><small>tools/scripts/restructure_project.py</small>")
     end
-    subgraph outputs_docs_sync_mtg_export_all_catalog_py_23c67772["sync/mtg/export_all_catalog.py"]
-        mtg_export_all_catalog_ensure_category_870c432b("ensure_category()<br/><small>sync/mtg/export_all_catalog.py</small>")
-        mtg_export_all_catalog_run_export_all_f2d1cdbd("run_export_all()<br/><small>sync/mtg/export_all_catalog.py</small>")
-        scripts_sync_mtg_export_all_catalog_py_odooclien_e615d1a8("OdooClient<br/><small>sync/mtg/export_all_catalog.py</small>")
+    subgraph outputs_docs_scripts_generate_executive_pdf_repo_8013ec2b["scripts/generate_executive_pdf_report.py"]
+        scripts_generate_executive_pdf_report_numberedca_c33fdc8b("NumberedCanvas<br/><small>scripts/generate_executive_pdf_report.py</small>")
+        scripts_generate_executive_pdf_report_ensure_gee_fb456095("ensure_geeko_icon()<br/><small>scripts/generate_executive_pdf_report.py</small>")
+        scripts_generate_executive_pdf_report_build_pdf_3f70c5b9("build_pdf()<br/><small>scripts/generate_executive_pdf_report.py</small>")
+        scripts_generate_executive_pdf_report_numberedca_1321c3f8("save()<br/><small>scripts/generate_executive_pdf_report.py</small>")
+        scripts_generate_executive_pdf_report_numberedca_9ad6e72b("draw_page_decorations()<br/><small>scripts/generate_executive_pdf_report.py</small>")
+        scripts_generate_executive_pdf_report_numberedca_50044390("__init__()<br/><small>scripts/generate_executive_pdf_report.py</small>")
+        scripts_generate_executive_pdf_report_numberedca_7473654c("showPage()<br/><small>scripts/generate_executive_pdf_report.py</small>")
     end
-    subgraph outputs_docs_tools_scripts_restructure_simple_py_82873462["tools/scripts/restructure_simple.py"]
-        scripts_restructure_simple_simpleprojectrestruct_19b72b7f("SimpleProjectRestructurer<br/><small>tools/scripts/restructure_simple.py</small>")
-        scripts_restructure_simple_simpleprojectrestruct_bf9a05fb("create_backup()<br/><small>tools/scripts/restructure_simple.py</small>")
-        scripts_restructure_simple_simpleprojectrestruct_d0dd2ccd("create_directory_structure()<br/><small>tools/scripts/restructure_simple.py</small>")
-    end
-    mtg_export_all_catalog_ensure_category_870c432b -->|calls| mtg_export_all_catalog_run_export_all_f2d1cdbd
-    scripts_sync_mtg_export_all_catalog_py_odooclien_e615d1a8 -->|calls| mtg_export_all_catalog_run_export_all_f2d1cdbd
+    scripts_restructure_simple_simpleprojectrestruct_19b72b7f("SimpleProjectRestructurer<br/><small>tools/scripts/restructure_simple.py</small>")
+    scripts_generate_executive_pdf_report_ensure_gee_fb456095 -->|calls| scripts_generate_executive_pdf_report_build_pdf_3f70c5b9
+    scripts_generate_executive_pdf_report_ensure_gee_fb456095 -->|calls| scripts_generate_executive_pdf_report_numberedca_1321c3f8
+    scripts_generate_executive_pdf_report_numberedca_c33fdc8b -->|method| scripts_generate_executive_pdf_report_numberedca_9ad6e72b
+    scripts_generate_executive_pdf_report_numberedca_c33fdc8b -->|method| scripts_generate_executive_pdf_report_numberedca_50044390
+    scripts_generate_executive_pdf_report_numberedca_c33fdc8b -->|method| scripts_generate_executive_pdf_report_numberedca_1321c3f8
+    scripts_generate_executive_pdf_report_numberedca_c33fdc8b -->|method| scripts_generate_executive_pdf_report_numberedca_7473654c
+    scripts_generate_executive_pdf_report_numberedca_7473654c -->|calls| scripts_generate_executive_pdf_report_numberedca_1321c3f8
+    scripts_generate_executive_pdf_report_numberedca_1321c3f8 -->|calls| scripts_generate_executive_pdf_report_numberedca_9ad6e72b
     scripts_restructure_project_projectrestructurer_bab9e8c2 -->|method| scripts_restructure_project_projectrestructurer_de470a9e
     scripts_restructure_project_projectrestructurer_bab9e8c2 -->|method| scripts_restructure_project_projectrestructurer_fb63f8b3
     scripts_restructure_project_projectrestructurer_bab9e8c2 -->|method| scripts_restructure_project_projectrestructurer_aa1d3f6a
@@ -1036,15 +1040,10 @@ flowchart LR
     scripts_restructure_project_create_readme_files_ad3209ed -->|calls| scripts_restructure_project_run_8e95fe85
     scripts_restructure_project_create_development_f_86e472c4 -->|calls| scripts_restructure_project_run_8e95fe85
     scripts_restructure_project_create_dockerfile_251f332e -->|calls| scripts_restructure_project_run_8e95fe85
-    scripts_restructure_project_create_initial_files_32ea3c35 -->|calls| scripts_restructure_project_run_8e95fe85
-    scripts_restructure_project_create_project_struc_b6145a88 -->|calls| scripts_restructure_project_run_8e95fe85
-    scripts_restructure_simple_simpleprojectrestruct_19b72b7f -->|method| scripts_restructure_simple_simpleprojectrestruct_bf9a05fb
-    scripts_restructure_simple_simpleprojectrestruct_19b72b7f -->|method| scripts_restructure_simple_simpleprojectrestruct_d0dd2ccd
-    %% Omitted for readability: 114 nodes, 0 edges
+    %% Omitted for readability: 131 nodes, 0 edges
     class scripts_restructure_project_projectrestructurer_bab9e8c2 klass;
     class scripts_restructure_project_create_development_f_86e472c4 function;
     class scripts_restructure_project_create_dockerfile_251f332e function;
-    class scripts_restructure_project_create_initial_files_32ea3c35 function;
     class scripts_restructure_project_projectrestructurer_de470a9e function;
     class scripts_restructure_project_projectrestructurer_fb63f8b3 function;
     class scripts_restructure_project_projectrestructurer_aa1d3f6a function;
@@ -1052,13 +1051,14 @@ flowchart LR
     class scripts_restructure_project_projectrestructurer_652d443c function;
     class scripts_restructure_project_run_8e95fe85 function;
     class scripts_restructure_project_create_readme_files_ad3209ed function;
-    class scripts_restructure_project_create_project_struc_b6145a88 function;
-    class mtg_export_all_catalog_ensure_category_870c432b function;
-    class mtg_export_all_catalog_run_export_all_f2d1cdbd function;
-    class scripts_sync_mtg_export_all_catalog_py_odooclien_e615d1a8 entry;
+    class scripts_generate_executive_pdf_report_numberedca_c33fdc8b klass;
+    class scripts_generate_executive_pdf_report_ensure_gee_fb456095 function;
+    class scripts_generate_executive_pdf_report_build_pdf_3f70c5b9 function;
+    class scripts_generate_executive_pdf_report_numberedca_1321c3f8 function;
+    class scripts_generate_executive_pdf_report_numberedca_9ad6e72b function;
+    class scripts_generate_executive_pdf_report_numberedca_50044390 function;
+    class scripts_generate_executive_pdf_report_numberedca_7473654c function;
     class scripts_restructure_simple_simpleprojectrestruct_19b72b7f klass;
-    class scripts_restructure_simple_simpleprojectrestruct_bf9a05fb function;
-    class scripts_restructure_simple_simpleprojectrestruct_d0dd2ccd function;
     classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
     classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
     classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
@@ -1332,26 +1332,26 @@ flowchart LR
 <tr><td><code>tools/scripts/restructure_project.py</code></td><td>23 nodes</td></tr>
 <tr><td><code>tools/scripts/restructure_simple.py</code></td><td>19 nodes</td></tr>
 <tr><td><code>archive/sessions/FIX_FILTERS_REPORT.md</code></td><td>10 nodes</td></tr>
-<tr><td><code>.agent/reference/documentation.md</code></td><td>5 nodes</td></tr>
-<tr><td><code>sync/mtg/export_all_catalog.py</code></td><td>5 nodes</td></tr>
-<tr><td><code>scripts/report_missing_lessons.py</code></td><td>2 nodes</td></tr>
+<tr><td><code>scripts/generate_executive_pdf_report.py</code></td><td>9 nodes</td></tr>
+<tr><td><code>00 - Geekorium Vault Hub.md</code></td><td>8 nodes</td></tr>
+<tr><td><code>architecture/adr/ADR-001-obsidian-pkm-integration.md</code></td><td>5 nodes</td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: contains x91, calls x18, explains x18, method x14. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x102, calls x20, explains x19, method x18. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
   </div>
 </div>
 <hr>
 
 <!-- ====== 6. CLI & Skill Installers ====== -->
 <h2 id="cli-skills">6. CLI &amp; Skill Installers</h2>
-<p>CLI &amp; Skill Installers groups implementation around agent, 2026, lessons, learnedmd, mostly in .agent/lessons_learned.md, .agent/COMPOUND.md, shared/utils/anti_bot.py. This section covers 637 nodes and 682 internal edges; the diagram shows only representative relationships to stay readable.</p>
+<p>CLI &amp; Skill Installers groups implementation around data, mainpy, mcp, tools, mostly in shared/utils/anti_bot.py, data/loaders/main.py, backup_before_restructure/data_loader/main.py. This section covers 212 nodes and 269 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
 %%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
 flowchart LR
-    %% Section: CLI &amp; Skill Installers (637 nodes, 682 edges)
+    %% Section: CLI &amp; Skill Installers (212 nodes, 269 edges)
     subgraph cli_skills_backup_before_restructure_data_loader_0d6de700["backup_before_restructure/data_loader/main.py"]
         data_loader_main_tcgdataloader_aa7e625c("TCGDataLoader<br/><small>backup_before_restructure/data_loader/main.py</small>")
         data_loader_main_main_26904f7a("main()<br/><small>backup_before_restructure/data_loader/main.py</small>")
@@ -1363,9 +1363,9 @@ flowchart LR
         data_loader_main_tcgdataloader_create_sample_dat_8b3584e5("create_sample_data_for_other_tcgs()<br/><small>backup_before_restructure/data_loader/main.py</small>")
         data_loader_main_tcgdataloader_create_wixoss_sam_cf8f886d("create_wixoss_sample_data()<br/><small>backup_before_restructure/data_loader/main.py</small>")
         data_loader_main_tcgdataloader_create_yugioh_sam_f70bbd62("create_yugioh_sample_data()<br/><small>backup_before_restructure/data_loader/main.py</small>")
+        data_loader_main_tcgdataloader_init_00e3a195("__init__()<br/><small>backup_before_restructure/data_loader/main.py</small>")
         data_loader_main_tcgdataloader_insert_mtg_card_cf58f4bf("insert_mtg_card()<br/><small>backup_before_restructure/data_loader/main.py</small>")
         data_loader_main_tcgdataloader_insert_mtg_set_44f2754d("insert_mtg_set()<br/><small>backup_before_restructure/data_loader/main.py</small>")
-        data_loader_main_tcgdataloader_insert_pokemon_ca_27653e80("insert_pokemon_card()<br/><small>backup_before_restructure/data_loader/main.py</small>")
     end
     subgraph cli_skills_shared_utils_anti_bot_py_e0f7e9ca["shared/utils/anti_bot.py"]
         utils_anti_bot_proxymanager_fa77fa8a("ProxyManager<br/><small>shared/utils/anti_bot.py</small>")
@@ -1383,15 +1383,15 @@ flowchart LR
     data_loader_main_tcgdataloader_aa7e625c -->|method| data_loader_main_tcgdataloader_create_sample_dat_8b3584e5
     data_loader_main_tcgdataloader_aa7e625c -->|method| data_loader_main_tcgdataloader_create_wixoss_sam_cf8f886d
     data_loader_main_tcgdataloader_aa7e625c -->|method| data_loader_main_tcgdataloader_create_yugioh_sam_f70bbd62
+    data_loader_main_tcgdataloader_aa7e625c -->|method| data_loader_main_tcgdataloader_init_00e3a195
     data_loader_main_tcgdataloader_aa7e625c -->|method| data_loader_main_tcgdataloader_insert_mtg_card_cf58f4bf
     data_loader_main_tcgdataloader_aa7e625c -->|method| data_loader_main_tcgdataloader_insert_mtg_set_44f2754d
-    data_loader_main_tcgdataloader_aa7e625c -->|method| data_loader_main_tcgdataloader_insert_pokemon_ca_27653e80
     data_loader_main_tcgdataloader_create_sample_dat_8b3584e5 -->|calls| data_loader_main_tcgdataloader_create_fab_sample_a8c6da60
     data_loader_main_tcgdataloader_create_sample_dat_8b3584e5 -->|calls| data_loader_main_tcgdataloader_create_lorcana_sa_908cf331
     data_loader_main_tcgdataloader_create_sample_dat_8b3584e5 -->|calls| data_loader_main_tcgdataloader_create_onepiece_s_acc9d2df
     data_loader_main_tcgdataloader_create_sample_dat_8b3584e5 -->|calls| data_loader_main_tcgdataloader_create_wixoss_sam_cf8f886d
     data_loader_main_tcgdataloader_create_sample_dat_8b3584e5 -->|calls| data_loader_main_tcgdataloader_create_yugioh_sam_f70bbd62
-    %% Omitted for readability: 619 nodes, 0 edges
+    %% Omitted for readability: 194 nodes, 0 edges
     class data_loader_main_tcgdataloader_aa7e625c klass;
     class data_loader_main_main_26904f7a function;
     class data_loader_main_tcgdataloader_aenter_2a1f2c7e function;
@@ -1402,9 +1402,9 @@ flowchart LR
     class data_loader_main_tcgdataloader_create_sample_dat_8b3584e5 function;
     class data_loader_main_tcgdataloader_create_wixoss_sam_cf8f886d function;
     class data_loader_main_tcgdataloader_create_yugioh_sam_f70bbd62 function;
+    class data_loader_main_tcgdataloader_init_00e3a195 function;
     class data_loader_main_tcgdataloader_insert_mtg_card_cf58f4bf function;
     class data_loader_main_tcgdataloader_insert_mtg_set_44f2754d function;
-    class data_loader_main_tcgdataloader_insert_pokemon_ca_27653e80 function;
     class utils_anti_bot_proxymanager_fa77fa8a klass;
     class utils_anti_bot_useragentrotator_1de1627a klass;
     class loaders_main_tcgdataloader_ad7b9c5c klass;
@@ -1433,243 +1433,243 @@ flowchart LR
 </tr>
 <tr>
   <td>1</td>
-  <td><code>ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âª Testing</code><br><small style="color:var(--muted)">.agent/lessons_learned.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
+  <td><code>ProxyConfig</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
   <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Documentation node describing ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â°ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¸ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âª Testing.</td>
+  <td><code>url()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td>Reads, resolves, or persists project configuration.</td>
 </tr>
 <tr>
   <td>2</td>
-  <td><code>17. Patch Target Correcto para Servicios con `supabase_admin` (Feb 2026)</code><br><small style="color:var(--muted)">.agent/lessons_learned.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
+  <td><code>.url()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>ProxyConfig</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
   <td>No direct outbound edge</td>
-  <td>Documentation node describing 17. Patch Target Correcto para Servicios con `supabase_admin` (Feb 2026).</td>
+  <td>.url() node in shared/utils/anti_bot.py.</td>
 </tr>
 <tr>
   <td>3</td>
-  <td><code>18. Lazy Imports en Servicios ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¯Ã‚Â¿Ã‚Â½ CÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â³mo Parchearlos (Feb 2026)</code><br><small style="color:var(--muted)">.agent/lessons_learned.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
+  <td><code>UserAgentRotator</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
   <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Documentation node describing 18. Lazy Imports en Servicios ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¯Ã‚Â¿Ã‚Â½ CÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â³mo Parchearlos (Feb 2026).</td>
+  <td><code>__init__()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small><br><code>__init__()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small><br><code>get_agent_for_platform()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small><br>+3 more</td>
+  <td>Supports retrieval-augmented Q&amp;A or streaming chat.</td>
 </tr>
 <tr>
   <td>4</td>
-  <td><code>19. Mock Chain para `ValuationService` ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¯Ã‚Â¿Ã‚Â½ Two-Step Query (Feb 2026)</code><br><small style="color:var(--muted)">.agent/lessons_learned.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
+  <td><code>.__init__()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>UserAgentRotator</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
   <td>No direct outbound edge</td>
-  <td>Documentation node describing 19. Mock Chain para `ValuationService` ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¯Ã‚Â¿Ã‚Â½ Two-Step Query (Feb 2026).</td>
+  <td>.__init__() node in shared/utils/anti_bot.py.</td>
 </tr>
 <tr>
   <td>5</td>
-  <td><code>20. Reemplazo Exhaustivo de Colores Heredados al Refactorizar UI (Feb 2026)</code><br><small style="color:var(--muted)">.agent/lessons_learned.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Documentation node describing 20. Reemplazo Exhaustivo de Colores Heredados al Refactorizar UI (Feb 2026).</td>
+  <td><code>.get_random_agent()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>UserAgentRotator</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td><code>test_proxy()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td>.get_random_agent() node in shared/utils/anti_bot.py.</td>
 </tr>
 <tr>
   <td>6</td>
-  <td><code>21. Fallbacks Visuales en Vistas Combinadas de DB (Feb 2026)</code><br><small style="color:var(--muted)">.agent/lessons_learned.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Documentation node describing 21. Fallbacks Visuales en Vistas Combinadas de DB (Feb 2026).</td>
+  <td><code>.get_next_agent()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>UserAgentRotator</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td><code>get_request_config()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td>.get_next_agent() node in shared/utils/anti_bot.py.</td>
 </tr>
 <tr>
   <td>7</td>
-  <td><code>22. Validaciones Locales Estrictas (Feb 2026)</code><br><small style="color:var(--muted)">.agent/lessons_learned.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
+  <td><code>.get_agent_for_platform()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>UserAgentRotator</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
   <td>No direct outbound edge</td>
-  <td>Documentation node describing 22. Validaciones Locales Estrictas (Feb 2026).</td>
+  <td>.get_agent_for_platform() node in shared/utils/anti_bot.py.</td>
 </tr>
 <tr>
   <td>8</td>
-  <td><code>23. BÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âºsqueda y ValidaciÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â³n de Stock en SQL (Feb 2026)</code><br><small style="color:var(--muted)">.agent/lessons_learned.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
+  <td><code>ProxyManager</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
   <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Documentation node describing 23. BÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âºsqueda y ValidaciÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â³n de Stock en SQL (Feb 2026).</td>
+  <td><code>__init__()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small><br><code>__init__()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small><br><code>add_proxy()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small><br>+6 more</td>
+  <td>ProxyManager node in shared/utils/anti_bot.py.</td>
 </tr>
 <tr>
   <td>9</td>
-  <td><code>24. Resolviendo TipografÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â­as en UI EspecÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â­fica (Feb 2026)</code><br><small style="color:var(--muted)">.agent/lessons_learned.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
+  <td><code>.__init__()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>ProxyManager</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
   <td>No direct outbound edge</td>
-  <td>Documentation node describing 24. Resolviendo TipografÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â­as en UI EspecÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â­fica (Feb 2026).</td>
+  <td>.__init__() node in shared/utils/anti_bot.py.</td>
 </tr>
 <tr>
   <td>10</td>
-  <td><code>[Guest Checkout &amp; Inventory Pattern] ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¯Ã‚Â¿Ã‚Â½ 2026-02-27</code><br><small style="color:var(--muted)">.agent/lessons_learned.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
+  <td><code>.add_proxy()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>ProxyManager</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
   <td>No direct outbound edge</td>
-  <td>Documentation node describing [Guest Checkout &amp; Inventory Pattern] ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¯Ã‚Â¿Ã‚Â½ 2026-02-27.</td>
+  <td>.add_proxy() node in shared/utils/anti_bot.py.</td>
 </tr>
 <tr>
   <td>11</td>
-  <td><code>2. ValidaciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n y Reserva Diferida - 2026-03-01</code><br><small style="color:var(--muted)">.agent/lessons_learned.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
+  <td><code>.add_proxy_list()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>ProxyManager</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
   <td>No direct outbound edge</td>
-  <td>Documentation node describing 2. ValidaciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n y Reserva Diferida - 2026-03-01.</td>
+  <td>.add_proxy_list() node in shared/utils/anti_bot.py.</td>
 </tr>
 <tr>
   <td>12</td>
-  <td><code>3. Evitar Bloqueos de UI por Fugas de InteracciÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â³n - 2026-03-01</code><br><small style="color:var(--muted)">.agent/lessons_learned.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Documentation node describing 3. Evitar Bloqueos de UI por Fugas de InteracciÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â³n - 2026-03-01.</td>
+  <td><code>.get_next_proxy()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>ProxyManager</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td><code>get_request_config()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td>.get_next_proxy() node in shared/utils/anti_bot.py.</td>
 </tr>
 <tr>
   <td>13</td>
-  <td><code>10. TypeError: reduce is not a function en ProducciÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â³n ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¯Ã‚Â¿Ã‚Â½ 2026-03-02</code><br><small style="color:var(--muted)">.agent/lessons_learned.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
+  <td><code>.get_random_proxy()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>ProxyManager</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
   <td>No direct outbound edge</td>
-  <td>Documentation node describing 10. TypeError: reduce is not a function en ProducciÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â³n ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¯Ã‚Â¿Ã‚Â½ 2026-03-02.</td>
+  <td>.get_random_proxy() node in shared/utils/anti_bot.py.</td>
 </tr>
 <tr>
   <td>14</td>
-  <td><code>64. Redundancia CrÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­tica en Historial de Precios ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã¯Â¿Â½ 2026-03-02</code><br><small style="color:var(--muted)">.agent/lessons_learned.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Documentation node describing 64. Redundancia CrÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­tica en Historial de Precios ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã¯Â¿Â½ 2026-03-02.</td>
+  <td><code>.mark_proxy_failed()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>ProxyManager</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td><code>post_request()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td>.mark_proxy_failed() node in shared/utils/anti_bot.py.</td>
 </tr>
 <tr>
   <td>15</td>
-  <td><code>65. IntegraciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n de ManaBox y PriorizaciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n de Scryfall ID (Marzo 2026)</code><br><small style="color:var(--muted)">.agent/lessons_learned.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Documentation node describing 65. IntegraciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n de ManaBox y PriorizaciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n de Scryfall ID (Marzo 2026).</td>
+  <td><code>.mark_proxy_success()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>ProxyManager</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td><code>post_request()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td>.mark_proxy_success() node in shared/utils/anti_bot.py.</td>
 </tr>
 <tr>
   <td>16</td>
-  <td><code>66. Soporte de FoliaciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n (Finish) y AgregaciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n en Lotes (Marzo 2026)</code><br><small style="color:var(--muted)">.agent/lessons_learned.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Documentation node describing 66. Soporte de FoliaciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n (Finish) y AgregaciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n en Lotes (Marzo 2026).</td>
+  <td><code>.test_proxy()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>get_random_agent()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small><br><code>ProxyManager</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small><br><code>UserAgentRotator</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td><code>test_all_proxies()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td>Verifies imports, entry points, or version behavior.</td>
 </tr>
 <tr>
   <td>17</td>
-  <td><code>67. Fuentes Locales Sin Archivo = 404 Silencioso en Build ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬ï¿½ 2026-03-03</code><br><small style="color:var(--muted)">.agent/lessons_learned.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
+  <td><code>.__init__()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>ProxyManager</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small><br><code>UserAgentRotator</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
   <td>No direct outbound edge</td>
-  <td>Documentation node describing 67. Fuentes Locales Sin Archivo = 404 Silencioso en Build ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬ï¿½ 2026-03-03.</td>
+  <td>.__init__() node in shared/utils/anti_bot.py.</td>
 </tr>
 <tr>
   <td>18</td>
-  <td><code>18. Toggle Variant UI y CardKingdom Pricing</code><br><small style="color:var(--muted)">.agent/lessons_learned.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
+  <td><code>.get_request_config()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>get_next_agent()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small><br><code>get_next_proxy()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
   <td>No direct outbound edge</td>
-  <td>Documentation node describing 18. Toggle Variant UI y CardKingdom Pricing.</td>
+  <td>Reads, resolves, or persists project configuration.</td>
 </tr>
 <tr>
   <td>19</td>
-  <td><code>67. ConfiguraciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n de Pydantic v2 (SettingsConfigDict)</code><br><small style="color:var(--muted)">.agent/lessons_learned.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
+  <td><code>Any</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td><span class="tag tag-class">Class</span></td>
   <td>External entry / no inbound edge</td>
   <td>No direct outbound edge</td>
-  <td>Documentation node describing 67. ConfiguraciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n de Pydantic v2 (SettingsConfigDict).</td>
+  <td>Any node in shared/utils/anti_bot.py.</td>
 </tr>
 <tr>
   <td>20</td>
-  <td><code>68. EnvÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­o AsÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­ncrono de Correos en FastAPI</code><br><small style="color:var(--muted)">.agent/lessons_learned.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
+  <td><code>.post_request()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>mark_proxy_failed()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small><br><code>mark_proxy_success()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
   <td>No direct outbound edge</td>
-  <td>Documentation node describing 68. EnvÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­o AsÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­ncrono de Correos en FastAPI.</td>
+  <td>.post_request() node in shared/utils/anti_bot.py.</td>
 </tr>
 <tr>
   <td>21</td>
-  <td><code>23. Prioridad de IntenciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n del Usuario sobre DocumentaciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n EstÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡tica ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã¯Â¿Â½ 2026-03-05</code><br><small style="color:var(--muted)">.agent/lessons_learned.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
+  <td><code>.add_proxy()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
   <td>External entry / no inbound edge</td>
   <td>No direct outbound edge</td>
-  <td>Documentation node describing 23. Prioridad de IntenciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n del Usuario sobre DocumentaciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n EstÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡tica ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã¯Â¿Â½ 2026-03-05.</td>
+  <td>.add_proxy() node in shared/utils/anti_bot.py.</td>
 </tr>
 <tr>
   <td>22</td>
-  <td><code>24. JerarquÃƒÆ’Ã‚Â­a de ConfiguraciÃƒÆ’Ã‚Â³n SMTP (Mar 2026)</code><br><small style="color:var(--muted)">.agent/lessons_learned.md</small></td>
-  <td><span class="tag tag-func">Concept</span></td>
-  <td>External entry / no inbound edge</td>
+  <td><code>.test_all_proxies()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>test_proxy()</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
   <td>No direct outbound edge</td>
-  <td>Documentation node describing 24. JerarquÃƒÆ’Ã‚Â­a de ConfiguraciÃƒÆ’Ã‚Â³n SMTP (Mar 2026).</td>
+  <td>Verifies imports, entry points, or version behavior.</td>
 </tr>
 <tr>
   <td>23</td>
-  <td><code>25. Seguridad de Secretos en ProducciÃƒÆ’Ã‚Â³n (Mar 2026)</code><br><small style="color:var(--muted)">.agent/lessons_learned.md</small></td>
+  <td><code>Configuración de proxy para rotación</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
   <td>No direct outbound edge</td>
-  <td>Documentation node describing 25. Seguridad de Secretos en ProducciÃƒÆ’Ã‚Â³n (Mar 2026).</td>
+  <td>Design note for Configuración de proxy para rotación.</td>
 </tr>
 <tr>
   <td>24</td>
-  <td><code>27. OptimizaciÃƒÆ’Ã‚Â³n de Storage y DecisiÃƒÆ’Ã‚Â³n de Ocultar Features (Mar 2026)</code><br><small style="color:var(--muted)">.agent/lessons_learned.md</small></td>
+  <td><code>Genera la URL del proxy</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
   <td>No direct outbound edge</td>
-  <td>Documentation node describing 27. OptimizaciÃƒÆ’Ã‚Â³n de Storage y DecisiÃƒÆ’Ã‚Â³n de Ocultar Features (Mar 2026).</td>
+  <td>Design note for Genera la URL del proxy.</td>
 </tr>
 <tr>
   <td>25</td>
-  <td><code>28. Checkout AtÃƒÆ’Ã‚Â³mico y Desacoplamiento de Schema (Mar 2026)</code><br><small style="color:var(--muted)">.agent/lessons_learned.md</small></td>
+  <td><code>Rotador de User-Agents para evitar detección</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
   <td>No direct outbound edge</td>
-  <td>Documentation node describing 28. Checkout AtÃƒÆ’Ã‚Â³mico y Desacoplamiento de Schema (Mar 2026).</td>
+  <td>Design note for Rotador de User-Agents para evitar detección.</td>
 </tr>
 <tr>
   <td>26</td>
-  <td><code>29. Hosting para E-commerce: Cloudflare Pages vs. GitHub Pages (Mar 2026)</code><br><small style="color:var(--muted)">.agent/lessons_learned.md</small></td>
+  <td><code>Obtiene un User-Agent aleatorio</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
   <td>No direct outbound edge</td>
-  <td>Documentation node describing 29. Hosting para E-commerce: Cloudflare Pages vs. GitHub Pages (Mar 2026).</td>
+  <td>Design note for Obtiene un User-Agent aleatorio.</td>
 </tr>
 <tr>
   <td>27</td>
-  <td><code>30. Estrategia de Branching y CI/CD (Mar 2026)</code><br><small style="color:var(--muted)">.agent/lessons_learned.md</small></td>
+  <td><code>Obtiene el siguiente User-Agent en secuencia</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
   <td>No direct outbound edge</td>
-  <td>Documentation node describing 30. Estrategia de Branching y CI/CD (Mar 2026).</td>
+  <td>Design note for Obtiene el siguiente User-Agent en secuencia.</td>
 </tr>
 <tr>
   <td>28</td>
-  <td><code>31. Cloudflare Pages vs. Workers para Frontend ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬ï¿½ 2026-03-07</code><br><small style="color:var(--muted)">.agent/lessons_learned.md</small></td>
+  <td><code>Obtiene un User-Agent específico para una plataforma</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
   <td>No direct outbound edge</td>
-  <td>Documentation node describing 31. Cloudflare Pages vs. Workers para Frontend ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬ï¿½ 2026-03-07.</td>
+  <td>Design note for Obtiene un User-Agent específico para una plataforma.</td>
 </tr>
 <tr>
   <td>29</td>
-  <td><code>32. SEO Condicional vÃƒÆ’Ã‚Â­a Variables de Entorno de Vite ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬ï¿½ 2026-03-07</code><br><small style="color:var(--muted)">.agent/lessons_learned.md</small></td>
+  <td><code>Gestor de proxies para rotación y distribución de carga</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
   <td>No direct outbound edge</td>
-  <td>Documentation node describing 32. SEO Condicional vÃƒÆ’Ã‚Â­a Variables de Entorno de Vite ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬ï¿½ 2026-03-07.</td>
+  <td>Design note for Gestor de proxies para rotación y distribución de carga.</td>
 </tr>
 <tr>
   <td>30</td>
-  <td><code>33. Root Directory en Estructuras Monorepo/Subcarpetas ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬ï¿½ 2026-03-07</code><br><small style="color:var(--muted)">.agent/lessons_learned.md</small></td>
+  <td><code>Agrega un proxy a la lista</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small></td>
   <td><span class="tag tag-func">Concept</span></td>
   <td>External entry / no inbound edge</td>
   <td>No direct outbound edge</td>
-  <td>Documentation node describing 33. Root Directory en Estructuras Monorepo/Subcarpetas ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬ï¿½ 2026-03-07.</td>
+  <td>Design note for Agrega un proxy a la lista.</td>
 </tr>
 </table>
 
@@ -1678,31 +1678,31 @@ flowchart LR
     <h4>Key Files</h4>
     <table style="width:100%;font-size:0.85rem;">
       <tr><th>File</th><th>Coverage</th></tr>
-      <tr><td><code>.agent/lessons_learned.md</code></td><td>210 nodes</td></tr>
-<tr><td><code>.agent/COMPOUND.md</code></td><td>122 nodes</td></tr>
-<tr><td><code>shared/utils/anti_bot.py</code></td><td>40 nodes</td></tr>
+      <tr><td><code>shared/utils/anti_bot.py</code></td><td>40 nodes</td></tr>
+<tr><td><code>backup_before_restructure/data_loader/main.py</code></td><td>37 nodes</td></tr>
 <tr><td><code>data/loaders/main.py</code></td><td>37 nodes</td></tr>
-<tr><td><code>backup_before_restructure/data_loader/main.py</code></td><td>36 nodes</td></tr>
 <tr><td><code>tools/mcp/deploy_mcp_server.py</code></td><td>20 nodes</td></tr>
 <tr><td><code>tools/scripts/reorganize_project.py</code></td><td>20 nodes</td></tr>
 <tr><td><code>opencode.json</code></td><td>19 nodes</td></tr>
+<tr><td><code>src/context/ThemeProvider.tsx</code></td><td>8 nodes</td></tr>
+<tr><td><code>tools/mcp/setup_mcp_server.py</code></td><td>8 nodes</td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: contains x474, explains x72, calls x64, method x57. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+    <p>This section comes from graphify community clustering. Relationship summary: explains x72, calls x64, contains x58, method x58. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
   </div>
 </div>
 <hr>
 
 <!-- ====== 7. Ingestion & Updates ====== -->
 <h2 id="ingest-cache-update">7. Ingestion &amp; Updates</h2>
-<p>Ingestion &amp; Updates groups implementation around sync, scripts, docs, data, mostly in scrapers/shared/scraper_manager.py, docs/reference/CardKingdom_Integration.md, sync/pokemon/pokemon_sync.py. This section covers 155 nodes and 182 internal edges; the diagram shows only representative relationships to stay readable.</p>
+<p>Ingestion &amp; Updates groups implementation around sync, scripts, docs, data, mostly in scrapers/shared/scraper_manager.py, docs/reference/CardKingdom_Integration.md, sync/pokemon/pokemon_sync.py. This section covers 147 nodes and 175 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
 %%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
 flowchart LR
-    %% Section: Ingestion &amp; Updates (155 nodes, 182 edges)
+    %% Section: Ingestion &amp; Updates (147 nodes, 175 edges)
     subgraph ingest_cache_update_scrapers_shared_scraper_mana_74c29675["scrapers/shared/scraper_manager.py"]
         shared_scraper_manager_tcgscrapermanager_87e6d8bf("TCGScraperManager<br/><small>scrapers/shared/scraper_manager.py</small>")
         shared_scraper_manager_tcgscrapermanager_detect_fcb72c48("detect_game_from_url()<br/><small>scrapers/shared/scraper_manager.py</small>")
@@ -1722,7 +1722,7 @@ flowchart LR
         shared_scraper_manager_tcgscrapermanager_validat_2512643e("validate_data_quality()<br/><small>scrapers/shared/scraper_manager.py</small>")
     end
     shared_supabase_client_supabaseclient_b16782cc("SupabaseClient<br/><small>scrapers/shared/supabase_client.py</small>")
-    common_db_0817896e("db.py")
+    common_db_get_db_connection_859e9bb4("get_db_connection()<br/><small>sync/common/db.py</small>")
     shared_scraper_manager_tcgscrapermanager_87e6d8bf -->|calls| shared_scraper_manager_main_29b467a8
     shared_scraper_manager_tcgscrapermanager_87e6d8bf -->|method| shared_scraper_manager_tcgscrapermanager_detect_e9cec531
     shared_scraper_manager_tcgscrapermanager_87e6d8bf -->|method| shared_scraper_manager_tcgscrapermanager_detect_fcb72c48
@@ -1747,7 +1747,7 @@ flowchart LR
     shared_scraper_manager_tcgscrapermanager_get_mar_0ceabb6c -->|calls| shared_scraper_manager_tcgscrapermanager_scrape_49414817
     shared_scraper_manager_tcgscrapermanager_extract_9609e833 -->|calls| shared_scraper_manager_tcgscrapermanager_save_to_0f394e1e
     shared_scraper_manager_tcgscrapermanager_extract_9609e833 -->|calls| shared_scraper_manager_tcgscrapermanager_scrape_de0d0a2a
-    %% Omitted for readability: 137 nodes, 11 edges
+    %% Omitted for readability: 129 nodes, 11 edges
     class shared_scraper_manager_tcgscrapermanager_87e6d8bf klass;
     class shared_scraper_manager_tcgscrapermanager_detect_fcb72c48 function;
     class shared_scraper_manager_tcgscrapermanager_detect_3d095ce0 function;
@@ -1765,7 +1765,7 @@ flowchart LR
     class shared_scraper_manager_tcgscrapermanager_scrape_de0d0a2a function;
     class shared_scraper_manager_tcgscrapermanager_validat_2512643e function;
     class shared_supabase_client_supabaseclient_b16782cc entry;
-    class common_db_0817896e module;
+    class common_db_get_db_connection_859e9bb4 function;
     classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
     classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
     classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
@@ -2041,24 +2041,24 @@ flowchart LR
 <tr><td><code>sync/digimon/sync_digimon_tcg.py</code></td><td>10 nodes</td></tr>
 <tr><td><code>archive/plans/PLAN_AUTH_UPDATE.md</code></td><td>8 nodes</td></tr>
 <tr><td><code>scrapers/shared/supabase_client.py</code></td><td>5 nodes</td></tr>
-<tr><td><code>sync/mtg/ck_sync.py</code></td><td>5 nodes</td></tr>
+<tr><td><code>scripts/investigate_ck_sync.py</code></td><td>4 nodes</td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: contains x75, calls x31, explains x29, method x18. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x70, calls x33, explains x28, method x18. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
   </div>
 </div>
 <hr>
 
 <!-- ====== 8. Serving API ====== -->
 <h2 id="serve-api">8. Serving API</h2>
-<p>Serving API groups implementation around api, supabase, docs, frontend, mostly in api/supabase/client.py, src/utils/api.ts, docs/api/supabase_apis.md. This section covers 857 nodes and 1080 internal edges; the diagram shows only representative relationships to stay readable.</p>
+<p>Serving API groups implementation around api, supabase, docs, frontend, mostly in api/supabase/client.py, src/utils/api.ts, docs/api/supabase_apis.md. This section covers 881 nodes and 1179 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
 %%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
 flowchart LR
-    %% Section: Serving API (857 nodes, 1080 edges)
+    %% Section: Serving API (881 nodes, 1179 edges)
     subgraph serve_api_shared_utils_anti_bot_py_3302decf["shared/utils/anti_bot.py"]
         utils_anti_bot_ratelimiter_46506836("RateLimiter<br/><small>shared/utils/anti_bot.py</small>")
         utils_anti_bot_ratelimiter_can_make_request_70b87219("can_make_request()<br/><small>shared/utils/anti_bot.py</small>")
@@ -2076,11 +2076,11 @@ flowchart LR
     end
     supabase_client_tcgdatabaseapi_b388a588("TCGDatabaseAPI<br/><small>api/supabase/client.py</small>")
     supabase_setup_supabasesetup_ce3451e1("SupabaseSetup<br/><small>api/supabase/setup.py</small>")
-    admin_cartmanager_cartmanager_934a9d2e("CartManager()<br/><small>components/Admin/CartManager.tsx</small>")
-    card_card_855bc1da("Card.tsx")
+    admin_possessionbanner_possessionbanner_06a15e3b("PosSessionBanner()<br/><small>components/Admin/PosSessionBanner.tsx</small>")
     navigation_cartdrawer_7f0aa12a("CartDrawer.tsx")
-    admin_presalespage_6568e236("PresalesPage.tsx")
+    navigation_header_de833621("Header.tsx")
     api_main_9f6d1557("main.py")
+    common_sortswift_client_sortswiftclient_6c28338b("SortSwiftClient<br/><small>sync/common/sortswift_client.py</small>")
     scrapers_cardkingdom_api_cardkingdomapi_de2d8a57 -->|method| scrapers_cardkingdom_api_cardkingdomapi_fetch_fu_6bafc9d7
     scrapers_cardkingdom_api_cardkingdomapi_de2d8a57 -->|method| scrapers_cardkingdom_api_cardkingdomapi_get_pric_6d8cfc5b
     scrapers_cardkingdom_api_cardkingdomapi_de2d8a57 -->|method| scrapers_cardkingdom_api_cardkingdomapi_init_cf6253cc
@@ -2092,7 +2092,7 @@ flowchart LR
     utils_anti_bot_ratelimiter_record_request_cae45bee -->|calls| utils_anti_bot_antibotmanager_pre_request_75983bd7
     utils_anti_bot_ratelimiter_get_wait_time_90fb4906 -->|calls| utils_anti_bot_ratelimiter_wait_if_needed_d371a168
     utils_anti_bot_ratelimiter_wait_if_needed_d371a168 -->|calls| utils_anti_bot_antibotmanager_pre_request_75983bd7
-    %% Omitted for readability: 839 nodes, 0 edges
+    %% Omitted for readability: 863 nodes, 0 edges
     class utils_anti_bot_ratelimiter_46506836 klass;
     class utils_anti_bot_ratelimiter_can_make_request_70b87219 function;
     class utils_anti_bot_ratelimiter_get_wait_time_90fb4906 function;
@@ -2106,11 +2106,11 @@ flowchart LR
     class scrapers_cardkingdom_api_cardkingdomapi_init_cf6253cc function;
     class supabase_client_tcgdatabaseapi_b388a588 api;
     class supabase_setup_supabasesetup_ce3451e1 klass;
-    class admin_cartmanager_cartmanager_934a9d2e ui;
-    class card_card_855bc1da ui;
+    class admin_possessionbanner_possessionbanner_06a15e3b async;
     class navigation_cartdrawer_7f0aa12a ui;
-    class admin_presalespage_6568e236 ui;
+    class navigation_header_de833621 ui;
     class api_main_9f6d1557 module;
+    class common_sortswift_client_sortswiftclient_6c28338b entry;
     classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
     classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
     classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
@@ -2150,6 +2150,14 @@ flowchart LR
 </tr>
 <tr>
   <td>3</td>
+  <td><code>BulkRarityOfferModal()</code><br><small style="color:var(--muted)">components/Admin/BulkRarityOfferModal.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>InventoryPage.tsx</code><br><small style="color:var(--muted)">pages/Admin/InventoryPage.tsx</small></td>
+  <td>BulkRarityOfferModal() node in components/Admin/BulkRarityOfferModal.tsx.</td>
+</tr>
+<tr>
+  <td>4</td>
   <td><code>RegistrationsModal.tsx</code><br><small style="color:var(--muted)">components/Modals/RegistrationsModal.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -2157,7 +2165,7 @@ flowchart LR
   <td>Module file in components/Modals/RegistrationsModal.tsx.</td>
 </tr>
 <tr>
-  <td>4</td>
+  <td>5</td>
   <td><code>RegistrationsModalProps</code><br><small style="color:var(--muted)">components/Modals/RegistrationsModal.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -2165,7 +2173,7 @@ flowchart LR
   <td>RegistrationsModalProps node in components/Modals/RegistrationsModal.tsx.</td>
 </tr>
 <tr>
-  <td>5</td>
+  <td>6</td>
   <td><code>RegistrationsModal()</code><br><small style="color:var(--muted)">components/Modals/RegistrationsModal.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -2173,15 +2181,15 @@ flowchart LR
   <td>RegistrationsModal() node in components/Modals/RegistrationsModal.tsx.</td>
 </tr>
 <tr>
-  <td>6</td>
+  <td>7</td>
   <td><code>AddressBook.tsx</code><br><small style="color:var(--muted)">components/Profile/AddressBook.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
-  <td><code>api.ts</code><br><small style="color:var(--muted)">src/utils/api.ts</small><br><code>deleteUserAddress()</code><br><small style="color:var(--muted)">src/utils/api.ts</small><br><code>fetchUserAddresses()</code><br><small style="color:var(--muted)">src/utils/api.ts</small><br>+2 more</td>
+  <td><code>api.ts</code><br><small style="color:var(--muted)">src/utils/api.ts</small><br><code>deleteUserAddress()</code><br><small style="color:var(--muted)">src/utils/api.ts</small><br><code>fetchUserAddresses()</code><br><small style="color:var(--muted)">src/utils/api.ts</small><br>+3 more</td>
   <td>Module file in components/Profile/AddressBook.tsx.</td>
 </tr>
 <tr>
-  <td>7</td>
+  <td>8</td>
   <td><code>Address</code><br><small style="color:var(--muted)">components/Profile/AddressBook.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -2189,23 +2197,23 @@ flowchart LR
   <td>Address node in components/Profile/AddressBook.tsx.</td>
 </tr>
 <tr>
-  <td>8</td>
+  <td>9</td>
   <td><code>AddressBook()</code><br><small style="color:var(--muted)">components/Profile/AddressBook.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
+  <td><code>Profile.tsx</code><br><small style="color:var(--muted)">src/pages/Profile.tsx</small></td>
   <td>AddressBook() node in components/Profile/AddressBook.tsx.</td>
 </tr>
 <tr>
-  <td>9</td>
+  <td>10</td>
   <td><code>ProfileSettingsModal.tsx</code><br><small style="color:var(--muted)">components/Profile/ProfileSettingsModal.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
-  <td><code>api.ts</code><br><small style="color:var(--muted)">src/utils/api.ts</small><br><code>sendPasswordResetEmail()</code><br><small style="color:var(--muted)">src/utils/api.ts</small><br><code>updateUserPassword()</code><br><small style="color:var(--muted)">src/utils/api.ts</small><br>+1 more</td>
+  <td><code>api.ts</code><br><small style="color:var(--muted)">src/utils/api.ts</small><br><code>AuthContext.tsx</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small><br><code>Profile.tsx</code><br><small style="color:var(--muted)">src/pages/Profile.tsx</small><br>+4 more</td>
   <td>Module file in components/Profile/ProfileSettingsModal.tsx.</td>
 </tr>
 <tr>
-  <td>10</td>
+  <td>11</td>
   <td><code>ProfileSettingsModalProps</code><br><small style="color:var(--muted)">components/Profile/ProfileSettingsModal.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -2213,15 +2221,15 @@ flowchart LR
   <td>ProfileSettingsModalProps node in components/Profile/ProfileSettingsModal.tsx.</td>
 </tr>
 <tr>
-  <td>11</td>
+  <td>12</td>
   <td><code>SearchBar.tsx</code><br><small style="color:var(--muted)">components/SearchBar/SearchBar.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
+  <td><code>Header.tsx</code><br><small style="color:var(--muted)">components/Navigation/Header.tsx</small></td>
   <td><code>api.ts</code><br><small style="color:var(--muted)">src/utils/api.ts</small><br><code>searchCardNames()</code><br><small style="color:var(--muted)">src/utils/api.ts</small></td>
   <td>Module file in components/SearchBar/SearchBar.tsx.</td>
 </tr>
 <tr>
-  <td>12</td>
+  <td>13</td>
   <td><code>SearchBarProps</code><br><small style="color:var(--muted)">components/SearchBar/SearchBar.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -2229,15 +2237,15 @@ flowchart LR
   <td>SearchBarProps node in components/SearchBar/SearchBar.tsx.</td>
 </tr>
 <tr>
-  <td>13</td>
+  <td>14</td>
   <td><code>SearchBar()</code><br><small style="color:var(--muted)">components/SearchBar/SearchBar.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
+  <td><code>Header.tsx</code><br><small style="color:var(--muted)">components/Navigation/Header.tsx</small></td>
   <td>No direct outbound edge</td>
   <td>SearchBar() node in components/SearchBar/SearchBar.tsx.</td>
 </tr>
 <tr>
-  <td>14</td>
+  <td>15</td>
   <td><code>BannersPage.tsx</code><br><small style="color:var(--muted)">pages/Admin/BannersPage.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -2245,7 +2253,7 @@ flowchart LR
   <td>Module file in pages/Admin/BannersPage.tsx.</td>
 </tr>
 <tr>
-  <td>15</td>
+  <td>16</td>
   <td><code>Banner</code><br><small style="color:var(--muted)">pages/Admin/BannersPage.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -2253,7 +2261,7 @@ flowchart LR
   <td>Banner node in pages/Admin/BannersPage.tsx.</td>
 </tr>
 <tr>
-  <td>16</td>
+  <td>17</td>
   <td><code>BannersPage()</code><br><small style="color:var(--muted)">pages/Admin/BannersPage.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -2261,7 +2269,7 @@ flowchart LR
   <td>Organizes documentation pages, navigation, or content lookup.</td>
 </tr>
 <tr>
-  <td>17</td>
+  <td>18</td>
   <td><code>EventsPage.tsx</code><br><small style="color:var(--muted)">pages/Admin/EventsPage.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td><code>RegistrationsModal()</code><br><small style="color:var(--muted)">components/Modals/RegistrationsModal.tsx</small><br><code>RegistrationsModal.tsx</code><br><small style="color:var(--muted)">components/Modals/RegistrationsModal.tsx</small></td>
@@ -2269,7 +2277,7 @@ flowchart LR
   <td>Module file in pages/Admin/EventsPage.tsx.</td>
 </tr>
 <tr>
-  <td>18</td>
+  <td>19</td>
   <td><code>Event</code><br><small style="color:var(--muted)">pages/Admin/EventsPage.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -2277,7 +2285,7 @@ flowchart LR
   <td>Event node in pages/Admin/EventsPage.tsx.</td>
 </tr>
 <tr>
-  <td>19</td>
+  <td>20</td>
   <td><code>GAME_OPTIONS</code><br><small style="color:var(--muted)">pages/Admin/EventsPage.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -2285,7 +2293,7 @@ flowchart LR
   <td>GAME_OPTIONS node in pages/Admin/EventsPage.tsx.</td>
 </tr>
 <tr>
-  <td>20</td>
+  <td>21</td>
   <td><code>formatToLocalDatetime()</code><br><small style="color:var(--muted)">pages/Admin/EventsPage.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -2293,7 +2301,7 @@ flowchart LR
   <td>formatToLocalDatetime() node in pages/Admin/EventsPage.tsx.</td>
 </tr>
 <tr>
-  <td>21</td>
+  <td>22</td>
   <td><code>EventsPage()</code><br><small style="color:var(--muted)">pages/Admin/EventsPage.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -2301,7 +2309,7 @@ flowchart LR
   <td>Organizes documentation pages, navigation, or content lookup.</td>
 </tr>
 <tr>
-  <td>22</td>
+  <td>23</td>
   <td><code>PresalesPage.tsx</code><br><small style="color:var(--muted)">pages/Admin/PresalesPage.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -2309,7 +2317,7 @@ flowchart LR
   <td>Module file in pages/Admin/PresalesPage.tsx.</td>
 </tr>
 <tr>
-  <td>23</td>
+  <td>24</td>
   <td><code>Presale</code><br><small style="color:var(--muted)">pages/Admin/PresalesPage.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -2317,7 +2325,7 @@ flowchart LR
   <td>Presale node in pages/Admin/PresalesPage.tsx.</td>
 </tr>
 <tr>
-  <td>24</td>
+  <td>25</td>
   <td><code>PresalesPage()</code><br><small style="color:var(--muted)">pages/Admin/PresalesPage.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -2325,7 +2333,7 @@ flowchart LR
   <td>Organizes documentation pages, navigation, or content lookup.</td>
 </tr>
 <tr>
-  <td>25</td>
+  <td>26</td>
   <td><code>TcgBannersPage.tsx</code><br><small style="color:var(--muted)">pages/Admin/TcgBannersPage.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -2333,7 +2341,7 @@ flowchart LR
   <td>Module file in pages/Admin/TcgBannersPage.tsx.</td>
 </tr>
 <tr>
-  <td>26</td>
+  <td>27</td>
   <td><code>Banner</code><br><small style="color:var(--muted)">pages/Admin/TcgBannersPage.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -2341,7 +2349,7 @@ flowchart LR
   <td>Banner node in pages/Admin/TcgBannersPage.tsx.</td>
 </tr>
 <tr>
-  <td>27</td>
+  <td>28</td>
   <td><code>Game</code><br><small style="color:var(--muted)">pages/Admin/TcgBannersPage.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -2349,7 +2357,7 @@ flowchart LR
   <td>Game node in pages/Admin/TcgBannersPage.tsx.</td>
 </tr>
 <tr>
-  <td>28</td>
+  <td>29</td>
   <td><code>TcgBannersPage()</code><br><small style="color:var(--muted)">pages/Admin/TcgBannersPage.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -2357,20 +2365,12 @@ flowchart LR
   <td>Organizes documentation pages, navigation, or content lookup.</td>
 </tr>
 <tr>
-  <td>29</td>
+  <td>30</td>
   <td><code>CheckoutPage.tsx</code><br><small style="color:var(--muted)">src/pages/CheckoutPage.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
   <td><code>api.ts</code><br><small style="color:var(--muted)">src/utils/api.ts</small><br><code>createOrder()</code><br><small style="color:var(--muted)">src/utils/api.ts</small><br><code>fetchCart()</code><br><small style="color:var(--muted)">src/utils/api.ts</small><br>+3 more</td>
   <td>Module file in src/pages/CheckoutPage.tsx.</td>
-</tr>
-<tr>
-  <td>30</td>
-  <td><code>CheckoutPage()</code><br><small style="color:var(--muted)">src/pages/CheckoutPage.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Organizes documentation pages, navigation, or content lookup.</td>
 </tr>
 </table>
 
@@ -2380,30 +2380,30 @@ flowchart LR
     <table style="width:100%;font-size:0.85rem;">
       <tr><th>File</th><th>Coverage</th></tr>
       <tr><td><code>api/supabase/client.py</code></td><td>79 nodes</td></tr>
-<tr><td><code>src/utils/api.ts</code></td><td>68 nodes</td></tr>
+<tr><td><code>src/utils/api.ts</code></td><td>67 nodes</td></tr>
 <tr><td><code>docs/api/supabase_apis.md</code></td><td>50 nodes</td></tr>
 <tr><td><code>TechDocs/apis/README.md</code></td><td>42 nodes</td></tr>
 <tr><td><code>docs/api/supabase_functions_complete.md</code></td><td>39 nodes</td></tr>
 <tr><td><code>docs/api/INSTRUCCIONES_IDEMPOTENTES.md</code></td><td>29 nodes</td></tr>
+<tr><td><code>sync/common/sortswift_client.py</code></td><td>28 nodes</td></tr>
 <tr><td><code>archive/reports/FILTROS_FIX.md</code></td><td>26 nodes</td></tr>
-<tr><td><code>archive/prds/PRD_CART_MANAGEMENT.md</code></td><td>25 nodes</td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: contains x576, imports x155, imports x118, method x80. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x566, imports x167, imports x136, method x96. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
   </div>
 </div>
 <hr>
 
 <!-- ====== 9. Tests & Fixtures ====== -->
 <h2 id="tests-fixtures">9. Tests &amp; Fixtures</h2>
-<p>Tests &amp; Fixtures groups implementation around test, tests, data, scrapers, mostly in tests/unit/test_advanced_features.py, tests/unit/test_advanced_features.py, shared/data/models.py. This section covers 796 nodes and 1201 internal edges; the diagram shows only representative relationships to stay readable.</p>
+<p>Tests &amp; Fixtures groups implementation around test, tests, data, scrapers, mostly in shared/data/models.py, tests/unit/test_advanced_features.py, tests/unit/test_advanced_features.py. This section covers 799 nodes and 1239 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
 %%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
 flowchart LR
-    %% Section: Tests &amp; Fixtures (796 nodes, 1201 edges)
+    %% Section: Tests &amp; Fixtures (799 nodes, 1239 edges)
     subgraph tests_fixtures_backup_before_restructure_scripts_d7803d59["backup_before_restructure/scripts/test_connection.py"]
         backup_before_restructure_scripts_test_connectio_0a529a6a("test_supabase_connection()<br/><small>backup_before_restructure/scripts/test_connection.py</small>")
         backup_before_restructure_scripts_test_connectio_51606eea("main()<br/><small>backup_before_restructure/scripts/test_connection.py</small>")
@@ -2440,7 +2440,7 @@ flowchart LR
     backup_before_restructure_tests_integration_test_89956d7c -->|method| backup_before_restructure_tests_integration_test_49512ca5
     backup_before_restructure_tests_integration_test_89956d7c -->|method| backup_before_restructure_tests_integration_test_d1a8d013
     backup_before_restructure_tests_integration_test_49512ca5 -->|calls| backup_before_restructure_tests_integration_test_9968ffaf
-    %% Omitted for readability: 778 nodes, 0 edges
+    %% Omitted for readability: 781 nodes, 0 edges
     class backup_before_restructure_scripts_test_connectio_0a529a6a test;
     class backup_before_restructure_scripts_test_connectio_51606eea test;
     class backup_before_restructure_scripts_test_connectio_63ef83ed test;
@@ -2485,7 +2485,7 @@ flowchart LR
   <td><code>manager.py</code><br><small style="color:var(--muted)">shared/data/manager.py</small></td>
   <td><span class="tag tag-class">Module</span></td>
   <td>External entry / no inbound edge</td>
-  <td><code>CardData</code><br><small style="color:var(--muted)">shared/data/models.py</small><br><code>CardVariant</code><br><small style="color:var(--muted)">shared/data/models.py</small><br><code>datetime</code><br><small style="color:var(--muted)">shared/data/manager.py</small><br>+2 more</td>
+  <td><code>CardData</code><br><small style="color:var(--muted)">shared/data/models.py</small><br><code>CardPrice</code><br><small style="color:var(--muted)">shared/data/models.py</small><br><code>CardVariant</code><br><small style="color:var(--muted)">shared/data/models.py</small><br>+3 more</td>
   <td>Module file in shared/data/manager.py.</td>
 </tr>
 <tr>
@@ -2493,7 +2493,7 @@ flowchart LR
   <td><code>datetime</code><br><small style="color:var(--muted)">shared/data/manager.py</small></td>
   <td><span class="tag tag-func">Function</span></td>
   <td><code>manager.py</code><br><small style="color:var(--muted)">shared/data/manager.py</small><br><code>test_advanced_features.py</code><br><small style="color:var(--muted)">tests/unit/test_advanced_features.py</small><br><code>test_real_scraping.py</code><br><small style="color:var(--muted)">tests/integration/test_real_scraping.py</small><br>+1 more</td>
-  <td><code>CardData</code><br><small style="color:var(--muted)">shared/data/models.py</small><br><code>cardkingdom.py</code><br><small style="color:var(--muted)">shared/scrapers/cardkingdom.py</small><br><code>cardmarket.py</code><br><small style="color:var(--muted)">shared/scrapers/cardmarket.py</small><br>+18 more</td>
+  <td><code>CardData</code><br><small style="color:var(--muted)">shared/data/models.py</small><br><code>cardkingdom.py</code><br><small style="color:var(--muted)">shared/scrapers/cardkingdom.py</small><br><code>cardmarket.py</code><br><small style="color:var(--muted)">shared/scrapers/cardmarket.py</small><br>+23 more</td>
   <td>datetime node in shared/data/manager.py.</td>
 </tr>
 <tr>
@@ -2517,7 +2517,7 @@ flowchart LR
   <td><code>ScrapingResult</code><br><small style="color:var(--muted)">shared/data/models.py</small></td>
   <td><span class="tag tag-endpoint">API</span></td>
   <td><code>TestAntiBotManager</code><br><small style="color:var(--muted)">tests/unit/test_advanced_features.py</small><br><code>TestCardIdentifier</code><br><small style="color:var(--muted)">tests/unit/test_advanced_features.py</small><br><code>TestDataManagement</code><br><small style="color:var(--muted)">tests/unit/test_advanced_features.py</small><br>+3 more</td>
-  <td><code>AntiBotManager</code><br><small style="color:var(--muted)">shared/scrapers/trollandtoad.py</small><br><code>AntiBotManager</code><br><small style="color:var(--muted)">shared/scrapers/tcgplayer.py</small><br><code>AntiBotManager</code><br><small style="color:var(--muted)">shared/scrapers/cardkingdom.py</small><br>+18 more</td>
+  <td><code>AntiBotManager</code><br><small style="color:var(--muted)">shared/scrapers/cardkingdom.py</small><br><code>AntiBotManager</code><br><small style="color:var(--muted)">shared/scrapers/cardmarket.py</small><br><code>AntiBotManager</code><br><small style="color:var(--muted)">shared/scrapers/tcgplayer.py</small><br>+18 more</td>
   <td>ScrapingResult node in shared/data/models.py.</td>
 </tr>
 <tr>
@@ -2556,7 +2556,7 @@ flowchart LR
   <td>10</td>
   <td><code>scraper_manager.py</code><br><small style="color:var(--muted)">scrapers/shared/scraper_manager.py</small></td>
   <td><span class="tag tag-class">Module</span></td>
-  <td><code>CardData</code><br><small style="color:var(--muted)">shared/data/models.py</small><br><code>CardIdentifier</code><br><small style="color:var(--muted)">shared/data/models.py</small><br><code>CardVariant</code><br><small style="color:var(--muted)">shared/data/models.py</small><br>+13 more</td>
+  <td><code>CardData</code><br><small style="color:var(--muted)">shared/data/models.py</small><br><code>CardIdentifier</code><br><small style="color:var(--muted)">shared/data/models.py</small><br><code>CardPrice</code><br><small style="color:var(--muted)">shared/data/models.py</small><br>+14 more</td>
   <td><code>anti_bot.py</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small><br><code>AntiBotManager</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small><br><code>cardkingdom.py</code><br><small style="color:var(--muted)">shared/scrapers/cardkingdom.py</small><br>+8 more</td>
   <td>Module file in scrapers/shared/scraper_manager.py.</td>
 </tr>
@@ -2572,7 +2572,7 @@ flowchart LR
   <td>12</td>
   <td><code>ScrapingResult</code><br><small style="color:var(--muted)">scrapers/shared/scraper_manager.py</small></td>
   <td><span class="tag tag-endpoint">API</span></td>
-  <td><code>CardData</code><br><small style="color:var(--muted)">shared/data/models.py</small><br><code>CardIdentifier</code><br><small style="color:var(--muted)">shared/data/models.py</small><br><code>CardVariant</code><br><small style="color:var(--muted)">shared/data/models.py</small><br>+10 more</td>
+  <td><code>CardData</code><br><small style="color:var(--muted)">shared/data/models.py</small><br><code>CardIdentifier</code><br><small style="color:var(--muted)">shared/data/models.py</small><br><code>CardPrice</code><br><small style="color:var(--muted)">shared/data/models.py</small><br>+11 more</td>
   <td><code>AntiBotManager</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small><br><code>CardKingdomScraper</code><br><small style="color:var(--muted)">shared/scrapers/cardkingdom.py</small><br><code>CardmarketScraper</code><br><small style="color:var(--muted)">shared/scrapers/cardmarket.py</small><br>+2 more</td>
   <td>ScrapingResult node in scrapers/shared/scraper_manager.py.</td>
 </tr>
@@ -2604,7 +2604,7 @@ flowchart LR
   <td>16</td>
   <td><code>CardKingdomScraper</code><br><small style="color:var(--muted)">shared/scrapers/cardkingdom.py</small></td>
   <td><span class="tag tag-class">Class</span></td>
-  <td><code>__init__()</code><br><small style="color:var(--muted)">scrapers/shared/scraper_manager.py</small><br><code>scraper_manager.py</code><br><small style="color:var(--muted)">scrapers/shared/scraper_manager.py</small><br><code>ScrapingResult</code><br><small style="color:var(--muted)">shared/data/models.py</small><br>+1 more</td>
+  <td><code>__init__()</code><br><small style="color:var(--muted)">scrapers/shared/scraper_manager.py</small><br><code>scraper_manager.py</code><br><small style="color:var(--muted)">scrapers/shared/scraper_manager.py</small><br><code>ScrapingResult</code><br><small style="color:var(--muted)">scrapers/shared/scraper_manager.py</small><br>+1 more</td>
   <td><code>__init__()</code><br><small style="color:var(--muted)">shared/scrapers/cardkingdom.py</small><br><code>AntiBotManager</code><br><small style="color:var(--muted)">shared/utils/anti_bot.py</small><br><code>scrape_card()</code><br><small style="color:var(--muted)">shared/scrapers/cardkingdom.py</small></td>
   <td>CardKingdomScraper node in shared/scrapers/cardkingdom.py.</td>
 </tr>
@@ -2728,8 +2728,8 @@ flowchart LR
     <table style="width:100%;font-size:0.85rem;">
       <tr><th>File</th><th>Coverage</th></tr>
       <tr><td><code>tests/unit/test_advanced_features.py</code></td><td>57 nodes</td></tr>
+<tr><td><code>shared/data/models.py</code></td><td>57 nodes</td></tr>
 <tr><td><code>tests/unit/test_advanced_features.py</code></td><td>57 nodes</td></tr>
-<tr><td><code>shared/data/models.py</code></td><td>55 nodes</td></tr>
 <tr><td><code>shared/data/manager.py</code></td><td>45 nodes</td></tr>
 <tr><td><code>TechDocs/development/README.md</code></td><td>45 nodes</td></tr>
 <tr><td><code>archive/prds/PRD_INVENTORY_ONLY_VERSIONS.md</code></td><td>39 nodes</td></tr>
@@ -2739,380 +2739,19 @@ flowchart LR
   </div>
   <div class="card">
     <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: contains x303, explains x215, method x144, calls x108. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x310, explains x214, method x141, calls x113. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
   </div>
 </div>
 <hr>
 
-<!-- ====== 10. Admin Dashboard & Orders ====== -->
-<h2 id="admin-dashboard-orders">10. Admin Dashboard &amp; Orders</h2>
-<p>Admin Dashboard &amp; Orders groups implementation around frontend, components, profile, pages, mostly in pages/Admin/OrdersPage.tsx, components/Profile/OrdersList.tsx, components/Profile/DebtsList.tsx. This section covers 63 nodes and 112 internal edges; the diagram shows only representative relationships to stay readable.</p>
+<!-- ====== 10. Checkout & PWA Flow ====== -->
+<h2 id="checkout-pwa-flow">10. Checkout &amp; PWA Flow</h2>
+<p>Checkout &amp; PWA Flow groups implementation around frontend, apptsx, components, navigation, mostly in frontend/src/App.tsx, components/Navigation/ChunkErrorBoundary.tsx, components/Auth/AdminRoute.tsx. This section covers 49 nodes and 53 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
 %%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
 flowchart LR
-    %% Section: Admin Dashboard &amp; Orders (63 nodes, 112 edges)
-    subgraph admin_dashboard_orders_components_Modals_PreRegi_a02b70da["components/Modals/PreRegistrationModal.tsx"]
-        modals_preregistrationmodal_6afac03d("PreRegistrationModal.tsx")
-        modals_preregistrationmodal_preregistrationmodal_0b53861c("PreRegistrationModal()<br/><small>components/Modals/PreRegistrationModal.tsx</small>")
-    end
-    subgraph admin_dashboard_orders_components_Navigation_Hea_82c4bf86["components/Navigation/Header.tsx"]
-        navigation_header_de833621("Header.tsx")
-        navigation_header_header_9792dcd1("Header()<br/><small>components/Navigation/Header.tsx</small>")
-    end
-    subgraph admin_dashboard_orders_components_Navigation_Use_273424ef["components/Navigation/UserMenu.tsx"]
-        navigation_usermenu_015b5188("UserMenu.tsx")
-        navigation_usermenu_usermenu_591437dd("UserMenu()<br/><small>components/Navigation/UserMenu.tsx</small>")
-    end
-    subgraph admin_dashboard_orders_components_Profile_Credit_f6e703aa["components/Profile/CreditHistoryList.tsx"]
-        profile_credithistorylist_9265be05("CreditHistoryList.tsx")
-        profile_credithistorylist_credithistorylist_963603cb("CreditHistoryList()<br/><small>components/Profile/CreditHistoryList.tsx</small>")
-    end
-    subgraph admin_dashboard_orders_components_Profile_DebtsL_2fdd771e["components/Profile/DebtsList.tsx"]
-        profile_debtslist_6dff0513("DebtsList.tsx")
-        profile_debtslist_debtslist_a453b993("DebtsList()<br/><small>components/Profile/DebtsList.tsx</small>")
-    end
-    subgraph admin_dashboard_orders_components_Profile_MyMiss_6a60a081["components/Profile/MyMissionsList.tsx"]
-        profile_mymissionslist_815fbeae("MyMissionsList.tsx")
-        profile_mymissionslist_mymissionslist_fda020f8("MyMissionsList()<br/><small>components/Profile/MyMissionsList.tsx</small>")
-    end
-    admin_possessionbanner_possessionbanner_06a15e3b("PosSessionBanner()<br/><small>components/Admin/PosSessionBanner.tsx</small>")
-    auth_adminroute_adminroute_aa3e8e7d("AdminRoute()<br/><small>components/Auth/AdminRoute.tsx</small>")
-    navigation_mobilemenudrawer_mobilemenudrawer_1138863f("MobileMenuDrawer()<br/><small>components/Navigation/MobileMenuDrawer.tsx</small>")
-    profile_inventorymovements_inventorymovements_32fe013b("InventoryMovements()<br/><small>components/Profile/InventoryMovements.tsx</small>")
-    profile_orderslist_orderslist_f7b53512("OrdersList()<br/><small>components/Profile/OrdersList.tsx</small>")
-    context_authcontext_useauth_2a79aa5d("useAuth()<br/><small>src/context/AuthContext.tsx</small>")
-    admin_possessionbanner_possessionbanner_06a15e3b -->|calls| context_authcontext_useauth_2a79aa5d
-    auth_adminroute_adminroute_aa3e8e7d -->|calls| context_authcontext_useauth_2a79aa5d
-    modals_preregistrationmodal_preregistrationmodal_0b53861c -->|calls| context_authcontext_useauth_2a79aa5d
-    navigation_header_header_9792dcd1 -->|calls| context_authcontext_useauth_2a79aa5d
-    navigation_mobilemenudrawer_mobilemenudrawer_1138863f -->|calls| context_authcontext_useauth_2a79aa5d
-    navigation_usermenu_usermenu_591437dd -->|calls| context_authcontext_useauth_2a79aa5d
-    profile_credithistorylist_credithistorylist_963603cb -->|calls| context_authcontext_useauth_2a79aa5d
-    profile_debtslist_debtslist_a453b993 -->|calls| context_authcontext_useauth_2a79aa5d
-    profile_inventorymovements_inventorymovements_32fe013b -->|calls| context_authcontext_useauth_2a79aa5d
-    profile_mymissionslist_mymissionslist_fda020f8 -->|calls| context_authcontext_useauth_2a79aa5d
-    profile_orderslist_orderslist_f7b53512 -->|calls| context_authcontext_useauth_2a79aa5d
-    modals_preregistrationmodal_6afac03d -->|imports| context_authcontext_useauth_2a79aa5d
-    navigation_header_de833621 -->|imports| context_authcontext_useauth_2a79aa5d
-    navigation_header_de833621 -->|imports| navigation_usermenu_015b5188
-    navigation_header_de833621 -->|imports| navigation_usermenu_usermenu_591437dd
-    navigation_usermenu_015b5188 -->|imports| context_authcontext_useauth_2a79aa5d
-    profile_credithistorylist_9265be05 -->|imports| context_authcontext_useauth_2a79aa5d
-    profile_debtslist_6dff0513 -->|imports| context_authcontext_useauth_2a79aa5d
-    profile_mymissionslist_815fbeae -->|imports| context_authcontext_useauth_2a79aa5d
-    %% Omitted for readability: 45 nodes, 0 edges
-    class modals_preregistrationmodal_6afac03d ui;
-    class modals_preregistrationmodal_preregistrationmodal_0b53861c ui;
-    class navigation_header_de833621 ui;
-    class navigation_header_header_9792dcd1 ui;
-    class navigation_usermenu_015b5188 ui;
-    class navigation_usermenu_usermenu_591437dd ui;
-    class profile_credithistorylist_9265be05 ui;
-    class profile_credithistorylist_credithistorylist_963603cb ui;
-    class profile_debtslist_6dff0513 ui;
-    class profile_debtslist_debtslist_a453b993 ui;
-    class profile_mymissionslist_815fbeae ui;
-    class profile_mymissionslist_mymissionslist_fda020f8 ui;
-    class admin_possessionbanner_possessionbanner_06a15e3b async;
-    class auth_adminroute_adminroute_aa3e8e7d api;
-    class navigation_mobilemenudrawer_mobilemenudrawer_1138863f ui;
-    class profile_inventorymovements_inventorymovements_32fe013b ui;
-    class profile_orderslist_orderslist_f7b53512 ui;
-    class context_authcontext_useauth_2a79aa5d ui;
-    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
-    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
-    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
-    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
-    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
-    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
-    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
-    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
-    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
-</div>
-
-<h3>Call Details</h3>
-<table class="call-table">
-<tr>
-  <th style="width:5%">#</th>
-  <th style="width:28%">Node</th>
-  <th style="width:10%">Type</th>
-  <th style="width:17%">Caller</th>
-  <th style="width:20%">Callees</th>
-  <th style="width:20%">Description</th>
-</tr>
-<tr>
-  <td>1</td>
-  <td><code>PosSessionBanner.tsx</code><br><small style="color:var(--muted)">components/Admin/PosSessionBanner.tsx</small></td>
-  <td><span class="tag tag-async">Async</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>AuthContext.tsx</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small><br><code>useAuth()</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small></td>
-  <td>Module file in components/Admin/PosSessionBanner.tsx.</td>
-</tr>
-<tr>
-  <td>2</td>
-  <td><code>PosSessionBanner()</code><br><small style="color:var(--muted)">components/Admin/PosSessionBanner.tsx</small></td>
-  <td><span class="tag tag-async">Async</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>useAuth()</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small></td>
-  <td>PosSessionBanner() node in components/Admin/PosSessionBanner.tsx.</td>
-</tr>
-<tr>
-  <td>3</td>
-  <td><code>AdminRoute.tsx</code><br><small style="color:var(--muted)">components/Auth/AdminRoute.tsx</small></td>
-  <td><span class="tag tag-endpoint">API</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>AuthContext.tsx</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small><br><code>useAuth()</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small></td>
-  <td>Module file in components/Auth/AdminRoute.tsx.</td>
-</tr>
-<tr>
-  <td>4</td>
-  <td><code>AdminRouteProps</code><br><small style="color:var(--muted)">components/Auth/AdminRoute.tsx</small></td>
-  <td><span class="tag tag-endpoint">API</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>AdminRouteProps node in components/Auth/AdminRoute.tsx.</td>
-</tr>
-<tr>
-  <td>5</td>
-  <td><code>AdminRoute()</code><br><small style="color:var(--muted)">components/Auth/AdminRoute.tsx</small></td>
-  <td><span class="tag tag-endpoint">API</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>useAuth()</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small></td>
-  <td>AdminRoute() node in components/Auth/AdminRoute.tsx.</td>
-</tr>
-<tr>
-  <td>6</td>
-  <td><code>PreRegistrationModal.tsx</code><br><small style="color:var(--muted)">components/Modals/PreRegistrationModal.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>AuthContext.tsx</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small><br><code>registerForEvent()</code><br><small style="color:var(--muted)">src/utils/api.ts</small><br><code>useAuth()</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small></td>
-  <td>Module file in components/Modals/PreRegistrationModal.tsx.</td>
-</tr>
-<tr>
-  <td>7</td>
-  <td><code>PreRegistrationModalProps</code><br><small style="color:var(--muted)">components/Modals/PreRegistrationModal.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>PreRegistrationModalProps node in components/Modals/PreRegistrationModal.tsx.</td>
-</tr>
-<tr>
-  <td>8</td>
-  <td><code>PreRegistrationModal()</code><br><small style="color:var(--muted)">components/Modals/PreRegistrationModal.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>useAuth()</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small></td>
-  <td>PreRegistrationModal() node in components/Modals/PreRegistrationModal.tsx.</td>
-</tr>
-<tr>
-  <td>9</td>
-  <td><code>Header.tsx</code><br><small style="color:var(--muted)">components/Navigation/Header.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>AuthContext.tsx</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small><br><code>Profile.tsx</code><br><small style="color:var(--muted)">src/pages/Profile.tsx</small><br><code>useAuth()</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small><br>+2 more</td>
-  <td>Module file in components/Navigation/Header.tsx.</td>
-</tr>
-<tr>
-  <td>10</td>
-  <td><code>HeaderProps</code><br><small style="color:var(--muted)">components/Navigation/Header.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>HeaderProps node in components/Navigation/Header.tsx.</td>
-</tr>
-<tr>
-  <td>11</td>
-  <td><code>Header()</code><br><small style="color:var(--muted)">components/Navigation/Header.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>Profile.tsx</code><br><small style="color:var(--muted)">src/pages/Profile.tsx</small><br><code>useAuth()</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small></td>
-  <td>Header() node in components/Navigation/Header.tsx.</td>
-</tr>
-<tr>
-  <td>12</td>
-  <td><code>MobileMenuDrawer.tsx</code><br><small style="color:var(--muted)">components/Navigation/MobileMenuDrawer.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>AuthContext.tsx</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small><br><code>useAuth()</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small></td>
-  <td>Module file in components/Navigation/MobileMenuDrawer.tsx.</td>
-</tr>
-<tr>
-  <td>13</td>
-  <td><code>MobileMenuDrawerProps</code><br><small style="color:var(--muted)">components/Navigation/MobileMenuDrawer.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>MobileMenuDrawerProps node in components/Navigation/MobileMenuDrawer.tsx.</td>
-</tr>
-<tr>
-  <td>14</td>
-  <td><code>MobileMenuDrawer()</code><br><small style="color:var(--muted)">components/Navigation/MobileMenuDrawer.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>useAuth()</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small></td>
-  <td>MobileMenuDrawer() node in components/Navigation/MobileMenuDrawer.tsx.</td>
-</tr>
-<tr>
-  <td>15</td>
-  <td><code>UserMenu.tsx</code><br><small style="color:var(--muted)">components/Navigation/UserMenu.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td><code>Header.tsx</code><br><small style="color:var(--muted)">components/Navigation/Header.tsx</small></td>
-  <td><code>AuthContext.tsx</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small><br><code>ImportCollection.tsx</code><br><small style="color:var(--muted)">src/pages/ImportCollection.tsx</small><br><code>Profile.tsx</code><br><small style="color:var(--muted)">src/pages/Profile.tsx</small><br>+1 more</td>
-  <td>Module file in components/Navigation/UserMenu.tsx.</td>
-</tr>
-<tr>
-  <td>16</td>
-  <td><code>UserMenu()</code><br><small style="color:var(--muted)">components/Navigation/UserMenu.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td><code>Header.tsx</code><br><small style="color:var(--muted)">components/Navigation/Header.tsx</small></td>
-  <td><code>ImportCollection.tsx</code><br><small style="color:var(--muted)">src/pages/ImportCollection.tsx</small><br><code>Profile.tsx</code><br><small style="color:var(--muted)">src/pages/Profile.tsx</small><br><code>useAuth()</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small></td>
-  <td>UserMenu() node in components/Navigation/UserMenu.tsx.</td>
-</tr>
-<tr>
-  <td>17</td>
-  <td><code>CreditHistoryList.tsx</code><br><small style="color:var(--muted)">components/Profile/CreditHistoryList.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>AuthContext.tsx</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small><br><code>Profile.tsx</code><br><small style="color:var(--muted)">src/pages/Profile.tsx</small><br><code>useAuth()</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small></td>
-  <td>Module file in components/Profile/CreditHistoryList.tsx.</td>
-</tr>
-<tr>
-  <td>18</td>
-  <td><code>CreditHistoryList()</code><br><small style="color:var(--muted)">components/Profile/CreditHistoryList.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>Profile.tsx</code><br><small style="color:var(--muted)">src/pages/Profile.tsx</small><br><code>useAuth()</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small></td>
-  <td>CreditHistoryList() node in components/Profile/CreditHistoryList.tsx.</td>
-</tr>
-<tr>
-  <td>19</td>
-  <td><code>DebtsList.tsx</code><br><small style="color:var(--muted)">components/Profile/DebtsList.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>AuthContext.tsx</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small><br><code>Profile.tsx</code><br><small style="color:var(--muted)">src/pages/Profile.tsx</small><br><code>useAuth()</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small></td>
-  <td>Module file in components/Profile/DebtsList.tsx.</td>
-</tr>
-<tr>
-  <td>20</td>
-  <td><code>DebtItem</code><br><small style="color:var(--muted)">components/Profile/DebtsList.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>DebtItem node in components/Profile/DebtsList.tsx.</td>
-</tr>
-<tr>
-  <td>21</td>
-  <td><code>DebtsListProps</code><br><small style="color:var(--muted)">components/Profile/DebtsList.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>DebtsListProps node in components/Profile/DebtsList.tsx.</td>
-</tr>
-<tr>
-  <td>22</td>
-  <td><code>DebtsList()</code><br><small style="color:var(--muted)">components/Profile/DebtsList.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>Profile.tsx</code><br><small style="color:var(--muted)">src/pages/Profile.tsx</small><br><code>useAuth()</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small></td>
-  <td>DebtsList() node in components/Profile/DebtsList.tsx.</td>
-</tr>
-<tr>
-  <td>23</td>
-  <td><code>InventoryMovements.tsx</code><br><small style="color:var(--muted)">components/Profile/InventoryMovements.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>AuthContext.tsx</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small><br><code>useAuth()</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small></td>
-  <td>Module file in components/Profile/InventoryMovements.tsx.</td>
-</tr>
-<tr>
-  <td>24</td>
-  <td><code>Movement</code><br><small style="color:var(--muted)">components/Profile/InventoryMovements.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Movement node in components/Profile/InventoryMovements.tsx.</td>
-</tr>
-<tr>
-  <td>25</td>
-  <td><code>InventoryMovements()</code><br><small style="color:var(--muted)">components/Profile/InventoryMovements.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>useAuth()</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small></td>
-  <td>InventoryMovements() node in components/Profile/InventoryMovements.tsx.</td>
-</tr>
-<tr>
-  <td>26</td>
-  <td><code>MyMissionsList.tsx</code><br><small style="color:var(--muted)">components/Profile/MyMissionsList.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>AuthContext.tsx</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small><br><code>Profile.tsx</code><br><small style="color:var(--muted)">src/pages/Profile.tsx</small><br><code>useAuth()</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small></td>
-  <td>Module file in components/Profile/MyMissionsList.tsx.</td>
-</tr>
-<tr>
-  <td>27</td>
-  <td><code>MyMissionsList()</code><br><small style="color:var(--muted)">components/Profile/MyMissionsList.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>Profile.tsx</code><br><small style="color:var(--muted)">src/pages/Profile.tsx</small><br><code>useAuth()</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small></td>
-  <td>MyMissionsList() node in components/Profile/MyMissionsList.tsx.</td>
-</tr>
-<tr>
-  <td>28</td>
-  <td><code>OrdersList.tsx</code><br><small style="color:var(--muted)">components/Profile/OrdersList.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>AuthContext.tsx</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small><br><code>Profile.tsx</code><br><small style="color:var(--muted)">src/pages/Profile.tsx</small><br><code>useAuth()</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small></td>
-  <td>Module file in components/Profile/OrdersList.tsx.</td>
-</tr>
-<tr>
-  <td>29</td>
-  <td><code>OrderItem</code><br><small style="color:var(--muted)">components/Profile/OrdersList.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>OrderItem node in components/Profile/OrdersList.tsx.</td>
-</tr>
-<tr>
-  <td>30</td>
-  <td><code>Order</code><br><small style="color:var(--muted)">components/Profile/OrdersList.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Order node in components/Profile/OrdersList.tsx.</td>
-</tr>
-</table>
-
-<div class="grid">
-  <div class="card">
-    <h4>Key Files</h4>
-    <table style="width:100%;font-size:0.85rem;">
-      <tr><th>File</th><th>Coverage</th></tr>
-      <tr><td><code>pages/Admin/OrdersPage.tsx</code></td><td>6 nodes</td></tr>
-<tr><td><code>components/Profile/OrdersList.tsx</code></td><td>5 nodes</td></tr>
-<tr><td><code>components/Profile/DebtsList.tsx</code></td><td>4 nodes</td></tr>
-<tr><td><code>components/Profile/PlayerCard.tsx</code></td><td>4 nodes</td></tr>
-<tr><td><code>src/context/AuthContext.tsx</code></td><td>4 nodes</td></tr>
-<tr><td><code>src/services/CollectionService.ts</code></td><td>4 nodes</td></tr>
-<tr><td><code>components/Auth/AdminRoute.tsx</code></td><td>3 nodes</td></tr>
-<tr><td><code>components/Modals/PreRegistrationModal.tsx</code></td><td>3 nodes</td></tr>
-    </table>
-  </div>
-  <div class="card">
-    <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: contains x41, imports x28, imports x27, calls x15. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
-  </div>
-</div>
-<hr>
-
-<!-- ====== 11. Checkout & PWA Flow ====== -->
-<h2 id="checkout-pwa-flow">11. Checkout &amp; PWA Flow</h2>
-<p>Checkout &amp; PWA Flow groups implementation around frontend, apptsx, components, navigation, mostly in frontend/src/App.tsx, components/Navigation/ChunkErrorBoundary.tsx, components/Navigation/WelcomeModal.tsx. This section covers 48 nodes and 52 internal edges; the diagram shows only representative relationships to stay readable.</p>
-
-<div class="mermaid">
-%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
-flowchart LR
-    %% Section: Checkout &amp; PWA Flow (48 nodes, 52 edges)
+    %% Section: Checkout &amp; PWA Flow (49 nodes, 53 edges)
     subgraph checkout_pwa_flow_components_Navigation_ChunkErr_78ff2190["components/Navigation/ChunkErrorBoundary.tsx"]
         navigation_chunkerrorboundary_chunkerrorboundary_2a4dc231("ChunkErrorBoundary<br/><small>components/Navigation/ChunkErrorBoundary.tsx</small>")
         navigation_chunkerrorboundary_chunkerrorboundary_6b9cc9da("componentDidCatch()<br/><small>components/Navigation/ChunkErrorBoundary.tsx</small>")
@@ -3120,11 +2759,11 @@ flowchart LR
         navigation_chunkerrorboundary_chunkerrorboundary_1c9c1c62("render()<br/><small>components/Navigation/ChunkErrorBoundary.tsx</small>")
         navigation_chunkerrorboundary_866d8f16("ChunkErrorBoundary.tsx")
         navigation_chunkerrorboundary_props_f1746a67("Props<br/><small>components/Navigation/ChunkErrorBoundary.tsx</small>")
-        navigation_chunkerrorboundary_state_0ba42c13("State<br/><small>components/Navigation/ChunkErrorBoundary.tsx</small>")
     end
-    subgraph checkout_pwa_flow_components_Auth_AuthModal_tsx_739b8e0e["components/Auth/AuthModal.tsx"]
-        auth_authmodal_d3acfa60("AuthModal.tsx")
-        auth_authmodal_authmodal_ddf47a5a("AuthModal()<br/><small>components/Auth/AuthModal.tsx</small>")
+    subgraph checkout_pwa_flow_components_Auth_AdminRoute_tsx_4e4f7cf4["components/Auth/AdminRoute.tsx"]
+        auth_adminroute_01800b6d("AdminRoute.tsx")
+        auth_adminroute_adminroute_aa3e8e7d("AdminRoute()<br/><small>components/Auth/AdminRoute.tsx</small>")
+        auth_adminroute_adminrouteprops_7ba8e9e9("AdminRouteProps<br/><small>components/Auth/AdminRoute.tsx</small>")
     end
     subgraph checkout_pwa_flow_components_Navigation_PwaReloa_1989d46c["components/Navigation/PwaReloadPrompt.tsx"]
         navigation_pwareloadprompt_141848c6("PwaReloadPrompt.tsx")
@@ -3144,8 +2783,8 @@ flowchart LR
     navigation_chunkerrorboundary_chunkerrorboundary_2a4dc231 -->|method| navigation_chunkerrorboundary_chunkerrorboundary_6b9cc9da
     navigation_chunkerrorboundary_chunkerrorboundary_2a4dc231 -->|method| navigation_chunkerrorboundary_chunkerrorboundary_aa405730
     navigation_chunkerrorboundary_chunkerrorboundary_2a4dc231 -->|method| navigation_chunkerrorboundary_chunkerrorboundary_1c9c1c62
-    frontend_src_app_tsx_src_app_0774c3e0 -->|imports| auth_authmodal_d3acfa60
-    frontend_src_app_tsx_src_app_0774c3e0 -->|imports| auth_authmodal_authmodal_ddf47a5a
+    frontend_src_app_tsx_src_app_0774c3e0 -->|imports| auth_adminroute_01800b6d
+    frontend_src_app_tsx_src_app_0774c3e0 -->|imports| auth_adminroute_adminroute_aa3e8e7d
     frontend_src_app_tsx_src_app_0774c3e0 -->|imports| context_authcontext_authprovider_b1c8f442
     frontend_src_app_tsx_src_app_0774c3e0 -->|imports| navigation_chunkerrorboundary_866d8f16
     frontend_src_app_tsx_src_app_0774c3e0 -->|imports| navigation_chunkerrorboundary_chunkerrorboundary_2a4dc231
@@ -3156,16 +2795,16 @@ flowchart LR
     frontend_src_app_tsx_src_app_0774c3e0 -->|imports| navigation_welcomemodal_welcomemodal_14195e72
     frontend_src_app_tsx_src_app_0774c3e0 -->|imports| navigation_whatsappwidget_e73b6d12
     frontend_src_app_tsx_src_app_0774c3e0 -->|imports| navigation_whatsappwidget_whatsappwidget_573d5dc1
-    %% Omitted for readability: 30 nodes, 0 edges
+    %% Omitted for readability: 31 nodes, 0 edges
     class navigation_chunkerrorboundary_chunkerrorboundary_2a4dc231 ui;
     class navigation_chunkerrorboundary_chunkerrorboundary_6b9cc9da ui;
     class navigation_chunkerrorboundary_chunkerrorboundary_aa405730 ui;
     class navigation_chunkerrorboundary_chunkerrorboundary_1c9c1c62 ui;
     class navigation_chunkerrorboundary_866d8f16 ui;
     class navigation_chunkerrorboundary_props_f1746a67 ui;
-    class navigation_chunkerrorboundary_state_0ba42c13 ui;
-    class auth_authmodal_d3acfa60 ui;
-    class auth_authmodal_authmodal_ddf47a5a ui;
+    class auth_adminroute_01800b6d api;
+    class auth_adminroute_adminroute_aa3e8e7d api;
+    class auth_adminroute_adminrouteprops_7ba8e9e9 api;
     class navigation_pwareloadprompt_141848c6 ui;
     class navigation_pwareloadprompt_pwareloadprompt_fabf8656 ui;
     class navigation_welcomemodal_96ff87ef ui;
@@ -3201,7 +2840,7 @@ flowchart LR
   <td><code>App.tsx</code><br><small style="color:var(--muted)">frontend/src/App.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
-  <td><code>AuthModal()</code><br><small style="color:var(--muted)">components/Auth/AuthModal.tsx</small><br><code>AuthModal.tsx</code><br><small style="color:var(--muted)">components/Auth/AuthModal.tsx</small><br><code>AuthProvider()</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small><br>+9 more</td>
+  <td><code>AdminRoute()</code><br><small style="color:var(--muted)">components/Auth/AdminRoute.tsx</small><br><code>AdminRoute.tsx</code><br><small style="color:var(--muted)">components/Auth/AdminRoute.tsx</small><br><code>AuthProvider()</code><br><small style="color:var(--muted)">src/context/AuthContext.tsx</small><br>+9 more</td>
   <td>Module file in frontend/src/App.tsx.</td>
 </tr>
 <tr>
@@ -3430,11 +3069,11 @@ flowchart LR
 </tr>
 <tr>
   <td>30</td>
-  <td><code>AuthModal.tsx</code><br><small style="color:var(--muted)">components/Auth/AuthModal.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>AdminRoute.tsx</code><br><small style="color:var(--muted)">components/Auth/AdminRoute.tsx</small></td>
+  <td><span class="tag tag-endpoint">API</span></td>
   <td><code>App.tsx</code><br><small style="color:var(--muted)">frontend/src/App.tsx</small></td>
   <td>No direct outbound edge</td>
-  <td>Module file in components/Auth/AuthModal.tsx.</td>
+  <td>Module file in components/Auth/AdminRoute.tsx.</td>
 </tr>
 </table>
 
@@ -3445,8 +3084,8 @@ flowchart LR
       <tr><th>File</th><th>Coverage</th></tr>
       <tr><td><code>frontend/src/App.tsx</code></td><td>29 nodes</td></tr>
 <tr><td><code>components/Navigation/ChunkErrorBoundary.tsx</code></td><td>7 nodes</td></tr>
+<tr><td><code>components/Auth/AdminRoute.tsx</code></td><td>3 nodes</td></tr>
 <tr><td><code>components/Navigation/WelcomeModal.tsx</code></td><td>3 nodes</td></tr>
-<tr><td><code>components/Auth/AuthModal.tsx</code></td><td>2 nodes</td></tr>
 <tr><td><code>components/Navigation/PwaReloadPrompt.tsx</code></td><td>2 nodes</td></tr>
 <tr><td><code>components/Navigation/ScrollToTop.tsx</code></td><td>2 nodes</td></tr>
 <tr><td><code>components/Navigation/WhatsAppWidget.tsx</code></td><td>2 nodes</td></tr>
@@ -3455,13 +3094,13 @@ flowchart LR
   </div>
   <div class="card">
     <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: contains x37, imports x6, imports x6, method x3. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x38, imports x6, imports x6, method x3. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
   </div>
 </div>
 <hr>
 
-<!-- ====== 12. Community 17 ====== -->
-<h2 id="community-17">12. Community 17</h2>
+<!-- ====== 11. Community 17 ====== -->
+<h2 id="community-17">11. Community 17</h2>
 <p>Community 17 groups implementation around architecturemd, docs, techdocs, tcg, mostly in docs/TechDocs/architecture.md. This section covers 45 nodes and 44 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
@@ -3800,8 +3439,8 @@ flowchart LR
 </div>
 <hr>
 
-<!-- ====== 13. Community 18 ====== -->
-<h2 id="community-18">13. Community 18</h2>
+<!-- ====== 12. Community 18 ====== -->
+<h2 id="community-18">12. Community 18</h2>
 <p>Community 18 groups implementation around robust, system, summarymd, docs, mostly in docs/TechDocs/ROBUST_SYSTEM_SUMMARY.md. This section covers 45 nodes and 44 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
@@ -4140,8 +3779,8 @@ flowchart LR
 </div>
 <hr>
 
-<!-- ====== 14. Community 19 ====== -->
-<h2 id="community-19">14. Community 19</h2>
+<!-- ====== 13. Community 19 ====== -->
+<h2 id="community-19">13. Community 19</h2>
 <p>Community 19 groups implementation around tcg, marketplace, mappingmd, docs, mostly in docs/TechDocs/TCG_MARKETPLACE_MAPPING.md. This section covers 45 nodes and 44 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
@@ -4480,8 +4119,8 @@ flowchart LR
 </div>
 <hr>
 
-<!-- ====== 15. Community 30 ====== -->
-<h2 id="community-30">15. Community 30</h2>
+<!-- ====== 14. Community 30 ====== -->
+<h2 id="community-30">14. Community 30</h2>
 <p>Community 30 groups implementation around progressmd, compound, 2026, odoo, mostly in PROGRESS.md. This section covers 39 nodes and 38 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
@@ -4820,67 +4459,68 @@ flowchart LR
 </div>
 <hr>
 
-<!-- ====== 16. Other ====== -->
-<h2 id="other">16. Other</h2>
-<p>Other groups implementation around docs, archive, prd, prds, mostly in docs/TechDocs/environment-setup.md, archive/prds/PRD_FILTROS_CORRECCION.md, TechDocs/database/README.md. This section covers 1716 nodes and 1504 internal edges; the diagram shows only representative relationships to stay readable.</p>
+<!-- ====== 15. Community 31 ====== -->
+<h2 id="community-31">15. Community 31</h2>
+<p>Community 31 groups implementation around readmemd, docs, techdocs, database, mostly in TechDocs/database/README.md. This section covers 37 nodes and 36 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
 %%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
 flowchart LR
-    %% Section: Other (1716 nodes, 1504 edges)
-    subgraph other_data_loaders_load_lorcana_cards_py_ec3c73b4["data/loaders/load_lorcana_cards.py"]
-        loaders_load_lorcana_cards_normalize_card_cf6c7b90("normalize_card()<br/><small>data/loaders/load_lorcana_cards.py</small>")
-        loaders_load_lorcana_cards_fetch_lorcana_cards_def8ea2c("fetch_lorcana_cards()<br/><small>data/loaders/load_lorcana_cards.py</small>")
-        loaders_load_lorcana_cards_main_590f4882("main()<br/><small>data/loaders/load_lorcana_cards.py</small>")
-        loaders_load_lorcana_cards_get_game_id_cc9804e4("get_game_id()<br/><small>data/loaders/load_lorcana_cards.py</small>")
-        loaders_load_lorcana_cards_get_set_id_e4ba3e46("get_set_id()<br/><small>data/loaders/load_lorcana_cards.py</small>")
-        loaders_load_lorcana_cards_upsert_card_5bf539ca("upsert_card()<br/><small>data/loaders/load_lorcana_cards.py</small>")
-    end
-    subgraph other_backup_before_restructure_data_loader_load_a5b16177["backup_before_restructure/data_loader/load_mtgs_cards_from_scryfall.py"]
-        data_loader_load_mtgs_cards_from_scryfall_map_sc_722b2d5b("map_scryfall_card()<br/><small>backup_before_restructure/data_loader/load_mtgs_cards_from_scryfall.py</small>")
-        data_loader_load_mtgs_cards_from_scryfall_main_a006e2e5("main()<br/><small>backup_before_restructure/data_loader/load_mtgs_cards_from_scryfall.py</small>")
-        data_loader_load_mtgs_cards_from_scryfall_map_sc_bee78a08("map_scryfall_printing()<br/><small>backup_before_restructure/data_loader/load_mtgs_cards_from_scryfall.py</small>")
-        data_loader_load_mtgs_cards_from_scryfall_get_al_1df58d49("get_all_cards_for_set()<br/><small>backup_before_restructure/data_loader/load_mtgs_cards_from_scryfall.py</small>")
-    end
-    subgraph other_backup_before_restructure_data_loader_load_2e20437c["backup_before_restructure/data_loader/load_mtgs_sets_from_scryfall.py"]
-        data_loader_load_mtgs_sets_from_scryfall_map_scr_930f87c0("map_scryfall_set()<br/><small>backup_before_restructure/data_loader/load_mtgs_sets_from_scryfall.py</small>")
-        data_loader_load_mtgs_sets_from_scryfall_main_65820df4("main()<br/><small>backup_before_restructure/data_loader/load_mtgs_sets_from_scryfall.py</small>")
-    end
-    admin_playerhistorymodal_c20a5235("PlayerHistoryModal.tsx")
-    rankings_rankingwidget_4091daa6("RankingWidget.tsx")
-    loaders_load_mtgs_cards_from_scryfall_exponentia_d353e643("exponential_backoff()<br/><small>data/loaders/load_mtgs_cards_from_scryfall.py</small>")
-    shared_final_scraping_implementation_finalscrapi_db317257("FinalScrapingImplementation<br/><small>scrapers/shared/final_scraping_implementation.py</small>")
-    gundam_price_sync_cardtraderclient_ea0edd93("CardTraderClient<br/><small>sync/gundam/price_sync.py</small>")
-    scripts_manage_supabase_db_run_b1a56695("run()<br/><small>tools/scripts/manage_supabase_db.py</small>")
-    data_loader_load_mtgs_cards_from_scryfall_map_sc_722b2d5b -->|calls| data_loader_load_mtgs_cards_from_scryfall_main_a006e2e5
-    data_loader_load_mtgs_cards_from_scryfall_map_sc_bee78a08 -->|calls| data_loader_load_mtgs_cards_from_scryfall_main_a006e2e5
-    data_loader_load_mtgs_cards_from_scryfall_get_al_1df58d49 -->|calls| data_loader_load_mtgs_cards_from_scryfall_main_a006e2e5
-    data_loader_load_mtgs_sets_from_scryfall_map_scr_930f87c0 -->|calls| data_loader_load_mtgs_sets_from_scryfall_main_65820df4
-    loaders_load_lorcana_cards_fetch_lorcana_cards_def8ea2c -->|calls| loaders_load_lorcana_cards_main_590f4882
-    loaders_load_lorcana_cards_normalize_card_cf6c7b90 -->|calls| loaders_load_lorcana_cards_main_590f4882
-    loaders_load_lorcana_cards_normalize_card_cf6c7b90 -->|calls| loaders_load_lorcana_cards_get_game_id_cc9804e4
-    loaders_load_lorcana_cards_normalize_card_cf6c7b90 -->|calls| loaders_load_lorcana_cards_get_set_id_e4ba3e46
-    loaders_load_lorcana_cards_get_game_id_cc9804e4 -->|calls| loaders_load_lorcana_cards_get_set_id_e4ba3e46
-    loaders_load_lorcana_cards_upsert_card_5bf539ca -->|calls| loaders_load_lorcana_cards_main_590f4882
-    %% Omitted for readability: 1698 nodes, 0 edges
-    class loaders_load_lorcana_cards_normalize_card_cf6c7b90 function;
-    class loaders_load_lorcana_cards_fetch_lorcana_cards_def8ea2c function;
-    class loaders_load_lorcana_cards_main_590f4882 function;
-    class loaders_load_lorcana_cards_get_game_id_cc9804e4 function;
-    class loaders_load_lorcana_cards_get_set_id_e4ba3e46 function;
-    class loaders_load_lorcana_cards_upsert_card_5bf539ca function;
-    class data_loader_load_mtgs_cards_from_scryfall_map_sc_722b2d5b function;
-    class data_loader_load_mtgs_cards_from_scryfall_main_a006e2e5 function;
-    class data_loader_load_mtgs_cards_from_scryfall_map_sc_bee78a08 function;
-    class data_loader_load_mtgs_cards_from_scryfall_get_al_1df58d49 function;
-    class data_loader_load_mtgs_sets_from_scryfall_map_scr_930f87c0 function;
-    class data_loader_load_mtgs_sets_from_scryfall_main_65820df4 function;
-    class admin_playerhistorymodal_c20a5235 ui;
-    class rankings_rankingwidget_4091daa6 ui;
-    class loaders_load_mtgs_cards_from_scryfall_exponentia_d353e643 function;
-    class shared_final_scraping_implementation_finalscrapi_db317257 api;
-    class gundam_price_sync_cardtraderclient_ea0edd93 entry;
-    class scripts_manage_supabase_db_run_b1a56695 function;
+    %% Section: Community 31 (37 nodes, 36 edges)
+    database_readme_base_de_datos_supabase_27a9ac78("Base de Datos - Supabase<br/><small>TechDocs/database/README.md</small>")
+    database_readme_tablas_principales_5475c1a9("Tablas Principales<br/><small>TechDocs/database/README.md</small>")
+    database_readme_configuraci_n_de_supabase_d254b17c("Configuración de Supabase<br/><small>TechDocs/database/README.md</small>")
+    database_readme_datos_iniciales_ca22fb57("Datos Iniciales<br/><small>TechDocs/database/README.md</small>")
+    database_readme_esquema_de_base_de_datos_33c91ec2("Esquema de Base de Datos<br/><small>TechDocs/database/README.md</small>")
+    database_readme_migraciones_298bd0c3("Migraciones<br/><small>TechDocs/database/README.md</small>")
+    database_readme_monitoreo_y_mantenimiento_218e7f8e("Monitoreo y Mantenimiento<br/><small>TechDocs/database/README.md</small>")
+    database_readme_tablas_de_usuario_3302ec8f("Tablas de Usuario<br/><small>TechDocs/database/README.md</small>")
+    database_readme_triggers_y_funciones_e28980c5("Triggers y Funciones<br/><small>TechDocs/database/README.md</small>")
+    database_readme_row_level_security_rls_cfc886f9("Row Level Security (RLS)<br/><small>TechDocs/database/README.md</small>")
+    database_readme_ndices_a1e97f5b("Índices<br/><small>TechDocs/database/README.md</small>")
+    database_readme_1_actualizaci_n_autom_tica_de_ti_90f126ce("1. Actualización Automática de Timestamps<br/><small>TechDocs/database/README.md</small>")
+    database_readme_1_games_juegos_cae2b39a("1. Games (Juegos)<br/><small>TechDocs/database/README.md</small>")
+    database_readme_10_user_watchlist_lista_de_segui_c1d4cfb8("10. User Watchlist (Lista de Seguimiento)<br/><small>TechDocs/database/README.md</small>")
+    database_readme_2_c_lculo_autom_tico_de_precios_7154a8c5("2. Cálculo Automático de Precios Agregados<br/><small>TechDocs/database/README.md</small>")
+    database_readme_2_sets_ediciones_b935ac27("2. Sets (Ediciones)<br/><small>TechDocs/database/README.md</small>")
+    database_readme_3_cards_cartas_datos_l_gicos_dfd82a6f("3. Cards (Cartas - Datos Lógicos)<br/><small>TechDocs/database/README.md</small>")
+    database_readme_4_card_printings_versiones_f_sic_cf8baa77("4. Card Printings (Versiones Físicas)<br/><small>TechDocs/database/README.md</small>")
+    database_readme_base_de_datos_supabase_27a9ac78 -->|contains| database_readme_configuraci_n_de_supabase_d254b17c
+    database_readme_base_de_datos_supabase_27a9ac78 -->|contains| database_readme_datos_iniciales_ca22fb57
+    database_readme_base_de_datos_supabase_27a9ac78 -->|contains| database_readme_esquema_de_base_de_datos_33c91ec2
+    database_readme_base_de_datos_supabase_27a9ac78 -->|contains| database_readme_migraciones_298bd0c3
+    database_readme_base_de_datos_supabase_27a9ac78 -->|contains| database_readme_monitoreo_y_mantenimiento_218e7f8e
+    database_readme_base_de_datos_supabase_27a9ac78 -->|contains| database_readme_row_level_security_rls_cfc886f9
+    database_readme_base_de_datos_supabase_27a9ac78 -->|contains| database_readme_triggers_y_funciones_e28980c5
+    database_readme_base_de_datos_supabase_27a9ac78 -->|contains| database_readme_ndices_a1e97f5b
+    database_readme_esquema_de_base_de_datos_33c91ec2 -->|contains| database_readme_tablas_de_usuario_3302ec8f
+    database_readme_esquema_de_base_de_datos_33c91ec2 -->|contains| database_readme_tablas_principales_5475c1a9
+    database_readme_tablas_principales_5475c1a9 -->|contains| database_readme_1_games_juegos_cae2b39a
+    database_readme_tablas_principales_5475c1a9 -->|contains| database_readme_2_sets_ediciones_b935ac27
+    database_readme_tablas_principales_5475c1a9 -->|contains| database_readme_3_cards_cartas_datos_l_gicos_dfd82a6f
+    database_readme_tablas_principales_5475c1a9 -->|contains| database_readme_4_card_printings_versiones_f_sic_cf8baa77
+    database_readme_tablas_de_usuario_3302ec8f -->|contains| database_readme_10_user_watchlist_lista_de_segui_c1d4cfb8
+    database_readme_triggers_y_funciones_e28980c5 -->|contains| database_readme_1_actualizaci_n_autom_tica_de_ti_90f126ce
+    database_readme_triggers_y_funciones_e28980c5 -->|contains| database_readme_2_c_lculo_autom_tico_de_precios_7154a8c5
+    %% Omitted for readability: 19 nodes, 0 edges
+    class database_readme_base_de_datos_supabase_27a9ac78 concept;
+    class database_readme_tablas_principales_5475c1a9 concept;
+    class database_readme_configuraci_n_de_supabase_d254b17c concept;
+    class database_readme_datos_iniciales_ca22fb57 concept;
+    class database_readme_esquema_de_base_de_datos_33c91ec2 concept;
+    class database_readme_migraciones_298bd0c3 concept;
+    class database_readme_monitoreo_y_mantenimiento_218e7f8e concept;
+    class database_readme_tablas_de_usuario_3302ec8f concept;
+    class database_readme_triggers_y_funciones_e28980c5 concept;
+    class database_readme_row_level_security_rls_cfc886f9 concept;
+    class database_readme_ndices_a1e97f5b concept;
+    class database_readme_1_actualizaci_n_autom_tica_de_ti_90f126ce concept;
+    class database_readme_1_games_juegos_cae2b39a concept;
+    class database_readme_10_user_watchlist_lista_de_segui_c1d4cfb8 concept;
+    class database_readme_2_c_lculo_autom_tico_de_precios_7154a8c5 concept;
+    class database_readme_2_sets_ediciones_b935ac27 concept;
+    class database_readme_3_cards_cartas_datos_l_gicos_dfd82a6f concept;
+    class database_readme_4_card_printings_versiones_f_sic_cf8baa77 concept;
     classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
     classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
     classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
@@ -5149,19 +4789,360 @@ flowchart LR
     <h4>Key Files</h4>
     <table style="width:100%;font-size:0.85rem;">
       <tr><th>File</th><th>Coverage</th></tr>
-      <tr><td><code>docs/TechDocs/environment-setup.md</code></td><td>46 nodes</td></tr>
-<tr><td><code>archive/prds/PRD_FILTROS_CORRECCION.md</code></td><td>40 nodes</td></tr>
-<tr><td><code>TechDocs/database/README.md</code></td><td>37 nodes</td></tr>
+      <tr><td><code>TechDocs/database/README.md</code></td><td>37 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x36. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 16. Other ====== -->
+<h2 id="other">16. Other</h2>
+<p>Other groups implementation around docs, archive, prd, scripts, mostly in archive/prds/PRD_FILTROS_CORRECCION.md, docs/TechDocs/environment-setup.md, archive/prds/PRD_MODAL_RESPONSIVE.md. This section covers 1915 nodes and 1750 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Other (1915 nodes, 1750 edges)
+    subgraph other_data_loaders_load_lorcana_cards_py_ec3c73b4["data/loaders/load_lorcana_cards.py"]
+        loaders_load_lorcana_cards_fetch_lorcana_cards_def8ea2c("fetch_lorcana_cards()<br/><small>data/loaders/load_lorcana_cards.py</small>")
+        loaders_load_lorcana_cards_main_590f4882("main()<br/><small>data/loaders/load_lorcana_cards.py</small>")
+        loaders_load_lorcana_cards_normalize_card_cf6c7b90("normalize_card()<br/><small>data/loaders/load_lorcana_cards.py</small>")
+        loaders_load_lorcana_cards_get_game_id_cc9804e4("get_game_id()<br/><small>data/loaders/load_lorcana_cards.py</small>")
+        loaders_load_lorcana_cards_get_set_id_e4ba3e46("get_set_id()<br/><small>data/loaders/load_lorcana_cards.py</small>")
+        loaders_load_lorcana_cards_upsert_card_5bf539ca("upsert_card()<br/><small>data/loaders/load_lorcana_cards.py</small>")
+    end
+    subgraph other_backup_before_restructure_data_loader_load_a5b16177["backup_before_restructure/data_loader/load_mtgs_cards_from_scryfall.py"]
+        data_loader_load_mtgs_cards_from_scryfall_map_sc_722b2d5b("map_scryfall_card()<br/><small>backup_before_restructure/data_loader/load_mtgs_cards_from_scryfall.py</small>")
+        data_loader_load_mtgs_cards_from_scryfall_main_a006e2e5("main()<br/><small>backup_before_restructure/data_loader/load_mtgs_cards_from_scryfall.py</small>")
+        data_loader_load_mtgs_cards_from_scryfall_map_sc_bee78a08("map_scryfall_printing()<br/><small>backup_before_restructure/data_loader/load_mtgs_cards_from_scryfall.py</small>")
+        data_loader_load_mtgs_cards_from_scryfall_get_al_1df58d49("get_all_cards_for_set()<br/><small>backup_before_restructure/data_loader/load_mtgs_cards_from_scryfall.py</small>")
+    end
+    subgraph other_backup_before_restructure_data_loader_load_2e20437c["backup_before_restructure/data_loader/load_mtgs_sets_from_scryfall.py"]
+        data_loader_load_mtgs_sets_from_scryfall_map_scr_930f87c0("map_scryfall_set()<br/><small>backup_before_restructure/data_loader/load_mtgs_sets_from_scryfall.py</small>")
+        data_loader_load_mtgs_sets_from_scryfall_main_65820df4("main()<br/><small>backup_before_restructure/data_loader/load_mtgs_sets_from_scryfall.py</small>")
+    end
+    subgraph other_components_Navigation_Footer_tsx_ec370bda["components/Navigation/Footer.tsx"]
+        navigation_footer_a30ca414("Footer.tsx")
+        navigation_footer_footer_f0fb19d9("Footer()<br/><small>components/Navigation/Footer.tsx</small>")
+    end
+    card_cardmodal_cb5731f2("CardModal.tsx")
+    filters_filterspanel_b0932035("FiltersPanel.tsx")
+    shared_final_scraping_implementation_finalscrapi_db317257("FinalScrapingImplementation<br/><small>scrapers/shared/final_scraping_implementation.py</small>")
+    gundam_price_sync_cardtraderclient_ea0edd93("CardTraderClient<br/><small>sync/gundam/price_sync.py</small>")
+    data_loader_load_mtgs_cards_from_scryfall_map_sc_722b2d5b -->|calls| data_loader_load_mtgs_cards_from_scryfall_main_a006e2e5
+    data_loader_load_mtgs_cards_from_scryfall_map_sc_bee78a08 -->|calls| data_loader_load_mtgs_cards_from_scryfall_main_a006e2e5
+    data_loader_load_mtgs_cards_from_scryfall_get_al_1df58d49 -->|calls| data_loader_load_mtgs_cards_from_scryfall_main_a006e2e5
+    data_loader_load_mtgs_sets_from_scryfall_map_scr_930f87c0 -->|calls| data_loader_load_mtgs_sets_from_scryfall_main_65820df4
+    loaders_load_lorcana_cards_fetch_lorcana_cards_def8ea2c -->|calls| loaders_load_lorcana_cards_main_590f4882
+    loaders_load_lorcana_cards_normalize_card_cf6c7b90 -->|calls| loaders_load_lorcana_cards_main_590f4882
+    loaders_load_lorcana_cards_normalize_card_cf6c7b90 -->|calls| loaders_load_lorcana_cards_get_game_id_cc9804e4
+    loaders_load_lorcana_cards_normalize_card_cf6c7b90 -->|calls| loaders_load_lorcana_cards_get_set_id_e4ba3e46
+    loaders_load_lorcana_cards_get_game_id_cc9804e4 -->|calls| loaders_load_lorcana_cards_get_set_id_e4ba3e46
+    loaders_load_lorcana_cards_upsert_card_5bf539ca -->|calls| loaders_load_lorcana_cards_main_590f4882
+    %% Omitted for readability: 1897 nodes, 0 edges
+    class loaders_load_lorcana_cards_fetch_lorcana_cards_def8ea2c function;
+    class loaders_load_lorcana_cards_main_590f4882 function;
+    class loaders_load_lorcana_cards_normalize_card_cf6c7b90 function;
+    class loaders_load_lorcana_cards_get_game_id_cc9804e4 function;
+    class loaders_load_lorcana_cards_get_set_id_e4ba3e46 function;
+    class loaders_load_lorcana_cards_upsert_card_5bf539ca function;
+    class data_loader_load_mtgs_cards_from_scryfall_map_sc_722b2d5b function;
+    class data_loader_load_mtgs_cards_from_scryfall_main_a006e2e5 function;
+    class data_loader_load_mtgs_cards_from_scryfall_map_sc_bee78a08 function;
+    class data_loader_load_mtgs_cards_from_scryfall_get_al_1df58d49 function;
+    class data_loader_load_mtgs_sets_from_scryfall_map_scr_930f87c0 function;
+    class data_loader_load_mtgs_sets_from_scryfall_main_65820df4 function;
+    class navigation_footer_a30ca414 ui;
+    class navigation_footer_footer_f0fb19d9 ui;
+    class card_cardmodal_cb5731f2 ui;
+    class filters_filterspanel_b0932035 ui;
+    class shared_final_scraping_implementation_finalscrapi_db317257 api;
+    class gundam_price_sync_cardtraderclient_ea0edd93 entry;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>CategoryModal.tsx</code><br><small style="color:var(--muted)">components/Admin/CategoryModal.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>CategoriesPage.tsx</code><br><small style="color:var(--muted)">pages/Admin/CategoriesPage.tsx</small><br><code>supabaseClient.ts</code><br><small style="color:var(--muted)">src/utils/supabaseClient.ts</small></td>
+  <td>Module file in components/Admin/CategoryModal.tsx.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>Category</code><br><small style="color:var(--muted)">components/Admin/CategoryModal.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>CategoriesPage.tsx</code><br><small style="color:var(--muted)">pages/Admin/CategoriesPage.tsx</small></td>
+  <td>Category node in components/Admin/CategoryModal.tsx.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>Props</code><br><small style="color:var(--muted)">components/Admin/CategoryModal.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Props node in components/Admin/CategoryModal.tsx.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>CategoryModal()</code><br><small style="color:var(--muted)">components/Admin/CategoryModal.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>CategoriesPage.tsx</code><br><small style="color:var(--muted)">pages/Admin/CategoriesPage.tsx</small></td>
+  <td>CategoryModal() node in components/Admin/CategoryModal.tsx.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>PlayerHistoryModal.tsx</code><br><small style="color:var(--muted)">components/Admin/PlayerHistoryModal.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>PlayerRankingsList.tsx</code><br><small style="color:var(--muted)">components/Profile/PlayerRankingsList.tsx</small><br><code>RankingSeasonManager.tsx</code><br><small style="color:var(--muted)">components/Admin/RankingSeasonManager.tsx</small><br><code>supabaseClient.ts</code><br><small style="color:var(--muted)">src/utils/supabaseClient.ts</small></td>
+  <td>Module file in components/Admin/PlayerHistoryModal.tsx.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>PlayerHistoryEntry</code><br><small style="color:var(--muted)">components/Admin/PlayerHistoryModal.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>PlayerHistoryEntry node in components/Admin/PlayerHistoryModal.tsx.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>PlayerHistoryModalProps</code><br><small style="color:var(--muted)">components/Admin/PlayerHistoryModal.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>PlayerHistoryModalProps node in components/Admin/PlayerHistoryModal.tsx.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>PlayerHistoryModal()</code><br><small style="color:var(--muted)">components/Admin/PlayerHistoryModal.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>PlayerRankingsList.tsx</code><br><small style="color:var(--muted)">components/Profile/PlayerRankingsList.tsx</small><br><code>RankingSeasonManager.tsx</code><br><small style="color:var(--muted)">components/Admin/RankingSeasonManager.tsx</small></td>
+  <td>PlayerHistoryModal() node in components/Admin/PlayerHistoryModal.tsx.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>RankingSeasonManager.tsx</code><br><small style="color:var(--muted)">components/Admin/RankingSeasonManager.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>PlayerHistoryModal()</code><br><small style="color:var(--muted)">components/Admin/PlayerHistoryModal.tsx</small><br><code>PlayerHistoryModal.tsx</code><br><small style="color:var(--muted)">components/Admin/PlayerHistoryModal.tsx</small></td>
+  <td><code>AdminRankingsPage.tsx</code><br><small style="color:var(--muted)">pages/Admin/AdminRankingsPage.tsx</small><br><code>RankingSeason</code><br><small style="color:var(--muted)">pages/Admin/AdminRankingsPage.tsx</small><br><code>supabaseClient.ts</code><br><small style="color:var(--muted)">src/utils/supabaseClient.ts</small></td>
+  <td>Module file in components/Admin/RankingSeasonManager.tsx.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>PlayerRanking</code><br><small style="color:var(--muted)">components/Admin/RankingSeasonManager.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>PlayerRanking node in components/Admin/RankingSeasonManager.tsx.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>RankingCategory</code><br><small style="color:var(--muted)">components/Admin/RankingSeasonManager.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>RankingCategory node in components/Admin/RankingSeasonManager.tsx.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>RankingTier</code><br><small style="color:var(--muted)">components/Admin/RankingSeasonManager.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>RankingTier node in components/Admin/RankingSeasonManager.tsx.</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>RankingSeasonManagerProps</code><br><small style="color:var(--muted)">components/Admin/RankingSeasonManager.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>RankingSeasonManagerProps node in components/Admin/RankingSeasonManager.tsx.</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td><code>RankingSeasonManager()</code><br><small style="color:var(--muted)">components/Admin/RankingSeasonManager.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>RankingSeasonManager() node in components/Admin/RankingSeasonManager.tsx.</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>QuickStockItem.tsx</code><br><small style="color:var(--muted)">components/Navigation/QuickStockItem.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>addToCart()</code><br><small style="color:var(--muted)">src/utils/api.ts</small><br><code>QuickStockPanel.tsx</code><br><small style="color:var(--muted)">components/Navigation/QuickStockPanel.tsx</small><br><code>supabaseClient.ts</code><br><small style="color:var(--muted)">src/utils/supabaseClient.ts</small></td>
+  <td>Module file in components/Navigation/QuickStockItem.tsx.</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>QuickStockItemProps</code><br><small style="color:var(--muted)">components/Navigation/QuickStockItem.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>QuickStockItemProps node in components/Navigation/QuickStockItem.tsx.</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td><code>QuickStockItem()</code><br><small style="color:var(--muted)">components/Navigation/QuickStockItem.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>QuickStockPanel.tsx</code><br><small style="color:var(--muted)">components/Navigation/QuickStockPanel.tsx</small></td>
+  <td>QuickStockItem() node in components/Navigation/QuickStockItem.tsx.</td>
+</tr>
+<tr>
+  <td>18</td>
+  <td><code>QuickStockPanel.tsx</code><br><small style="color:var(--muted)">components/Navigation/QuickStockPanel.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>QuickStockItem()</code><br><small style="color:var(--muted)">components/Navigation/QuickStockItem.tsx</small><br><code>QuickStockItem.tsx</code><br><small style="color:var(--muted)">components/Navigation/QuickStockItem.tsx</small></td>
+  <td><code>supabaseClient.ts</code><br><small style="color:var(--muted)">src/utils/supabaseClient.ts</small></td>
+  <td>Module file in components/Navigation/QuickStockPanel.tsx.</td>
+</tr>
+<tr>
+  <td>19</td>
+  <td><code>InventoryItem</code><br><small style="color:var(--muted)">components/Navigation/QuickStockPanel.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>InventoryItem node in components/Navigation/QuickStockPanel.tsx.</td>
+</tr>
+<tr>
+  <td>20</td>
+  <td><code>QuickStockPanel()</code><br><small style="color:var(--muted)">components/Navigation/QuickStockPanel.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>QuickStockPanel() node in components/Navigation/QuickStockPanel.tsx.</td>
+</tr>
+<tr>
+  <td>21</td>
+  <td><code>PlayerRankingsList.tsx</code><br><small style="color:var(--muted)">components/Profile/PlayerRankingsList.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>PlayerHistoryModal()</code><br><small style="color:var(--muted)">components/Admin/PlayerHistoryModal.tsx</small><br><code>PlayerHistoryModal.tsx</code><br><small style="color:var(--muted)">components/Admin/PlayerHistoryModal.tsx</small></td>
+  <td><code>supabaseClient.ts</code><br><small style="color:var(--muted)">src/utils/supabaseClient.ts</small></td>
+  <td>Module file in components/Profile/PlayerRankingsList.tsx.</td>
+</tr>
+<tr>
+  <td>22</td>
+  <td><code>PlayerRankingsListProps</code><br><small style="color:var(--muted)">components/Profile/PlayerRankingsList.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>PlayerRankingsListProps node in components/Profile/PlayerRankingsList.tsx.</td>
+</tr>
+<tr>
+  <td>23</td>
+  <td><code>calculateRank()</code><br><small style="color:var(--muted)">components/Profile/PlayerRankingsList.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>calculateRank() node in components/Profile/PlayerRankingsList.tsx.</td>
+</tr>
+<tr>
+  <td>24</td>
+  <td><code>PlayerRankingsList()</code><br><small style="color:var(--muted)">components/Profile/PlayerRankingsList.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>PlayerRankingsList() node in components/Profile/PlayerRankingsList.tsx.</td>
+</tr>
+<tr>
+  <td>25</td>
+  <td><code>RankingWidget.tsx</code><br><small style="color:var(--muted)">components/Rankings/RankingWidget.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>AdminRankingsPage.tsx</code><br><small style="color:var(--muted)">pages/Admin/AdminRankingsPage.tsx</small><br><code>RankingSeason</code><br><small style="color:var(--muted)">pages/Admin/AdminRankingsPage.tsx</small><br><code>supabaseClient.ts</code><br><small style="color:var(--muted)">src/utils/supabaseClient.ts</small></td>
+  <td>Module file in components/Rankings/RankingWidget.tsx.</td>
+</tr>
+<tr>
+  <td>26</td>
+  <td><code>PlayerRanking</code><br><small style="color:var(--muted)">components/Rankings/RankingWidget.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>PlayerRanking node in components/Rankings/RankingWidget.tsx.</td>
+</tr>
+<tr>
+  <td>27</td>
+  <td><code>RankingWidgetProps</code><br><small style="color:var(--muted)">components/Rankings/RankingWidget.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>RankingWidgetProps node in components/Rankings/RankingWidget.tsx.</td>
+</tr>
+<tr>
+  <td>28</td>
+  <td><code>RankingWidget()</code><br><small style="color:var(--muted)">components/Rankings/RankingWidget.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>RankingWidget() node in components/Rankings/RankingWidget.tsx.</td>
+</tr>
+<tr>
+  <td>29</td>
+  <td><code>AdminRankingsPage.tsx</code><br><small style="color:var(--muted)">pages/Admin/AdminRankingsPage.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>RankingSeasonManager.tsx</code><br><small style="color:var(--muted)">components/Admin/RankingSeasonManager.tsx</small><br><code>RankingWidget.tsx</code><br><small style="color:var(--muted)">components/Rankings/RankingWidget.tsx</small></td>
+  <td><code>supabaseClient.ts</code><br><small style="color:var(--muted)">src/utils/supabaseClient.ts</small></td>
+  <td>Module file in pages/Admin/AdminRankingsPage.tsx.</td>
+</tr>
+<tr>
+  <td>30</td>
+  <td><code>RankingSeason</code><br><small style="color:var(--muted)">pages/Admin/AdminRankingsPage.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>RankingSeasonManager.tsx</code><br><small style="color:var(--muted)">components/Admin/RankingSeasonManager.tsx</small><br><code>RankingWidget.tsx</code><br><small style="color:var(--muted)">components/Rankings/RankingWidget.tsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>RankingSeason node in pages/Admin/AdminRankingsPage.tsx.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>archive/prds/PRD_FILTROS_CORRECCION.md</code></td><td>47 nodes</td></tr>
+<tr><td><code>docs/TechDocs/environment-setup.md</code></td><td>46 nodes</td></tr>
 <tr><td><code>archive/prds/PRD_MODAL_RESPONSIVE.md</code></td><td>36 nodes</td></tr>
 <tr><td><code>docs/TechDocs/data-dictionary.md</code></td><td>35 nodes</td></tr>
 <tr><td><code>docs/architecture/scraping_summary.md</code></td><td>35 nodes</td></tr>
 <tr><td><code>archive/sessions/SESION_AUTONOMA_2026_02_05.md</code></td><td>29 nodes</td></tr>
 <tr><td><code>docs/reference/Mejoras_Implementadas.md</code></td><td>29 nodes</td></tr>
+<tr><td><code>LEYES_DEL_SISTEMA.md</code></td><td>27 nodes</td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: contains x1347, calls x72, explains x30, imports x21. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x1504, calls x100, imports x47, imports x46. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
   </div>
 </div>
 <hr>
@@ -5172,18 +5153,18 @@ flowchart LR
   <div class="card">
     <h4>Graph</h4>
     <table style="width:100%;font-size:0.85rem;">
-      <tr><td>Nodes</td><td>5427</td></tr>
-      <tr><td>Edges</td><td>6294</td></tr>
+      <tr><td>Nodes</td><td>5433</td></tr>
+      <tr><td>Edges</td><td>6530</td></tr>
       <tr><td>Hyperedges</td><td>0</td></tr>
-      <tr><td>Communities</td><td>604</td></tr>
+      <tr><td>Communities</td><td>600</td></tr>
       <tr><td>Documented Sections</td><td>15</td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Edge Confidence</h4>
     <table style="width:100%;font-size:0.85rem;">
-      <tr><td>EXTRACTED</td><td>5896</td></tr>
-      <tr><td>INFERRED</td><td>398</td></tr>
+      <tr><td>EXTRACTED</td><td>6121</td></tr>
+      <tr><td>INFERRED</td><td>409</td></tr>
       <tr><td>AMBIGUOUS</td><td>0</td></tr>
     </table>
   </div>
@@ -5191,7 +5172,7 @@ flowchart LR
 
 <div style="text-align:center; padding:40px 0; color: var(--muted); font-size:0.9rem;">
   <p>TCG Web App — Architecture Documentation</p>
-  <p>Generated: 2026-09-08 22:51 UTC · graphify callflow-html</p>
+  <p>Generated: 2026-11-12 21:12 UTC · graphify callflow-html</p>
 </div>
 
 </div><!-- .container -->
