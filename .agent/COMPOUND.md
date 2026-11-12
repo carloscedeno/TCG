@@ -775,3 +775,16 @@ ame.includes(' // ') asumía erróneamente que cualquier carta con barras dobles
 3. **Parser de Texto de Reglas**: Se implementó 
 enderOracleText que convierte <br> en saltos de línea limpios, remueve etiquetas HTML crudas y aplica tipografía compacta (	ext-xs md:text-sm).
 4. **Modal Viewport & Scroll**: Modal con md:h-[660px] max-h-[94vh] y contenedor interno con min-h-0 overflow-y-auto custom-scrollbar.
+
+### 45. Mobile WebApp CardModal UX Architecture & React Portal Isolation (2026-11-12)
+- **Contexto**: El modal estilo Moxfield implementado para desktop debía trasladarse con excelencia a dispositivos móviles (teléfonos iPhone / Android).
+- **Problema Descubierto**:
+  1. **Inversión de Prioridad por Flex Flow en Mobile**: En desktop la columna izquierda contiene [Imagen + Lista de Versiones] y la derecha [Info + Precios]. Al colapsar a columna única en mobile (lex-col), la lista de versiones se colocaba entre la imagen y el bloque de precios, obligando al usuario a deslizarse por múltiples expansiones antes de ver el precio y el botón de compra.
+  2. **Interferencia de Z-Index con Navegación Mobile**: BottomNav (z-[100]) y WhatsAppWidget (z-[100]) se sobreponían visualmente sobre la parte inferior del modal si este quedaba atrapado dentro del contexto de apilamiento (stacking context) de la página.
+  3. **Scroll Chaining y Recorte Táctil**: El scroll móvil se bloqueaba o provocaba saltos indeseados si existían múltiples contenedores con overflow-hidden fijos.
+- **Solución Implementada**:
+  1. **Arquitectura Responsiva Condicional de Versiones**: Se encapsuló 
+enderVersionsContent(). En desktop (md:) se renderiza en la columna izquierda debajo del arte; en móvil (< md) se oculta de la izquierda (hidden md:flex) y se traslada al final del panel de detalles (md:hidden) tras el bloque comercial y las reglas. De este modo, en móviles el usuario ve inmediatamente: Header fijo con logo TCG -> Imagen Proporcional -> TCG/Set -> Título -> Precio Geekorium ($) + Selector de Acabado + Botón 'Agregar al Carrito' (Above the Fold).
+  2. **Aislamiento Root con React Portal (createPortal)**: El modal ahora se renderiza vía createPortal(modalNode, document.body) con backdrop z-[300] bg-black/75 backdrop-blur-md. Cubre perfectamente la barra inferior y el botón flotante de WhatsApp sin artefactos visuales.
+  3. **Unificación Táctil con Aspect Ratio Adaptativo**: El contenedor de imagen ajusta su ancho proporcional (w-[170px] xs:w-[190px] sm:w-[220px] md:w-[240px] aspect-[5/7]), y el modal utiliza overflow-y-auto md:overflow-hidden con scroll nativo fluido en smartphones.
+- **Resultado**: Interfaz móvil 100% optimizada, validada visualmente con screenshots en viewport móvil (390x844) en Magic: The Gathering (Aven Brigadier) y One Piece TCG (Black Maria).
