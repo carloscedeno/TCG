@@ -295,9 +295,15 @@ const Home: React.FC = () => {
           ]);
 
           const mappedProducts = (productRes.products || []).map((p: any) => ({
+            ...p,
             card_id: p.printing_id ? `${p.printing_id}-${p.finish || 'nonfoil'}` : p.id,
             name: p.name,
             set: p.set_code?.toUpperCase() || 'Unknown',
+            set_code: p.set_code,
+            set_name: p.set_name,
+            game: p.game,
+            game_id: p.game_id,
+            tcg_specific_attributes: p.tcg_specific_attributes,
             price: Number(p.price) || 0,
             image_url: p.image_url,
             rarity: p.rarity,

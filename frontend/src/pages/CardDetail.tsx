@@ -33,13 +33,13 @@ export const CardDetail: React.FC = () => {
             printing_id: baseId || initialCard.card_id,
             card_id: baseId || initialCard.card_id,
             name: initialCard.name,
-            set: initialCard.set,
+            set: initialCard.set_name || initialCard.set,
             set_code: initialCard.set_code || '',
             game_id: initialCard.game_id,
             game: initialCard.game || (() => {
                 const gid = initialCard.game_id;
                 const GAME_MAP: Record<number, string> = { 16: 'RFB', 17: 'GND', 18: 'DGM', 22: 'MTG', 23: 'PKM', 13: 'OPC', 25: 'FAB', 12: 'LOR', 26: 'YGO', 27: 'WXS' };
-                return (gid && GAME_MAP[gid]) || 'MTG';
+                return (gid && GAME_MAP[gid]) || undefined;
             })(),
             tcg_specific_attributes: initialCard.tcg_specific_attributes,
             external_id: initialCard.external_id || initialCard.tcgplayer_id,
@@ -49,7 +49,7 @@ export const CardDetail: React.FC = () => {
             original_price: initialCard.original_price,
             discount_percentage: initialCard.discount_percentage,
             rarity: initialCard.rarity,
-            type: initialCard.type,
+            type: initialCard.type || initialCard.type_line,
             finish: initialCard.finish,
             is_foil: initialCard.is_foil,
             total_stock: initialCard.total_stock || initialCard.stock || 0,
@@ -60,6 +60,7 @@ export const CardDetail: React.FC = () => {
     };
 
     const [details, setDetails] = useState<any>(getInitialDetails());
+    const [isDetailsLoaded, setIsDetailsLoaded] = useState(false);
     const [loading, setLoading] = useState(!initialCard);
     const [error, setError] = useState<string | null>(null);
     const [activePrintingId, setActivePrintingId] = useState<string | undefined>(baseId);
@@ -88,11 +89,13 @@ export const CardDetail: React.FC = () => {
     }, [navigate]);
 
     const loadDetails = async (printingId: string) => {
+        setIsDetailsLoaded(false);
         if (!details) setLoading(true);
         setError(null);
         try {
             const data = await fetchCardDetails(printingId);
             setDetails(data);
+            setIsDetailsLoaded(true);
         } catch (err) {
             console.error('Error loading card details:', err);
             setError('Failed to load card details. Please try again.');
@@ -356,10 +359,27 @@ export const CardDetail: React.FC = () => {
                                 <div className="min-h-[150px] max-h-[250px] border-t border-neutral-200 dark:border-white/5 bg-white dark:bg-[#080808] flex flex-col shrink-0 overflow-hidden rounded-bl-[32px]">
                                     <div className="px-6 py-4 flex items-center justify-between border-b border-white/5">
                                         <h3 className="text-xs font-black uppercase tracking-widest text-text-low">Edition / Printings</h3>
-                                        <span className="text-[10px] text-text-low font-bold">{details.all_versions?.length || 0} Versions</span>
+                                        {!isDetailsLoaded ? (
+                                            <div className="h-3 w-16 bg-white/10 rounded animate-pulse" />
+                                        ) : (
+                                            <span className="text-[10px] text-text-low font-bold">{details.all_versions?.length || 0} Versions</span>
+                                        )}
                                     </div>
                                     <div className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar">
-                                    {versionGroups.length > 0 ? (
+                                    {!isDetailsLoaded ? (
+                                        <div className="p-3 space-y-2">
+                                            {[1, 2].map((i) => (
+                                                <div key={i} className="flex items-center gap-2.5 p-2 rounded bg-white/[0.02] border border-white/5 animate-pulse">
+                                                    <div className="w-7 h-7 rounded bg-white/10 shrink-0" />
+                                                    <div className="flex-1 space-y-1.5">
+                                                        <div className="h-3 w-3/4 bg-white/10 rounded" />
+                                                        <div className="h-2 w-1/2 bg-white/5 rounded" />
+                                                    </div>
+                                                    <div className="h-4 w-12 bg-white/10 rounded" />
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : versionGroups.length > 0 ? (
                                         versionGroups.map((group: any) => {
                                             const isGroupActive = activePrintingId === group.base.printing_id;
                                             const rowActiveVersion = (activeFinish === 'foil' && group.foil) ? group.foil : (group.normal || group.base);
@@ -479,26 +499,41 @@ export const CardDetail: React.FC = () => {
                                     </div>
                                 </a>
                                 <div className="flex flex-wrap items-center gap-3 text-base lg:text-lg font-medium text-text-low">
-                                    <span><ManaText text={details.mana_cost || ''} /></span>
-                                    {details.mana_cost && <span className="opacity-30">•</span>}
-                                    <span className="text-black/80 dark:text-white/80">{details.type}</span>
+                                    {details.mana_cost && (
+                                        <>
+                                            <span><ManaText text={details.mana_cost} /></span>
+                                            <span className="opacity-30">•</span>
+                                        </>
+                                    )}
+                                    {!isDetailsLoaded && !details.type ? (
+                                        <div className="h-4 w-24 bg-white/10 rounded animate-pulse" />
+                                    ) : (
+                                        <span className="text-black/80 dark:text-white/80">{details.type}</span>
+                                    )}
                                     <span className="text-neutral-700">/</span>
                                     <span className="text-geeko-gold uppercase text-[10px] font-black tracking-[0.2em]">{details.rarity}</span>
                                 </div>
-                                {tcgConfig.specificAttributes && tcgConfig.specificAttributes.length > 0 && (
+                                {!isDetailsLoaded ? (
                                     <div className="flex flex-wrap items-center gap-2 pt-1">
-                                        {tcgConfig.specificAttributes.map(attr => {
-                                            const attrsObj = (details as any).tcg_specific_attributes || {};
-                                            const val = attrsObj[attr.key] ?? (details as any)[attr.key];
-                                            if (val === undefined || val === null || val === '') return null;
-                                            const displayVal = Array.isArray(val) ? val.join(', ') : String(val);
-                                            return (
-                                                <span key={attr.key} className={`text-[10px] px-2.5 py-0.5 rounded-full border font-black uppercase tracking-wider ${attr.badgeBg || 'bg-white/5 border-white/10'} ${attr.badgeTextColor || 'text-white'}`}>
-                                                    {attr.label}: {displayVal}
-                                                </span>
-                                            );
-                                        })}
+                                        <div className="h-5 w-20 bg-white/10 rounded-full animate-pulse" />
+                                        <div className="h-5 w-24 bg-white/10 rounded-full animate-pulse" />
                                     </div>
+                                ) : (
+                                    tcgConfig.specificAttributes && tcgConfig.specificAttributes.length > 0 && (
+                                        <div className="flex flex-wrap items-center gap-2 pt-1">
+                                            {tcgConfig.specificAttributes.map(attr => {
+                                                const attrsObj = (details as any).tcg_specific_attributes || {};
+                                                const val = attrsObj[attr.key] ?? (details as any)[attr.key];
+                                                if (val === undefined || val === null || val === '') return null;
+                                                const displayVal = Array.isArray(val) ? val.join(', ') : String(val);
+                                                return (
+                                                    <span key={attr.key} className={`text-[10px] px-2.5 py-0.5 rounded-full border font-black uppercase tracking-wider ${attr.badgeBg || 'bg-white/5 border-white/10'} ${attr.badgeTextColor || 'text-white'}`}>
+                                                        {attr.label}: {displayVal}
+                                                    </span>
+                                                );
+                                            })}
+                                        </div>
+                                    )
                                 )}
 
                                 {/* Prominent Stock Status Badge */}
@@ -518,7 +553,7 @@ export const CardDetail: React.FC = () => {
                             </div>
 
                             {/* BUY BOX & LEGALITY GRID (PLACED FIRST FOR INSTANT ACCESS) */}
-                            <div className={`grid grid-cols-1 ${(!details?.is_accessory && relevantFormats.length > 0) ? 'xl:grid-cols-2' : ''} gap-8 items-start`}>
+                            <div className={`grid grid-cols-1 ${(!details?.is_accessory && (!isDetailsLoaded || relevantFormats.length > 0)) ? 'xl:grid-cols-2' : ''} gap-8 items-start`}>
                                 {/* Marketplace */}
                                 <div className="space-y-6">
                                     <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-text-low pl-2">Trading Hub</h3>
@@ -526,7 +561,11 @@ export const CardDetail: React.FC = () => {
                                     <div className="p-6 lg:p-8 rounded-[32px] bg-gradient-to-br from-geeko-cyan/10 via-transparent to-transparent border border-white/10 group relative overflow-hidden hover:border-geeko-cyan/30 transition-colors">
                                         <div className="absolute top-0 right-0 w-40 h-40 bg-geeko-cyan/5 rounded-full blur-[50px] pointer-events-none" />
                                         <div className="text-[9px] font-black uppercase text-geeko-cyan tracking-[0.2em] mb-4">
-                                            {details?.game === 'MTG' ? 'Card Kingdom Price' : 'Geekorium Price'}
+                                            {!isDetailsLoaded ? (
+                                                <div className="h-3 w-32 bg-geeko-cyan/20 rounded animate-pulse" />
+                                            ) : (
+                                                details?.game === 'MTG' ? 'Card Kingdom Price' : 'Geekorium Price'
+                                            )}
                                         </div>
                                         <div className="flex flex-col gap-6">
                                             {/* Price + Variant Badge */}
@@ -571,42 +610,46 @@ export const CardDetail: React.FC = () => {
                                             
                                             <div className="flex items-center justify-between gap-4">
                                                 {/* Finish Toggle */}
-                                                <div className="flex bg-neutral-900/80 p-1 rounded-xl border border-white/5 w-fit">
-                                                    {activeGroup?.normal && (
-                                                        <button
-                                                            onClick={() => {
-                                                                const targetId = activeGroup?.normal?.printing_id;
-                                                                if (targetId) handleVersionClick(targetId, 'nonfoil');
-                                                            }}
-                                                            className={`px-3 py-2 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all flex items-center gap-1 ${activeFinish !== 'foil'
-                                                                ? 'bg-white text-black shadow-lg scale-[1.05]'
-                                                                : (activeGroup.normal?.stock || 0) === 0
-                                                                    ? 'text-text-low opacity-60'
-                                                                    : 'text-text-low hover:text-white'
-                                                                }`}
-                                                        >
-                                                            Normal
-                                                            {(activeGroup.normal?.stock ?? 0) > 0 && <span className="ml-1 text-[8px] opacity-75">({activeGroup.normal.stock})</span>}
-                                                        </button>
-                                                    )}
-                                                    {activeGroup?.foil && (
-                                                        <button
-                                                            onClick={() => {
-                                                                const targetId = activeGroup?.foil?.printing_id;
-                                                                if (targetId) handleVersionClick(targetId, 'foil');
-                                                            }}
-                                                            className={`px-3 py-2 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all flex items-center gap-1 ${activeFinish === 'foil'
-                                                                ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 border-transparent text-white shadow-[0_0_15px_rgba(236,72,153,0.3)] scale-[1.05]'
-                                                                : (activeGroup.foil?.stock || 0) === 0
-                                                                    ? 'text-text-low opacity-60'
-                                                                    : 'text-text-low hover:text-white'
-                                                                }`}
-                                                        >
-                                                            Foil
-                                                            {(activeGroup.foil?.stock ?? 0) > 0 && <span className="ml-1 text-[8px] opacity-75">({activeGroup.foil.stock})</span>}
-                                                        </button>
-                                                    )}
-                                                </div>
+                                                {!isDetailsLoaded ? (
+                                                    <div className="h-9 w-28 bg-white/5 rounded-xl border border-white/5 animate-pulse" />
+                                                ) : (
+                                                    <div className="flex bg-neutral-900/80 p-1 rounded-xl border border-white/5 w-fit">
+                                                        {activeGroup?.normal && (
+                                                            <button
+                                                                onClick={() => {
+                                                                    const targetId = activeGroup?.normal?.printing_id;
+                                                                    if (targetId) handleVersionClick(targetId, 'nonfoil');
+                                                                }}
+                                                                className={`px-3 py-2 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all flex items-center gap-1 ${activeFinish !== 'foil'
+                                                                    ? 'bg-white text-black shadow-lg scale-[1.05]'
+                                                                    : (activeGroup.normal?.stock || 0) === 0
+                                                                        ? 'text-text-low opacity-60'
+                                                                        : 'text-text-low hover:text-white'
+                                                                    }`}
+                                                            >
+                                                                Normal
+                                                                {(activeGroup.normal?.stock ?? 0) > 0 && <span className="ml-1 text-[8px] opacity-75">({activeGroup.normal.stock})</span>}
+                                                            </button>
+                                                        )}
+                                                        {activeGroup?.foil && (
+                                                            <button
+                                                                onClick={() => {
+                                                                    const targetId = activeGroup?.foil?.printing_id;
+                                                                    if (targetId) handleVersionClick(targetId, 'foil');
+                                                                }}
+                                                                className={`px-3 py-2 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all flex items-center gap-1 ${activeFinish === 'foil'
+                                                                    ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 border-transparent text-white shadow-[0_0_15px_rgba(236,72,153,0.3)] scale-[1.05]'
+                                                                    : (activeGroup.foil?.stock || 0) === 0
+                                                                        ? 'text-text-low opacity-60'
+                                                                        : 'text-text-low hover:text-white'
+                                                                    }`}
+                                                            >
+                                                                Foil
+                                                                {(activeGroup.foil?.stock ?? 0) > 0 && <span className="ml-1 text-[8px] opacity-75">({activeGroup.foil.stock})</span>}
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                )}
 
                                                 <button
                                                     data-testid="add-to-cart-button"
@@ -621,42 +664,62 @@ export const CardDetail: React.FC = () => {
                                         </div>
                                     </div>
 
-                                    {!details?.is_accessory && externalMarket && (
-                                        <a
-                                            href={externalMarket.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="w-full flex items-center justify-between p-6 rounded-2xl bg-neutral-900/30 hover:bg-geeko-cyan/5 border border-white/5 hover:border-geeko-cyan/30 transition-all group"
-                                        >
-                                            <div className="flex flex-col">
-                                                <span className="text-[9px] font-black uppercase text-text-low tracking-[0.2em] mb-1">Market Price</span>
-                                                <span className="text-lg font-bold">{externalMarket.label}</span>
-                                            </div>
-                                            <div className="flex items-center gap-4">
-                                                <span className="text-2xl font-mono font-black text-black dark:text-white">$ {details.valuation?.market_price ? Number(details.valuation?.market_price).toFixed(2) : '---'}</span>
-                                                <div className="p-2 rounded-full bg-white/5 group-hover:bg-geeko-cyan group-hover:text-black transition-colors">
-                                                    <ExternalLink size={14} />
+                                    {!details?.is_accessory && (
+                                        !isDetailsLoaded ? (
+                                            <div className="w-full flex items-center justify-between p-6 rounded-2xl bg-neutral-900/30 border border-white/5 animate-pulse">
+                                                <div className="flex flex-col gap-2">
+                                                    <div className="h-2.5 w-20 bg-white/10 rounded" />
+                                                    <div className="h-5 w-36 bg-white/10 rounded" />
                                                 </div>
+                                                <div className="h-7 w-20 bg-white/10 rounded" />
                                             </div>
-                                        </a>
+                                        ) : externalMarket ? (
+                                            <a
+                                                href={externalMarket.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="w-full flex items-center justify-between p-6 rounded-2xl bg-neutral-900/30 hover:bg-geeko-cyan/5 border border-white/5 hover:border-geeko-cyan/30 transition-all group"
+                                            >
+                                                <div className="flex flex-col">
+                                                    <span className="text-[9px] font-black uppercase text-text-low tracking-[0.2em] mb-1">Market Price</span>
+                                                    <span className="text-lg font-bold">{externalMarket.label}</span>
+                                                </div>
+                                                <div className="flex items-center gap-4">
+                                                    <span className="text-2xl font-mono font-black text-black dark:text-white">$ {details.valuation?.market_price ? Number(details.valuation?.market_price).toFixed(2) : '---'}</span>
+                                                    <div className="p-2 rounded-full bg-white/5 group-hover:bg-geeko-cyan group-hover:text-black transition-colors">
+                                                        <ExternalLink size={14} />
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        ) : null
                                     )}
                                 </div>
 
                                 {/* Legality (Dynamic per TCG) */}
-                                {!details?.is_accessory && relevantFormats.length > 0 && (
-                                    <div className="space-y-6">
-                                        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-text-low pl-2">Format Legality</h3>
-                                        <div className="grid grid-cols-2 gap-3">
-                                            {relevantFormats.map(fmt => (
-                                                <div key={fmt} className="flex items-center justify-between p-4 rounded-xl bg-neutral-900/30 border border-white/5 hover:border-white/10 transition-colors">
-                                                    <span className="text-[9px] font-black text-text-low uppercase tracking-widest">{fmt}</span>
-                                                    <div className="scale-110">
-                                                        {getLegalityIcon(details.legalities?.[fmt] || 'not_legal')}
-                                                    </div>
-                                                </div>
-                                            ))}
+                                {!details?.is_accessory && (
+                                    !isDetailsLoaded ? (
+                                        <div className="space-y-6">
+                                            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-text-low pl-2">Format Legality</h3>
+                                            <div className="grid grid-cols-2 gap-3">
+                                                <div className="h-14 rounded-xl bg-neutral-900/30 border border-white/5 animate-pulse" />
+                                                <div className="h-14 rounded-xl bg-neutral-900/30 border border-white/5 animate-pulse" />
+                                            </div>
                                         </div>
-                                    </div>
+                                    ) : relevantFormats.length > 0 ? (
+                                        <div className="space-y-6">
+                                            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-text-low pl-2">Format Legality</h3>
+                                            <div className="grid grid-cols-2 gap-3">
+                                                {relevantFormats.map(fmt => (
+                                                    <div key={fmt} className="flex items-center justify-between p-4 rounded-xl bg-neutral-900/30 border border-white/5 hover:border-white/10 transition-colors">
+                                                        <span className="text-[9px] font-black text-text-low uppercase tracking-widest">{fmt}</span>
+                                                        <div className="scale-110">
+                                                            {getLegalityIcon(details.legalities?.[fmt] || 'not_legal')}
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ) : null
                                 )}
                             </div>
 
