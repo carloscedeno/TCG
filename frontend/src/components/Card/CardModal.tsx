@@ -870,27 +870,45 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                                     </div>
 
                                     {/* Compact Marketplace Price Comparison Bar */}
-                                    <div className="flex items-center justify-around w-full py-1.5 px-3 bg-[#0a0a0d] rounded-xl border border-white/5 mt-2 text-center shrink-0">
-                                        <div>
-                                            <div className="text-[8px] uppercase tracking-wider text-geeko-cyan font-semibold">Geekorium</div>
-                                            <div className="text-xs font-bold text-white font-mono">
-                                                ${(activeVersion?.price || details?.price || 0) > 0 ? ((activeVersion?.price || details?.price || 0)).toFixed(2) : '---'}
+                                    {externalMarket ? (
+                                        <a
+                                            href={externalMarket.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex items-center justify-around w-full py-1.5 px-3 bg-[#0a0a0d] hover:bg-white/5 rounded-xl border border-white/5 hover:border-geeko-cyan/30 mt-2 text-center shrink-0 transition-all group"
+                                            title={`Ver en ${externalMarket.label}`}
+                                        >
+                                            <div>
+                                                <div className="text-[8px] uppercase tracking-wider text-geeko-cyan font-semibold">Geekorium</div>
+                                                <div className="text-xs font-bold text-white font-mono">
+                                                    ${(activeVersion?.price || details?.price || 0) > 0 ? ((activeVersion?.price || details?.price || 0)).toFixed(2) : '---'}
+                                                </div>
+                                            </div>
+                                            {marketPrice > 0 && (
+                                                <>
+                                                    <div className="h-5 w-px bg-white/10" />
+                                                    <div>
+                                                        <div className="text-[8px] uppercase tracking-wider text-neutral-400 group-hover:text-geeko-cyan font-semibold truncate max-w-[90px] transition-colors flex items-center justify-center gap-0.5">
+                                                            <span>{externalMarket?.label?.replace('Comprar @ ', '').replace('Ver en ', '') || 'Mercado'}</span>
+                                                            <ExternalLink size={9} />
+                                                        </div>
+                                                        <div className="text-xs font-bold text-neutral-300 group-hover:text-white font-mono transition-colors">
+                                                            ${Number(marketPrice).toFixed(2)}
+                                                        </div>
+                                                    </div>
+                                                </>
+                                            )}
+                                        </a>
+                                    ) : (
+                                        <div className="flex items-center justify-around w-full py-1.5 px-3 bg-[#0a0a0d] rounded-xl border border-white/5 mt-2 text-center shrink-0">
+                                            <div>
+                                                <div className="text-[8px] uppercase tracking-wider text-geeko-cyan font-semibold">Geekorium</div>
+                                                <div className="text-xs font-bold text-white font-mono">
+                                                    ${(activeVersion?.price || details?.price || 0) > 0 ? ((activeVersion?.price || details?.price || 0)).toFixed(2) : '---'}
+                                                </div>
                                             </div>
                                         </div>
-                                        {marketPrice > 0 && (
-                                            <>
-                                                <div className="h-5 w-px bg-white/10" />
-                                                <div>
-                                                    <div className="text-[8px] uppercase tracking-wider text-neutral-500 font-semibold truncate max-w-[90px]">
-                                                        {externalMarket?.label?.replace('Comprar @ ', '').replace('Ver en ', '') || 'Mercado'}
-                                                    </div>
-                                                    <div className="text-xs font-bold text-neutral-300 font-mono">
-                                                        ${Number(marketPrice).toFixed(2)}
-                                                    </div>
-                                                </div>
-                                            </>
-                                        )}
-                                    </div>
+                                    )}
                                 </div>
 
                                 {/* Versions list (Desktop only) */}
@@ -963,51 +981,16 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                                             )}
                                         </div>
 
-                                        {/* 3. Commercial Buy Bar (Geekorium Price & Add to Cart) */}
-                                        <div className="p-3.5 rounded-xl bg-gradient-to-r from-white/[0.04] to-transparent border border-white/10 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-                                            <div className="flex items-center gap-3">
-                                                <div>
-                                                    <div className="text-[9px] uppercase tracking-wider text-geeko-cyan font-bold">Precio</div>
-                                                    <div className="text-xl sm:text-2xl font-bold text-white font-mono leading-none">
-                                                        ${(activeVersion?.price || details.price || 0) > 0 ? (activeVersion?.price || details.price).toFixed(2) : '---'}
-                                                    </div>
-                                                </div>
-                                                {/* Finish Toggle */}
-                                                {(activeGroup?.normal || activeGroup?.foil) && (
-                                                    <div className="flex bg-black/50 p-0.5 rounded-lg border border-white/10 gap-1">
-                                                        {activeGroup?.normal && (
-                                                            <button
-                                                                onClick={() => {
-                                                                    const targetId = activeGroup?.normal?.printing_id;
-                                                                    if (targetId) handleVersionClick(targetId, 'nonfoil');
-                                                                }}
-                                                                className={`px-2.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider transition-all ${
-                                                                    selectedFinish === 'nonfoil'
-                                                                        ? 'bg-white text-black shadow-sm'
-                                                                        : 'text-neutral-400 hover:text-white'
-                                                                }`}
-                                                            >
-                                                                Normal
-                                                            </button>
-                                                        )}
-                                                        {activeGroup?.foil && (
-                                                            <button
-                                                                onClick={() => {
-                                                                    const targetId = activeGroup?.foil?.printing_id;
-                                                                    if (targetId) handleVersionClick(targetId, 'foil');
-                                                                }}
-                                                                className={`px-2.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider transition-all ${
-                                                                    selectedFinish === 'foil'
-                                                                        ? 'bg-gradient-to-r from-pink-500 to-cyan-500 text-white shadow-sm'
-                                                                        : 'text-neutral-400 hover:text-white'
-                                                                }`}
-                                                            >
-                                                                Foil
-                                                            </button>
-                                                        )}
-                                                    </div>
-                                                )}
-                                                <div className="hidden sm:block">
+                                        {/* 3. Commercial Buy Row: Geekorium Price & External Market Link */}
+                                        <div className={`grid grid-cols-1 ${(!details?.is_accessory && externalMarket) ? 'sm:grid-cols-2' : ''} gap-3 items-stretch`}>
+                                            {/* Left Card: Geekorium Price & Add to Cart */}
+                                            <div className="p-3.5 sm:p-4 rounded-xl bg-gradient-to-br from-geeko-cyan/15 via-white/[0.02] to-transparent border border-white/10 flex flex-col justify-between gap-3 relative overflow-hidden group">
+                                                <div className="absolute top-0 right-0 w-28 h-28 bg-geeko-cyan/10 rounded-full blur-[30px] pointer-events-none" />
+                                                
+                                                <div className="relative z-10 flex items-center justify-between gap-2">
+                                                    <span className="text-[10px] font-bold uppercase tracking-wider text-geeko-cyan">
+                                                        Geekorium Price
+                                                    </span>
                                                     {(activeVersion?.stock ?? details.total_stock ?? 0) > 0 ? (
                                                         <span className="text-[9px] font-black text-geeko-green bg-geeko-green/10 px-2 py-0.5 rounded-full border border-geeko-green/20 uppercase tracking-tight">
                                                             En Stock ({activeVersion?.stock ?? details.total_stock})
@@ -1018,21 +1001,102 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                                                         </span>
                                                     )}
                                                 </div>
+
+                                                <div className="relative z-10 flex items-baseline justify-between gap-2">
+                                                    <div className="text-2xl sm:text-3xl font-bold text-white font-mono leading-none">
+                                                        ${(activeVersion?.price || details.price || 0) > 0 ? (activeVersion?.price || details.price).toFixed(2) : '---'}
+                                                    </div>
+
+                                                    {/* Finish Toggle */}
+                                                    {(activeGroup?.normal || activeGroup?.foil) && (
+                                                        <div className="flex bg-black/60 p-0.5 rounded-lg border border-white/10 gap-0.5 shrink-0">
+                                                            {activeGroup?.normal && (
+                                                                <button
+                                                                    onClick={() => {
+                                                                        const targetId = activeGroup?.normal?.printing_id;
+                                                                        if (targetId) handleVersionClick(targetId, 'nonfoil');
+                                                                    }}
+                                                                    className={`px-2.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider transition-all ${
+                                                                        selectedFinish === 'nonfoil'
+                                                                            ? 'bg-white text-black shadow-sm'
+                                                                            : 'text-neutral-400 hover:text-white'
+                                                                    }`}
+                                                                >
+                                                                    Normal
+                                                                </button>
+                                                            )}
+                                                            {activeGroup?.foil && (
+                                                                <button
+                                                                    onClick={() => {
+                                                                        const targetId = activeGroup?.foil?.printing_id;
+                                                                        if (targetId) handleVersionClick(targetId, 'foil');
+                                                                    }}
+                                                                    className={`px-2.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider transition-all ${
+                                                                        selectedFinish === 'foil'
+                                                                            ? 'bg-gradient-to-r from-pink-500 to-cyan-500 text-white shadow-sm'
+                                                                            : 'text-neutral-400 hover:text-white'
+                                                                    }`}
+                                                                >
+                                                                    Foil
+                                                                </button>
+                                                            )}
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                {!isArchive && (
+                                                    <button
+                                                        onClick={handleAddToCart}
+                                                        disabled={isAdding}
+                                                        data-testid="add-to-cart-button"
+                                                        className={`w-full h-9 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 relative z-10 mt-1 ${
+                                                            addedSuccess
+                                                                ? 'bg-geeko-green text-black shadow-[0_0_20px_rgba(0,255,133,0.4)]'
+                                                                : 'bg-geeko-cyan text-black shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_30px_rgba(0,229,255,0.6)]'
+                                                        }`}
+                                                    >
+                                                        {isAdding ? <Loader2 size={14} className="animate-spin" /> : addedSuccess ? '¡Añadido al Carrito! ✓' : <ShoppingCart size={14} fill="currentColor" />}
+                                                        {!isAdding && !addedSuccess && ((activeVersion?.stock || 0) > 0 ? 'Agregar al Carrito' : 'Por encargo')}
+                                                    </button>
+                                                )}
                                             </div>
-                                            {!isArchive && (
-                                                <button
-                                                    onClick={handleAddToCart}
-                                                    disabled={isAdding}
-                                                    data-testid="add-to-cart-button"
-                                                    className={`px-5 h-9 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 shrink-0 ${
-                                                        addedSuccess
-                                                            ? 'bg-geeko-green text-black shadow-[0_0_20px_rgba(0,255,133,0.4)]'
-                                                            : 'bg-geeko-cyan text-black shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_30px_rgba(0,229,255,0.6)]'
-                                                    }`}
+
+                                            {/* Right Card: External Marketplace (Card Kingdom / TCGplayer) */}
+                                            {!details?.is_accessory && externalMarket && (
+                                                <a
+                                                    href={externalMarket.url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="p-3.5 sm:p-4 rounded-xl bg-gradient-to-br from-white/[0.04] to-transparent hover:bg-white/[0.08] border border-white/10 hover:border-geeko-cyan/40 transition-all flex flex-col justify-between gap-3 group relative overflow-hidden"
+                                                    title={`Abrir ${externalMarket.label} en una pestaña nueva`}
                                                 >
-                                                    {isAdding ? <Loader2 size={14} className="animate-spin" /> : addedSuccess ? '¡Añadido! ✓' : <ShoppingCart size={14} fill="currentColor" />}
-                                                    {!isAdding && !addedSuccess && ((activeVersion?.stock || 0) > 0 ? 'Agregar al Carrito' : 'Por encargo')}
-                                                </button>
+                                                    <div className="absolute top-0 right-0 w-28 h-28 bg-white/5 rounded-full blur-[30px] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+
+                                                    <div className="relative z-10 flex items-center justify-between gap-2">
+                                                        <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 group-hover:text-geeko-cyan transition-colors">
+                                                            Mercado Externo
+                                                        </span>
+                                                        {marketPrice > 0 && (activeVersion?.price || details.price || 0) > 0 && (activeVersion?.price || details.price || 0) < marketPrice && (
+                                                            <span className="text-[9px] font-bold text-geeko-green bg-geeko-green/10 px-2 py-0.5 rounded-full border border-geeko-green/20">
+                                                                Ahorras ${(marketPrice - (activeVersion?.price || details.price || 0)).toFixed(2)}
+                                                            </span>
+                                                        )}
+                                                    </div>
+
+                                                    <div className="relative z-10">
+                                                        <div className="text-xs font-semibold text-neutral-300 group-hover:text-white transition-colors truncate">
+                                                            {externalMarket.label}
+                                                        </div>
+                                                        <div className="text-2xl sm:text-3xl font-bold font-mono text-white group-hover:text-geeko-cyan transition-colors leading-none mt-1">
+                                                            {marketPrice > 0 ? `$${Number(marketPrice).toFixed(2)}` : 'Ver en Sitio'}
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="relative z-10 w-full h-9 rounded-xl bg-white/5 group-hover:bg-geeko-cyan group-hover:text-black border border-white/10 group-hover:border-geeko-cyan font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 text-white transition-all mt-1">
+                                                        <span>Ver en {externalMarket.label.replace('Comprar @ ', '').replace('Ver en ', '')}</span>
+                                                        <ExternalLink size={14} />
+                                                    </div>
+                                                </a>
                                             )}
                                         </div>
 
