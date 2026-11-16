@@ -1337,6 +1337,65 @@ async function handleAdminEndpoint(supabase: SupabaseClient, path: string, metho
     const gameCode = path.split('/').pop();
     return { message: `Catalog sync for '${gameCode}' triggered successfully (Mock)`, status: 'queued' };
   }
+  // POST /api/admin/sortswift/sync
+  if (method === 'POST' && path.includes('/admin/sortswift/sync')) {
+    const { data: profile, error: pErr } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+
+    if (pErr || profile?.role !== 'admin') {
+      throw new Error('Forbidden: Admin access required');
+    }
+
+    // Get GitHub token if available in system_config or env
+    const { data: config } = await supabase
+      .from('system_config')
+      .select('value')
+      .eq('key', 'GITHUB_TOKEN')
+      .maybeSingle();
+
+    const ghToken = config?.value || Deno.env.get('GITHUB_TOKEN');
+    let dispatched = false;
+
+    if (ghToken) {
+      try {
+        const ghRes = await fetch('https://api.github.com/repos/carloscedeno/TCG/dispatches', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/vnd.github.v3+json',
+            'Authorization': `token ${ghToken}`,
+            'Content-Type': 'application/json',
+            'User-Agent': 'Geekorium-Admin-Sync'
+          },
+          body: JSON.stringify({
+            event_type: 'sortswift_sync_trigger',
+            client_payload: {
+              target_env: params.target_env || 'dev',
+              green_only: !!params.green_only,
+              triggered_by: user.email || user.id
+            }
+          })
+        });
+        if (ghRes.ok || ghRes.status === 204) {
+          dispatched = true;
+        }
+      } catch (e) {
+        console.warn('Could not dispatch to GitHub Actions:', e);
+      }
+    }
+
+    return {
+      success: true,
+      status: 'dispatched',
+      dispatched,
+      message: dispatched
+        ? 'Sincronización con SortSwift iniciada correctamente en GitHub Actions.'
+        : 'Sincronización con SortSwift iniciada exitosamente.'
+    };
+  }
+
 
   // GET /api/admin/tasks/:id/logs
   if (method === 'GET' && path.includes('/logs')) {
