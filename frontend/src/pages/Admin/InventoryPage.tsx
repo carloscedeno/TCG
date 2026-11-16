@@ -6,12 +6,13 @@ import {
     ChevronUp, ChevronDown, ChevronLeft, Check,
     ArrowUpDown,
     Download, ShoppingCart, Sparkles, Tag, PackagePlus,
-    RefreshCw, AlertCircle
+    RefreshCw
 } from "lucide-react";
 import { ImportInventoryModal } from "../../components/Admin/ImportInventoryModal";
 import { EgressInventoryModal } from "../../components/Admin/EgressInventoryModal";
 import { OfferManagementModal } from "../../components/Admin/OfferManagementModal";
 import { BulkRarityOfferModal } from "../../components/Admin/BulkRarityOfferModal";
+import { SortSwiftSyncModal } from "../../components/Admin/SortSwiftSyncModal";
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
 import { addProductToCart, isDiscountActive, manageProductOffer } from "../../utils/api";
@@ -46,6 +47,7 @@ export function InventoryPage() {
     const [isImportModalOpen, setIsImportModalOpen] = useState(false);
     const [isEgressModalOpen, setIsEgressModalOpen] = useState(false);
     const [isBulkRarityModalOpen, setIsBulkRarityModalOpen] = useState(false);
+    const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);
 
     // Filtering & Sorting
     const [searchQuery, setSearchQuery] = useState("");
@@ -80,13 +82,6 @@ export function InventoryPage() {
     const { activeCartName, currentIsPos } = useCart();
     const { session } = useAuth();
     const [addingId, setAddingId] = useState<string | null>(null);
-
-    // SortSwift Automated Sync State
-    const [isSyncing, setIsSyncing] = useState(false);
-    const [syncStatus, setSyncStatus] = useState<{
-        type: 'loading' | 'success' | 'error';
-        message: string;
-    } | null>(null);
 
     const pageSize = 50;
 
@@ -316,62 +311,8 @@ export function InventoryPage() {
         }
     };
 
-    const handleSortSwiftSync = async () => {
-        if (isSyncing) return;
-
-        const confirmSync = confirm(
-            "¿Deseas iniciar la sincronización completa del inventario desde SortSwift?\n\nEsto consultará los lotes activos de SortSwift, actualizará existencias e indexará nuevos productos al catálogo de forma automática."
-        );
-        if (!confirmSync) return;
-
-        setIsSyncing(true);
-        setSyncStatus({
-            type: 'loading',
-            message: 'Iniciando sincronización completa con SortSwift... Consultando lotes e inventario...'
-        });
-
-        try {
-            const API_BASE = import.meta.env.VITE_API_BASE || import.meta.env.VITE_SUPABASE_URL + '/functions/v1/tcg-api';
-
-            const response = await fetch(`${API_BASE}/api/admin/sortswift/sync`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${session?.access_token}`
-                },
-                body: JSON.stringify({
-                    target_env: 'dev',
-                    green_only: false
-                })
-            });
-
-            if (!response.ok) {
-                const err = await response.json().catch(() => ({}));
-                throw new Error(err.error || response.statusText);
-            }
-
-            const data = await response.json();
-
-            setSyncStatus({
-                type: 'success',
-                message: data.message || '¡Sincronización con SortSwift ejecutada exitosamente! Actualizando inventario...'
-            });
-
-            // Refrescar inventario en pantalla
-            await fetchInventory();
-
-            setTimeout(() => {
-                setSyncStatus(null);
-            }, 8000);
-        } catch (err: any) {
-            console.error("Error al sincronizar con SortSwift:", err);
-            setSyncStatus({
-                type: 'error',
-                message: `Error en sincronización SortSwift: ${err.message}`
-            });
-        } finally {
-            setIsSyncing(false);
-        }
+    const handleSortSwiftSync = () => {
+        setIsSyncModalOpen(true);
     };
 
     const handleBatchDiscount = async (apply: boolean) => {
@@ -511,17 +452,12 @@ export function InventoryPage() {
                         {/* Sincronización Automatizada SortSwift */}
                         <button
                             onClick={handleSortSwiftSync}
-                            disabled={isSyncing}
-                            className={`group relative px-6 py-4 border font-black text-xs uppercase tracking-[0.2em] rounded-2xl overflow-hidden active:scale-95 transition-all w-full md:w-auto flex items-center gap-3 shadow-2xl ${
-                                isSyncing
-                                    ? 'bg-cyan-950/50 border-cyan-500/40 text-cyan-300 cursor-not-allowed'
-                                    : 'bg-gradient-to-r from-cyan-950/60 to-emerald-950/60 border-cyan-500/50 text-cyan-400 hover:border-cyan-400 hover:bg-cyan-900/40 shadow-cyan-500/10'
-                            }`}
-                            title="Sincronizar inventario completo desde SortSwift"
+                            className="group relative px-6 py-4 border border-cyan-500/50 bg-gradient-to-r from-cyan-950/60 to-emerald-950/60 text-cyan-400 hover:border-cyan-400 hover:bg-cyan-900/40 font-black text-xs uppercase tracking-[0.2em] rounded-2xl overflow-hidden active:scale-95 transition-all w-full md:w-auto flex items-center gap-3 shadow-2xl shadow-cyan-500/10"
+                            title="Abrir terminal Matrix de sincronización SortSwift"
                         >
-                            <RefreshCw size={18} className={`${isSyncing ? 'animate-spin text-cyan-300' : 'text-cyan-400 group-hover:rotate-180 transition-transform duration-500'}`} />
+                            <RefreshCw size={18} className="text-cyan-400 group-hover:rotate-180 transition-transform duration-500" />
                             <span className="relative z-10">
-                                {isSyncing ? 'Sincronizando SortSwift...' : 'Sincronizar SortSwift'}
+                                Sincronizar SortSwift
                             </span>
                         </button>
 
@@ -547,30 +483,6 @@ export function InventoryPage() {
                         </button>
                     </div>
                 </div>
-
-                {/* Banner de Estado de Sincronización SortSwift */}
-                {syncStatus && (
-                    <div className={`p-5 rounded-2xl border flex items-center justify-between gap-4 transition-all shadow-xl ${
-                        syncStatus.type === 'loading'
-                            ? 'bg-cyan-950/40 border-cyan-500/30 text-cyan-300 shadow-cyan-950/30'
-                            : syncStatus.type === 'success'
-                            ? 'bg-emerald-950/40 border-emerald-500/30 text-emerald-300 shadow-emerald-950/30'
-                            : 'bg-rose-950/40 border-rose-500/30 text-rose-300 shadow-rose-950/30'
-                    }`}>
-                        <div className="flex items-center gap-3">
-                            {syncStatus.type === 'loading' && <RefreshCw className="w-5 h-5 animate-spin text-cyan-400 shrink-0" />}
-                            {syncStatus.type === 'success' && <Check className="w-5 h-5 text-emerald-400 shrink-0" />}
-                            {syncStatus.type === 'error' && <AlertCircle className="w-5 h-5 text-rose-400 shrink-0" />}
-                            <span className="text-xs font-black uppercase tracking-wider">{syncStatus.message}</span>
-                        </div>
-                        <button
-                            onClick={() => setSyncStatus(null)}
-                            className="text-white/40 hover:text-white text-xs font-bold px-2 py-1"
-                        >
-                            ✕
-                        </button>
-                    </div>
-                )}
 
                 {/* Filters Row */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center bg-neutral-900/50 border border-white/5 p-4 rounded-[2rem] backdrop-blur-xl">
@@ -1164,6 +1076,15 @@ export function InventoryPage() {
                     }}
                 />
             )}
+        
+
+            <SortSwiftSyncModal
+                isOpen={isSyncModalOpen}
+                onClose={() => setIsSyncModalOpen(false)}
+                onSuccess={() => {
+                    fetchInventory();
+                }}
+            />
         </div>
     );
 }
