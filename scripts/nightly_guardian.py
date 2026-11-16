@@ -64,6 +64,8 @@ def main():
         "check_products_health.py",
         "scripts/sync_cardkingdom_api.py",
         "scripts/fix_missing_prices.py",
+        "scripts/sync/sortswift/sync_sortswift_automated.py",
+        "scripts/sync/sync_sortswift_to_odoo.py",
         "tests/verify_supabase_functions.py"
     ]
     

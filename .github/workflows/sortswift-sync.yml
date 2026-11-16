@@ -1,0 +1,70 @@
+name: SortSwift Inventory Sync
+
+on:
+  schedule:
+    # Run twice daily: 04:30 UTC (nightly) and 16:30 UTC (mid-day store sync)
+    - cron: '30 4,16 * * *'
+  workflow_dispatch:
+    inputs:
+      green_only:
+        description: 'Sync only green bins (verified Status OK lots)'
+        required: false
+        type: boolean
+        default: false
+      dry_run:
+        description: 'Dry-run simulation (no database writes)'
+        required: false
+        type: boolean
+        default: false
+  repository_dispatch:
+    types: [sortswift_sync_trigger]
+
+jobs:
+  sync-sortswift:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run SortSwift Automated Sync
+        env:
+          SORTSWIFT_API_KEY: ${{ secrets.SORTSWIFT_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL_PROD }}
+          PYTHONPATH: .
+        run: |
+          FLAGS=""
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            FLAGS="--dry-run"
+          fi
+          if [ "${{ github.event.inputs.green_only }}" = "true" ]; then
+            FLAGS="$FLAGS --green-only"
+          fi
+          echo "Executing: python scripts/sync/sortswift/sync_sortswift_automated.py $FLAGS"
+          python scripts/sync/sortswift/sync_sortswift_automated.py $FLAGS
+
+      - name: Upload sync artifacts/snapshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sortswift-sync-snapshots
+          path: |
+            scripts/sync/sortswift/prod_sortswift_cards.json
+            scripts/sync/sortswift/tcgplayer_details_cache.json
+          retention-days: 7
