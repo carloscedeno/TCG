@@ -13,6 +13,7 @@ import { EgressInventoryModal } from "../../components/Admin/EgressInventoryModa
 import { OfferManagementModal } from "../../components/Admin/OfferManagementModal";
 import { BulkRarityOfferModal } from "../../components/Admin/BulkRarityOfferModal";
 import { SortSwiftSyncModal } from "../../components/Admin/SortSwiftSyncModal";
+import { CardModal } from "../../components/Card/CardModal";
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
 import { addProductToCart, isDiscountActive, manageProductOffer } from "../../utils/api";
@@ -73,6 +74,11 @@ export function InventoryPage() {
 
     // Offer Management State
     const [selectedOfferProduct, setSelectedOfferProduct] = useState<InventoryItem | null>(null);
+
+    // Card Modal Inspection State
+    const [inspectedCardId, setInspectedCardId] = useState<string | null>(null);
+    const [inspectedCardImage, setInspectedCardImage] = useState<string | undefined>(undefined);
+    const [inspectedCardData, setInspectedCardData] = useState<any>(undefined);
 
     // State for Stock Editing
     const [editingStockId, setEditingStockId] = useState<string | null>(null);
@@ -693,26 +699,56 @@ export function InventoryPage() {
                                     </div>
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                                        {catalogResults.map((cat) => (
-                                            <div key={cat.printing_id} className="bg-white/5 border border-white/5 rounded-2xl p-4 flex flex-col items-center gap-4 group hover:border-purple-500/30 transition-all">
-                                                <div className="relative w-20 h-28 bg-black rounded-xl overflow-hidden shadow-2xl transition-transform group-hover:scale-105">
-                                                    <img src={cat.image_url} alt={cat.cards.card_name} className="w-full h-full object-cover" />
+                                        {catalogResults.map((cat) => {
+                                            const cardId = cat.printing_id || cat.id;
+                                            const cardName = cat.cards?.card_name || cat.name || "Sin nombre";
+                                            return (
+                                                <div key={cat.printing_id} className="bg-white/5 border border-white/5 rounded-2xl p-4 flex flex-col items-center gap-4 group hover:border-purple-500/30 transition-all">
+                                                    <div className="relative w-20 h-28 bg-black rounded-xl overflow-hidden shadow-2xl transition-transform group-hover:scale-105 shrink-0 group/cat-thumb">
+                                                        <img src={cat.image_url} alt={cardName} className="w-full h-full object-cover" />
+                                                        <button
+                                                            type="button"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                setInspectedCardId(cardId);
+                                                                setInspectedCardImage(cat.image_url);
+                                                                setInspectedCardData({ ...cat, id: cardId, card_name: cardName });
+                                                            }}
+                                                            className="absolute inset-0 bg-black/60 opacity-0 group-hover/cat-thumb:opacity-100 flex items-center justify-center transition-all text-[#00D1FF]"
+                                                            title="Ver detalle de la carta"
+                                                        >
+                                                            <div className="p-2 bg-neutral-900/90 border border-[#00D1FF]/40 rounded-full shadow-lg shadow-[#00D1FF]/20 text-[#00D1FF] hover:bg-[#00D1FF] hover:text-black transition-all">
+                                                                <Search size={16} />
+                                                            </div>
+                                                        </button>
+                                                    </div>
+                                                    <div className="text-center min-w-0 w-full">
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                setInspectedCardId(cardId);
+                                                                setInspectedCardImage(cat.image_url);
+                                                                setInspectedCardData({ ...cat, id: cardId, card_name: cardName });
+                                                            }}
+                                                            className="text-xs font-black text-white italic truncate tracking-tight lowercase hover:text-purple-400 hover:underline transition-colors block w-full text-center cursor-pointer"
+                                                            title="Ver detalle de la carta"
+                                                        >
+                                                            {cardName}
+                                                        </button>
+                                                        <div className="text-[8px] text-neutral-500 font-black uppercase tracking-widest mt-1">{cat.sets?.set_code || cat.set_code}</div>
+                                                    </div>
+                                                    <button
+                                                        onClick={() => {
+                                                            setPrefillCard(cat);
+                                                            setIsDrawerOpen(true);
+                                                        }}
+                                                        className="w-full py-2 bg-purple-500 hover:bg-purple-600 text-white text-[9px] font-black uppercase tracking-widest rounded-lg transition-all shadow-lg shadow-purple-500/20"
+                                                    >
+                                                        Agregar al Stock
+                                                    </button>
                                                 </div>
-                                                <div className="text-center min-w-0 w-full">
-                                                    <div className="text-xs font-black text-white italic truncate tracking-tight lowercase">{cat.cards.card_name}</div>
-                                                    <div className="text-[8px] text-neutral-500 font-black uppercase tracking-widest mt-1">{cat.sets.set_code}</div>
-                                                </div>
-                                                <button
-                                                    onClick={() => {
-                                                        setPrefillCard(cat);
-                                                        setIsDrawerOpen(true);
-                                                    }}
-                                                    className="w-full py-2 bg-purple-500 hover:bg-purple-600 text-white text-[9px] font-black uppercase tracking-widest rounded-lg transition-all shadow-lg shadow-purple-500/20"
-                                                >
-                                                    Agregar al Stock
-                                                </button>
-                                            </div>
-                                        ))}
+                                            );
+                                        })}
                                     </div>
                                 </div>
                             )}
@@ -771,16 +807,42 @@ export function InventoryPage() {
                                             </td>
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-4">
-                                                    <div className="relative w-12 h-16 bg-black rounded-xl overflow-hidden shadow-2xl border border-white/5 transition-transform group-hover:scale-105 group-hover:-rotate-3">
+                                                    <div className="relative w-12 h-16 bg-black rounded-xl overflow-hidden shadow-2xl border border-white/5 transition-transform group-hover:scale-105 group-hover:-rotate-3 shrink-0 group/item-thumb">
                                                         <img src={item.image_url} alt={item.name} className="w-full h-full object-cover" loading="lazy" />
+                                                        <button
+                                                            type="button"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                const cardId = item.printing_id || item.product_id;
+                                                                setInspectedCardId(cardId);
+                                                                setInspectedCardImage(item.image_url);
+                                                                setInspectedCardData({ ...item, id: item.product_id, card_name: item.name });
+                                                            }}
+                                                            className="absolute inset-0 bg-black/60 opacity-0 group-hover/item-thumb:opacity-100 flex items-center justify-center transition-all text-[#00D1FF]"
+                                                            title="Ver detalle de la carta"
+                                                        >
+                                                            <div className="p-1.5 bg-neutral-900/90 border border-[#00D1FF]/40 rounded-full shadow-lg shadow-[#00D1FF]/20 text-[#00D1FF] hover:bg-[#00D1FF] hover:text-black transition-all">
+                                                                <Search size={14} />
+                                                            </div>
+                                                        </button>
                                                     </div>
                                                     <div className="flex flex-col min-w-0 max-w-[200px] md:max-w-md">
-                                                        <span className="text-sm font-black text-white italic tracking-tight lowercase truncate">
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                const cardId = item.printing_id || item.product_id;
+                                                                setInspectedCardId(cardId);
+                                                                setInspectedCardImage(item.image_url);
+                                                                setInspectedCardData({ ...item, id: item.product_id, card_name: item.name });
+                                                            }}
+                                                            className="text-left text-sm font-black text-white italic tracking-tight lowercase truncate hover:text-purple-400 hover:underline transition-colors cursor-pointer"
+                                                            title="Ver detalle de la carta"
+                                                        >
                                                             {item.name}
                                                             {item.set_code && ['msh', 'msc', 'mar'].includes(item.set_code.toLowerCase()) && (
                                                                 <span className="ml-2 items-center px-1.5 py-0.5 bg-gradient-to-r from-purple-500 to-pink-500 text-[7px] font-black uppercase rounded shadow-lg shadow-purple-500/20 animate-in fade-in zoom-in duration-500">Nuevo</span>
                                                             )}
-                                                        </span>
+                                                        </button>
                                                         <div className="flex items-center gap-2 mt-1">
                                                             <span className="text-[9px] font-black text-neutral-600 uppercase tracking-widest px-2 py-0.5 bg-white/5 rounded-md">
                                                                 {item.set_code}
@@ -1083,6 +1145,20 @@ export function InventoryPage() {
                 onClose={() => setIsSyncModalOpen(false)}
                 onSuccess={() => {
                     fetchInventory();
+                }}
+            />
+
+            {/* In-page Modal for card inspection (no page reload or navigation) */}
+            <CardModal
+                isOpen={!!inspectedCardId}
+                cardId={inspectedCardId}
+                initialImage={inspectedCardImage}
+                initialData={inspectedCardData}
+                isArchive={true}
+                onClose={() => {
+                    setInspectedCardId(null);
+                    setInspectedCardImage(undefined);
+                    setInspectedCardData(undefined);
                 }}
             />
         </div>
