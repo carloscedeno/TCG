@@ -67,32 +67,37 @@ export function SortSwiftSyncModal({ isOpen, onClose, onSuccess }: SortSwiftSync
         addLog("SYS", "[API_CALL] GET https://inventory-api.sortswift.com/api/inventory/api-key/raw-cards");
 
 
-        try {
-            const API_BASE = import.meta.env.VITE_API_BASE || import.meta.env.VITE_SUPABASE_URL + '/functions/v1/tcg-api';
+                try {
+            const SUPABASE_URL = import.meta.env.VITE_DEV_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL || 'https://bqfkqnnostzaqueujdms.supabase.co';
+            addLog("SYS", `[API_GATEWAY] Conectando con Edge Function: ${SUPABASE_URL}/functions/v1/sortswift-sync`);
 
-            // Disparar sincronización al backend
-            const response = await fetch(`${API_BASE}/api/admin/sortswift/sync`, {
+            // Disparar sincronización real al backend
+            const response = await fetch(`${SUPABASE_URL}/functions/v1/sortswift-sync`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${session?.access_token}`
                 },
                 body: JSON.stringify({
-                    target_env: 'dev',
-                    green_only: false
+                    target_env: 'dev'
                 })
             });
 
             if (response.ok) {
                 const resJson = await response.json().catch(() => ({}));
-                if (resJson?.message) {
-                    addLog("INFO", `[DISPATCH] ${resJson.message}`);
-                }
+                addLog("SUCCESS", `[GATEWAY_200_OK] ${resJson?.message || 'Pipeline activado en backend'}`);
             } else {
-                addLog("INFO", `[GATEWAY] Dispatch HTTP ${response.status}: Pipeline procesándose en backend.`);
+                const errJson = await response.json().catch(() => ({}));
+                addLog("ERROR", `[GATEWAY_FAIL] HTTP ${response.status}: ${errJson?.error || response.statusText}`);
+                setStatus("error");
+                setStage("Error de comunicación con el backend.");
+                return;
             }
         } catch (err: any) {
-            addLog("WARN", `[CONNECT] Nota de enlace backend: ${err.message}. Continuando procesamiento de catálogo.`);
+            addLog("ERROR", `[CONNECT_FAIL] Error crítico de red: ${err.message}`);
+            setStatus("error");
+            setStage("Error de red al contactar servidor.");
+            return;
         }
 
         await new Promise(r => setTimeout(r, 600));
