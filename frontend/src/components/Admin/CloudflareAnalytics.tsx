@@ -188,7 +188,7 @@ export const CloudflareAnalytics = ({ session, apiBase }: { session: any, apiBas
                         </div>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[300px] overflow-y-auto custom-scrollbar pr-2">
-                        {stats?.data.slice().reverse().map((group: any, idx: number) => (
+                        {stats?.data.toReversed().map((group: any, idx: number) => (
                             <div key={idx} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5 hover:border-white/20 transition-all">
                                 <div className="flex items-center gap-3">
                                     <div className="w-8 h-8 bg-white/5 rounded-lg flex items-center justify-center">

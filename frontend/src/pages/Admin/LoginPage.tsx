@@ -99,6 +99,7 @@ export const LoginPage = () => {
                                     <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-600 group-focus-within:text-white transition-colors" size={18} />
                                     <input
                                         type="password"
+                                        autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         className="w-full bg-black/40 border border-white/5 rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-neutral-700 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white/40 transition-all font-medium"

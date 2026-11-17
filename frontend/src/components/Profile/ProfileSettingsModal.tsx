@@ -381,7 +381,7 @@ export const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOp
                                             <Lock size={14} className="text-slate-500" />
                                         </div>
                                         <input 
-                                            type="password" 
+                                            type="password" autoComplete="new-password"
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
                                             className="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 pl-9 pr-4 text-sm text-white focus:outline-none focus:border-geeko-cyan transition-all"
@@ -396,7 +396,7 @@ export const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({ isOp
                                             <Lock size={14} className="text-slate-500" />
                                         </div>
                                         <input 
-                                            type="password" 
+                                            type="password" autoComplete="new-password"
                                             value={confirmPassword}
                                             onChange={(e) => setConfirmPassword(e.target.value)}
                                             className="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 pl-9 pr-4 text-sm text-white focus:outline-none focus:border-geeko-cyan transition-all"

@@ -113,7 +113,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ gameCode }) => {
         <div className="space-y-3">
             {/* Title & Subtitle OUTSIDE the banner */}
             <div className="px-1">
-                <h2 className="text-lg sm:text-xl md:text-2xl font-black text-white tracking-tight leading-tight">
+                <h2 className="text-lg sm:text-xl md:text-2xl font-black text-white tracking-tight leading-tight text-balance">
                     {currentItem.title}
                 </h2>
                 {currentItem.subtitle && (

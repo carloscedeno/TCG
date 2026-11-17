@@ -819,7 +819,7 @@ export function InventoryPage() {
                                                             className="w-24 bg-black border border-purple-500/50 rounded-xl px-3 py-2 text-right text-xs font-mono focus:outline-none shadow-xl shadow-purple-500/10"
                                                             autoFocus
                                                             onKeyDown={(e) => {
-                                                                if (e.key === 'Enter') handleSavePrice(item.product_id);
+                                                                if (e.key === 'Enter' && !e.nativeEvent.isComposing) handleSavePrice(item.product_id);
                                                                 if (e.key === 'Escape') setEditingPriceId(null);
                                                             }}
                                                         />
@@ -888,7 +888,7 @@ export function InventoryPage() {
                                                             className="w-16 bg-black border border-purple-500/50 rounded-xl px-2 py-2 text-center text-xs font-mono focus:outline-none shadow-xl shadow-purple-500/10"
                                                             autoFocus
                                                             onKeyDown={(e) => {
-                                                                if (e.key === 'Enter') handleSaveStock(item.product_id);
+                                                                if (e.key === 'Enter' && !e.nativeEvent.isComposing) handleSaveStock(item.product_id);
                                                                 if (e.key === 'Escape') setEditingStockId(null);
                                                             }}
                                                         />

@@ -258,7 +258,7 @@ const RankingSeasonManager = ({ season, onBack }: RankingSeasonManagerProps) => 
                                             {isAddingPlayer && (
                                                 <tr className="bg-[#00FF85]/5 border-b border-[#00FF85]/20">
                                                     <td className="px-4 py-4">
-                                                        <input autoFocus type="text" placeholder="Nombre" value={newPlayerName} onChange={e => setNewPlayerName(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') submitNewPlayer(); if (e.key === 'Escape') setIsAddingPlayer(false); }} className="bg-black/50 border border-[#00FF85]/50 rounded px-2 py-1 w-full focus:border-[#00FF85] outline-none text-[#00FF85]" />
+                                                        <input autoFocus type="text" placeholder="Nombre" value={newPlayerName} onChange={e => setNewPlayerName(e.target.value)} onKeyDown={e => { if (e.key === 'Enter' && !e.nativeEvent.isComposing) submitNewPlayer(); if (e.key === 'Escape') setIsAddingPlayer(false); }} className="bg-black/50 border border-[#00FF85]/50 rounded px-2 py-1 w-full focus:border-[#00FF85] outline-none text-[#00FF85]" />
                                                     </td>
                                                     <td colSpan={isGundam ? 4 : 3} className="px-4 py-4 text-slate-500 text-xs italic">Presiona Enter para guardar</td>
                                                     <td className="px-4 py-4 text-right">

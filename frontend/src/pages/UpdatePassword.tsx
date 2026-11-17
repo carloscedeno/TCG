@@ -101,6 +101,7 @@ export const UpdatePassword = () => {
                             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5" />
                             <input
                                 type="password"
+                                autoComplete="new-password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 className="w-full bg-slate-800/50 border border-slate-700 rounded-xl py-3 pl-11 pr-4 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white/50 transition-all"
