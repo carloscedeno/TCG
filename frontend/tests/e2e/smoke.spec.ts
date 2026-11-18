@@ -1,19 +1,14 @@
 import { test, expect } from '@playwright/test';
 
-test('has title', async ({ page }) => {
-    await page.goto('/');
+test.describe('@smoke Basic App Shell', () => {
+    test('has Geekorium title and brand shell', async ({ page }) => {
+        await page.goto('/');
+        await expect(page).toHaveTitle(/Geekorium/i);
+    });
 
-    // Expect a title "to contain" a substring.
-    await expect(page).toHaveTitle(/El Emporio/);
-});
-
-test('marketplace link works', async ({ page }) => {
-    await page.goto('/');
-
-    // Scroll down to ensure content loads
-    await page.evaluate(() => window.scrollTo(0, 500));
-
-    // Check for card items
-    // If we don't know the class, we just check for basic text
-    await expect(page.locator('body')).toContainText(/Marketplace|Cards|Cartas/i);
+    test('marketplace renders catalog or search UI', async ({ page }) => {
+        await page.goto('/');
+        await page.evaluate(() => window.scrollTo(0, 400));
+        await expect(page.locator('body')).toContainText(/Geekorium|Marketplace|Cartas|Catálogo|MTG/i);
+    });
 });

@@ -1,16 +1,16 @@
-# Graph Report - TCG Web App  (2026-11-12)
+# Graph Report - TCG Web App  (2026-11-17)
 
 ## Corpus Check
-- 869 files · ~2,368,470 words
+- 883 files · ~2,376,998 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 5433 nodes · 6530 edges · 600 communities (545 shown, 55 thin omitted)
-- Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 409 edges (avg confidence: 0.55)
+- 5492 nodes · 6642 edges · 607 communities (549 shown, 58 thin omitted)
+- Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 426 edges (avg confidence: 0.56)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `441872ee`
+- Built from commit: `d349ebcc`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -384,56 +384,61 @@
 - [[_COMMUNITY_Community 469|Community 469]]
 - [[_COMMUNITY_Community 470|Community 470]]
 - [[_COMMUNITY_Community 472|Community 472]]
+- [[_COMMUNITY_Community 476|Community 476]]
 - [[_COMMUNITY_Community 477|Community 477]]
 - [[_COMMUNITY_Community 483|Community 483]]
 - [[_COMMUNITY_Community 484|Community 484]]
 - [[_COMMUNITY_Community 487|Community 487]]
+- [[_COMMUNITY_Community 488|Community 488]]
+- [[_COMMUNITY_Community 489|Community 489]]
+- [[_COMMUNITY_Community 490|Community 490]]
+- [[_COMMUNITY_Community 604|Community 604]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `datetime` - 56 edges
-2. `useAuth()` - 47 edges
+2. `useAuth()` - 49 edges
 3. `TCGDatabaseAPI` - 47 edges
 4. `TCGScraperManager` - 43 edges
 5. `AntiBotManager` - 42 edges
-6. `TCGMarketplaceMapper` - 38 edges
-7. `OdooClient` - 38 edges
-8. `get_supabase()` - 37 edges
+6. `get_supabase()` - 41 edges
+7. `OdooClient` - 39 edges
+8. `TCGMarketplaceMapper` - 38 edges
 9. `IncrementalUpdateManager` - 35 edges
 10. `CardData` - 33 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `seed()` --calls--> `fetch`  [INFERRED]
   frontend/seed_seasons.js → scripts/test_performance.js
-- `handleAdminEndpoint()` --calls--> `fetch`  [INFERRED]
-  supabase/functions/api/index.ts → scripts/test_performance.js
-- `odooJsonRpc()` --calls--> `fetch`  [INFERRED]
-  supabase/functions/odoo-polling/index.ts → scripts/test_performance.js
 - `imageToBase64()` --calls--> `fetch`  [INFERRED]
   supabase/functions/odoo-sync/index.ts → scripts/test_performance.js
+- `odooJsonRpc()` --calls--> `fetch`  [INFERRED]
+  supabase/functions/odoo-webhook/index.ts → scripts/test_performance.js
 - `RealScrapingTester` --uses--> `CardData`  [INFERRED]
+  backup_before_restructure/tests/integration/test_real_scraping.py → data/scrapers/shared/data/models.py
+- `RealScrapingTester` --uses--> `TCGMarketplaceMapper`  [INFERRED]
   backup_before_restructure/tests/integration/test_real_scraping.py → data/scrapers/shared/data/models.py
 
 ## Import Cycles
 - 1-file cycle: `data/scrapers/shared/data/manager.py -> data/scrapers/shared/data/manager.py`
 - 2-file cycle: `data/scrapers/shared/data/manager.py -> data/scrapers/shared/data/models.py -> data/scrapers/shared/data/manager.py`
 
-## Communities (600 total, 55 thin omitted)
+## Communities (607 total, 58 thin omitted)
 
 ### Community 0 - "Banners, Events & Games"
-Cohesion: 0.04
-Nodes (58): Banner, BulkRarityOfferModal(), BulkRarityOfferModalProps, Event, GAME_OPTIONS, Presale, Banner, Game (+50 more)
+Cohesion: 0.05
+Nodes (51): Banner, BulkRarityOfferModal(), BulkRarityOfferModalProps, Event, GAME_OPTIONS, Presale, Banner, Game (+43 more)
 
 ### Community 1 - "Admin Dashboard & Orders"
-Cohesion: 0.07
-Nodes (39): InventoryPage(), PosSessionBanner(), AuthModal(), BulkImport(), AuthContext, AuthContextType, useAuth(), CartContext (+31 more)
+Cohesion: 0.06
+Nodes (43): AdminDashboard(), CloudflareAnalytics(), CloudflareStats, Job, PriceChange, PriceUpdateHistory(), BulkImport(), BulkImportProps (+35 more)
 
 ### Community 2 - "Card Catalog & UI Components"
-Cohesion: 0.10
-Nodes (24): Card, CardFace, CardProps, CardGrid(), CardGridProps, DealsCarousel(), DealsCarouselProps, Banner (+16 more)
+Cohesion: 0.09
+Nodes (25): AuthModal(), Card, CardFace, CardProps, CardGrid(), CardGridProps, DealsCarousel(), DealsCarouselProps (+17 more)
 
 ### Community 3 - "Cart & Auth Context"
-Cohesion: 0.31
-Nodes (4): CartManager(), ManageCreditsModal(), ManageCreditsModalProps, UserCreditsManager()
+Cohesion: 0.09
+Nodes (23): CartManager(), PosSessionBanner(), CartContext, CartContextType, CartItem, CartProvider(), useCart(), BottomNav() (+15 more)
 
 ### Community 4 - "Inventory Management"
 Cohesion: 0.11
@@ -441,23 +446,23 @@ Nodes (16): AddAccessoryDrawer(), AddAccessoryDrawerProps, BulkImageUploadModalP
 
 ### Community 5 - "Checkout & PWA Flow"
 Cohesion: 0.05
-Nodes (37): AdminRoute(), AdminRouteProps, AuthProvider(), ChunkErrorBoundary, Props, State, PwaReloadPrompt(), MISSION_STEPS (+29 more)
+Nodes (36): AdminRoute(), AdminRouteProps, ChunkErrorBoundary, Props, State, PwaReloadPrompt(), MISSION_STEPS, WelcomeModal() (+28 more)
 
 ### Community 6 - "Icons, Help & Pre-Registration"
-Cohesion: 0.33
-Nodes (6): DiscoveryIcon(), PactIcon(), PreparationIcon(), SelectionIcon(), VideoPlaceholder(), HelpSection()
+Cohesion: 0.48
+Nodes (6): clean_text(), derive_set_code(), map_green_bin_location(), normalize_set_name(), High-Speed Ingestion Script: SortSwift Green Bins -> DEV Target Database: Strict, run_sync()
 
 ### Community 7 - "Profile & Portfolio"
 Cohesion: 0.07
 Nodes (38): content, description, headers, content, content, description, $ref, content (+30 more)
 
 ### Community 8 - "Product Admin & Import"
-Cohesion: 0.09
-Nodes (22): AddProductDrawer(), AddProductDrawerProps, CardPrinting, EgressInventoryModal(), EgressInventoryModalProps, ImportInventoryModal(), ImportInventoryModalProps, InventoryItem (+14 more)
+Cohesion: 0.11
+Nodes (18): AddProductDrawer(), AddProductDrawerProps, CardPrinting, EgressInventoryModal(), EgressInventoryModalProps, ImportInventoryModal(), ImportInventoryModalProps, InventoryItem (+10 more)
 
 ### Community 11 - "Community 11"
-Cohesion: 0.06
-Nodes (29): Sistema de gestión de datos históricos y actualizaciones incrementales Optimiza, Modelos de datos para el sistema de scraping de TCG Compatibles con la estructu, Mapeador de atributos específicos por TCG, Resultado de un scraping individual, ScrapingResult, TCGAttributeMapper, AntiBotManager, AntiBotManager (+21 more)
+Cohesion: 0.07
+Nodes (29): Modelos de datos para el sistema de scraping de TCG Compatibles con la estructu, Mapeador de atributos específicos por TCG, Resultado de un scraping individual, ScrapingResult, TCGAttributeMapper, AntiBotManager, AntiBotManager, AntiBotManager (+21 more)
 
 ### Community 12 - "Community 12"
 Cohesion: 0.03
@@ -468,8 +473,8 @@ Cohesion: 0.04
 Nodes (51): artist, artist_ids, booster, border_color, card_faces, cardmarket_id, collector_number, color_identity (+43 more)
 
 ### Community 14 - "Community 14"
-Cohesion: 0.06
-Nodes (30): Pruebas para el sistema de gestión de datos, Probar actualizaciones incrementales, Probar detección de cambios, Probar validación de calidad de datos, Probar detección de anomalías, TestDataManagement, DataChange, DataQualityManager (+22 more)
+Cohesion: 0.04
+Nodes (59): Pruebas para el sistema de gestión de datos, Probar actualizaciones incrementales, Probar detección de cambios, Probar validación de calidad de datos, Probar detección de anomalías, TestDataManagement, DataChange, DataQualityManager (+51 more)
 
 ### Community 15 - "Community 15"
 Cohesion: 0.06
@@ -492,12 +497,12 @@ Cohesion: 0.04
 Nodes (44): 1. Cardmarket (Europa), 1. **Para Wixoss**, 2. **Para Lorcana**, 2. TCGplayer (Norteamérica), 3. Card Kingdom (Norteamérica), 3. **Para Flesh and Blood**, 4. **Para One Piece TCG**, 4. Troll and Toad (Norteamérica) (+36 more)
 
 ### Community 20 - "Community 20"
-Cohesion: 0.09
-Nodes (17): CardImage(), CardImageProps, PreRegistrationModal(), PreRegistrationModalProps, Footer(), getGameIcon(), RankingCategory, RankingPlayer (+9 more)
+Cohesion: 0.11
+Nodes (13): PreRegistrationModal(), PreRegistrationModalProps, Footer(), getGameIcon(), RankingCategory, RankingPlayer, RankingsPage(), RankingTier (+5 more)
 
 ### Community 21 - "Community 21"
 Cohesion: 0.08
-Nodes (22): Any, ScrapingBatch, run_market_sync(), main(), Cargar datos de entrada desde CSV o Supabase, Cargar cartas de la base de datos que necesitan actualización, Detectar el juego basado en la URL usando el mapeador inteligente, Validar si un TCG está soportado en un marketplace específico (+14 more)
+Nodes (21): Any, run_market_sync(), main(), Cargar datos de entrada desde CSV o Supabase, Cargar cartas de la base de datos que necesitan actualización, Detectar el juego basado en la URL usando el mapeador inteligente, Validar si un TCG está soportado en un marketplace específico, Obtener información completa de cobertura de marketplaces (+13 more)
 
 ### Community 22 - "Community 22"
 Cohesion: 0.05
@@ -508,8 +513,8 @@ Cohesion: 0.05
 Nodes (41): 1. APIs Específicas del Juego, 1. Búsqueda de Cartas, 1. Búsqueda de Cartas, 1. Cardmarket Trend Scraper, 1. Obtener Precios de Carta, 2. APIs de Agregadores Comerciales, 2. Obtener Carta por ID, 2. Obtener Sets (+33 more)
 
 ### Community 24 - "Community 24"
-Cohesion: 0.09
-Nodes (19): Pruebas para normalización de precios, Probar extracción de precios, Probar normalización de condiciones, TestPriceNormalization, CardVariant, ConditionMapper, PriceNormalizer, Normalizador de precios y monedas (+11 more)
+Cohesion: 0.06
+Nodes (24): Pruebas para normalización de precios, Probar extracción de precios, Probar normalización de condiciones, TestPriceNormalization, ConditionMapper, PriceNormalizer, Resultado de un lote de scraping, Calcula la tasa de éxito del scraping (+16 more)
 
 ### Community 25 - "Community 25"
 Cohesion: 0.05
@@ -557,7 +562,7 @@ Nodes (35): 1. Problema, 2.1 Sistema Tipográfico Definido, 2.2 Optimización de
 
 ### Community 36 - "Community 36"
 Cohesion: 0.08
-Nodes (19): RankingSeason, Category, CategoryModal(), Props, PlayerHistoryEntry, PlayerHistoryModal(), PlayerHistoryModalProps, PlayerRanking (+11 more)
+Nodes (18): RankingSeason, Category, CategoryModal(), Props, ManageCreditsModal(), ManageCreditsModalProps, PlayerHistoryEntry, PlayerHistoryModal() (+10 more)
 
 ### Community 37 - "Community 37"
 Cohesion: 0.06
@@ -568,24 +573,24 @@ Cohesion: 0.06
 Nodes (34): 10. User Watchlist (Lista de Seguimiento), 1. Games (Juegos), 2. Sets (Ediciones), 3. Cards (Cartas - Datos Lógicos), 4. Card Printings (Versiones Físicas), 5. Conditions (Condiciones), 6. Sources (Fuentes de Precios), 7. Price History (Historial de Precios) (+26 more)
 
 ### Community 39 - "Community 39"
-Cohesion: 0.08
-Nodes (28): Order, ORDER_STATUSES, OrderItem, OrdersPage(), CardDetails, CardFace, CardModal(), CardModalProps (+20 more)
+Cohesion: 0.07
+Nodes (34): Order, ORDER_STATUSES, OrderItem, OrdersPage(), CardImage(), CardImageProps, CardDetails, CardFace (+26 more)
 
 ### Community 40 - "Community 40"
 Cohesion: 0.06
 Nodes (31): allCardsUrl, allCardsUrlPageCountIdentifier, allCardsUrlPageIdentifier, autoUpdateUrl, bannerImageUrl, cardBackImageFileType, cardBackImageUrl, cardDataIdentifier (+23 more)
 
 ### Community 41 - "Community 41"
-Cohesion: 0.11
-Nodes (14): CollectionService, Processes bulk import of cards for collection or price reference.         Optim, Retrieves the full collection for a user with two-factor valuation., Updates quantity or condition of a specific item in the collection., Deletes an item from the collection., MatcherService, Smart matching for card names using exact match and fallback to trigram similari, Any (+6 more)
+Cohesion: 0.19
+Nodes (8): CollectionService, Processes bulk import of cards for collection or price reference.         Optim, Retrieves the full collection for a user with two-factor valuation., Updates quantity or condition of a specific item in the collection., Deletes an item from the collection., MatcherService, Smart matching for card names using exact match and fallback to trigram similari, Any
 
 ### Community 42 - "Community 42"
 Cohesion: 0.06
 Nodes (30): 1. Edge Functions Requieren Deployment Manual, 1. Modal Sin Datos, 2. Cartas Duplicadas en Grid, 2. Verificar RPCs Antes de Usarlos, 3. Secrets de GitHub Son Críticos, 3. VITE_API_BASE No Configurado, 4. Fallbacks Deben Ser Completos, 5. Documentar Para No Repetir Errores (+22 more)
 
 ### Community 43 - "Community 43"
-Cohesion: 0.07
-Nodes (17): Pruebas para el mapeo de marketplaces, Probar detección de TCG desde URL, Probar validación de soporte de TCG, Probar cobertura de marketplaces, TestMarketplaceMapping, Mapeador de TCG por marketplace - Detecta qué TCGs están disponibles en cada mar, Detecta el TCG basado en la URL y el marketplace, Verifica si un TCG está soportado en un marketplace específico (+9 more)
+Cohesion: 0.10
+Nodes (12): Pruebas para el mapeo de marketplaces, Probar detección de TCG desde URL, Probar validación de soporte de TCG, Probar cobertura de marketplaces, TestMarketplaceMapping, Mapeador de TCG por marketplace - Detecta qué TCGs están disponibles en cada mar, Detecta el TCG basado en la URL y el marketplace, Verifica si un TCG está soportado en un marketplace específico (+4 more)
 
 ### Community 44 - "Community 44"
 Cohesion: 0.07
@@ -605,7 +610,7 @@ Nodes (28): 1. Rama Creada, 2. Merge a Main, 3. Push a Origin, 📊 Archivos Dep
 
 ### Community 48 - "Community 48"
 Cohesion: 0.10
-Nodes (18): analyze_sources(), backup_inventory(), Exports the current content of public.products to a JSON backup file., consolidate_sources(), check_ck_prices(), check_products(), import_manabox_csv(), map_condition() (+10 more)
+Nodes (18): analyze_sources(), backup_inventory(), Exports the current content of public.products to a JSON backup file., consolidate_sources(), check_ck_prices(), check_products(), import_mtga_file(), parse_mtga_line() (+10 more)
 
 ### Community 49 - "Community 49"
 Cohesion: 0.07
@@ -636,8 +641,8 @@ Cohesion: 0.08
 Nodes (25): 1. Database Performance Indexes (⏱️ 15 min), 2. Frontend React Optimizations (⏱️ 10 min), 3. Build & Deployment Verification, API Health ⚠️, Card Component Optimization, 🏁 Conclusión, Database Health ✅, Edge Function Deployment ⚠️ (+17 more)
 
 ### Community 56 - "Community 56"
-Cohesion: 0.09
-Nodes (14): Pruebas para el sistema de identificadores de cartas, Probar agregar y obtener identificadores, Probar encontrar carta por identificador, TestCardIdentifier, CardIdentifier, Sistema de identificadores únicos para correlación entre plataformas, Agrega un identificador para una carta, Obtiene todos los identificadores para una carta (+6 more)
+Cohesion: 0.12
+Nodes (10): Pruebas para el sistema de identificadores de cartas, Probar agregar y obtener identificadores, Probar encontrar carta por identificador, TestCardIdentifier, CardIdentifier, Sistema de identificadores únicos para correlación entre plataformas, Agrega un identificador para una carta, Obtiene todos los identificadores para una carta (+2 more)
 
 ### Community 57 - "Community 57"
 Cohesion: 0.08
@@ -648,8 +653,8 @@ Cohesion: 0.08
 Nodes (24): Backend Verification, Build Times, Bundle Sizes, Code Quality, 🚀 Deployment Readiness, Documentation, Frontend Verification, Immediate (This Session) (+16 more)
 
 ### Community 59 - "Community 59"
-Cohesion: 0.09
-Nodes (14): Pruebas para el sistema de detección de variantes, Probar detección de variantes MTG, Probar detección de variantes Pokémon, Probar detección de variantes desde URL, TestVariantDetection, Detector inteligente de variantes de cartas basado en patrones y metadatos, Detecta variantes basándose en texto descriptivo, Detecta variantes basándose en patrones de URL (+6 more)
+Cohesion: 0.07
+Nodes (17): Probar rotación de User-Agents, Probar limitación de tasa, Probar detección de CAPTCHA, Probar detección de bloqueos, Pruebas para el sistema de detección de variantes, Probar detección de variantes MTG, Ejecutar todas las pruebas, Probar detección de variantes Pokémon (+9 more)
 
 ### Community 60 - "Community 60"
 Cohesion: 0.08
@@ -660,12 +665,12 @@ Cohesion: 0.06
 Nodes (31): audio-recorder, backlink, bases, bookmarks, canvas, command-palette, daily-notes, editor-status (+23 more)
 
 ### Community 62 - "Community 62"
-Cohesion: 0.09
-Nodes (20): BackgroundTasks, BaseModel, Configuration settings., add_to_cart(), CartAddRequest, get_current_user_id(), Extracts user ID from Supabase JWT or returns demo ID., CheckoutNotificationRequest (+12 more)
+Cohesion: 0.12
+Nodes (14): BackgroundTasks, BaseModel, Configuration settings., add_to_cart(), CartAddRequest, get_current_user_id(), Extracts user ID from Supabase JWT or returns demo ID., CheckoutNotificationRequest (+6 more)
 
 ### Community 63 - "Community 63"
-Cohesion: 0.06
-Nodes (12): get_supabase(), Get the Supabase admin client., OdooClient, clean_names(), remove_pokemon(), fix_images(), normalize(), run_sync() (+4 more)
+Cohesion: 0.07
+Nodes (8): get_supabase(), Get the Supabase admin client., OdooClient, clean_names(), remove_pokemon(), fix_images(), run_zeroing(), test_bilateral()
 
 ### Community 64 - "Community 64"
 Cohesion: 0.09
@@ -704,12 +709,8 @@ Cohesion: 0.10
 Nodes (20): compilerOptions, allowImportingTsExtensions, erasableSyntaxOnly, jsx, lib, module, moduleDetection, moduleResolution (+12 more)
 
 ### Community 73 - "Community 73"
-Cohesion: 0.10
-Nodes (7): import_collection(), public_sync_webhook(), Public webhook (protected by token) to trigger syncs.     Useful for GitHub Act, AdminService, Asynchronously runs a scraper for a specific source and tracks progress., Fetches traffic metrics from Cloudflare GraphQL API., Any
-
-### Community 74 - "Community 74"
-Cohesion: 0.11
-Nodes (11): DataRetentionManager, Gestor de retención y archivo de datos históricos, Archiva datos antiguos, Limpia datos expirados según las políticas de retención, Obtiene estadísticas de uso de almacenamiento, Pruebas para el sistema de gestión de datos, Probar actualizaciones incrementales, Probar detección de cambios (+3 more)
+Cohesion: 0.12
+Nodes (6): import_collection(), public_sync_webhook(), Public webhook (protected by token) to trigger syncs.     Useful for GitHub Act, AdminService, Fetches traffic metrics from Cloudflare GraphQL API., Any
 
 ### Community 75 - "Community 75"
 Cohesion: 0.10
@@ -773,7 +774,7 @@ Nodes (10): main(), Probar operaciones de colecciones (simulado), Probar operaci
 
 ### Community 90 - "Community 90"
 Cohesion: 0.12
-Nodes (8): ApiHandler, corsHeaders, handleAdminEndpoint(), handleCardsEndpoint(), handleImportEndpoint(), normalizeCondition(), RequestParams, sanitizeSlug()
+Nodes (7): ApiHandler, corsHeaders, handleCardsEndpoint(), handleImportEndpoint(), normalizeCondition(), RequestParams, sanitizeSlug()
 
 ### Community 92 - "Community 92"
 Cohesion: 0.11
@@ -816,8 +817,8 @@ Cohesion: 0.07
 Nodes (29): active, bases:Crear nueva base, canvas:Crear nuevo lienzo, command-palette:Abrir paleta de comandos, daily-notes:Abrir la nota de hoy, graph:Abrir vista gráfica, switcher:Abrir selector rápido, templates:Insertar plantilla (+21 more)
 
 ### Community 102 - "Community 102"
-Cohesion: 0.12
-Nodes (16): Reserve one physical card on SortSwift during web checkout.         Expires aut, Custom exception for SortSwift API errors., Release a reservation, returning the card to the sellable pool., Commit a reservation permanently (deducts stock) once order is paid/confirmed., Direct POS sale deduction: reserves for 5 min and immediately commits., Reset the sandbox fixture back to its documented pristine test state., Official SortSwift Inventory API Client (v1.12.0) for Geekorium., Check inventory API health status. (+8 more)
+Cohesion: 0.14
+Nodes (13): Reserve one physical card on SortSwift during web checkout.         Expires aut, Release a reservation, returning the card to the sellable pool., Commit a reservation permanently (deducts stock) once order is paid/confirmed., Direct POS sale deduction: reserves for 5 min and immediately commits., Reset the sandbox fixture back to its documented pristine test state., Official SortSwift Inventory API Client (v1.12.0) for Geekorium., Check inventory API health status., Fetch full or incremental inventory grouped by catalog product. (+5 more)
 
 ### Community 103 - "Community 103"
 Cohesion: 0.12
@@ -920,8 +921,8 @@ Cohesion: 0.13
 Nodes (14): dependencies, react, react-dom, @supabase/supabase-js, devDependencies, vite, @vitejs/plugin-react, name (+6 more)
 
 ### Community 128 - "Community 128"
-Cohesion: 0.14
-Nodes (8): Probar rotación de User-Agents, Probar limitación de tasa, Probar detección de CAPTCHA, Probar detección de bloqueos, Ejecutar todas las pruebas, Pruebas para el sistema anti-bot, run_tests(), TestAntiBotManager
+Cohesion: 0.15
+Nodes (12): CartService, Retrieves active cart ID or creates one if it doesn't exist., Adds or updates an item in the cart., Retrieves items in the user's cart with product details., Finalizes the purchase, records items, reduces stock, and clears the cart., Any, _cart_supabase_mock(), Unit tests for CartService and CollectionService commerce flows. Uses mocks — d (+4 more)
 
 ### Community 129 - "Community 129"
 Cohesion: 0.14
@@ -944,8 +945,8 @@ Cohesion: 0.18
 Nodes (7): RateLimiter, Limitador de tasa para evitar sobrecarga de servidores, Verifica si se puede hacer una nueva petición, Registra una petición realizada, Calcula cuánto tiempo esperar antes de la siguiente petición, Espera si es necesario según los límites de tasa, Acciones a realizar antes de una petición
 
 ### Community 134 - "Community 134"
-Cohesion: 0.18
-Nodes (9): handleCartEndpoint(), corsHeaders, odooJsonRpc(), corsHeaders, odooJsonRpc(), odooJsonRpc(), fetch, testPerformance() (+1 more)
+Cohesion: 0.13
+Nodes (11): handleAdminEndpoint(), handleCartEndpoint(), corsHeaders, odooJsonRpc(), corsHeaders, odooJsonRpc(), corsHeaders, odooJsonRpc() (+3 more)
 
 ### Community 135 - "Community 135"
 Cohesion: 0.25
@@ -956,12 +957,12 @@ Cohesion: 0.17
 Nodes (11): 1. Identidad Visual por Juego (Design System), 2. Estructura de Base de Datos (Supabase), 3. Lógica del Sistema ELO Multi-TCG, 4. Implementación Propuesta, Constantes, Fórmulas, Sistema de Torneos y Ranking ELO Multi-TCG - Geekorium, Tabla: `matches` (Historial de Partidas) (+3 more)
 
 ### Community 137 - "Community 137"
-Cohesion: 0.13
-Nodes (7): run_health_audit(), Utility to return a test card back to available in SortSwift sandbox only if rem, return_card_to_sandbox(), test_1_web_checkout_and_odoo_confirm(), test_2_web_checkout_and_cancellation_release(), test_3_store_pos_delivery_direct_sale(), test_full_sale_lifecycle()
+Cohesion: 0.12
+Nodes (9): Setup logging for a specific game sync., setup_logging(), run_health_audit(), Utility to return a test card back to available in SortSwift sandbox only if rem, return_card_to_sandbox(), test_1_web_checkout_and_odoo_confirm(), test_2_web_checkout_and_cancellation_release(), test_3_store_pos_delivery_direct_sale() (+1 more)
 
 ### Community 138 - "Community 138"
-Cohesion: 0.15
-Nodes (8): ensure_category(), fetch_image_b64(), run_bulk_export(), ensure_category(), run_export_all(), OdooClient, OdooClient, run_e2e_test()
+Cohesion: 0.18
+Nodes (4): ensure_category(), run_export_all(), OdooClient, run_e2e_test()
 
 ### Community 139 - "Community 139"
 Cohesion: 0.17
@@ -1007,13 +1008,9 @@ Nodes (11): mock_supabase_client(), project_ref(), Pytest configuration and fixt
 Cohesion: 0.17
 Nodes (6): Obtener carta por nombre y juego, Obtener impresiones de cartas, Buscar cartas con precios usando función SQL, Obtener carta con sus precios actuales, Búsqueda simple de cartas con precios, TCGAPIHelper
 
-### Community 150 - "Community 150"
-Cohesion: 0.22
-Nodes (6): AdminDashboard(), CloudflareAnalytics(), CloudflareStats, Job, PriceChange, PriceUpdateHistory()
-
 ### Community 151 - "Community 151"
-Cohesion: 0.12
-Nodes (10): Resultado de un lote de scraping, Calcula la tasa de éxito del scraping, Calcula la duración del scraping en segundos, ScrapingBatch, Probar rotación de User-Agents, Probar limitación de tasa, Probar detección de CAPTCHA, Probar detección de bloqueos (+2 more)
+Cohesion: 0.33
+Nodes (5): 1. Revert de Modal y Restauración del Estilo Moxfield, 2. Detección e Ingesta de Contenedores en Verde de SortSwift, 🛠️ Acciones Realizadas, Daily Log — 2026-11-13, 🎯 Objetivo
 
 ### Community 152 - "Community 152"
 Cohesion: 0.15
@@ -1060,16 +1057,16 @@ Cohesion: 0.27
 Nodes (9): main(), Probar Edge Functions, Probar que las variables de entorno están configuradas, Probar conexión real a Supabase, test_edge_functions(), test_environment_variables(), test_sql_functions(), test_supabase_connection_integration() (+1 more)
 
 ### Community 165 - "Community 165"
-Cohesion: 0.29
-Nodes (9): Setup logging for a specific game sync., setup_logging(), extract_set_info(), fetch_all_cards(), generate_id(), get_or_create_game(), Generate an idempotent UUID based on a string., Fetch all cards from the community database. (+1 more)
+Cohesion: 0.39
+Nodes (7): extract_set_info(), fetch_all_cards(), generate_id(), get_or_create_game(), Generate an idempotent UUID based on a string., Fetch all cards from the community database., sync_catalog()
 
 ### Community 166 - "Community 166"
 Cohesion: 0.24
 Nodes (9): fetch_digimon_cards(), get_or_create_source(), Trigger materialized view refresh via RPC if possible., Fetch all cards from the Digimon TCG API., Ensure the Digimon API source exists in the DB., Sync Digimon cards into the Supabase database., refresh_view(), sync_digimon_data() (+1 more)
 
 ### Community 167 - "Community 167"
-Cohesion: 0.20
-Nodes (10): dependencies, lucide-react, playwright, react, react-dom, react-router-dom, @supabase/supabase-js, @tailwindcss/postcss (+2 more)
+Cohesion: 0.22
+Nodes (9): dependencies, lucide-react, react, react-dom, react-router-dom, @supabase/supabase-js, @tailwindcss/postcss, @tailwindcss/vite (+1 more)
 
 ### Community 168 - "Community 168"
 Cohesion: 0.20
@@ -1264,8 +1261,8 @@ Cohesion: 0.22
 Nodes (8): 1. Registro Declarativo Omni-TCG (`frontend/src/config/tcgRegistry.ts`), 2. Refactorización de Componentes Frontend, 3. Data Loader SortSwift-First (`scripts/sync/riftbound/sync_sortswift_riftbound.py`), 4. Corrección de Escaneos Reales, Enlaces TCGPlayer y Desacoplamiento Integral (Commit d2dfc835), Daily Log — 2026-11-08, Enlaces de Arquitectura, Objetivos del Día, Tareas Completadas
 
 ### Community 217 - "Community 217"
-Cohesion: 0.44
-Nodes (6): corsHeaders, commitSortSwiftReservation(), deductSortSwiftDirectSale(), getSortSwiftApiKey(), releaseSortSwiftReservation(), reserveSortSwiftCard()
+Cohesion: 0.38
+Nodes (7): corsHeaders, odooJsonRpc(), commitSortSwiftReservation(), deductSortSwiftDirectSale(), getSortSwiftApiKey(), releaseSortSwiftReservation(), reserveSortSwiftCard()
 
 ### Community 218 - "Community 218"
 Cohesion: 0.31
@@ -1340,8 +1337,8 @@ Cohesion: 0.52
 Nodes (6): check_env(), check_git(), check_laws(), main(), print_summary(), run_cmd()
 
 ### Community 236 - "Community 236"
-Cohesion: 0.33
-Nodes (6): import_mtga_file(), parse_mtga_line(), Any, Script para importar inventario en formato MTGA/Arena Formato: <cantidad> <nomb, Parsea una línea en formato MTGA y retorna un diccionario con los datos., Importa un archivo en formato MTGA a la tabla products.
+Cohesion: 0.21
+Nodes (5): Custom exception for SortSwift API errors., SortSwiftAPIError, Exception, TestEnvironmentSegregationContracts, TestSortSwiftSecurityContracts
 
 ### Community 237 - "Community 237"
 Cohesion: 0.43
@@ -1447,10 +1444,6 @@ Nodes (4): ⚠️ Anti-Patrones a Evitar (Don'ts), 📂 Ejemplos en el Codebase,
 Cohesion: 0.40
 Nodes (4): 1. ⚙️ Configuracion Inicial Realizada, 2. 🧩 Plugins de Obsidian Altamente Recomendados, 3. 🔄 El Ciclo de Desarrollo Aumentado (AI + Obsidian + Code), 4. ⌨️ Atajos Clave en Obsidian
 
-### Community 263 - "Community 263"
-Cohesion: 0.50
-Nodes (3): 3. Funciones SQL Avanzadas, get_card_prices(card_uuid, condition_filter), search_cards_with_prices(search_query, game_code_filter, limit_count)
-
 ### Community 264 - "Community 264"
 Cohesion: 0.29
 Nodes (6): Agent Rules for Documentation:, Engineering Knowledge Vault (Obsidian PKM), Key Tools, MCP Tools: code-review-graph, When to use graph tools FIRST, Workflow
@@ -1472,8 +1465,8 @@ Cohesion: 0.40
 Nodes (4): 1. Gestión de Base de Datos Multi-Entorno, 2. Replicación de Esquemas, 3. SEO en Entornos de Preview, Lecciones Aprendidas - TCG Project
 
 ### Community 269 - "Community 269"
-Cohesion: 0.40
-Nodes (4): dest, __dirname, __filename, src
+Cohesion: 0.14
+Nodes (12): Path, supabase, supabase, Asynchronously runs a scraper for a specific source and tracks progress., clean_text(), derive_set_code(), fetch_live_sortswift_cards(), map_bin_to_store_location() (+4 more)
 
 ### Community 270 - "Community 270"
 Cohesion: 0.40
@@ -1579,10 +1572,6 @@ Nodes (4): purchase_uris, cardhoarder, cardmarket, tcgplayer
 Cohesion: 0.50
 Nodes (4): related_uris, edhrec, tcgplayer_infinite_articles, tcgplayer_infinite_decks
 
-### Community 299 - "Community 299"
-Cohesion: 0.50
-Nodes (3): env, envContent, seed()
-
 ### Community 300 - "Community 300"
 Cohesion: 0.67
 Nodes (3): find_cardtrader_match(), main(), Applies the 4 Mapping Rules (CGS -> CardTrader)
@@ -1598,6 +1587,10 @@ Nodes (3): imports, @supabase/functions-js, @supabase/server
 ### Community 303 - "Community 303"
 Cohesion: 0.50
 Nodes (3): imports, @supabase/functions-js, @supabase/server
+
+### Community 304 - "Community 304"
+Cohesion: 0.33
+Nodes (6): DiscoveryIcon(), PactIcon(), PreparationIcon(), SelectionIcon(), VideoPlaceholder(), HelpSection()
 
 ### Community 305 - "Community 305"
 Cohesion: 0.50
@@ -1691,20 +1684,40 @@ Nodes (3): 6.1 Riesgos Identificados, 6.2 Plan de Rollback, 6. Riesgos y Mitigac
 Cohesion: 0.67
 Nodes (3): 9.1 Stakeholders, 9.2 Sign-off, 9. Aprobación
 
+### Community 343 - "Community 343"
+Cohesion: 0.38
+Nodes (6): import_manabox_csv(), map_condition(), map_finish(), Maps Manabox condition to DB condition., Maps Manabox foil status to DB finish., Imports a Manabox CSV export into the public.products table.
+
+### Community 344 - "Community 344"
+Cohesion: 0.40
+Nodes (4): dest, __dirname, __filename, src
+
+### Community 476 - "Community 476"
+Cohesion: 0.70
+Nodes (4): ensure_category(), fetch_image_b64(), run_bulk_export(), OdooClient
+
+### Community 488 - "Community 488"
+Cohesion: 0.50
+Nodes (3): 3. Funciones SQL Avanzadas, get_card_prices(card_uuid, condition_filter), search_cards_with_prices(search_query, game_code_filter, limit_count)
+
+### Community 489 - "Community 489"
+Cohesion: 0.50
+Nodes (3): env, envContent, seed()
+
 ## Knowledge Gaps
-- **2329 isolated node(s):** `name`, `version`, `private`, `dev`, `build` (+2324 more)
+- **2337 isolated node(s):** `name`, `version`, `private`, `dev`, `build` (+2332 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **55 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **58 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `datetime` connect `Community 11` to `Community 128`, `Community 256`, `Community 137`, `Community 141`, `Community 14`, `Community 271`, `Community 24`, `Community 282`, `Community 32`, `Community 34`, `Community 166`, `Community 48`, `Community 63`, `Community 66`, `Community 324`, `Community 71`, `Community 73`, `Community 74`, `Community 81`, `Community 87`, `Community 89`, `Community 218`, `Community 247`, `Community 352`, `Community 97`, `Community 98`, `Community 230`, `Community 105`, `Community 237`, `Community 116`, `Community 117`, `Community 119`, `Community 252`?**
-  _High betweenness centrality (0.052) - this node is a cross-community bridge._
-- **Why does `get_supabase_admin()` connect `Community 48` to `Community 73`, `Community 137`, `Community 41`, `Community 236`, `Community 152`, `Community 125`, `Community 62`, `Community 63`?**
-  _High betweenness centrality (0.045) - this node is a cross-community bridge._
-- **Why does `Client` connect `Community 152` to `Community 48`, `Community 125`?**
-  _High betweenness centrality (0.040) - this node is a cross-community bridge._
+- **Why does `datetime` connect `Community 11` to `Community 256`, `Community 137`, `Community 141`, `Community 14`, `Community 271`, `Community 282`, `Community 32`, `Community 34`, `Community 166`, `Community 48`, `Community 59`, `Community 63`, `Community 66`, `Community 324`, `Community 71`, `Community 73`, `Community 74`, `Community 81`, `Community 87`, `Community 89`, `Community 218`, `Community 247`, `Community 352`, `Community 97`, `Community 98`, `Community 230`, `Community 105`, `Community 237`, `Community 116`, `Community 117`, `Community 119`, `Community 252`?**
+  _High betweenness centrality (0.056) - this node is a cross-community bridge._
+- **Why does `Path` connect `Community 269` to `Icons, Help & Pre-Registration`, `Community 489`, `Community 235`, `Community 15`, `Community 272`, `Community 21`, `Community 214`, `Community 344`, `Community 63`?**
+  _High betweenness centrality (0.041) - this node is a cross-community bridge._
+- **Why does `fetch` connect `Community 134` to `Banners, Events & Games`, `Community 489`, `Community 301`, `Community 274`, `Community 246`, `Community 217`, `Community 90`?**
+  _High betweenness centrality (0.031) - this node is a cross-community bridge._
 - **Are the 3 inferred relationships involving `datetime` (e.g. with `CardData` and `CardPrice`) actually correct?**
   _`datetime` has 3 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 6 inferred relationships involving `TCGDatabaseAPI` (e.g. with `SupabaseAPITester` and `.__init__()`) actually correct?**

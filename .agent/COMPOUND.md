@@ -788,3 +788,12 @@ enderVersionsContent(). En desktop (md:) se renderiza en la columna izquierda de
   2. **Aislamiento Root con React Portal (createPortal)**: El modal ahora se renderiza vía createPortal(modalNode, document.body) con backdrop z-[300] bg-black/75 backdrop-blur-md. Cubre perfectamente la barra inferior y el botón flotante de WhatsApp sin artefactos visuales.
   3. **Unificación Táctil con Aspect Ratio Adaptativo**: El contenedor de imagen ajusta su ancho proporcional (w-[170px] xs:w-[190px] sm:w-[220px] md:w-[240px] aspect-[5/7]), y el modal utiliza overflow-y-auto md:overflow-hidden con scroll nativo fluido en smartphones.
 - **Resultado**: Interfaz móvil 100% optimizada, validada visualmente con screenshots en viewport móvil (390x844) en Magic: The Gathering (Aven Brigadier) y One Piece TCG (Black Maria).
+
+
+---
+
+## 🧠 2026-11-17 — Batería Integral de Pruebas y Workflow `/pruebame`
+
+- **Qué se resolvió:** Se implementó el orquestador unificado `run_tests.ps1` (`-Mode smoke | unit | e2e | full`), se ampliaron las pruebas unitarias en `frontend/src/tests/` (`Card`, `CartContext`, `url_and_images`, `translations_and_codes`) y `tests/unit/test_system_contracts.py`, se actualizó `frontend/playwright.config.ts` a `pnpm dev` con proyecto `smoke` desacoplado de credenciales admin, y se creó `.agent/workflows/pruebame.md` (`/pruebame`) como gate obligatorio al inyectar features.
+- **Lección clave:** En entornos con `.env` unificado en raíz, `pnpm dev` dentro de `frontend/` no hereda automáticamente `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY`, por lo que `run_tests.ps1` carga `.env` raíz e inyecta fallback local no-secreto para smoke E2E. Además, `pnpm --config.verify-deps-before-run=false` evita el bloqueo `ERR_PNPM_IGNORED_BUILDS` al invocar scripts en Windows.
+- **Verificación:** `.\run_tests.ps1 -Mode smoke` (34 Python unit + 6 suites/30 Jest + 6 Playwright smoke) y `pnpm build` en `frontend/` pasando 100%.
