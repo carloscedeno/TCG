@@ -18,10 +18,10 @@ class OdooClient:
             logger.warning("Odoo credentials missing from environment. Odoo Sync will be disabled.")
         else:
             try:
-                common = xmlrpc.client.ServerProxy('{}/xmlrpc/2/common'.format(self.url))
+                common = xmlrpc.client.ServerProxy('{}/xmlrpc/2/common'.format(self.url), allow_none=True)
                 self.uid = common.authenticate(self.db, self.username, self.password, {})
                 if self.uid:
-                    self.models = xmlrpc.client.ServerProxy('{}/xmlrpc/2/object'.format(self.url))
+                    self.models = xmlrpc.client.ServerProxy('{}/xmlrpc/2/object'.format(self.url), allow_none=True)
                     logger.info(f"Authenticated with Odoo (UID: {self.uid})")
                 else:
                     logger.error("Failed to authenticate with Odoo (Invalid credentials)")

@@ -340,8 +340,8 @@
     "semantic_hash": ""
   },
   "frontend/src/pages/Admin/InventoryPage.tsx": {
-    "mtime": 1794928277.761013,
-    "ast_hash": "bbced90ce555ab5dae6f0b4bfed1277b",
+    "mtime": 1794958569.51232,
+    "ast_hash": "af9505d0c700617db2ce04777b26e70e",
     "semantic_hash": ""
   },
   "frontend/src/pages/Admin/LoginPage.tsx": {
@@ -965,8 +965,8 @@
     "semantic_hash": ""
   },
   "frontend/package.json": {
-    "mtime": 1794934389.0487573,
-    "ast_hash": "24b3334e00404dd3400ddb2759e1b7f9",
+    "mtime": 1794964513.9009967,
+    "ast_hash": "cfa0c5d181f05bd084006df77be97e3c",
     "semantic_hash": ""
   },
   "frontend/playwright.config.ts": {
@@ -3735,8 +3735,8 @@
     "semantic_hash": ""
   },
   ".github/workflows/deploy.yml": {
-    "mtime": 1780595286.2967248,
-    "ast_hash": "69b0ace8e0692441bd359cc369b77f00",
+    "mtime": 1794964567.7960646,
+    "ast_hash": "10d2f2df0fe0ab01ac57962866b4da37",
     "semantic_hash": ""
   },
   ".github/workflows/omni-sync.yml": {
@@ -4720,12 +4720,12 @@
     "semantic_hash": ""
   },
   "graphify-out/converted/registros_de_inventario_2026_05_22_02de5ee5.md": {
-    "mtime": 1794950521.0656826,
+    "mtime": 1794980813.8575122,
     "ast_hash": "01f5eab91ac7aff3e3d39389958da667",
     "semantic_hash": ""
   },
   "graphify-out/converted/registros_de_inventario_2026_05_26_3ed7a95a.md": {
-    "mtime": 1794950514.2544942,
+    "mtime": 1794980805.4862607,
     "ast_hash": "51785020f4be4fc21f183e109ff0750b",
     "semantic_hash": ""
   },
@@ -5675,8 +5675,8 @@
     "semantic_hash": ""
   },
   "frontend/src/components/Admin/SortSwiftSyncModal.tsx": {
-    "mtime": 1794886008.9587271,
-    "ast_hash": "76e9cd3bec09b94edb3c7caaa7ebb8bb",
+    "mtime": 1794964254.1034617,
+    "ast_hash": "6506231852e9ec33f55aaa6c871090ca",
     "semantic_hash": ""
   },
   "scripts/sync/migrate_trello_to_odoo.py": {
@@ -5750,8 +5750,18 @@
     "semantic_hash": ""
   },
   "frontend/pnpm-workspace.yaml": {
-    "mtime": 1794934335.1236572,
-    "ast_hash": "eac7850e895f44effb172cd815042b97",
+    "mtime": 1794980646.411374,
+    "ast_hash": "55ef4742de41348c6f40549451d7d1e7",
+    "semantic_hash": ""
+  },
+  "docs/reports/sortswift_sync_summary.json": {
+    "mtime": 1794964014.291672,
+    "ast_hash": "abfd4bf96154aecd91d12baf53d22eae",
+    "semantic_hash": ""
+  },
+  "scripts/sync/sortswift/generate_sync_audit_report.py": {
+    "mtime": 1794963973.0083199,
+    "ast_hash": "a4aae63dc084d72e5aebe86986c94bed",
     "semantic_hash": ""
   }
 }

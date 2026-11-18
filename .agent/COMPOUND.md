@@ -812,3 +812,14 @@ enderVersionsContent(). En desktop (md:) se renderiza en la columna izquierda de
   2. Resolución de conflicto de versiones en Playwright (`package.json` tenía `playwright@1.62.1` en `dependencies` y `@playwright/test@1.58.2` en `devDependencies`): eliminado duplicado de producción y actualizado `@playwright/test` a `^1.65.1` con su binario Chromium v1255.
   3. Habilitado `esbuild: true` y `unrs-resolver: true` en `frontend/pnpm-workspace.yaml` para eliminar bloqueos `ERR_PNPM_IGNORED_BUILDS` de pnpm v11.
 - **Verificación:** `legacy-scan` (0 hallazgos en `src`), `pnpm run build` (5.67s), `pnpm test` (2/2 suites, 13/13 tests), navegador Chromium real en `/`, `/admin/login`, `/update-password` (0 errores de consola), y `pytest tests/` (27/30 pasando; 3 fallos preexistentes de asyncio/Python 3.12).
+
+---
+
+## Sesión: 2026-11-18 — Auditoría SortSwift, Descarga de CSV y CardModal en Inventario
+
+### 🎯 Objetivos Logrados
+1. **Modal de Visualización en Inventario (`CardModal.tsx`)**: Integrado preview in-page estilo Moxfield en la tabla de inventario administrativo (`InventoryPage.tsx`). Miniaturas y títulos de cartas son interactivos con overlay de búsqueda para abrir el modal sin recargar página.
+2. **Auditoría Exhaustiva SortSwift vs Supabase DEV**: Conexión directa a la API en vivo de SortSwift descubriendo 4,072 cartas singles RAW y 9,768 unidades físicas disponibles frente a los 931 productos previos en DEV.
+3. **Generación de Reporte CSV Transaccional**: Generado `sortswift_sync_audit_detail.csv` con 4,334 líneas de detalle por lote, código de barras, condición, acabado, precio, costo y bin físico.
+4. **Actualización de Terminal Matrix (`SortSwiftSyncModal.tsx`)**: Refactorizada la consola Matrix para mostrar el desglose real por TCG de cartas singles y dos botones interactivos para descargar el CSV directamente desde el navegador.
+5. **Corrección de Despliegue CI GitHub Pages (`deploy.yml`)**: Solucionado error `ERR_PNPM_LOCKFILE_CONFIG_MISMATCH` incorporando `--no-frozen-lockfile` en el workflow de GitHub Actions.

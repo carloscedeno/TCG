@@ -190,7 +190,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "strataframework_src_main_jsx_src_main",
-      "community": 152,
+      "community": 41,
       "norm_label": "main.jsx"
     },
     {
@@ -200,7 +200,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_main_root",
-      "community": 152,
+      "community": 41,
       "norm_label": "root"
     },
     {
@@ -4478,7 +4478,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "loaders_main_tcgdataloader_init",
-      "community": 32,
+      "community": 25,
       "norm_label": ".__init__()"
     },
     {
@@ -5418,7 +5418,7 @@
       "source_location": "L107",
       "_origin": "ast",
       "id": "data_models_scrapingbatch",
-      "community": 24,
+      "community": 285,
       "norm_label": "scrapingbatch"
     },
     {
@@ -5428,7 +5428,7 @@
       "source_location": "L117",
       "_origin": "ast",
       "id": "data_models_scrapingbatch_success_rate",
-      "community": 24,
+      "community": 285,
       "norm_label": ".success_rate()"
     },
     {
@@ -5438,7 +5438,7 @@
       "source_location": "L124",
       "_origin": "ast",
       "id": "data_models_scrapingbatch_duration",
-      "community": 24,
+      "community": 285,
       "norm_label": ".duration()"
     },
     {
@@ -5758,7 +5758,7 @@
       "source_location": "L108",
       "_origin": "ast",
       "id": "data_models_rationale_108",
-      "community": 24,
+      "community": 285,
       "norm_label": "resultado de un lote de scraping"
     },
     {
@@ -5768,7 +5768,7 @@
       "source_location": "L118",
       "_origin": "ast",
       "id": "data_models_rationale_118",
-      "community": 24,
+      "community": 285,
       "norm_label": "calcula la tasa de exito del scraping"
     },
     {
@@ -5778,7 +5778,7 @@
       "source_location": "L125",
       "_origin": "ast",
       "id": "data_models_rationale_125",
-      "community": 24,
+      "community": 285,
       "norm_label": "calcula la duracion del scraping en segundos"
     },
     {
@@ -9960,6 +9960,686 @@
       "norm_label": "std/"
     },
     {
+      "label": "sortswift_sync_summary.json",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary",
+      "community": 489,
+      "norm_label": "sortswift_sync_summary.json"
+    },
+    {
+      "label": "total_sortswift_items",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L2",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_total_sortswift_items",
+      "community": 489,
+      "norm_label": "total_sortswift_items"
+    },
+    {
+      "label": "total_sortswift_units",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_total_sortswift_units",
+      "community": 489,
+      "norm_label": "total_sortswift_units"
+    },
+    {
+      "label": "total_db_products",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_total_db_products",
+      "community": 489,
+      "norm_label": "total_db_products"
+    },
+    {
+      "label": "by_tcg",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_by_tcg",
+      "community": 489,
+      "norm_label": "by_tcg"
+    },
+    {
+      "label": "MTG",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_by_tcg_mtg",
+      "community": 351,
+      "norm_label": "mtg"
+    },
+    {
+      "label": "agregados",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L7",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_mtg_agregados",
+      "community": 351,
+      "norm_label": "agregados"
+    },
+    {
+      "label": "unidades_agregadas",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L8",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_mtg_unidades_agregadas",
+      "community": 351,
+      "norm_label": "unidades_agregadas"
+    },
+    {
+      "label": "actualizados",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L9",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_mtg_actualizados",
+      "community": 351,
+      "norm_label": "actualizados"
+    },
+    {
+      "label": "unidades_actualizadas",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L10",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_mtg_unidades_actualizadas",
+      "community": 351,
+      "norm_label": "unidades_actualizadas"
+    },
+    {
+      "label": "en_cero",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L11",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_mtg_en_cero",
+      "community": 351,
+      "norm_label": "en_cero"
+    },
+    {
+      "label": "unidades_en_cero",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L12",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_mtg_unidades_en_cero",
+      "community": 351,
+      "norm_label": "unidades_en_cero"
+    },
+    {
+      "label": "total_items_ss",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L13",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_mtg_total_items_ss",
+      "community": 351,
+      "norm_label": "total_items_ss"
+    },
+    {
+      "label": "total_units_ss",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L14",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_mtg_total_units_ss",
+      "community": 351,
+      "norm_label": "total_units_ss"
+    },
+    {
+      "label": "OPC",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L16",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_by_tcg_opc",
+      "community": 427,
+      "norm_label": "opc"
+    },
+    {
+      "label": "agregados",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L17",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_opc_agregados",
+      "community": 427,
+      "norm_label": "agregados"
+    },
+    {
+      "label": "unidades_agregadas",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L18",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_opc_unidades_agregadas",
+      "community": 427,
+      "norm_label": "unidades_agregadas"
+    },
+    {
+      "label": "actualizados",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L19",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_opc_actualizados",
+      "community": 427,
+      "norm_label": "actualizados"
+    },
+    {
+      "label": "unidades_actualizadas",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L20",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_opc_unidades_actualizadas",
+      "community": 427,
+      "norm_label": "unidades_actualizadas"
+    },
+    {
+      "label": "en_cero",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L21",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_opc_en_cero",
+      "community": 427,
+      "norm_label": "en_cero"
+    },
+    {
+      "label": "unidades_en_cero",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L22",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_opc_unidades_en_cero",
+      "community": 427,
+      "norm_label": "unidades_en_cero"
+    },
+    {
+      "label": "total_items_ss",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L23",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_opc_total_items_ss",
+      "community": 427,
+      "norm_label": "total_items_ss"
+    },
+    {
+      "label": "total_units_ss",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L24",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_opc_total_units_ss",
+      "community": 427,
+      "norm_label": "total_units_ss"
+    },
+    {
+      "label": "RFB",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L26",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_by_tcg_rfb",
+      "community": 470,
+      "norm_label": "rfb"
+    },
+    {
+      "label": "agregados",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L27",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_rfb_agregados",
+      "community": 470,
+      "norm_label": "agregados"
+    },
+    {
+      "label": "unidades_agregadas",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L28",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_rfb_unidades_agregadas",
+      "community": 470,
+      "norm_label": "unidades_agregadas"
+    },
+    {
+      "label": "actualizados",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L29",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_rfb_actualizados",
+      "community": 470,
+      "norm_label": "actualizados"
+    },
+    {
+      "label": "unidades_actualizadas",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L30",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_rfb_unidades_actualizadas",
+      "community": 470,
+      "norm_label": "unidades_actualizadas"
+    },
+    {
+      "label": "en_cero",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L31",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_rfb_en_cero",
+      "community": 470,
+      "norm_label": "en_cero"
+    },
+    {
+      "label": "unidades_en_cero",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L32",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_rfb_unidades_en_cero",
+      "community": 470,
+      "norm_label": "unidades_en_cero"
+    },
+    {
+      "label": "total_items_ss",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L33",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_rfb_total_items_ss",
+      "community": 470,
+      "norm_label": "total_items_ss"
+    },
+    {
+      "label": "total_units_ss",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L34",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_rfb_total_units_ss",
+      "community": 470,
+      "norm_label": "total_units_ss"
+    },
+    {
+      "label": "PKM",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L36",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_by_tcg_pkm",
+      "community": 455,
+      "norm_label": "pkm"
+    },
+    {
+      "label": "agregados",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L37",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_pkm_agregados",
+      "community": 455,
+      "norm_label": "agregados"
+    },
+    {
+      "label": "unidades_agregadas",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L38",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_pkm_unidades_agregadas",
+      "community": 455,
+      "norm_label": "unidades_agregadas"
+    },
+    {
+      "label": "actualizados",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L39",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_pkm_actualizados",
+      "community": 455,
+      "norm_label": "actualizados"
+    },
+    {
+      "label": "unidades_actualizadas",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L40",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_pkm_unidades_actualizadas",
+      "community": 455,
+      "norm_label": "unidades_actualizadas"
+    },
+    {
+      "label": "en_cero",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L41",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_pkm_en_cero",
+      "community": 455,
+      "norm_label": "en_cero"
+    },
+    {
+      "label": "unidades_en_cero",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L42",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_pkm_unidades_en_cero",
+      "community": 455,
+      "norm_label": "unidades_en_cero"
+    },
+    {
+      "label": "total_items_ss",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L43",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_pkm_total_items_ss",
+      "community": 455,
+      "norm_label": "total_items_ss"
+    },
+    {
+      "label": "total_units_ss",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L44",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_pkm_total_units_ss",
+      "community": 455,
+      "norm_label": "total_units_ss"
+    },
+    {
+      "label": "DGM",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L46",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_by_tcg_dgm",
+      "community": 288,
+      "norm_label": "dgm"
+    },
+    {
+      "label": "agregados",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L47",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_dgm_agregados",
+      "community": 288,
+      "norm_label": "agregados"
+    },
+    {
+      "label": "unidades_agregadas",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L48",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_dgm_unidades_agregadas",
+      "community": 288,
+      "norm_label": "unidades_agregadas"
+    },
+    {
+      "label": "actualizados",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L49",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_dgm_actualizados",
+      "community": 288,
+      "norm_label": "actualizados"
+    },
+    {
+      "label": "unidades_actualizadas",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L50",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_dgm_unidades_actualizadas",
+      "community": 288,
+      "norm_label": "unidades_actualizadas"
+    },
+    {
+      "label": "en_cero",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L51",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_dgm_en_cero",
+      "community": 288,
+      "norm_label": "en_cero"
+    },
+    {
+      "label": "unidades_en_cero",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L52",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_dgm_unidades_en_cero",
+      "community": 288,
+      "norm_label": "unidades_en_cero"
+    },
+    {
+      "label": "total_items_ss",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L53",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_dgm_total_items_ss",
+      "community": 288,
+      "norm_label": "total_items_ss"
+    },
+    {
+      "label": "total_units_ss",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L54",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_dgm_total_units_ss",
+      "community": 288,
+      "norm_label": "total_units_ss"
+    },
+    {
+      "label": "FAB",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L56",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_by_tcg_fab",
+      "community": 329,
+      "norm_label": "fab"
+    },
+    {
+      "label": "agregados",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L57",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_fab_agregados",
+      "community": 329,
+      "norm_label": "agregados"
+    },
+    {
+      "label": "unidades_agregadas",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L58",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_fab_unidades_agregadas",
+      "community": 329,
+      "norm_label": "unidades_agregadas"
+    },
+    {
+      "label": "actualizados",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L59",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_fab_actualizados",
+      "community": 329,
+      "norm_label": "actualizados"
+    },
+    {
+      "label": "unidades_actualizadas",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L60",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_fab_unidades_actualizadas",
+      "community": 329,
+      "norm_label": "unidades_actualizadas"
+    },
+    {
+      "label": "en_cero",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L61",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_fab_en_cero",
+      "community": 329,
+      "norm_label": "en_cero"
+    },
+    {
+      "label": "unidades_en_cero",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L62",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_fab_unidades_en_cero",
+      "community": 329,
+      "norm_label": "unidades_en_cero"
+    },
+    {
+      "label": "total_items_ss",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L63",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_fab_total_items_ss",
+      "community": 329,
+      "norm_label": "total_items_ss"
+    },
+    {
+      "label": "total_units_ss",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L64",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_fab_total_units_ss",
+      "community": 329,
+      "norm_label": "total_units_ss"
+    },
+    {
+      "label": "GND",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L66",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_by_tcg_gnd",
+      "community": 343,
+      "norm_label": "gnd"
+    },
+    {
+      "label": "agregados",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L67",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_gnd_agregados",
+      "community": 343,
+      "norm_label": "agregados"
+    },
+    {
+      "label": "unidades_agregadas",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L68",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_gnd_unidades_agregadas",
+      "community": 343,
+      "norm_label": "unidades_agregadas"
+    },
+    {
+      "label": "actualizados",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L69",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_gnd_actualizados",
+      "community": 343,
+      "norm_label": "actualizados"
+    },
+    {
+      "label": "unidades_actualizadas",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L70",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_gnd_unidades_actualizadas",
+      "community": 343,
+      "norm_label": "unidades_actualizadas"
+    },
+    {
+      "label": "en_cero",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L71",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_gnd_en_cero",
+      "community": 343,
+      "norm_label": "en_cero"
+    },
+    {
+      "label": "unidades_en_cero",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L72",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_gnd_unidades_en_cero",
+      "community": 343,
+      "norm_label": "unidades_en_cero"
+    },
+    {
+      "label": "total_items_ss",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L73",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_gnd_total_items_ss",
+      "community": 343,
+      "norm_label": "total_items_ss"
+    },
+    {
+      "label": "total_units_ss",
+      "file_type": "code",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L74",
+      "_origin": "ast",
+      "id": "reports_sortswift_sync_summary_gnd_total_units_ss",
+      "community": 343,
+      "norm_label": "total_units_ss"
+    },
+    {
       "label": "stories.json",
       "file_type": "code",
       "source_file": "docs/specs/stories.json",
@@ -10263,7 +10943,7 @@
       "label": "react",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L20",
+      "source_location": "L19",
       "_origin": "ast",
       "id": "frontend_package_dependencies_react",
       "community": 167,
@@ -10273,7 +10953,7 @@
       "label": "react-dom",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L21",
+      "source_location": "L20",
       "_origin": "ast",
       "id": "frontend_package_dependencies_react_dom",
       "community": 167,
@@ -10283,7 +10963,7 @@
       "label": "react-router-dom",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L22",
+      "source_location": "L21",
       "_origin": "ast",
       "id": "frontend_package_dependencies_react_router_dom",
       "community": 167,
@@ -10293,7 +10973,7 @@
       "label": "workbox-window",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L23",
+      "source_location": "L22",
       "_origin": "ast",
       "id": "frontend_package_dependencies_workbox_window",
       "community": 167,
@@ -10303,7 +10983,7 @@
       "label": "devDependencies",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L25",
+      "source_location": "L24",
       "_origin": "ast",
       "id": "frontend_package_devdependencies",
       "community": 50,
@@ -10313,7 +10993,7 @@
       "label": "@babel/preset-env",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L26",
+      "source_location": "L25",
       "_origin": "ast",
       "id": "frontend_package_devdependencies_babel_preset_env",
       "community": 50,
@@ -10323,7 +11003,7 @@
       "label": "@babel/preset-react",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L27",
+      "source_location": "L26",
       "_origin": "ast",
       "id": "frontend_package_devdependencies_babel_preset_react",
       "community": 50,
@@ -10333,7 +11013,7 @@
       "label": "@babel/preset-typescript",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L28",
+      "source_location": "L27",
       "_origin": "ast",
       "id": "frontend_package_devdependencies_babel_preset_typescript",
       "community": 50,
@@ -10343,7 +11023,7 @@
       "label": "@eslint/js",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L29",
+      "source_location": "L28",
       "_origin": "ast",
       "id": "frontend_package_devdependencies_eslint_js",
       "community": 50,
@@ -10353,7 +11033,7 @@
       "label": "@playwright/test",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L30",
+      "source_location": "L29",
       "_origin": "ast",
       "id": "frontend_package_devdependencies_playwright_test",
       "community": 50,
@@ -10363,7 +11043,7 @@
       "label": "@testing-library/jest-dom",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L31",
+      "source_location": "L30",
       "_origin": "ast",
       "id": "frontend_package_devdependencies_testing_library_jest_dom",
       "community": 50,
@@ -10373,7 +11053,7 @@
       "label": "@testing-library/react",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L32",
+      "source_location": "L31",
       "_origin": "ast",
       "id": "frontend_package_devdependencies_testing_library_react",
       "community": 50,
@@ -10383,7 +11063,7 @@
       "label": "@types/jest",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L33",
+      "source_location": "L32",
       "_origin": "ast",
       "id": "frontend_package_devdependencies_types_jest",
       "community": 50,
@@ -10393,7 +11073,7 @@
       "label": "@types/node",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L34",
+      "source_location": "L33",
       "_origin": "ast",
       "id": "frontend_package_devdependencies_types_node",
       "community": 50,
@@ -10403,7 +11083,7 @@
       "label": "@types/react",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L35",
+      "source_location": "L34",
       "_origin": "ast",
       "id": "frontend_package_devdependencies_types_react",
       "community": 50,
@@ -10413,7 +11093,7 @@
       "label": "@types/react-dom",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L36",
+      "source_location": "L35",
       "_origin": "ast",
       "id": "frontend_package_devdependencies_types_react_dom",
       "community": 50,
@@ -10423,7 +11103,7 @@
       "label": "@vitejs/plugin-react",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L37",
+      "source_location": "L36",
       "_origin": "ast",
       "id": "frontend_package_devdependencies_vitejs_plugin_react",
       "community": 50,
@@ -10433,7 +11113,7 @@
       "label": "babel-jest",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L38",
+      "source_location": "L37",
       "_origin": "ast",
       "id": "frontend_package_devdependencies_babel_jest",
       "community": 50,
@@ -10443,7 +11123,7 @@
       "label": "eslint",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L39",
+      "source_location": "L38",
       "_origin": "ast",
       "id": "frontend_package_devdependencies_eslint",
       "community": 50,
@@ -10453,7 +11133,7 @@
       "label": "eslint-plugin-react-hooks",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L40",
+      "source_location": "L39",
       "_origin": "ast",
       "id": "frontend_package_devdependencies_eslint_plugin_react_hooks",
       "community": 50,
@@ -10463,7 +11143,7 @@
       "label": "eslint-plugin-react-refresh",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L41",
+      "source_location": "L40",
       "_origin": "ast",
       "id": "frontend_package_devdependencies_eslint_plugin_react_refresh",
       "community": 50,
@@ -10473,7 +11153,7 @@
       "label": "globals",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L42",
+      "source_location": "L41",
       "_origin": "ast",
       "id": "frontend_package_devdependencies_globals",
       "community": 50,
@@ -10483,7 +11163,7 @@
       "label": "jest",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L43",
+      "source_location": "L42",
       "_origin": "ast",
       "id": "frontend_package_devdependencies_jest",
       "community": 50,
@@ -10493,7 +11173,7 @@
       "label": "jest-environment-jsdom",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L44",
+      "source_location": "L43",
       "_origin": "ast",
       "id": "frontend_package_devdependencies_jest_environment_jsdom",
       "community": 50,
@@ -10503,7 +11183,7 @@
       "label": "postcss",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L45",
+      "source_location": "L44",
       "_origin": "ast",
       "id": "frontend_package_devdependencies_postcss",
       "community": 50,
@@ -10513,7 +11193,7 @@
       "label": "tailwindcss",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L46",
+      "source_location": "L45",
       "_origin": "ast",
       "id": "frontend_package_devdependencies_tailwindcss",
       "community": 50,
@@ -10523,7 +11203,7 @@
       "label": "ts-jest",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L47",
+      "source_location": "L46",
       "_origin": "ast",
       "id": "frontend_package_devdependencies_ts_jest",
       "community": 50,
@@ -10533,7 +11213,7 @@
       "label": "typescript",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L48",
+      "source_location": "L47",
       "_origin": "ast",
       "id": "frontend_package_devdependencies_typescript",
       "community": 50,
@@ -10543,7 +11223,7 @@
       "label": "typescript-eslint",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L49",
+      "source_location": "L48",
       "_origin": "ast",
       "id": "frontend_package_devdependencies_typescript_eslint",
       "community": 50,
@@ -10553,7 +11233,7 @@
       "label": "vite",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L50",
+      "source_location": "L49",
       "_origin": "ast",
       "id": "frontend_package_devdependencies_vite",
       "community": 50,
@@ -10563,7 +11243,7 @@
       "label": "vite-plugin-pwa",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L51",
+      "source_location": "L50",
       "_origin": "ast",
       "id": "frontend_package_devdependencies_vite_plugin_pwa",
       "community": 50,
@@ -10573,7 +11253,7 @@
       "label": "resolutions",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L53",
+      "source_location": "L52",
       "_origin": "ast",
       "id": "frontend_package_resolutions",
       "community": 277,
@@ -10583,7 +11263,7 @@
       "label": "handlebars",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L54",
+      "source_location": "L53",
       "_origin": "ast",
       "id": "frontend_package_resolutions_handlebars",
       "community": 277,
@@ -10593,7 +11273,7 @@
       "label": "source-map-js",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L55",
+      "source_location": "L54",
       "_origin": "ast",
       "id": "frontend_package_resolutions_source_map_js",
       "community": 277,
@@ -10603,7 +11283,7 @@
       "label": "brace-expansion",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L56",
+      "source_location": "L55",
       "_origin": "ast",
       "id": "frontend_package_resolutions_brace_expansion",
       "community": 277,
@@ -10613,41 +11293,61 @@
       "label": "overrides",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L58",
+      "source_location": "L57",
       "_origin": "ast",
       "id": "frontend_package_overrides",
-      "community": 227,
+      "community": 607,
       "norm_label": "overrides"
     },
     {
       "label": "handlebars",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L59",
+      "source_location": "L58",
       "_origin": "ast",
       "id": "frontend_package_overrides_handlebars",
-      "community": 227,
+      "community": 607,
       "norm_label": "handlebars"
     },
     {
       "label": "source-map-js",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L60",
+      "source_location": "L59",
       "_origin": "ast",
       "id": "frontend_package_overrides_source_map_js",
-      "community": 227,
+      "community": 607,
       "norm_label": "source-map-js"
     },
     {
       "label": "brace-expansion",
       "file_type": "code",
       "source_file": "frontend/package.json",
-      "source_location": "L61",
+      "source_location": "L60",
       "_origin": "ast",
       "id": "frontend_package_overrides_brace_expansion",
-      "community": 227,
+      "community": 607,
       "norm_label": "brace-expansion"
+    },
+    {
+      "label": "pnpm",
+      "file_type": "code",
+      "source_file": "frontend/package.json",
+      "source_location": "L62",
+      "_origin": "ast",
+      "id": "frontend_package_pnpm",
+      "community": 227,
+      "norm_label": "pnpm"
+    },
+    {
+      "label": "onlyBuiltDependencies",
+      "file_type": "code",
+      "source_file": "frontend/package.json",
+      "source_location": "L63",
+      "_origin": "ast",
+      "id": "frontend_package_pnpm_onlybuiltdependencies",
+      "community": 227,
+      "norm_label": "onlybuiltdependencies"
     },
     {
       "label": "playwright.config.ts",
@@ -10746,7 +11446,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_seed_seasons",
-      "community": 489,
+      "community": 269,
       "norm_label": "seed_seasons.js"
     },
     {
@@ -10756,7 +11456,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "frontend_seed_seasons_envcontent",
-      "community": 489,
+      "community": 269,
       "norm_label": "envcontent"
     },
     {
@@ -10766,7 +11466,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "frontend_seed_seasons_env",
-      "community": 489,
+      "community": 269,
       "norm_label": "env"
     },
     {
@@ -10776,7 +11476,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "frontend_seed_seasons_seed",
-      "community": 489,
+      "community": 269,
       "norm_label": "seed()"
     },
     {
@@ -11056,7 +11756,7 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "src_app_globalauthmodal",
-      "community": 5,
+      "community": 1,
       "norm_label": "globalauthmodal()"
     },
     {
@@ -11186,7 +11886,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "admin_bulkimportcatalogmodal",
-      "community": 4,
+      "community": 8,
       "norm_label": "bulkimportcatalogmodal.tsx"
     },
     {
@@ -11196,7 +11896,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "admin_bulkimportcatalogmodal_bulkimportcatalogmodalprops",
-      "community": 4,
+      "community": 8,
       "norm_label": "bulkimportcatalogmodalprops"
     },
     {
@@ -11206,7 +11906,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "admin_bulkimportcatalogmodal_bulkimportcatalogmodal",
-      "community": 4,
+      "community": 8,
       "norm_label": "bulkimportcatalogmodal()"
     },
     {
@@ -11736,7 +12436,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "auth_authmodal",
-      "community": 2,
+      "community": 5,
       "norm_label": "authmodal.tsx"
     },
     {
@@ -11746,7 +12446,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "auth_authmodal_authmodal",
-      "community": 2,
+      "community": 5,
       "norm_label": "authmodal()"
     },
     {
@@ -11906,7 +12606,7 @@
       "source_location": "L86",
       "_origin": "ast",
       "id": "card_cardmodal_cardmodal",
-      "community": 39,
+      "community": 1,
       "norm_label": "cardmodal()"
     },
     {
@@ -12076,7 +12776,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "home_herosection",
-      "community": 2,
+      "community": 0,
       "norm_label": "herosection.tsx"
     },
     {
@@ -12086,7 +12786,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "home_herosection_banner",
-      "community": 2,
+      "community": 0,
       "norm_label": "banner"
     },
     {
@@ -12096,7 +12796,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "home_herosection_herosectionprops",
-      "community": 2,
+      "community": 0,
       "norm_label": "herosectionprops"
     },
     {
@@ -12106,7 +12806,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "home_herosection_herosection",
-      "community": 2,
+      "community": 0,
       "norm_label": "herosection()"
     },
     {
@@ -12116,7 +12816,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "home_presalesection",
-      "community": 2,
+      "community": 0,
       "norm_label": "presalesection.tsx"
     },
     {
@@ -12126,7 +12826,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "home_presalesection_presalebanner",
-      "community": 2,
+      "community": 0,
       "norm_label": "presalebanner"
     },
     {
@@ -12136,7 +12836,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "home_presalesection_presalesection",
-      "community": 2,
+      "community": 0,
       "norm_label": "presalesection()"
     },
     {
@@ -12146,7 +12846,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "home_upcomingmissionswidget",
-      "community": 2,
+      "community": 0,
       "norm_label": "upcomingmissionswidget.tsx"
     },
     {
@@ -12156,7 +12856,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "home_upcomingmissionswidget_upcomingmissionswidget",
-      "community": 2,
+      "community": 0,
       "norm_label": "upcomingmissionswidget()"
     },
     {
@@ -12406,7 +13106,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "navigation_header",
-      "community": 1,
+      "community": 20,
       "norm_label": "header.tsx"
     },
     {
@@ -12416,7 +13116,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "navigation_header_headerprops",
-      "community": 1,
+      "community": 20,
       "norm_label": "headerprops"
     },
     {
@@ -12426,7 +13126,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "navigation_header_header",
-      "community": 1,
+      "community": 20,
       "norm_label": "header()"
     },
     {
@@ -12566,7 +13266,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "navigation_usermenu",
-      "community": 1,
+      "community": 3,
       "norm_label": "usermenu.tsx"
     },
     {
@@ -12826,7 +13526,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "profile_playercard",
-      "community": 285,
+      "community": 1,
       "norm_label": "playercard.tsx"
     },
     {
@@ -12836,7 +13536,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "profile_playercard_tcgstat",
-      "community": 285,
+      "community": 1,
       "norm_label": "tcgstat"
     },
     {
@@ -12846,7 +13546,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "profile_playercard_playercardprops",
-      "community": 285,
+      "community": 1,
       "norm_label": "playercardprops"
     },
     {
@@ -12856,7 +13556,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "profile_playercard_playercard",
-      "community": 285,
+      "community": 1,
       "norm_label": "playercard()"
     },
     {
@@ -13006,7 +13706,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "searchbar_searchbar",
-      "community": 0,
+      "community": 20,
       "norm_label": "searchbar.tsx"
     },
     {
@@ -13016,7 +13716,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "searchbar_searchbar_searchbarprops",
-      "community": 0,
+      "community": 20,
       "norm_label": "searchbarprops"
     },
     {
@@ -13026,7 +13726,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "searchbar_searchbar_searchbar",
-      "community": 0,
+      "community": 20,
       "norm_label": "searchbar()"
     },
     {
@@ -13056,7 +13756,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "collections_bulkimport",
-      "community": 1,
+      "community": 8,
       "norm_label": "bulkimport.tsx"
     },
     {
@@ -13066,7 +13766,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "collections_bulkimport_bulkimportprops",
-      "community": 1,
+      "community": 8,
       "norm_label": "bulkimportprops"
     },
     {
@@ -13076,7 +13776,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "collections_bulkimport_bulkimport",
-      "community": 1,
+      "community": 8,
       "norm_label": "bulkimport()"
     },
     {
@@ -13086,7 +13786,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "ui_glasscard",
-      "community": 1,
+      "community": 8,
       "norm_label": "glasscard.tsx"
     },
     {
@@ -13096,7 +13796,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "ui_glasscard_glasscardprops",
-      "community": 1,
+      "community": 8,
       "norm_label": "glasscardprops"
     },
     {
@@ -13106,7 +13806,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "ui_glasscard_glasscard",
-      "community": 1,
+      "community": 8,
       "norm_label": "glasscard()"
     },
     {
@@ -13633,7 +14333,7 @@
       "label": "InventoryItem",
       "file_type": "code",
       "source_file": "frontend/src/pages/Admin/InventoryPage.tsx",
-      "source_location": "L20",
+      "source_location": "L21",
       "_origin": "ast",
       "id": "admin_inventorypage_inventoryitem",
       "community": 8,
@@ -13643,7 +14343,7 @@
       "label": "SortField",
       "file_type": "code",
       "source_file": "frontend/src/pages/Admin/InventoryPage.tsx",
-      "source_location": "L39",
+      "source_location": "L40",
       "_origin": "ast",
       "id": "admin_inventorypage_sortfield",
       "community": 8,
@@ -13653,7 +14353,7 @@
       "label": "SortOrder",
       "file_type": "code",
       "source_file": "frontend/src/pages/Admin/InventoryPage.tsx",
-      "source_location": "L40",
+      "source_location": "L41",
       "_origin": "ast",
       "id": "admin_inventorypage_sortorder",
       "community": 8,
@@ -13663,7 +14363,7 @@
       "label": "InventoryPage()",
       "file_type": "code",
       "source_file": "frontend/src/pages/Admin/InventoryPage.tsx",
-      "source_location": "L42",
+      "source_location": "L43",
       "_origin": "ast",
       "id": "admin_inventorypage_inventorypage",
       "community": 8,
@@ -13696,7 +14396,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "admin_mediapage",
-      "community": 4,
+      "community": 36,
       "norm_label": "mediapage.tsx"
     },
     {
@@ -13706,7 +14406,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "admin_mediapage_storagefile",
-      "community": 4,
+      "community": 36,
       "norm_label": "storagefile"
     },
     {
@@ -13716,7 +14416,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "admin_mediapage_mediapage",
-      "community": 4,
+      "community": 36,
       "norm_label": "mediapage()"
     },
     {
@@ -13726,7 +14426,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "admin_orderspage",
-      "community": 39,
+      "community": 1,
       "norm_label": "orderspage.tsx"
     },
     {
@@ -13736,7 +14436,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "admin_orderspage_orderitem",
-      "community": 39,
+      "community": 1,
       "norm_label": "orderitem"
     },
     {
@@ -13746,7 +14446,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "admin_orderspage_order_statuses",
-      "community": 39,
+      "community": 1,
       "norm_label": "order_statuses"
     },
     {
@@ -13756,7 +14456,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "admin_orderspage_order",
-      "community": 39,
+      "community": 1,
       "norm_label": "order"
     },
     {
@@ -13766,7 +14466,7 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "admin_orderspage_generateorderreceipthtml",
-      "community": 39,
+      "community": 1,
       "norm_label": "generateorderreceipthtml()"
     },
     {
@@ -13776,7 +14476,7 @@
       "source_location": "L171",
       "_origin": "ast",
       "id": "admin_orderspage_orderspage",
-      "community": 39,
+      "community": 1,
       "norm_label": "orderspage()"
     },
     {
@@ -13866,7 +14566,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "pages_carddetail_carddetail",
-      "community": 39,
+      "community": 1,
       "norm_label": "carddetail()"
     },
     {
@@ -13946,7 +14646,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "pages_home",
-      "community": 2,
+      "community": 0,
       "norm_label": "home.tsx"
     },
     {
@@ -13956,7 +14656,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "pages_home_mockfilters",
-      "community": 2,
+      "community": 0,
       "norm_label": "mockfilters"
     },
     {
@@ -13966,7 +14666,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "pages_home_colorcodemap",
-      "community": 2,
+      "community": 0,
       "norm_label": "colorcodemap"
     },
     {
@@ -13976,7 +14676,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "pages_home_home",
-      "community": 2,
+      "community": 0,
       "norm_label": "home()"
     },
     {
@@ -14666,7 +15366,7 @@
       "source_location": "L139",
       "_origin": "ast",
       "id": "utils_api_fetchcards",
-      "community": 2,
+      "community": 0,
       "norm_label": "fetchcards()"
     },
     {
@@ -14686,7 +15386,7 @@
       "source_location": "L253",
       "_origin": "ast",
       "id": "utils_api_fetchproducts",
-      "community": 2,
+      "community": 0,
       "norm_label": "fetchproducts()"
     },
     {
@@ -14716,7 +15416,7 @@
       "source_location": "L861",
       "_origin": "ast",
       "id": "utils_api_searchcardnames",
-      "community": 0,
+      "community": 20,
       "norm_label": "searchcardnames()"
     },
     {
@@ -14996,7 +15696,7 @@
       "source_location": "L1676",
       "_origin": "ast",
       "id": "utils_api_fetchbanners",
-      "community": 2,
+      "community": 0,
       "norm_label": "fetchbanners()"
     },
     {
@@ -15006,7 +15706,7 @@
       "source_location": "L1711",
       "_origin": "ast",
       "id": "utils_api_fetchpresales",
-      "community": 2,
+      "community": 0,
       "norm_label": "fetchpresales()"
     },
     {
@@ -15036,7 +15736,7 @@
       "source_location": "L1757",
       "_origin": "ast",
       "id": "utils_api_fetchevents",
-      "community": 2,
+      "community": 0,
       "norm_label": "fetchevents()"
     },
     {
@@ -15206,7 +15906,7 @@
       "source_location": "L2021",
       "_origin": "ast",
       "id": "utils_api_fetchdiscountedsingles",
-      "community": 2,
+      "community": 0,
       "norm_label": "fetchdiscountedsingles()"
     },
     {
@@ -15216,7 +15916,7 @@
       "source_location": "L2069",
       "_origin": "ast",
       "id": "utils_api_fetchdiscountedaccessories",
-      "community": 2,
+      "community": 0,
       "norm_label": "fetchdiscountedaccessories()"
     },
     {
@@ -15226,7 +15926,7 @@
       "source_location": "L2115",
       "_origin": "ast",
       "id": "utils_api_checkgameinventorypresence",
-      "community": 2,
+      "community": 0,
       "norm_label": "checkgameinventorypresence()"
     },
     {
@@ -17494,7 +18194,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "scripts_fix_order_prices",
-      "community": 125,
+      "community": 41,
       "norm_label": "fix_order_prices.py"
     },
     {
@@ -17504,7 +18204,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "scripts_fix_order_prices_fix_order_prices",
-      "community": 125,
+      "community": 41,
       "norm_label": "fix_order_prices()"
     },
     {
@@ -17954,7 +18654,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "scripts_import_manabox",
-      "community": 343,
+      "community": 48,
       "norm_label": "import_manabox.py"
     },
     {
@@ -17964,7 +18664,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "scripts_import_manabox_map_condition",
-      "community": 343,
+      "community": 48,
       "norm_label": "map_condition()"
     },
     {
@@ -17974,7 +18674,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "scripts_import_manabox_map_finish",
-      "community": 343,
+      "community": 48,
       "norm_label": "map_finish()"
     },
     {
@@ -17984,7 +18684,7 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "scripts_import_manabox_import_manabox_csv",
-      "community": 343,
+      "community": 48,
       "norm_label": "import_manabox_csv()"
     },
     {
@@ -17994,7 +18694,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "scripts_import_manabox_rationale_13",
-      "community": 343,
+      "community": 48,
       "norm_label": "maps manabox condition to db condition."
     },
     {
@@ -18004,7 +18704,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "scripts_import_manabox_rationale_24",
-      "community": 343,
+      "community": 48,
       "norm_label": "maps manabox foil status to db finish."
     },
     {
@@ -18014,7 +18714,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "scripts_import_manabox_rationale_35",
-      "community": 343,
+      "community": 48,
       "norm_label": "imports a manabox csv export into the public.products table."
     },
     {
@@ -18024,7 +18724,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "scripts_import_mtga",
-      "community": 48,
+      "community": 488,
       "norm_label": "import_mtga.py"
     },
     {
@@ -18034,7 +18734,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "scripts_import_mtga_parse_mtga_line",
-      "community": 48,
+      "community": 488,
       "norm_label": "parse_mtga_line()"
     },
     {
@@ -18044,7 +18744,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "scripts_import_mtga_py_any",
-      "community": 48,
+      "community": 488,
       "norm_label": "any"
     },
     {
@@ -18054,7 +18754,7 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "scripts_import_mtga_import_mtga_file",
-      "community": 48,
+      "community": 488,
       "norm_label": "import_mtga_file()"
     },
     {
@@ -18064,7 +18764,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "scripts_import_mtga_rationale_1",
-      "community": 48,
+      "community": 488,
       "norm_label": "script para importar inventario en formato mtga/arena formato: <cantidad> <nomb"
     },
     {
@@ -18074,7 +18774,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "scripts_import_mtga_rationale_23",
-      "community": 48,
+      "community": 488,
       "norm_label": "parsea una linea en formato mtga y retorna un diccionario con los datos."
     },
     {
@@ -18084,7 +18784,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "scripts_import_mtga_rationale_46",
-      "community": 48,
+      "community": 488,
       "norm_label": "importa un archivo en formato mtga a la tabla products."
     },
     {
@@ -20596,6 +21296,26 @@
       "id": "sortswift_fix_official_images_fix_images",
       "community": 63,
       "norm_label": "fix_images()"
+    },
+    {
+      "label": "generate_sync_audit_report.py",
+      "file_type": "code",
+      "source_file": "scripts/sync/sortswift/generate_sync_audit_report.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "sortswift_generate_sync_audit_report",
+      "community": 63,
+      "norm_label": "generate_sync_audit_report.py"
+    },
+    {
+      "label": "generate_report()",
+      "file_type": "code",
+      "source_file": "scripts/sync/sortswift/generate_sync_audit_report.py",
+      "source_location": "L28",
+      "_origin": "ast",
+      "id": "sortswift_generate_sync_audit_report_generate_report",
+      "community": 63,
+      "norm_label": "generate_report()"
     },
     {
       "label": "sync_green_bins_to_dev.py",
@@ -24274,7 +24994,7 @@
       "source_location": "L124",
       "_origin": "ast",
       "id": "services_admin_service_adminservice_run_scraper",
-      "community": 269,
+      "community": 73,
       "norm_label": ".run_scraper()"
     },
     {
@@ -24294,7 +25014,7 @@
       "source_location": "L125",
       "_origin": "ast",
       "id": "services_admin_service_rationale_125",
-      "community": 269,
+      "community": 73,
       "norm_label": "asynchronously runs a scraper for a specific source and tracks progress."
     },
     {
@@ -24564,7 +25284,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "services_collection_service_collectionservice",
-      "community": 41,
+      "community": 128,
       "norm_label": "collectionservice"
     },
     {
@@ -24574,7 +25294,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "services_collection_service_collectionservice_import_data",
-      "community": 41,
+      "community": 128,
       "norm_label": ".import_data()"
     },
     {
@@ -24584,7 +25304,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "src_api_services_collection_service_py_any",
-      "community": 41,
+      "community": 128,
       "norm_label": "any"
     },
     {
@@ -24594,7 +25314,7 @@
       "source_location": "L372",
       "_origin": "ast",
       "id": "services_collection_service_collectionservice_get_user_collection",
-      "community": 41,
+      "community": 128,
       "norm_label": ".get_user_collection()"
     },
     {
@@ -24604,7 +25324,7 @@
       "source_location": "L407",
       "_origin": "ast",
       "id": "services_collection_service_collectionservice_update_item",
-      "community": 41,
+      "community": 128,
       "norm_label": ".update_item()"
     },
     {
@@ -24614,7 +25334,7 @@
       "source_location": "L422",
       "_origin": "ast",
       "id": "services_collection_service_collectionservice_remove_item",
-      "community": 41,
+      "community": 128,
       "norm_label": ".remove_item()"
     },
     {
@@ -24624,7 +25344,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "services_collection_service_rationale_35",
-      "community": 41,
+      "community": 128,
       "norm_label": "processes bulk import of cards for collection or price reference.         optim"
     },
     {
@@ -24634,7 +25354,7 @@
       "source_location": "L373",
       "_origin": "ast",
       "id": "services_collection_service_rationale_373",
-      "community": 41,
+      "community": 128,
       "norm_label": "retrieves the full collection for a user with two-factor valuation."
     },
     {
@@ -24644,7 +25364,7 @@
       "source_location": "L408",
       "_origin": "ast",
       "id": "services_collection_service_rationale_408",
-      "community": 41,
+      "community": 128,
       "norm_label": "updates quantity or condition of a specific item in the collection."
     },
     {
@@ -24654,7 +25374,7 @@
       "source_location": "L423",
       "_origin": "ast",
       "id": "services_collection_service_rationale_423",
-      "community": 41,
+      "community": 128,
       "norm_label": "deletes an item from the collection."
     },
     {
@@ -24794,7 +25514,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_matcher_service",
-      "community": 125,
+      "community": 41,
       "norm_label": "matcher_service.py"
     },
     {
@@ -25134,7 +25854,7 @@
       "source_location": "L132",
       "_origin": "ast",
       "id": "supabase_client_tcgdatabaseapi_get_printing_by_id",
-      "community": 288,
+      "community": 25,
       "norm_label": ".get_printing_by_id()"
     },
     {
@@ -25144,7 +25864,7 @@
       "source_location": "L137",
       "_origin": "ast",
       "id": "supabase_client_tcgdatabaseapi_create_printing",
-      "community": 329,
+      "community": 25,
       "norm_label": ".create_printing()"
     },
     {
@@ -25184,7 +25904,7 @@
       "source_location": "L167",
       "_origin": "ast",
       "id": "supabase_client_tcgdatabaseapi_get_card_prices",
-      "community": 25,
+      "community": 608,
       "norm_label": ".get_card_prices()"
     },
     {
@@ -25214,7 +25934,7 @@
       "source_location": "L204",
       "_origin": "ast",
       "id": "supabase_client_tcgdatabaseapi_get_card_prices_detailed",
-      "community": 25,
+      "community": 609,
       "norm_label": ".get_card_prices_detailed()"
     },
     {
@@ -25254,7 +25974,7 @@
       "source_location": "L240",
       "_origin": "ast",
       "id": "supabase_client_tcgdatabaseapi_update_collection_item",
-      "community": 25,
+      "community": 610,
       "norm_label": ".update_collection_item()"
     },
     {
@@ -25264,7 +25984,7 @@
       "source_location": "L249",
       "_origin": "ast",
       "id": "supabase_client_tcgdatabaseapi_get_user_watchlist",
-      "community": 25,
+      "community": 611,
       "norm_label": ".get_user_watchlist()"
     },
     {
@@ -25274,7 +25994,7 @@
       "source_location": "L254",
       "_origin": "ast",
       "id": "supabase_client_tcgdatabaseapi_add_to_watchlist",
-      "community": 25,
+      "community": 612,
       "norm_label": ".add_to_watchlist()"
     },
     {
@@ -25294,7 +26014,7 @@
       "source_location": "L269",
       "_origin": "ast",
       "id": "supabase_client_tcgdatabaseapi_update_watchlist_item",
-      "community": 351,
+      "community": 25,
       "norm_label": ".update_watchlist_item()"
     },
     {
@@ -25334,7 +26054,7 @@
       "source_location": "L342",
       "_origin": "ast",
       "id": "supabase_client_tcgdatabaseapi_bulk_insert_printings",
-      "community": 427,
+      "community": 25,
       "norm_label": ".bulk_insert_printings()"
     },
     {
@@ -25344,7 +26064,7 @@
       "source_location": "L351",
       "_origin": "ast",
       "id": "supabase_client_tcgdatabaseapi_bulk_insert_prices",
-      "community": 455,
+      "community": 25,
       "norm_label": ".bulk_insert_prices()"
     },
     {
@@ -25354,7 +26074,7 @@
       "source_location": "L364",
       "_origin": "ast",
       "id": "supabase_client_tcgdatabaseapi_get_conditions",
-      "community": 25,
+      "community": 613,
       "norm_label": ".get_conditions()"
     },
     {
@@ -25364,7 +26084,7 @@
       "source_location": "L369",
       "_origin": "ast",
       "id": "supabase_client_tcgdatabaseapi_get_sources",
-      "community": 470,
+      "community": 25,
       "norm_label": ".get_sources()"
     },
     {
@@ -25504,7 +26224,7 @@
       "source_location": "L133",
       "_origin": "ast",
       "id": "supabase_client_rationale_133",
-      "community": 288,
+      "community": 25,
       "norm_label": "obtener impresion por id"
     },
     {
@@ -25514,7 +26234,7 @@
       "source_location": "L138",
       "_origin": "ast",
       "id": "supabase_client_rationale_138",
-      "community": 329,
+      "community": 25,
       "norm_label": "crear nueva impresion"
     },
     {
@@ -25554,7 +26274,7 @@
       "source_location": "L168",
       "_origin": "ast",
       "id": "supabase_client_rationale_168",
-      "community": 25,
+      "community": 608,
       "norm_label": "obtener precios de todas las impresiones de una carta"
     },
     {
@@ -25584,7 +26304,7 @@
       "source_location": "L205",
       "_origin": "ast",
       "id": "supabase_client_rationale_205",
-      "community": 25,
+      "community": 609,
       "norm_label": "obtener precios detallados de una carta usando funcion sql"
     },
     {
@@ -25624,7 +26344,7 @@
       "source_location": "L241",
       "_origin": "ast",
       "id": "supabase_client_rationale_241",
-      "community": 25,
+      "community": 610,
       "norm_label": "actualizar item de la coleccion"
     },
     {
@@ -25634,7 +26354,7 @@
       "source_location": "L250",
       "_origin": "ast",
       "id": "supabase_client_rationale_250",
-      "community": 25,
+      "community": 611,
       "norm_label": "obtener watchlist de usuario"
     },
     {
@@ -25644,7 +26364,7 @@
       "source_location": "L255",
       "_origin": "ast",
       "id": "supabase_client_rationale_255",
-      "community": 25,
+      "community": 612,
       "norm_label": "anadir carta al watchlist"
     },
     {
@@ -25664,7 +26384,7 @@
       "source_location": "L270",
       "_origin": "ast",
       "id": "supabase_client_rationale_270",
-      "community": 351,
+      "community": 25,
       "norm_label": "actualizar item del watchlist"
     },
     {
@@ -25704,7 +26424,7 @@
       "source_location": "L343",
       "_origin": "ast",
       "id": "supabase_client_rationale_343",
-      "community": 427,
+      "community": 25,
       "norm_label": "insertar multiples impresiones"
     },
     {
@@ -25714,7 +26434,7 @@
       "source_location": "L352",
       "_origin": "ast",
       "id": "supabase_client_rationale_352",
-      "community": 455,
+      "community": 25,
       "norm_label": "insertar multiples precios"
     },
     {
@@ -25724,7 +26444,7 @@
       "source_location": "L365",
       "_origin": "ast",
       "id": "supabase_client_rationale_365",
-      "community": 25,
+      "community": 613,
       "norm_label": "obtener todas las condiciones"
     },
     {
@@ -25734,7 +26454,7 @@
       "source_location": "L370",
       "_origin": "ast",
       "id": "supabase_client_rationale_370",
-      "community": 470,
+      "community": 25,
       "norm_label": "obtener todas las fuentes"
     },
     {
@@ -26084,7 +26804,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "utils_supabase_client",
-      "community": 125,
+      "community": 41,
       "norm_label": "supabase_client.py"
     },
     {
@@ -26094,7 +26814,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "utils_supabase_client_clean_url",
-      "community": 125,
+      "community": 41,
       "norm_label": "clean_url()"
     },
     {
@@ -26104,7 +26824,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "utils_supabase_client_clean_key",
-      "community": 125,
+      "community": 41,
       "norm_label": "clean_key()"
     },
     {
@@ -26114,7 +26834,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "utils_supabase_client_get_supabase_client",
-      "community": 125,
+      "community": 41,
       "norm_label": "get_supabase_client()"
     },
     {
@@ -26124,7 +26844,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "client",
-      "community": 152,
+      "community": 41,
       "norm_label": "client"
     },
     {
@@ -26144,7 +26864,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "utils_supabase_client_get_default_client",
-      "community": 125,
+      "community": 41,
       "norm_label": "_get_default_client()"
     },
     {
@@ -27994,7 +28714,7 @@
       "source_location": "L88",
       "_origin": "ast",
       "id": "tests_unit_test_advanced_features_py_unit_test_advanced_features_testantibotmanager",
-      "community": 24,
+      "community": 285,
       "norm_label": "testantibotmanager"
     },
     {
@@ -28004,7 +28724,7 @@
       "source_location": "L91",
       "_origin": "ast",
       "id": "tests_unit_test_advanced_features_py_unit_test_advanced_features_testantibotmanager_setup",
-      "community": 24,
+      "community": 285,
       "norm_label": ".setup()"
     },
     {
@@ -28014,7 +28734,7 @@
       "source_location": "L99",
       "_origin": "ast",
       "id": "tests_unit_test_advanced_features_py_unit_test_advanced_features_testantibotmanager_test_user_agent_rotation",
-      "community": 24,
+      "community": 285,
       "norm_label": ".test_user_agent_rotation()"
     },
     {
@@ -28024,7 +28744,7 @@
       "source_location": "L109",
       "_origin": "ast",
       "id": "tests_unit_test_advanced_features_py_unit_test_advanced_features_testantibotmanager_test_rate_limiting",
-      "community": 24,
+      "community": 285,
       "norm_label": ".test_rate_limiting()"
     },
     {
@@ -28034,7 +28754,7 @@
       "source_location": "L125",
       "_origin": "ast",
       "id": "tests_unit_test_advanced_features_py_unit_test_advanced_features_testantibotmanager_test_captcha_detection",
-      "community": 24,
+      "community": 285,
       "norm_label": ".test_captcha_detection()"
     },
     {
@@ -28044,7 +28764,7 @@
       "source_location": "L133",
       "_origin": "ast",
       "id": "tests_unit_test_advanced_features_py_unit_test_advanced_features_testantibotmanager_test_blocked_detection",
-      "community": 24,
+      "community": 285,
       "norm_label": ".test_blocked_detection()"
     },
     {
@@ -28284,7 +29004,7 @@
       "source_location": "L89",
       "_origin": "ast",
       "id": "tests_unit_test_advanced_features_py_unit_test_advanced_features_rationale_89",
-      "community": 24,
+      "community": 285,
       "norm_label": "pruebas para el sistema anti-bot"
     },
     {
@@ -28294,7 +29014,7 @@
       "source_location": "L100",
       "_origin": "ast",
       "id": "tests_unit_test_advanced_features_py_unit_test_advanced_features_rationale_100",
-      "community": 24,
+      "community": 285,
       "norm_label": "probar rotacion de user-agents"
     },
     {
@@ -28304,7 +29024,7 @@
       "source_location": "L110",
       "_origin": "ast",
       "id": "tests_unit_test_advanced_features_py_unit_test_advanced_features_rationale_110",
-      "community": 24,
+      "community": 285,
       "norm_label": "probar limitacion de tasa"
     },
     {
@@ -28314,7 +29034,7 @@
       "source_location": "L126",
       "_origin": "ast",
       "id": "tests_unit_test_advanced_features_py_unit_test_advanced_features_rationale_126",
-      "community": 24,
+      "community": 285,
       "norm_label": "probar deteccion de captcha"
     },
     {
@@ -28324,7 +29044,7 @@
       "source_location": "L134",
       "_origin": "ast",
       "id": "tests_unit_test_advanced_features_py_unit_test_advanced_features_rationale_134",
-      "community": 24,
+      "community": 285,
       "norm_label": "probar deteccion de bloqueos"
     },
     {
@@ -28994,7 +29714,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_verify_prd_features",
-      "community": 71,
+      "community": 128,
       "norm_label": "verify_prd_features.py"
     },
     {
@@ -29004,7 +29724,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "tests_verify_prd_features_verify_everything",
-      "community": 71,
+      "community": 128,
       "norm_label": "verify_everything()"
     },
     {
@@ -39434,7 +40154,7 @@
       "source_location": "L144",
       "_origin": "ast",
       "id": "api_supabase_apis_3_funciones_sql_avanzadas",
-      "community": 488,
+      "community": 135,
       "norm_label": "3. funciones sql avanzadas"
     },
     {
@@ -39444,7 +40164,7 @@
       "source_location": "L146",
       "_origin": "ast",
       "id": "api_supabase_apis_update_aggregated_prices",
-      "community": 488,
+      "community": 135,
       "norm_label": "update_aggregated_prices()"
     },
     {
@@ -39454,7 +40174,7 @@
       "source_location": "L149",
       "_origin": "ast",
       "id": "api_supabase_apis_search_cards_with_prices_search_query_game_code_filter_limit_count",
-      "community": 488,
+      "community": 135,
       "norm_label": "search_cards_with_prices(search_query, game_code_filter, limit_count)"
     },
     {
@@ -39464,7 +40184,7 @@
       "source_location": "L152",
       "_origin": "ast",
       "id": "api_supabase_apis_get_card_prices_card_uuid_condition_filter",
-      "community": 488,
+      "community": 135,
       "norm_label": "get_card_prices(card_uuid, condition_filter)"
     },
     {
@@ -71231,6 +71951,676 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary",
+      "target": "reports_sortswift_sync_summary_by_tcg",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary",
+      "target": "reports_sortswift_sync_summary_total_db_products",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary",
+      "target": "reports_sortswift_sync_summary_total_sortswift_items",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary",
+      "target": "reports_sortswift_sync_summary_total_sortswift_units",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L46",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg",
+      "target": "reports_sortswift_sync_summary_by_tcg_dgm",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L56",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg",
+      "target": "reports_sortswift_sync_summary_by_tcg_fab",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L66",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg",
+      "target": "reports_sortswift_sync_summary_by_tcg_gnd",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg",
+      "target": "reports_sortswift_sync_summary_by_tcg_mtg",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg",
+      "target": "reports_sortswift_sync_summary_by_tcg_opc",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg",
+      "target": "reports_sortswift_sync_summary_by_tcg_pkm",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg",
+      "target": "reports_sortswift_sync_summary_by_tcg_rfb",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_mtg",
+      "target": "reports_sortswift_sync_summary_mtg_actualizados",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_mtg",
+      "target": "reports_sortswift_sync_summary_mtg_agregados",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_mtg",
+      "target": "reports_sortswift_sync_summary_mtg_en_cero",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_mtg",
+      "target": "reports_sortswift_sync_summary_mtg_total_items_ss",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_mtg",
+      "target": "reports_sortswift_sync_summary_mtg_total_units_ss",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_mtg",
+      "target": "reports_sortswift_sync_summary_mtg_unidades_actualizadas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_mtg",
+      "target": "reports_sortswift_sync_summary_mtg_unidades_agregadas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_mtg",
+      "target": "reports_sortswift_sync_summary_mtg_unidades_en_cero",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_opc",
+      "target": "reports_sortswift_sync_summary_opc_actualizados",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_opc",
+      "target": "reports_sortswift_sync_summary_opc_agregados",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_opc",
+      "target": "reports_sortswift_sync_summary_opc_en_cero",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_opc",
+      "target": "reports_sortswift_sync_summary_opc_total_items_ss",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_opc",
+      "target": "reports_sortswift_sync_summary_opc_total_units_ss",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_opc",
+      "target": "reports_sortswift_sync_summary_opc_unidades_actualizadas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_opc",
+      "target": "reports_sortswift_sync_summary_opc_unidades_agregadas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_opc",
+      "target": "reports_sortswift_sync_summary_opc_unidades_en_cero",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_rfb",
+      "target": "reports_sortswift_sync_summary_rfb_actualizados",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_rfb",
+      "target": "reports_sortswift_sync_summary_rfb_agregados",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_rfb",
+      "target": "reports_sortswift_sync_summary_rfb_en_cero",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_rfb",
+      "target": "reports_sortswift_sync_summary_rfb_total_items_ss",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_rfb",
+      "target": "reports_sortswift_sync_summary_rfb_total_units_ss",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_rfb",
+      "target": "reports_sortswift_sync_summary_rfb_unidades_actualizadas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_rfb",
+      "target": "reports_sortswift_sync_summary_rfb_unidades_agregadas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_rfb",
+      "target": "reports_sortswift_sync_summary_rfb_unidades_en_cero",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L39",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_pkm",
+      "target": "reports_sortswift_sync_summary_pkm_actualizados",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L37",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_pkm",
+      "target": "reports_sortswift_sync_summary_pkm_agregados",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L41",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_pkm",
+      "target": "reports_sortswift_sync_summary_pkm_en_cero",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L43",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_pkm",
+      "target": "reports_sortswift_sync_summary_pkm_total_items_ss",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L44",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_pkm",
+      "target": "reports_sortswift_sync_summary_pkm_total_units_ss",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L40",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_pkm",
+      "target": "reports_sortswift_sync_summary_pkm_unidades_actualizadas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_pkm",
+      "target": "reports_sortswift_sync_summary_pkm_unidades_agregadas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L42",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_pkm",
+      "target": "reports_sortswift_sync_summary_pkm_unidades_en_cero",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L49",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_dgm",
+      "target": "reports_sortswift_sync_summary_dgm_actualizados",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L47",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_dgm",
+      "target": "reports_sortswift_sync_summary_dgm_agregados",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L51",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_dgm",
+      "target": "reports_sortswift_sync_summary_dgm_en_cero",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L53",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_dgm",
+      "target": "reports_sortswift_sync_summary_dgm_total_items_ss",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L54",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_dgm",
+      "target": "reports_sortswift_sync_summary_dgm_total_units_ss",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L50",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_dgm",
+      "target": "reports_sortswift_sync_summary_dgm_unidades_actualizadas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L48",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_dgm",
+      "target": "reports_sortswift_sync_summary_dgm_unidades_agregadas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_dgm",
+      "target": "reports_sortswift_sync_summary_dgm_unidades_en_cero",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L59",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_fab",
+      "target": "reports_sortswift_sync_summary_fab_actualizados",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L57",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_fab",
+      "target": "reports_sortswift_sync_summary_fab_agregados",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L61",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_fab",
+      "target": "reports_sortswift_sync_summary_fab_en_cero",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L63",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_fab",
+      "target": "reports_sortswift_sync_summary_fab_total_items_ss",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L64",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_fab",
+      "target": "reports_sortswift_sync_summary_fab_total_units_ss",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L60",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_fab",
+      "target": "reports_sortswift_sync_summary_fab_unidades_actualizadas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L58",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_fab",
+      "target": "reports_sortswift_sync_summary_fab_unidades_agregadas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L62",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_fab",
+      "target": "reports_sortswift_sync_summary_fab_unidades_en_cero",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L69",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_gnd",
+      "target": "reports_sortswift_sync_summary_gnd_actualizados",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L67",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_gnd",
+      "target": "reports_sortswift_sync_summary_gnd_agregados",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L71",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_gnd",
+      "target": "reports_sortswift_sync_summary_gnd_en_cero",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L73",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_gnd",
+      "target": "reports_sortswift_sync_summary_gnd_total_items_ss",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L74",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_gnd",
+      "target": "reports_sortswift_sync_summary_gnd_total_units_ss",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L70",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_gnd",
+      "target": "reports_sortswift_sync_summary_gnd_unidades_actualizadas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L68",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_gnd",
+      "target": "reports_sortswift_sync_summary_gnd_unidades_agregadas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/reports/sortswift_sync_summary.json",
+      "source_location": "L72",
+      "weight": 1.0,
+      "source": "reports_sortswift_sync_summary_by_tcg_gnd",
+      "target": "reports_sortswift_sync_summary_gnd_unidades_en_cero",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "docs/specs/stories.json",
       "source_location": "L2",
       "weight": 1.0,
@@ -71337,6 +72727,16 @@
       "confidence_score": 1.0,
       "source": "frontend_package",
       "target": "frontend_package_overrides"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/package.json",
+      "source_location": "L62",
+      "weight": 1.0,
+      "source": "frontend_package",
+      "target": "frontend_package_pnpm",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -71847,6 +73247,16 @@
       "confidence_score": 1.0,
       "source": "frontend_package_overrides",
       "target": "frontend_package_overrides_source_map_js"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/package.json",
+      "source_location": "L63",
+      "weight": 1.0,
+      "source": "frontend_package_pnpm",
+      "target": "frontend_package_pnpm_onlybuiltdependencies",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -74157,9 +75567,9 @@
       "source_file": "frontend/src/tests/Card.test.tsx",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_card_test",
-      "target": "card_card",
-      "confidence_score": 1.0
+      "target": "card_card"
     },
     {
       "relation": "imports_from",
@@ -74267,9 +75677,9 @@
       "source_file": "frontend/src/tests/Card.test.tsx",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_card_test",
-      "target": "card_card_card",
-      "confidence_score": 1.0
+      "target": "card_card_card"
     },
     {
       "relation": "contains",
@@ -74458,6 +75868,17 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/Admin/InventoryPage.tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "admin_inventorypage",
+      "target": "card_cardmodal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "frontend/src/pages/Admin/OrdersPage.tsx",
       "source_location": "L6",
       "weight": 1.0,
@@ -74613,6 +76034,17 @@
       "confidence_score": 1.0,
       "source": "pages_home",
       "target": "card_cardmodal"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/Admin/InventoryPage.tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "admin_inventorypage",
+      "target": "card_cardmodal_cardmodal",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports",
@@ -78307,9 +79739,9 @@
       "source_file": "frontend/src/tests/CartContext.test.tsx",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_cartcontext_test",
-      "target": "context_cartcontext",
-      "confidence_score": 1.0
+      "target": "context_cartcontext"
     },
     {
       "relation": "imports",
@@ -78318,9 +79750,9 @@
       "source_file": "frontend/src/tests/CartContext.test.tsx",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_cartcontext_test",
-      "target": "context_cartcontext_cartprovider",
-      "confidence_score": 1.0
+      "target": "context_cartcontext_cartprovider"
     },
     {
       "relation": "imports",
@@ -78395,9 +79827,9 @@
       "source_file": "frontend/src/tests/CartContext.test.tsx",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_cartcontext_test",
-      "target": "context_cartcontext_usecart",
-      "confidence_score": 1.0
+      "target": "context_cartcontext_usecart"
     },
     {
       "relation": "calls",
@@ -78406,9 +79838,9 @@
       "source_file": "frontend/src/tests/CartContext.test.tsx",
       "source_location": "L21",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_cartcontext_test_cartprobe",
-      "target": "context_cartcontext_usecart",
-      "confidence_score": 1.0
+      "target": "context_cartcontext_usecart"
     },
     {
       "relation": "contains",
@@ -79973,9 +81405,9 @@
       "source_file": "frontend/src/tests/CartContext.test.tsx",
       "source_location": "L20",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_cartcontext_test",
-      "target": "tests_cartcontext_test_cartprobe",
-      "confidence_score": 1.0
+      "target": "tests_cartcontext_test_cartprobe"
     },
     {
       "relation": "contains",
@@ -79983,9 +81415,9 @@
       "source_file": "frontend/src/tests/CartContext.test.tsx",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_cartcontext_test",
-      "target": "tests_cartcontext_test_mockfetchcart",
-      "confidence_score": 1.0
+      "target": "tests_cartcontext_test_mockfetchcart"
     },
     {
       "relation": "contains",
@@ -79993,9 +81425,9 @@
       "source_file": "frontend/src/tests/CartContext.test.tsx",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_cartcontext_test",
-      "target": "tests_cartcontext_test_mocklistusercarts",
-      "confidence_score": 1.0
+      "target": "tests_cartcontext_test_mocklistusercarts"
     },
     {
       "relation": "contains",
@@ -80003,9 +81435,9 @@
       "source_file": "frontend/src/tests/translations_and_codes.test.ts",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_translations_and_codes_test",
-      "target": "tests_translations_and_codes_test_canonical_tcg_codes",
-      "confidence_score": 1.0
+      "target": "tests_translations_and_codes_test_canonical_tcg_codes"
     },
     {
       "relation": "imports_from",
@@ -80014,9 +81446,9 @@
       "source_file": "frontend/src/tests/translations_and_codes.test.ts",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_translations_and_codes_test",
-      "target": "utils_translations",
-      "confidence_score": 1.0
+      "target": "utils_translations"
     },
     {
       "relation": "imports",
@@ -80025,9 +81457,9 @@
       "source_file": "frontend/src/tests/translations_and_codes.test.ts",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_translations_and_codes_test",
-      "target": "utils_translations_colormap",
-      "confidence_score": 1.0
+      "target": "utils_translations_colormap"
     },
     {
       "relation": "imports",
@@ -80036,9 +81468,9 @@
       "source_file": "frontend/src/tests/translations_and_codes.test.ts",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_translations_and_codes_test",
-      "target": "utils_translations_raritymap",
-      "confidence_score": 1.0
+      "target": "utils_translations_raritymap"
     },
     {
       "relation": "imports",
@@ -80047,9 +81479,9 @@
       "source_file": "frontend/src/tests/translations_and_codes.test.ts",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_translations_and_codes_test",
-      "target": "utils_translations_typemap",
-      "confidence_score": 1.0
+      "target": "utils_translations_typemap"
     },
     {
       "relation": "contains",
@@ -80088,9 +81520,9 @@
       "source_file": "frontend/src/tests/url_and_images.test.ts",
       "source_location": "L2",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_url_and_images_test",
-      "target": "utils_imageoptimization",
-      "confidence_score": 1.0
+      "target": "utils_imageoptimization"
     },
     {
       "relation": "imports",
@@ -80099,9 +81531,9 @@
       "source_file": "frontend/src/tests/url_and_images.test.ts",
       "source_location": "L2",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_url_and_images_test",
-      "target": "utils_imageoptimization_getoptimizedscryfallurl",
-      "confidence_score": 1.0
+      "target": "utils_imageoptimization_getoptimizedscryfallurl"
     },
     {
       "relation": "imports_from",
@@ -80110,9 +81542,9 @@
       "source_file": "frontend/src/tests/url_and_images.test.ts",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_url_and_images_test",
-      "target": "utils_urlutils",
-      "confidence_score": 1.0
+      "target": "utils_urlutils"
     },
     {
       "relation": "imports",
@@ -80121,9 +81553,9 @@
       "source_file": "frontend/src/tests/url_and_images.test.ts",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "tests_url_and_images_test",
-      "target": "utils_urlutils_getcardkingdomurl",
-      "confidence_score": 1.0
+      "target": "utils_urlutils_getcardkingdomurl"
     },
     {
       "relation": "contains",
@@ -81899,9 +83331,9 @@
       "source_file": "run_tests.ps1",
       "source_location": "L22",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "run_tests",
-      "target": "run_tests_invoke_stage",
-      "confidence_score": 1.0
+      "target": "run_tests_invoke_stage"
     },
     {
       "relation": "contains",
@@ -84441,6 +85873,28 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "scripts/sync/sortswift/generate_sync_audit_report.py",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "sortswift_generate_sync_audit_report",
+      "target": "common_db_get_supabase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/sync/sortswift/generate_sync_audit_report.py",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "sortswift_generate_sync_audit_report_generate_report",
+      "target": "common_db_get_supabase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "scripts/sync/sortswift/sync_green_bins_to_dev.py",
       "source_location": "L21",
       "weight": 1.0,
@@ -85377,9 +86831,9 @@
       "source_file": "tests/unit/test_system_contracts.py",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "unit_test_system_contracts",
-      "target": "common_sortswift_client_sortswiftapierror",
-      "confidence_score": 1.0
+      "target": "common_sortswift_client_sortswiftapierror"
     },
     {
       "relation": "uses",
@@ -85387,9 +86841,9 @@
       "source_file": "tests/unit/test_system_contracts.py",
       "source_location": "L9",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "unit_test_system_contracts_testenvironmentsegregationcontracts",
-      "target": "common_sortswift_client_sortswiftapierror",
-      "confidence_score": 0.5
+      "target": "common_sortswift_client_sortswiftapierror"
     },
     {
       "relation": "uses",
@@ -85397,9 +86851,9 @@
       "source_file": "tests/unit/test_system_contracts.py",
       "source_location": "L9",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "unit_test_system_contracts_testsortswiftsecuritycontracts",
-      "target": "common_sortswift_client_sortswiftapierror",
-      "confidence_score": 0.5
+      "target": "common_sortswift_client_sortswiftapierror"
     },
     {
       "relation": "calls",
@@ -85735,9 +87189,9 @@
       "source_file": "tests/unit/test_system_contracts.py",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "unit_test_system_contracts",
-      "target": "common_sortswift_client_sortswiftclient",
-      "confidence_score": 1.0
+      "target": "common_sortswift_client_sortswiftclient"
     },
     {
       "relation": "uses",
@@ -85745,9 +87199,9 @@
       "source_file": "tests/unit/test_system_contracts.py",
       "source_location": "L9",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "unit_test_system_contracts_testenvironmentsegregationcontracts",
-      "target": "common_sortswift_client_sortswiftclient",
-      "confidence_score": 0.5
+      "target": "common_sortswift_client_sortswiftclient"
     },
     {
       "relation": "uses",
@@ -85755,9 +87209,9 @@
       "source_file": "tests/unit/test_system_contracts.py",
       "source_location": "L9",
       "weight": 0.8,
+      "confidence_score": 0.5,
       "source": "unit_test_system_contracts_testsortswiftsecuritycontracts",
-      "target": "common_sortswift_client_sortswiftclient",
-      "confidence_score": 0.5
+      "target": "common_sortswift_client_sortswiftclient"
     },
     {
       "relation": "calls",
@@ -87346,6 +88800,27 @@
       "confidence_score": 1.0,
       "source": "sortswift_fix_official_images",
       "target": "sortswift_fix_official_images_fix_images"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/sync/sortswift/generate_sync_audit_report.py",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "sortswift_generate_sync_audit_report",
+      "target": "sortswift_generate_sync_audit_report_generate_report",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "scripts/sync/sortswift/generate_sync_audit_report.py",
+      "source_location": "L220",
+      "weight": 1.0,
+      "source": "sortswift_generate_sync_audit_report_generate_report",
+      "target": "path"
     },
     {
       "relation": "contains",
@@ -97577,9 +99052,9 @@
       "source_file": "tests/unit/test_system_contracts.py",
       "source_location": "L34",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "unit_test_system_contracts",
-      "target": "unit_test_system_contracts_testenvironmentsegregationcontracts",
-      "confidence_score": 1.0
+      "target": "unit_test_system_contracts_testenvironmentsegregationcontracts"
     },
     {
       "relation": "contains",
@@ -97587,9 +99062,9 @@
       "source_file": "tests/unit/test_system_contracts.py",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "unit_test_system_contracts",
-      "target": "unit_test_system_contracts_testsortswiftsecuritycontracts",
-      "confidence_score": 1.0
+      "target": "unit_test_system_contracts_testsortswiftsecuritycontracts"
     },
     {
       "relation": "method",
@@ -97597,9 +99072,9 @@
       "source_file": "tests/unit/test_system_contracts.py",
       "source_location": "L22",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "unit_test_system_contracts_testsortswiftsecuritycontracts",
-      "target": "unit_test_system_contracts_testsortswiftsecuritycontracts_test_enforce_sandbox_accepts_sandbox_key",
-      "confidence_score": 1.0
+      "target": "unit_test_system_contracts_testsortswiftsecuritycontracts_test_enforce_sandbox_accepts_sandbox_key"
     },
     {
       "relation": "method",
@@ -97607,9 +99082,9 @@
       "source_file": "tests/unit/test_system_contracts.py",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "unit_test_system_contracts_testsortswiftsecuritycontracts",
-      "target": "unit_test_system_contracts_testsortswiftsecuritycontracts_test_enforce_sandbox_rejects_production_key",
-      "confidence_score": 1.0
+      "target": "unit_test_system_contracts_testsortswiftsecuritycontracts_test_enforce_sandbox_rejects_production_key"
     },
     {
       "relation": "method",
@@ -97617,9 +99092,9 @@
       "source_file": "tests/unit/test_system_contracts.py",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "unit_test_system_contracts_testsortswiftsecuritycontracts",
-      "target": "unit_test_system_contracts_testsortswiftsecuritycontracts_test_missing_api_key_raises_value_error",
-      "confidence_score": 1.0
+      "target": "unit_test_system_contracts_testsortswiftsecuritycontracts_test_missing_api_key_raises_value_error"
     },
     {
       "relation": "method",
@@ -97627,9 +99102,9 @@
       "source_file": "tests/unit/test_system_contracts.py",
       "source_location": "L27",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "unit_test_system_contracts_testsortswiftsecuritycontracts",
-      "target": "unit_test_system_contracts_testsortswiftsecuritycontracts_test_sortswift_api_error_preserves_status_and_details",
-      "confidence_score": 1.0
+      "target": "unit_test_system_contracts_testsortswiftsecuritycontracts_test_sortswift_api_error_preserves_status_and_details"
     },
     {
       "relation": "method",
@@ -97637,9 +99112,9 @@
       "source_file": "tests/unit/test_system_contracts.py",
       "source_location": "L43",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "unit_test_system_contracts_testenvironmentsegregationcontracts",
-      "target": "unit_test_system_contracts_testenvironmentsegregationcontracts_test_canonical_tcg_codes_ley_18",
-      "confidence_score": 1.0
+      "target": "unit_test_system_contracts_testenvironmentsegregationcontracts_test_canonical_tcg_codes_ley_18"
     },
     {
       "relation": "method",
@@ -97647,9 +99122,9 @@
       "source_file": "tests/unit/test_system_contracts.py",
       "source_location": "L38",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "unit_test_system_contracts_testenvironmentsegregationcontracts",
-      "target": "unit_test_system_contracts_testenvironmentsegregationcontracts_test_dev_and_prod_ids_are_distinct",
-      "confidence_score": 1.0
+      "target": "unit_test_system_contracts_testenvironmentsegregationcontracts_test_dev_and_prod_ids_are_distinct"
     },
     {
       "relation": "contains",
@@ -122818,5 +124293,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "d349ebcc1c9b5a4689547ad2da6c435cc0a85fbe"
+  "built_at_commit": "822b9da2d6b1f8d34ff67c4a58c4aa6d1184f3f6"
 }

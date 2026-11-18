@@ -2562,3 +2562,16 @@ enderVersionsContent), garantizando experiencia *Above the Fold* en smartphones.
   3. Aislamiento de capas con React Portal: createPortal(modalNode, document.body) con z-[300] y g-black/75 backdrop-blur-md, cubriendo limpiamente barras de navegación fijas y widgets de chat.
   4. Lógica DFC estricta: hasMultipleFaces = !!(details?.card_faces && details.card_faces.length > 1) con fallback garantizado a details.image_url.
 - **Regla Derivada:** En todo marketplace mobile-first, el precio y el botón de añadir al carrito jamás deben depender del scroll ni de la longitud del texto oráculo del producto. Los modales globales a pantalla completa deben portarse siempre a document.body para no heredar z-indexes locales.
+
+### 71. GitHub Actions repository_dispatch solo corre en la rama por defecto (main)
+- **Problema**: El webhook o Edge Function enviaba `repository_dispatch` para ejecutar `sortswift-sync.yml`, pero GitHub Actions no ejecutaba ningún job a pesar de responder `HTTP 204`.
+- **Causa**: La especificación oficial de GitHub Actions establece que los eventos `repository_dispatch` y workflows programados (`schedule`) ÚNICAMENTE se disparan si el archivo `.yml` existe en la rama por defecto del repositorio (`HEAD` / `main`). Si el workflow solo existe en `dev`, GitHub descarta el evento silenciosamente.
+- **Solución**: El workflow debe estar en `main`, o la Edge Function / backend debe ejecutar o disparar flujos compatibles con ramas secundarias via API de actions.
+
+### 72. Discrepancias de Lockfile en CI con PNPM v9 (--no-frozen-lockfile)
+- **Problema**: `pnpm install` fallaba en GitHub Pages runner con `ERR_PNPM_LOCKFILE_CONFIG_MISMATCH`, bloqueando los deploys de la rama `dev`.
+- **Causa**: Inconsistencias entre los `overrides` de `package.json` y el `pnpm-lock.yaml`.
+- **Solución**: Configurar `pnpm install --no-frozen-lockfile` en el paso de instalación de dependencias en `.github/workflows/deploy.yml`.
+
+### 73. Terminología y Alcance de SortSwift: Exclusivamente Cartas Singles
+- **Regla**: SortSwift administra únicamente inventario físico de **cartas singulares (singles)**. No debe llamarse "productos" en los logs ni en la interfaz de usuario para evitar confusión operativa con productos sellados (boosters, bundles, mazos) y accesorios.

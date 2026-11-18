@@ -332,7 +332,8 @@ serve(async (req) => {
            list_price: listPrice,
            name: name,
            detailed_type: 'product',
-           is_storable: true
+           is_storable: true,
+           available_in_pos: true
         };
         if (odooImageB64) {
            odooPayload.image_1920 = odooImageB64;

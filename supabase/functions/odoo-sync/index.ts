@@ -172,7 +172,8 @@ Deno.serve(async (req: Request) => {
             list_price: listPrice,
             categ_id: catSinglesId,
             type: 'consu',
-            is_storable: true
+            is_storable: true,
+            available_in_pos: true
           };
           if (base64Image) {
             updatePayload.image_512 = base64Image;
@@ -197,7 +198,8 @@ Deno.serve(async (req: Request) => {
             list_price: listPrice,
             categ_id: catSinglesId,
             type: 'consu',
-            is_storable: true
+            is_storable: true,
+            available_in_pos: true
           };
           if (base64Image) {
             createPayload.image_512 = base64Image;
