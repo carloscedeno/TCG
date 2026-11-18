@@ -5,7 +5,7 @@
 
 ---
 
-## 📅 Última sesión: 2026-11-17
+## 📅 Última sesión: 2026-11-18 (Modern Web Guidance + Playwright 1.65.1 verificados en dev)
 **Rama activa:** dev
 **En progreso:** Batería integral de pruebas y gate `/pruebame` implementados y verificados al 100% (`.\run_tests.ps1 -Mode smoke`):
 - Python Unit (`tests/unit`, incl. `test_system_contracts.py`): 34 passed.

@@ -797,3 +797,18 @@ enderVersionsContent(). En desktop (md:) se renderiza en la columna izquierda de
 - **Qué se resolvió:** Se implementó el orquestador unificado `run_tests.ps1` (`-Mode smoke | unit | e2e | full`), se ampliaron las pruebas unitarias en `frontend/src/tests/` (`Card`, `CartContext`, `url_and_images`, `translations_and_codes`) y `tests/unit/test_system_contracts.py`, se actualizó `frontend/playwright.config.ts` a `pnpm dev` con proyecto `smoke` desacoplado de credenciales admin, y se creó `.agent/workflows/pruebame.md` (`/pruebame`) como gate obligatorio al inyectar features.
 - **Lección clave:** En entornos con `.env` unificado en raíz, `pnpm dev` dentro de `frontend/` no hereda automáticamente `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY`, por lo que `run_tests.ps1` carga `.env` raíz e inyecta fallback local no-secreto para smoke E2E. Además, `pnpm --config.verify-deps-before-run=false` evita el bloqueo `ERR_PNPM_IGNORED_BUILDS` al invocar scripts en Windows.
 - **Verificación:** `.\run_tests.ps1 -Mode smoke` (34 Python unit + 6 suites/30 Jest + 6 Playwright smoke) y `pnpm build` en `frontend/` pasando 100%.
+
+
+---
+
+## 🧠 2026-11-18 - Modern Web Guidance Compliance & Playwright 1.65.1
+
+- **Qué se resolvió:**
+  1. Auditoría con `modern-web-guidance legacy-scan frontend/src` y remediación completa (0 observaciones en código fuente):
+     - `autoComplete` en inputs de contraseña (`ProfileSettingsModal.tsx`, `LoginPage.tsx`, `UpdatePassword.tsx`).
+     - Guardas `!e.nativeEvent.isComposing` en listeners `onKeyDown` con `Enter` (`RankingSeasonManager.tsx`, `InventoryPage.tsx`).
+     - Habilitado `"ES2023"` en `frontend/tsconfig.app.json` y migración de `.slice().reverse()` a `.toReversed()` (`CloudflareAnalytics.tsx`).
+     - Tipografía moderna `text-balance` en `HeroSection.tsx`.
+  2. Resolución de conflicto de versiones en Playwright (`package.json` tenía `playwright@1.62.1` en `dependencies` y `@playwright/test@1.58.2` en `devDependencies`): eliminado duplicado de producción y actualizado `@playwright/test` a `^1.65.1` con su binario Chromium v1255.
+  3. Habilitado `esbuild: true` y `unrs-resolver: true` en `frontend/pnpm-workspace.yaml` para eliminar bloqueos `ERR_PNPM_IGNORED_BUILDS` de pnpm v11.
+- **Verificación:** `legacy-scan` (0 hallazgos en `src`), `pnpm run build` (5.67s), `pnpm test` (2/2 suites, 13/13 tests), navegador Chromium real en `/`, `/admin/login`, `/update-password` (0 errores de consola), y `pytest tests/` (27/30 pasando; 3 fallos preexistentes de asyncio/Python 3.12).
