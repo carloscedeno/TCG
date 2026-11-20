@@ -61,7 +61,7 @@ async function imageToBase64(url: string) {
 
 // Ensure category exists and return its ID
 async function ensureCategory(url: string, db: string, uid: number, apiKey: string, name: string, parentId?: number) {
-  const domain = [['name', '=', name]];
+  const domain: any[] = [['name', '=', name]];
   if (parentId) {
     domain.push(['parent_id', '=', parentId]);
   }
@@ -172,8 +172,7 @@ Deno.serve(async (req: Request) => {
             list_price: listPrice,
             categ_id: catSinglesId,
             type: 'consu',
-            is_storable: true,
-            available_in_pos: true
+            is_storable: true
           };
           if (base64Image) {
             updatePayload.image_512 = base64Image;
@@ -198,8 +197,7 @@ Deno.serve(async (req: Request) => {
             list_price: listPrice,
             categ_id: catSinglesId,
             type: 'consu',
-            is_storable: true,
-            available_in_pos: true
+            is_storable: true
           };
           if (base64Image) {
             createPayload.image_512 = base64Image;
@@ -217,9 +215,6 @@ Deno.serve(async (req: Request) => {
           });
           results.push({ id: item.product_id, status: 'created' });
         }
-        
-        // NOTE: Stock quantity update (stock.quant) is complex in Odoo as it requires a location_id.
-        // For phase 1, we just sync the product structure and price.
       }
 
       return new Response(JSON.stringify({ success: true, results }), {
@@ -233,17 +228,18 @@ Deno.serve(async (req: Request) => {
         throw new Error("Missing items in payload");
       }
 
+      const supabaseUrl = Deno.env.get('SUPABASE_URL') || Deno.env.get('SUPABASE_URL_OVERRIDE') || 'https://bqfkqnnostzaqueujdms.supabase.co';
+      const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || Deno.env.get('SUPABASE_ANON_KEY') || '';
+      const supabase = supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
+
       const invalidItems = [];
 
       for (const item of items) {
-        let odooDomain = [];
+        let odooDomain: any[] = [];
         
         if (item.accessory_id) {
-           const supabaseUrl = Deno.env.get('SUPABASE_URL') || Deno.env.get('SUPABASE_URL_OVERRIDE') || 'https://bqfkqnnostzaqueujdms.supabase.co';
-           const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || Deno.env.get('SUPABASE_ANON_KEY');
-           
            if (supabaseUrl && supabaseKey) {
-             const accRes = await fetch(`${supabaseUrl}/rest/v1/accessories?id=eq.${item.accessory_id}&select=odoo_id`, {
+             const accRes = await fetch(`${supabaseUrl}/rest/v1/accessories?id=eq.${item.accessory_id}&select=odoo_id,stock`, {
                headers: { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}` }
              });
              const accJson = await accRes.json();
@@ -272,11 +268,22 @@ Deno.serve(async (req: Request) => {
         });
 
         if (!productSearch || productSearch.length === 0) {
-          invalidItems.push({ item, reason: 'NOT_FOUND' });
+          // Product not synced to Odoo yet: verify directly in Supabase products table
+          if (supabase && item.product_id) {
+            const { data: sbProd } = await supabase
+              .from('products')
+              .select('stock')
+              .eq('id', item.product_id)
+              .maybeSingle();
+            if (!sbProd) {
+              invalidItems.push({ item, reason: 'NOT_FOUND' });
+            } else if ((sbProd.stock || 0) < item.quantity && !item.is_on_demand) {
+              invalidItems.push({ item, reason: 'OUT_OF_STOCK', available: sbProd.stock || 0 });
+            }
+          }
         } else {
           const odooProduct = productSearch[0];
-          // Only strictly block for out of stock if it's a storable product
-          if (odooProduct.is_storable && odooProduct.qty_available < item.quantity) {
+          if (odooProduct.is_storable && odooProduct.qty_available < item.quantity && !item.is_on_demand) {
              invalidItems.push({ item, reason: 'OUT_OF_STOCK', available: odooProduct.qty_available });
           }
         }
@@ -299,10 +306,57 @@ Deno.serve(async (req: Request) => {
         throw new Error("Missing order_data in request");
       }
 
-      // 1. Find or create Partner
-      const customerEmail = order_data.customer_email || 'guest@geekorium.com';
-      const customerName = order_data.customer_name || 'Web Customer';
-      
+      const supabaseUrl = Deno.env.get('SUPABASE_URL') || Deno.env.get('SUPABASE_URL_OVERRIDE') || 'https://bqfkqnnostzaqueujdms.supabase.co';
+      const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || Deno.env.get('SUPABASE_ANON_KEY') || '';
+      const supabase = supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
+
+      // Sanitize client_order_ref defensively first so we can enrich from DB
+      let cleanRef = order_data.id;
+      if (typeof cleanRef === 'object' && cleanRef !== null) {
+        cleanRef = (cleanRef as any).order_id || JSON.stringify(cleanRef);
+      }
+      if (typeof cleanRef === 'string') {
+        const uuidMatch = cleanRef.match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i);
+        if (uuidMatch) cleanRef = uuidMatch[0];
+      }
+
+      let dbOrder: any = null;
+      const dbProductsMap = new Map<string, any>();
+      if (supabase && cleanRef) {
+        const { data: ordRow } = await supabase
+          .from('orders')
+          .select('id, shipping_address, guest_info, odoo_order_id')
+          .eq('id', cleanRef)
+          .maybeSingle();
+        dbOrder = ordRow;
+
+        const { data: oiRows } = await supabase
+          .from('order_items')
+          .select('id, product_id, accessory_id, quantity, price_at_purchase, products(id, name, game, set_code, condition, finish, price, cost, barcode)')
+          .eq('order_id', cleanRef);
+        for (const oi of oiRows || []) {
+          if (oi.product_id && oi.products) {
+            dbProductsMap.set(oi.product_id, oi.products);
+          }
+        }
+      }
+
+      // 1. Find or create Partner (enriching customer name & email from orders.shipping_address if available)
+      const shippingAddr = dbOrder?.shipping_address || {};
+      const guestInfo = dbOrder?.guest_info || {};
+      const customerEmail =
+        shippingAddr.email ||
+        guestInfo.email ||
+        order_data.customer_email ||
+        'guest@geekorium.com';
+      const rawCustomerName = order_data.customer_name;
+      const customerName =
+        (rawCustomerName && rawCustomerName !== 'Web Customer' ? rawCustomerName : null) ||
+        shippingAddr.full_name ||
+        rawCustomerName ||
+        'Web Customer';
+      const customerPhone = shippingAddr.phone || guestInfo.phone || null;
+
       let partnerId;
       const partnerSearch = await odooJsonRpc(odooUrl, 'call', {
         service: 'object',
@@ -318,6 +372,22 @@ Deno.serve(async (req: Request) => {
 
       if (partnerSearch && partnerSearch.length > 0) {
         partnerId = partnerSearch[0];
+        if (customerName && customerName !== 'Web Customer') {
+          try {
+            await odooJsonRpc(odooUrl, 'call', {
+              service: 'object',
+              method: 'execute_kw',
+              args: [
+                odooDb, uid, odooApiKey,
+                'res.partner',
+                'write',
+                [[partnerId], { name: customerName, ...(customerPhone ? { phone: customerPhone } : {}) }]
+              ]
+            });
+          } catch (_e) {
+            // non-fatal partner update
+          }
+        }
       } else {
         partnerId = await odooJsonRpc(odooUrl, 'call', {
           service: 'object',
@@ -329,39 +399,61 @@ Deno.serve(async (req: Request) => {
             [{
               name: customerName,
               email: customerEmail,
+              ...(customerPhone ? { phone: customerPhone } : {}),
               customer_rank: 1
             }]
           ]
         });
       }
 
-      // 2. Prepare order lines
+      // Cache for Odoo categories during this request
+      const categoryCache = new Map<string, number>();
+      const getOrCreateSinglesCategoryId = async (gameCode: string): Promise<number> => {
+        const gCode = (gameCode || 'MTG').toUpperCase();
+        if (categoryCache.has(gCode)) return categoryCache.get(gCode)!;
+        const catJuegosId = await ensureCategory(odooUrl, odooDb, uid, odooApiKey, "Juegos TCG");
+        const catGameId = await ensureCategory(odooUrl, odooDb, uid, odooApiKey, gCode, catJuegosId);
+        const catSinglesId = await ensureCategory(odooUrl, odooDb, uid, odooApiKey, "Singles", catGameId);
+        categoryCache.set(gCode, catSinglesId);
+        return catSinglesId;
+      };
+
+      // 2. Prepare order lines (auto-creating any missing product.product in Odoo on the fly)
       const orderLines = [];
       for (const item of order_data.items) {
-        let odooDomain = [];
-        
+        let odooDomain: any[] = [];
+        let resolvedProductId = item.product_id;
+
+        if (!resolvedProductId && !item.accessory_id && item.printing_id && supabase) {
+          const reqFinish = (item.finish || (item.foil ? 'foil' : 'nonfoil')).toLowerCase();
+          const { data: matchedProd } = await supabase
+            .from('products')
+            .select('id, name, game, set_code, condition, finish, price, cost, barcode')
+            .eq('printing_id', item.printing_id)
+            .eq('finish', reqFinish)
+            .maybeSingle();
+          if (matchedProd) {
+            resolvedProductId = matchedProd.id;
+            dbProductsMap.set(matchedProd.id, matchedProd);
+          }
+        }
+
         if (item.accessory_id) {
-           // For accessories, we must fetch the odoo_id from the database
-           const supabaseUrl = Deno.env.get('SUPABASE_URL') || Deno.env.get('SUPABASE_URL_OVERRIDE') || 'https://bqfkqnnostzaqueujdms.supabase.co';
-           const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || Deno.env.get('SUPABASE_ANON_KEY');
-           
            if (supabaseUrl && supabaseKey) {
-             const accRes = await fetch(`${supabaseUrl}/rest/v1/accessories?id=eq.${item.accessory_id}&select=odoo_id`, {
+             const accRes = await fetch(`${supabaseUrl}/rest/v1/accessories?id=eq.${item.accessory_id}&select=odoo_id,name,price`, {
                headers: { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}` }
              });
              const accJson = await accRes.json();
              if (accJson && accJson.length > 0 && accJson[0].odoo_id) {
                odooDomain = [['id', '=', accJson[0].odoo_id]];
              } else {
-               // Fallback to default_code just in case
                odooDomain = [['default_code', '=', item.accessory_id]];
              }
            } else {
              odooDomain = [['default_code', '=', item.accessory_id]];
            }
         } else {
-           // For TCG Cards, default_code is the product_id (UUID)
-           odooDomain = [['default_code', '=', item.product_id]];
+           odooDomain = [['default_code', '=', resolvedProductId]];
         }
 
         const productSearch = await odooJsonRpc(odooUrl, 'call', {
@@ -376,11 +468,58 @@ Deno.serve(async (req: Request) => {
           ]
         });
 
-        if (productSearch && productSearch.length > 0) {
+        let odooProductId: number | null = productSearch && productSearch.length > 0 ? productSearch[0] : null;
+
+        // If the card or accessory is not yet in Odoo, auto-create it on the fly!
+        if (!odooProductId) {
+          let prodInfo = resolvedProductId ? dbProductsMap.get(resolvedProductId) : null;
+          if (!prodInfo && resolvedProductId && supabase) {
+            const { data: fetchedProd } = await supabase
+              .from('products')
+              .select('id, name, game, set_code, condition, finish, price, cost, barcode')
+              .eq('id', resolvedProductId)
+              .maybeSingle();
+            prodInfo = fetchedProd;
+          }
+
+          const cardName = prodInfo?.name || item.name || 'Carta TCG';
+          const setCode = (prodInfo?.set_code || item.set || 'SET').toUpperCase();
+          const finish = (prodInfo?.finish || item.finish || (item.foil ? 'foil' : 'nonfoil')).toLowerCase();
+          const condition = (prodInfo?.condition || 'NM').toUpperCase();
+          const gameCode = prodInfo?.game || 'MTG';
+          const finishStr = finish === 'foil' ? ' (Foil)' : '';
+          const formattedName = item.accessory_id
+            ? `[ACC] ${cardName}`
+            : `[${setCode}] ${cardName}${finishStr} - ${condition}`;
+          const defaultCode = item.accessory_id || resolvedProductId || `GEEKO-${Date.now()}`;
+          const unitPrice = Number(item.price ?? prodInfo?.price ?? 0);
+          const categId = await getOrCreateSinglesCategoryId(gameCode);
+
+          odooProductId = await odooJsonRpc(odooUrl, 'call', {
+            service: 'object',
+            method: 'execute_kw',
+            args: [
+              odooDb, uid, odooApiKey,
+              'product.product',
+              'create',
+              [{
+                name: formattedName,
+                default_code: defaultCode,
+                list_price: unitPrice,
+                categ_id: categId,
+                type: 'consu',
+                is_storable: true
+              }]
+            ]
+          });
+          console.log(`[Odoo Sync] Auto-created missing product in Odoo: ${formattedName} (ID: ${odooProductId}, Code: ${defaultCode})`);
+        }
+
+        if (odooProductId) {
           orderLines.push([0, 0, {
-            product_id: productSearch[0],
-            product_uom_qty: item.quantity,
-            price_unit: item.price
+            product_id: odooProductId,
+            product_uom_qty: Number(item.quantity || 1),
+            price_unit: Number(item.price || 0)
           }]);
         }
       }
@@ -388,16 +527,6 @@ Deno.serve(async (req: Request) => {
       // 3. Create Sale Order
       if (orderLines.length === 0) {
         throw new Error("No mappable products found for this order in Odoo.");
-      }
-
-      // Sanitize client_order_ref defensively
-      let cleanRef = order_data.id;
-      if (typeof cleanRef === 'object' && cleanRef !== null) {
-        cleanRef = (cleanRef as any).order_id || JSON.stringify(cleanRef);
-      }
-      if (typeof cleanRef === 'string') {
-        const uuidMatch = cleanRef.match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i);
-        if (uuidMatch) cleanRef = uuidMatch[0];
       }
 
       const orderId = await odooJsonRpc(odooUrl, 'call', {
@@ -416,6 +545,7 @@ Deno.serve(async (req: Request) => {
       });
 
       // Immediately link odoo_order_id to Supabase
+      let soName: string | null = null;
       try {
         const soDetails = await odooJsonRpc(odooUrl, 'call', {
           service: 'object',
@@ -428,9 +558,7 @@ Deno.serve(async (req: Request) => {
             { fields: ['name'] }
           ]
         });
-        const soName = soDetails?.[0]?.name;
-        const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
-        const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
+        soName = soDetails?.[0]?.name || null;
         if (soName && cleanRef && supabaseUrl && supabaseKey) {
           await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${cleanRef}`, {
             method: 'PATCH',
@@ -448,10 +576,17 @@ Deno.serve(async (req: Request) => {
 
       // Step 4: Hold physical MTG cards on SortSwift for items in this order
       try {
-        const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
-        const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
-        if (cleanRef && supabaseUrl && supabaseKey) {
-          const supabase = createClient(supabaseUrl, supabaseKey);
+        if (cleanRef && supabase) {
+          let ssApiKey = Deno.env.get('SORTSWIFT_API_KEY') || '';
+          if (!ssApiKey) {
+            const { data: cfg } = await supabase
+              .from('system_config')
+              .select('value')
+              .eq('key', 'SORTSWIFT_API_KEY')
+              .maybeSingle();
+            ssApiKey = cfg?.value || 'ss_inv_fa551970f693f49c03d8b0120d35e6b314ce980a6a31eda3b6b683520efec738';
+          }
+
           const { data: orderItems } = await supabase
             .from('order_items')
             .select('id, product_id')
@@ -467,7 +602,7 @@ Deno.serve(async (req: Request) => {
                   .maybeSingle();
 
                 if (prod?.sortswift_id) {
-                  const hold = await reserveSortSwiftCard(prod.sortswift_id, oi.id, 60);
+                  const hold = await reserveSortSwiftCard(prod.sortswift_id, oi.id, 60, ssApiKey);
                   if (hold && hold.id) {
                     await supabase
                       .from('order_items')
@@ -484,7 +619,7 @@ Deno.serve(async (req: Request) => {
         console.error('[SortSwift Hold] Non-fatal error reserving cards on SortSwift:', ssErr.message);
       }
 
-      return new Response(JSON.stringify({ success: true, order_id: orderId }), {
+      return new Response(JSON.stringify({ success: true, order_id: orderId, odoo_order_name: soName }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
     }

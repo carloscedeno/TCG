@@ -307,7 +307,8 @@ export const CheckoutPage = () => {
                 shippingAddress: shippingAddressObj,
                 totalAmount: total,
                 guestInfo: !user ? { email: form.email || 'guest@geekorium.com', phone: form.whatsapp } : undefined,
-                cartId: cartId || undefined
+                cartId: cartId || undefined,
+                customerName: form.full_name || undefined
             });
 
             // Save address if requested and logged in
