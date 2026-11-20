@@ -948,6 +948,185 @@ serve(async (req: Request) => {
       if (error) throw new Error(`Zero stock products error: ${error.message}`);
     }
 
+    // 9. Phase 2: Real-Time Parity Sync with Odoo ERP (product.product + stock.quant)
+    let odooSynced = false;
+    let odooCreated = 0;
+    let odooUpdated = 0;
+    let odooStockApplied = 0;
+    let odooError: string | null = null;
+
+    const odooUrl = Deno.env.get("ODOO_URL");
+    const odooDb = Deno.env.get("ODOO_DB");
+    const odooUsername = Deno.env.get("ODOO_USERNAME");
+    const odooApiKey = Deno.env.get("ODOO_API_KEY");
+
+    if (odooUrl && odooDb && odooUsername && odooApiKey) {
+      try {
+        const odooRpc = async (service: string, method: string, args: any[]) => {
+          const res = await fetch(`${odooUrl}/jsonrpc`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "User-Agent": "GeekoriumSync/2.0",
+            },
+            body: JSON.stringify({
+              jsonrpc: "2.0",
+              method: "call",
+              params: { service, method, args },
+              id: Math.floor(Math.random() * 1000000),
+            }),
+          });
+          const json = await res.json();
+          if (json.error) {
+            throw new Error(json.error.data?.message || json.error.message || "Odoo RPC error");
+          }
+          return json.result;
+        };
+
+        const odooUid = await odooRpc("common", "authenticate", [odooDb, odooUsername, odooApiKey, {}]);
+        if (odooUid) {
+          const ODOO_CAT_MAP: Record<string, number> = {
+            MTG: 10,
+            PKM: 28,
+            YGO: 30,
+            OPC: 20,
+            DGM: 26,
+            FAB: 18,
+            GND: 24,
+            RFB: 22,
+          };
+          const DEFAULT_ODOO_CAT = 34;
+          const ODOO_WH_STOCK = 5;
+
+          const codesToSync = [
+            ...productsToUpsert.map((p) => String(p.id)),
+            ...idsToZero.map((id) => String(id)),
+          ];
+
+          if (codesToSync.length > 0) {
+            const existingOdooByCode = new Map<string, number>();
+            for (let i = 0; i < codesToSync.length; i += 200) {
+              const codeChunk = codesToSync.slice(i, i + 200);
+              const found = await odooRpc("object", "execute_kw", [
+                odooDb,
+                odooUid,
+                odooApiKey,
+                "product.product",
+                "search_read",
+                [[["default_code", "in", codeChunk]]],
+                { fields: ["id", "default_code"] },
+              ]);
+              for (const rec of found || []) {
+                if (rec.default_code) existingOdooByCode.set(String(rec.default_code), rec.id);
+              }
+            }
+
+            const toCreateOdoo: Array<{ vals: any; stock: number }> = [];
+            const quantUpdates: Array<{ product_id: number; location_id: number; inventory_quantity: number }> = [];
+
+            for (const p of productsToUpsert) {
+              const code = String(p.id);
+              const existingOdooId = existingOdooByCode.get(code);
+              const sCode = String(p.set_code || "UNK").toUpperCase();
+              const finishStr = p.finish === "foil" ? " (Foil)" : "";
+              const cond = String(p.condition || "NM").toUpperCase();
+              const fullName = `[${sCode}] ${p.name}${finishStr} - ${cond}`;
+              const catId = ODOO_CAT_MAP[p.game] || DEFAULT_ODOO_CAT;
+
+              if (existingOdooId) {
+                odooUpdated += 1;
+                await odooRpc("object", "execute_kw", [
+                  odooDb,
+                  odooUid,
+                  odooApiKey,
+                  "product.product",
+                  "write",
+                  [[existingOdooId], { list_price: Number(p.price || 0) }],
+                ]);
+                quantUpdates.push({
+                  product_id: existingOdooId,
+                  location_id: ODOO_WH_STOCK,
+                  inventory_quantity: Number(p.stock || 0),
+                });
+              } else {
+                toCreateOdoo.push({
+                  vals: {
+                    name: fullName,
+                    default_code: code,
+                    list_price: Number(p.price || 0),
+                    available_in_pos: true,
+                    is_storable: true,
+                    categ_id: catId,
+                  },
+                  stock: Number(p.stock || 0),
+                });
+              }
+            }
+
+            for (const zId of idsToZero) {
+              const existingOdooId = existingOdooByCode.get(String(zId));
+              if (existingOdooId) {
+                quantUpdates.push({
+                  product_id: existingOdooId,
+                  location_id: ODOO_WH_STOCK,
+                  inventory_quantity: 0,
+                });
+              }
+            }
+
+            for (let i = 0; i < toCreateOdoo.length; i += 100) {
+              const chunk = toCreateOdoo.slice(i, i + 100);
+              const newOdooIds = await odooRpc("object", "execute_kw", [
+                odooDb,
+                odooUid,
+                odooApiKey,
+                "product.product",
+                "create",
+                [chunk.map((c) => c.vals)],
+              ]);
+              if (Array.isArray(newOdooIds)) {
+                odooCreated += newOdooIds.length;
+                newOdooIds.forEach((nid: number, idx: number) => {
+                  quantUpdates.push({
+                    product_id: nid,
+                    location_id: ODOO_WH_STOCK,
+                    inventory_quantity: chunk[idx].stock,
+                  });
+                });
+              }
+            }
+
+            for (let i = 0; i < quantUpdates.length; i += 100) {
+              const qChunk = quantUpdates.slice(i, i + 100);
+              const quantIds = await odooRpc("object", "execute_kw", [
+                odooDb,
+                odooUid,
+                odooApiKey,
+                "stock.quant",
+                "create",
+                [qChunk],
+              ]);
+              if (Array.isArray(quantIds) && quantIds.length > 0) {
+                await odooRpc("object", "execute_kw", [
+                  odooDb,
+                  odooUid,
+                  odooApiKey,
+                  "stock.quant",
+                  "action_apply_inventory",
+                  [quantIds],
+                ]);
+                odooStockApplied += quantIds.length;
+              }
+            }
+          }
+          odooSynced = true;
+        }
+      } catch (oErr: any) {
+        odooError = oErr?.message || String(oErr);
+        console.warn("Odoo phase 2 sync warning:", odooError);
+      }
+    }
+
     const durationMs = Date.now() - startTime;
 
     return new Response(
@@ -970,6 +1149,11 @@ serve(async (req: Request) => {
         unchanged_units: unchangedUnits,
         zeroed_count: zeroedCount,
         active_bins_count: activeBinsSet.size,
+        odoo_synced: odooSynced,
+        odoo_created: odooCreated,
+        odoo_updated: odooUpdated,
+        odoo_stock_applied: odooStockApplied,
+        odoo_error: odooError,
         by_tcg: byTcg,
         sample_new_cards: sampleNewCards,
         sample_updated_cards: sampleUpdatedCards,

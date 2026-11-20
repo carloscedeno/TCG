@@ -293,6 +293,25 @@ export function SortSwiftSyncModal({ isOpen, onClose, onSuccess }: SortSwiftSync
             }
         }
 
+        setProgress(93);
+        setStage("Verificando paridad en vivo con Odoo ERP...");
+        addLog("SYS", "----------------------------------------------------------");
+        addLog("SYS", " [FASE 2/2] PARIDAD DE CATÁLOGO Y STOCK CON ODOO ERP (JSON-RPC)");
+        addLog("SYS", "----------------------------------------------------------");
+
+        if (resJson?.odoo_synced) {
+            const oCreated = Number(resJson?.odoo_created ?? 0);
+            const oUpdated = Number(resJson?.odoo_updated ?? 0);
+            const oStock = Number(resJson?.odoo_stock_applied ?? 0);
+            if (oCreated === 0 && oUpdated === 0 && oStock === 0) {
+                addLog("SUCCESS", "[ODOO_OK] Catálogo y existencias WH/Stock en Odoo ya están al 100% en paridad (0 deltas pendientes).");
+            } else {
+                addLog("SUCCESS", `[ODOO_OK] Sincronización Odoo completada: ${oCreated} fichas nuevas creadas | ${oUpdated} precios actualizados | ${oStock} ajustes de stock en WH/Stock.`);
+            }
+        } else if (resJson?.odoo_error) {
+            addLog("WARN", `[ODOO_WARN] Alerta en enlace Odoo: ${resJson.odoo_error}`);
+        }
+
         setProgress(96);
         setStage("Generando resumen auditado por TCG y archivo de transacción...");
         addLog("SYS", "==========================================================");
