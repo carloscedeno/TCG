@@ -448,7 +448,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                 ) : (
                     <>
                         {versionGroups.map((group: any) => {
-                            const isGroupActive = activePrintingId === group.base.printing_id;
+                            const isGroupActive = activePrintingId === group.base?.printing_id || activePrintingId === group.normal?.printing_id || activePrintingId === group.foil?.printing_id || activePrintingId === group.etched?.printing_id;
                             const rowActiveVersion = (isGroupActive && selectedFinish === 'foil' && group.foil) ? group.foil : (group.normal || group.base);
 
                             return (

@@ -345,16 +345,45 @@ serve(async (req: Request) => {
     }
 
     const cardIdByGameAndName = new Map<string, string>();
+    // Pre-populate cardIdByGameAndName from existing printings & products so new printings of existing cards always share card_id
+    const printingIdToCardId = new Map<string, string>();
+    for (const p of allPrintings) {
+      if (p.printing_id && p.card_id) {
+        printingIdToCardId.set(p.printing_id, p.card_id);
+      }
+    }
+    const GAME_CODE_TO_ID: Record<string, number> = {
+      MTG: 22,
+      PKM: 23,
+      OPC: 13,
+      FAB: 25,
+      DGM: 18,
+      GND: 17,
+      RFB: 16,
+    };
+    for (const prod of allProducts) {
+      if (prod.printing_id && prod.name) {
+        const cid = printingIdToCardId.get(prod.printing_id);
+        const gid = GAME_CODE_TO_ID[prod.game] || 22;
+        if (cid) {
+          cardIdByGameAndName.set(`${gid}|${String(prod.name).trim().toLowerCase()}`, cid);
+        }
+      }
+    }
+
     const newCardNamesArr = Array.from(newCardNamesSet);
     for (let i = 0; i < newCardNamesArr.length; i += 100) {
       const chunkNames = newCardNamesArr.slice(i, i + 100);
       const { data: matchedCards } = await supabase
         .from("cards")
-        .select("card_id, card_name, game_id")
+        .select("card_id, card_name, game_id, mana_cost, created_at")
         .in("card_name", chunkNames);
       for (const c of matchedCards || []) {
         if (c.card_name) {
-          cardIdByGameAndName.set(`${c.game_id}|${String(c.card_name).trim().toLowerCase()}`, c.card_id);
+          const key = `${c.game_id}|${String(c.card_name).trim().toLowerCase()}`;
+          if (!cardIdByGameAndName.has(key) || c.mana_cost || c.created_at) {
+            cardIdByGameAndName.set(key, c.card_id);
+          }
         }
       }
     }
