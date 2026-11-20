@@ -187,6 +187,18 @@ async function processSortSwiftOrderCommit(supabase: any, orderRef: string, isCa
               .from('order_items')
               .update({ sortswift_reservation_id: `committed:${resId || item.id}` })
               .eq('id', item.id);
+
+            if (item.product_id) {
+              const { data: pCheck } = await supabase
+                .from('products')
+                .select('stock, sortswift_id')
+                .eq('id', item.product_id)
+                .maybeSingle();
+              if (pCheck?.sortswift_id && Number(pCheck.stock || 0) > 0) {
+                const newStock = Math.max(0, Number(pCheck.stock) - Number(item.quantity || 1));
+                await supabase.from('products').update({ stock: newStock }).eq('id', item.product_id);
+              }
+            }
           }
         }
       }
@@ -214,22 +226,12 @@ let odooUid: number | null = null;
 
     // 3. Process Updates
     for (const record of records) {
-      // DEBUG LOGGING
-      try {
-        await supabase.from('accessories').insert({
-          id: crypto.randomUUID(),
-          name: JSON.stringify(record).substring(0, 200),
-          category: 'Accesorios',
-          is_active: false,
-          language: 'Spanish',
-          unit_type: 'Unidad'
-        });
-      } catch (e) {}
+      console.log(`[Odoo Webhook] Incoming record:`, JSON.stringify(record));
 
             // 0. Is it a Stock Picking (Transfers / Inventory Deliveries)?
       if (record._model === 'stock.picking' || record.model === 'stock.picking' || (record.name && record.name.startsWith('WH/'))) {
-        const pickingId = record.id;
-        const pickingName = record.name;
+        const pickingId = record._id || record.id;
+        const pickingName = record.name || `WH-#${pickingId}`;
         const pickingState = record.state;
         console.log(`[Odoo Webhook] Processing Stock Picking: ${pickingName} (State: ${pickingState})`);
 
@@ -313,9 +315,14 @@ let odooUid: number | null = null;
 
       // 0.5 Is it an Invoice or Credit Note / Refund (account.move)?
       if (record._model === 'account.move' || record.model === 'account.move' || (record.name && (record.name.startsWith('INV/') || record.name.startsWith('RINV/')))) {
-        const moveId = record.id;
-        const moveName = record.name;
-        console.log(`[Odoo Webhook] Processing Invoice/Refund: ${moveName}`);
+        const moveId = record._id || record.id;
+        const moveName = record.name || `INV-#${moveId}`;
+        console.log(`[Odoo Webhook] Processing Invoice/Refund: ${moveName} (ID: ${moveId})`);
+
+        if (!moveId) {
+          console.warn('[Odoo Webhook] account.move has no valid ID. Skipping.');
+          continue;
+        }
 
         try {
           let moveDetails: any[] = [];
@@ -410,7 +417,7 @@ let odooUid: number | null = null;
             if (isRefund) {
               await updateOrder('refunded');
               await processSortSwiftOrderCommit(supabase, originSO, true);
-            } else if (isPaid) {
+            } else if (isPaid || m?.payment_state === "paid" || m?.payment_state === "in_payment" || m?.state === "posted") {
               await updateOrder('paid');
               await processSortSwiftOrderCommit(supabase, originSO, false);
             } else if (isCancelled) {
@@ -427,8 +434,9 @@ let odooUid: number | null = null;
       }
 
       // 1. Is it a Sales Order (from Web or Odoo)?
-      if (record.amount_total !== undefined || record.order_line !== undefined || record.model === 'sale.order' || (record.name && record.name.startsWith('S'))) {
-        const odooOrderName = record.name;
+      if (record.amount_total !== undefined || record.order_line !== undefined || record.model === 'sale.order' || record._model === 'sale.order' || (record.name && record.name.startsWith('S'))) {
+        const odooOrderId = record._id || record.id;
+        let odooOrderName = record.name;
         let webOrderId = record.client_order_ref;
         if (typeof webOrderId === 'string') {
           const uuidMatch = webOrderId.match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i);
@@ -436,9 +444,8 @@ let odooUid: number | null = null;
             webOrderId = uuidMatch[0];
           }
         }
-        const odooOrderId = record.id;
         
-        console.log(`[Odoo Webhook] Processing Sales Order: ${odooOrderName} (Web ID: ${webOrderId || 'None - Created in Odoo'})`);
+        console.log(`[Odoo Webhook] Processing Sales Order: ${odooOrderName || odooOrderId} (ID: ${odooOrderId}, Web ID: ${webOrderId || 'None - Created in Odoo'})`);
         
         try {
           const uid = await getOdooUid();
