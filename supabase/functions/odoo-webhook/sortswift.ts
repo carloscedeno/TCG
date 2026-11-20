@@ -4,7 +4,7 @@ const SORTSWIFT_BASE_URL = 'https://inventory-api.sortswift.com/api/inventory';
 export function getSortSwiftApiKey(): string {
   return (
     Deno.env.get('SORTSWIFT_API_KEY') ||
-    'ss_inv_sbx_e56e17c7ca1fe8dcc88650edcd0bc654f6a37803a64f6e6b54debdcc6d39c358'
+    'ss_inv_fa551970f693f49c03d8b0120d35e6b314ce980a6a31eda3b6b683520efec738'
   );
 }
 

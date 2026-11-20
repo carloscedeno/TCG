@@ -104,10 +104,20 @@ serve(async (req) => {
 
     const results = [];
     
-// Helper to commit or release SortSwift reservations for an order
+// Helper to commit or release SortSwift reservations for an order (idempotent)
 async function processSortSwiftOrderCommit(supabase: any, orderRef: string, isCancel: boolean = false) {
   if (!orderRef) return;
   try {
+    let ssApiKey = Deno.env.get('SORTSWIFT_API_KEY') || '';
+    if (!ssApiKey) {
+      const { data: cfg } = await supabase
+        .from('system_config')
+        .select('value')
+        .eq('key', 'SORTSWIFT_API_KEY')
+        .maybeSingle();
+      ssApiKey = cfg?.value || 'ss_inv_fa551970f693f49c03d8b0120d35e6b314ce980a6a31eda3b6b683520efec738';
+    }
+
     const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(orderRef);
     let ordersQuery = supabase.from('orders').select('id, odoo_order_id');
     if (isUuid) {
@@ -139,13 +149,44 @@ async function processSortSwiftOrderCommit(supabase: any, orderRef: string, isCa
 
     if (Array.isArray(items)) {
       for (const item of items) {
-        if (item.sortswift_reservation_id) {
-          if (isCancel) {
-            console.log(`[SortSwift Hook] Releasing reservation ${item.sortswift_reservation_id} for order ${order.id}`);
-            await releaseSortSwiftReservation(item.sortswift_reservation_id);
-          } else {
-            console.log(`[SortSwift Hook] Committing reservation ${item.sortswift_reservation_id} for order ${order.id}`);
-            await commitSortSwiftReservation(item.sortswift_reservation_id);
+        const resId = item.sortswift_reservation_id ? String(item.sortswift_reservation_id) : '';
+        if (resId.startsWith('committed:') || resId.startsWith('released:')) {
+          continue;
+        }
+
+        if (isCancel) {
+          if (resId) {
+            console.log(`[SortSwift Hook] Releasing reservation ${resId} for order ${order.id}`);
+            await releaseSortSwiftReservation(resId, ssApiKey);
+            await supabase.from('order_items').update({ sortswift_reservation_id: `released:${resId}` }).eq('id', item.id);
+          }
+        } else {
+          let committed = false;
+          if (resId) {
+            console.log(`[SortSwift Hook] Committing reservation ${resId} for order ${order.id}`);
+            committed = await commitSortSwiftReservation(resId, ssApiKey);
+          }
+
+          if (!committed && item.product_id) {
+            const { data: prod } = await supabase
+              .from('products')
+              .select('sortswift_id')
+              .eq('id', item.product_id)
+              .maybeSingle();
+            if (prod?.sortswift_id) {
+              const qty = Math.max(1, Number(item.quantity || 1));
+              for (let q = 0; q < qty; q++) {
+                const ok = await deductSortSwiftDirectSale(prod.sortswift_id, `${item.id}_${q}`, ssApiKey);
+                if (ok) committed = true;
+              }
+            }
+          }
+
+          if (committed) {
+            await supabase
+              .from('order_items')
+              .update({ sortswift_reservation_id: `committed:${resId || item.id}` })
+              .eq('id', item.id);
           }
         }
       }
@@ -251,14 +292,15 @@ let odooUid: number | null = null;
                     }
                   }
                 }
-                if (pickingDetails && pickingDetails[0]?.origin) {
+                if (pickingDetails && pickingDetails[0]?.origin && (pickingDetails[0]?.state === 'done' || pickingState === 'done' || record.state === 'done')) {
                   await processSortSwiftOrderCommit(supabase, pickingDetails[0].origin, false);
                 }
               }
             }
           }
           const pickingOrigin = (pickingDetails && pickingDetails[0]?.origin) || record.origin;
-          if (pickingOrigin && (pickingState === 'done' || record.state === 'done')) {
+          const actualPickingState = (pickingDetails && pickingDetails[0]?.state) || pickingState || record.state;
+          if (pickingOrigin && actualPickingState === 'done') {
             await processSortSwiftOrderCommit(supabase, pickingOrigin, false);
           }
           results.push({ picking: pickingName, state: pickingState, status: 'synced_stock' });
