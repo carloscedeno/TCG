@@ -15,12 +15,53 @@ interface LogEntry {
     message: string;
 }
 
+interface AuditRow {
+    action: string;
+    game: string;
+    name: string;
+    set_name: string;
+    collector_number: string;
+    condition: string;
+    finish: string;
+    language: string;
+    prev_stock: number;
+    new_stock: number;
+    delta: string;
+    price: string;
+    cost: string;
+    bin: string;
+    location: string;
+    barcode: string;
+    ss_id: string;
+    pid: string;
+}
+
+const TCG_LABELS: Record<string, string> = {
+    MTG: "MTG (Magic)",
+    PKM: "PKM (Pokémon)",
+    OPC: "OPC (One Piece)",
+    RFB: "RFB (Riftbound)",
+    DGM: "DGM (Digimon)",
+    GND: "GND (Gundam)",
+    FAB: "FAB (Flesh & Blood)",
+    YGO: "YGO (Yu-Gi-Oh!)",
+};
+
+function escapeCsvField(val: unknown): string {
+    const str = String(val ?? "");
+    if (str.includes(",") || str.includes('"') || str.includes("\n")) {
+        return `"${str.replace(/"/g, '""')}"`;
+    }
+    return str;
+}
+
 export function SortSwiftSyncModal({ isOpen, onClose, onSuccess }: SortSwiftSyncModalProps) {
     const { session } = useAuth();
     const [progress, setProgress] = useState(0);
     const [stage, setStage] = useState<string>("Iniciando terminal...");
     const [status, setStatus] = useState<"idle" | "running" | "completed" | "error">("idle");
     const [logs, setLogs] = useState<LogEntry[]>([]);
+    const [auditRows, setAuditRows] = useState<AuditRow[]>([]);
     const [copied, setCopied] = useState(false);
     const [downloadingCsv, setDownloadingCsv] = useState(false);
     const terminalEndRef = useRef<HTMLDivElement>(null);
@@ -48,6 +89,66 @@ export function SortSwiftSyncModal({ isOpen, onClose, onSuccess }: SortSwiftSync
     const handleDownloadCsv = async () => {
         setDownloadingCsv(true);
         try {
+            if (auditRows.length > 0) {
+                const headers = [
+                    "Accion",
+                    "Juego (TCG)",
+                    "Nombre de Carta",
+                    "Set / Edicion",
+                    "Nro Coleccionista",
+                    "Condicion",
+                    "Acabado (Finish)",
+                    "Idioma",
+                    "Stock Anterior",
+                    "Stock Nuevo (SortSwift)",
+                    "Diferencia",
+                    "Precio USD",
+                    "Costo USD",
+                    "Gaveta SortSwift (Bin)",
+                    "Ubicacion Fisica Asignada",
+                    "Codigo de Barras",
+                    "ID SortSwift",
+                    "TCGPlayer ID"
+                ];
+
+                const lines = [headers.join(",")];
+                for (const r of auditRows) {
+                    lines.push([
+                        escapeCsvField(r.action),
+                        escapeCsvField(r.game),
+                        escapeCsvField(r.name),
+                        escapeCsvField(r.set_name),
+                        escapeCsvField(r.collector_number),
+                        escapeCsvField(r.condition),
+                        escapeCsvField(r.finish),
+                        escapeCsvField(r.language),
+                        escapeCsvField(r.prev_stock),
+                        escapeCsvField(r.new_stock),
+                        escapeCsvField(r.delta),
+                        escapeCsvField(r.price),
+                        escapeCsvField(r.cost),
+                        escapeCsvField(r.bin),
+                        escapeCsvField(r.location),
+                        escapeCsvField(r.barcode),
+                        escapeCsvField(r.ss_id),
+                        escapeCsvField(r.pid),
+                    ].join(","));
+                }
+
+                const csvContent = "\uFEFF" + lines.join("\n");
+                const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = `Geekorium_Sincronizacion_SortSwift_${new Date().toISOString().split("T")[0]}.csv`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                setDownloadingCsv(false);
+                return;
+            }
+
             const baseUrl = import.meta.env.BASE_URL || "/";
             const cleanBase = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
             const fileUrl = `${cleanBase}sortswift_sync_audit_detail.csv`;
@@ -67,10 +168,9 @@ export function SortSwiftSyncModal({ isOpen, onClose, onSuccess }: SortSwiftSync
                 return;
             }
         } catch (err) {
-            console.error("Direct fetch failed, falling back to window location:", err);
+            console.error("Direct CSV download failed, falling back:", err);
         }
 
-        // Fallback
         const link = document.createElement("a");
         link.href = "./sortswift_sync_audit_detail.csv";
         link.download = `Geekorium_Sincronizacion_SortSwift_${new Date().toISOString().split("T")[0]}.csv`;
@@ -84,43 +184,49 @@ export function SortSwiftSyncModal({ isOpen, onClose, onSuccess }: SortSwiftSync
         setStatus("running");
         setProgress(5);
         setLogs([]);
+        setAuditRows([]);
         setStage("Handshake TLS & Auth con SortSwift API...");
 
         addLog("SYS", "==========================================================");
-        addLog("SYS", " GEEKORIUM // SORTSWIFT OMNI-CATALOG INGESTION ENGINE v3.2");
+        addLog("SYS", " GEEKORIUM // SORTSWIFT LIVE OMNI-CATALOG SYNC ENGINE v4.0");
         addLog("SYS", " TARGET_NODE: dev.geekorium.shop [Supabase DEV: bqfkqnnostzaqueujdms]");
         addLog("SYS", "==========================================================");
 
-        await new Promise(r => setTimeout(r, 600));
+        await new Promise(r => setTimeout(r, 300));
         addLog("INFO", "[AUTH] Verificando credenciales de administrador y token de sesión...");
-        setProgress(15);
+        setProgress(12);
 
-        await new Promise(r => setTimeout(r, 700));
-        addLog("INFO", "[AUTH] Token válido. Handshake establecido con endpoint de API SortSwift.");
-        setStage("Consultando lotes activos e inventario en SortSwift...");
-        setProgress(25);
+        const SUPABASE_URL = import.meta.env.VITE_DEV_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL || "https://bqfkqnnostzaqueujdms.supabase.co";
+        addLog("SYS", "[API_CALL] GET https://inventory-api.sortswift.com/api/inventory/api-key/raw-cards?limit=1000");
+        addLog("SYS", `[API_GATEWAY] Ejecutando sincronización en vivo en Edge Function: ${SUPABASE_URL}/functions/v1/sortswift-sync`);
+        setStage("Consultando lotes en vivo en SortSwift API y sincronizando base de datos...");
+        setProgress(22);
 
-        addLog("SYS", "[API_CALL] GET https://inventory-api.sortswift.com/api/inventory/api-key/raw-cards");
+        let progressTimer: ReturnType<typeof setInterval> | null = setInterval(() => {
+            setProgress(prev => (prev < 86 ? prev + 3 : prev));
+        }, 700);
 
+        let resJson: any = null;
         try {
-            const SUPABASE_URL = import.meta.env.VITE_DEV_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL || 'https://bqfkqnnostzaqueujdms.supabase.co';
-            addLog("SYS", `[API_GATEWAY] Conectando con Edge Function: ${SUPABASE_URL}/functions/v1/sortswift-sync`);
-
-            // Disparar sincronización al backend
             const response = await fetch(`${SUPABASE_URL}/functions/v1/sortswift-sync`, {
-                method: 'POST',
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${session?.access_token}`
+                    "Content-Type": "application/json",
+                    ...(session?.access_token ? { "Authorization": `Bearer ${session.access_token}` } : {})
                 },
                 body: JSON.stringify({
-                    target_env: 'dev'
+                    target_env: "dev"
                 })
             });
 
+            if (progressTimer) {
+                clearInterval(progressTimer);
+                progressTimer = null;
+            }
+
             if (response.ok) {
-                const resJson = await response.json().catch(() => ({}));
-                addLog("SUCCESS", `[GATEWAY_200_OK] ${resJson?.message || 'Pipeline activado en backend'}`);
+                resJson = await response.json();
+                addLog("SUCCESS", `[GATEWAY_200_OK] ${resJson?.message || "Sincronización en vivo completada"}`);
             } else {
                 const errJson = await response.json().catch(() => ({}));
                 addLog("ERROR", `[GATEWAY_FAIL] HTTP ${response.status}: ${errJson?.error || response.statusText}`);
@@ -129,90 +235,101 @@ export function SortSwiftSyncModal({ isOpen, onClose, onSuccess }: SortSwiftSync
                 return;
             }
         } catch (err: any) {
+            if (progressTimer) {
+                clearInterval(progressTimer);
+                progressTimer = null;
+            }
             addLog("ERROR", `[CONNECT_FAIL] Error crítico de red: ${err.message}`);
             setStatus("error");
             setStage("Error de red al contactar servidor.");
             return;
         }
 
-        await new Promise(r => setTimeout(r, 600));
-        setProgress(35);
-        setStage("Descargando e inspeccionando cartas singles desde SortSwift...");
-        addLog("INFO", "[SS_RAW] Descargadas 4,072 cartas singles RAW desde SortSwift API.");
-        addLog("INFO", "[SS_UNITS] Lotes físicos contabilizados: 9,768 unidades físicas disponibles.");
+        const totalRaw = Number(resJson?.total_raw_cards ?? 0);
+        const totalUnits = Number(resJson?.total_units ?? 0);
+        const totalNodes = Number(resJson?.total_unique_nodes ?? 0);
+        const newTcgResolved = Number(resJson?.new_tcg_resolved ?? 0);
+        const addedCount = Number(resJson?.added_count ?? 0);
+        const addedUnits = Number(resJson?.added_units ?? 0);
+        const updatedCount = Number(resJson?.updated_count ?? 0);
+        const updatedUnits = Number(resJson?.updated_units ?? 0);
+        const unchangedCount = Number(resJson?.unchanged_count ?? 0);
+        const unchangedUnits = Number(resJson?.unchanged_units ?? 0);
+        const zeroedCount = Number(resJson?.zeroed_count ?? 0);
+        const activeBins = Number(resJson?.active_bins_count ?? 0);
+        const rows: AuditRow[] = Array.isArray(resJson?.audit_rows) ? resJson.audit_rows : [];
 
-        await new Promise(r => setTimeout(r, 600));
-        setProgress(45);
-        setStage("Resolución de metadatos TCGplayer y Card Printings...");
-        addLog("INFO", "[TCG_RESOLVE] Resolviendo Product IDs con motor multijuego (MTG, PKM, OPC, GND, DGM, FAB, RFB)...");
-        addLog("INFO", "[METADATA] Extrayendo collector_number, finish (Normal/Foil), rarezas y arte oficial...");
-        addLog("SUCCESS", "[TCG_CACHE] 1,378 nuevas cartas singulares resueltas con metadatos oficiales.");
+        setAuditRows(rows);
+        setProgress(90);
+        setStage("Procesando resultados de ingesta y metadatos...");
 
-        await new Promise(r => setTimeout(r, 600));
-        setProgress(60);
-        setStage("Agregando existencias de cartas en catálogo Supabase...");
-        addLog("SYS", "[DB_UPSERT] Realizando atomic batch upsert en tabla 'products'...");
-        addLog("INFO", "[STOCK_AGGREGATE] Consolidando cantidades físicas por printing_id, condición y acabado...");
-        addLog("SUCCESS", "[SS_OK] Ingesta SortSwift completada: 4,072 cartas singulares procesadas.");
+        addLog("INFO", `[SS_RAW] Descargadas ${totalRaw.toLocaleString()} cartas singles RAW activas desde SortSwift API (${activeBins} gavetas/carpetas activas).`);
+        addLog("INFO", `[SS_UNITS] Lotes físicos contabilizados: ${totalUnits.toLocaleString()} unidades físicas consolidadas en ${totalNodes.toLocaleString()} nodos únicos.`);
 
-        // ==========================================
-        // FASE 2: SINCRONIZACIÓN CON ODOO ERP
-        // ==========================================
-        await new Promise(r => setTimeout(r, 700));
-        setProgress(70);
-        setStage("Iniciando Fase 2: Enlace con Odoo ERP...");
-        addLog("SYS", "----------------------------------------------------------");
-        addLog("SYS", " [FASE 2/2] SINCRONIZACIÓN Y PARIDAD CON ODOO ERP (JSON-RPC)");
-        addLog("SYS", "----------------------------------------------------------");
+        if (newTcgResolved > 0) {
+            addLog(
+                "SUCCESS",
+                `[TCG_RESOLVE] ${newTcgResolved.toLocaleString()} Product IDs resueltos con metadatos oficiales (${resJson?.new_sets_created || 0} sets nuevos, ${resJson?.new_cards_created || 0} cartas base nuevas, ${resJson?.new_printings_created || 0} printings nuevos).`
+            );
+        } else {
+            addLog("INFO", "[TCG_CACHE] 100% de los Product IDs de SortSwift ya estaban indexados en caché de metadatos oficiales.");
+        }
 
-        await new Promise(r => setTimeout(r, 600));
-        setProgress(78);
-        setStage("Autenticando sesión con Odoo ERP...");
-        addLog("INFO", "[ODOO_AUTH] Conectando a https://geekorium.odoo.com [DB: geekorium]...");
-        addLog("INFO", "[ODOO_AUTH] Sesión XML-RPC establecida para usuario ERP (UID: 2). Handshake OK.");
+        const sampleNew: any[] = Array.isArray(resJson?.sample_new_cards) ? resJson.sample_new_cards : [];
+        if (sampleNew.length > 0) {
+            addLog("SYS", "----------------------------------------------------------");
+            addLog("SYS", ` MUESTRA DE CARTAS SINGLES NUEVAS INSERTADAS (${addedCount.toLocaleString()} total):`);
+            for (const c of sampleNew.slice(0, 12)) {
+                addLog("SUCCESS", `  + [${c.game}] ${c.name} (${c.set}) [${c.finish}] x${c.qty} -> ${c.bin}`);
+            }
+        }
 
-        await new Promise(r => setTimeout(r, 650));
-        setProgress(86);
-        setStage("Sincronizando plantillas de cartas singulares en Odoo...");
-        addLog("INFO", "[ODOO_CAT] Taxonomías de categorías verificadas: MTG (ID:10), PKM (ID:28), OPC (ID:20), YGO (ID:30)...");
-        addLog("INFO", "[ODOO_TMPL] Cotejando 'product.template' y variantes 'product.product' para cartas singles...");
-        addLog("INFO", "[ODOO_MAP] Vinculando códigos de barras y referencias internas (SortSwift -> Odoo)...");
+        const sampleUpdated: any[] = Array.isArray(resJson?.sample_updated_cards) ? resJson.sample_updated_cards : [];
+        if (sampleUpdated.length > 0) {
+            addLog("SYS", "----------------------------------------------------------");
+            addLog("SYS", ` MUESTRA DE CARTAS SINGLES CON STOCK ACTUALIZADO (${updatedCount.toLocaleString()} total):`);
+            for (const c of sampleUpdated.slice(0, 10)) {
+                addLog("INFO", `  ~ [${c.game}] ${c.name} (${c.set}) [${c.finish}]: ${c.prev_qty} u -> ${c.new_qty} u (${c.bin})`);
+            }
+        }
 
-        await new Promise(r => setTimeout(r, 650));
-        setProgress(92);
-        setStage("Ajustando inventario en tiempo real en Odoo (WH/Stock)...");
-        addLog("SYS", "[ODOO_STOCK] Actualizando 'stock.quant' en ubicación física WH/Stock (ID: 5)...");
-        addLog("INFO", "[ODOO_QUANT] Existencias de almacén Odoo sincronizadas con existencias físicas.");
-        addLog("SUCCESS", "[ODOO_OK] Sincronización Odoo finalizada: Catálogo y existencias en paridad total.");
-
-        // ==========================================
-        // FASE 3: RESUMEN AUDITADO POR TCG
-        // ==========================================
-        await new Promise(r => setTimeout(r, 600));
         setProgress(96);
         setStage("Generando resumen auditado por TCG y archivo de transacción...");
         addLog("SYS", "==========================================================");
-        addLog("SYS", " RESUMEN DE TRANSACCIÓN POR JUEGO (TCG) - CARTAS SINGLES");
+        addLog("SYS", " RESUMEN REAL DE TRANSACCIÓN POR JUEGO (TCG) - CARTAS SINGLES");
         addLog("SYS", "==========================================================");
-        addLog("INFO", "MTG (Magic):          2,960 cartas nuevas agregadas (+6,175 u) | 1,059 cartas actualizadas | 262 cartas sin lote en SS (en cero)");
-        addLog("INFO", "PKM (Pokémon):            0 cartas agregadas |  19 cartas actualizadas (19 u)  |   0 cartas en cero");
-        addLog("INFO", "RFB (Riftbound):          0 cartas agregadas |   9 cartas actualizadas (10 u)  |   0 cartas en cero");
-        addLog("INFO", "DGM (Digimon):            0 cartas agregadas |   8 cartas actualizadas (8 u)   |   0 cartas en cero");
-        addLog("INFO", "GND (Gundam):             0 cartas agregadas |   7 cartas actualizadas (7 u)   |   0 cartas en cero");
-        addLog("INFO", "FAB (Flesh & Blood):      0 cartas agregadas |   5 cartas actualizadas (6 u)   |   0 cartas en cero");
-        addLog("INFO", "OPC (One Piece):          0 cartas agregadas |   5 cartas actualizadas (6 u)   |   0 cartas en cero");
+
+        const byTcg = resJson?.by_tcg || {};
+        const tcgOrder = ["MTG", "PKM", "OPC", "RFB", "DGM", "GND", "FAB", ...Object.keys(byTcg)];
+        const seenTcgs = new Set<string>();
+
+        for (const tcg of tcgOrder) {
+            if (seenTcgs.has(tcg) || !byTcg[tcg]) continue;
+            seenTcgs.add(tcg);
+            const st = byTcg[tcg];
+            const label = (TCG_LABELS[tcg] || tcg).padEnd(20, " ");
+            addLog(
+                "INFO",
+                `${label} ${Number(st.added || 0).toLocaleString()} nuevas (+${Number(st.added_units || 0).toLocaleString()} u) | ${Number(st.updated || 0).toLocaleString()} actualizadas (${Number(st.updated_units || 0).toLocaleString()} u) | ${Number(st.unchanged || 0).toLocaleString()} en paridad (${Number(st.unchanged_units || 0).toLocaleString()} u) | ${Number(st.zeroed || 0).toLocaleString()} en cero`
+            );
+        }
+
         addLog("SYS", "----------------------------------------------------------");
-        addLog("SUCCESS", "TOTAL SORTSWIFT: 4,072 cartas singulares procesadas (9,768 unidades físicas)");
-        addLog("SUCCESS", "CARTAS SINGLES NUEVAS AGREGADAS: 2,960 (6,175 unidades)");
-        addLog("SUCCESS", "CARTAS SINGLES CON STOCK ACTUALIZADO: 1,112");
-        addLog("WARN",    "CARTAS SIN LOTE FÍSICO EN SORTSWIFT: 262 (Fijadas en stock 0)");
+        addLog("SUCCESS", `TOTAL SORTSWIFT EN VIVO: ${totalRaw.toLocaleString()} cartas singulares procesadas (${totalUnits.toLocaleString()} unidades físicas)`);
+        addLog("SUCCESS", `NODOS ÚNICOS INDEXADOS EN CATÁLOGO: ${totalNodes.toLocaleString()}`);
+        addLog("SUCCESS", `CARTAS SINGLES NUEVAS AGREGADAS EN ESTA EJECUCIÓN: ${addedCount.toLocaleString()} (+${addedUnits.toLocaleString()} unidades)`);
+        addLog("SUCCESS", `CARTAS SINGLES CON STOCK ACTUALIZADO: ${updatedCount.toLocaleString()} (${updatedUnits.toLocaleString()} unidades)`);
+        addLog("INFO", `CARTAS SINGLES EN PARIDAD (SIN CAMBIOS): ${unchangedCount.toLocaleString()} (${unchangedUnits.toLocaleString()} unidades)`);
+        if (zeroedCount > 0) {
+            addLog("WARN", `CARTAS SIN LOTE FÍSICO EN SORTSWIFT: ${zeroedCount.toLocaleString()} (Fijadas en stock 0)`);
+        }
         addLog("SYS", "==========================================================");
-        addLog("SUCCESS", "STATUS 200 OK • PARIDAD 100% GARANTIZADA ENTRE SISTEMAS");
-        addLog("SUCCESS", "DETALLE COMPLETO DISPONIBLE: 4,334 REGISTROS EN FORMATO CSV.");
+        addLog("SUCCESS", `STATUS 200 OK • SINCRONIZACIÓN REAL EJECUTADA EN ${((Number(resJson?.duration_ms || 0)) / 1000).toFixed(1)}s`);
+        addLog("SUCCESS", `DETALLE COMPLETO DISPONIBLE: ${rows.length.toLocaleString()} REGISTROS EN FORMATO CSV.`);
 
         setProgress(100);
         setStatus("completed");
-        setStage("Sincronización completa con SortSwift y Odoo finalizada con éxito.");
+        setStage("Sincronización en vivo con SortSwift finalizada con éxito.");
 
         // Notificar al componente padre para recargar la tabla de inventario
         onSuccess();
@@ -263,11 +380,11 @@ export function SortSwiftSyncModal({ isOpen, onClose, onSuccess }: SortSwiftSync
                                 </h2>
                                 <span className="px-2.5 py-0.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-1.5 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
                                     <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping inline-block" />
-                                    ONLINE DEV
+                                    LIVE SYNC DEV
                                 </span>
                             </div>
                             <p className="text-[10px] text-emerald-500/70 font-mono uppercase tracking-[0.2em] mt-0.5">
-                                KERNEL // SYNC ENGINE v3.2 • PIPELINE INTEGRAL: SORTSWIFT + GEEKORIUM + ODOO ERP
+                                KERNEL // LIVE SYNC ENGINE v4.0 • CONEXIÓN DIRECTA SORTSWIFT API + SUPABASE DEV
                             </p>
                         </div>
                     </div>
@@ -380,7 +497,7 @@ export function SortSwiftSyncModal({ isOpen, onClose, onSuccess }: SortSwiftSync
                 <div className="p-6 border-t border-emerald-500/20 bg-black/80 flex flex-wrap items-center justify-between gap-4">
                     <div className="flex items-center gap-2 text-[10px] font-mono text-emerald-500/60">
                         <Shield size={14} className="text-emerald-400 shrink-0" />
-                        <span>ENTORNO SEGURO DEV • CONEXIÓN SSL/TLS CIFRADA • SORTSWIFT & ODOO ERP ACTIVO</span>
+                        <span>ENTORNO SEGURO DEV • CONEXIÓN SSL/TLS CIFRADA • SORTSWIFT API EN VIVO</span>
                     </div>
 
                     <div className="flex items-center gap-3">
@@ -408,7 +525,7 @@ export function SortSwiftSyncModal({ isOpen, onClose, onSuccess }: SortSwiftSync
                                 className="px-6 py-3 bg-emerald-950/50 border border-emerald-500/30 text-emerald-400/60 font-mono font-bold text-xs uppercase tracking-widest rounded-xl flex items-center gap-2 cursor-wait"
                             >
                                 <RefreshCw size={14} className="animate-spin text-emerald-400" />
-                                Procesando...
+                                Sincronizando en Vivo...
                             </button>
                         ) : (
                             <button
