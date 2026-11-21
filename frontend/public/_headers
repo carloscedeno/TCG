@@ -1,6 +1,12 @@
-# Cache rules
+# Cache & Security rules
 /*
   Cache-Control: public, max-age=0, must-revalidate
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.scryfall.com; frame-ancestors 'none';
 
 /index.html
   Cache-Control: no-cache, no-store, must-revalidate
@@ -20,4 +26,3 @@
 
 *.css
   Cache-Control: public, max-age=31536000, immutable
-

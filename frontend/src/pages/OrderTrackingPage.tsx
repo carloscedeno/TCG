@@ -16,19 +16,9 @@ export const OrderTrackingPage = () => {
                 throw new Error("El ID de la orden no es válido");
             }
 
-            // Attempt 1: Full fetch with items and details mapping
+            // Secure RPC fetch by exact UUID (prevents public table enumeration)
             const { data, error } = await supabase
-                .from('orders')
-                .select(`
-                    *,
-                    order_items(
-                        *,
-                        products(name, image_url, set_code, release_date),
-                        accessories(name, image_url, category, category_code, release_date)
-                    )
-                `)
-                .eq('id', orderId)
-                .single();
+                .rpc('get_order_tracking', { p_order_id: orderId });
 
             if (error) {
                 console.warn("Initial fetch with items failed:", error);

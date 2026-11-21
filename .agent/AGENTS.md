@@ -29,6 +29,7 @@ Cargar según la tarea específica:
 5. **[Scraper & Data](reference/scrapers.md)** — Calidad de datos, detección de variantes.
 6. **[Documentation](reference/documentation.md)** — Gestión del PRD y docs/.
 7. **[Lessons Learned](lessons_learned.md)** — Bugs críticos, soluciones, anti-patrones.
+8. **[Código y Seguridad](rules/code_discipline_security.md)** — Disciplina Karpathy (simplicidad, cambios quirúrgicos) y Seguridad por Defecto.
 
 ## ⚙️ Ciclo de Trabajo — Compounding Engineer
 

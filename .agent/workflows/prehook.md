@@ -25,7 +25,7 @@ python tools/scripts/carlos_prehook.py
 Este script realiza un chequeo de cordura (Sanity Check) sobre:
 - Estado y rama de Git (asegurando trabajar en `dev` y reportando archivos sin guardar).
 - Presencia y validez del archivo `.env` y variables de Supabase.
-- Verificación de existencia de las leyes y lecciones aprendidas del proyecto.
+- Verificación de existencia de las leyes, lecciones aprendidas y reglas de código/seguridad del proyecto.
 
 ---
 
@@ -94,7 +94,38 @@ graphify update frontend/src --no-viz
 
 ---
 
-## 📋 6. Spec-First para Tareas Grandes
+## 🧘 6. SKILL 1 (PERMANENTE): Disciplina de Código (Reglas de Karpathy)
+
+El agente debe acatar estrictamente estas 4 reglas en toda modificación o creación:
+
+1. **Piensa antes de programar:**
+   - Analiza el problema y expón brevemente tu plan antes de tocar código.
+   - Si un requerimiento es ambiguo o existen múltiples opciones, detente y pregunta primero.
+2. **Simplicidad extrema (haz solo lo pedido):**
+   - Implementa exactamente lo solicitado de la forma más directa y simple posible.
+   - Prohibido agregar abstracciones innecesarias, features extras o archivos no pedidos.
+3. **Cambios quirúrgicos (toca solo lo necesario):**
+   - Modifica únicamente las líneas y archivos estrictamente relacionados con la tarea.
+   - Prohibido reformatear o refactorizar código fuera del alcance. Preserva comentarios y reglas existentes.
+4. **Verifica antes de decir "listo":**
+   - Revisa cambios línea por línea y corre pruebas para validar que no se rompió nada antes de dar por cerrada la tarea.
+
+---
+
+## 🔒 7. SKILL 2 (PERMANENTE): Seguridad por Defecto
+
+Prácticas de seguridad aplicadas automáticamente en todo momento sin excepción:
+
+1. **Cero secretos expuestos:** Claves API y tokens NUNCA en código ni frontend. Variables privadas solo en backend. Prefijo `VITE_` solo para configs 100% públicas.
+2. **Desconfía del cliente:** Validación de datos, precios, stock, roles y formularios siempre en el servidor (Supabase RPCs / Edge Functions).
+3. **Consultas parametrizadas:** Prevención absoluta de SQL injection, XSS y CSRF.
+4. **Rutas y sesiones blindadas:** Validación en servidor (RLS / Edge Functions) para `/admin` y datos sensibles.
+5. **Límites y control de archivos:** Rate limiting y validación estricta de MIME, extensión y tamaño en subidas.
+6. **Código limpio para producción:** Sin debug activo, sin trazas públicas y sin datos sensibles en logs.
+
+---
+
+## 📋 8. Spec-First para Tareas Grandes
 
 Si la tarea afecta **más de 2 archivos** o **instala una dependencia** → escribir mini-spec ANTES de ejecutar:
 
@@ -111,7 +142,7 @@ Esperar aprobación del usuario. No ejecutar antes.
 
 ---
 
-## ✅ 7. Confirmación del Prehook al Usuario
+## ✅ 9. Confirmación del Prehook al Usuario
 
 ```text
 ## 🛡️ Prehook Carlos AI Framework completado
@@ -121,6 +152,7 @@ Esperar aprobación del usuario. No ejecutar antes.
 ✅ SESSION_STATE: Leído — zona caliente: [archivos]
 ✅ Graphify: [Disponible (299 nodos) / Desactualizado → graphify update frontend/src --no-viz]
 ✅ Leyes del Sistema: Cargadas y en estricta observancia.
+✅ Disciplina de Código (Karpathy) & Seguridad por Defecto: Activas y operativas.
 
 → Contexto anclado. ¿Procedemos con [Tarea]?
 ```

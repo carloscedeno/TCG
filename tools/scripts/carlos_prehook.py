@@ -60,7 +60,8 @@ def check_laws():
     critical_files = [
         (".agent/AGENTS.md", "Reglas y Arquitectura de Agentes"),
         ("LEYES_DEL_SISTEMA.md", "Leyes Fundamentales del Proyecto"),
-        (".agent/lessons_learned.md", "Lecciones y Anti-patrones Acumulados")
+        (".agent/lessons_learned.md", "Lecciones y Anti-patrones Acumulados"),
+        (".agent/rules/code_discipline_security.md", "Disciplina de Código (Karpathy) y Seguridad por Defecto")
     ]
     
     all_ok = True
@@ -77,12 +78,12 @@ def print_summary():
     print("\n" + "="*70)
     print("🛡️ CARLOS AI FRAMEWORK — PREHOOK VERIFICATION COMPLETED 🛡️")
     print("="*70)
-    print("📋 DIRECTIVA PARA EL AGENTE:")
+    print("📋 DIRECTIVAS PERMANENTES PARA EL AGENTE:")
     print("1. Antes de codificar, asegúrate de haber asimilado las LEYES_DEL_SISTEMA.")
     print("2. Si la tarea es de producto, consulta y mantén apego estricto al PRD_MASTER.")
-    print("3. Si NO hay PRD aplicable (tareas ad-hoc, refactor, creación de herramientas):")
-    print("   sigue con precisión las instrucciones del usuario y asimila el contexto del código.")
-    print("4. NO desvaríes ni alucines terminología ajena al Carlos AI Framework.")
+    print("3. SKILL 1 (KARPATHY): Piensa antes de programar | Simplicidad extrema | Cambios quirúrgicos | Verifica antes de decir listo.")
+    print("4. SKILL 2 (SEGURIDAD): Cero secretos en cliente | Desconfía del cliente (valida en servidor) | Consultas seguras/parametrizadas | Rutas/roles blindados.")
+    print("5. NO desvaríes ni alucines terminología ajena al Carlos AI Framework.")
     print("="*70)
 
 def main():
