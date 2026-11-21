@@ -89,9 +89,24 @@ async function ensureCategory(url: string, db: string, uid: number, apiKey: stri
 }
 
 
-// Ensure USD currency and default pricelist in Odoo are set to USD
+// Fast check/enforcement that Odoo's default pricelist uses USD
 async function ensureUsdPricelist(url: string, db: string, uid: number, apiKey: string): Promise<number | null> {
   try {
+    const pricelists = await odooJsonRpc(url, 'call', {
+      service: 'object',
+      method: 'execute_kw',
+      args: [db, uid, apiKey, 'product.pricelist', 'search_read', [[]], { fields: ['id', 'name', 'currency_id'] }]
+    });
+
+    if (Array.isArray(pricelists)) {
+      for (const pl of pricelists) {
+        const currName = Array.isArray(pl.currency_id) ? pl.currency_id[1] : '';
+        if (currName === 'USD') {
+          return pl.id;
+        }
+      }
+    }
+
     const usdIds = await odooJsonRpc(url, 'call', {
       service: 'object',
       method: 'execute_kw',
@@ -100,57 +115,22 @@ async function ensureUsdPricelist(url: string, db: string, uid: number, apiKey: 
     if (!usdIds || usdIds.length === 0) return null;
     const usdId = usdIds[0];
 
-    // Ensure USD currency is active
     await odooJsonRpc(url, 'call', {
       service: 'object',
       method: 'execute_kw',
       args: [db, uid, apiKey, 'res.currency', 'write', [[usdId], { active: true }]]
     });
 
-    // Ensure main company currency is USD
-    const compIds = await odooJsonRpc(url, 'call', {
-      service: 'object',
-      method: 'execute_kw',
-      args: [db, uid, apiKey, 'res.company', 'search', [[]], { limit: 1 }]
-    });
-    if (compIds && compIds.length > 0) {
-      try {
-        await odooJsonRpc(url, 'call', {
-          service: 'object',
-          method: 'execute_kw',
-          args: [db, uid, apiKey, 'res.company', 'write', [[compIds[0]], { currency_id: usdId }]]
-        });
-      } catch (_e) {
-        // Ignore if accounting entries lock company currency
-      }
+    if (Array.isArray(pricelists) && pricelists.length > 0) {
+      const targetPlId = pricelists[0].id;
+      await odooJsonRpc(url, 'call', {
+        service: 'object',
+        method: 'execute_kw',
+        args: [db, uid, apiKey, 'product.pricelist', 'write', [[targetPlId], { currency_id: usdId }]]
+      });
+      return targetPlId;
     }
-
-    // Update all active pricelists named 'Por defecto' or default pricelist (ID 1) to USD
-    const pricelists = await odooJsonRpc(url, 'call', {
-      service: 'object',
-      method: 'execute_kw',
-      args: [db, uid, apiKey, 'product.pricelist', 'search_read', [[]], { fields: ['id', 'name', 'currency_id'] }]
-    });
-
-    let usdPricelistId: number | null = null;
-    if (Array.isArray(pricelists)) {
-      for (const pl of pricelists) {
-        const currName = Array.isArray(pl.currency_id) ? pl.currency_id[1] : '';
-        if (pl.id === 1 || String(pl.name || '').toLowerCase().includes('defecto') || String(pl.name || '').toLowerCase().includes('default')) {
-          if (currName !== 'USD') {
-            await odooJsonRpc(url, 'call', {
-              service: 'object',
-              method: 'execute_kw',
-              args: [db, uid, apiKey, 'product.pricelist', 'write', [[pl.id], { currency_id: usdId }]]
-            });
-          }
-          usdPricelistId = pl.id;
-        } else if (currName === 'USD' && !usdPricelistId) {
-          usdPricelistId = pl.id;
-        }
-      }
-    }
-    return usdPricelistId;
+    return null;
   } catch (err: any) {
     console.warn('[Odoo Sync] Could not enforce USD pricelist:', err.message);
     return null;
