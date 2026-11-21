@@ -5,24 +5,22 @@
 
 ---
 
-## 📅 Última sesión: 2026-11-21 (Prehook Karpathy/Seguridad + Auditoría & Hardening DEV)
-**Rama activa:** dev
-**Estado:** Sistema endurecido y verificado en DEV (`bqfkqnnostzaqueujdms` / `dev.geekorium.shop`).
-- **Prehook y Reglas Permanentes**: Integradas las Reglas de Karpathy y Seguridad por Defecto en `.agent/rules/code_discipline_security.md`, `.agent/workflows/prehook.md`, `.agent/AGENTS.md` y `tools/scripts/carlos_prehook.py`.
-- **Auditoría de Primera Pasada**: Creado `tools/scripts/security_first_pass_audit.py`. Detectadas y cerradas en DEV: escalación de `profiles.role`, exposición pública de `orders`, monto total en `create_order_atomic`, cabeceras HTTP en `_headers` y desvinculación de `supabase/.env.local` de Git.
-- **Migration `20261121000001_security_hardening_rls_and_orders.sql`**: Aplicada vía pooler DEV (`aws-1-us-west-2.pooler.supabase.com`) con trigger `trg_prevent_role_escalation` y RPC `get_order_tracking(uuid)`. Verificado que `GET /orders` anónimo devuelve `[]`.
+## 📅 Última sesión: 2026-11-21 (Release DEV → PROD + Reset Inventario/Ventas PROD)
+**Rama activa:** dev (sincronizada con `main`)
+**Estado:** Promoción completa de `dev` a `main` (PROD `sxuotvogwvmxuvwbsscv`).
+- **Respaldo y Reset en PROD**: Exportadas 228 órdenes (`1,441` ítems), `21,418` productos y `182` accesorios a CSV en `docs/reports/` (ignorados por git). Vaciadas transaccionalmente `orders`, `order_items`, `carts`, `cart_items`, `products`, `inventory_logs`, `product_offers_history`, `accessories` y `accessories_history`. Catálogo base (`cards`, `card_printings`, `sets`) y `profiles` intactos.
+- **Migraciones y Configuración PROD**: Aplicadas las 7 migraciones pendientes (`20260825015900` a `20261121000001`, incluyendo `sortswift_reservation_id`, agrupación de catálogo por carta + juego, RLS hardening, `get_order_tracking` y `trg_prevent_role_escalation`) y sincronizadas claves de `public.system_config` (`SORTSWIFT_API_KEY`, `GITHUB_TOKEN`, `CLOUDFLARE_*`).
+- **Edge Functions & Release**: Desplegada `sortswift-sync` en PROD, actualizado `.github/workflows/deploy-functions.yml` para desplegar `api`, `tcg-api`, `odoo-webhook`, `odoo-sync`, `sortswift-sync` y `odoo-polling`, y promovido `dev` → `main` (`git push origin main`).
 
 ## 📁 Zona Caliente (archivos tocados recientemente)
-- `.agent/workflows/prehook.md` — Integración de Skill 1 (Karpathy) y Skill 2 (Seguridad por Defecto).
-- `.agent/rules/code_discipline_security.md` — Reglas maestras permanentes.
-- `tools/scripts/carlos_prehook.py` & `tools/scripts/security_first_pass_audit.py` — Validación prehook y auditoría.
-- `supabase/migrations/20261121000001_security_hardening_rls_and_orders.sql` — Hardening RLS, trigger y RPC seguro.
-- `frontend/src/pages/OrderTrackingPage.tsx` — Consumo vía `supabase.rpc('get_order_tracking')`.
-- `frontend/public/_headers` — Cabeceras CSP, HSTS, X-Frame-Options, X-Content-Type-Options.
+- `.github/workflows/deploy-functions.yml` — Despliegue automatizado de todas las Edge Functions activas a PROD.
+- `supabase/migrations/20261119000001_group_products_by_card_name.sql` & `20261121000001_security_hardening_rls_and_orders.sql` — Aplicadas en DEV y PROD.
+- `supabase/functions/sortswift-sync/index.ts`, `odoo-sync/index.ts`, `odoo-webhook/index.ts` — Sincronización tripartita SortSwift + Supabase + Odoo ERP.
+- `frontend/src/pages/OrderTrackingPage.tsx` & `frontend/public/_headers` — Tracking seguro y cabeceras HTTP en producción.
 
 ## ⏭️ Próxima acción recomendada
-1. Verificar `dev.geekorium.shop` y validar cuándo promover la migración `20261121000001` a PROD (`sxuotvogwvmxuvwbsscv`).
-2. Ejecutar ingestión real `LIVE APPLY` (`python scripts/sync/sortswift/sync_sortswift_automated.py`) en DEV cuando corresponda.
+1. Ejecutar sincronización de inventario nuevo en PROD (desde el botón Matrix de SortSwift en Admin o script/Edge Function `sortswift-sync`).
+2. Verificar `geekorium.pages.dev` / `geekorium.shop` y desactivar las rutas del Worker `maintenance-geekorium` en Cloudflare cuando el inventario esté cargado.
 
 ## 🚫 Restricciones activas
 - NO usar `npm` — solo `pnpm`
