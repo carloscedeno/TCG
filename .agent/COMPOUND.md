@@ -823,3 +823,16 @@ enderVersionsContent(). En desktop (md:) se renderiza en la columna izquierda de
 3. **Generación de Reporte CSV Transaccional**: Generado `sortswift_sync_audit_detail.csv` con 4,334 líneas de detalle por lote, código de barras, condición, acabado, precio, costo y bin físico.
 4. **Actualización de Terminal Matrix (`SortSwiftSyncModal.tsx`)**: Refactorizada la consola Matrix para mostrar el desglose real por TCG de cartas singles y dos botones interactivos para descargar el CSV directamente desde el navegador.
 5. **Corrección de Despliegue CI GitHub Pages (`deploy.yml`)**: Solucionado error `ERR_PNPM_LOCKFILE_CONFIG_MISMATCH` incorporando `--no-frozen-lockfile` en el workflow de GitHub Actions.
+
+
+---
+
+## 2026-11-21 — Prehook Karpathy/Seguridad + Auditoría de Primera Pasada y Hardening DEV
+
+### Qué se aprendió e integró
+- **Reglas Permanentes en Prehook**: Se integraron las 4 Reglas de Karpathy (piensa antes de programar, simplicidad extrema, cambios quirúrgicos, verifica antes de decir listo) y las 6 de Seguridad por Defecto en .agent/rules/code_discipline_security.md, .agent/workflows/prehook.md, .agent/AGENTS.md y 	ools/scripts/carlos_prehook.py.
+- **Pooler DEV Supabase**: El proyecto DEV (qfkqnnostzaqueujdms) utiliza el pooler ws-1-us-west-2.pooler.supabase.com:6543 (el .env.dev tenía ws-0-us-west-2 desactualizado y el .env raíz apunta a PROD sxuotvogwvmxuvwbsscv). Siempre validar el ref del pooler antes de ejecutar DDL.
+- **Patrón Seguro para Order Tracking**: En lugar de abrir SELECT público (qual = true) sobre orders, usar RLS estricto (uth.uid() = user_id OR is_admin()) combinado con un RPC SECURITY DEFINER (get_order_tracking(p_order_id uuid)) para consultas por UUID exacto sin permitir enumeración de tabla.
+- **Protección de Columnas Sensibles en RLS**: Una política UPDATE con uth.uid() = id sobre profiles permite modificar cualquier columna (incluyendo 
+ole). Se blindó mediante el trigger BEFORE UPDATE 	rg_prevent_role_escalation.
+- **Validación de Totales en Checkout**: create_order_atomic ahora exige quantity > 0 y sobrescribe orders.total_amount con el total calculado en servidor desde los precios reales de BD.

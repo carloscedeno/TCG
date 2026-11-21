@@ -5,29 +5,30 @@
 
 ---
 
-## 📅 Última sesión: 2026-11-18 (SortSwift Sync Audit, Matrix Modal & Card Preview)
+## 📅 Última sesión: 2026-11-21 (Prehook Karpathy/Seguridad + Auditoría & Hardening DEV)
 **Rama activa:** dev
-**Estado:** Sistema auditado y verificado en DEV (`dev.geekorium.shop`).
-- **Modal de Visualización en Inventario**: Integrado `CardModal` estilo Moxfield en `InventoryPage.tsx` con preview interactivo in-page de cartas singles.
-- **Auditoría SortSwift**: 4,072 cartas singles RAW (9,768 unidades físicas) cotejadas contra base de datos DEV. Desglose detallado por TCG (MTG +2,960 singles, PKM, RFB, DGM, GND, FAB, OPC).
-- **Descarga CSV Directa**: Generado `sortswift_sync_audit_detail.csv` (4,334 líneas) con descarga directa desde el header y footer de `SortSwiftSyncModal.tsx`.
-- **CI / GitHub Pages Fix**: Corregido `.github/workflows/deploy.yml` con `--no-frozen-lockfile` y verificado en vivo con Playwright/Chrome DevTools.
+**Estado:** Sistema endurecido y verificado en DEV (`bqfkqnnostzaqueujdms` / `dev.geekorium.shop`).
+- **Prehook y Reglas Permanentes**: Integradas las Reglas de Karpathy y Seguridad por Defecto en `.agent/rules/code_discipline_security.md`, `.agent/workflows/prehook.md`, `.agent/AGENTS.md` y `tools/scripts/carlos_prehook.py`.
+- **Auditoría de Primera Pasada**: Creado `tools/scripts/security_first_pass_audit.py`. Detectadas y cerradas en DEV: escalación de `profiles.role`, exposición pública de `orders`, monto total en `create_order_atomic`, cabeceras HTTP en `_headers` y desvinculación de `supabase/.env.local` de Git.
+- **Migration `20261121000001_security_hardening_rls_and_orders.sql`**: Aplicada vía pooler DEV (`aws-1-us-west-2.pooler.supabase.com`) con trigger `trg_prevent_role_escalation` y RPC `get_order_tracking(uuid)`. Verificado que `GET /orders` anónimo devuelve `[]`.
 
 ## 📁 Zona Caliente (archivos tocados recientemente)
-- frontend/src/components/Admin/SortSwiftSyncModal.tsx — Desglose auditado por TCG de singles y descarga CSV.
-- frontend/src/pages/Admin/InventoryPage.tsx — Integración de `CardModal` para cartas y sugerencias.
-- frontend/public/sortswift_sync_audit_detail.csv — Archivo CSV de transacciones auditadas.
-- .github/workflows/deploy.yml — Flag `--no-frozen-lockfile` para despliegues fluidos en CI.
-- scripts/sync/sortswift/generate_sync_audit_report.py — Generador de auditoría y conciliación SortSwift/DB.
+- `.agent/workflows/prehook.md` — Integración de Skill 1 (Karpathy) y Skill 2 (Seguridad por Defecto).
+- `.agent/rules/code_discipline_security.md` — Reglas maestras permanentes.
+- `tools/scripts/carlos_prehook.py` & `tools/scripts/security_first_pass_audit.py` — Validación prehook y auditoría.
+- `supabase/migrations/20261121000001_security_hardening_rls_and_orders.sql` — Hardening RLS, trigger y RPC seguro.
+- `frontend/src/pages/OrderTrackingPage.tsx` — Consumo vía `supabase.rpc('get_order_tracking')`.
+- `frontend/public/_headers` — Cabeceras CSP, HSTS, X-Frame-Options, X-Content-Type-Options.
 
 ## ⏭️ Próxima acción recomendada
-Ejecutar ingestión real `LIVE APPLY` (`python scripts/sync/sortswift/sync_sortswift_automated.py`) en DEV para incorporar las 2,960 cartas singles nuevas (6,175 unidades) al catálogo web.
+1. Verificar `dev.geekorium.shop` y validar cuándo promover la migración `20261121000001` a PROD (`sxuotvogwvmxuvwbsscv`).
+2. Ejecutar ingestión real `LIVE APPLY` (`python scripts/sync/sortswift/sync_sortswift_automated.py`) en DEV cuando corresponda.
 
 ## 🚫 Restricciones activas
 - NO usar `npm` — solo `pnpm`
 - NO modificar PROD sin backup explícito
 - NO tocar `create_order_atomic` RPC sin migration
-- Entorno DEV: proyecto Supabase `bqfkqnnostzaqueujdms`
+- Entorno DEV: proyecto Supabase `bqfkqnnostzaqueujdms` (Pooler: `aws-1-us-west-2.pooler.supabase.com`)
 - Entorno PROD: proyecto Supabase `sxuotvogwvmxuvwbsscv`
 
 ## 🗺️ Knowledge Graph
@@ -39,7 +40,6 @@ Ejecutar ingestión real `LIVE APPLY` (`python scripts/sync/sortswift/sync_sorts
 - Sincronizador Dual USD/USB (BCV/Binance) para Odoo mediante pg_cron.
 - Corrección de zona horaria de eventos (Caracas UTC-4)
 - Checkout E2E + WhatsApp flow & SortSwift 60m Hold
-- Bulk Import (cartas y accesorios)
-- Sistema de descuentos con fechas NULL
-- Carrito unificado (auth + guest)
+- Bulk Import (cartas y accesorios) & Descuentos con fechas NULL
+- Carrito unificado (auth + guest) & Tracking seguro (`get_order_tracking`)
 - Batería de pruebas `/pruebame` (`run_tests.ps1`)
