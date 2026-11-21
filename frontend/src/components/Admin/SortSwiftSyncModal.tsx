@@ -57,6 +57,12 @@ function escapeCsvField(val: unknown): string {
 
 export function SortSwiftSyncModal({ isOpen, onClose, onSuccess }: SortSwiftSyncModalProps) {
     const { session } = useAuth();
+    const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || import.meta.env.VITE_DEV_SUPABASE_URL || "https://bqfkqnnostzaqueujdms.supabase.co";
+    const isProdEnv = SUPABASE_URL.includes("sxuotvogwvmxuvwbsscv");
+    const envLabel = isProdEnv ? "PROD" : "DEV";
+    const targetNodeLabel = isProdEnv
+        ? "geekorium.shop [Supabase PROD: sxuotvogwvmxuvwbsscv]"
+        : "dev.geekorium.shop [Supabase DEV: bqfkqnnostzaqueujdms]";
     const [progress, setProgress] = useState(0);
     const [stage, setStage] = useState<string>("Iniciando terminal...");
     const [status, setStatus] = useState<"idle" | "running" | "completed" | "error">("idle");
@@ -189,14 +195,13 @@ export function SortSwiftSyncModal({ isOpen, onClose, onSuccess }: SortSwiftSync
 
         addLog("SYS", "==========================================================");
         addLog("SYS", " GEEKORIUM // SORTSWIFT LIVE OMNI-CATALOG SYNC ENGINE v4.0");
-        addLog("SYS", " TARGET_NODE: dev.geekorium.shop [Supabase DEV: bqfkqnnostzaqueujdms]");
+        addLog("SYS", ` TARGET_NODE: ${targetNodeLabel}`);
         addLog("SYS", "==========================================================");
 
         await new Promise(r => setTimeout(r, 300));
         addLog("INFO", "[AUTH] Verificando credenciales de administrador y token de sesión...");
         setProgress(12);
 
-        const SUPABASE_URL = import.meta.env.VITE_DEV_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL || "https://bqfkqnnostzaqueujdms.supabase.co";
         addLog("SYS", "[API_CALL] GET https://inventory-api.sortswift.com/api/inventory/api-key/raw-cards?limit=1000");
         addLog("SYS", `[API_GATEWAY] Ejecutando sincronización en vivo en Edge Function: ${SUPABASE_URL}/functions/v1/sortswift-sync`);
         setStage("Consultando lotes en vivo en SortSwift API y sincronizando base de datos...");
@@ -215,7 +220,7 @@ export function SortSwiftSyncModal({ isOpen, onClose, onSuccess }: SortSwiftSync
                     ...(session?.access_token ? { "Authorization": `Bearer ${session.access_token}` } : {})
                 },
                 body: JSON.stringify({
-                    target_env: "dev"
+                    target_env: isProdEnv ? "prod" : "dev"
                 })
             });
 
@@ -399,11 +404,11 @@ export function SortSwiftSyncModal({ isOpen, onClose, onSuccess }: SortSwiftSync
                                 </h2>
                                 <span className="px-2.5 py-0.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-1.5 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
                                     <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping inline-block" />
-                                    LIVE SYNC DEV
+                                    LIVE SYNC {envLabel}
                                 </span>
                             </div>
                             <p className="text-[10px] text-emerald-500/70 font-mono uppercase tracking-[0.2em] mt-0.5">
-                                KERNEL // LIVE SYNC ENGINE v4.0 • CONEXIÓN DIRECTA SORTSWIFT API + SUPABASE DEV
+                                KERNEL // LIVE SYNC ENGINE v4.0 • CONEXIÓN DIRECTA SORTSWIFT API + SUPABASE {envLabel}
                             </p>
                         </div>
                     </div>
@@ -516,7 +521,7 @@ export function SortSwiftSyncModal({ isOpen, onClose, onSuccess }: SortSwiftSync
                 <div className="p-6 border-t border-emerald-500/20 bg-black/80 flex flex-wrap items-center justify-between gap-4">
                     <div className="flex items-center gap-2 text-[10px] font-mono text-emerald-500/60">
                         <Shield size={14} className="text-emerald-400 shrink-0" />
-                        <span>ENTORNO SEGURO DEV • CONEXIÓN SSL/TLS CIFRADA • SORTSWIFT API EN VIVO</span>
+                        <span>ENTORNO SEGURO {envLabel} • CONEXIÓN SSL/TLS CIFRADA • SORTSWIFT API EN VIVO</span>
                     </div>
 
                     <div className="flex items-center gap-3">
