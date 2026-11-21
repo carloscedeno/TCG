@@ -88,6 +88,75 @@ async function ensureCategory(url: string, db: string, uid: number, apiKey: stri
   return newId;
 }
 
+
+// Ensure USD currency and default pricelist in Odoo are set to USD
+async function ensureUsdPricelist(url: string, db: string, uid: number, apiKey: string): Promise<number | null> {
+  try {
+    const usdIds = await odooJsonRpc(url, 'call', {
+      service: 'object',
+      method: 'execute_kw',
+      args: [db, uid, apiKey, 'res.currency', 'search', [[['name', '=', 'USD'], ['active', 'in', [true, false]]]], { limit: 1 }]
+    });
+    if (!usdIds || usdIds.length === 0) return null;
+    const usdId = usdIds[0];
+
+    // Ensure USD currency is active
+    await odooJsonRpc(url, 'call', {
+      service: 'object',
+      method: 'execute_kw',
+      args: [db, uid, apiKey, 'res.currency', 'write', [[usdId], { active: true }]]
+    });
+
+    // Ensure main company currency is USD
+    const compIds = await odooJsonRpc(url, 'call', {
+      service: 'object',
+      method: 'execute_kw',
+      args: [db, uid, apiKey, 'res.company', 'search', [[]], { limit: 1 }]
+    });
+    if (compIds && compIds.length > 0) {
+      try {
+        await odooJsonRpc(url, 'call', {
+          service: 'object',
+          method: 'execute_kw',
+          args: [db, uid, apiKey, 'res.company', 'write', [[compIds[0]], { currency_id: usdId }]]
+        });
+      } catch (_e) {
+        // Ignore if accounting entries lock company currency
+      }
+    }
+
+    // Update all active pricelists named 'Por defecto' or default pricelist (ID 1) to USD
+    const pricelists = await odooJsonRpc(url, 'call', {
+      service: 'object',
+      method: 'execute_kw',
+      args: [db, uid, apiKey, 'product.pricelist', 'search_read', [[]], { fields: ['id', 'name', 'currency_id'] }]
+    });
+
+    let usdPricelistId: number | null = null;
+    if (Array.isArray(pricelists)) {
+      for (const pl of pricelists) {
+        const currName = Array.isArray(pl.currency_id) ? pl.currency_id[1] : '';
+        if (pl.id === 1 || String(pl.name || '').toLowerCase().includes('defecto') || String(pl.name || '').toLowerCase().includes('default')) {
+          if (currName !== 'USD') {
+            await odooJsonRpc(url, 'call', {
+              service: 'object',
+              method: 'execute_kw',
+              args: [db, uid, apiKey, 'product.pricelist', 'write', [[pl.id], { currency_id: usdId }]]
+            });
+          }
+          usdPricelistId = pl.id;
+        } else if (currName === 'USD' && !usdPricelistId) {
+          usdPricelistId = pl.id;
+        }
+      }
+    }
+    return usdPricelistId;
+  } catch (err: any) {
+    console.warn('[Odoo Sync] Could not enforce USD pricelist:', err.message);
+    return null;
+  }
+}
+
 Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
@@ -117,7 +186,8 @@ Deno.serve(async (req: Request) => {
     if (!uid) throw new Error(`Authentication failed with Odoo. DB: ${odooDb}, User: ${odooUsername}, KeyLen: ${odooApiKey?.length}, URL: ${odooUrl}`);
 
     if (action === 'ping') {
-      return new Response(JSON.stringify({ success: true, message: "Odoo Connection OK" }), {
+      const usdPricelistId = await ensureUsdPricelist(odooUrl, odooDb, uid, odooApiKey);
+      return new Response(JSON.stringify({ success: true, message: "Odoo Connection OK", usd_pricelist_id: usdPricelistId }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
     }
@@ -529,6 +599,8 @@ Deno.serve(async (req: Request) => {
         throw new Error("No mappable products found for this order in Odoo.");
       }
 
+      const usdPricelistId = await ensureUsdPricelist(odooUrl, odooDb, uid, odooApiKey);
+
       const orderId = await odooJsonRpc(odooUrl, 'call', {
         service: 'object',
         method: 'execute_kw',
@@ -538,6 +610,7 @@ Deno.serve(async (req: Request) => {
           'create', 
           [{
             partner_id: partnerId,
+            ...(usdPricelistId ? { pricelist_id: usdPricelistId } : {}),
             order_line: orderLines,
             client_order_ref: cleanRef
           }]
