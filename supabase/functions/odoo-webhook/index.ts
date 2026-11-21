@@ -159,6 +159,13 @@ async function processSortSwiftOrderCommit(supabase: any, orderRef: string, isCa
             console.log(`[SortSwift Hook] Releasing reservation ${resId} for order ${order.id}`);
             await releaseSortSwiftReservation(resId, ssApiKey);
             await supabase.from('order_items').update({ sortswift_reservation_id: `released:${resId}` }).eq('id', item.id);
+            if (item.product_id) {
+              const { data: curProd } = await supabase.from('products').select('stock').eq('id', item.product_id).maybeSingle();
+              if (curProd) {
+                const restocked = (curProd.stock || 0) + Math.max(1, Number(item.quantity || 1));
+                await supabase.from('products').update({ stock: restocked }).eq('id', item.product_id);
+              }
+            }
           }
         } else {
           let committed = false;
