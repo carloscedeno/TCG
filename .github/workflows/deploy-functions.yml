@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'supabase/functions/**'
+      - '.github/workflows/deploy-functions.yml'
   workflow_dispatch:
 
 jobs:
@@ -32,7 +33,11 @@ jobs:
       - name: Deploy Supabase Function
         run: |
           supabase functions deploy api --project-ref sxuotvogwvmxuvwbsscv --no-verify-jwt
+          supabase functions deploy tcg-api --project-ref sxuotvogwvmxuvwbsscv --no-verify-jwt
           supabase functions deploy odoo-webhook --project-ref sxuotvogwvmxuvwbsscv --no-verify-jwt
+          supabase functions deploy odoo-sync --project-ref sxuotvogwvmxuvwbsscv --no-verify-jwt
+          supabase functions deploy sortswift-sync --project-ref sxuotvogwvmxuvwbsscv --no-verify-jwt
+          supabase functions deploy odoo-polling --project-ref sxuotvogwvmxuvwbsscv
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
