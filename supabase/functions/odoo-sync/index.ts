@@ -590,7 +590,7 @@ Deno.serve(async (req: Request) => {
           'create', 
           [{
             partner_id: partnerId,
-            ...(usdPricelistId ? { pricelist_id: usdPricelistId } : {}),
+            ...(usdPricelistId ? { pricelist_id: usdPricelistId, currency_id: 1 } : {}),
             order_line: orderLines,
             client_order_ref: cleanRef
           }]
