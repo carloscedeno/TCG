@@ -33,38 +33,44 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-          cache: 'pip'
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Run SortSwift Automated Sync
+      - name: Invoke Authoritative SortSwift Sync Edge Function (v4.0)
         env:
-          SORTSWIFT_API_KEY: ${{ secrets.SORTSWIFT_API_KEY }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-          DATABASE_URL: ${{ secrets.DATABASE_URL_PROD }}
-          PYTHONPATH: .
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
-          FLAGS=""
-          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
-            FLAGS="--dry-run"
-          fi
-          if [ "${{ github.event.inputs.green_only }}" = "true" ]; then
-            FLAGS="$FLAGS --green-only"
-          fi
-          echo "Executing: python scripts/sync/sortswift/sync_sortswift_automated.py $FLAGS"
-          python scripts/sync/sortswift/sync_sortswift_automated.py $FLAGS
+          python - << 'EOF'
+          import os, json, sys, urllib.request
 
-      - name: Upload sync artifacts/snapshots
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: sortswift-sync-snapshots
-          path: |
-            scripts/sync/sortswift/prod_sortswift_cards.json
-            scripts/sync/sortswift/tcgplayer_details_cache.json
-          retention-days: 7
+          base_url = (os.environ.get("SUPABASE_URL") or "https://sxuotvogwvmxuvwbsscv.supabase.co").rstrip("/")
+          url = f"{base_url}/functions/v1/sortswift-sync"
+          token = os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or os.environ.get("SUPABASE_ANON_KEY") or ""
+
+          headers = {"Content-Type": "application/json"}
+          if token:
+              headers["Authorization"] = f"Bearer {token}"
+
+          req = urllib.request.Request(
+              url,
+              data=json.dumps({"target_env": "prod"}).encode("utf-8"),
+              headers=headers,
+              method="POST"
+          )
+
+          print(f"Invoking {url} ...")
+          with urllib.request.urlopen(req, timeout=150) as r:
+              res = json.loads(r.read().decode("utf-8"))
+
+          print("Response:", json.dumps({
+              k: res.get(k) for k in (
+                  "success", "status", "duration_ms", "total_raw_cards",
+                  "total_units", "total_unique_nodes", "added_count",
+                  "updated_count", "unchanged_count", "zeroed_count",
+                  "odoo_synced", "message"
+              )
+          }, indent=2))
+
+          if not res.get("success"):
+              sys.exit(1)
+          EOF

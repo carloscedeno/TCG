@@ -50,7 +50,7 @@ def run_health_audit():
             failures.append(f"La última sincronización exitosa ocurrió hace {age.total_seconds() / 3600:.1f} horas (> 28h).")
             print(f"   ❌ Alerta: Sincronización atrasada ({age.total_seconds() / 3600:.1f}h).")
         else:
-            print(f"   ✅ Último job ({job_id[:8]}...): Status='{status}', Items={items_updated}, Duración={duration_ms/1000:.1f}s, Hace={age.total_seconds()/3600:.1f}h.")
+            print(f"   ✅ Último job ({str(job_id)[:8]}...): Status='{status}', Items={items_updated}, Duración={duration_ms/1000:.1f}s, Hace={age.total_seconds()/3600:.1f}h.")
 
     # 2. Verificar productos activos con precio 0 o NULL
     print("\n[2/4] Verificando productos en tienda con precio inválido (0 o NULL)...")
@@ -84,13 +84,15 @@ def run_health_audit():
     else:
         print("   ✅ Cobertura dentro del rango operativo normal (>80%).")
 
-    # 4. Verificar consistencia entre products y card_printings
-    print("\n[4/4] Verificando discrepancias graves tienda vs catálogo...")
+    # 4. Verificar consistencia entre products (no-SortSwift) y card_printings
+    # Nota: Los productos con sortswift_id reciben su precio autoritativo directo de SortSwift API.
+    print("\n[4/4] Verificando discrepancias graves tienda vs catálogo (CardKingdom)...")
     cur.execute("""
         SELECT COUNT(*)
         FROM public.products p
         JOIN public.card_printings cp ON p.printing_id = cp.printing_id
-        WHERE p.price > 0 
+        WHERE p.sortswift_id IS NULL
+          AND p.price > 0 
           AND cp.avg_market_price_usd > 0
           AND LOWER(COALESCE(p.finish, 'nonfoil')) NOT IN ('foil', 'etched')
           AND ABS(p.price - cp.avg_market_price_usd) > 0.05;
