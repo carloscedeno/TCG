@@ -2456,11 +2456,11 @@ useEffect(() => {
 
 
 
-# #   2 0 2 6 - 0 6 - 1 7 :   C u i d a d o   c o n   V i t e P W A   a u t o U p d a t e   y   p r e c o n n e c t s   c r u d o s 
- 
- E l   m o d o   ' a u t o U p d a t e '   d e   V i t e P W A   p r e c a c h e a   t o d o s   l o s   a s s e t s   i n m e d i a t a m e n t e ,   l o   q u e   p u e d e   a h o g a r   l a   c o n e x i o n   W i - F i   e n   m o v i l e s   l e n t o s   y   b l o q u e a r   p e t i c i o n e s   c r i t i c a s   a   S u p a b a s e .   A d e m a s ,   e v i t e m o s   u s a r   % V I T E _ V A R S %   e n   e l   i n d e x . h t m l   p a r a   < l i n k   r e l = ' p r e c o n n e c t ' >   s i   n o   g a r a n t i z a m o s   q u e   e l   b u i l d   r e e m p l a c e   l a   v a r i a b l e ,   y a   q u e   S a f a r i   b l o q u e a r a   e l   r e n d e r i z a d o   ( h a s t a   p o r   1 4   s e g u n d o s )   e s p e r a n d o   q u e   s e   r e s u e l v a   u n   D N S   l i t e r a l   c o m o   ' % V I T E _ S U P A B A S E _ U R L % ' . 
- 
- 
+## 2026-06-17: Cuidado con VitePWA autoUpdate y preconnects crudos
+
+El modo 'autoUpdate' de VitePWA precachea todos los assets inmediatamente, lo que puede ahogar la conexion Wi-Fi en moviles lentos y bloquear peticiones criticas a Supabase. Ademas, evitemos usar %VITE_VARS% en el index.html para <link rel='preconnect'> si no garantizamos que el build reemplace la variable, ya que Safari bloqueara el renderizado (hasta por 14 segundos) esperando que se resuelva un DNS literal como '%VITE_SUPABASE_URL%'.
+
+
 ### 161. Bulk Import Set Name Resolution (Aug 2026)
 - **Problema**: El filtro por Set en el catÃ¡logo ('The Hobbit') no devolvÃ­a resultados para cartas reciÃ©n importadas, aunque el cÃ³digo del set ('HOB') era correcto.
 - **Causa RaÃ­z**: El importador masivo (bulk_upload) dejaba la columna set_name en NULL. El filtro del frontend enviaba el nombre completo del set al RPC get_products_filtered, el cual intentaba hacer match directo contra p.set_name o p.set_code. Al ser NULL, fallaba silenciosamente.
@@ -2499,11 +2499,11 @@ useEffect(() => {
 - **SoluciÃ³n:** Para testear catÃ¡logos en frontend, inyectar stock de forma estricta recuperando printing_id e image_url reales del juego (game_id = 17) en la tabla card_printings.
 - **Regla Derivada:** Nunca inventar o reciclar FKs de printing_id en products. Siempre hacer JOIN o un IN query contra card_printings validando el juego.
 
-# #   2 0 2 6 - 0 8 - 2 1 :   V e r c e l   S c h e m a   D e s y n c 
- -   W h e n   m o d i f y i n g   d a t a b a s e   s c h e m a s   v i a   S u p a b a s e ,   e n s u r e   t h a t   t h e   m o d i f i c a t i o n s   a r e   a p p l i e d   t o   B O T H   t h e   d e v e l o p m e n t   A N D   p r o d u c t i o n   e n v i r o n m e n t s   i f   t h e   f r o n t e n d   d e p e n d s   o n   t h e m . 
- -   S u p a b a s e   c a c h e s   t h e   s c h e m a   u s i n g   P o s t g R E S T .   R u n   \ N O T I F Y   p g r s t ,   ' r e l o a d   s c h e m a ' \   v i a   S Q L   t o   e n s u r e   n e w   c o l u m n s   a r e   a v a i l a b l e   i n   t h e   A P I   i m m e d i a t e l y . 
- -   T h e   c l i e n t   r e q u e s t e d   t h e   G u n d a m   3 - p o i n t   s y s t e m   ( C o n q u i s t a ,   D e r r i b o ,   K i l l s )   t o   b e   u s e d   a c r o s s   A L L   g a m e s ,   n o t   j u s t   G u n d a m .   R e m o v e d   t h e   s i n g l e - p o i n t   f a l l b a c k   t o   u n i f y   t h e   s c o r i n g   s y s t e m .  
- 
+## 2026-08-21: Vercel Schema Desync
+- When modifying database schemas via Supabase, ensure that the modifications are applied to BOTH the development AND production environments if the frontend depends on them.
+- Supabase caches the schema using PostgREST. Run \NOTIFY pgrst, 'reload schema'\ via SQL to ensure new columns are available in the API immediately.
+- The client requested the Gundam 3-point system (Conquista, Derribo, Kills) to be used across ALL games, not just Gundam. Removed the single-point fallback to unify the scoring system.
+
 ### 54. Supabase Webhooks and Env Mixed-up â€” 2026-08-23
 - **Problema:** Los webhooks nativos de Odoo (ir.actions.server state=webhook) no enviaban los campos esperados y la funciÃ³n de Supabase devolvÃ­a error de Auth con la apikey.
 - **Causa RaÃ­z:** Odoo no envÃ­a campos a menos que se definan en webhook_field_ids. AdemÃ¡s, Supabase/Kong filtra los parÃ¡metros de URL llamados apikey, y el usuario editaba plantillas en PROD mientras operaba en DEV.
@@ -2575,3 +2575,21 @@ enderVersionsContent), garantizando experiencia *Above the Fold* en smartphones.
 
 ### 73. Terminología y Alcance de SortSwift: Exclusivamente Cartas Singles
 - **Regla**: SortSwift administra únicamente inventario físico de **cartas singulares (singles)**. No debe llamarse "productos" en los logs ni en la interfaz de usuario para evitar confusión operativa con productos sellados (boosters, bundles, mazos) y accesorios.
+
+---
+
+## 🛡️ Lecciones Aprendidas — Promoción DEV → PROD, Cloudflare `pnpm v9` y Paridad SortSwift/Odoo (Nov 2026)
+
+1. **Incompatibilidad `pnpm v11` local vs `pnpm v9` en Cloudflare Pages**:
+   - **Problema**: Crear `pnpm-workspace.yaml` con solo `allowBuilds:` (válido en `pnpm v11`) o dejar etiquetas `libc: [glibc/musl]` sin el bloque `overrides:` en `pnpm-lock.yaml` rompe inmediatamente el build de Cloudflare Pages (`pnpm v9 --frozen-lockfile`) con `ERROR packages field missing or empty`.
+   - **Regla**: Nunca crear `frontend/pnpm-workspace.yaml` sin `packages:`, y siempre validar `pnpm dlx pnpm@9 install --frozen-lockfile --lockfile-only` antes de hacer push de cambios en `package.json` o `pnpm-lock.yaml`.
+2. **Índices obligatorios tras actualizaciones masivas en `card_printings`**:
+   - **Problema**: Ejecutar un `UPDATE` masivo sobre `card_printings` (`97,741` filas) genera *dead tuples* que, sin un índice sobre `api_source_id`, provocan `statement timeout` (`>8s`) en PostgREST cuando `sortswift-sync` consulta `WHERE api_source_id IS NOT NULL`.
+   - **Regla**: Mantener siempre `idx_card_printings_api_source_id` activo y ejecutar `VACUUM ANALYZE` tras migraciones masivas de catálogo.
+3. **Columna almacenada `sale.order.currency_id` en Odoo ERP**:
+   - **Problema**: Cambiar la moneda de la compañía (`res.company`) o de `product.pricelist` después de haber creado presupuestos no actualiza el `currency_id` ya almacenado en órdenes previas, y si `product.pricelist` (`Por defecto`) quedó en `VEF`, las órdenes nuevas nacen en `Bs.F`.
+   - **Regla**: En `odoo-sync`, verificar siempre que la lista de precios por defecto tenga `currency_id = USD` y enviar explícitamente `pricelist_id` y `currency_id` en `sale.order.create`.
+4. **Prohibido usar `.select()` sin paginación en scripts de sincronización**:
+   - **Problema**: El script legacy `sync_sortswift_automated.py` usaba `sb.table("card_printings").select(...).execute()`, que PostgREST trunca a `1,000` filas, causando inserción de duplicados en ejecuciones por cron.
+   - **Regla**: Toda sincronización programada de SortSwift debe invocar la Edge Function autoritativa `sortswift-sync` (`v4.0`), que pagina con `fetchAllRows` y deduplica automáticamente.
+

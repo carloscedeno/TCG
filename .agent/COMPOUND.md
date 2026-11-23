@@ -699,12 +699,12 @@ Terminamos la reescritura del script de sincronización de precios de Gundam (pr
 **Artefacto creado:** insert_real_dummies.py guardado en tools de scripts.
 **Regla derivada:** Validar siempre details.game en componentes de precio, y usar 	ry/except en web scraping/API syncs gratuitas.
 
-# #   2 0 2 6 - 0 8 - 2 1 :   U n i f i e d   G u n d a m   R a n k i n g   S y s t e m   &   B u i l d   F i x e s 
- -   F i x e d   V e r c e l   b u i l d   f a i l u r e s   b y   r e s o l v i n g   s t r i c t   E S L i n t   e r r o r s   ( m i s s i n g   \ @ t s - e x p e c t - e r r o r \ ,   R e a c t   F a s t   R e f r e s h   r u l e s )   a n d   c o r r e c t i n g   U T F - 1 6   e n c o d i n g   o n   \ d a t a b a s e . t y p e s . t s \ . 
- -   S y n c h r o n i z e d   \ p n p m - l o c k . y a m l \   t o   r e s o l v e   \ E R R _ P N P M _ O U T D A T E D _ L O C K F I L E \   d e p l o y m e n t   b l o c k e r . 
- -   A p p l i e d   \  a n k i n g _ t y p e \   s c h e m a   c h a n g e s   t o   t h e   P r o d u c t i o n   d a t a b a s e   ( i t   w a s   o n l y   i n   D e v ) ,   a n d   r e l o a d e d   t h e   P o s t g R E S T   c a c h e . 
- -   S e t   t h e   d e f a u l t   \  a n k i n g _ t y p e \   t o   \ g u n d a m \   a c r o s s   t h e   p l a t f o r m   ( d a t a b a s e   a n d   a d m i n   p a n e l )   t o   s a t i s f y   t h e   c l i e n t ' s   r e q u e s t   t o   u s e   t h e   3 - p o i n t   s y s t e m   ( C o n q u i s t a ,   D e r r i b o ,   K i l l s )   f o r   a l l   T C G s .  
- 
+## 2026-08-21: Unified Gundam Ranking System & Build Fixes
+- Fixed Vercel build failures by resolving strict ESLint errors (missing \@ts-expect-error\, React Fast Refresh rules) and correcting UTF-16 encoding on \database.types.ts\.
+- Synchronized \pnpm-lock.yaml\ to resolve \ERR_PNPM_OUTDATED_LOCKFILE\ deployment blocker.
+- Applied \anking_type\ schema changes to the Production database (it was only in Dev), and reloaded the PostgREST cache.
+- Set the default \anking_type\ to \gundam\ across the platform (database and admin panel) to satisfy the client's request to use the 3-point system (Conquista, Derribo, Kills) for all TCGs.
+
 
 ## Compound v64: Odoo Catalog & Images Sync Cleanup
 - **Odoo Image Synchronization Engine**: Modificado Supabase edge function odoo-polling para actualizar automáticamente las imágenes 512 de Odoo hacia Supabase Storage y de Supabase Scryfall hacia Odoo image_1920.
@@ -836,3 +836,25 @@ enderVersionsContent(). En desktop (md:) se renderiza en la columna izquierda de
 - **Protección de Columnas Sensibles en RLS**: Una política UPDATE con uth.uid() = id sobre profiles permite modificar cualquier columna (incluyendo 
 ole). Se blindó mediante el trigger BEFORE UPDATE 	rg_prevent_role_escalation.
 - **Validación de Totales en Checkout**: create_order_atomic ahora exige quantity > 0 y sobrescribe orders.total_amount con el total calculado en servidor desde los precios reales de BD.
+
+---
+
+## 📅 Sesión 2026-11-21 / 2026-11-23 — Release DEV → PROD, Flujo Tripartito E2E & CI Cron Hardening
+
+### Qué se hizo
+1. **Respaldo y Reinicio Transaccional de Producción (`sxuotvogwvmxuvwbsscv`)**:
+   - Exportadas `228` órdenes (`1,441` ítems), `21,418` productos y `182` accesorios a archivos CSV en `docs/reports/` (ignorados por `.gitignore`).
+   - Vaciadas las tablas transaccionales (`orders`, `order_items`, `carts`, `cart_items`, `products`, `inventory_logs`, `product_offers_history`, `accessories`, `accessories_history`) preservando `cards`, `card_printings`, `sets` y `profiles`.
+2. **Promoción de Migraciones e Índices Críticos a Producción**:
+   - Aplicadas las migraciones `20260825015900` a `20261121000002` en PROD.
+   - Creado `idx_card_printings_api_source_id` + `VACUUM ANALYZE`, reduciendo la lectura de `card_printings` en `sortswift-sync` de `>14s` (statement timeout) a `171ms`.
+   - Flexibilizado `fn_validate_tcg_attributes` para permitir cartas de entrenador/energía/eventos auto-ingeridas desde SortSwift/TCGplayer.
+3. **Reparación de Build en Cloudflare Pages (`pnpm v9`)**:
+   - Eliminado `frontend/pnpm-workspace.yaml` (contenía solo `allowBuilds` de `pnpm v11`, causando `ERROR packages field missing or empty` en `pnpm v9` de Cloudflare Pages) y sincronizado `frontend/pnpm-lock.yaml` con `pnpm v9.15.9 --frozen-lockfile`.
+4. **Verificación E2E del Flujo Tripartito (`SortSwift ↔ Web PROD ↔ Odoo ERP`) y Moneda USD**:
+   - Actualizada la lista de precios `"Por defecto"` (`ID: 1`) en Odoo ERP de `VEF` a `USD` (`$`) y forzado `pricelist_id: 1, currency_id: 1` en `odoo-sync` (`v11`).
+   - Probados en vivo los ciclos completos de compra confirmada (`create_order_atomic` → `odoo-sync` SO en USD + reserva 60m en SortSwift → `odoo-webhook` factura pagada → `/commit` en SortSwift → restauración con `/return`) y cancelación (`state=cancel` → `/release` en SortSwift + restock web).
+5. **Corrección de Workflows Programados en GitHub Actions**:
+   - `sortswift-sync.yml` redirigido del script legacy `sync_sortswift_automated.py` (que truncaba `.select()` a 1,000 filas y duplicaba productos) hacia la Edge Function autoritativa `sortswift-sync` (`v4.0`, `12.7s`, `4,054` SKUs en paridad).
+   - `verify_sync_health.py` actualizado para excluir productos con `sortswift_id IS NOT NULL` de la comparación contra precios de CardKingdom.
+
