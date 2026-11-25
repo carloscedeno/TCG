@@ -456,8 +456,71 @@ Deno.serve(async (req: Request) => {
         });
       }
 
-      // Cache for Odoo categories during this request
+      // Cache for Odoo categories & stock location during this request
       const categoryCache = new Map<string, number>();
+      let stockLocationId: number | null = null;
+      const getWhStockLocationId = async (): Promise<number | null> => {
+        if (stockLocationId) return stockLocationId;
+        try {
+          const whLocs = await odooJsonRpc(odooUrl, 'call', {
+            service: 'object',
+            method: 'execute_kw',
+            args: [odooDb, uid, odooApiKey, 'stock.location', 'search', [[['usage', '=', 'internal'], ['complete_name', 'ilike', 'WH/Stock']]], { limit: 1 }]
+          });
+          if (whLocs && whLocs.length > 0) {
+            stockLocationId = whLocs[0];
+            return stockLocationId;
+          }
+          const anyInternal = await odooJsonRpc(odooUrl, 'call', {
+            service: 'object',
+            method: 'execute_kw',
+            args: [odooDb, uid, odooApiKey, 'stock.location', 'search', [[['usage', '=', 'internal']]], { limit: 1 }]
+          });
+          if (anyInternal && anyInternal.length > 0) {
+            stockLocationId = anyInternal[0];
+            return stockLocationId;
+          }
+        } catch (locErr: any) {
+          console.warn('[Odoo Sync] Could not resolve WH/Stock location:', locErr.message);
+        }
+        return null;
+      };
+
+      const ensureOdooProductStock = async (prodId: number, minQty: number) => {
+        try {
+          const locId = await getWhStockLocationId();
+          if (!locId) return;
+          const existingQuants = await odooJsonRpc(odooUrl, 'call', {
+            service: 'object',
+            method: 'execute_kw',
+            args: [odooDb, uid, odooApiKey, 'stock.quant', 'search', [[['product_id', '=', prodId], ['location_id', '=', locId]]], { limit: 1 }]
+          });
+          let quantId: number;
+          if (existingQuants && existingQuants.length > 0) {
+            quantId = existingQuants[0];
+            await odooJsonRpc(odooUrl, 'call', {
+              service: 'object',
+              method: 'execute_kw',
+              args: [odooDb, uid, odooApiKey, 'stock.quant', 'write', [[quantId], { inventory_quantity: minQty }]]
+            });
+          } else {
+            quantId = await odooJsonRpc(odooUrl, 'call', {
+              service: 'object',
+              method: 'execute_kw',
+              args: [odooDb, uid, odooApiKey, 'stock.quant', 'create', [{ product_id: prodId, location_id: locId, inventory_quantity: minQty }]]
+            });
+          }
+          await odooJsonRpc(odooUrl, 'call', {
+            service: 'object',
+            method: 'execute_kw',
+            args: [odooDb, uid, odooApiKey, 'stock.quant', 'action_apply_inventory', [[quantId]]]
+          });
+          console.log(`[Odoo Sync] Ensured WH/Stock qty=${minQty} for product ID ${prodId}`);
+        } catch (qErr: any) {
+          console.warn(`[Odoo Sync] Non-fatal stock.quant sync warning for product ${prodId}:`, qErr.message);
+        }
+      };
+
       const getOrCreateSinglesCategoryId = async (gameCode: string): Promise<number> => {
         const gCode = (gameCode || 'MTG').toUpperCase();
         if (categoryCache.has(gCode)) return categoryCache.get(gCode)!;
@@ -512,13 +575,15 @@ Deno.serve(async (req: Request) => {
           args: [
             odooDb, uid, odooApiKey, 
             'product.product', 
-            'search', 
+            'search_read', 
             [odooDomain], 
-            { limit: 1 }
+            { fields: ['id', 'qty_available', 'is_storable'], limit: 1 }
           ]
         });
 
-        let odooProductId: number | null = productSearch && productSearch.length > 0 ? productSearch[0] : null;
+        let odooProductId: number | null = productSearch && productSearch.length > 0 ? productSearch[0].id : null;
+        let currentOdooQty: number = productSearch && productSearch.length > 0 ? Number(productSearch[0].qty_available || 0) : 0;
+        let isStorable: boolean = productSearch && productSearch.length > 0 ? Boolean(productSearch[0].is_storable) : true;
 
         // If the card or accessory is not yet in Odoo, auto-create it on the fly!
         if (!odooProductId) {
@@ -566,9 +631,13 @@ Deno.serve(async (req: Request) => {
         }
 
         if (odooProductId) {
+          const reqQty = Number(item.quantity || 1);
+          if (isStorable && currentOdooQty < reqQty) {
+            await ensureOdooProductStock(odooProductId, reqQty);
+          }
           orderLines.push([0, 0, {
             product_id: odooProductId,
-            product_uom_qty: Number(item.quantity || 1),
+            product_uom_qty: reqQty,
             price_unit: Number(item.price || 0)
           }]);
         }
