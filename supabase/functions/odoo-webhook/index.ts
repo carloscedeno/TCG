@@ -158,17 +158,19 @@ async function processSortSwiftOrderCommit(supabase: any, orderRef: string, isCa
           if (resId) {
             console.log(`[SortSwift Hook] Releasing reservation ${resId} for order ${order.id}`);
             await releaseSortSwiftReservation(resId, ssApiKey);
-            await supabase.from('order_items').update({ sortswift_reservation_id: `released:${resId}` }).eq('id', item.id);
-            if (item.product_id) {
-              const { data: curProd } = await supabase.from('products').select('stock').eq('id', item.product_id).maybeSingle();
-              if (curProd) {
-                const restocked = (curProd.stock || 0) + Math.max(1, Number(item.quantity || 1));
-                await supabase.from('products').update({ stock: restocked }).eq('id', item.product_id);
-              }
+          }
+          await supabase.from('order_items').update({ sortswift_reservation_id: `released:${resId || item.id}` }).eq('id', item.id);
+          if (item.product_id) {
+            const { data: curProd } = await supabase.from('products').select('stock').eq('id', item.product_id).maybeSingle();
+            if (curProd) {
+              const restocked = (curProd.stock || 0) + Math.max(1, Number(item.quantity || 1));
+              await supabase.from('products').update({ stock: restocked }).eq('id', item.product_id);
+              console.log(`[SortSwift Hook] Restocked product ${item.product_id} to ${restocked} after cancellation`);
             }
           }
         } else {
           let committed = false;
+          const hadWebReservation = Boolean(resId);
           if (resId) {
             console.log(`[SortSwift Hook] Committing reservation ${resId} for order ${order.id}`);
             committed = await commitSortSwiftReservation(resId, ssApiKey);
@@ -195,7 +197,8 @@ async function processSortSwiftOrderCommit(supabase: any, orderRef: string, isCa
               .update({ sortswift_reservation_id: `committed:${resId || item.id}` })
               .eq('id', item.id);
 
-            if (item.product_id) {
+            // Only deduct web stock here if there was no prior web checkout reservation
+            if (!hadWebReservation && item.product_id) {
               const { data: pCheck } = await supabase
                 .from('products')
                 .select('stock, sortswift_id')
@@ -288,16 +291,16 @@ let odooUid: number | null = null;
                 for (const p of prods) {
                   if (p.default_code && p.is_storable) {
                     const newStock = Math.max(0, Math.round(p.qty_available));
-                    console.log(`[Odoo Webhook] Syncing stock for ${p.default_code} to ${newStock} via Picking ${pickingName}`);
-                    await supabase.from('products').update({ stock: newStock }).eq('id', p.default_code);
+                    const { data: pData } = await supabase.from('products').select('sortswift_id').eq('id', p.default_code).maybeSingle();
+                    if (!pData?.sortswift_id) {
+                      console.log(`[Odoo Webhook] Syncing stock for ${p.default_code} to ${newStock} via Picking ${pickingName}`);
+                      await supabase.from('products').update({ stock: newStock }).eq('id', p.default_code);
+                    }
                     await supabase.from('accessories').update({ stock: newStock }).eq('id', p.default_code);
 
-                    if (newStock === 0) {
-                      const { data: pData } = await supabase.from('products').select('sortswift_id').eq('id', p.default_code).maybeSingle();
-                      if (pData?.sortswift_id) {
-                        console.log(`[SortSwift Direct Sale] Deducting physical card ${pData.sortswift_id} via picking ${pickingName}`);
-                        await deductSortSwiftDirectSale(pData.sortswift_id, pickingName);
-                      }
+                    if (newStock === 0 && pData?.sortswift_id && !pickingDetails?.[0]?.origin) {
+                      console.log(`[SortSwift Direct Sale] Deducting physical card ${pData.sortswift_id} via picking ${pickingName}`);
+                      await deductSortSwiftDirectSale(pData.sortswift_id, pickingName);
                     }
                   }
                 }
@@ -393,8 +396,11 @@ let odooUid: number | null = null;
 
                   if (p.is_storable) {
                     const newStock = Math.max(0, Math.round(p.qty_available));
-                    console.log(`[Odoo Webhook] Syncing stock for ${p.default_code} to ${newStock} via Invoice/Refund ${moveName}`);
-                    await supabase.from('products').update({ stock: newStock }).eq('id', p.default_code);
+                    const { data: pData } = await supabase.from('products').select('sortswift_id').eq('id', p.default_code).maybeSingle();
+                    if (!pData?.sortswift_id) {
+                      console.log(`[Odoo Webhook] Syncing stock for ${p.default_code} to ${newStock} via Invoice/Refund ${moveName}`);
+                      await supabase.from('products').update({ stock: newStock }).eq('id', p.default_code);
+                    }
                     await supabase.from('accessories').update({ stock: newStock }).eq('id', p.default_code);
                   } else if (isRefund || isCancelled) {
                     const line = validLines.find((l: any) => l.product_id[0] === p.id);
@@ -663,8 +669,11 @@ let odooUid: number | null = null;
           for (const p of odooProducts) {
             if (p.default_code && p.is_storable) {
               const newStock = Math.max(0, Math.round(p.qty_available));
-              console.log(`[Odoo Webhook] Syncing stock for ${p.default_code} to ${newStock} via SO ${odooOrderName}`);
-              await supabase.from('products').update({ stock: newStock }).eq('id', p.default_code);
+              const { data: pData } = await supabase.from('products').select('sortswift_id').eq('id', p.default_code).maybeSingle();
+              if (!pData?.sortswift_id) {
+                console.log(`[Odoo Webhook] Syncing stock for ${p.default_code} to ${newStock} via SO ${odooOrderName}`);
+                await supabase.from('products').update({ stock: newStock }).eq('id', p.default_code);
+              }
               await supabase.from('accessories').update({ stock: newStock }).eq('id', p.default_code);
             } else if (newStatus === 'cancelled') {
               // Return non-storable products back to stock
@@ -837,18 +846,18 @@ let odooUid: number | null = null;
       } else {
         // --- UPDATE FLOW (Product already has a default_code) ---
         let table = 'products';
-        let { data: item, error: productErr } = await supabase.from('products').select('id').eq('id', defaultCode).maybeSingle();
+        let { data: item, error: productErr } = await supabase.from('products').select('id, sortswift_id').eq('id', defaultCode).maybeSingle();
         
         if (!item) {
           table = 'accessories';
           const { data: accItem } = await supabase.from('accessories').select('id').eq('id', defaultCode).maybeSingle();
-          item = accItem;
+          item = accItem as any;
         }
 
         if (item) {
           const updateData: any = {};
           if (price !== undefined) updateData.price = parseFloat(price);
-          if (stock !== undefined) updateData.stock = parseInt(stock, 10);
+          if (stock !== undefined && !(item as any).sortswift_id) updateData.stock = parseInt(stock, 10);
 
           if (Object.keys(updateData).length > 0) {
             const { error } = await supabase.from(table).update(updateData).eq('id', defaultCode);

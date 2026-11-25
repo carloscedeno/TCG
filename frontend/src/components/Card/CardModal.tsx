@@ -884,7 +884,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                                                                     : 'text-neutral-400 hover:text-white'
                                                                 }`}
                                                         >
-                                                            Normal {(activeGroup.normal?.stock || 0) <= 0 && <span className="text-[8px] opacity-70 tracking-tighter">(P/E)</span>}
+                                                            Normal {(activeGroup.normal?.stock || 0) > 0 ? <span className="text-[8px] opacity-80">({activeGroup.normal.stock})</span> : <span className="text-[8px] opacity-70 tracking-tighter">(P/E)</span>}
                                                         </button>
                                                     )}
                                                     {activeGroup?.foil && (
@@ -900,7 +900,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                                                                     : 'text-neutral-400 hover:text-white'
                                                                 }`}
                                                         >
-                                                            Foil {(activeGroup.foil?.stock || 0) <= 0 && <span className="text-[8px] opacity-70 tracking-tighter">(P/E)</span>}
+                                                            Foil {(activeGroup.foil?.stock || 0) > 0 ? <span className="text-[8px] opacity-80">({activeGroup.foil.stock})</span> : <span className="text-[8px] opacity-70 tracking-tighter">(P/E)</span>}
                                                         </button>
                                                     )}
                                                 </div>
@@ -918,7 +918,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                                                     }`}
                                             >
                                                 {isAdding ? <Loader2 size={16} className="animate-spin" /> : addedSuccess ? '¡Añadido! ✓' : <ShoppingCart size={16} fill="currentColor" />}
-                                                {!isAdding && !addedSuccess && ((activeVersion?.stock || 0) > 0 ? 'Agregar al Carrito' : 'Por encargo')}
+                                                {!isAdding && !addedSuccess && ((activeVersion?.stock || 0) > 0 ? `Agregar al Carrito (${activeVersion.stock} disp.)` : 'Por encargo')}
                                             </button>
                                         )}
                                     </div>

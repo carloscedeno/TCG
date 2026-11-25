@@ -757,7 +757,8 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
 
         if (targetVersion) {
           data.product_id = targetVersion.product_id;
-          data.total_stock = targetVersion.stock || 0;
+          data.stock = targetVersion.stock || 0;
+          data.total_stock = data.all_versions.reduce((sum: number, v: any) => sum + (Number(v.stock) || 0), 0);
           data.price = targetVersion.price;
           data.original_price = targetVersion.original_price;
           data.discount_percentage = targetVersion.discount_percentage;
