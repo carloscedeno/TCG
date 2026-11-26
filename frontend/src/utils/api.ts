@@ -1211,28 +1211,37 @@ export const createOrder = async (orderData: {
 
     if (error) throw error;
 
-    // Clear guest cart if successful
-    if (!orderData.userId) {
-      localStorage.removeItem('guest_cart');
+    // Clear guest cart or active POS cart UI state immediately
+    if (!orderData.userId || orderData.cartId) {
+      if (!orderData.userId) {
+        localStorage.removeItem('guest_cart');
+      }
       window.dispatchEvent(new Event('cart-updated'));
     }
 
     // Fire & Forget: Sync order to Odoo
     if (data) {
-      let email = orderData.guestInfo?.email || 'guest@geekorium.com';
-      if (orderData.userId && !orderData.guestInfo?.email) {
+      let email =
+        orderData.shippingAddress?.email?.trim() ||
+        orderData.guestInfo?.email?.trim() ||
+        '';
+      if (!email && orderData.userId) {
         const { data: userData } = await supabase.auth.getUser();
-        if (userData.user?.email) email = userData.user.email;
+        if (userData.user?.id === orderData.userId && userData.user?.email) {
+          email = userData.user.email;
+        }
       }
-      
+
       supabase.functions.invoke('odoo-sync', {
         body: {
           action: 'sync_order',
           order_data: {
             id: (typeof data === 'object' && data !== null && 'order_id' in data) ? (data as any).order_id : data,
             items: orderData.items,
-            customer_email: email,
-            customer_name: orderData.customerName || 'Web Customer'
+            customer_email: email || null,
+            customer_name: orderData.customerName || orderData.shippingAddress?.full_name || 'Web Customer',
+            customer_phone: orderData.shippingAddress?.phone || orderData.guestInfo?.phone || null,
+            customer_cedula: orderData.shippingAddress?.zip_code || null
           }
         }
       }).catch((err: any) => console.error("Failed to sync order to Odoo:", err));

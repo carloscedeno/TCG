@@ -5,7 +5,11 @@ import {
     Truck,
     MessageCircle,
     Loader2,
-    AlertCircle
+    AlertCircle,
+    Search,
+    UserCheck,
+    UserX,
+    X
 } from 'lucide-react';
 import { supabase } from '../utils/supabaseClient';
 
@@ -16,6 +20,12 @@ export const CheckoutPage = () => {
     const [validationError, setValidationError] = useState<string | null>(null);
     const [isProcessing, setIsProcessing] = useState(false);
     const [cartId, setCartId] = useState<string | null>(null);
+    const [isPosCheckout, setIsPosCheckout] = useState(false);
+    const [posCartName, setPosCartName] = useState<string>('');
+    const [posCustomerSearch, setPosCustomerSearch] = useState('');
+    const [posCustomerResults, setPosCustomerResults] = useState<any[]>([]);
+    const [posSearchingCustomers, setPosSearchingCustomers] = useState(false);
+    const [posSelectedUser, setPosSelectedUser] = useState<any | null>(null);
 
     // Customer form (Simplified to Name and Phone)
     const [form, setForm] = useState({
@@ -48,7 +58,7 @@ export const CheckoutPage = () => {
     });
 
     useEffect(() => {
-        const loadCart = async () => {
+        const loadCartAndContext = async () => {
             setLoading(true);
             try {
                 const cartData = await fetchCart();
@@ -58,13 +68,30 @@ export const CheckoutPage = () => {
                 }
                 setCartItems(cartData.items);
                 setCartId(cartData.id || null);
+
+                const fromMultiCart = !!cartData.is_pos;
+                setIsPosCheckout(fromMultiCart);
+                const cName = cartData.name || '';
+                setPosCartName(cName);
+
+                if (fromMultiCart) {
+                    // Multi-cart (Atención al Cliente): NEVER prefill Admin data.
+                    // Pre-fill customer name from cart session if meaningful and search matching user.
+                    const cleanCartName = cName && cName !== 'Carrito Principal' ? cName : '';
+                    if (cleanCartName) {
+                        setForm(prev => ({ ...prev, full_name: cleanCartName }));
+                        setPosCustomerSearch(cleanCartName);
+                    }
+                } else {
+                    await loadProfile();
+                }
             } catch (error) {
                 console.error('Error loading cart:', error);
             } finally {
                 setLoading(false);
             }
         };
-        loadCart();
+        loadCartAndContext();
     }, [navigate]);
 
     const loadAddresses = async () => {
@@ -110,52 +137,109 @@ export const CheckoutPage = () => {
         address: ''
     });
 
-    useEffect(() => {
-        const loadProfile = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (user) {
-                const { data: profile } = await supabase
-                    .from('profiles')
-                    .select('*')
-                    .eq('id', user.id)
-                    .single();
+    const loadProfile = async () => {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+            const { data: profile } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', user.id)
+                .single();
 
-                if (profile) {
-                    const cedulaStr = profile.cedula || '';
-                    const parsedPrefix = cedulaStr.startsWith('E-') ? 'E' : 'V';
-                    const parsedNumber = cedulaStr.replace(/^[VE]-/, '').replace(/\D/g, '');
+            if (profile) {
+                const cedulaStr = profile.cedula || '';
+                const parsedPrefix = cedulaStr.startsWith('E-') ? 'E' : 'V';
+                const parsedNumber = cedulaStr.replace(/^[VE]-/, '').replace(/\D/g, '');
 
-                    setProfileForm({
-                        first_name: profile.first_name || '',
-                        last_name: profile.last_name || '',
-                        cedula_prefix: parsedPrefix,
-                        cedula_number: parsedNumber,
-                        phone: profile.phone || '',
-                        address: profile.address || ''
-                    });
+                setProfileForm({
+                    first_name: profile.first_name || '',
+                    last_name: profile.last_name || '',
+                    cedula_prefix: parsedPrefix,
+                    cedula_number: parsedNumber,
+                    phone: profile.phone || '',
+                    address: profile.address || ''
+                });
 
-                    setForm(prev => ({
-                        ...prev,
-                        full_name: profile.first_name ? `${profile.first_name} ${profile.last_name || ''}`.trim() : prev.full_name,
-                        whatsapp: profile.phone || prev.whatsapp,
-                        email: user.email || prev.email,
-                        address: profile.address || prev.address,
-                        cedula_number: parsedNumber || prev.cedula_number,
-                        cedula_prefix: parsedPrefix as 'V' | 'E',
-                    }));
+                setForm(prev => ({
+                    ...prev,
+                    full_name: profile.first_name ? `${profile.first_name} ${profile.last_name || ''}`.trim() : prev.full_name,
+                    whatsapp: profile.phone || prev.whatsapp,
+                    email: user.email || prev.email,
+                    address: profile.address || prev.address,
+                    cedula_number: parsedNumber || prev.cedula_number,
+                    cedula_prefix: parsedPrefix as 'V' | 'E',
+                }));
 
-                    if (!profile.first_name || !profile.last_name || !profile.phone || !profile.cedula) {
-                        setShowCompleteProfileModal(true);
-                    }
-                } else {
-                    setForm(prev => ({ ...prev, email: user.email || prev.email }));
+                if (!profile.first_name || !profile.last_name || !profile.phone || !profile.cedula) {
                     setShowCompleteProfileModal(true);
                 }
-                loadAddresses();
+            } else {
+                setForm(prev => ({ ...prev, email: user.email || prev.email }));
+                setShowCompleteProfileModal(true);
             }
-        };
-        loadProfile();
-    }, []);
+            loadAddresses();
+        }
+    };
+
+    // Multi-Cart customer lookup in profiles (debounced, only when isPosCheckout is active)
+    useEffect(() => {
+        if (!isPosCheckout) return;
+        const term = posCustomerSearch.trim();
+        if (term.length < 2) {
+            setPosCustomerResults([]);
+            return;
+        }
+        const timer = setTimeout(async () => {
+            setPosSearchingCustomers(true);
+            try {
+                const s = `%${term}%`;
+                const { data } = await supabase
+                    .from('profiles')
+                    .select('id, username, first_name, last_name, email, phone, cedula, address')
+                    .or(`username.ilike.${s},first_name.ilike.${s},last_name.ilike.${s},email.ilike.${s},cedula.ilike.${s},phone.ilike.${s}`)
+                    .limit(8);
+                setPosCustomerResults(data || []);
+            } catch (err) {
+                console.error('Error searching customers:', err);
+                setPosCustomerResults([]);
+            } finally {
+                setPosSearchingCustomers(false);
+            }
+        }, 300);
+        return () => clearTimeout(timer);
+    }, [isPosCheckout, posCustomerSearch]);
+
+    const handleSelectPosCustomer = (cust: any) => {
+        setPosSelectedUser(cust);
+        const cedulaStr = cust.cedula || '';
+        const parsedPrefix = cedulaStr.startsWith('E-') ? 'E' : 'V';
+        const parsedNumber = cedulaStr.replace(/^[VE]-/, '').replace(/\D/g, '');
+        const fullName = `${cust.first_name || ''} ${cust.last_name || ''}`.trim() || cust.username || '';
+
+        setForm(prev => ({
+            ...prev,
+            full_name: fullName || prev.full_name,
+            whatsapp: (cust.phone || '').replace(/\D/g, ''),
+            email: cust.email || '',
+            cedula_prefix: parsedPrefix as 'V' | 'E',
+            cedula_number: parsedNumber,
+            address: prev.shipping_method === 'delivery' ? (cust.address || '') : prev.address,
+        }));
+        setPosCustomerResults([]);
+    };
+
+    const handleClearPosCustomer = () => {
+        setPosSelectedUser(null);
+        setForm(prev => ({
+            ...prev,
+            full_name: posCartName && posCartName !== 'Carrito Principal' ? posCartName : '',
+            whatsapp: '',
+            email: '',
+            cedula_prefix: 'V',
+            cedula_number: '',
+            address: prev.shipping_method === 'pickup' ? 'Tienda Geekorium (Pick Up)' : '',
+        }));
+    };
 
     const handleSaveProfile = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -223,7 +307,11 @@ export const CheckoutPage = () => {
         const nameValid = form.full_name.trim().length >= 3 && /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(form.full_name.trim());
         const phoneDigits = form.whatsapp.replace(/\D/g, '');
         const phoneValid = /^(0|58)?(414|424|412|416|426|2\d{2})\d{7}$/.test(phoneDigits);
-        const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim());
+        const trimmedEmail = form.email.trim();
+        // In Multi-Cart (POS) mode, email is optional when the customer has no web account
+        const emailValid = isPosCheckout
+            ? (trimmedEmail === '' || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail))
+            : /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail);
         
         // Validate shipping address if delivery
         const addressValid = form.shipping_method === 'pickup' || (form.address.trim().length > 5 && form.address !== 'Tienda Geekorium (Pick Up)');
@@ -277,18 +365,21 @@ export const CheckoutPage = () => {
                 };
             });
 
-            const cedula = `${form.cedula_prefix}-${form.cedula_number || '00000000'}`;
+            const cedula = form.cedula_number ? `${form.cedula_prefix}-${form.cedula_number}` : '';
+            const trimmedEmail = form.email.trim();
+            const effectiveUserId = isPosCheckout ? (posSelectedUser?.id || null) : (user?.id || null);
 
             const shippingAddressObj = {
-                full_name: form.full_name,
+                full_name: form.full_name.trim(),
                 address_line1: form.address,
                 city: 'Caracas',
                 state: form.state,
-                zip_code: cedula,
+                zip_code: cedula || `${form.cedula_prefix}-00000000`,
                 country: 'VE',
-                email: form.email || 'guest@geekorium.com',
+                email: trimmedEmail || (isPosCheckout ? '' : 'guest@geekorium.com'),
                 phone: form.whatsapp,
                 shipping_method: form.shipping_method,
+                is_pos: isPosCheckout,
                 billing_address: sameAsShipping ? null : {
                     full_name: billingForm.full_name,
                     address_line1: billingForm.address_line1,
@@ -302,17 +393,17 @@ export const CheckoutPage = () => {
             };
 
             const orderResponse = await createOrder({
-                userId: user?.id || null,
+                userId: effectiveUserId,
                 items: simplifiedItems,
                 shippingAddress: shippingAddressObj,
                 totalAmount: total,
-                guestInfo: !user ? { email: form.email || 'guest@geekorium.com', phone: form.whatsapp } : undefined,
+                guestInfo: !effectiveUserId ? { email: trimmedEmail, phone: form.whatsapp } : undefined,
                 cartId: cartId || undefined,
-                customerName: form.full_name || undefined
+                customerName: form.full_name.trim() || undefined
             });
 
-            // Save address if requested and logged in
-            if (form.shipping_method === 'delivery' && selectedAddressId === 'new' && saveToBook && user) {
+            // Save address if requested and logged in (never save to admin's personal book during POS checkout)
+            if (!isPosCheckout && form.shipping_method === 'delivery' && selectedAddressId === 'new' && saveToBook && user) {
                 try {
                     await saveUserAddress({
                         name: 'Dirección de Checkout',
@@ -332,7 +423,7 @@ export const CheckoutPage = () => {
             }
 
             // Save billing address if requested and different
-            if (!sameAsShipping && saveToBook && user) {
+            if (!isPosCheckout && !sameAsShipping && saveToBook && user) {
                 try {
                     await saveUserAddress({
                         name: 'Facturación Checkout',
@@ -390,7 +481,7 @@ export const CheckoutPage = () => {
                 `¡Hola Geeko-Asesor! Quiero concretar esta orden:`,
                 `*Cliente:* ${form.full_name}`,
                 `*WhatsApp:* ${form.whatsapp}`,
-                `*Correo:* ${form.email}`,
+                form.email.trim() ? `*Correo:* ${form.email.trim()}` : '',
                 `*Total:* $${total.toFixed(2)}`,
                 ``,
                 `*Detalle (${items.length} ítem${items.length !== 1 ? 's' : ''}):*`,
@@ -401,25 +492,27 @@ export const CheckoutPage = () => {
 
             window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(waMessage)}`, '_blank');
 
-            // Notification
-            try {
-                sendCheckoutEmailNotification({
-                    order_id: orderIdForMsg,
-                    user_email: form.email || 'guest@geekorium.com',
-                    order_total: total,
-                    items: cartItems.map(item => ({
-                        quantity: item.quantity,
-                        products: { 
-                            name: item.products?.name, 
-                            price: item.products?.price, 
-                            finish: item.products?.finish, 
-                            is_on_demand: !item.accessory_id && (item.quantity > (item.products?.stock || 0)) 
-                        }
-                    })),
-                    current_user_id: user?.id || "guest"
-                });
-            } catch (e) {
-                console.error('Notification error:', e);
+            // Notification (skip customer email if POS customer did not provide one)
+            if (form.email.trim()) {
+                try {
+                    sendCheckoutEmailNotification({
+                        order_id: orderIdForMsg,
+                        user_email: form.email.trim(),
+                        order_total: total,
+                        items: cartItems.map(item => ({
+                            quantity: item.quantity,
+                            products: { 
+                                name: item.products?.name, 
+                                price: item.products?.price, 
+                                finish: item.products?.finish, 
+                                is_on_demand: !item.accessory_id && (item.quantity > (item.products?.stock || 0)) 
+                            }
+                        })),
+                        current_user_id: effectiveUserId || "guest"
+                    });
+                } catch (e) {
+                    console.error('Notification error:', e);
+                }
             }
 
             navigate('/checkout/success', {
@@ -480,7 +573,92 @@ export const CheckoutPage = () => {
                     </div>
 
                     <div className="bg-[#281F3E]/60 border border-white/5 rounded-2xl p-6 sm:p-8">
-                        <h2 className="text-2xl font-black uppercase tracking-tight mb-6">Tus Datos</h2>
+                        <div className="flex flex-wrap items-center justify-between gap-2 mb-6">
+                            <h2 className="text-2xl font-black uppercase tracking-tight">
+                                {isPosCheckout ? 'Datos del Cliente (Atención)' : 'Tus Datos'}
+                            </h2>
+                            {isPosCheckout && (
+                                <span className="px-3 py-1 rounded-full bg-geeko-cyan/15 border border-geeko-cyan/40 text-geeko-cyan text-[10px] font-black uppercase tracking-widest">
+                                    Multi-Cart: {posCartName || 'Cliente'}
+                                </span>
+                            )}
+                        </div>
+
+                        {isPosCheckout && (
+                            <div className="mb-6 p-4 rounded-xl bg-black/40 border border-geeko-cyan/25 space-y-3">
+                                <div className="flex items-center justify-between gap-2">
+                                    <span className="text-xs font-black uppercase tracking-wider text-geeko-cyan flex items-center gap-2">
+                                        <Search size={14} /> Vincular Usuario Registrado (Opcional)
+                                    </span>
+                                    {posSelectedUser && (
+                                        <button
+                                            type="button"
+                                            onClick={handleClearPosCustomer}
+                                            className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 hover:text-white flex items-center gap-1"
+                                        >
+                                            <X size={12} /> Desvincular
+                                        </button>
+                                    )}
+                                </div>
+
+                                {posSelectedUser ? (
+                                    <div className="flex items-center justify-between gap-3 p-3 rounded-xl bg-geeko-green/10 border border-geeko-green/30 text-xs">
+                                        <div className="flex items-center gap-2.5 min-w-0">
+                                            <UserCheck size={16} className="text-geeko-green shrink-0" />
+                                            <div className="min-w-0">
+                                                <div className="font-bold text-white truncate">
+                                                    {`${posSelectedUser.first_name || ''} ${posSelectedUser.last_name || ''}`.trim() || posSelectedUser.username}
+                                                </div>
+                                                <div className="text-[11px] text-neutral-300 truncate">
+                                                    {posSelectedUser.email} {posSelectedUser.cedula ? `• ${posSelectedUser.cedula}` : ''}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span className="text-[9px] font-black uppercase text-geeko-green shrink-0">Vinculado</span>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-2 relative">
+                                        <input
+                                            type="text"
+                                            placeholder="Buscar cliente por nombre, cédula, correo o usuario..."
+                                            value={posCustomerSearch}
+                                            onChange={(e) => setPosCustomerSearch(e.target.value)}
+                                            className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-neutral-500 focus:border-geeko-cyan outline-none"
+                                        />
+                                        {posSearchingCustomers && (
+                                            <p className="text-[11px] text-geeko-cyan animate-pulse">Buscando en usuarios...</p>
+                                        )}
+                                        {posCustomerResults.length > 0 && (
+                                            <div className="max-h-48 overflow-y-auto rounded-xl border border-white/10 bg-[#120d1d] divide-y divide-white/5">
+                                                {posCustomerResults.map((cust) => {
+                                                    const cName = `${cust.first_name || ''} ${cust.last_name || ''}`.trim() || cust.username || 'Sin nombre';
+                                                    return (
+                                                        <button
+                                                            key={cust.id}
+                                                            type="button"
+                                                            onClick={() => handleSelectPosCustomer(cust)}
+                                                            className="w-full text-left px-3.5 py-2.5 hover:bg-geeko-cyan/15 transition-colors flex items-center justify-between gap-2"
+                                                        >
+                                                            <div className="min-w-0">
+                                                                <div className="text-xs font-bold text-white truncate">{cName}</div>
+                                                                <div className="text-[10px] text-neutral-400 truncate">
+                                                                    {cust.email || 'Sin correo'} {cust.cedula ? `• ${cust.cedula}` : ''} {cust.phone ? `• ${cust.phone}` : ''}
+                                                                </div>
+                                                            </div>
+                                                            <span className="text-[10px] font-black uppercase text-geeko-cyan shrink-0">Seleccionar</span>
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+                                        )}
+                                        <p className="text-[11px] text-neutral-400 flex items-center gap-1.5">
+                                            <UserX size={13} className="shrink-0 text-neutral-500" />
+                                            Si el cliente no tiene usuario registrado, no hace falta seleccionarlo; llena sus datos abajo (correo opcional).
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+                        )}
 
                         {validationError && (
                             <div className="bg-red-500/10 border border-red-500/30 text-red-400 p-3 rounded-xl flex items-center gap-2 text-sm mb-4">

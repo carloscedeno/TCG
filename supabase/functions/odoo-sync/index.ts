@@ -89,9 +89,26 @@ async function ensureCategory(url: string, db: string, uid: number, apiKey: stri
 }
 
 
-// Fast check/enforcement that Odoo's default pricelist uses USD
-async function ensureUsdPricelist(url: string, db: string, uid: number, apiKey: string): Promise<number | null> {
+// Fast check/enforcement that Odoo's default pricelist and USD currency symbol are set to USD ($)
+async function ensureUsdPricelist(url: string, db: string, uid: number, apiKey: string): Promise<{ pricelistId: number | null; usdId: number | null }> {
   try {
+    const usdList = await odooJsonRpc(url, 'call', {
+      service: 'object',
+      method: 'execute_kw',
+      args: [db, uid, apiKey, 'res.currency', 'search_read', [[['name', '=', 'USD'], ['active', 'in', [true, false]]]], { fields: ['id', 'name', 'symbol', 'active'], limit: 1 }]
+    });
+    if (!Array.isArray(usdList) || usdList.length === 0) return { pricelistId: null, usdId: null };
+    const usdCurr = usdList[0];
+    const usdId: number = usdCurr.id;
+
+    if (!usdCurr.active || usdCurr.symbol !== '$') {
+      await odooJsonRpc(url, 'call', {
+        service: 'object',
+        method: 'execute_kw',
+        args: [db, uid, apiKey, 'res.currency', 'write', [[usdId], { active: true, symbol: '$' }]]
+      });
+    }
+
     const pricelists = await odooJsonRpc(url, 'call', {
       service: 'object',
       method: 'execute_kw',
@@ -102,38 +119,23 @@ async function ensureUsdPricelist(url: string, db: string, uid: number, apiKey: 
       for (const pl of pricelists) {
         const currName = Array.isArray(pl.currency_id) ? pl.currency_id[1] : '';
         if (currName === 'USD') {
-          return pl.id;
+          return { pricelistId: pl.id, usdId };
         }
       }
+      if (pricelists.length > 0) {
+        const targetPlId = pricelists[0].id;
+        await odooJsonRpc(url, 'call', {
+          service: 'object',
+          method: 'execute_kw',
+          args: [db, uid, apiKey, 'product.pricelist', 'write', [[targetPlId], { currency_id: usdId }]]
+        });
+        return { pricelistId: targetPlId, usdId };
+      }
     }
-
-    const usdIds = await odooJsonRpc(url, 'call', {
-      service: 'object',
-      method: 'execute_kw',
-      args: [db, uid, apiKey, 'res.currency', 'search', [[['name', '=', 'USD'], ['active', 'in', [true, false]]]], { limit: 1 }]
-    });
-    if (!usdIds || usdIds.length === 0) return null;
-    const usdId = usdIds[0];
-
-    await odooJsonRpc(url, 'call', {
-      service: 'object',
-      method: 'execute_kw',
-      args: [db, uid, apiKey, 'res.currency', 'write', [[usdId], { active: true }]]
-    });
-
-    if (Array.isArray(pricelists) && pricelists.length > 0) {
-      const targetPlId = pricelists[0].id;
-      await odooJsonRpc(url, 'call', {
-        service: 'object',
-        method: 'execute_kw',
-        args: [db, uid, apiKey, 'product.pricelist', 'write', [[targetPlId], { currency_id: usdId }]]
-      });
-      return targetPlId;
-    }
-    return null;
+    return { pricelistId: null, usdId };
   } catch (err: any) {
     console.warn('[Odoo Sync] Could not enforce USD pricelist:', err.message);
-    return null;
+    return { pricelistId: null, usdId: null };
   }
 }
 
@@ -166,8 +168,8 @@ Deno.serve(async (req: Request) => {
     if (!uid) throw new Error(`Authentication failed with Odoo. DB: ${odooDb}, User: ${odooUsername}, KeyLen: ${odooApiKey?.length}, URL: ${odooUrl}`);
 
     if (action === 'ping') {
-      const usdPricelistId = await ensureUsdPricelist(odooUrl, odooDb, uid, odooApiKey);
-      return new Response(JSON.stringify({ success: true, message: "Odoo Connection OK", usd_pricelist_id: usdPricelistId }), {
+      const { pricelistId: usdPricelistId, usdId } = await ensureUsdPricelist(odooUrl, odooDb, uid, odooApiKey);
+      return new Response(JSON.stringify({ success: true, message: "Odoo Connection OK", usd_pricelist_id: usdPricelistId, usd_currency_id: usdId }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
     }
@@ -391,38 +393,94 @@ Deno.serve(async (req: Request) => {
         }
       }
 
-      // 1. Find or create Partner (enriching customer name & email from orders.shipping_address if available)
+      const { pricelistId: usdPricelistId, usdId } = await ensureUsdPricelist(odooUrl, odooDb, uid, odooApiKey);
+
+      // 1. Find or create Partner (enriching customer details without overwriting existing Odoo partners or merging unrelated no-email guests)
       const shippingAddr = dbOrder?.shipping_address || {};
       const guestInfo = dbOrder?.guest_info || {};
-      const customerEmail =
+      const rawEmail = String(
         shippingAddr.email ||
         guestInfo.email ||
         order_data.customer_email ||
-        'guest@geekorium.com';
-      const rawCustomerName = order_data.customer_name;
+        ''
+      ).trim();
+      const isPlaceholderEmail = (e: string) =>
+        !e ||
+        e.toLowerCase() === 'guest@geekorium.com' ||
+        e.toLowerCase() === 'sin-correo@geekorium.com' ||
+        !e.includes('@');
+      const realEmail = isPlaceholderEmail(rawEmail) ? null : rawEmail;
+
+      const rawCustomerName = String(order_data.customer_name || '').trim();
       const customerName =
         (rawCustomerName && rawCustomerName !== 'Web Customer' ? rawCustomerName : null) ||
-        shippingAddr.full_name ||
+        (shippingAddr.full_name ? String(shippingAddr.full_name).trim() : null) ||
         rawCustomerName ||
         'Web Customer';
-      const customerPhone = shippingAddr.phone || guestInfo.phone || null;
 
-      let partnerId;
-      const partnerSearch = await odooJsonRpc(odooUrl, 'call', {
-        service: 'object',
-        method: 'execute_kw',
-        args: [
-          odooDb, uid, odooApiKey, 
-          'res.partner', 
-          'search', 
-          [[['email', '=', customerEmail]]], 
-          { limit: 1 }
-        ]
-      });
+      const customerPhone = String(
+        shippingAddr.phone || guestInfo.phone || order_data.customer_phone || ''
+      ).trim() || null;
 
-      if (partnerSearch && partnerSearch.length > 0) {
-        partnerId = partnerSearch[0];
-        if (customerName && customerName !== 'Web Customer') {
+      const rawCedula = String(
+        shippingAddr.zip_code || order_data.customer_cedula || ''
+      ).trim();
+      const validCedula =
+        rawCedula && !['V-00000000', 'E-00000000'].includes(rawCedula.toUpperCase())
+          ? rawCedula
+          : null;
+
+      const findPartnerByDomain = async (domain: any[]) => {
+        const res = await odooJsonRpc(odooUrl, 'call', {
+          service: 'object',
+          method: 'execute_kw',
+          args: [
+            odooDb, uid, odooApiKey,
+            'res.partner',
+            'search_read',
+            [domain],
+            { fields: ['id', 'name', 'email', 'phone', 'vat'], limit: 1 }
+          ]
+        });
+        return Array.isArray(res) && res.length > 0 ? res[0] : null;
+      };
+
+      let existingPartner: any = null;
+      if (realEmail) {
+        existingPartner = await findPartnerByDomain([['email', '=ilike', realEmail]]);
+      }
+      if (!existingPartner && validCedula) {
+        existingPartner = await findPartnerByDomain([['vat', 'ilike', validCedula]]);
+      }
+      if (!existingPartner && customerPhone && customerPhone.replace(/\D/g, '').length >= 7) {
+        existingPartner = await findPartnerByDomain([['phone', 'ilike', customerPhone]]);
+      }
+      if (!existingPartner && !realEmail && customerName && customerName !== 'Web Customer') {
+        existingPartner = await findPartnerByDomain([['name', '=ilike', customerName]]);
+      }
+
+      let partnerId: number;
+      if (existingPartner) {
+        partnerId = existingPartner.id;
+        // Preserve existing partner's name; only backfill missing fields & USD pricelist
+        const updateFields: Record<string, any> = {};
+        if ((!existingPartner.name || existingPartner.name === 'Web Customer') && customerName && customerName !== 'Web Customer') {
+          updateFields.name = customerName;
+        }
+        if (!existingPartner.email && realEmail) {
+          updateFields.email = realEmail;
+        }
+        if (!existingPartner.phone && customerPhone) {
+          updateFields.phone = customerPhone;
+        }
+        if (!existingPartner.vat && validCedula) {
+          updateFields.vat = validCedula;
+        }
+        if (usdPricelistId) {
+          updateFields.property_product_pricelist = usdPricelistId;
+        }
+
+        if (Object.keys(updateFields).length > 0) {
           try {
             await odooJsonRpc(odooUrl, 'call', {
               service: 'object',
@@ -431,7 +489,7 @@ Deno.serve(async (req: Request) => {
                 odooDb, uid, odooApiKey,
                 'res.partner',
                 'write',
-                [[partnerId], { name: customerName, ...(customerPhone ? { phone: customerPhone } : {}) }]
+                [[partnerId], updateFields]
               ]
             });
           } catch (_e) {
@@ -443,13 +501,15 @@ Deno.serve(async (req: Request) => {
           service: 'object',
           method: 'execute_kw',
           args: [
-            odooDb, uid, odooApiKey, 
-            'res.partner', 
-            'create', 
+            odooDb, uid, odooApiKey,
+            'res.partner',
+            'create',
             [{
               name: customerName,
-              email: customerEmail,
+              ...(realEmail ? { email: realEmail } : {}),
               ...(customerPhone ? { phone: customerPhone } : {}),
+              ...(validCedula ? { vat: validCedula } : {}),
+              ...(usdPricelistId ? { property_product_pricelist: usdPricelistId } : {}),
               customer_rank: 1
             }]
           ]
@@ -648,8 +708,6 @@ Deno.serve(async (req: Request) => {
         throw new Error("No mappable products found for this order in Odoo.");
       }
 
-      const usdPricelistId = await ensureUsdPricelist(odooUrl, odooDb, uid, odooApiKey);
-
       const orderId = await odooJsonRpc(odooUrl, 'call', {
         service: 'object',
         method: 'execute_kw',
@@ -659,7 +717,8 @@ Deno.serve(async (req: Request) => {
           'create', 
           [{
             partner_id: partnerId,
-            ...(usdPricelistId ? { pricelist_id: usdPricelistId, currency_id: 1 } : {}),
+            ...(usdPricelistId ? { pricelist_id: usdPricelistId } : {}),
+            ...(usdId ? { currency_id: usdId } : {}),
             order_line: orderLines,
             client_order_ref: cleanRef
           }]
