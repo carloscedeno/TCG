@@ -18,7 +18,7 @@
   <!-- Forced Cache Clear Script -->
   <script>
     // Forced Cache Clear on new deployments
-    const DEPLOY_VERSION = "20260704-bulk-rarity-discount";
+    const DEPLOY_VERSION = "20261126-no-sw-cache";
     if (localStorage.getItem("GEEKO_DEPLOY_VERSION") !== DEPLOY_VERSION) {
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(function(registrations) {
