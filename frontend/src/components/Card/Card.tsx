@@ -42,7 +42,7 @@ export interface CardProps {
   onClick?: () => void;
 }
 
-export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, price, original_price, discount_percentage, card_id, rarity, type, card_faces, viewMode = 'grid', total_stock, finish, is_foil, isArchive, showCartButton = false, is_accessory, accessory_id, additional_images, restocked_at, onClick }) => {
+export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, price, original_price, discount_percentage, card_id, type, card_faces, viewMode = 'grid', total_stock, finish, is_foil, isArchive, showCartButton = false, is_accessory, accessory_id, additional_images, restocked_at, onClick }) => {
   const isNew = restocked_at ? (Date.now() - new Date(restocked_at).getTime()) < 14 * 24 * 60 * 60 * 1000 : false;
   const [currentFaceIndex, setCurrentFaceIndex] = useState(0);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -74,7 +74,6 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
   const isPresale = currentName?.toLowerCase().includes('(preventa)');
   const cleanName = isPresale ? currentName.replace(/\(preventa\)/gi, '').trim() : currentName;
 
-  const currentType = (card_faces && card_faces.length > 1) ? card_faces[currentFaceIndex].type_line || type : type;
   const imgSrc = allImages[currentImageIndex] || allImages[0] || '';
 
   const handleFlip = (e: React.MouseEvent) => {
@@ -156,22 +155,16 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
           </h3>
           <div className="flex items-center gap-2 mt-0.5">
             <span className="text-[10px] text-neutral-600 dark:text-text-low font-bold uppercase tracking-wider px-1.5 py-0.5 bg-black/5 dark:bg-white/5 rounded">{set}</span>
-            {!is_accessory && rarity && (
-              <span className={`text-[9px] font-black uppercase tracking-widest ${rarity.toLowerCase() === 'mythic' ? 'text-orange-400' :
-                rarity.toLowerCase() === 'rare' ? 'text-geeko-gold' : 'text-text-low'
-                }`}>
-                {rarity}
-              </span>
-            )}
-            {isFoil && (
-              <span className="flex items-center gap-1 text-[8px] bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white px-1.5 py-0.5 rounded uppercase font-bold tracking-wider animate-pulse">
-                <svg width="8" height="10" viewBox="0 0 10 12" fill="none" className="drop-shadow-sm">
-                  <rect x="0.5" y="0.5" width="9" height="11" rx="1.5" stroke="currentColor" strokeWidth="1" />
-                  <path d="M2 3 L8 3 M2 5 L6 5" stroke="currentColor" strokeWidth="1" />
-                  <circle cx="7" cy="8" r="1.5" fill="currentColor" />
-                </svg>
-                Foil
-              </span>
+            {!is_accessory && (
+              isFoil ? (
+                <span className="text-[8px] bg-gradient-to-r from-indigo-600 via-purple-600 to-fuchsia-600 text-white px-1.5 py-0.5 rounded uppercase font-black tracking-wider">
+                  Foil
+                </span>
+              ) : (
+                <span className="text-[8px] bg-neutral-200 dark:bg-white/10 text-neutral-700 dark:text-neutral-300 px-1.5 py-0.5 rounded uppercase font-black tracking-wider">
+                  Normal
+                </span>
+              )
             )}
           </div>
         </div>
@@ -188,35 +181,27 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         </div>
 
         <div className="text-right flex flex-col items-end min-w-[80px] ml-auto pl-2 relative">
-          <span className="text-[9px] uppercase text-text-low font-bold tracking-wider">Mercado</span>
           {discount_percentage && discount_percentage > 0 ? (
               <div className="flex flex-col items-end gap-0.5">
-                  <span className="text-[9px] text-text-low font-bold line-through">${original_price?.toFixed(2)}</span>
                   <div className="flex items-center gap-1.5">
-                      <span className="text-geeko-cyan font-mono font-bold text-base leading-none">
-                        {typeof price === 'number' ? `$${price.toFixed(2)}` : '---'}
-                      </span>
-                      <span className="text-[8px] bg-purple-500/20 text-purple-400 border border-purple-500/30 px-1 py-0.5 rounded font-black">-{discount_percentage}%</span>
+                      <span className="text-[10px] text-text-low font-bold line-through">${original_price?.toFixed(2)}</span>
+                      <span className="text-[9px] bg-red-600 text-white px-1.5 py-0.5 rounded font-black uppercase">{discount_percentage}% OFF</span>
                   </div>
+                  <span className="text-geeko-cyan font-mono font-black text-base leading-none">
+                    {typeof price === 'number' ? `$${price.toFixed(2)}` : '---'}
+                  </span>
               </div>
           ) : (
-              <div className="flex items-center gap-1.5">
-                <span className="text-geeko-cyan font-mono font-bold text-base leading-none">
-                  {typeof price === 'number' ? `$${price.toFixed(2)}` : '---'}
-                </span>
-                {isFoil && (
-                  <span className="text-[10px] bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white px-1.5 py-0.5 rounded uppercase font-black tracking-tighter" title="Versión Foil">
-                    FOIL
-                  </span>
-                )}
-              </div>
+              <span className="text-geeko-cyan font-mono font-black text-base leading-none">
+                {typeof price === 'number' ? `$${price.toFixed(2)}` : '---'}
+              </span>
           )}
         </div>
 
         {showCartButton && !isArchive && (
           <button
             onClick={handleQuickAdd}
-            className={`ml-4 w-9 h-9 rounded-full flex items-center justify-center transition-all border border-white/5 ${addingToCart ? 'bg-geeko-cyan text-black' : 'bg-white/5 text-text-low hover:bg-geeko-cyan hover:text-black hover:scale-110'}`}
+            className={`ml-4 w-9 h-9 rounded-full flex items-center justify-center transition-all border border-white/5 ${addingToCart ? 'bg-geeko-cyan text-black' : 'bg-geeko-cyan text-black hover:scale-110'}`}
             title={(total_stock || 0) > 0 ? "Agregar al Carrito Rápido" : "Por encargo"}
           >
             {addingToCart ? <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /> : <Plus size={20} strokeWidth={3} />}
@@ -238,188 +223,142 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
       }}
       onMouseEnter={handlePreFetch}
       data-testid="product-card"
-      className="relative group p-2 sm:p-4 bg-white dark:bg-neutral-900/40 border border-neutral-200 dark:border-white/5 rounded-[1.5rem] hover:bg-neutral-50 dark:hover:bg-neutral-900/80 transition-all cursor-pointer flex flex-col h-full hover:border-geeko-cyan/50 dark:hover:border-geeko-cyan/30 shadow-sm dark:shadow-none"
+      className="relative group p-2.5 sm:p-3.5 bg-white dark:bg-[#19142b]/80 border border-neutral-200 dark:border-white/10 rounded-2xl hover:bg-neutral-50 dark:hover:bg-[#211a38] transition-all cursor-pointer flex flex-col h-full hover:border-geeko-cyan/50 dark:hover:border-geeko-cyan/40 shadow-sm dark:shadow-none"
     >
-      <div className="relative aspect-[63/88] w-full rounded-lg overflow-hidden bg-neutral-200 dark:bg-neutral-800 shadow-lg">
-
-      {/* Flip Button overlay */}
-      {!!hasMultipleFaces && (
-        <button
-          onClick={handleFlip}
-          className="absolute top-2 left-2 z-10 p-1.5 bg-black/60 hover:bg-geeko-cyan text-white rounded-full border border-white/10 transition-colors"
-        >
-          <RotateCw size={14} className="group-hover:rotate-180 transition-transform duration-500" />
-        </button>
-      )}
-
-      {/* PREVENTA Badge Overlay */}
-      {isPresale && (
-        <div className="absolute top-2 left-2 z-10 px-2 py-1 bg-geeko-cyan text-black text-[8px] font-black uppercase rounded shadow-lg shadow-geeko-cyan/30 flex items-center gap-1 animate-in zoom-in duration-300">
-          <div className="w-1.5 h-1.5 bg-black rounded-full animate-pulse" />
-          Preventa
-        </div>
-      )}
-
-      {/* NEW Badge Overlay */}
-      {isNew && (
-        <div className={`absolute ${isPresale ? 'top-10' : 'top-2'} left-2 z-10 px-2 py-1 bg-purple-600 text-white text-[8px] font-black uppercase rounded shadow-lg shadow-purple-600/30 flex items-center gap-1 animate-in zoom-in duration-300`}>
-          <div className="w-1 h-1 bg-white rounded-full animate-ping" />
-          Nuevo
-        </div>
-      )}
-
-      {/* Discount Ribbon (Top Left Diagonal) */}
-      {!!(discount_percentage && discount_percentage > 0) && (
-        <div className="absolute top-0 left-0 w-20 h-20 overflow-hidden z-10 pointer-events-none rounded-tl-2xl">
-          <div className="absolute top-[16px] left-[-22px] w-[100px] py-1.5 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-[10px] font-black uppercase text-center -rotate-45 shadow-[0_4px_15px_rgba(147,51,234,0.6)] border-y border-white/20 tracking-tighter">
-            -{discount_percentage}%
-          </div>
-        </div>
-      )}
-
-      {/* Dynamic Background Glow for Hover */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10" />
-
-      {/* Card Image */}
-      <div className={`relative aspect-[2.5/3.5] w-full bg-neutral-100 dark:bg-[#1a1a1a] overflow-hidden ${isFoil ? 'holo-effect' : ''}`}>
-        {isFoil && (
-          <div className="absolute inset-0 z-20 foil-shimmer opacity-30 mix-blend-overlay pointer-events-none" />
-        )}
-
-        <CardImage src={imgSrc} alt={currentName} size="small" fallbackIconSize={40} className="group-hover:scale-110 transition-transform duration-500" />
-
-        {/* Carousel Navigation */}
-        {!hasMultipleFaces && allImages.length > 1 && (
-          <>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                setCurrentImageIndex((prev) => prev === 0 ? allImages.length - 1 : prev - 1);
-              }}
-              className="absolute top-1/2 left-2 -translate-y-1/2 z-20 p-1.5 bg-black/60 hover:bg-geeko-cyan text-white rounded-full opacity-0 group-hover:opacity-100 transition-all border border-white/10"
-            >
-              <ChevronLeft size={16} />
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                setCurrentImageIndex((prev) => (prev + 1) % allImages.length);
-              }}
-              className="absolute top-1/2 right-2 -translate-y-1/2 z-20 p-1.5 bg-black/60 hover:bg-geeko-cyan text-white rounded-full opacity-0 group-hover:opacity-100 transition-all border border-white/10"
-            >
-              <ChevronRight size={16} />
-            </button>
-
-            {/* Carousel Indicators */}
-            <div className={`absolute left-1/2 -translate-x-1/2 z-20 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity ${total_stock !== undefined && total_stock > 0 ? 'bottom-8' : 'bottom-3'}`}>
-              {allImages.map((_, idx) => (
-                <div 
-                  key={idx} 
-                  className={`w-1.5 h-1.5 rounded-full transition-colors ${idx === currentImageIndex ? 'bg-geeko-cyan shadow-[0_0_5px_rgba(0,209,255,0.8)]' : 'bg-white/50'}`} 
-                />
-              ))}
-            </div>
-          </>
-        )}
-
-        {/* Stock display - Repositioned to bottom-left to avoid overlap with cart button */}
-        {total_stock !== undefined && total_stock > 0 && (
-          <div className="absolute bottom-3 left-3 z-20 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest backdrop-blur-md border border-white/20 dark:border-white/10 bg-black/80 dark:bg-black/95 text-white shadow-lg">
-            DISP: {total_stock}
-          </div>
-        )}
-
-        {/* Rarity Badge (Overlay) */}
-        {!is_accessory && rarity && type?.toLowerCase() !== 'sealed product' && type?.toLowerCase() !== 'sealed' && rarity.toLowerCase() !== 'común' && rarity.toLowerCase() !== 'comun' && rarity.toLowerCase() !== 'common' && (
-          <div className={`absolute top-2 right-2 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider backdrop-blur-md border border-white/10 z-10 ${rarity.toLowerCase() === 'mythic' ? 'bg-orange-500/20 text-orange-400 border-orange-500/30' :
-            rarity.toLowerCase() === 'rare' ? 'bg-geeko-gold/20 text-geeko-gold border-geeko-gold/30' :
-              'bg-black/10 dark:bg-black/60 text-neutral-700 dark:text-text-low'
-            }`}>
-            {rarity}
-          </div>
-        )}
-
-        {isFoil && (
-          <div className="absolute top-8 right-2 px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider bg-gradient-to-r from-pink-500/80 via-purple-600/80 to-cyan-500/80 text-white border border-white/20 z-10 shadow-lg flex items-center gap-1 animate-pulse">
-            <svg width="8" height="10" viewBox="0 0 10 12" fill="none">
-              <rect x="0.5" y="0.5" width="9" height="11" rx="1.5" stroke="currentColor" strokeWidth="1" />
-              <path d="M2 3 L8 3 M2 5 L6 5" stroke="currentColor" strokeWidth="1" />
-              <circle cx="7" cy="8" r="1.5" fill="currentColor" />
-            </svg>
-            Foil
-          </div>
-        )}
-
-        {showCartButton && (
+      {/* Clean Card Image (No badges covering the artwork) */}
+      <div className="relative aspect-[63/88] w-full rounded-xl overflow-hidden bg-neutral-200 dark:bg-neutral-800 shadow-lg flex-shrink-0">
+        {!!hasMultipleFaces && (
           <button
-            onClick={handleQuickAdd}
-            className={`absolute bottom-3 right-3 h-12 lg:h-10 rounded-full flex items-center justify-center transition-all duration-300 shadow-2xl z-20 group/addbtn ${
-              addingToCart 
-                ? 'w-12 lg:w-10 bg-white text-black scale-100 opacity-100' 
-                : 'w-12 lg:w-10 hover:w-[140px] bg-geeko-cyan text-black border border-white/20 shadow-[0_0_15px_rgba(0, 209, 255, 0.4)] opacity-100 translate-y-0 scale-100'
-            }`}
+            onClick={handleFlip}
+            aria-label="Voltear carta"
+            className="absolute top-2 left-2 z-20 p-1.5 bg-black/65 hover:bg-geeko-cyan text-white hover:text-black rounded-full border border-white/10 transition-colors"
           >
-            <div className="flex items-center gap-2 whitespace-nowrap overflow-hidden px-1">
-              {addingToCart ? (
-                <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin flex-shrink-0" />
-              ) : (
-                <Plus size={22} strokeWidth={3.5} className="flex-shrink-0" />
-              )}
-              <span className="text-[10px] font-black uppercase tracking-tight opacity-0 group-hover/addbtn:opacity-100 transition-opacity duration-300 pointer-events-none">
-                Añadir al carrito
-              </span>
-            </div>
-            </button>
+            <RotateCw size={14} className="group-hover:rotate-180 transition-transform duration-500" />
+          </button>
+        )}
+
+        {isPresale && (
+          <div className="absolute top-2 left-2 z-20 px-2 py-0.5 bg-geeko-cyan text-black text-[8px] font-black uppercase rounded shadow-lg">
+            Preventa
+          </div>
+        )}
+
+        <div className={`relative w-full h-full bg-neutral-100 dark:bg-[#1a1a1a] overflow-hidden ${isFoil ? 'holo-effect' : ''}`}>
+          {isFoil && (
+            <div className="absolute inset-0 z-10 foil-shimmer opacity-30 mix-blend-overlay pointer-events-none" />
+          )}
+
+          <CardImage src={imgSrc} alt={currentName} size="small" fallbackIconSize={40} className="group-hover:scale-105 transition-transform duration-500" />
+
+          {!hasMultipleFaces && allImages.length > 1 && (
+            <>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  setCurrentImageIndex((prev) => prev === 0 ? allImages.length - 1 : prev - 1);
+                }}
+                className="absolute top-1/2 left-2 -translate-y-1/2 z-20 p-1.5 bg-black/60 hover:bg-geeko-cyan text-white rounded-full opacity-0 group-hover:opacity-100 transition-all border border-white/10"
+              >
+                <ChevronLeft size={16} />
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  setCurrentImageIndex((prev) => (prev + 1) % allImages.length);
+                }}
+                className="absolute top-1/2 right-2 -translate-y-1/2 z-20 p-1.5 bg-black/60 hover:bg-geeko-cyan text-white rounded-full opacity-0 group-hover:opacity-100 transition-all border border-white/10"
+              >
+                <ChevronRight size={16} />
+              </button>
+
+              <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 z-20 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                {allImages.map((_, idx) => (
+                  <div 
+                    key={idx} 
+                    className={`w-1.5 h-1.5 rounded-full transition-colors ${idx === currentImageIndex ? 'bg-geeko-cyan shadow-[0_0_5px_rgba(0,209,255,0.8)]' : 'bg-white/50'}`} 
+                  />
+                ))}
+              </div>
+            </>
           )}
         </div>
       </div>
 
-      {/* Card Info */}
-      <div className="p-4 flex flex-col gap-1 z-20 bg-neutral-50 dark:bg-[#0a0a0a]/90 backdrop-blur-md border-t border-neutral-200 dark:border-white/5 flex-grow">
-        {/* Fix text overlap: Truncate + Title */}
-        <h3 className="text-black dark:text-white text-sm font-bold truncate leading-snug group-hover:text-geeko-cyan transition-colors" title={cleanName}>
+      {/* Card Info Body */}
+      <div className="pt-3 flex flex-col gap-2 flex-grow">
+        {/* Row 1: Set + Availability + Normal/Foil (under image, never over card art) */}
+        <div className="flex items-center justify-between gap-1 min-h-[22px]">
+          <span className="px-1.5 py-0.5 bg-neutral-200 dark:bg-black/80 border border-neutral-300 dark:border-white/10 rounded text-[10px] font-black uppercase tracking-wider text-neutral-800 dark:text-white truncate max-w-[32%]">
+            {set}
+          </span>
+
+          {total_stock !== undefined && total_stock > 0 ? (
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-neutral-900 dark:bg-black text-white border border-white/10 whitespace-nowrap">
+              DISP: {total_stock}
+            </span>
+          ) : (
+            <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-orange-500/15 text-orange-400 border border-orange-500/25 whitespace-nowrap">
+              P/E
+            </span>
+          )}
+
+          {!is_accessory && (
+            isFoil ? (
+              <span className="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-gradient-to-r from-indigo-600 via-purple-600 to-fuchsia-600 text-white whitespace-nowrap shadow-sm">
+                FOIL
+              </span>
+            ) : (
+              <span className="px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider bg-neutral-200 dark:bg-white/10 text-neutral-700 dark:text-neutral-300 whitespace-nowrap">
+                NORMAL
+              </span>
+            )
+          )}
+        </div>
+
+        {/* Row 2: Product Title (minimum 2 lines for clean uniform alignment) */}
+        <h3
+          className="text-black dark:text-white text-sm sm:text-[15px] font-extrabold italic leading-snug line-clamp-2 min-h-[2.6em] group-hover:text-geeko-cyan transition-colors break-words"
+          title={cleanName}
+        >
           {cleanName}
         </h3>
 
-        <div className="text-xs text-neutral-500 dark:text-neutral-400 mt-2 truncate flex items-center gap-1.5 font-medium">
-          <span className="px-1.5 py-0.5 bg-black/5 dark:bg-white/5 rounded text-[10px] font-black uppercase tracking-widest text-neutral-600 dark:text-text-low">
-            {set}
-          </span>
-          {currentType && <span className="truncate max-w-[30%] opacity-50 text-right">{currentType.split('—')[0].trim()}</span>}
-        </div>
+        {/* Row 3: Discount (when active) + Price & Add-to-Cart Button */}
+        <div className="mt-auto pt-1 flex flex-col gap-1.5">
+          {!!(discount_percentage && discount_percentage > 0) && (
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-300 font-bold line-through leading-none">
+                ${original_price?.toFixed(2)}
+              </span>
+              <span className="px-2 py-0.5 rounded bg-red-600 text-white text-[10px] font-black uppercase tracking-wide leading-none shadow-sm">
+                {discount_percentage}% OFF
+              </span>
+            </div>
+          )}
 
-        {/* Price Row */}
-        <div className="mt-auto pt-3 flex items-center justify-between border-t border-neutral-200 dark:border-white/5">
-          <div className="flex flex-col text-right w-full relative">
-            <span className="text-[8px] uppercase text-neutral-500 dark:text-text-low font-bold tracking-wider absolute -top-2 right-0">Mercado</span>
-            {discount_percentage && discount_percentage > 0 ? (
-                <div className="flex flex-col items-end gap-0.5">
-                    <div className="flex items-center gap-1.5 justify-end">
-                        <span className="text-[9px] text-neutral-400 dark:text-text-low font-bold line-through">${original_price?.toFixed(2)}</span>
-                        <span className="text-[8px] bg-purple-500/10 dark:bg-purple-500/20 text-purple-600 dark:text-purple-400 border border-purple-500/20 dark:border-purple-500/30 px-1 rounded font-black">-{discount_percentage}%</span>
-                    </div>
-                    <div className="flex items-center justify-end gap-1.5">
-                      <span className="text-geeko-cyan font-mono font-bold text-base tracking-tight leading-none">
-                        {price && price > 0 ? `$${price.toFixed(2)}` : 'S/P'}
-                      </span>
-                    </div>
-                </div>
-            ) : (
-                <div className="flex items-center justify-end gap-1.5">
-                  <span className="text-geeko-cyan font-mono font-bold text-base tracking-tight leading-none">
-                    {price && price > 0 ? `$${price.toFixed(2)}` : 'S/P'}
-                  </span>
-                  {isFoil && (
-                    <span className="text-[10px] bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white px-1.5 py-0.5 rounded uppercase font-black tracking-tighter" title="Versión Foil">
-                      FOIL
-                    </span>
-                  )}
-                </div>
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-geeko-cyan font-mono font-black text-xl sm:text-2xl tracking-tight leading-none">
+              {price && price > 0 ? `$${price.toFixed(2)}` : 'S/P'}
+            </span>
+
+            {showCartButton && !isArchive && (
+              <button
+                onClick={handleQuickAdd}
+                disabled={addingToCart}
+                aria-label="Añadir al carrito"
+                title={(total_stock || 0) > 0 ? "Añadir al carrito" : "Por encargo"}
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex-shrink-0 flex items-center justify-center bg-geeko-cyan text-black hover:scale-110 active:scale-95 transition-all shadow-[0_0_15px_rgba(0,229,255,0.4)] disabled:opacity-60"
+              >
+                {addingToCart ? (
+                  <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                ) : (
+                  <Plus size={20} strokeWidth={3} />
+                )}
+              </button>
             )}
           </div>
-
         </div>
       </div>
     </a>

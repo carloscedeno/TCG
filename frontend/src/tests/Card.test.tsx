@@ -33,7 +33,7 @@ describe('Card Component (Ley 20 & Visual Guards)', () => {
         discount_percentage={20}
       />
     );
-    expect(screen.getAllByText(/-20%/).length).toBeGreaterThanOrEqual(2);
+    expect(screen.getByText(/20% OFF/i)).toBeInTheDocument();
     expect(screen.getByText(/10\.00/)).toBeInTheDocument();
     expect(screen.getByText(/8\.00/)).toBeInTheDocument();
   });

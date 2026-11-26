@@ -15,7 +15,6 @@ import { Header } from '../components/Navigation/Header';
 import { HeroSection } from '../components/Home/HeroSection';
 import { PresaleSection } from '../components/Home/PresaleSection';
 import { DealsCarousel } from '../components/Home/DealsCarousel';
-import { UpcomingMissionsWidget } from '../components/Home/UpcomingMissionsWidget';
 import { CardModal } from '../components/Card/CardModal';
 
 
@@ -747,13 +746,6 @@ const Home: React.FC = () => {
                 </div>
               )}
             </div>
-
-            {/* Right Sidebar (Missions) */}
-            <aside className="hidden xl:block w-72 flex-shrink-0">
-              <div className="sticky top-[60px] lg:top-[230px] max-h-[calc(100vh-230px)] overflow-y-auto pl-2 custom-scrollbar">
-                <UpcomingMissionsWidget />
-              </div>
-            </aside>
           </div>
         </main>
 
