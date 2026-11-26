@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { X, ShoppingCart, ExternalLink, RotateCw, Loader2 } from 'lucide-react';
+import { X, ShoppingCart, RotateCw, Loader2 } from 'lucide-react';
 import { fetchCardDetails, addToCart } from '../../utils/api';
-import { getTcgConfig, getExternalMarketplaceLink } from '../../config/tcgRegistry';
-import { ManaText } from '../Mana/ManaText';
+import { getTcgConfig } from '../../config/tcgRegistry';
 import { CardImage } from './CardImage';
 
 
@@ -307,23 +306,20 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
     // Removal of icon-based legality indicators in favor of color-coded boxes.
 
     const tcgConfig = useMemo(() => getTcgConfig(details?.game), [details?.game]);
-    const relevantFormats = useMemo(() => tcgConfig.formats || [], [tcgConfig]);
 
     const versionGroups = useMemo(() => {
         if (!details?.all_versions) return [];
 
         const groups = (Array.isArray(details.all_versions) ? details.all_versions : []).reduce((acc: any, v: any) => {
-            // ONLY include versions with stock > 0
-            if ((v.stock || 0) <= 0) return acc;
-
             const key = `${v.set_code || 'unk'}-${v.collector_number || Math.random()}`;
             if (!acc[key]) {
                 const isNormal = !(v.is_foil || v.finish === 'foil' || v.finish === 'etched');
                 acc[key] = {
-                    base: v, // will be normalized below
+                    base: v,
                     normal: isNormal ? v : null,
                     foil: (v.is_foil || v.finish === 'foil') ? v : null,
                     etched: v.finish === 'etched' ? v : null,
+                    totalStock: 0,
                 };
             } else {
                 if (!(v.is_foil || v.finish === 'foil' || v.finish === 'etched')) acc[key].normal = v;
@@ -333,13 +329,15 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
             return acc;
         }, {} as Record<string, any>);
 
-        // Normalize: base should always be the normal version when available,
-        // so activeGroup lookups by base.printing_id are consistent.
         Object.values(groups).forEach((g: any) => {
             g.base = g.normal || g.foil || g.etched || g.base;
+            g.totalStock = (g.normal?.stock || 0) + (g.foil?.stock || 0) + (g.etched?.stock || 0);
         });
 
         return Object.values(groups).sort((a: any, b: any) => {
+            const aAvail = a.totalStock > 0 ? 1 : 0;
+            const bAvail = b.totalStock > 0 ? 1 : 0;
+            if (bAvail !== aAvail) return bAvail - aAvail;
             const nameA = a.base?.set_name || '';
             const nameB = b.base?.set_name || '';
             return nameA.localeCompare(nameB);
@@ -368,65 +366,22 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
     const currentFace = hasMultipleFaces ? (details?.card_faces?.[currentFaceIndex] || {}) : details;
     const currentImage = (currentFace as any)?.image_url || (currentFace as any)?.image_uris?.normal || (currentFace as any)?.image_uris?.large || (currentFace as any)?.image_uris?.png || details?.image_url || initialImage || (initialData as any)?.image_url;
 
-    const externalMarket = useMemo(() => {
-        if (!details || details.is_accessory) return null;
-        const isFoil = activeVersion ? (activeVersion.is_foil || activeVersion.finish === 'foil') : !!(details.is_foil || details.finish === 'foil');
-        const extId = (activeVersion as any)?.external_id || (details as any)?.external_id || (activeVersion as any)?.tcgplayer_id || (details as any)?.tcgplayer_id;
-        return getExternalMarketplaceLink(details.game, {
-            name: details.name,
-            isFoil,
-            externalId: extId,
-            setCode: details.set_code,
-            collectorNumber: activeVersion?.collector_number || details.collector_number
-        });
-    }, [details, activeVersion]);
+    const inStockSetsCount = useMemo(() => versionGroups.filter((g: any) => g.totalStock > 0).length, [versionGroups]);
 
-    const marketPrice = useMemo(() => {
-        if (!activeVersion || !details) return details?.valuation?.market_price || 0;
-        const resolvedPrice = activeVersion.price || details?.valuation?.market_price || 0;
-        console.log("CardModal Price Calc:", {
-            activeVersionId: activeVersion.printing_id,
-            activeVersionFinish: activeVersion.finish,
-            activeVersionPrice: activeVersion.price,
-            fallbackBasePrice: details?.valuation?.market_price,
-            finalResolvedPrice: resolvedPrice
-        });
-        return resolvedPrice;
-    }, [activeVersion, details]);
-
-    // Cleanly parse oracle / rules text (handles <br>, <em>, <strong> from external TCGs without raw HTML)
-    const renderOracleText = (rawText: string) => {
-        if (!rawText) return null;
-        const withNewlines = rawText.replace(/<br\s*\/?>/gi, '\n');
-        const lines = withNewlines.split('\n');
-
-        return (
-            <div className="space-y-1.5 text-xs md:text-sm leading-relaxed text-neutral-300">
-                {lines.map((line, idx) => {
-                    const trimmed = line.trim();
-                    if (!trimmed) return null;
-                    const cleanLine = trimmed.replace(/<[^>]+>/g, '');
-                    return (
-                        <p key={idx} className="whitespace-pre-wrap">
-                            <ManaText text={cleanLine} />
-                        </p>
-                    );
-                })}
-            </div>
-        );
-    };
-
-        const renderVersionsContent = () => (
+    const renderVersionsContent = () => (
         <div className="flex flex-col h-full w-full">
             <div className="px-4 md:px-6 py-2.5 md:py-3 flex items-center justify-between border-b border-white/5 bg-[#0a0a0a]/50">
-                <h3 className="text-[10px] font-web-titles font-normal uppercase tracking-widest text-neutral-500">Edición / Impresiones</h3>
+                <h3 className="text-[10px] font-web-titles font-normal uppercase tracking-widest text-neutral-400">Edición / Impresiones</h3>
                 <span className="text-[10px] text-neutral-400 font-normal">
                     {loading && versionGroups.length === 0 ? (
                         <span className="inline-flex items-center gap-1.5 text-geeko-cyan animate-pulse">
                             <Loader2 size={10} className="animate-spin" /> Cargando...
                         </span>
                     ) : (
-                        `${versionGroups.length} ${versionGroups.length === 1 ? 'Versión' : 'Versiones'}`
+                        <span>
+                            {inStockSetsCount > 0 && <span className="text-geeko-green font-bold">{inStockSetsCount} en tienda • </span>}
+                            {versionGroups.length} {versionGroups.length === 1 ? 'Set' : 'Sets'}
+                        </span>
                     )}
                 </span>
             </div>
@@ -449,7 +404,14 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                     <>
                         {versionGroups.map((group: any) => {
                             const isGroupActive = activePrintingId === group.base?.printing_id || activePrintingId === group.normal?.printing_id || activePrintingId === group.foil?.printing_id || activePrintingId === group.etched?.printing_id;
-                            const rowActiveVersion = (isGroupActive && selectedFinish === 'foil' && group.foil) ? group.foil : (group.normal || group.base);
+                            const rowActiveVersion = (isGroupActive && selectedFinish === 'foil' && group.foil)
+                                ? group.foil
+                                : (group.normal && group.normal.stock > 0)
+                                    ? group.normal
+                                    : (group.foil && group.foil.stock > 0)
+                                        ? group.foil
+                                        : (group.normal || group.foil || group.base);
+                            const groupHasStock = (group.totalStock || 0) > 0;
 
                             return (
                                 <div
@@ -473,69 +435,65 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                                         }
                                     }}
                                     data-testid="edition-link"
-                                    className={`flex items-center justify-between gap-3 px-4 md:px-6 py-3 hover:bg-white/10 transition-colors border-b border-white/5 group w-full text-left cursor-pointer outline-none focus-visible:bg-white/10 ${isGroupActive ? 'bg-geeko-cyan/10 border-geeko-cyan/20' : ''}`}
+                                    className={`flex items-center justify-between gap-2.5 px-4 md:px-5 py-3 hover:bg-white/10 transition-colors border-b border-white/5 group w-full text-left cursor-pointer outline-none focus-visible:bg-white/10 ${isGroupActive ? 'bg-geeko-cyan/10 border-l-2 border-l-geeko-cyan' : groupHasStock ? 'bg-geeko-green/[0.03]' : 'opacity-65 hover:opacity-100'}`}
                                 >
-                                    <div className="flex items-center gap-3 flex-1 min-w-0">
-                                        <div className="w-8 h-8 rounded bg-neutral-900 flex items-center justify-center text-xs font-web-titles group-hover:text-geeko-cyan transition-colors shrink-0">
+                                    <div className="flex items-center gap-2.5 flex-1 min-w-0">
+                                        <div className={`w-8 h-8 rounded flex items-center justify-center text-[11px] font-web-titles transition-colors shrink-0 ${groupHasStock ? 'bg-geeko-green/15 text-geeko-green border border-geeko-green/30' : 'bg-neutral-900 text-neutral-400'}`}>
                                             {group.base.set_code?.toUpperCase()}
                                         </div>
                                         <div className="flex-1 text-left min-w-0">
-                                            <div className={`text-xs font-semibold leading-tight truncate ${isGroupActive ? 'text-geeko-cyan' : 'text-neutral-300'}`}>
+                                            <div className={`text-xs font-semibold leading-tight truncate ${isGroupActive ? 'text-geeko-cyan' : groupHasStock ? 'text-white' : 'text-neutral-400'}`}>
                                                 {group.base.set_name}
                                             </div>
-                                            <div className="text-[10px] text-neutral-500 font-normal truncate">#{group.base.collector_number} • {group.base.rarity}</div>
+                                            <div className="text-[10px] text-neutral-500 font-normal truncate">
+                                                #{group.base.collector_number}
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <div className="flex items-center gap-3 shrink-0">
+                                    <div className="flex items-center gap-2.5 shrink-0">
                                         <div className="flex flex-col items-end gap-0.5">
                                             {group.normal && (
                                                 <div className="flex items-center gap-1.5">
-                                                    <span className="text-[9px] text-neutral-500 font-bold uppercase tracking-wider">Norm</span>
-                                                    <span className={`text-[11px] font-black ${group.normal.stock > 0 ? 'text-white' : 'text-neutral-600'}`}>
-                                                        ${group.normal.price.toFixed(2)}
-                                                        {group.normal.stock <= 0 && <span className="ml-1 text-[8px] text-orange-500/80 italic font-medium">(P/E)</span>}
+                                                    <span className="text-[9px] text-neutral-400 font-bold uppercase tracking-wider">
+                                                        Norm ({group.normal.stock || 0})
+                                                    </span>
+                                                    <span className={`text-[11px] font-black ${(group.normal.stock || 0) > 0 ? 'text-white' : 'text-neutral-600'}`}>
+                                                        ${Number(group.normal.price || 0).toFixed(2)}
                                                     </span>
                                                 </div>
                                             )}
                                             {group.foil && (
                                                 <div className="flex items-center gap-1.5">
-                                                    <span className="text-[9px] text-purple-400 font-bold uppercase tracking-wider flex items-center gap-0.5">
-                                                        <svg width="7" height="7" viewBox="0 0 10 12" fill="none">
-                                                            <rect x="0.5" y="0.5" width="9" height="11" rx="1.5" stroke="currentColor" strokeWidth="1" />
-                                                            <path d="M2 3 L8 3" stroke="currentColor" strokeWidth="1" />
-                                                        </svg>
-                                                        Foil
+                                                    <span className="text-[9px] text-purple-400 font-bold uppercase tracking-wider">
+                                                        Foil ({group.foil.stock || 0})
                                                     </span>
-                                                    <span className={`text-[11px] font-black ${group.foil.stock > 0 ? 'text-geeko-cyan' : 'text-neutral-600'}`}>
-                                                        ${group.foil.price.toFixed(2)}
-                                                        {group.foil.stock <= 0 && <span className="ml-1 text-[8px] text-orange-500/80 italic font-medium">(P/E)</span>}
+                                                    <span className={`text-[11px] font-black ${(group.foil.stock || 0) > 0 ? 'text-geeko-cyan' : 'text-neutral-600'}`}>
+                                                        ${Number(group.foil.price || 0).toFixed(2)}
                                                     </span>
                                                 </div>
                                             )}
                                         </div>
 
-                                        <div className="flex items-center gap-2">
-                                            {(rowActiveVersion?.stock ?? 0) > 0 ? (
-                                                <span className="text-[8px] font-black text-geeko-green bg-geeko-green/10 px-1.5 py-0.5 rounded-full border border-geeko-green/20 uppercase tracking-tight whitespace-nowrap">
-                                                    Stock
+                                        <div className="flex items-center gap-1.5">
+                                            {groupHasStock ? (
+                                                <span className="text-[8px] font-black text-geeko-green bg-geeko-green/15 px-2 py-0.5 rounded-full border border-geeko-green/30 uppercase tracking-tight whitespace-nowrap">
+                                                    En tienda: {group.totalStock}
                                                 </span>
                                             ) : (
-                                                <span className="text-[8px] font-bold text-neutral-600 bg-neutral-900 px-1.5 py-0.5 rounded-full border border-white/5 uppercase tracking-tight whitespace-nowrap">
-                                                    P/E
+                                                <span className="text-[8px] font-bold text-neutral-500 bg-neutral-900 px-1.5 py-0.5 rounded-full border border-white/5 uppercase tracking-tight whitespace-nowrap">
+                                                    Sin stock
                                                 </span>
                                             )}
-                                            {!isArchive && (
+                                            {!isArchive && groupHasStock && (
                                                 <div
                                                     onClick={(e) => {
                                                         e.preventDefault();
                                                         e.stopPropagation();
                                                         if (rowActiveVersion) handleVersionAddToCart(rowActiveVersion);
                                                     }}
-                                                    className={`p-1.5 rounded-lg transition-all shrink-0 ${!rowActiveVersion?.stock || rowActiveVersion.stock === 0
-                                                        ? 'text-neutral-800 cursor-not-allowed'
-                                                        : 'text-neutral-500 hover:text-geeko-cyan hover:bg-geeko-cyan/10'
-                                                        }`}
+                                                    className="p-1.5 rounded-lg transition-all shrink-0 text-geeko-cyan hover:bg-geeko-cyan/15"
+                                                    title="Agregar al carrito"
                                                 >
                                                     <ShoppingCart size={13} />
                                                 </div>
@@ -816,183 +774,118 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                                         <span className="text-xs font-black uppercase tracking-wider">Cargando Información...</span>
                                     </div>
                                 )}
-                                <div className="flex flex-wrap items-center gap-2 text-sm md:text-base font-semibold text-neutral-400">
-                                    <span className="text-white/80"><ManaText text={details.mana_cost || ''} /></span>
-                                    {details.mana_cost && <span className="opacity-30">•</span>}
-                                    <span>{details.type}</span>
-                                </div>
-                                {tcgConfig.specificAttributes && tcgConfig.specificAttributes.length > 0 && (
-                                    <div className="flex flex-wrap items-center gap-2 pt-1">
-                                        {tcgConfig.specificAttributes.map(attr => {
-                                            const attrsObj = (details as any).tcg_specific_attributes || {};
-                                            const val = attrsObj[attr.key] ?? (details as any)[attr.key];
-                                            if (val === undefined || val === null || val === '') return null;
-                                            const displayVal = Array.isArray(val) ? val.join(', ') : String(val);
-                                            return (
-                                                <span key={attr.key} className={`text-[10px] px-2.5 py-0.5 rounded-full border font-black uppercase tracking-wider ${attr.badgeBg || 'bg-white/5 border-white/10'} ${attr.badgeTextColor || 'text-white'}`}>
-                                                    {attr.label}: {displayVal}
-                                                </span>
-                                            );
-                                        })}
-                                    </div>
-                                )}
                             </div>
 
-                            {/* 1. PRICE & PURCHASE ACTIONS - PROMINENT AT TOP, NEVER CUT OFF */}
+                            {/* 1. PRICE, AVAILABILITY & PURCHASE ACTIONS */}
                             <div className="space-y-3 pt-1">
-                                <div className={`grid grid-cols-1 ${(!details?.is_accessory && externalMarket) ? 'sm:grid-cols-2' : ''} gap-3 items-stretch`}>
-                                    {/* Left: Local Price + Cart */}
-                                    <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-geeko-cyan/15 via-white/[0.02] to-transparent border border-white/10 group relative overflow-hidden flex flex-col justify-between gap-3">
-                                        <div className="absolute top-0 right-0 w-32 h-32 bg-geeko-cyan/10 rounded-full blur-[40px] pointer-events-none" />
-                                        <div className="space-y-1 relative z-10">
-                                            <div className="text-[10px] font-semibold uppercase text-geeko-cyan tracking-widest flex items-center justify-between">
-                                                <span>Geekorium Price</span>
-                                                {marketPrice > 0 && (activeVersion?.price || details.price || 0) > 0 && (activeVersion?.price || details.price || 0) < marketPrice ? (
-                                                    <span className="text-[9px] text-geeko-green bg-geeko-green/10 px-2 py-0.5 rounded-full border border-geeko-green/20">
-                                                        Ahorro: ${(marketPrice - (activeVersion?.price || details.price || 0)).toFixed(2)}
-                                                    </span>
-                                                ) : null}
-                                            </div>
-
-                                            <div className="flex flex-wrap items-baseline gap-2 pt-1">
-                                                <div className="text-2xl sm:text-3xl font-medium text-white font-titles tracking-tighter">
-                                                    ${(activeVersion?.price || details.price || 0) > 0 ? (activeVersion?.price || details.price).toFixed(2) : '---'}
-                                                </div>
-                                                <span className={`text-[10px] px-2 py-0.5 rounded-full font-black tracking-widest shadow-sm ${selectedFinish === 'foil' ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white animate-pulse' : 'bg-white text-black'}`}>
-                                                    {selectedFinish?.toUpperCase()}
+                                <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-geeko-cyan/15 via-white/[0.02] to-transparent border border-white/10 group relative overflow-hidden flex flex-col justify-between gap-4">
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-geeko-cyan/10 rounded-full blur-[40px] pointer-events-none" />
+                                    <div className="space-y-2 relative z-10">
+                                        <div className="text-[10px] font-semibold uppercase text-geeko-cyan tracking-widest flex items-center justify-between gap-2">
+                                            <span>Precio Geekorium</span>
+                                            {details.total_stock > 0 ? (
+                                                <span className="text-[9px] text-geeko-green bg-geeko-green/10 px-2.5 py-0.5 rounded-full border border-geeko-green/25 font-black">
+                                                    Existencia total en tienda: {details.total_stock}
                                                 </span>
-                                                {!details?.is_accessory && marketPrice > 0 && (activeVersion?.price || details.price || 0) > 0 && (activeVersion?.price || details.price || 0) < marketPrice ? (
-                                                    <span className="text-xs font-bold text-neutral-500 line-through decoration-red-500/50">
-                                                        MKT: ${Number(marketPrice).toFixed(2)}
-                                                    </span>
-                                                ) : null}
-                                            </div>
-
-                                            {/* Finish Toggle Switch */}
-                                            {(activeGroup?.normal || activeGroup?.foil) && (
-                                                <div className="flex bg-neutral-900/90 p-1 rounded-xl border border-white/5 w-fit mt-1 gap-1">
-                                                    {activeGroup?.normal && (
-                                                        <button
-                                                            onClick={() => {
-                                                                const targetId = activeGroup?.normal?.printing_id;
-                                                                if (targetId) handleVersionClick(targetId, 'nonfoil');
-                                                            }}
-                                                            className={`px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-1 ${selectedFinish === 'nonfoil'
-                                                                ? 'bg-white text-black shadow-lg scale-[1.03]'
-                                                                : (activeGroup.normal?.stock || 0) === 0
-                                                                    ? 'text-neutral-500 opacity-60'
-                                                                    : 'text-neutral-400 hover:text-white'
-                                                                }`}
-                                                        >
-                                                            Normal {(activeGroup.normal?.stock || 0) > 0 ? <span className="text-[8px] opacity-80">({activeGroup.normal.stock})</span> : <span className="text-[8px] opacity-70 tracking-tighter">(P/E)</span>}
-                                                        </button>
-                                                    )}
-                                                    {activeGroup?.foil && (
-                                                        <button
-                                                            onClick={() => {
-                                                                const targetId = activeGroup?.foil?.printing_id;
-                                                                if (targetId) handleVersionClick(targetId, 'foil');
-                                                            }}
-                                                            className={`px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-1 ${selectedFinish === 'foil'
-                                                                ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white shadow-lg scale-[1.03]'
-                                                                : (activeGroup.foil?.stock || 0) === 0
-                                                                    ? 'text-neutral-500 opacity-60'
-                                                                    : 'text-neutral-400 hover:text-white'
-                                                                }`}
-                                                        >
-                                                            Foil {(activeGroup.foil?.stock || 0) > 0 ? <span className="text-[8px] opacity-80">({activeGroup.foil.stock})</span> : <span className="text-[8px] opacity-70 tracking-tighter">(P/E)</span>}
-                                                        </button>
-                                                    )}
-                                                </div>
+                                            ) : (
+                                                <span className="text-[9px] text-orange-400 bg-orange-500/10 px-2.5 py-0.5 rounded-full border border-orange-500/25 font-bold">
+                                                    Sin existencia en tienda
+                                                </span>
                                             )}
                                         </div>
 
-                                        {!isArchive && (
-                                            <button
-                                                onClick={handleAddToCart}
-                                                disabled={isAdding}
-                                                data-testid="add-to-cart-button"
-                                                className={`w-full h-11 rounded-xl font-web-titles font-normal text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 shrink-0 relative z-10 ${addedSuccess
-                                                    ? 'bg-geeko-green text-black shadow-[0_0_20px_rgba(0,255,133,0.4)]'
-                                                    : 'bg-geeko-cyan text-black shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_40px_rgba(0,229,255,0.6)]'
-                                                    }`}
-                                            >
-                                                {isAdding ? <Loader2 size={16} className="animate-spin" /> : addedSuccess ? '¡Añadido! ✓' : <ShoppingCart size={16} fill="currentColor" />}
-                                                {!isAdding && !addedSuccess && ((activeVersion?.stock || 0) > 0 ? `Agregar al Carrito (${activeVersion.stock} disp.)` : 'Por encargo')}
-                                            </button>
+                                        <div className="flex flex-wrap items-baseline gap-2.5 pt-1">
+                                            <div className="text-3xl sm:text-4xl font-medium text-white font-titles tracking-tighter">
+                                                ${(activeVersion?.price || details.price || 0) > 0 ? Number(activeVersion?.price || details.price).toFixed(2) : '---'}
+                                            </div>
+                                            <span className={`text-[10px] px-2.5 py-0.5 rounded-full font-black tracking-widest shadow-sm ${selectedFinish === 'foil' ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white animate-pulse' : 'bg-white text-black'}`}>
+                                                {selectedFinish?.toUpperCase()}
+                                            </span>
+                                            {(activeVersion as any)?.discount_percentage > 0 && (
+                                                <>
+                                                    <span className="text-xs font-bold text-neutral-400 line-through">
+                                                        ${Number((activeVersion as any).original_price).toFixed(2)}
+                                                    </span>
+                                                    <span className="text-[10px] bg-red-600 text-white px-2 py-0.5 rounded font-black uppercase">
+                                                        {(activeVersion as any).discount_percentage}% OFF
+                                                    </span>
+                                                </>
+                                            )}
+                                        </div>
+
+                                        {/* Selected Variant Availability */}
+                                        <div className="flex items-center justify-between text-xs font-bold py-2 px-3 rounded-xl bg-white/[0.04] border border-white/5">
+                                            <span className="text-neutral-400 uppercase tracking-wider text-[10px]">Cantidad disponible</span>
+                                            {(activeVersion?.stock || 0) > 0 ? (
+                                                <span className="text-geeko-green font-black flex items-center gap-1.5 text-xs">
+                                                    <span className="w-2 h-2 rounded-full bg-geeko-green animate-pulse" />
+                                                    {activeVersion.stock} {activeVersion.stock === 1 ? 'unidad disponible' : 'unidades disponibles'}
+                                                </span>
+                                            ) : (
+                                                <span className="text-orange-400 font-bold flex items-center gap-1.5 text-xs">
+                                                    <span className="w-2 h-2 rounded-full bg-orange-400" />
+                                                    0 en tienda (Por Encargo)
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        {/* Finish Toggle Switch */}
+                                        {(activeGroup?.normal || activeGroup?.foil) && (
+                                            <div className="flex bg-neutral-900/90 p-1 rounded-xl border border-white/5 w-fit mt-1 gap-1">
+                                                {activeGroup?.normal && (
+                                                    <button
+                                                        onClick={() => {
+                                                            const targetId = activeGroup?.normal?.printing_id;
+                                                            if (targetId) handleVersionClick(targetId, 'nonfoil');
+                                                        }}
+                                                        className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-1 ${selectedFinish === 'nonfoil'
+                                                            ? 'bg-white text-black shadow-lg scale-[1.03]'
+                                                            : (activeGroup.normal?.stock || 0) === 0
+                                                                ? 'text-neutral-500 opacity-60'
+                                                                : 'text-neutral-400 hover:text-white'
+                                                            }`}
+                                                    >
+                                                        Normal {(activeGroup.normal?.stock || 0) > 0 ? <span className="text-[9px] opacity-80">({activeGroup.normal.stock})</span> : <span className="text-[8px] opacity-70 tracking-tighter">(P/E)</span>}
+                                                    </button>
+                                                )}
+                                                {activeGroup?.foil && (
+                                                    <button
+                                                        onClick={() => {
+                                                            const targetId = activeGroup?.foil?.printing_id;
+                                                            if (targetId) handleVersionClick(targetId, 'foil');
+                                                        }}
+                                                        className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-1 ${selectedFinish === 'foil'
+                                                            ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white shadow-lg scale-[1.03]'
+                                                            : (activeGroup.foil?.stock || 0) === 0
+                                                                ? 'text-neutral-500 opacity-60'
+                                                                : 'text-neutral-400 hover:text-white'
+                                                            }`}
+                                                    >
+                                                        Foil {(activeGroup.foil?.stock || 0) > 0 ? <span className="text-[9px] opacity-80">({activeGroup.foil.stock})</span> : <span className="text-[8px] opacity-70 tracking-tighter">(P/E)</span>}
+                                                    </button>
+                                                )}
+                                            </div>
                                         )}
                                     </div>
 
-                                    {/* Right: External Market (Dynamic per TCG) */}
-                                    {!details?.is_accessory && externalMarket && (
-                                        <a
-                                            href={externalMarket.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-neutral-900/60 hover:bg-geeko-cyan/10 border border-white/5 hover:border-geeko-cyan/40 transition-all group relative overflow-hidden gap-3"
+                                    {!isArchive && (
+                                        <button
+                                            onClick={handleAddToCart}
+                                            disabled={isAdding}
+                                            data-testid="add-to-cart-button"
+                                            className={`w-full h-12 rounded-xl font-web-titles font-normal text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 shrink-0 relative z-10 ${addedSuccess
+                                                ? 'bg-geeko-green text-black shadow-[0_0_20px_rgba(0,255,133,0.4)]'
+                                                : 'bg-geeko-cyan text-black shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_40px_rgba(0,229,255,0.6)]'
+                                                }`}
                                         >
-                                            <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity" />
-                                            <div className="space-y-1 relative z-10">
-                                                <span className="text-[10px] font-semibold uppercase text-neutral-500 tracking-widest group-hover:text-geeko-cyan transition-colors">Mercado Externo</span>
-                                                <div className="text-sm sm:text-base font-web-titles font-normal leading-tight text-white">{externalMarket.label}</div>
-                                            </div>
-                                            <div className="flex items-center justify-between gap-3 w-full relative z-10 mt-auto">
-                                                <span className="text-xl sm:text-2xl font-titles font-medium text-white group-hover:text-geeko-cyan transition-colors">
-                                                    {marketPrice > 0 ? `$${Number(marketPrice).toFixed(2)}` : 'Ver en Sitio'}
-                                                </span>
-                                                <div className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-geeko-cyan group-hover:text-black transition-all">
-                                                    <ExternalLink size={16} />
-                                                </div>
-                                            </div>
-                                        </a>
+                                            {isAdding ? <Loader2 size={16} className="animate-spin" /> : addedSuccess ? '¡Añadido! ✓' : <ShoppingCart size={16} fill="currentColor" />}
+                                            {!isAdding && !addedSuccess && ((activeVersion?.stock || 0) > 0 ? `Agregar al Carrito (${activeVersion.stock} disp.)` : 'Por encargo')}
+                                        </button>
                                     )}
                                 </div>
                             </div>
 
-                            {/* 2. RULES / ORACLE TEXT (CLEAN & COMPACT) */}
-                            {details.oracle_text && (
-                                <div className="p-3.5 sm:p-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-1.5">
-                                    <div className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">Texto de la Carta</div>
-                                    {renderOracleText(details.oracle_text)}
-                                    {details.flavor_text && (
-                                        <p className="text-[11px] italic text-neutral-500 border-t border-white/5 pt-2">
-                                            "{details.flavor_text}"
-                                        </p>
-                                    )}
-                                </div>
-                            )}
-
-                            {/* 3. FORMAT LEGALITY */}
-                            {!details?.is_accessory && relevantFormats.length > 0 && (
-                                <div className="space-y-2 pt-1 pb-4">
-                                    <h3 className="text-[10px] font-web-titles font-normal uppercase tracking-widest text-neutral-500 flex items-center justify-between">
-                                        Legalidad de Formato
-                                        {details.total_stock > 0 && (
-                                            <span className="text-[9px] text-geeko-cyan bg-geeko-cyan/10 px-2.5 py-0.5 rounded-full border border-geeko-cyan/20">
-                                                Existencia Total: {details.total_stock}
-                                            </span>
-                                        )}
-                                    </h3>
-                                    <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5">
-                                        {relevantFormats.map(fmt => {
-                                            const isLegal = details.legalities?.[fmt] === 'legal';
-                                            return (
-                                                <div
-                                                    key={fmt}
-                                                    className={`flex items-center justify-center p-2 rounded-lg border transition-all duration-300 ${isLegal
-                                                        ? 'bg-geeko-gold/10 border-geeko-gold/40 text-geeko-gold shadow-[0_0_15px_rgba(249,174,0,0.1)]'
-                                                        : 'bg-neutral-900/40 border-white/5 text-neutral-600 opacity-60'
-                                                        }`}
-                                                >
-                                                    <span className="text-[9px] font-web-titles font-normal uppercase tracking-widest">{fmt}</span>
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* 4. VERSIONS LIST (MOBILE ONLY - AT BOTTOM OF FLOW) */}
+                            {/* 2. VERSIONS LIST (MOBILE ONLY - AT BOTTOM OF FLOW) */}
                             <div className="md:hidden border-t border-white/5 bg-[#080808] -mx-4 -mb-4 pt-1 rounded-b-[24px] overflow-hidden">
                                 {renderVersionsContent()}
                             </div>

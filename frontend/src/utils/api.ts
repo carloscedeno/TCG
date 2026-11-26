@@ -741,8 +741,8 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
           data.all_versions.forEach((v: any) => v.stock = 0);
         }
 
-        // Filter out versions with NO stock
-        data.all_versions = data.all_versions.filter((v: any) => (v.stock || 0) > 0);
+        // Sort versions so in-stock versions appear first, while keeping all sets visible
+        data.all_versions.sort((a: any, b: any) => ((b.stock || 0) > 0 ? 1 : 0) - ((a.stock || 0) > 0 ? 1 : 0));
 
         // Update main price/stock for the current printingId
         const baseId = printingId.replace(/-foil$/, '').replace(/-nonfoil$/, '').replace(/-etched$/, '');
@@ -750,10 +750,12 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
 
         const requestedVersionInStock = data.all_versions.find((v: any) =>
           v.printing_id.replace(/-foil$/, '').replace(/-nonfoil$/, '').replace(/-etched$/, '') === baseId &&
-          v.finish.toLowerCase() === requestedFinish
+          v.finish.toLowerCase() === requestedFinish &&
+          (v.stock || 0) > 0
         );
 
-        const targetVersion = requestedVersionInStock || data.all_versions[0];
+        const firstInStock = data.all_versions.find((v: any) => (v.stock || 0) > 0);
+        const targetVersion = requestedVersionInStock || firstInStock || data.all_versions[0];
 
         if (targetVersion) {
           data.product_id = targetVersion.product_id;
