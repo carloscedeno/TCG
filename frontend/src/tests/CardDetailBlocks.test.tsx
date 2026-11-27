@@ -127,6 +127,11 @@ describe('CardDetailBlocks (3-Block Detail View)', () => {
     expect(screen.getAllByText(/179\.99 \$/).length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText(/10% OFF/i)).toBeInTheDocument();
     expect(screen.getAllByText('DISP: 4').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByTestId('finish-tab-foil')).toHaveTextContent(/^FOIL$/);
+    expect(screen.getByTestId('version-stock-label')).toHaveTextContent('DISP: 4');
+    expect(screen.getByTestId('quantity-control').className).toContain('w-28 h-10');
+    expect(screen.getByTestId('add-to-cart-button').className).toContain('w-28 h-10');
+    expect(screen.getByTestId('versions-count-label')).toHaveTextContent('2 Versiones');
 
     // MTG strictly 6 formats (5 legal + Pauper not legal; Legacy omitted)
     expect(screen.getByTestId('legality-standard')).toHaveAttribute('data-legal', 'true');

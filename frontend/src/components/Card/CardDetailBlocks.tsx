@@ -257,9 +257,9 @@ export const CardDetailBlocks: React.FC<CardDetailBlocksProps> = ({
                 <button
                     onClick={onClose}
                     aria-label="Cerrar"
-                    className="absolute top-4 right-4 z-50 w-9 h-9 rounded-lg bg-black/70 hover:bg-red-500/20 border border-red-500/60 text-red-400 hover:text-red-300 hidden md:flex items-center justify-center transition-all shadow-lg backdrop-blur-md"
+                    className="absolute top-3.5 right-3.5 z-50 w-8 h-8 rounded-lg bg-black/70 hover:bg-red-500/20 border border-red-500/60 text-red-400 hover:text-red-300 hidden md:flex items-center justify-center transition-all shadow-lg backdrop-blur-md"
                 >
-                    <X size={16} strokeWidth={2.5} />
+                    <X size={15} strokeWidth={2.5} />
                 </button>
             )}
 
@@ -404,97 +404,68 @@ export const CardDetailBlocks: React.FC<CardDetailBlocksProps> = ({
                 </div>
 
                 {/* Purchase Card Box */}
-                <div className="rounded-2xl bg-[#072e30] border border-teal-400/20 p-3.5 md:p-4 flex flex-col gap-3 shadow-lg">
-                    {/* Top Row: Finish Tabs (Normal / Foil) + Quantity Input */}
-                    <div className="flex items-center justify-between gap-2 flex-wrap">
-                        {/* Finish tabs with prices */}
-                        <div className="flex items-center gap-1.5 flex-wrap">
-                            {activeGroup?.normal && (
-                                <button
-                                    type="button"
-                                    onClick={() => onSelectVersion(activeGroup.normal.printing_id, 'nonfoil')}
-                                    className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1.5 ${
-                                        selectedFinish === 'nonfoil'
-                                            ? 'bg-white text-black shadow-md'
-                                            : 'bg-black/45 text-neutral-300 hover:text-white border border-white/10'
-                                    }`}
-                                >
-                                    <span>NORMAL</span>
-                                    <span className={`font-mono text-[10px] ${selectedFinish === 'nonfoil' ? 'text-neutral-700' : 'text-neutral-400'}`}>
-                                        {Number(activeGroup.normal.price || 0).toFixed(2)}$
-                                    </span>
-                                </button>
-                            )}
-                            {activeGroup?.foil && (
-                                <button
-                                    type="button"
-                                    onClick={() => onSelectVersion(activeGroup.foil.printing_id, 'foil')}
-                                    className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1.5 ${
-                                        selectedFinish === 'foil'
-                                            ? 'bg-gradient-to-r from-indigo-600 via-purple-600 to-fuchsia-600 text-white shadow-md'
-                                            : 'bg-black/45 text-neutral-300 hover:text-white border border-white/10'
-                                    }`}
-                                >
-                                    <span>FOIL</span>
-                                    <span className={`font-mono text-[10px] ${selectedFinish === 'foil' ? 'text-white/90' : 'text-neutral-400'}`}>
-                                        {Number(activeGroup.foil.price || 0).toFixed(2)}$
-                                    </span>
-                                </button>
-                            )}
-                            {activeGroup?.etched && (
-                                <button
-                                    type="button"
-                                    onClick={() => onSelectVersion(activeGroup.etched.printing_id, 'etched')}
-                                    className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1.5 ${
-                                        selectedFinish === 'etched'
-                                            ? 'bg-amber-500 text-black shadow-md'
-                                            : 'bg-black/45 text-neutral-300 hover:text-white border border-white/10'
-                                    }`}
-                                >
-                                    <span>ETCHED</span>
-                                    <span className="font-mono text-[10px]">
-                                        {Number(activeGroup.etched.price || 0).toFixed(2)}$
-                                    </span>
-                                </button>
-                            )}
-                        </div>
-
-                        {/* Quantity Control */}
-                        {!isArchive && (
-                            <div className="flex items-center bg-white rounded-xl overflow-hidden shadow-sm shrink-0">
-                                <button
-                                    type="button"
-                                    aria-label="Disminuir cantidad"
-                                    onClick={() => handleQtyChange(quantity - 1)}
-                                    disabled={quantity <= 1}
-                                    className="px-2 py-2 text-neutral-700 hover:bg-neutral-100 disabled:opacity-40 transition-colors"
-                                >
-                                    <Minus size={12} strokeWidth={3} />
-                                </button>
-                                <input
-                                    type="number"
-                                    min={1}
-                                    max={maxQty}
-                                    value={quantity}
-                                    onChange={(e) => handleQtyChange(Number(e.target.value))}
-                                    aria-label="Cantidad"
-                                    className="w-10 text-center text-black font-black text-sm outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                                />
-                                <button
-                                    type="button"
-                                    aria-label="Aumentar cantidad"
-                                    onClick={() => handleQtyChange(quantity + 1)}
-                                    disabled={quantity >= maxQty}
-                                    className="px-2 py-2 text-neutral-700 hover:bg-neutral-100 disabled:opacity-40 transition-colors"
-                                >
-                                    <Plus size={12} strokeWidth={3} />
-                                </button>
+                <div className="rounded-2xl bg-[#072e30] border border-teal-400/20 p-3.5 md:p-4 flex items-center justify-between gap-3 shadow-lg">
+                    {/* Left Column: Finish Tabs (label only) -> Stock (above price) -> Price & Discount */}
+                    <div className="flex flex-col items-start gap-2 min-w-0 flex-1">
+                        {/* Finish tabs without prices */}
+                        {(activeGroup?.normal || activeGroup?.foil || activeGroup?.etched) && (
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                                {activeGroup?.normal && (
+                                    <button
+                                        type="button"
+                                        data-testid="finish-tab-normal"
+                                        onClick={() => onSelectVersion(activeGroup.normal.printing_id, 'nonfoil')}
+                                        className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all ${
+                                            selectedFinish === 'nonfoil'
+                                                ? 'bg-white text-black shadow-md'
+                                                : 'bg-black/45 text-neutral-300 hover:text-white border border-white/10'
+                                        }`}
+                                    >
+                                        NORMAL
+                                    </button>
+                                )}
+                                {activeGroup?.foil && (
+                                    <button
+                                        type="button"
+                                        data-testid="finish-tab-foil"
+                                        onClick={() => onSelectVersion(activeGroup.foil.printing_id, 'foil')}
+                                        className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all ${
+                                            selectedFinish === 'foil'
+                                                ? 'bg-gradient-to-r from-indigo-600 via-purple-600 to-fuchsia-600 text-white shadow-md'
+                                                : 'bg-black/45 text-neutral-300 hover:text-white border border-white/10'
+                                        }`}
+                                    >
+                                        FOIL
+                                    </button>
+                                )}
+                                {activeGroup?.etched && (
+                                    <button
+                                        type="button"
+                                        data-testid="finish-tab-etched"
+                                        onClick={() => onSelectVersion(activeGroup.etched.printing_id, 'etched')}
+                                        className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all ${
+                                            selectedFinish === 'etched'
+                                                ? 'bg-amber-500 text-black shadow-md'
+                                                : 'bg-black/45 text-neutral-300 hover:text-white border border-white/10'
+                                        }`}
+                                    >
+                                        ETCHED
+                                    </button>
+                                )}
                             </div>
                         )}
-                    </div>
 
-                    {/* Bottom Row: Price (+ Discount) on Left, Add Button + Version Stock on Right */}
-                    <div className="flex items-end justify-between gap-3 pt-1">
+                        {/* Version Stock placed directly above Price, slightly larger */}
+                        <span
+                            data-testid="version-stock-label"
+                            className={`text-sm font-black uppercase tracking-wider leading-none ${
+                                currentStock > 0 ? 'text-emerald-400' : 'text-orange-400'
+                            }`}
+                        >
+                            {currentStock > 0 ? `DISP: ${currentStock}` : 'Por Encargo'}
+                        </span>
+
+                        {/* Price (+ Discount) */}
                         <div className="flex flex-col gap-1 min-w-0">
                             <div className="text-3xl sm:text-4xl font-black text-white font-mono tracking-tight leading-none">
                                 {effectivePrice > 0 ? `${effectivePrice.toFixed(2)} $` : 'S/P'}
@@ -510,41 +481,68 @@ export const CardDetailBlocks: React.FC<CardDetailBlocksProps> = ({
                                 </div>
                             )}
                         </div>
+                    </div>
 
-                        <div className="flex flex-col items-end gap-1.5 shrink-0">
-                            {!isArchive && (
+                    {/* Right Column: Matching-size Quantity Input & Add-to-Cart Button */}
+                    {!isArchive && (
+                        <div className="flex flex-col items-end gap-2.5 shrink-0">
+                            <div
+                                data-testid="quantity-control"
+                                className="w-28 h-10 flex items-center bg-white rounded-xl overflow-hidden shadow-sm shrink-0"
+                            >
                                 <button
                                     type="button"
-                                    onClick={() => onAddToCart(quantity)}
-                                    disabled={isAdding}
-                                    data-testid="add-to-cart-button"
-                                    className={`px-4 h-11 rounded-xl font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-50 shadow-lg ${
-                                        addedSuccess
-                                            ? 'bg-emerald-400 text-black'
-                                            : 'bg-geeko-cyan text-black hover:brightness-110'
-                                    }`}
+                                    aria-label="Disminuir cantidad"
+                                    onClick={() => handleQtyChange(quantity - 1)}
+                                    disabled={quantity <= 1}
+                                    className="w-8 h-full flex items-center justify-center text-neutral-700 hover:bg-neutral-100 disabled:opacity-40 transition-colors"
                                 >
-                                    {isAdding ? (
-                                        <Loader2 size={16} className="animate-spin" />
-                                    ) : addedSuccess ? (
-                                        <span>¡Añadido! ✓</span>
-                                    ) : (
-                                        <>
-                                            <Plus size={14} strokeWidth={3} />
-                                            <ShoppingCart size={16} fill="currentColor" />
-                                        </>
-                                    )}
+                                    <Minus size={12} strokeWidth={3} />
                                 </button>
-                            )}
-                            <span
-                                className={`text-xs font-black uppercase tracking-wider ${
-                                    currentStock > 0 ? 'text-emerald-400' : 'text-orange-400'
+                                <input
+                                    type="number"
+                                    min={1}
+                                    max={maxQty}
+                                    value={quantity}
+                                    onChange={(e) => handleQtyChange(Number(e.target.value))}
+                                    aria-label="Cantidad"
+                                    className="flex-1 min-w-0 h-full text-center text-black font-black text-sm outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                />
+                                <button
+                                    type="button"
+                                    aria-label="Aumentar cantidad"
+                                    onClick={() => handleQtyChange(quantity + 1)}
+                                    disabled={quantity >= maxQty}
+                                    className="w-8 h-full flex items-center justify-center text-neutral-700 hover:bg-neutral-100 disabled:opacity-40 transition-colors"
+                                >
+                                    <Plus size={12} strokeWidth={3} />
+                                </button>
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={() => onAddToCart(quantity)}
+                                disabled={isAdding}
+                                data-testid="add-to-cart-button"
+                                className={`w-28 h-10 rounded-xl font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 disabled:opacity-50 shadow-lg shrink-0 ${
+                                    addedSuccess
+                                        ? 'bg-emerald-400 text-black'
+                                        : 'bg-geeko-cyan text-black hover:brightness-110'
                                 }`}
                             >
-                                {currentStock > 0 ? `DISP: ${currentStock}` : 'Por Encargo'}
-                            </span>
+                                {isAdding ? (
+                                    <Loader2 size={16} className="animate-spin" />
+                                ) : addedSuccess ? (
+                                    <span className="text-[11px]">¡Añadido! ✓</span>
+                                ) : (
+                                    <>
+                                        <Plus size={15} strokeWidth={3} />
+                                        <ShoppingCart size={16} fill="currentColor" />
+                                    </>
+                                )}
+                            </button>
                         </div>
-                    </div>
+                    )}
                 </div>
             </div>
 
@@ -552,16 +550,21 @@ export const CardDetailBlocks: React.FC<CardDetailBlocksProps> = ({
                 BLOQUE 3 (DERECHA DESKTOP / ABAJO MOBILE): EDICIONES DISPONIBLES
                ════════════════════════════════════════════════════════════════ */}
             <div className="flex flex-col bg-[#080b10] px-4 pt-3 pb-5 md:p-5 md:pr-4 border-t border-white/10 md:border-t-0 md:min-h-0 md:max-h-[470px] md:overflow-hidden">
-                <div className="pb-2.5 border-b border-white/10 md:pr-11 shrink-0">
-                    <h3 className="text-[11px] font-black uppercase tracking-wider text-white">
-                        Ediciones disponibles en Geekorium
-                    </h3>
-                    <div className="mt-1 flex items-center justify-between gap-2">
+                <div className="pb-2.5 border-b border-white/10 md:pr-10 shrink-0">
+                    <div className="flex items-center justify-between gap-2">
+                        <h3 className="text-[10px] sm:text-[11px] font-black uppercase tracking-wide text-white leading-tight">
+                            Ediciones disponibles en Geekorium
+                        </h3>
+                        <span
+                            data-testid="versions-count-label"
+                            className="text-[10px] font-bold text-neutral-400 uppercase whitespace-nowrap shrink-0"
+                        >
+                            {versionGroups.length} {versionGroups.length === 1 ? 'Versión' : 'Versiones'}
+                        </span>
+                    </div>
+                    <div className="mt-1">
                         <span className="text-xs font-black uppercase text-emerald-400 tracking-wide">
                             TOTAL DISP: {details.total_stock ?? 0}
-                        </span>
-                        <span className="text-[10px] font-bold text-neutral-400 uppercase">
-                            {versionGroups.length} {versionGroups.length === 1 ? 'Versión' : 'Versiones'}
                         </span>
                     </div>
                 </div>

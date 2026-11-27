@@ -383,7 +383,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                 data-testid="card-modal"
                 role="dialog"
                 aria-modal="true"
-                className="w-full max-w-[440px] md:max-w-5xl max-h-[94dvh] md:h-auto md:max-h-[90vh] rounded-[24px] md:rounded-[28px] border border-white/15 shadow-[0_0_100px_rgba(0,0,0,0.85)] flex flex-col overflow-y-auto md:overflow-hidden relative bg-[#090c11] custom-scrollbar"
+                className="w-full max-w-[440px] md:max-w-6xl max-h-[94dvh] md:h-auto md:max-h-[90vh] rounded-[24px] md:rounded-[28px] border border-white/15 shadow-[0_0_100px_rgba(0,0,0,0.85)] flex flex-col overflow-y-auto md:overflow-hidden relative bg-[#090c11] custom-scrollbar"
                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
             >
                 {/* Sticky Header for mobile: TCG badge + red-outlined X matching mobile wireframe */}
