@@ -722,7 +722,7 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
             const matches = pData.filter((p: any) => p.printing_id === baseVId);
             const finishMatches = matches.filter((p: any) => (p.finish || 'nonfoil').toLowerCase() === vFinish);
             const totalStockForFinish = finishMatches.reduce((acc: number, curr: any) => acc + (curr.stock || 0), 0);
-            const exactProd = finishMatches[0];
+            const exactProd = finishMatches.find((p: any) => (p.stock || 0) > 0) || finishMatches[0];
             const finalPrice = (exactProd?.price && Number(exactProd.price) > 0) ? Number(exactProd.price) : Number(v.price || 0);
             const originalPrice = (exactProd?.original_price && Number(exactProd.original_price) > 0) ? Number(exactProd.original_price) : finalPrice;
             const discountPct = Number(exactProd?.discount_percentage || 0);

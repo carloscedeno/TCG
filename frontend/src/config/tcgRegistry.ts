@@ -35,7 +35,7 @@ export const TCG_REGISTRY: Record<string, TCGConfig> = {
     gameName: 'Magic: The Gathering',
     colorsOrDomains: ['White', 'Blue', 'Black', 'Red', 'Green', 'Colorless', 'Multicolor'],
     types: ['Creature', 'Instant', 'Sorcery', 'Enchantment', 'Artifact', 'Planeswalker', 'Land'],
-    formats: ['standard', 'pioneer', 'modern', 'legacy', 'commander', 'pauper'],
+    formats: ['standard', 'modern', 'pioneer', 'pauper', 'duel', 'commander'],
     externalMarketplace: {
       name: 'CardKingdom',
       label: 'Comprar @ CardKingdom',

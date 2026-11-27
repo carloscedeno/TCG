@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { X, ShoppingCart, RotateCw, Loader2 } from 'lucide-react';
+import { X } from 'lucide-react';
 import { fetchCardDetails, addToCart } from '../../utils/api';
-import { getTcgConfig } from '../../config/tcgRegistry';
-import { CardImage } from './CardImage';
+import { CardDetailBlocks } from './CardDetailBlocks';
 import { useSeoMeta, buildCardProductSeo } from '../../hooks/useSeoMeta';
 
 
@@ -216,42 +215,37 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
         }
     };
 
-    const handleVersionClick = (id: string, finish?: string, e?: React.MouseEvent) => {
-        if (e && (e.ctrlKey || e.metaKey)) {
-            return; // Allow native browser behavior for ctrl+click if it's a link
-        }
+    const handleSelectVersion = (id: string, finish?: 'nonfoil' | 'foil' | 'etched') => {
+        const cleanId = id.replace(/-foil$/, '').replace(/-nonfoil$/, '').replace(/-etched$/, '');
+        const existsInLoaded = versionGroups.some((g: any) =>
+            [g.normal, g.foil, g.etched, g.base].some(
+                (v: any) => v && (v.printing_id === id || v.printing_id?.replace(/-(foil|nonfoil|etched)$/, '') === cleanId)
+            )
+        );
 
-        // If finish is explicitly provided (FOIL/NORMAL toggle buttons), only update
-        // selectedFinish + activePrintingId — do NOT reload card details.
-        // The activeVersion memo already picks the correct price from all_versions,
-        // and a reload would overwrite that price with the nonfoil product price.
-        if (finish) {
-            setSelectedFinish(finish as any);
-            if (activeGroup) {
-                const targetVersion = finish === 'foil' ? activeGroup.foil : (finish === 'etched' ? activeGroup.etched : activeGroup.normal);
-                if (targetVersion) {
-                    setActivePrintingId(targetVersion.printing_id);
-                }
-            }
-            return; // ← skip loadCardDetails entirely for finish toggle
-        }
-
-        // Clicking a different edition row → full reload
-        if (id !== activePrintingId) {
+        if (existsInLoaded) {
             setActivePrintingId(id);
-            loadCardDetails(id, true);
+            if (finish) {
+                setSelectedFinish(finish);
+            }
+            setCurrentFaceIndex(0);
+            return;
         }
+
+        // Fallback reload only if target printing isn't in loaded versions
+        setActivePrintingId(id);
+        if (finish) setSelectedFinish(finish);
+        loadCardDetails(id, true, finish);
     };
 
-
-    const handleAddToCart = async () => {
+    const handleAddToCart = async (quantity: number = 1) => {
         if (!activePrintingId) return;
 
         setIsAdding(true);
         try {
             // Use the real printing_id (strip any synthetic suffix before calling RPC)
             const baseId = activePrintingId.replace(/-foil$/, '').replace(/-nonfoil$/, '').replace(/-etched$/, '');
-            const result = await addToCart(baseId, 1, selectedFinish);
+            const result = await addToCart(baseId, Math.max(1, quantity), selectedFinish, !!details?.is_accessory);
             if (result && !result.success) {
                 alert(result.message || result.error || 'No se pudo agregar al carrito');
                 setIsAdding(false);
@@ -275,38 +269,11 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
         }
     };
 
-    const handleVersionAddToCart = async (v: any) => {
-        try {
-            // Strip synthetic suffix, pass finish explicitly
-            const baseId = (v.printing_id || '').replace(/-foil$/, '').replace(/-nonfoil$/, '').replace(/-etched$/, '');
-            const vFinish = v.finish || (v.is_foil ? 'foil' : 'nonfoil');
-            const result = await addToCart(baseId, 1, vFinish);
-            if (result && !result.success) {
-                // Show error message to user
-                alert(result.message || result.error || 'No se pudo agregar al carrito');
-                return;
-            }
-            if (onAddToCartSuccess) {
-                onAddToCartSuccess();
-            }
-        } catch (err: any) {
-            console.error("Cart error", err);
-            alert(err.message || 'Error al agregar al carrito');
-        }
-    };
-
-
-
-
     const handleBackdropClick = (e: React.MouseEvent) => {
         if (e.target === e.currentTarget) {
             onClose();
         }
     };
-
-    // Removal of icon-based legality indicators in favor of color-coded boxes.
-
-    const tcgConfig = useMemo(() => getTcgConfig(details?.game), [details?.game]);
 
     const versionGroups = useMemo(() => {
         if (!details?.all_versions) return [];
@@ -365,9 +332,9 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
     // Detect DFC only if multiple faces actually exist in card data
     const hasMultipleFaces = !!(details?.card_faces && details.card_faces.length > 1);
     const currentFace = hasMultipleFaces ? (details?.card_faces?.[currentFaceIndex] || {}) : details;
-    const currentImage = (currentFace as any)?.image_url || (currentFace as any)?.image_uris?.normal || (currentFace as any)?.image_uris?.large || (currentFace as any)?.image_uris?.png || details?.image_url || initialImage || (initialData as any)?.image_url;
-
-    const inStockSetsCount = useMemo(() => versionGroups.filter((g: any) => g.totalStock > 0).length, [versionGroups]);
+    const currentImage = hasMultipleFaces
+        ? ((currentFace as any)?.image_url || (currentFace as any)?.image_uris?.normal || (currentFace as any)?.image_uris?.large || (currentFace as any)?.image_uris?.png || details?.image_url || initialImage || (initialData as any)?.image_url || '')
+        : (activeVersion?.image_url || details?.image_url || initialImage || (initialData as any)?.image_url || '');
 
     const modalSeoConfig = useMemo(() => {
         if (!isOpen || !details?.name) return null;
@@ -393,170 +360,23 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
 
     useSeoMeta(modalSeoConfig);
 
-    const renderVersionsContent = () => (
-        <div className="flex flex-col h-full w-full">
-            <div className="px-4 md:px-6 py-2.5 md:py-3 flex items-center justify-between border-b border-white/5 bg-[#0a0a0a]/50">
-                <h3 className="text-[10px] font-web-titles font-normal uppercase tracking-widest text-neutral-400">Edición / Impresiones</h3>
-                <span className="text-[10px] text-neutral-400 font-normal">
-                    {loading && versionGroups.length === 0 ? (
-                        <span className="inline-flex items-center gap-1.5 text-geeko-cyan animate-pulse">
-                            <Loader2 size={10} className="animate-spin" /> Cargando...
-                        </span>
-                    ) : (
-                        <span>
-                            {inStockSetsCount > 0 && <span className="text-geeko-green font-bold">{inStockSetsCount} en tienda • </span>}
-                            {versionGroups.length} {versionGroups.length === 1 ? 'Set' : 'Sets'}
-                        </span>
-                    )}
-                </span>
-            </div>
-            <div
-                data-testid="versions-list-container"
-                className="flex-1 overflow-y-auto custom-scrollbar relative flex flex-col p-1 md:p-0 max-h-[260px] md:max-h-none"
-            >
-                {loading ? (
-                    // Versions Skeleton
-                    [...Array(3)].map((_, i) => (
-                        <div key={i} className="flex items-center gap-4 px-4 md:px-6 py-3 border-b border-white/5 animate-pulse">
-                            <div className="w-8 h-8 rounded bg-white/5 shrink-0" />
-                            <div className="flex-1 space-y-2">
-                                <div className="h-3 w-32 bg-white/5 rounded" />
-                                <div className="h-2 w-16 bg-white/5 rounded" />
-                            </div>
-                        </div>
-                    ))
-                ) : (
-                    <>
-                        {versionGroups.map((group: any) => {
-                            const isGroupActive = activePrintingId === group.base?.printing_id || activePrintingId === group.normal?.printing_id || activePrintingId === group.foil?.printing_id || activePrintingId === group.etched?.printing_id;
-                            const rowActiveVersion = (isGroupActive && selectedFinish === 'foil' && group.foil)
-                                ? group.foil
-                                : (group.normal && group.normal.stock > 0)
-                                    ? group.normal
-                                    : (group.foil && group.foil.stock > 0)
-                                        ? group.foil
-                                        : (group.normal || group.foil || group.base);
-                            const groupHasStock = (group.totalStock || 0) > 0;
-
-                            return (
-                                <div
-                                    key={`${group.base.set_code}-${group.base.collector_number}`}
-                                    role="button"
-                                    tabIndex={0}
-                                    onClick={() => {
-                                        const isCurrentlyFoil = !!(details?.is_foil || details?.finish === 'foil');
-                                        const targetPrintingId = isCurrentlyFoil
-                                            ? (group.foil?.printing_id || group.normal?.printing_id)
-                                            : (group.normal?.printing_id || group.foil?.printing_id);
-                                        if (targetPrintingId) handleVersionClick(targetPrintingId);
-                                    }}
-                                    onKeyDown={(e) => {
-                                        if (e.key === 'Enter' || e.key === ' ') {
-                                            const isCurrentlyFoil = !!(details?.is_foil || details?.finish === 'foil');
-                                            const targetPrintingId = isCurrentlyFoil
-                                                ? (group.foil?.printing_id || group.normal?.printing_id)
-                                                : (group.normal?.printing_id || group.foil?.printing_id);
-                                            if (targetPrintingId) handleVersionClick(targetPrintingId);
-                                        }
-                                    }}
-                                    data-testid="edition-link"
-                                    className={`flex items-center justify-between gap-2.5 px-4 md:px-5 py-3 hover:bg-white/10 transition-colors border-b border-white/5 group w-full text-left cursor-pointer outline-none focus-visible:bg-white/10 ${isGroupActive ? 'bg-geeko-cyan/10 border-l-2 border-l-geeko-cyan' : groupHasStock ? 'bg-geeko-green/[0.03]' : 'opacity-65 hover:opacity-100'}`}
-                                >
-                                    <div className="flex items-center gap-2.5 flex-1 min-w-0">
-                                        <div className={`w-8 h-8 rounded flex items-center justify-center text-[11px] font-web-titles transition-colors shrink-0 ${groupHasStock ? 'bg-geeko-green/15 text-geeko-green border border-geeko-green/30' : 'bg-neutral-900 text-neutral-400'}`}>
-                                            {group.base.set_code?.toUpperCase()}
-                                        </div>
-                                        <div className="flex-1 text-left min-w-0">
-                                            <div className={`text-xs font-semibold leading-tight truncate ${isGroupActive ? 'text-geeko-cyan' : groupHasStock ? 'text-white' : 'text-neutral-400'}`}>
-                                                {group.base.set_name}
-                                            </div>
-                                            <div className="text-[10px] text-neutral-500 font-normal truncate">
-                                                #{group.base.collector_number}
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex items-center gap-2.5 shrink-0">
-                                        <div className="flex flex-col items-end gap-0.5">
-                                            {group.normal && (
-                                                <div className="flex items-center gap-1.5">
-                                                    <span className="text-[9px] text-neutral-400 font-bold uppercase tracking-wider">
-                                                        Norm ({group.normal.stock || 0})
-                                                    </span>
-                                                    <span className={`text-[11px] font-black ${(group.normal.stock || 0) > 0 ? 'text-white' : 'text-neutral-600'}`}>
-                                                        ${Number(group.normal.price || 0).toFixed(2)}
-                                                    </span>
-                                                </div>
-                                            )}
-                                            {group.foil && (
-                                                <div className="flex items-center gap-1.5">
-                                                    <span className="text-[9px] text-purple-400 font-bold uppercase tracking-wider">
-                                                        Foil ({group.foil.stock || 0})
-                                                    </span>
-                                                    <span className={`text-[11px] font-black ${(group.foil.stock || 0) > 0 ? 'text-geeko-cyan' : 'text-neutral-600'}`}>
-                                                        ${Number(group.foil.price || 0).toFixed(2)}
-                                                    </span>
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        <div className="flex items-center gap-1.5">
-                                            {groupHasStock ? (
-                                                <span className="text-[8px] font-black text-geeko-green bg-geeko-green/15 px-2 py-0.5 rounded-full border border-geeko-green/30 uppercase tracking-tight whitespace-nowrap">
-                                                    En tienda: {group.totalStock}
-                                                </span>
-                                            ) : (
-                                                <span className="text-[8px] font-bold text-neutral-500 bg-neutral-900 px-1.5 py-0.5 rounded-full border border-white/5 uppercase tracking-tight whitespace-nowrap">
-                                                    Sin stock
-                                                </span>
-                                            )}
-                                            {!isArchive && groupHasStock && (
-                                                <div
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        e.stopPropagation();
-                                                        if (rowActiveVersion) handleVersionAddToCart(rowActiveVersion);
-                                                    }}
-                                                    className="p-1.5 rounded-lg transition-all shrink-0 text-geeko-cyan hover:bg-geeko-cyan/15"
-                                                    title="Agregar al carrito"
-                                                >
-                                                    <ShoppingCart size={13} />
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                        <div className="sticky bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-[#080808] to-transparent pointer-events-none hidden md:block" />
-                    </>
-                )}
-            </div>
-        </div>
-    );
-
     if (!isOpen) return null;
 
     const modalNode = (
         <div
-            className="fixed inset-0 z-[300] flex items-end md:items-center justify-center bg-black/75 backdrop-blur-md p-0 md:p-6 animate-in fade-in duration-200 overflow-hidden"
+            className="fixed inset-0 z-[300] flex items-end md:items-center justify-center bg-black/80 backdrop-blur-md p-0 md:p-6 animate-in fade-in duration-200 overflow-hidden"
             onClick={handleBackdropClick}
         >
-            {/* Modal Content */}
+            {/* Modal Content — 3 Equal-Size Blocks */}
             <div
                 data-testid="card-modal"
                 role="dialog"
                 aria-modal="true"
-                className="glass-panel w-full max-w-5xl h-[94vh] md:h-[660px] max-h-[94vh] rounded-t-[32px] md:rounded-[32px] border border-white/10 shadow-[0_0_100px_rgba(0,0,0,0.8)] flex flex-col md:flex-row overflow-y-auto md:overflow-hidden relative bg-[#0a0a0a]"
+                className="w-full max-w-6xl h-[94vh] md:h-[620px] max-h-[94vh] rounded-t-[28px] md:rounded-[28px] border border-white/15 shadow-[0_0_100px_rgba(0,0,0,0.85)] flex flex-col overflow-y-auto md:overflow-hidden relative bg-[#090c11]"
                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
             >
-                {/* Swipe indicator handle for mobile */}
-                <div className="w-full h-8 flex items-center justify-center md:hidden shrink-0 cursor-grab active:cursor-grabbing relative z-50">
-                    <div className="w-12 h-1.5 bg-white/20 rounded-full" />
-                </div>
-
-                {/* Sticky Header: Card name + TCG logo + close button always visible on mobile */}
-                <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/5 bg-[#0a0a0a]/95 backdrop-blur-md sticky top-0 z-50 md:hidden shrink-0">
+                {/* Sticky Header for mobile */}
+                <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/10 bg-[#090c11]/95 backdrop-blur-md sticky top-0 z-50 md:hidden shrink-0">
                     <div className="flex items-center gap-2 min-w-0 flex-1 pr-3">
                         <div className="w-5 h-5 rounded-full bg-white/10 p-0.5 flex items-center justify-center border border-white/10 shrink-0">
                             <img
@@ -566,359 +386,38 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                                 onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
                             />
                         </div>
-                        <h2 className="text-sm font-web-titles font-normal text-white truncate">{details?.name || 'Cargando...'}</h2>
+                        <h2 className="text-sm font-black italic text-white truncate">{details?.name || 'Cargando...'}</h2>
                     </div>
                     <button
                         onClick={onClose}
-                        className="flex-shrink-0 w-9 h-9 flex items-center justify-center bg-white/10 hover:bg-white/20 active:scale-95 rounded-full transition-all text-neutral-300 hover:text-white"
+                        className="flex-shrink-0 w-9 h-9 flex items-center justify-center bg-red-500/10 hover:bg-red-500/20 border border-red-500/50 rounded-lg transition-all text-red-400"
                         aria-label="Cerrar"
                     >
                         <X size={18} />
                     </button>
                 </div>
 
-                {/* Desktop close button */}
-                <button onClick={onClose} className="absolute top-5 right-6 z-50 px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-white text-xs font-black uppercase tracking-wider hidden md:flex items-center gap-1.5 transition-all hover:scale-105 active:scale-95 shadow-lg backdrop-blur-md"><X size={15} /><span>Cerrar</span></button>
-
-                {details?.is_accessory ? (
-                    /* ────────────────────────────────────────
-                       ACCESSORY LAYOUT — clean product view
-                    ──────────────────────────────────────── */
-                    <div className="flex flex-col md:flex-row w-full h-full">
-                        {/* Image */}
-                        <div className="w-full md:w-[380px] bg-[#0c0c0c] flex items-center justify-center p-8 border-r border-white/5 shrink-0 min-h-[300px] md:min-h-0">
-                            {loading && !currentImage ? (
-                                <div className="w-48 h-48 rounded-2xl bg-white/5 animate-pulse" />
-                            ) : (
-                                <div className="relative flex items-center justify-center">
-                                    <div className="absolute inset-0 bg-geeko-cyan/10 blur-[80px] rounded-full pointer-events-none" />
-                                    <CardImage
-                                        src={currentImage}
-                                        alt={details?.name || 'Card Image'}
-                                        size="normal"
-                                        objectFit="contain"
-                                        fallbackIconSize={60}
-                                        className="max-w-[280px] max-h-[280px] object-contain relative z-10 drop-shadow-[0_20px_60px_rgba(0,0,0,0.8)] hover:scale-105 transition-transform duration-500"
-                                    />
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Info */}
-                        <div className="flex-1 bg-[#050505] p-6 md:p-10 flex flex-col justify-between gap-6 overflow-y-auto custom-scrollbar">
-                            {loading ? (
-                                <div className="space-y-6 animate-pulse">
-                                    <div className="h-10 w-3/4 bg-white/5 rounded-xl" />
-                                    <div className="h-4 w-1/3 bg-white/5 rounded" />
-                                    <div className="h-32 bg-white/5 rounded-2xl" />
-                                    <div className="h-14 bg-white/5 rounded-xl" />
-                                </div>
-                            ) : details ? (
-                                <>
-                                    {/* Name + Category */}
-                                    <div className="space-y-2">
-                                        <span className="text-[10px] font-black uppercase tracking-widest text-geeko-cyan/70">
-                                            {details.set || 'Accesorio'}
-                                        </span>
-                                        <h2 className="text-2xl md:text-4xl font-web-titles font-normal tracking-tight text-white leading-tight capitalize">
-                                            {details.name}
-                                        </h2>
-                                    </div>
-
-                                    {/* Stock badge */}
-                                    <div className="flex items-center gap-3">
-                                        {(activeVersion?.stock ?? details.total_stock ?? 0) > 0 ? (
-                                            <span className="text-xs font-black text-geeko-green bg-geeko-green/10 px-4 py-1.5 rounded-full border border-geeko-green/20 uppercase tracking-widest">
-                                                ✓ En Stock — {activeVersion?.stock ?? details.total_stock} disponibles
-                                            </span>
-                                        ) : (
-                                            <span className="text-xs font-black text-orange-400 bg-orange-500/10 px-4 py-1.5 rounded-full border border-orange-500/20 uppercase tracking-widest">
-                                                Por Encargo
-                                            </span>
-                                        )}
-                                    </div>
-
-                                    {/* Oracle / Description — only if present */}
-                                    {details.oracle_text && (
-                                        <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 text-sm text-neutral-300 leading-relaxed">
-                                            {details.oracle_text}
-                                        </div>
-                                    )}
-
-                                    {/* Price + CTA */}
-                                    <div className="space-y-3">
-                                        <div className="p-5 rounded-2xl bg-gradient-to-br from-geeko-cyan/10 via-transparent to-transparent border border-white/10 flex items-center justify-between">
-                                            <div>
-                                                <div className="text-[10px] font-semibold uppercase text-geeko-cyan tracking-widest mb-1">Precio</div>
-                                                <div className="text-4xl font-titles font-medium text-white tracking-tighter">
-                                                    ${(activeVersion?.price || details.price || 0) > 0
-                                                        ? (activeVersion?.price || details.price).toFixed(2)
-                                                        : '---'}
-                                                </div>
-                                            </div>
-                                            <div className="text-right">
-                                                <div className="text-[10px] text-neutral-600 uppercase tracking-widest">Unidad</div>
-                                                <div className="text-2xl text-neutral-500">×1</div>
-                                            </div>
-                                        </div>
-
-                                        {!isArchive && (
-                                            <button
-                                                onClick={handleAddToCart}
-                                                disabled={isAdding}
-                                                data-testid="add-to-cart-button"
-                                                className={`w-full h-14 rounded-xl font-web-titles font-normal text-sm uppercase tracking-widest flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 ${
-                                                    addedSuccess
-                                                        ? 'bg-geeko-green text-black shadow-[0_0_20px_rgba(0,255,133,0.4)]'
-                                                        : 'bg-geeko-cyan text-black shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_40px_rgba(0,229,255,0.6)]'
-                                                }`}
-                                            >
-                                                {isAdding ? <Loader2 size={18} className="animate-spin" /> : addedSuccess ? '¡Añadido! ✓' : <ShoppingCart size={18} fill="currentColor" />}
-                                                {!isAdding && !addedSuccess && ((activeVersion?.stock || 0) > 0 ? 'Agregar al Carrito' : 'Pedir por Encargo')}
-                                            </button>
-                                        )}
-                                    </div>
-                                </>
-                            ) : null}
-                        </div>
-                    </div>
-                ) : (
-                /* ────────────────────────────────────────
-                   CARD LAYOUT — original view
-                ──────────────────────────────────────── */
-                <>
-                    {/* LEFT: IMAGE & VERSIONS LIST */}
-                    <div className="w-full md:w-[320px] lg:w-[360px] bg-[#09090b] flex flex-col border-r border-white/5 shrink-0 overflow-hidden h-auto md:h-full">
-                    <div className="min-h-[220px] md:min-h-[300px] relative flex items-center justify-center p-3 sm:p-6 bg-gradient-to-b from-white/[0.04] to-transparent shrink-0">
-                        {loading && !currentImage ? (
-                            <div className="w-[170px] xs:w-[190px] sm:w-[220px] md:w-[240px] aspect-[5/7] rounded-2xl bg-white/5 border border-white/10 animate-pulse flex flex-col items-center justify-center gap-2.5 shadow-2xl">
-                                <Loader2 size={28} className="text-geeko-cyan animate-spin" />
-                                <span className="text-[10px] sm:text-xs font-black text-geeko-cyan uppercase tracking-widest animate-pulse">Cargando Información...</span>
-                            </div>
-                        ) : (
-                            <div className="relative w-[170px] xs:w-[190px] sm:w-[220px] md:w-[240px] aspect-[5/7] flex items-center justify-center group/card my-auto">
-                                <div className="absolute inset-0 bg-geeko-cyan/25 blur-[80px] rounded-full opacity-40 animate-pulse pointer-events-none" />
-                                <div className={`relative w-full h-full flex items-center justify-center drop-shadow-[0_25px_60px_rgba(0,0,0,0.95)] ${selectedFinish === 'foil' ? 'holo-effect' : ''}`}>
-                                    {selectedFinish === 'foil' && (
-                                        <div className="absolute inset-0 z-20 foil-shimmer opacity-30 mix-blend-overlay pointer-events-none rounded-[10%] scale-[0.95]" />
-                                    )}
-                                    <CardImage
-                                        src={currentImage}
-                                        alt={details?.name || 'Card Image'}
-                                        size="normal"
-                                        objectFit="contain"
-                                        fallbackIconSize={80}
-                                        className="w-full h-full object-contain rounded-xl relative z-10 transition-transform duration-500 group-hover/card:scale-[1.02]"
-                                    />
-                                </div>
-                            </div>
-                        )}
-                        {hasMultipleFaces && !loading && (
-                            <button
-                                onClick={(e) => { e.stopPropagation(); setCurrentFaceIndex(prev => (prev + 1) % 2); }}
-                                className="absolute bottom-6 right-6 p-3 md:p-4 bg-black/80 hover:bg-geeko-cyan text-white hover:text-black rounded-full border border-white/20 backdrop-blur-md transition-all z-30 group shadow-2xl"
-                            >
-                                <RotateCw size={18} className="group-hover:rotate-180 transition-transform duration-500" />
-                            </button>
-                        )}
-                    </div>
-
-                    {/* VERSIONS LIST (DESKTOP ONLY) */}
-                    <div className="hidden md:flex h-auto md:flex-[0_0_35%] md:min-h-[200px] border-t border-white/5 bg-[#080808] flex-col shrink-0">
-                        {renderVersionsContent()}
-                    </div>
-                </div> {/* end card left column */}
-
-                {/* RIGHT: CARD TEXT & ACTIONS */}
-                <div className="flex-1 h-auto md:h-full md:min-h-0 md:overflow-y-auto custom-scrollbar bg-[#050505] p-4 sm:p-6 md:p-8 space-y-4 flex flex-col">
-
-                    {loading && !details ? (
-                        <div className="flex flex-col items-center justify-center h-full min-h-[350px] space-y-4">
-                            <Loader2 size={36} className="text-geeko-cyan animate-spin" />
-                            <p className="text-sm font-black text-geeko-cyan uppercase tracking-widest animate-pulse">Cargando Información...</p>
-                        </div>
-                    ) : error ? (
-                        <div className="flex flex-col items-center justify-center h-full text-center p-8 space-y-4 animate-in fade-in">
-                            <div className="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 border border-red-500/20 mb-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" x2="12" y1="8" y2="12" /><line x1="12" x2="12.01" y1="16" y2="16" /></svg>
-                            </div>
-                            <h3 className="text-xl font-black text-red-500 uppercase tracking-widest">Error Loading Card</h3>
-                            <p className="text-sm text-neutral-400 font-medium max-max-w-xs mx-auto">{error}</p>
-                            <button
-                                onClick={() => activePrintingId && loadCardDetails(activePrintingId)}
-                                className="px-6 py-2 bg-white/5 hover:bg-white/10 rounded-full text-white font-bold text-xs uppercase tracking-widest transition-all border border-white/5 hover:border-white/20 mt-4"
-                            >
-                                Try Again
-                            </button>
-                        </div>
-                    ) : details ? (
-                        <>
-                            <div className="space-y-2.5">
-                                {/* TCG Icon + Game & Set Metadata */}
-                                <div className="flex items-center gap-2">
-                                    <div className="w-5 h-5 rounded-full bg-white/10 p-0.5 flex items-center justify-center border border-white/15 shrink-0 shadow-sm">
-                                        <img
-                                            src={`/logos/tcg/${details?.game || initialData?.game || 'MTG'}.png`}
-                                            alt={details?.game || initialData?.game || 'TCG'}
-                                            className="w-3.5 h-3.5 object-contain"
-                                            onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
-                                        />
-                                    </div>
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-geeko-cyan">
-                                        {tcgConfig?.gameName || details?.game || initialData?.game || 'TCG'}
-                                    </span>
-                                    {details?.set && (
-                                        <>
-                                            <span className="text-white/20">•</span>
-                                            <span className="text-[10px] font-bold text-neutral-400 truncate max-w-[200px]">
-                                                {details.set}
-                                            </span>
-                                        </>
-                                    )}
-                                </div>
-
-                                <div className="flex flex-wrap items-center justify-between gap-4">
-                                    <a
-                                        href={`/card/${details.card_id}`}
-                                        className="block group/title flex-1 min-w-0"
-                                        onClick={(e) => {
-                                            if (!e.ctrlKey && !e.metaKey) {
-                                                e.preventDefault();
-                                            }
-                                        }}
-                                    >
-                                        <h2 className="text-xl sm:text-2xl md:text-3xl font-web-titles font-normal tracking-tight text-white text-gradient-cyan group-hover/title:brightness-125 transition-all leading-tight">
-                                            {details.name}
-                                        </h2>
-                                    </a>
-                                </div>
-
-                                {loading && (
-                                    <div className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-geeko-cyan/15 border border-geeko-cyan/40 text-geeko-cyan animate-pulse shadow-sm">
-                                        <Loader2 size={15} className="animate-spin text-geeko-cyan shrink-0" />
-                                        <span className="text-xs font-black uppercase tracking-wider">Cargando Información...</span>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* 1. PRICE, AVAILABILITY & PURCHASE ACTIONS */}
-                            <div className="space-y-3 pt-1">
-                                <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-geeko-cyan/15 via-white/[0.02] to-transparent border border-white/10 group relative overflow-hidden flex flex-col justify-between gap-4">
-                                    <div className="absolute top-0 right-0 w-32 h-32 bg-geeko-cyan/10 rounded-full blur-[40px] pointer-events-none" />
-                                    <div className="space-y-2 relative z-10">
-                                        <div className="text-[10px] font-semibold uppercase text-geeko-cyan tracking-widest flex items-center justify-between gap-2">
-                                            <span>Precio Geekorium</span>
-                                            {details.total_stock > 0 ? (
-                                                <span className="text-[9px] text-geeko-green bg-geeko-green/10 px-2.5 py-0.5 rounded-full border border-geeko-green/25 font-black">
-                                                    Existencia total en tienda: {details.total_stock}
-                                                </span>
-                                            ) : (
-                                                <span className="text-[9px] text-orange-400 bg-orange-500/10 px-2.5 py-0.5 rounded-full border border-orange-500/25 font-bold">
-                                                    Sin existencia en tienda
-                                                </span>
-                                            )}
-                                        </div>
-
-                                        <div className="flex flex-wrap items-baseline gap-2.5 pt-1">
-                                            <div className="text-3xl sm:text-4xl font-medium text-white font-titles tracking-tighter">
-                                                ${(activeVersion?.price || details.price || 0) > 0 ? Number(activeVersion?.price || details.price).toFixed(2) : '---'}
-                                            </div>
-                                            <span className={`text-[10px] px-2.5 py-0.5 rounded-full font-black tracking-widest shadow-sm ${selectedFinish === 'foil' ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white animate-pulse' : 'bg-white text-black'}`}>
-                                                {selectedFinish?.toUpperCase()}
-                                            </span>
-                                            {(activeVersion as any)?.discount_percentage > 0 && (
-                                                <>
-                                                    <span className="text-xs font-bold text-neutral-400 line-through">
-                                                        ${Number((activeVersion as any).original_price).toFixed(2)}
-                                                    </span>
-                                                    <span className="text-[10px] bg-red-600 text-white px-2 py-0.5 rounded font-black uppercase">
-                                                        {(activeVersion as any).discount_percentage}% OFF
-                                                    </span>
-                                                </>
-                                            )}
-                                        </div>
-
-                                        {/* Selected Variant Availability */}
-                                        <div className="flex items-center justify-between text-xs font-bold py-2 px-3 rounded-xl bg-white/[0.04] border border-white/5">
-                                            <span className="text-neutral-400 uppercase tracking-wider text-[10px]">Cantidad disponible</span>
-                                            {(activeVersion?.stock || 0) > 0 ? (
-                                                <span className="text-geeko-green font-black flex items-center gap-1.5 text-xs">
-                                                    <span className="w-2 h-2 rounded-full bg-geeko-green animate-pulse" />
-                                                    {activeVersion.stock} {activeVersion.stock === 1 ? 'unidad disponible' : 'unidades disponibles'}
-                                                </span>
-                                            ) : (
-                                                <span className="text-orange-400 font-bold flex items-center gap-1.5 text-xs">
-                                                    <span className="w-2 h-2 rounded-full bg-orange-400" />
-                                                    0 en tienda (Por Encargo)
-                                                </span>
-                                            )}
-                                        </div>
-
-                                        {/* Finish Toggle Switch */}
-                                        {(activeGroup?.normal || activeGroup?.foil) && (
-                                            <div className="flex bg-neutral-900/90 p-1 rounded-xl border border-white/5 w-fit mt-1 gap-1">
-                                                {activeGroup?.normal && (
-                                                    <button
-                                                        onClick={() => {
-                                                            const targetId = activeGroup?.normal?.printing_id;
-                                                            if (targetId) handleVersionClick(targetId, 'nonfoil');
-                                                        }}
-                                                        className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-1 ${selectedFinish === 'nonfoil'
-                                                            ? 'bg-white text-black shadow-lg scale-[1.03]'
-                                                            : (activeGroup.normal?.stock || 0) === 0
-                                                                ? 'text-neutral-500 opacity-60'
-                                                                : 'text-neutral-400 hover:text-white'
-                                                            }`}
-                                                    >
-                                                        Normal {(activeGroup.normal?.stock || 0) > 0 ? <span className="text-[9px] opacity-80">({activeGroup.normal.stock})</span> : <span className="text-[8px] opacity-70 tracking-tighter">(P/E)</span>}
-                                                    </button>
-                                                )}
-                                                {activeGroup?.foil && (
-                                                    <button
-                                                        onClick={() => {
-                                                            const targetId = activeGroup?.foil?.printing_id;
-                                                            if (targetId) handleVersionClick(targetId, 'foil');
-                                                        }}
-                                                        className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-1 ${selectedFinish === 'foil'
-                                                            ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 text-white shadow-lg scale-[1.03]'
-                                                            : (activeGroup.foil?.stock || 0) === 0
-                                                                ? 'text-neutral-500 opacity-60'
-                                                                : 'text-neutral-400 hover:text-white'
-                                                            }`}
-                                                    >
-                                                        Foil {(activeGroup.foil?.stock || 0) > 0 ? <span className="text-[9px] opacity-80">({activeGroup.foil.stock})</span> : <span className="text-[8px] opacity-70 tracking-tighter">(P/E)</span>}
-                                                    </button>
-                                                )}
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    {!isArchive && (
-                                        <button
-                                            onClick={handleAddToCart}
-                                            disabled={isAdding}
-                                            data-testid="add-to-cart-button"
-                                            className={`w-full h-12 rounded-xl font-web-titles font-normal text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 shrink-0 relative z-10 ${addedSuccess
-                                                ? 'bg-geeko-green text-black shadow-[0_0_20px_rgba(0,255,133,0.4)]'
-                                                : 'bg-geeko-cyan text-black shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_40px_rgba(0,229,255,0.6)]'
-                                                }`}
-                                        >
-                                            {isAdding ? <Loader2 size={16} className="animate-spin" /> : addedSuccess ? '¡Añadido! ✓' : <ShoppingCart size={16} fill="currentColor" />}
-                                            {!isAdding && !addedSuccess && ((activeVersion?.stock || 0) > 0 ? `Agregar al Carrito (${activeVersion.stock} disp.)` : 'Por encargo')}
-                                        </button>
-                                    )}
-                                </div>
-                            </div>
-
-                            {/* 2. VERSIONS LIST (MOBILE ONLY - AT BOTTOM OF FLOW) */}
-                            <div className="md:hidden border-t border-white/5 bg-[#080808] -mx-4 -mb-4 pt-1 rounded-b-[24px] overflow-hidden">
-                                {renderVersionsContent()}
-                            </div>
-                        </>
-                    ) : null}
-                </div>
-                </>
-                )}
+                <CardDetailBlocks
+                    details={details}
+                    loading={loading}
+                    error={error}
+                    onRetry={() => activePrintingId && loadCardDetails(activePrintingId)}
+                    onClose={onClose}
+                    activePrintingId={activePrintingId}
+                    selectedFinish={selectedFinish}
+                    activeGroup={activeGroup}
+                    activeVersion={activeVersion}
+                    versionGroups={versionGroups}
+                    currentImage={currentImage}
+                    hasMultipleFaces={hasMultipleFaces}
+                    onFlipFace={() => setCurrentFaceIndex(prev => (prev + 1) % 2)}
+                    onSelectVersion={handleSelectVersion}
+                    onAddToCart={handleAddToCart}
+                    isAdding={isAdding}
+                    addedSuccess={addedSuccess}
+                    isArchive={isArchive}
+                    isDetailsLoaded={!loading}
+                />
             </div>
         </div>
     );

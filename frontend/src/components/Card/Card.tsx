@@ -184,16 +184,16 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
           {discount_percentage && discount_percentage > 0 ? (
               <div className="flex flex-col items-end gap-0.5">
                   <div className="flex items-center gap-1.5">
-                      <span className="text-[10px] text-text-low font-bold line-through">${original_price?.toFixed(2)}</span>
+                      <span className="text-[10px] text-text-low font-bold line-through">{original_price?.toFixed(2)}$</span>
                       <span className="text-[9px] bg-red-600 text-white px-1.5 py-0.5 rounded font-black uppercase">{discount_percentage}% OFF</span>
                   </div>
                   <span className="text-geeko-cyan font-mono font-black text-base leading-none">
-                    {typeof price === 'number' ? `$${price.toFixed(2)}` : '---'}
+                    {typeof price === 'number' ? `${price.toFixed(2)} $` : '---'}
                   </span>
               </div>
           ) : (
               <span className="text-geeko-cyan font-mono font-black text-base leading-none">
-                {typeof price === 'number' ? `$${price.toFixed(2)}` : '---'}
+                {typeof price === 'number' ? `${price.toFixed(2)} $` : '---'}
               </span>
           )}
         </div>
@@ -223,7 +223,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
       }}
       onMouseEnter={handlePreFetch}
       data-testid="product-card"
-      className="relative group p-2.5 sm:p-3.5 bg-white dark:bg-[#19142b]/80 border border-neutral-200 dark:border-white/10 rounded-2xl hover:bg-neutral-50 dark:hover:bg-[#211a38] transition-all cursor-pointer flex flex-col h-full hover:border-geeko-cyan/50 dark:hover:border-geeko-cyan/40 shadow-sm dark:shadow-none"
+      className="relative group p-2.5 sm:p-3.5 bg-white dark:bg-[#23193b]/95 border border-neutral-200 dark:border-white/10 rounded-2xl hover:bg-neutral-50 dark:hover:bg-[#2c204a] transition-all cursor-pointer flex flex-col h-full hover:border-geeko-cyan/50 dark:hover:border-geeko-cyan/40 shadow-sm dark:shadow-xl"
     >
       {/* Clean Card Image (No badges covering the artwork) */}
       <div className="relative aspect-[63/88] w-full rounded-xl overflow-hidden bg-neutral-200 dark:bg-neutral-800 shadow-lg flex-shrink-0">
@@ -329,8 +329,8 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         <div className="mt-auto pt-1 flex flex-col gap-1.5">
           {!!(discount_percentage && discount_percentage > 0) && (
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-300 font-bold line-through leading-none">
-                ${original_price?.toFixed(2)}
+              <span className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-200 font-bold line-through leading-none">
+                {original_price?.toFixed(2)}$
               </span>
               <span className="px-2 py-0.5 rounded bg-red-600 text-white text-[10px] font-black uppercase tracking-wide leading-none shadow-sm">
                 {discount_percentage}% OFF
@@ -340,7 +340,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
 
           <div className="flex items-center justify-between gap-2">
             <span className="text-geeko-cyan font-mono font-black text-xl sm:text-2xl tracking-tight leading-none">
-              {price && price > 0 ? `$${price.toFixed(2)}` : 'S/P'}
+              {price && price > 0 ? `${price.toFixed(2)} $` : 'S/P'}
             </span>
 
             {showCartButton && !isArchive && (
