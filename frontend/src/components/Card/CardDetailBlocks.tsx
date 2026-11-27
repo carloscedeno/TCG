@@ -266,14 +266,14 @@ export const CardDetailBlocks: React.FC<CardDetailBlocksProps> = ({
             {/* ════════════════════════════════════════════════════════════════
                 BLOQUE 1 (IZQUIERDA DESKTOP / ARRIBA MOBILE): IMAGEN DE LA CARTA
                ════════════════════════════════════════════════════════════════ */}
-            <div className="flex flex-col items-center justify-center px-4 pt-3 pb-2 md:p-6 bg-[#0a0d13] relative">
+            <div className="flex flex-col items-center justify-center px-4 pt-3 pb-2 md:p-5 bg-[#0a0d13] relative">
                 {loading && !displayImage ? (
-                    <div className="w-full max-w-[290px] sm:max-w-[310px] md:max-w-[275px] aspect-[5/7] rounded-2xl bg-white/5 border border-white/10 animate-pulse flex flex-col items-center justify-center gap-2">
+                    <div className="w-full max-w-[290px] sm:max-w-[310px] md:max-w-[295px] aspect-[5/7] rounded-2xl bg-white/5 border border-white/10 animate-pulse flex flex-col items-center justify-center gap-2">
                         <Loader2 size={28} className="text-geeko-cyan animate-spin" />
                         <span className="text-[10px] font-black text-geeko-cyan uppercase tracking-widest">Cargando...</span>
                     </div>
                 ) : (
-                    <div className="relative w-full max-w-[290px] sm:max-w-[310px] md:max-w-[275px] aspect-[5/7] flex items-center justify-center group/card">
+                    <div className="relative w-full max-w-[290px] sm:max-w-[310px] md:max-w-[295px] aspect-[5/7] flex items-center justify-center group/card">
                         <div className={`relative w-full h-full rounded-xl overflow-hidden border transition-all ${isFoilVisual ? 'border-purple-500/60 shadow-[0_0_35px_rgba(168,85,247,0.35)] holo-effect' : 'border-white/15 shadow-[0_20px_55px_rgba(0,0,0,0.9)]'}`}>
                             {isFoilVisual && (
                                 <div className="absolute inset-0 z-20 foil-shimmer opacity-30 mix-blend-overlay pointer-events-none" />
@@ -333,8 +333,8 @@ export const CardDetailBlocks: React.FC<CardDetailBlocksProps> = ({
             {/* ════════════════════════════════════════════════════════════════
                 BLOQUE 2 (CENTRO DESKTOP / MEDIO MOBILE): INFO, LEGALIDAD Y COMPRA
                ════════════════════════════════════════════════════════════════ */}
-            <div className="flex flex-col justify-between px-4 py-3 md:p-6 bg-[#090c11] gap-4 md:overflow-y-auto custom-scrollbar">
-                <div className="space-y-2.5 md:space-y-3">
+            <div className="flex flex-col justify-center px-4 py-3 md:p-5 bg-[#090c11] gap-3.5 md:overflow-y-auto custom-scrollbar">
+                <div className="space-y-2">
                     {/* TCG Header (hidden on mobile when parent modal provides a sticky mobile TCG header) */}
                     <div className={`${hasMobileHeader ? 'hidden md:flex' : 'flex'} items-center gap-2`}>
                         <div className="w-4 h-4 rounded-full bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center overflow-hidden shrink-0">
@@ -404,7 +404,7 @@ export const CardDetailBlocks: React.FC<CardDetailBlocksProps> = ({
                 </div>
 
                 {/* Purchase Card Box */}
-                <div className="rounded-2xl bg-[#072e30] border border-teal-400/20 p-4 flex flex-col gap-3 mt-auto shadow-lg">
+                <div className="rounded-2xl bg-[#072e30] border border-teal-400/20 p-3.5 md:p-4 flex flex-col gap-3 shadow-lg">
                     {/* Top Row: Finish Tabs (Normal / Foil) + Quantity Input */}
                     <div className="flex items-center justify-between gap-2 flex-wrap">
                         {/* Finish tabs with prices */}
@@ -551,9 +551,9 @@ export const CardDetailBlocks: React.FC<CardDetailBlocksProps> = ({
             {/* ════════════════════════════════════════════════════════════════
                 BLOQUE 3 (DERECHA DESKTOP / ABAJO MOBILE): EDICIONES DISPONIBLES
                ════════════════════════════════════════════════════════════════ */}
-            <div className="flex flex-col bg-[#080b10] px-4 pt-3 pb-5 md:p-6 md:pr-5 border-t border-white/10 md:border-t-0 md:min-h-0 md:overflow-hidden">
-                <div className="pb-3 border-b border-white/10 md:pr-10 shrink-0">
-                    <h3 className="text-xs font-black uppercase tracking-wider text-white">
+            <div className="flex flex-col bg-[#080b10] px-4 pt-3 pb-5 md:p-5 md:pr-4 border-t border-white/10 md:border-t-0 md:min-h-0 md:max-h-[470px] md:overflow-hidden">
+                <div className="pb-2.5 border-b border-white/10 md:pr-11 shrink-0">
+                    <h3 className="text-[11px] font-black uppercase tracking-wider text-white">
                         Ediciones disponibles en Geekorium
                     </h3>
                     <div className="mt-1 flex items-center justify-between gap-2">
@@ -568,7 +568,7 @@ export const CardDetailBlocks: React.FC<CardDetailBlocksProps> = ({
 
                 <div
                     data-testid="versions-list-container"
-                    className="md:flex-1 md:overflow-y-auto custom-scrollbar mt-3 space-y-2 md:pr-1"
+                    className="md:flex-1 md:overflow-y-auto custom-scrollbar mt-2.5 space-y-2 md:pr-1"
                 >
                     {loading || !isDetailsLoaded ? (
                         [...Array(3)].map((_, i) => (

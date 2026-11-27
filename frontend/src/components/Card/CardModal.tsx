@@ -198,12 +198,19 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
 
             setDetails(data);
 
-            // PRESERVE SELECTED ID: If the requested `id` (e.g. uuid-foil) exists in the versions list, keep it!
-            // Otherwise, fallback to the base printing_id from the database.
-            let pId = id;
-            if (!data.all_versions?.some((v: any) => v.printing_id === id)) {
-                pId = data.printing_id || data.card_id || id;
-            }
+            // PRESERVE SELECTED ID: Match requested id + finish even when synthetic suffixes (-foil/-nonfoil/-etched) differ
+            const cleanTargetId = id.replace(/-(foil|nonfoil|etched)$/i, '');
+            const targetFinish = (forcedFinish || selectedFinish || 'nonfoil').toLowerCase();
+            const exactVer =
+                data.all_versions?.find((v: any) =>
+                    v.printing_id?.replace(/-(foil|nonfoil|etched)$/i, '') === cleanTargetId &&
+                    (v.finish || (v.is_foil ? 'foil' : 'nonfoil')).toLowerCase() === targetFinish
+                ) ||
+                data.all_versions?.find((v: any) =>
+                    v.printing_id?.replace(/-(foil|nonfoil|etched)$/i, '') === cleanTargetId
+                );
+
+            const pId = exactVer?.printing_id || data.printing_id || data.card_id || id;
 
             setActivePrintingId(pId);
             console.log("CardModal: Details set with Printing ID:", pId);
@@ -371,12 +378,12 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
             className="fixed inset-0 z-[300] flex items-center justify-center bg-black/80 backdrop-blur-md p-2.5 sm:p-4 md:p-6 animate-in fade-in duration-200 overflow-hidden"
             onClick={handleBackdropClick}
         >
-            {/* Modal Content — 3 Equal-Size Blocks (stacked cleanly vertically on mobile) */}
+            {/* Modal Content — 3 Equal-Size Compact Blocks (stacked vertically on mobile) */}
             <div
                 data-testid="card-modal"
                 role="dialog"
                 aria-modal="true"
-                className="w-full max-w-[440px] md:max-w-6xl max-h-[94dvh] md:h-[620px] md:max-h-[94vh] rounded-[24px] md:rounded-[28px] border border-white/15 shadow-[0_0_100px_rgba(0,0,0,0.85)] flex flex-col overflow-y-auto md:overflow-hidden relative bg-[#090c11] custom-scrollbar"
+                className="w-full max-w-[440px] md:max-w-5xl max-h-[94dvh] md:h-auto md:max-h-[90vh] rounded-[24px] md:rounded-[28px] border border-white/15 shadow-[0_0_100px_rgba(0,0,0,0.85)] flex flex-col overflow-y-auto md:overflow-hidden relative bg-[#090c11] custom-scrollbar"
                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
             >
                 {/* Sticky Header for mobile: TCG badge + red-outlined X matching mobile wireframe */}
