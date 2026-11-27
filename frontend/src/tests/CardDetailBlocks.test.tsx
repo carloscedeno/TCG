@@ -170,15 +170,33 @@ describe('CardDetailBlocks (3-Block Detail View)', () => {
     expect(onSelectVersion).toHaveBeenCalledWith('p-spm-norm', 'nonfoil');
   });
 
-  it('resolves Scryfall alias set codes (slds -> sld) for localized non-English MTG images with fallback preserved', () => {
-    const res = resolveLocalizedCardImage({
+  it('uses English reference image for normal non-English MTG stock and Japanese art only for Japanese-exclusive editions', () => {
+    const solJp = resolveLocalizedCardImage({
       productImage: 'https://sortswift.nyc3.cdn.digitaloceanspaces.com/cards/555449.jpg',
       language: 'JP',
       game: 'MTG',
       setCode: 'slds',
       collectorNumber: '1604',
     });
-    expect(res.imageUrl).toBe('https://api.scryfall.com/cards/sld/1604/ja?format=image&version=normal');
-    expect(res.fallbackImageUrl).toBe('https://sortswift.nyc3.cdn.digitaloceanspaces.com/cards/555449.jpg');
+    expect(solJp.imageUrl).toBe('https://sortswift.nyc3.cdn.digitaloceanspaces.com/cards/555449.jpg');
+
+    const kithkinEs = resolveLocalizedCardImage({
+      productImage: 'https://sortswift.nyc3.cdn.digitaloceanspaces.com/cards/15550_ES.jpg',
+      language: 'ES',
+      game: 'MTG',
+      setCode: 'lrw',
+      collectorNumber: '26',
+    });
+    expect(kithkinEs.imageUrl).toBe('https://sortswift.nyc3.cdn.digitaloceanspaces.com/cards/15550.jpg');
+
+    const staJpOnly = resolveLocalizedCardImage({
+      productImage: 'https://sortswift.nyc3.cdn.digitaloceanspaces.com/cards/235900.jpg',
+      language: 'JP',
+      game: 'MTG',
+      setCode: 'sta',
+      collectorNumber: '90',
+    });
+    expect(staJpOnly.imageUrl).toBe('https://api.scryfall.com/cards/sta/90/ja?format=image&version=normal');
+    expect(staJpOnly.fallbackImageUrl).toBe('https://sortswift.nyc3.cdn.digitaloceanspaces.com/cards/235900.jpg');
   });
 });

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { RotateCw, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
 import { fetchCardDetails, addToCart } from '../../utils/api';
+import { resolveReferenceCardImage } from '../../utils/cardLanguage';
 import { CardImage } from './CardImage';
 
 export interface CardFace {
@@ -39,10 +40,13 @@ export interface CardProps {
   accessory_id?: string;
   restocked_at?: string;
   additional_images?: string[];
+  game?: string;
+  collector_number?: string;
+  language?: string;
   onClick?: () => void;
 }
 
-export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, price, original_price, discount_percentage, card_id, type, card_faces, viewMode = 'grid', total_stock, finish, is_foil, isArchive, showCartButton = false, is_accessory, accessory_id, additional_images, restocked_at, onClick }) => {
+export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, price, original_price, discount_percentage, card_id, type, card_faces, viewMode = 'grid', total_stock, finish, is_foil, isArchive, showCartButton = false, is_accessory, accessory_id, additional_images, restocked_at, game, collector_number, language, onClick }) => {
   const isNew = restocked_at ? (Date.now() - new Date(restocked_at).getTime()) < 14 * 24 * 60 * 60 * 1000 : false;
   const [currentFaceIndex, setCurrentFaceIndex] = useState(0);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -74,7 +78,17 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
   const isPresale = currentName?.toLowerCase().includes('(preventa)');
   const cleanName = isPresale ? currentName.replace(/\(preventa\)/gi, '').trim() : currentName;
 
-  const imgSrc = allImages[currentImageIndex] || allImages[0] || '';
+  const rawImgSrc = allImages[currentImageIndex] || allImages[0] || '';
+  const { imageUrl: imgSrc, fallbackImageUrl: imgFallbackSrc } = React.useMemo(() => {
+    if (is_accessory) return { imageUrl: rawImgSrc, fallbackImageUrl: undefined };
+    return resolveReferenceCardImage({
+      productImage: rawImgSrc,
+      setCode: set,
+      collectorNumber: collector_number,
+      language,
+      game,
+    });
+  }, [is_accessory, rawImgSrc, set, collector_number, language, game]);
 
   const handleFlip = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -132,7 +146,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
         className="flex items-center gap-4 px-4 py-3 bg-white dark:bg-black/40 hover:bg-neutral-50 dark:hover:bg-neutral-900 border border-neutral-200 dark:border-white/5 hover:border-geeko-cyan/50 dark:hover:border-geeko-cyan/30 rounded-xl transition-all cursor-pointer group shadow-sm dark:shadow-none"
       >
         <div className="w-12 h-16 bg-neutral-200 dark:bg-[#1a1a1a] rounded-md overflow-hidden flex-shrink-0 relative">
-          <CardImage src={imgSrc} alt={currentName} size="small" fallbackIconSize={20} className="rounded-md" />
+          <CardImage src={imgSrc} fallbackSrc={imgFallbackSrc} alt={currentName} size="small" fallbackIconSize={20} className="rounded-md" />
           {!!hasMultipleFaces && (
             <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
               <RotateCw size={12} className="text-white" />
@@ -248,7 +262,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
             <div className="absolute inset-0 z-10 foil-shimmer opacity-30 mix-blend-overlay pointer-events-none" />
           )}
 
-          <CardImage src={imgSrc} alt={currentName} size="small" fallbackIconSize={40} className="group-hover:scale-105 transition-transform duration-500" />
+          <CardImage src={imgSrc} fallbackSrc={imgFallbackSrc} alt={currentName} size="small" fallbackIconSize={40} className="group-hover:scale-105 transition-transform duration-500" />
 
           {!hasMultipleFaces && allImages.length > 1 && (
             <>

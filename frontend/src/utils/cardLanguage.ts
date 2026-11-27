@@ -81,20 +81,52 @@ export function getScryfallLanguageCode(raw?: string | null): string {
   return LANG_SCRYFALL_MAP[canonical] || canonical.toLowerCase();
 }
 
-const LOCALIZED_URL_REGEX = /_(ES|JP|PT|RU|IT|FR|KO|DE|CT|ZHS|ZHT)\./i;
+const LOCALIZED_URL_REGEX = /_(ES|JP|PT|RU|IT|FR|KO|DE|CT|ZHS|ZHT)(\.[a-z0-9]+(?:\?.*)?)$/i;
+const SCRYFALL_NON_EN_REGEX = /\/(es|ja|ko|de|ru|pt|it|fr|zht|zhs)\?format=image/i;
 
 const SCRYFALL_SET_ALIAS: Record<string, string> = {
   slds: 'sld',
   csos: 'soc',
   ppmot: 'pmom',
+  zr: 'znr',
 };
+
+const JAPANESE_ONLY_MTG_SETS = new Set(['pwcs', 'pj21', 'plg21']);
 
 export function getScryfallSetCode(setCode?: string | null): string {
   const rawSet = (setCode || '').trim().toLowerCase();
   return SCRYFALL_SET_ALIAS[rawSet] || rawSet;
 }
 
-export function resolveLocalizedCardImage(opts: {
+export function isJapaneseOnlyMtgPrinting(setCode?: string | null, collectorNumber?: string | null): boolean {
+  const scryfallSet = getScryfallSetCode(setCode);
+  const cleanNum = (collectorNumber || '').trim();
+  if (!scryfallSet) return false;
+  if (JAPANESE_ONLY_MTG_SETS.has(scryfallSet)) return true;
+  // War of the Spark Japanese Alternate-Art Anime Planeswalkers (e.g. 97★)
+  if (scryfallSet === 'war' && /[★*]/.test(cleanNum)) return true;
+  // Strixhaven Mystical Archive Japanese Alternate-Art (#64-#126)
+  if (scryfallSet === 'sta') {
+    const numMatch = cleanNum.match(/^(\d+)/);
+    if (numMatch) {
+      const n = parseInt(numMatch[1], 10);
+      if (n >= 64 && n <= 126) return true;
+    }
+  }
+  return false;
+}
+
+function isLocalizedNonEnglishUrl(url: string): boolean {
+  return LOCALIZED_URL_REGEX.test(url) || SCRYFALL_NON_EN_REGEX.test(url);
+}
+
+/**
+ * Resolves the card reference image:
+ * - Default: English reference image so any player can read/recognize the card regardless of physical copy language.
+ * - Exception: Japanese-only MTG printings (e.g., WAR anime ★, STA #64-126 JP archive, JP-only promos) keep their Japanese art.
+ *   Also falls back cleanly to the stored image whenever an English asset is unavailable.
+ */
+export function resolveReferenceCardImage(opts: {
   productImage?: string | null;
   printingImage?: string | null;
   language?: string | null;
@@ -105,38 +137,71 @@ export function resolveLocalizedCardImage(opts: {
   const productImg = (opts.productImage || '').trim();
   const printingImg = (opts.printingImage || '').trim();
   const baseFallback = productImg || printingImg || '';
-  const lang = normalizeLanguageCode(opts.language);
+  const isMtg = !opts.game || ['MTG', 'MAGIC', '22'].includes(String(opts.game).toUpperCase());
+  const scryfallSet = getScryfallSetCode(opts.setCode);
+  const cleanNum = (opts.collectorNumber || '').trim();
 
-  if (lang === 'EN') {
+  // 1. Japanese-only MTG printings keep their Japanese-only artwork
+  if (isMtg && isJapaneseOnlyMtgPrinting(scryfallSet, cleanNum)) {
+    if (baseFallback && isLocalizedNonEnglishUrl(baseFallback)) {
+      return { imageUrl: baseFallback };
+    }
+    if (scryfallSet && cleanNum) {
+      return {
+        imageUrl: `https://api.scryfall.com/cards/${encodeURIComponent(scryfallSet)}/${encodeURIComponent(cleanNum)}/ja?format=image&version=normal`,
+        fallbackImageUrl: baseFallback || undefined,
+      };
+    }
+    return { imageUrl: baseFallback };
+  }
+
+  // 2. Non-MTG TCGs keep their stored catalog image
+  if (!isMtg) {
     return {
-      imageUrl: productImg || printingImg || '',
-      fallbackImageUrl: productImg && printingImg && productImg !== printingImg ? printingImg : undefined,
+      imageUrl: printingImg || productImg || '',
+      fallbackImageUrl: printingImg && productImg && printingImg !== productImg ? productImg : undefined,
     };
   }
 
-  // If DB product already stores a localized asset (e.g. *_ES.jpg, *_JP.jpg), prefer it directly
-  if (productImg && LOCALIZED_URL_REGEX.test(productImg)) {
+  // 3. Normal MTG printings: prefer an already-English printing or product image
+  if (printingImg && !isLocalizedNonEnglishUrl(printingImg)) {
+    return {
+      imageUrl: printingImg,
+      fallbackImageUrl: productImg && productImg !== printingImg ? productImg : undefined,
+    };
+  }
+  if (productImg && !isLocalizedNonEnglishUrl(productImg)) {
     return {
       imageUrl: productImg,
       fallbackImageUrl: printingImg && printingImg !== productImg ? printingImg : undefined,
     };
   }
 
-  // For MTG, try Scryfall localized image endpoint when product/printing lacks localized file suffix
-  const isMtg = !opts.game || ['MTG', 'MAGIC', '22'].includes(String(opts.game).toUpperCase());
-  const scryfallSet = getScryfallSetCode(opts.setCode);
-  const cleanNum = (opts.collectorNumber || '').trim();
-  if (isMtg && scryfallSet && scryfallSet !== '??' && cleanNum) {
-    const scryfallLang = getScryfallLanguageCode(lang);
-    const localizedUrl = `https://api.scryfall.com/cards/${encodeURIComponent(scryfallSet)}/${encodeURIComponent(cleanNum)}/${scryfallLang}?format=image&version=normal`;
+  // 4. Strip SortSwift _ES/_JP/_KO/... suffix to load the English reference image directly from CDN, keeping raw image as fallback
+  if (baseFallback && LOCALIZED_URL_REGEX.test(baseFallback)) {
+    const strippedEnglish = baseFallback.replace(LOCALIZED_URL_REGEX, '$2');
+    const scryfallEn =
+      scryfallSet && scryfallSet !== '??' && cleanNum
+        ? `https://api.scryfall.com/cards/${encodeURIComponent(scryfallSet)}/${encodeURIComponent(cleanNum)}/en?format=image&version=normal`
+        : undefined;
     return {
-      imageUrl: localizedUrl,
+      imageUrl: strippedEnglish,
+      fallbackImageUrl: scryfallEn || baseFallback,
+    };
+  }
+
+  // 5. Try Scryfall English printing URL, falling back to stored image (which rescues any uncataloged JP-only card)
+  if (scryfallSet && scryfallSet !== '??' && cleanNum) {
+    return {
+      imageUrl: `https://api.scryfall.com/cards/${encodeURIComponent(scryfallSet)}/${encodeURIComponent(cleanNum)}/en?format=image&version=normal`,
       fallbackImageUrl: baseFallback || undefined,
     };
   }
 
   return { imageUrl: baseFallback };
 }
+
+export const resolveLocalizedCardImage = resolveReferenceCardImage;
 
 const LANGUAGE_ORDER = ['EN', 'JP', 'ES', 'KO', 'DE', 'RU', 'PT', 'IT', 'FR', 'CT', 'CS'];
 
