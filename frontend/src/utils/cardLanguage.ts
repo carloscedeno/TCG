@@ -83,6 +83,17 @@ export function getScryfallLanguageCode(raw?: string | null): string {
 
 const LOCALIZED_URL_REGEX = /_(ES|JP|PT|RU|IT|FR|KO|DE|CT|ZHS|ZHT)\./i;
 
+const SCRYFALL_SET_ALIAS: Record<string, string> = {
+  slds: 'sld',
+  csos: 'soc',
+  ppmot: 'pmom',
+};
+
+export function getScryfallSetCode(setCode?: string | null): string {
+  const rawSet = (setCode || '').trim().toLowerCase();
+  return SCRYFALL_SET_ALIAS[rawSet] || rawSet;
+}
+
 export function resolveLocalizedCardImage(opts: {
   productImage?: string | null;
   printingImage?: string | null;
@@ -113,11 +124,11 @@ export function resolveLocalizedCardImage(opts: {
 
   // For MTG, try Scryfall localized image endpoint when product/printing lacks localized file suffix
   const isMtg = !opts.game || ['MTG', 'MAGIC', '22'].includes(String(opts.game).toUpperCase());
-  const cleanSet = (opts.setCode || '').trim().toLowerCase();
+  const scryfallSet = getScryfallSetCode(opts.setCode);
   const cleanNum = (opts.collectorNumber || '').trim();
-  if (isMtg && cleanSet && cleanSet !== '??' && cleanNum) {
+  if (isMtg && scryfallSet && scryfallSet !== '??' && cleanNum) {
     const scryfallLang = getScryfallLanguageCode(lang);
-    const localizedUrl = `https://api.scryfall.com/cards/${encodeURIComponent(cleanSet)}/${encodeURIComponent(cleanNum)}/${scryfallLang}?format=image`;
+    const localizedUrl = `https://api.scryfall.com/cards/${encodeURIComponent(scryfallSet)}/${encodeURIComponent(cleanNum)}/${scryfallLang}?format=image&version=normal`;
     return {
       imageUrl: localizedUrl,
       fallbackImageUrl: baseFallback || undefined,

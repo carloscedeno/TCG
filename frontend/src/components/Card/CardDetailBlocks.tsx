@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { X, ShoppingCart, RotateCw, Loader2, ChevronLeft, ChevronRight, Minus, Plus } from 'lucide-react';
 import { CardImage } from './CardImage';
 import { normalizeGameCode, getTcgConfig } from '../../config/tcgRegistry';
-import { getLanguageBadgeLabel, normalizeLanguageCode } from '../../utils/cardLanguage';
+import { getLanguageBadgeLabel, normalizeLanguageCode, getScryfallSetCode } from '../../utils/cardLanguage';
 
 const MTG_LEGALITY_FORMATS: { key: string; label: string }[] = [
     { key: 'standard', label: 'STANDARD' },
@@ -40,14 +40,23 @@ export interface CardDetailBlocksProps {
     hasMobileHeader?: boolean;
 }
 
-const VersionMiniature: React.FC<{ imageUrl?: string; setCode?: string; alt: string }> = ({
+const VersionMiniature: React.FC<{ imageUrl?: string; fallbackImageUrl?: string; setCode?: string; alt: string }> = ({
     imageUrl,
+    fallbackImageUrl,
     setCode,
     alt,
 }) => {
+    const [useFallback, setUseFallback] = useState(false);
     const [imgFailed, setImgFailed] = useState(false);
 
-    if (!imageUrl || imgFailed) {
+    useEffect(() => {
+        setUseFallback(false);
+        setImgFailed(false);
+    }, [imageUrl, fallbackImageUrl]);
+
+    const activeSrc = useFallback && fallbackImageUrl ? fallbackImageUrl : imageUrl;
+
+    if (!activeSrc || imgFailed) {
         return (
             <div className="w-9 h-12 rounded-md bg-neutral-900 border border-white/15 flex items-center justify-center text-[10px] font-black uppercase text-neutral-300 shrink-0">
                 {(setCode || '??').toUpperCase()}
@@ -57,10 +66,17 @@ const VersionMiniature: React.FC<{ imageUrl?: string; setCode?: string; alt: str
 
     return (
         <img
-            src={imageUrl}
+            src={activeSrc}
             alt={alt}
             loading="lazy"
-            onError={() => setImgFailed(true)}
+            referrerPolicy="no-referrer"
+            onError={() => {
+                if (!useFallback && fallbackImageUrl && fallbackImageUrl !== activeSrc) {
+                    setUseFallback(true);
+                } else {
+                    setImgFailed(true);
+                }
+            }}
             className="w-9 h-12 rounded-md object-cover border border-white/15 bg-neutral-900 shrink-0 shadow-sm"
         />
     );
@@ -670,7 +686,7 @@ export const CardDetailBlocks: React.FC<CardDetailBlocksProps> = ({
                                 activePrintingId === group.etched?.printing_id ||
                                 (Array.isArray(group.variants) && group.variants.some((v: any) => v.printing_id === activePrintingId));
                             const setCode = (group.base?.set_code || '').toUpperCase();
-                            const setCodeLower = (group.base?.set_code || '').toLowerCase();
+                            const setCodeLower = getScryfallSetCode(group.base?.set_code);
                             const thumbUrl = (isGroupActive && activeVersion?.image_url) || group.base?.image_url || currentImage;
 
                             return (
@@ -717,6 +733,7 @@ export const CardDetailBlocks: React.FC<CardDetailBlocksProps> = ({
                                     <div className="flex items-center gap-2.5 flex-1 min-w-0">
                                         <VersionMiniature
                                             imageUrl={thumbUrl}
+                                            fallbackImageUrl={(isGroupActive && activeVersion?.fallback_image_url) || group.base?.fallback_image_url}
                                             setCode={setCode}
                                             alt={`${details.name} (${setCode})`}
                                         />

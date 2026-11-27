@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { CardDetailBlocks } from '../components/Card/CardDetailBlocks';
+import { resolveLocalizedCardImage } from '../utils/cardLanguage';
 
 const mockDetails = {
   printing_id: 'p-pc-foil',
@@ -167,5 +168,17 @@ describe('CardDetailBlocks (3-Block Detail View)', () => {
     // Clicking separated Normal option in Block 3 selects that exact printing_id and nonfoil finish
     fireEvent.click(screen.getByText('120.00 $'));
     expect(onSelectVersion).toHaveBeenCalledWith('p-spm-norm', 'nonfoil');
+  });
+
+  it('resolves Scryfall alias set codes (slds -> sld) for localized non-English MTG images with fallback preserved', () => {
+    const res = resolveLocalizedCardImage({
+      productImage: 'https://sortswift.nyc3.cdn.digitaloceanspaces.com/cards/555449.jpg',
+      language: 'JP',
+      game: 'MTG',
+      setCode: 'slds',
+      collectorNumber: '1604',
+    });
+    expect(res.imageUrl).toBe('https://api.scryfall.com/cards/sld/1604/ja?format=image&version=normal');
+    expect(res.fallbackImageUrl).toBe('https://sortswift.nyc3.cdn.digitaloceanspaces.com/cards/555449.jpg');
   });
 });
