@@ -31,6 +31,35 @@ function cleanText(val: unknown): string {
   return String(val).trim();
 }
 
+function normalizeCardBaseName(rawName: string): {
+  baseName: string;
+  isBorderless: boolean;
+  isShowcase: boolean;
+  isFullArt: boolean;
+} {
+  const raw = String(rawName || "").trim();
+  if (!raw) return { baseName: "", isBorderless: false, isShowcase: false, isFullArt: false };
+  if (/\(preventa\)/i.test(raw)) {
+    return { baseName: raw, isBorderless: false, isShowcase: false, isFullArt: false };
+  }
+  let clean = raw
+    .replace(/\s*\(\s*French\)\s*-\s*"[^"]*"\s*$/i, "")
+    .trim();
+  const variantRe =
+    /\s*\((?:[0-9]{1,5}|[A-Z]{1,4}|(?:Borderless|Showcase|Extended|Retro|Full\s*Art|Anime|Alternate\s*Art|Alt\s*Art|JP\s*Alt(?:ernate)?\s*Art|Surge|Rainbow|Fracture|Galaxy|Textured|Halo|Confetti|Raised|Ripple|Gilded|Step-and-Compleat|Oil\s*Slick|Serialized|Overnumbered|Draft\s*Weekend|Reminder\s*Text|DE\s*Exclusive|Prerelease|Promo|Foil|Etched)[^)]*|Bear|Beard,\s*Jr\.|Blue Mountains|Danforth)\)\s*$/i;
+  let prev: string;
+  do {
+    prev = clean;
+    clean = clean.replace(variantRe, "").trim();
+  } while (clean !== prev);
+  return {
+    baseName: clean || raw,
+    isBorderless: /\(Borderless\)/i.test(raw),
+    isShowcase: /\(Showcase/i.test(raw),
+    isFullArt: /\(Full\s*Art\)/i.test(raw),
+  };
+}
+
 function normalizeSetName(sname: string): string {
   if (!sname) return "";
   let s = sname.trim();
@@ -340,7 +369,7 @@ serve(async (req: Request) => {
     const newCardNamesSet = new Set<string>();
     for (const pid of unknownPids) {
       const d = tcgDetailsMap[pid];
-      const cname = (d?.productName || `Card ${pid}`).trim();
+      const cname = normalizeCardBaseName(d?.productName || `Card ${pid}`).baseName;
       if (cname) newCardNamesSet.add(cname);
     }
 
@@ -366,7 +395,8 @@ serve(async (req: Request) => {
         const cid = printingIdToCardId.get(prod.printing_id);
         const gid = GAME_CODE_TO_ID[prod.game] || 22;
         if (cid) {
-          cardIdByGameAndName.set(`${gid}|${String(prod.name).trim().toLowerCase()}`, cid);
+          const baseProdName = normalizeCardBaseName(String(prod.name)).baseName.toLowerCase();
+          cardIdByGameAndName.set(`${gid}|${baseProdName}`, cid);
         }
       }
     }
@@ -428,13 +458,14 @@ serve(async (req: Request) => {
       let setId: number;
       let setCode: string;
       let cardId: string;
+      const normMeta = normalizeCardBaseName(details.productName || `Card ${pid}`);
 
       if (siblingPrinting && siblingPrinting.card_id && siblingPrinting.set_id) {
         setId = siblingPrinting.set_id;
         setCode = siblingPrinting.set_code || "set";
         cardId = siblingPrinting.card_id;
       } else {
-        const cardName = (details.productName || `Card ${pid}`).trim();
+        const cardName = normMeta.baseName;
         const rawSetName = (details.setName || "SortSwift Ingestion").trim();
         const normSname = normalizeSetName(rawSetName);
         let releaseDate = customAttrs.releaseDate || null;
@@ -514,6 +545,9 @@ serve(async (req: Request) => {
         rarity,
         is_foil: isFoil,
         is_non_foil: !isFoil,
+        is_borderless: normMeta.isBorderless,
+        is_showcase: normMeta.isShowcase,
+        is_full_art: normMeta.isFullArt,
         image_url: officialImg,
         image_url_normal: officialImg,
         image_url_small:
@@ -614,7 +648,7 @@ serve(async (req: Request) => {
       const details = tcgDetailsMap[pid] || {};
       const customAttrs = details.customAttributes || {};
 
-      const cardName = (details.productName || existingProd?.name || `Card ${pid}`).trim();
+      const cardName = normalizeCardBaseName(details.productName || existingProd?.name || `Card ${pid}`).baseName;
       const setName = (details.setName || existingProd?.set_name || "SortSwift Ingestion").trim();
       const setCode = printingObj.set_code || existingProd?.set_code || "set";
       const collectorNum = printingObj.collector_number || cleanText(customAttrs.number) || "0";
@@ -802,8 +836,9 @@ serve(async (req: Request) => {
         const stockChanged = prevStock !== newStock;
         const locChanged = existing.physical_location !== item.physical_location;
         const priceChanged = Math.abs(prevPrice - item.price) > 0.009;
+        const nameChanged = String(existing.name || "").trim() !== item.name;
 
-        if (stockChanged || locChanged || priceChanged) {
+        if (stockChanged || locChanged || priceChanged || nameChanged) {
           updatedCount += 1;
           updatedUnits += newStock;
           byTcg[item.game].updated += 1;
