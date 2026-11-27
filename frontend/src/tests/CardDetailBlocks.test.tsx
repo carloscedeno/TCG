@@ -51,8 +51,10 @@ const mockVersionGroups = [
       stock: 4,
       finish: 'foil',
       is_foil: true,
+      language: 'EN',
     },
     etched: null,
+    languages: ['EN', 'JP', 'ES'],
     totalStock: 4,
   },
   {
@@ -95,8 +97,9 @@ const mockVersionGroups = [
 ];
 
 describe('CardDetailBlocks (3-Block Detail View)', () => {
-  it('renders MTG 6-format legalities, collector number, stock, discount, and separated Normal/Foil versions', () => {
+  it('renders MTG 6-format legalities, collector number, stock, discount, language pills, and separated Normal/Foil versions', () => {
     const onSelectVersion = jest.fn();
+    const onSelectLanguage = jest.fn();
     const onAddToCart = jest.fn();
 
     render(
@@ -107,6 +110,7 @@ describe('CardDetailBlocks (3-Block Detail View)', () => {
         onClose={jest.fn()}
         activePrintingId="p-pc-foil"
         selectedFinish="foil"
+        selectedLanguage="EN"
         activeGroup={mockVersionGroups[0]}
         activeVersion={mockVersionGroups[0].foil}
         versionGroups={mockVersionGroups}
@@ -114,6 +118,7 @@ describe('CardDetailBlocks (3-Block Detail View)', () => {
         hasMultipleFaces={false}
         onFlipFace={jest.fn()}
         onSelectVersion={onSelectVersion}
+        onSelectLanguage={onSelectLanguage}
         onAddToCart={onAddToCart}
         isAdding={false}
         addedSuccess={false}
@@ -128,6 +133,12 @@ describe('CardDetailBlocks (3-Block Detail View)', () => {
     expect(screen.getByText(/10% OFF/i)).toBeInTheDocument();
     expect(screen.getAllByText('DISP: 4').length).toBeGreaterThanOrEqual(1);
     expect(screen.getByTestId('finish-tab-foil')).toHaveTextContent(/^FOIL$/);
+    expect(screen.getByTestId('lang-btn-en')).toHaveTextContent('ENG');
+    expect(screen.getByTestId('lang-btn-en')).toHaveAttribute('data-active', 'true');
+    expect(screen.getByTestId('lang-btn-jp')).toHaveTextContent('JPN');
+    expect(screen.getByTestId('lang-btn-es')).toHaveTextContent('SPN');
+    fireEvent.click(screen.getByTestId('lang-btn-es'));
+    expect(onSelectLanguage).toHaveBeenCalledWith('ES');
     expect(screen.getByTestId('version-stock-label')).toHaveTextContent('DISP: 4');
     expect(screen.getByTestId('quantity-control').className).toContain('w-28 h-10');
     expect(screen.getByTestId('add-to-cart-button').className).toContain('w-28 h-10');

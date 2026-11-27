@@ -4,6 +4,7 @@ import { getOptimizedScryfallUrl } from '../../utils/imageOptimization';
 
 interface CardImageProps {
   src?: string;
+  fallbackSrc?: string;
   alt: string;
   className?: string;
   testId?: string;
@@ -13,23 +14,26 @@ interface CardImageProps {
   placeholderSrc?: string;
 }
 
-export const CardImage: React.FC<CardImageProps> = ({ src, alt, className = '', testId = 'product-image', size = 'normal', fallbackIconSize = 40, objectFit = 'cover', placeholderSrc }) => {
+export const CardImage: React.FC<CardImageProps> = ({ src, fallbackSrc, alt, className = '', testId = 'product-image', size = 'normal', fallbackIconSize = 40, objectFit = 'cover', placeholderSrc }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [useFallback, setUseFallback] = useState(false);
+  const [useBackupSrc, setUseBackupSrc] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
-  
-  const optimizedSrc = useFallback ? src : getOptimizedScryfallUrl(src, size);
+
+  const activeSrc = useBackupSrc && fallbackSrc ? fallbackSrc : src;
+  const optimizedSrc = useFallback ? activeSrc : getOptimizedScryfallUrl(activeSrc, size);
 
   // Auto-generate a small placeholder for progressive loading if requesting a larger image
-  const autoPlaceholderSrc = placeholderSrc || (size !== 'small' ? getOptimizedScryfallUrl(src, 'small') : undefined);
+  const autoPlaceholderSrc = useBackupSrc ? undefined : (placeholderSrc || (size !== 'small' ? getOptimizedScryfallUrl(activeSrc, 'small') : undefined));
 
-  // Reiniciar el estado si cambia la imagen (ej: flip de DFC)
+  // Reiniciar el estado si cambia la imagen (ej: flip de DFC o cambio de idioma)
   useEffect(() => {
     setIsLoaded(false);
     setHasError(false);
     setUseFallback(false);
-  }, [src]); // Depender de src en vez de optimizedSrc para evitar loops
+    setUseBackupSrc(false);
+  }, [src, fallbackSrc]);
 
   useEffect(() => {
     if (imgRef.current?.complete && imgRef.current.naturalWidth > 0) {
@@ -38,8 +42,11 @@ export const CardImage: React.FC<CardImageProps> = ({ src, alt, className = '', 
   }, [optimizedSrc]);
 
   const handleError = () => {
-    if (!useFallback && src !== optimizedSrc) {
+    if (!useFallback && activeSrc !== optimizedSrc) {
       setUseFallback(true);
+    } else if (!useBackupSrc && fallbackSrc && fallbackSrc !== activeSrc) {
+      setUseBackupSrc(true);
+      setUseFallback(false);
     } else {
       setHasError(true);
     }

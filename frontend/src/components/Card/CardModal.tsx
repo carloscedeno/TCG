@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { fetchCardDetails, addToCart } from '../../utils/api';
 import { getTcgConfig, normalizeGameCode } from '../../config/tcgRegistry';
+import { normalizeLanguageCode, groupCardVersions, resolveActiveVersion } from '../../utils/cardLanguage';
 import { CardDetailBlocks } from './CardDetailBlocks';
 import { useSeoMeta, buildCardProductSeo } from '../../hooks/useSeoMeta';
 
@@ -91,6 +92,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
     const [currentFaceIndex, setCurrentFaceIndex] = useState(0);
     const [activePrintingId, setActivePrintingId] = useState<string | null>(null);
     const [selectedFinish, setSelectedFinish] = useState<'nonfoil' | 'foil' | 'etched'>('nonfoil');
+    const [selectedLanguage, setSelectedLanguage] = useState<string>('EN');
 
     // ... useEffect ...
 
@@ -213,6 +215,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
             const pId = exactVer?.printing_id || data.printing_id || data.card_id || id;
 
             setActivePrintingId(pId);
+            setSelectedLanguage(normalizeLanguageCode(exactVer?.language || data.language));
             console.log("CardModal: Details set with Printing ID:", pId);
         } catch (err: any) {
             console.error("CardModal: Failed to load details", err);
@@ -225,16 +228,21 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
 
     const handleSelectVersion = (id: string, finish?: 'nonfoil' | 'foil' | 'etched') => {
         const cleanId = id.replace(/-foil$/, '').replace(/-nonfoil$/, '').replace(/-etched$/, '');
-        const existsInLoaded = versionGroups.some((g: any) =>
-            [g.normal, g.foil, g.etched, g.base].some(
+        const matchingGroup = versionGroups.find((g: any) =>
+            [g.normal, g.foil, g.etched, g.base, ...(g.variants || [])].some(
                 (v: any) => v && (v.printing_id === id || v.printing_id?.replace(/-(foil|nonfoil|etched)$/, '') === cleanId)
             )
         );
 
-        if (existsInLoaded) {
-            setActivePrintingId(id);
+        if (matchingGroup) {
+            const targetFinish = finish || selectedFinish;
+            const resolved = resolveActiveVersion(matchingGroup, targetFinish, selectedLanguage);
+            setActivePrintingId(resolved?.printing_id || id);
             if (finish) {
                 setSelectedFinish(finish);
+            }
+            if (resolved?.language) {
+                setSelectedLanguage(normalizeLanguageCode(resolved.language));
             }
             setCurrentFaceIndex(0);
             return;
@@ -246,6 +254,28 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
         loadCardDetails(id, true, finish);
     };
 
+    const handleSelectLanguage = (language: string) => {
+        const normLang = normalizeLanguageCode(language);
+        setSelectedLanguage(normLang);
+        if (!activeGroup) return;
+
+        const variants: any[] = Array.isArray(activeGroup.variants) ? activeGroup.variants : [];
+        const matchSameFinish = variants.find(
+            (v) =>
+                normalizeLanguageCode(v.language) === normLang &&
+                ((v.finish || (v.is_foil ? 'foil' : 'nonfoil')).toLowerCase() === selectedFinish)
+        );
+        const matchAnyFinish = matchSameFinish || variants.find((v) => normalizeLanguageCode(v.language) === normLang);
+        if (matchAnyFinish) {
+            if (matchAnyFinish.printing_id) setActivePrintingId(matchAnyFinish.printing_id);
+            const nextFinish = (matchAnyFinish.finish || (matchAnyFinish.is_foil ? 'foil' : 'nonfoil')).toLowerCase();
+            if (nextFinish === 'foil' || nextFinish === 'etched' || nextFinish === 'nonfoil') {
+                setSelectedFinish(nextFinish);
+            }
+        }
+        setCurrentFaceIndex(0);
+    };
+
     const handleAddToCart = async (quantity: number = 1) => {
         if (!activePrintingId) return;
 
@@ -253,7 +283,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
         try {
             // Use the real printing_id (strip any synthetic suffix before calling RPC)
             const baseId = activePrintingId.replace(/-foil$/, '').replace(/-nonfoil$/, '').replace(/-etched$/, '');
-            const result = await addToCart(baseId, Math.max(1, quantity), selectedFinish, !!details?.is_accessory);
+            const result = await addToCart(baseId, Math.max(1, quantity), selectedFinish, !!details?.is_accessory, activeVersion?.product_id);
             if (result && !result.success) {
                 alert(result.message || result.error || 'No se pudo agregar al carrito');
                 setIsAdding(false);
@@ -284,58 +314,22 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
     };
 
     const versionGroups = useMemo(() => {
-        if (!details?.all_versions) return [];
-
-        const groups = (Array.isArray(details.all_versions) ? details.all_versions : []).reduce((acc: any, v: any) => {
-            const key = `${v.set_code || 'unk'}-${v.collector_number || Math.random()}`;
-            if (!acc[key]) {
-                const isNormal = !(v.is_foil || v.finish === 'foil' || v.finish === 'etched');
-                acc[key] = {
-                    base: v,
-                    normal: isNormal ? v : null,
-                    foil: (v.is_foil || v.finish === 'foil') ? v : null,
-                    etched: v.finish === 'etched' ? v : null,
-                    totalStock: 0,
-                };
-            } else {
-                if (!(v.is_foil || v.finish === 'foil' || v.finish === 'etched')) acc[key].normal = v;
-                else if (v.finish === 'etched') acc[key].etched = v;
-                else acc[key].foil = v;
-            }
-            return acc;
-        }, {} as Record<string, any>);
-
-        Object.values(groups).forEach((g: any) => {
-            g.base = g.normal || g.foil || g.etched || g.base;
-            g.totalStock = (g.normal?.stock || 0) + (g.foil?.stock || 0) + (g.etched?.stock || 0);
-        });
-
-        return Object.values(groups).sort((a: any, b: any) => {
-            const aAvail = a.totalStock > 0 ? 1 : 0;
-            const bAvail = b.totalStock > 0 ? 1 : 0;
-            if (bAvail !== aAvail) return bAvail - aAvail;
-            const nameA = a.base?.set_name || '';
-            const nameB = b.base?.set_name || '';
-            return nameA.localeCompare(nameB);
-        });
-    }, [details?.all_versions]);
+        return groupCardVersions(details?.all_versions || [], selectedLanguage);
+    }, [details?.all_versions, selectedLanguage]);
 
     const activeGroup = useMemo<any>(() => {
         return versionGroups.find((g: any) =>
             g.normal?.printing_id === activePrintingId ||
             g.foil?.printing_id === activePrintingId ||
             g.etched?.printing_id === activePrintingId ||
-            g.base?.printing_id === activePrintingId
+            g.base?.printing_id === activePrintingId ||
+            (Array.isArray(g.variants) && g.variants.some((v: any) => v.printing_id === activePrintingId))
         );
     }, [versionGroups, activePrintingId]);
 
     const activeVersion = useMemo(() => {
-        if (!activeGroup) return null;
-        if (selectedFinish === 'foil' && activeGroup.foil) return activeGroup.foil;
-        if (selectedFinish === 'etched' && activeGroup.etched) return activeGroup.etched;
-        // Fallback to whichever is available in the group
-        return activeGroup.normal || activeGroup.foil || activeGroup.etched || activeGroup.base;
-    }, [activeGroup, selectedFinish]);
+        return resolveActiveVersion(activeGroup, selectedFinish, selectedLanguage);
+    }, [activeGroup, selectedFinish, selectedLanguage]);
 
     // Detect DFC only if multiple faces actually exist in card data
     const hasMultipleFaces = !!(details?.card_faces && details.card_faces.length > 1);
@@ -418,6 +412,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                     onClose={onClose}
                     activePrintingId={activePrintingId}
                     selectedFinish={selectedFinish}
+                    selectedLanguage={selectedLanguage}
                     activeGroup={activeGroup}
                     activeVersion={activeVersion}
                     versionGroups={versionGroups}
@@ -425,6 +420,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                     hasMultipleFaces={hasMultipleFaces}
                     onFlipFace={() => setCurrentFaceIndex(prev => (prev + 1) % 2)}
                     onSelectVersion={handleSelectVersion}
+                    onSelectLanguage={handleSelectLanguage}
                     onAddToCart={handleAddToCart}
                     isAdding={isAdding}
                     addedSuccess={addedSuccess}

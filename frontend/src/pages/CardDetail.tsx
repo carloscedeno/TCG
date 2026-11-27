@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useParams, useNavigate, Link, useSearchParams, useLocation } from 'react-router-dom';
 import { Loader2, ArrowLeft, AlertCircle } from 'lucide-react';
 import { fetchCardDetails, addToCart } from '../utils/api';
+import { normalizeLanguageCode, groupCardVersions, resolveActiveVersion } from '../utils/cardLanguage';
 import { useAuth } from '../context/AuthContext';
 import { Header } from '../components/Navigation/Header';
 import { useCart } from '../context/CartContext';
@@ -60,6 +61,9 @@ export const CardDetail: React.FC = () => {
     const [loading, setLoading] = useState(!initialCard);
     const [error, setError] = useState<string | null>(null);
     const [activePrintingId, setActivePrintingId] = useState<string | undefined>(baseId);
+    const [selectedLanguage, setSelectedLanguage] = useState<string>(() =>
+        searchParams.get('lang') ? normalizeLanguageCode(searchParams.get('lang')) : 'EN'
+    );
     const [currentFaceIndex, setCurrentFaceIndex] = useState(0);
     const [isAdding, setIsAdding] = useState(false);
 
@@ -73,6 +77,13 @@ export const CardDetail: React.FC = () => {
             loadDetails(id);
         }
     }, [id]);
+
+    useEffect(() => {
+        const langParam = searchParams.get('lang');
+        if (langParam) {
+            setSelectedLanguage(normalizeLanguageCode(langParam));
+        }
+    }, [searchParams]);
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -91,6 +102,9 @@ export const CardDetail: React.FC = () => {
         try {
             const data = await fetchCardDetails(printingId);
             setDetails(data);
+            if (!searchParams.get('lang') && data?.language) {
+                setSelectedLanguage(normalizeLanguageCode(data.language));
+            }
             setIsDetailsLoaded(true);
         } catch (err) {
             console.error('Error loading card details:', err);
@@ -100,13 +114,36 @@ export const CardDetail: React.FC = () => {
         }
     };
 
-    const handleVersionClick = (printingId: string, finish?: string) => {
+    const handleVersionClick = (printingId: string, finish?: string, lang?: string) => {
         const params = new URLSearchParams();
         if (finish && finish !== 'nonfoil') {
             params.set('finish', finish);
         }
+        const effectiveLang = lang || selectedLanguage;
+        if (effectiveLang && effectiveLang !== 'EN') {
+            params.set('lang', effectiveLang);
+        }
         const search = params.toString();
         navigate(`/card/${printingId}${search ? `?${search}` : ''}`);
+    };
+
+    const handleSelectLanguage = (language: string) => {
+        const normLang = normalizeLanguageCode(language);
+        setSelectedLanguage(normLang);
+        if (!activeGroup) return;
+        const variants: any[] = Array.isArray(activeGroup.variants) ? activeGroup.variants : [];
+        const matchSameFinish = variants.find(
+            (v) =>
+                normalizeLanguageCode(v.language) === normLang &&
+                ((v.finish || (v.is_foil ? 'foil' : 'nonfoil')).toLowerCase() === activeFinish)
+        );
+        const matchAny = matchSameFinish || variants.find((v) => normalizeLanguageCode(v.language) === normLang);
+        if (matchAny) {
+            const nextFinish = (matchAny.finish || (matchAny.is_foil ? 'foil' : 'nonfoil')).toLowerCase();
+            if (matchAny.printing_id && (matchAny.printing_id !== activePrintingId || nextFinish !== activeFinish)) {
+                handleVersionClick(matchAny.printing_id, nextFinish, normLang);
+            }
+        }
     };
 
     const handleAddToCart = async (quantity: number = 1) => {
@@ -118,9 +155,9 @@ export const CardDetail: React.FC = () => {
 
         setIsAdding(true);
         try {
-            // Strip synthetic suffix from id, pass finish explicitly
+            // Strip synthetic suffix from id, pass finish explicitly + product_id for language specificity
             const baseId = activeVersion.printing_id.replace(/-foil$/, '').replace(/-nonfoil$/, '').replace(/-etched$/, '');
-            const result = await addToCart(baseId, Math.max(1, quantity), activeFinish, !!details?.is_accessory);
+            const result = await addToCart(baseId, Math.max(1, quantity), activeFinish, !!details?.is_accessory, activeVersion?.product_id);
 
             if (result && !result.success) {
                 console.error("ADD TO CART FAILED:", result);
@@ -140,69 +177,32 @@ export const CardDetail: React.FC = () => {
     const hasMultipleFaces = !!(details?.card_faces && details.card_faces.length > 1);
 
     const versionGroups = useMemo(() => {
-        if (!details?.all_versions) return [];
-
-        const inStockVersions = (Array.isArray(details.all_versions) ? details.all_versions : []).filter(
+        const inStockVersions = (Array.isArray(details?.all_versions) ? details.all_versions : []).filter(
             (v: any) => details?.is_accessory || (v.stock || 0) > 0
         );
-
-        const groups = inStockVersions.reduce((acc: any, rawV: any) => {
-            const setCode = rawV.set_code || details?.set_code || '??';
-            const setName = rawV.set_name || details?.set || 'Unknown Set';
-            const v = {
-                ...rawV,
-                set_code: setCode,
-                set_name: setName
-            };
-            const key = `${setCode}-${v.collector_number || v.printing_id}`;
-
-            if (!acc[key]) {
-                const isEtched = v.finish === 'etched';
-                const isFoilVer = !isEtched && (v.is_foil || v.finish === 'foil');
-                acc[key] = {
-                    base: v,
-                    normal: !isFoilVer && !isEtched ? v : null,
-                    foil: isFoilVer ? v : null,
-                    etched: isEtched ? v : null,
-                    totalStock: 0,
-                };
-            } else {
-                if (v.finish === 'etched') acc[key].etched = v;
-                else if (v.is_foil || v.finish === 'foil') acc[key].foil = v;
-                else acc[key].normal = v;
-                if (acc[key].base.set_name === 'Unknown Set' && v.set_name !== 'Unknown Set') {
-                    acc[key].base = v;
-                }
-            }
-            return acc;
-        }, {} as Record<string, any>);
-
-        Object.values(groups).forEach((g: any) => {
-            g.base = g.normal || g.foil || g.etched || g.base;
-            g.totalStock = (g.normal?.stock || 0) + (g.foil?.stock || 0) + (g.etched?.stock || 0);
+        return groupCardVersions(inStockVersions, selectedLanguage, {
+            set_code: details?.set_code,
+            set: details?.set,
         });
-
-        return Object.values(groups).sort((a: any, b: any) => {
-            const bAvail = b.totalStock > 0 ? 1 : 0;
-            const aAvail = a.totalStock > 0 ? 1 : 0;
-            if (bAvail !== aAvail) return bAvail - aAvail;
-            return (a.base?.set_name || '').localeCompare(b.base?.set_name || '');
-        });
-    }, [details?.all_versions, details?.set, details?.set_code, details?.is_accessory]);
+    }, [details?.all_versions, details?.set, details?.set_code, details?.is_accessory, selectedLanguage]);
 
     const activeGroup = useMemo<any>(() => {
-        return versionGroups.find((g: any) => g.normal?.printing_id === activePrintingId || g.foil?.printing_id === activePrintingId || g.etched?.printing_id === activePrintingId);
+        return versionGroups.find(
+            (g: any) =>
+                g.normal?.printing_id === activePrintingId ||
+                g.foil?.printing_id === activePrintingId ||
+                g.etched?.printing_id === activePrintingId ||
+                (Array.isArray(g.variants) && g.variants.some((v: any) => v.printing_id === activePrintingId))
+        );
     }, [versionGroups, activePrintingId]);
 
     const activeVersion = useMemo(() => {
-        if (!activeGroup) return null;
-        // Use activeFinish from URL searchParams
-        const reqFinish = activeFinish || 'nonfoil';
-        if (reqFinish === 'foil' && activeGroup.foil) return activeGroup.foil;
-        if (reqFinish === 'etched' && activeGroup.etched) return activeGroup.etched;
-        // Fallback to whichever is available in the group
-        return activeGroup.normal || activeGroup.foil || activeGroup.etched || activeGroup.base;
-    }, [activeGroup, activeFinish]);
+        const reqFinish = (activeFinish === 'foil' || activeFinish === 'etched' ? activeFinish : 'nonfoil') as
+            | 'nonfoil'
+            | 'foil'
+            | 'etched';
+        return resolveActiveVersion(activeGroup, reqFinish, selectedLanguage);
+    }, [activeGroup, activeFinish, selectedLanguage]);
 
     const allImages = useMemo(() => {
         const list: string[] = [];
@@ -295,6 +295,7 @@ export const CardDetail: React.FC = () => {
                             onClose={() => navigate(-1)}
                             activePrintingId={activePrintingId}
                             selectedFinish={(activeFinish === 'foil' || activeFinish === 'etched' ? activeFinish : 'nonfoil') as 'nonfoil' | 'foil' | 'etched'}
+                            selectedLanguage={selectedLanguage}
                             activeGroup={activeGroup}
                             activeVersion={activeVersion}
                             versionGroups={versionGroups}
@@ -303,6 +304,7 @@ export const CardDetail: React.FC = () => {
                             hasMultipleFaces={hasMultipleFaces}
                             onFlipFace={() => setCurrentFaceIndex(prev => (prev + 1) % 2)}
                             onSelectVersion={handleVersionClick}
+                            onSelectLanguage={handleSelectLanguage}
                             onAddToCart={handleAddToCart}
                             isAdding={isAdding}
                             addedSuccess={false}

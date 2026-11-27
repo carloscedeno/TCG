@@ -1,5 +1,6 @@
 import { supabase } from './supabaseClient';
 import { getCardKingdomUrl } from './urlUtils';
+import { normalizeLanguageCode, resolveLocalizedCardImage } from './cardLanguage';
 
 const API_BASE = import.meta.env.VITE_API_BASE || '';
 
@@ -669,8 +670,11 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
       versionGroups.forEach((group) => {
         if (group.length > 1) {
           const allNonFoil = group.every(v => !(v.finish === 'foil' || v.is_foil));
+          const sameLang = group.every(v =>
+            normalizeLanguageCode(v.lang || v.language) === normalizeLanguageCode(group[0]?.lang || group[0]?.language)
+          );
 
-          if (allNonFoil) {
+          if (allNonFoil && sameLang) {
             // Mark the second one as foil
             group[1].finish = 'foil';
             group[1].is_foil = true;
@@ -696,11 +700,12 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
           image_url: data.image_url,
           stock: data.total_stock || 0,
           finish: data.finish || (data.is_foil ? 'foil' : 'nonfoil'),
-          is_foil: !!data.is_foil || (data.finish === 'foil')
+          is_foil: !!data.is_foil || (data.finish === 'foil'),
+          language: normalizeLanguageCode(data.language || data.lang),
         }];
       }
 
-      // Enrich all versions with stock from products table
+      // Enrich all versions with stock, language, and localized images from products table
       // Filter pIds to only include valid UUIDs to avoid 400 errors from Supabase
       const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
       const pIds = Array.from(new Set(data.all_versions
@@ -716,35 +721,85 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
           .rpc('get_products_stock_by_printing_ids', { p_printing_ids: pIds });
 
         if (pData) {
-          data.all_versions = data.all_versions.map((v: any) => {
+          data.all_versions = data.all_versions.flatMap((v: any) => {
             const baseVId = v.printing_id.replace(/-foil$/, '').replace(/-nonfoil$/, '').replace(/-etched$/, '');
             const vFinish = (v.finish || (v.is_foil ? 'foil' : 'nonfoil')).toLowerCase();
             const matches = pData.filter((p: any) => p.printing_id === baseVId);
             const finishMatches = matches.filter((p: any) => (p.finish || 'nonfoil').toLowerCase() === vFinish);
-            const totalStockForFinish = finishMatches.reduce((acc: number, curr: any) => acc + (curr.stock || 0), 0);
-            const exactProd = finishMatches.find((p: any) => (p.stock || 0) > 0) || finishMatches[0];
-            const finalPrice = (exactProd?.price && Number(exactProd.price) > 0) ? Number(exactProd.price) : Number(v.price || 0);
-            const originalPrice = (exactProd?.original_price && Number(exactProd.original_price) > 0) ? Number(exactProd.original_price) : finalPrice;
-            const discountPct = Number(exactProd?.discount_percentage || 0);
-            const discountActive = isDiscountActive(exactProd?.discount_end_date);
 
-            return {
-              ...v,
-              product_id: exactProd?.id,
-              stock: totalStockForFinish,
-              price: finalPrice,
-              original_price: originalPrice,
-              discount_percentage: discountActive ? discountPct : 0
-            };
+            if (finishMatches.length === 0) {
+              const fallbackLang = normalizeLanguageCode(v.language || v.lang);
+              const imgRes = resolveLocalizedCardImage({
+                productImage: v.image_url,
+                printingImage: v.image_url,
+                language: fallbackLang,
+                game: data.game,
+                setCode: v.set_code,
+                collectorNumber: v.collector_number,
+              });
+              return [{
+                ...v,
+                language: fallbackLang,
+                image_url: imgRes.imageUrl || v.image_url,
+                fallback_image_url: imgRes.fallbackImageUrl,
+                stock: 0,
+              }];
+            }
+
+            // Group rows for this (printing_id, finish) by language so each language keeps its own stock, price & image
+            const byLang = new Map<string, any[]>();
+            for (const row of finishMatches) {
+              const langCode = normalizeLanguageCode(row.language);
+              if (!byLang.has(langCode)) byLang.set(langCode, []);
+              byLang.get(langCode)!.push(row);
+            }
+
+            const entriesForLangs: any[] = [];
+            for (const [langCode, langRows] of byLang.entries()) {
+              const totalStockForLang = langRows.reduce((acc: number, curr: any) => acc + (curr.stock || 0), 0);
+              const exactProd = langRows.find((p: any) => (p.stock || 0) > 0) || langRows[0];
+              const finalPrice = (exactProd?.price && Number(exactProd.price) > 0) ? Number(exactProd.price) : Number(v.price || 0);
+              const originalPrice = (exactProd?.original_price && Number(exactProd.original_price) > 0) ? Number(exactProd.original_price) : finalPrice;
+              const discountPct = Number(exactProd?.discount_percentage || 0);
+              const discountActive = isDiscountActive(exactProd?.discount_end_date);
+
+              const imgRes = resolveLocalizedCardImage({
+                productImage: exactProd?.image_url,
+                printingImage: v.image_url,
+                language: langCode,
+                game: data.game,
+                setCode: v.set_code,
+                collectorNumber: v.collector_number,
+              });
+
+              entriesForLangs.push({
+                ...v,
+                product_id: exactProd?.id,
+                language: langCode,
+                image_url: imgRes.imageUrl || exactProd?.image_url || v.image_url,
+                fallback_image_url: imgRes.fallbackImageUrl,
+                stock: totalStockForLang,
+                price: finalPrice,
+                original_price: originalPrice,
+                discount_percentage: discountActive ? discountPct : 0,
+              });
+            }
+
+            // If some languages have stock > 0 and others have 0, keep only in-stock languages when available
+            const inStockLangs = entriesForLangs.filter((e) => (e.stock || 0) > 0);
+            return inStockLangs.length > 0 ? inStockLangs : [entriesForLangs[0]];
           });
         } else {
-          data.all_versions.forEach((v: any) => v.stock = 0);
+          data.all_versions.forEach((v: any) => {
+            v.stock = 0;
+            v.language = normalizeLanguageCode(v.language || v.lang);
+          });
         }
 
         // Sort versions so in-stock versions appear first, while keeping all sets visible
         data.all_versions.sort((a: any, b: any) => ((b.stock || 0) > 0 ? 1 : 0) - ((a.stock || 0) > 0 ? 1 : 0));
 
-        // Update main price/stock for the current printingId
+        // Update main price/stock/language/image for the current printingId
         const baseId = printingId.replace(/-foil$/, '').replace(/-nonfoil$/, '').replace(/-etched$/, '');
         const requestedFinish = (data.finish || (data.is_foil ? 'foil' : 'nonfoil')).toLowerCase();
 
@@ -766,6 +821,9 @@ export const fetchCardDetails = async (printingId: string): Promise<any> => {
           data.discount_percentage = targetVersion.discount_percentage;
           data.finish = targetVersion.finish;
           data.is_foil = targetVersion.is_foil;
+          data.language = targetVersion.language || 'EN';
+          if (targetVersion.image_url) data.image_url = targetVersion.image_url;
+          if (targetVersion.fallback_image_url) data.fallback_image_url = targetVersion.fallback_image_url;
           if (data.valuation) data.valuation.store_price = targetVersion.price;
         }
       }
@@ -970,14 +1028,16 @@ export const fetchCart = async (): Promise<any> => {
           const printing = (printingsData || []).find((p: any) => p.printing_id === itemMapping.baseId);
           if (!printing) return null;
           const matches = (productsData || []).filter((p: any) => p.printing_id === itemMapping.baseId);
-          const exactProduct = matches.find((p: any) => (p.finish || 'nonfoil').toLowerCase() === itemMapping.explicitFinish.toLowerCase());
+          const exactProduct =
+            (itemMapping.product_id ? matches.find((p: any) => p.id === itemMapping.product_id) : null) ||
+            matches.find((p: any) => (p.finish || 'nonfoil').toLowerCase() === itemMapping.explicitFinish.toLowerCase());
           const product = exactProduct || matches[0];
           const priceFallback = (itemMapping.explicitFinish === 'foil' || itemMapping.explicitFinish === 'etched')
             ? (printing.avg_market_price_foil_usd || 0)
             : (printing.avg_market_price_usd || 0);
 
           return {
-            id: `guest-${itemMapping.printing_id}`,
+            id: `guest-${itemMapping.product_id || itemMapping.printing_id}`,
             product_id: product?.id || itemMapping.baseId,
             quantity: itemMapping.quantity,
             products: {
@@ -986,10 +1046,11 @@ export const fetchCart = async (): Promise<any> => {
               price: Number(product?.price ?? priceFallback),
               original_price: Number(product?.original_price || product?.price || priceFallback),
               discount_percentage: Number(product?.discount_percentage || 0),
-              image_url: printing.image_url,
+              image_url: product?.image_url || printing.image_url,
               set_code: printing.sets?.set_code || '',
               stock: product?.stock || 0,
-              finish: product?.finish || itemMapping.explicitFinish
+              finish: product?.finish || itemMapping.explicitFinish,
+              language: product?.language || 'EN'
             }
           };
         }).filter(Boolean);
@@ -1054,7 +1115,7 @@ export const fetchCart = async (): Promise<any> => {
   }
 };
 
-export const addToCart = async (printingId: string, quantity: number = 1, finish: string = 'nonfoil', isAccessory: boolean = false): Promise<any> => {
+export const addToCart = async (printingId: string, quantity: number = 1, finish: string = 'nonfoil', isAccessory: boolean = false, productId?: string): Promise<any> => {
   try {
     const session = await supabase.auth.getSession();
 
@@ -1076,7 +1137,7 @@ export const addToCart = async (printingId: string, quantity: number = 1, finish
       }
 
       const { data, error } = await supabase.rpc('add_to_cart_v2', {
-        p_identifier: printingId, // The master RPC now handles both product_id and printing_id
+        p_identifier: productId || printingId, // Prefer exact product_id (language-specific) when present
         p_quantity: quantity,
         p_finish: (finish || 'nonfoil').toLowerCase()
       });
@@ -1105,16 +1166,19 @@ export const addToCart = async (printingId: string, quantity: number = 1, finish
 
     // Validate Stock for Guest
     if (!isAccessory) {
-        const { data: stockData } = await supabase
-            .from('products')
-            .select('stock')
-            .or(`id.eq.${printingId},printing_id.eq.${printingId}`)
-            .ilike('finish', explicitFinish)
-            .order('stock', { ascending: false })
-            .limit(1)
-            .maybeSingle();
+        const stockQuery = supabase.from('products').select('stock');
+        const { data: stockData } = await (productId
+            ? stockQuery.eq('id', productId).limit(1).maybeSingle()
+            : stockQuery
+                .or(`id.eq.${printingId},printing_id.eq.${printingId}`)
+                .ilike('finish', explicitFinish)
+                .order('stock', { ascending: false })
+                .limit(1)
+                .maybeSingle());
             
-        const existingItem = currentCart.find((i: any) => !i.is_accessory && i.printing_id === printingId && i.finish === explicitFinish);
+        const existingItem = currentCart.find((i: any) =>
+          !i.is_accessory && (productId ? i.product_id === productId : (i.printing_id === printingId && i.finish === explicitFinish))
+        );
         const existingQty = existingItem ? existingItem.quantity : 0;
         const availableStock = stockData?.stock || 0;
         
@@ -1125,14 +1189,15 @@ export const addToCart = async (printingId: string, quantity: number = 1, finish
 
     const existingItemIndex = currentCart.findIndex((i: any) => 
       (isAccessory && i.accessory_id === printingId) ||
-      (!isAccessory && i.printing_id === printingId && i.finish === explicitFinish)
+      (!isAccessory && (productId ? i.product_id === productId : (i.printing_id === printingId && i.finish === explicitFinish)))
     );
 
     if (existingItemIndex >= 0) {
       currentCart[existingItemIndex].quantity += quantity;
     } else {
       currentCart.push({ 
-        id: `guest-${printingId}`,
+        id: `guest-${productId || printingId}`,
+        product_id: !isAccessory ? productId : undefined,
         printing_id: !isAccessory ? printingId : undefined,
         accessory_id: isAccessory ? printingId : undefined,
         quantity, 
