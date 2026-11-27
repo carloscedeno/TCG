@@ -221,4 +221,31 @@ describe('CheckoutPage Multi-Cart (POS) vs Standard Checkout', () => {
     expect((screen.getByLabelText(/Nombre Completo/i) as HTMLInputElement).value).toBe('Admin Geeko');
     expect(screen.queryByText(/Vincular Usuario Registrado/i)).not.toBeInTheDocument();
   });
+
+  it('accepts Venezuelan mobile prefixes including 0422, 0424, 0426, 0412, 0414, 0416 and +58422 formats', async () => {
+    mockFetchCart.mockResolvedValue({
+      id: 'pos-cart-phone',
+      name: 'Cliente Digitel',
+      is_pos: true,
+      items: sampleCartItems,
+    });
+
+    render(<CheckoutPage />);
+
+    await waitFor(() => {
+      expect(screen.getByLabelText(/Número de WhatsApp/i)).toBeInTheDocument();
+    });
+
+    const whatsappInput = screen.getByLabelText(/Número de WhatsApp/i) as HTMLInputElement;
+    const submitBtn = screen.getByRole('button', { name: /Confirmar y Pagar por WhatsApp/i });
+
+    for (const validPhone of ['04221234567', '584221234567', '04241234567', '04261234567', '04121234567', '04141234567', '04161234567']) {
+      fireEvent.change(whatsappInput, { target: { value: validPhone } });
+      expect(submitBtn).toBeEnabled();
+    }
+
+    fireEvent.change(whatsappInput, { target: { value: '04991234567' } });
+    expect(submitBtn).toBeDisabled();
+    expect(screen.getByText(/Ingresa un número válido de Venezuela/i)).toBeInTheDocument();
+  });
 });

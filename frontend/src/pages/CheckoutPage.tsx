@@ -303,10 +303,14 @@ export const CheckoutPage = () => {
         }
     };
 
+    const isWhatsappValid = (rawPhone: string) => {
+        const phoneDigits = rawPhone.replace(/\D/g, '');
+        return /^(0|58)?(412|422|414|424|416|426|2\d{2})\d{7}$/.test(phoneDigits);
+    };
+
     const isFormValid = () => {
         const nameValid = form.full_name.trim().length >= 3 && /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(form.full_name.trim());
-        const phoneDigits = form.whatsapp.replace(/\D/g, '');
-        const phoneValid = /^(0|58)?(414|424|412|416|426|2\d{2})\d{7}$/.test(phoneDigits);
+        const phoneValid = isWhatsappValid(form.whatsapp);
         const trimmedEmail = form.email.trim();
         // In Multi-Cart (POS) mode, email is optional when the customer has no web account
         const emailValid = isPosCheckout
@@ -720,6 +724,11 @@ export const CheckoutPage = () => {
                                     onChange={(e) => setForm({ ...form, whatsapp: e.target.value.replace(/\D/g, '') })}
                                 />
                                 <p className="text-[10px] text-neutral-500 mt-1">Usaremos este número para coordinar el pago.</p>
+                                {form.whatsapp.trim().length > 0 && !isWhatsappValid(form.whatsapp) && (
+                                    <p className="text-[11px] text-amber-400 font-semibold mt-1">
+                                        Ingresa un número válido de Venezuela (ej: 0412, 0422, 0414, 0424, 0416 o 0426 + 7 dígitos).
+                                    </p>
+                                )}
                             </div>
 
                             <div>
