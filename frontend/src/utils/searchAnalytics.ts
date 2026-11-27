@@ -9,10 +9,16 @@ export type SearchResolutionType =
   | 'abandon'
   | 'zero_results';
 
-export interface SearchIntentPayload {
-  query: string;
+export interface SearchFilterContext {
   gameFilter?: string;
   tab?: 'marketplace' | 'catalog';
+  rarityFilter?: string;
+  typeFilter?: string;
+  setFilter?: string;
+}
+
+export interface SearchIntentPayload extends SearchFilterContext {
+  query: string;
   resultsCount?: number;
   resolutionType: SearchResolutionType;
   resolvedCardId?: string;
@@ -37,26 +43,36 @@ class SearchIntentTracker {
   private lastQuery = '';
   private lastResolvedName: string | null = null;
   private lastGameFilter: string | undefined;
+  private lastRarityFilter: string | undefined;
+  private lastTypeFilter: string | undefined;
+  private lastSetFilter: string | undefined;
   private lastTab: 'marketplace' | 'catalog' = 'marketplace';
   private lastResultsCount = 0;
   private hasResultsLoaded = false;
   private idleTimer: ReturnType<typeof setTimeout> | null = null;
   private resolvedInSession = false;
 
-  public onQueryInput(
-    query: string,
-    context?: { gameFilter?: string; tab?: 'marketplace' | 'catalog' }
-  ) {
-    const trimmed = query.trim();
+  private applyContext(context?: SearchFilterContext) {
+    if (!context) return;
+    if (context.gameFilter !== undefined) this.lastGameFilter = context.gameFilter;
+    if (context.tab !== undefined) this.lastTab = context.tab;
+    if (context.rarityFilter !== undefined) this.lastRarityFilter = context.rarityFilter;
+    if (context.typeFilter !== undefined) this.lastTypeFilter = context.typeFilter;
+    if (context.setFilter !== undefined) this.lastSetFilter = context.setFilter;
+  }
 
-    if (context?.gameFilter !== undefined) this.lastGameFilter = context.gameFilter;
-    if (context?.tab !== undefined) this.lastTab = context.tab;
+  public onQueryInput(query: string, context?: SearchFilterContext) {
+    const trimmed = query.trim();
+    this.applyContext(context);
 
     if (trimmed.length < 2) {
       if (this.sessionId && this.lastQuery.trim().length >= 2 && !this.resolvedInSession) {
         this.flushNow({
           query: this.lastQuery,
           gameFilter: this.lastGameFilter,
+          rarityFilter: this.lastRarityFilter,
+          typeFilter: this.lastTypeFilter,
+          setFilter: this.lastSetFilter,
           tab: this.lastTab,
           resultsCount: this.lastResultsCount,
           resolutionType: 'abandon',
@@ -91,6 +107,9 @@ class SearchIntentTracker {
       this.flushNow({
         query: this.lastQuery,
         gameFilter: this.lastGameFilter,
+        rarityFilter: this.lastRarityFilter,
+        typeFilter: this.lastTypeFilter,
+        setFilter: this.lastSetFilter,
         tab: this.lastTab,
         resultsCount: this.lastResultsCount,
         resolutionType: this.hasResultsLoaded && this.lastResultsCount === 0 ? 'zero_results' : 'idle_settle',
@@ -98,11 +117,7 @@ class SearchIntentTracker {
     }, IDLE_SETTLE_MS);
   }
 
-  public onResultsLoaded(
-    query: string,
-    resultsCount: number,
-    context?: { gameFilter?: string; tab?: 'marketplace' | 'catalog' }
-  ) {
+  public onResultsLoaded(query: string, resultsCount: number, context?: SearchFilterContext) {
     const trimmed = query.trim();
     if (trimmed.length < 2) return;
 
@@ -114,8 +129,7 @@ class SearchIntentTracker {
     }
     this.lastResultsCount = Math.max(0, resultsCount);
     this.hasResultsLoaded = true;
-    if (context?.gameFilter !== undefined) this.lastGameFilter = context.gameFilter;
-    if (context?.tab !== undefined) this.lastTab = context.tab;
+    this.applyContext(context);
 
     if (this.lastResultsCount === 0 && !this.resolvedInSession) {
       if (this.idleTimer) clearTimeout(this.idleTimer);
@@ -124,6 +138,9 @@ class SearchIntentTracker {
         this.flushNow({
           query: this.lastQuery,
           gameFilter: this.lastGameFilter,
+          rarityFilter: this.lastRarityFilter,
+          typeFilter: this.lastTypeFilter,
+          setFilter: this.lastSetFilter,
           tab: this.lastTab,
           resultsCount: 0,
           resolutionType: 'zero_results',
@@ -134,13 +151,11 @@ class SearchIntentTracker {
 
   public recordResolution(
     resolutionType: Exclude<SearchResolutionType, 'idle_settle' | 'abandon' | 'zero_results'>,
-    details?: {
+    details?: SearchFilterContext & {
       query?: string;
       resolvedCardId?: string;
       resolvedName?: string;
       resultsCount?: number;
-      gameFilter?: string;
-      tab?: 'marketplace' | 'catalog';
     }
   ) {
     const rawFromDetails = details?.query?.trim();
@@ -162,8 +177,7 @@ class SearchIntentTracker {
 
     this.lastQuery = activeQuery;
     if (details?.resultsCount !== undefined) this.lastResultsCount = details.resultsCount;
-    if (details?.gameFilter !== undefined) this.lastGameFilter = details.gameFilter;
-    if (details?.tab !== undefined) this.lastTab = details.tab;
+    this.applyContext(details);
     if (details?.resolvedName) this.lastResolvedName = details.resolvedName.trim();
     if (resolutionType === 'card_click' || resolutionType === 'cart_add' || resolutionType === 'suggestion_click') {
       this.resolvedInSession = true;
@@ -172,6 +186,9 @@ class SearchIntentTracker {
     this.flushNow({
       query: activeQuery,
       gameFilter: this.lastGameFilter,
+      rarityFilter: this.lastRarityFilter,
+      typeFilter: this.lastTypeFilter,
+      setFilter: this.lastSetFilter,
       tab: this.lastTab,
       resultsCount: this.lastResultsCount,
       resolutionType,
@@ -200,6 +217,9 @@ class SearchIntentTracker {
       p_resolution_type: this.hasResultsLoaded && this.lastResultsCount === 0 ? 'zero_results' : 'abandon',
       p_resolved_card_id: null,
       p_resolved_name: null,
+      p_rarity_filter: this.lastRarityFilter || null,
+      p_type_filter: this.lastTypeFilter || null,
+      p_set_filter: this.lastSetFilter || null,
     };
 
     try {
@@ -230,6 +250,9 @@ class SearchIntentTracker {
         p_resolution_type: payload.resolutionType,
         p_resolved_card_id: payload.resolvedCardId || null,
         p_resolved_name: payload.resolvedName || null,
+        p_rarity_filter: payload.rarityFilter || null,
+        p_type_filter: payload.typeFilter || null,
+        p_set_filter: payload.setFilter || null,
       });
     } catch {
       // Non-blocking telemetry

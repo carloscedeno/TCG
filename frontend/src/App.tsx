@@ -39,6 +39,7 @@ const PresalesPage = lazy(() => import('./pages/Admin/PresalesPage').then(m => (
 const CategoriesPage = lazy(() => import('./pages/Admin/CategoriesPage'));
 const MediaPage = lazy(() => import('./pages/Admin/MediaPage'));
 const AdminRankingsPage = lazy(() => import('./pages/Admin/AdminRankingsPage'));
+const SearchAnalyticsPage = lazy(() => import('./pages/Admin/SearchAnalyticsPage'));
 const RankingsPage = lazy(() => import('./pages/RankingsPage'));
 const WishlistPage = lazy(() => import('./pages/WishlistPage'));
 
@@ -117,6 +118,7 @@ function App() {
                                 <Route path="/admin/events" element={<AdminRoute><EventsPage /></AdminRoute>} />
                                 <Route path="/admin/rankings" element={<AdminRoute><AdminRankingsPage /></AdminRoute>} />
                                 <Route path="/admin/media" element={<AdminRoute><MediaPage /></AdminRoute>} />
+                                <Route path="/admin/search-analytics" element={<AdminRoute><SearchAnalyticsPage /></AdminRoute>} />
                                 <Route path="/checkout" element={<CheckoutPage />} />
                                 <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
                                 <Route path="/product/:id" element={<CardDetail />} />

@@ -246,7 +246,16 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     const activeGame = filters.games && filters.games.length > 0 ? filters.games[0] : undefined;
-    searchIntentTracker.onQueryInput(query, { gameFilter: activeGame, tab: activeTab });
+    const activeRarity = filters.rarities && filters.rarities.length > 0 ? filters.rarities[0] : undefined;
+    const activeType = filters.types && filters.types.length > 0 ? filters.types[0] : undefined;
+    const activeSet = filters.sets && filters.sets.length > 0 ? filters.sets[0] : undefined;
+    searchIntentTracker.onQueryInput(query, {
+      gameFilter: activeGame,
+      rarityFilter: activeRarity,
+      typeFilter: activeType,
+      setFilter: activeSet,
+      tab: activeTab,
+    });
 
     const timer = setTimeout(() => {
       setDebouncedQuery(query);
@@ -461,6 +470,9 @@ const Home: React.FC = () => {
         if (offset === 0 && debouncedQuery && debouncedQuery.trim().length >= 2) {
           searchIntentTracker.onResultsLoaded(debouncedQuery, result.total_count, {
             gameFilter: debouncedFilters.games?.[0],
+            rarityFilter: debouncedFilters.rarities?.[0],
+            typeFilter: debouncedFilters.types?.[0],
+            setFilter: debouncedFilters.sets?.[0],
             tab: activeTab,
           });
         }
@@ -550,6 +562,9 @@ const Home: React.FC = () => {
         resolvedName: fullCard?.name,
         resultsCount: totalCount,
         gameFilter: filters.games?.[0],
+        rarityFilter: filters.rarities?.[0],
+        typeFilter: filters.types?.[0],
+        setFilter: filters.sets?.[0],
         tab: activeTab,
       });
     }
@@ -579,22 +594,22 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[100dvh] flex flex-col bg-neutral-50 dark:bg-geeko-black text-black dark:text-text-high font-sans relative selection:bg-black/20 dark:selection:bg-white/30">
+    <div className="min-h-[100dvh] flex flex-col overflow-x-clip bg-neutral-50 dark:bg-geeko-black text-black dark:text-text-high font-sans relative selection:bg-black/20 dark:selection:bg-white/30">
       
       {/* Background decoration */}
-      <div className="fixed inset-0 z-0 bg-neutral-50 dark:bg-geeko-black">
+      <div className="fixed inset-0 z-0 bg-neutral-50 dark:bg-geeko-black overflow-hidden pointer-events-none">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-white/5 rounded-full blur-[120px]" />
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-geeko-purple-vibrant/5 rounded-full blur-[100px]" />
       </div>
 
       {/* Content Wrapper */}
-      <div className="relative z-10 flex-1 flex flex-col">
+      <div className="relative z-10 flex-1 flex flex-col min-w-0">
 
         {/* Header */}
         <Header onCartOpen={() => setIsCartOpen(true)} cartCount={cartCount} />
 
         {showHeroSection && (
-          <div className="max-w-[1600px] mx-auto w-full px-6 pt-2 animate-in fade-in slide-in-from-top-4 duration-1000">
+          <div className="max-w-[1600px] mx-auto w-full px-4 sm:px-6 pt-2 animate-in fade-in slide-in-from-top-4 duration-1000">
             <HeroSection gameCode={filters.games && filters.games.length === 1 ? filters.games[0] : undefined} />
             {(isDashboardView || (activeTab === 'catalog' && (!filters.games || filters.games.length === 0))) && <PresaleSection />}
           </div>
@@ -618,19 +633,19 @@ const Home: React.FC = () => {
         )}
 
         {/* Search & Utility Bar - Sticky */}
-        <div className="bg-white/95 dark:bg-[#0a0a0a]/95 border-b border-neutral-200 dark:border-neutral-800 sticky top-[60px] lg:top-[156px] z-40 backdrop-blur-md">
-            <div className="max-w-[1600px] mx-auto px-4 py-3 flex items-center justify-between gap-4">
-                <div className="flex bg-neutral-100 dark:bg-neutral-900/50 p-1 rounded-full border border-neutral-200 dark:border-neutral-800">
+        <div className="bg-white/95 dark:bg-[#0a0a0a]/95 border-b border-neutral-200 dark:border-neutral-800 sticky top-[56px] lg:top-[156px] z-40 backdrop-blur-md">
+            <div className="max-w-[1600px] mx-auto px-3 sm:px-4 py-2.5 sm:py-3 flex flex-wrap items-center justify-between gap-2 sm:gap-4">
+                <div className="flex flex-wrap bg-neutral-100 dark:bg-neutral-900/50 p-1 rounded-full border border-neutral-200 dark:border-neutral-800 max-w-full">
                   {filters.games && filters.games.length > 0 && inventoryPresence.hasSingles && (
                   <button
                     onClick={() => handleTabChange('marketplace')}
                     data-testid="inventory-tab"
-                    className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'marketplace'
+                    className={`px-3 sm:px-6 py-1.5 sm:py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-wider sm:tracking-widest uppercase transition-all flex items-center gap-1.5 sm:gap-2 ${activeTab === 'marketplace'
                       ? 'ring-2 ring-geeko-cyan/30 bg-geeko-cyan text-black shadow-[0_0_15px_rgba(0,209,255,0.4)]'
                       : 'text-text-low hover:text-neutral-300'
                       }`}
                   >
-                    <img src="/branding/Emporio.jpg" alt="Icon" className="w-5 h-5 rounded-full" />
+                    <img src="/branding/Emporio.jpg" alt="Icon" className="w-4 h-4 sm:w-5 sm:h-5 rounded-full" />
                     Stock Geekorium
                   </button>
                 )}
@@ -639,25 +654,25 @@ const Home: React.FC = () => {
                   <button
                     onClick={() => handleTabChange('catalog')}
                     data-testid="archives-tab"
-                    className={`px-4 sm:px-6 py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-widest uppercase transition-all flex items-center gap-2 ${activeTab === 'catalog'
+                    className={`px-3 sm:px-6 py-1.5 sm:py-2 rounded-full text-[10px] sm:text-[11px] font-black tracking-wider sm:tracking-widest uppercase transition-all flex items-center gap-1.5 sm:gap-2 ${activeTab === 'catalog'
                       ? 'ring-2 ring-geeko-cyan/30 bg-geeko-cyan text-black shadow-[0_0_15px_rgba(0,209,255,0.4)]'
                       : 'text-text-low hover:text-neutral-300'
                       }`}
                   >
-                    <Search size={16} className={activeTab === 'catalog' ? 'text-black' : 'text-geeko-cyan'} />
+                    <Search size={14} className={activeTab === 'catalog' ? 'text-black' : 'text-geeko-cyan'} />
                     Catálogo
                   </button>
                 )}
               </div>
 
 
-            <div className="flex items-center gap-2 md:gap-4">
+            <div className="flex items-center justify-between sm:justify-end gap-1.5 sm:gap-2 md:gap-4 w-full lg:w-auto flex-wrap">
                 <button 
                 onClick={() => setIsMobileFiltersOpen(true)}
-                className="lg:hidden p-2.5 bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-white/5 rounded-xl hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-all text-neutral-600 dark:text-text-low flex items-center gap-2"
+                className="lg:hidden p-2 sm:p-2.5 bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-white/5 rounded-xl hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-all text-neutral-600 dark:text-text-low flex items-center gap-1.5 shrink-0"
                 >
                 <div className="relative">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" /></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" /></svg>
                   {Object.values(filters).some(v => v && (typeof v === 'boolean' ? v : (v as any).length > 0)) && (
                     <div className="absolute -top-1 -right-1 w-2 h-2 bg-white rounded-full" />
                   )}
@@ -665,18 +680,18 @@ const Home: React.FC = () => {
                 <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Filtros</span>
               </button>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
                 <span className="text-[11px] font-black uppercase tracking-tighter text-text-low hidden sm:inline">Ordenar:</span>
-                <div className="flex bg-white dark:bg-neutral-900/50 p-1 rounded-full border border-neutral-200 dark:border-neutral-800 shadow-sm dark:shadow-none">
+                <div className="flex bg-white dark:bg-neutral-900/50 p-0.5 sm:p-1 rounded-full border border-neutral-200 dark:border-neutral-800 shadow-sm dark:shadow-none">
                   <button
                     onClick={() => updateURL({ sort: sortBy === 'name' ? 'name_desc' : 'name' })}
-                    className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase transition-all ${sortBy.includes('name') ? 'bg-neutral-200 dark:bg-neutral-700 text-black dark:text-text-high' : 'text-neutral-500 dark:text-text-low hover:text-black dark:hover:text-neutral-300'}`}
+                    className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] font-bold uppercase transition-all whitespace-nowrap ${sortBy.includes('name') ? 'bg-neutral-200 dark:bg-neutral-700 text-black dark:text-text-high' : 'text-neutral-500 dark:text-text-low hover:text-black dark:hover:text-neutral-300'}`}
                   >
                     Nombre {sortBy === 'name' ? '↓' : (sortBy === 'name_desc' ? '↑' : '⇅')}
                   </button>
                   <button
                     onClick={() => updateURL({ sort: sortBy === 'price_asc' ? 'price_desc' : 'price_asc' })}
-                    className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase transition-all ${sortBy.includes('price') ? 'bg-neutral-200 dark:bg-neutral-700 text-black dark:text-text-high' : 'text-neutral-500 dark:text-text-low hover:text-black dark:hover:text-neutral-300'}`}
+                    className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] font-bold uppercase transition-all whitespace-nowrap ${sortBy.includes('price') ? 'bg-neutral-200 dark:bg-neutral-700 text-black dark:text-text-high' : 'text-neutral-500 dark:text-text-low hover:text-black dark:hover:text-neutral-300'}`}
                   >
                     Precio {sortBy === 'price_asc' ? '↑' : (sortBy === 'price_desc' ? '↓' : '⇅')}
                   </button>
@@ -684,7 +699,7 @@ const Home: React.FC = () => {
                 
                 <button
                   onClick={() => updateURL({ only_new: filters.only_new ? undefined : 'true' })}
-                  className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase transition-all flex items-center gap-2 ${
+                  className={`px-2.5 sm:px-4 py-1.5 rounded-full text-[10px] font-black uppercase transition-all flex items-center gap-1 sm:gap-2 whitespace-nowrap ${
                     filters.only_new
                       ? 'bg-geeko-purple-vibrant text-white shadow-[0_0_15px_rgba(168,85,247,0.4)] ring-2 ring-purple-500/50'
                       : 'bg-white dark:bg-neutral-900/50 text-neutral-500 dark:text-text-low hover:text-black dark:hover:text-neutral-300 border border-neutral-200 dark:border-neutral-800 shadow-sm dark:shadow-none'
@@ -696,7 +711,7 @@ const Home: React.FC = () => {
 
                 <button
                   onClick={() => updateURL({ only_discount: filters.only_discount ? undefined : 'true' })}
-                  className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase transition-all flex items-center gap-2 ${
+                  className={`px-2.5 sm:px-4 py-1.5 rounded-full text-[10px] font-black uppercase transition-all flex items-center gap-1 sm:gap-2 whitespace-nowrap ${
                     filters.only_discount
                       ? 'bg-emerald-500 text-white dark:text-black shadow-[0_0_15px_rgba(16,185,129,0.4)] ring-2 ring-emerald-500/50'
                       : 'bg-white dark:bg-neutral-900/50 text-neutral-500 dark:text-text-low hover:text-black dark:hover:text-neutral-300 border border-neutral-200 dark:border-neutral-800 shadow-sm dark:shadow-none'
@@ -863,6 +878,9 @@ const Home: React.FC = () => {
                 resolvedName: selectedCardData?.name,
                 resultsCount: totalCount,
                 gameFilter: filters.games?.[0],
+                rarityFilter: filters.rarities?.[0],
+                typeFilter: filters.types?.[0],
+                setFilter: filters.sets?.[0],
                 tab: activeTab,
               });
             }
