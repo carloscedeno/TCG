@@ -858,3 +858,27 @@ ole). Se blindó mediante el trigger BEFORE UPDATE 	rg_prevent_role_escalation.
    - `sortswift-sync.yml` redirigido del script legacy `sync_sortswift_automated.py` (que truncaba `.select()` a 1,000 filas y duplicaba productos) hacia la Edge Function autoritativa `sortswift-sync` (`v4.0`, `12.7s`, `4,054` SKUs en paridad).
    - `verify_sync_health.py` actualizado para excluir productos con `sortswift_id IS NOT NULL` de la comparación contra precios de CardKingdom.
 
+
+
+---
+
+## 📅 Sesión 2026-11-26 — Checkout Multicarrito (POS) & Emparejamiento de Partners en Odoo
+
+### Qué se resolvió
+1. **Aislamiento de datos del Cliente en Checkout Multicarrito (`is_pos === true`) — `frontend/src/pages/CheckoutPage.tsx`**:
+   - Cuando el carrito activo proviene del terminal Multicarrito (`Gestión de Clientes`, `carts.is_pos === true`), se omite la precarga del perfil y direcciones del Admin (`loadProfile`, `loadAddresses`) y se pre-llena el nombre del cliente a partir del nombre del carrito POS (si no es `'Carrito Principal'`).
+   - Se añadió el buscador opcional **"Vincular Usuario Registrado (Opcional)"** sobre `profiles` para asociar el pedido al `user_id` de un cliente existente y autocompletar sus datos; si el cliente no tiene usuario web, el checkout procede con `user_id = null` y correo electrónico opcional (sin alterar el checkout web estándar).
+2. **Propagación limpia de identidad en `createOrder` — `frontend/src/utils/api.ts`**:
+   - Se restringió el fallback al email de `supabase.auth.getUser()` estrictamente al caso `userData.user?.id === orderData.userId` para impedir inyectar el correo del Admin en órdenes POS de terceros o invitados.
+   - Se despacha `cart-updated` también al cerrar carritos con `cartId`, y se envían `customer_email`, `customer_name`, `customer_phone` y `customer_cedula` hacia `odoo-sync`.
+3. **Resolución segura de `res.partner` y paridad `ensureUsdPricelist` — `supabase/functions/odoo-sync/index.ts`**:
+   - Se ignoran correos placeholder (`guest@geekorium.com`, `sin-correo@geekorium.com`) y cédulas genéricas (`V-00000000`, `E-00000000`).
+   - La búsqueda de `res.partner` prioriza `email` (`=ilike`), `vat` (`ilike`), `phone` (`ilike`) y `name` (`=ilike` solo cuando no hay correo real). Si el contacto ya existe en Odoo, se reutiliza preservando su `name` actual; de lo contrario se crea sin almacenar correos ficticios.
+   - Desplegado en PROD (`sxuotvogwvmxuvwbsscv`, v15) y DEV (`bqfkqnnostzaqueujdms`, v21) con `verify_jwt: false`.
+
+### Validación Técnica (`/pruebame` full)
+- **Build (`tsc -b && vite build && node postbuild.js`)**: PASS (`30.3s`).
+- **Python Unit (`pytest tests/unit`)**: `34 passed`.
+- **Frontend Unit (`Jest`)**: `7 passed, 7 total` suites / `33 passed, 33 total` tests (incluye `frontend/src/tests/CheckoutPos.test.tsx`).
+- **Python Integration (`pytest tests/integration`)**: `1 passed`.
+- **Playwright E2E (`smoke`)**: `6 passed`.

@@ -1,6 +1,6 @@
 # 📈 Progress Report - Geekorium Optimization
 
-**Last Updated**: 2026-06-12 22:40 (User Dashboard & Checkout Address Book Enhancements)
+**Last Updated**: 2026-11-26 23:40 (Multi-Cart POS Checkout Isolation & Odoo Partner Matching)
 
 **Status**: ✅ Cart Performance | ✅ Cart Context Unification | ✅ Optimistic UI | ✅ Accessories Module | ✅ Polymorphic Checkout | ✅ Public Tracking RLS | ✅ Admin Visibility | ✅ Dev Branch Recreation | ✅ Catalog & Inventory Sync | ✅ Quick Add UX Optimized | ✅ Performance Optimization (Batch Fetch) | ✅ Global 'Nuevo' Feature | ✅ Schema Fallback implemented | ✅ Strixhaven Visibility Fix | ✅ Production Checkout Restored | ✅ Pokémon PKM Standardization | ✅ Security Audit & Cleanup | ✅ Dynamic Discounts & Visual Integrity | ✅ Bulk Import Catalog Sync | ✅ User Dashboard & TCG Player IDs | ✅ Address Book CRUD | ✅ Independent Billing Address | ✅ Order History & Pre-order Estimated Dates | ✅ Event Timezone Correction
 
@@ -14,6 +14,13 @@ This session focused on implementing User Dashboard (Mi Cuenta) features: TCG pl
 ---
 
 ## Completed Work
+
+### ✅ Multi-Cart POS Customer Checkout & Odoo Partner Matching (Nov 2026)
+
+- **POS Checkout Session Isolation (`CheckoutPage.tsx`)**: Skipped Admin profile/address prefill strictly when `cartData.is_pos` is true; added optional `profiles` customer linking while allowing orders with `user_id = null` and optional email when the buyer has no web account.
+- **Clean Order Identity Propagation (`frontend/src/utils/api.ts`)**: Guarded `auth.getUser().email` fallback with `userData.user?.id === orderData.userId` and forwarded customer contact fields to `odoo-sync`.
+- **Odoo `res.partner` Resolution (`supabase/functions/odoo-sync/index.ts`)**: Filtered placeholder emails/cedulas, added prioritized matching (`email`, `vat`, `phone`, `name`), prevented overwriting existing Odoo partner names, and deployed to PROD (`v15`) and DEV (`v21`).
+- **Automated Verification**: Added `frontend/src/tests/CheckoutPos.test.tsx` (`3 passed`) and passed full `/pruebame` regression (`tsc/vite build`, 34 Python unit, 7/7 Jest suites / 33 tests, 1 Python integration, 6 Playwright smoke).
 
 ### ✅ Registration UX & Top Navigation (Compound v66)
 

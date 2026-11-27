@@ -119,3 +119,5 @@ Artefactos del Compound step:
 
 - ✅ **Modal TCG Estilo Moxfield & Optimización Mobile-First (Nov 2026)**: Apertura in-page sin recargas, jerarquía comercial con Geekorium Price, acabado Normal/Foil y "Agregar al Carrito" en el tope (*above the fold*) para desktop y smartphones. Logos oficiales TCG en sticky header, aislamiento de capa con React Portal (`createPortal` con `z-[300]`), badges de carga visual "Cargando Información..." y corrección DFC estricta para evitar imágenes rotas en cartas split y Digimon.
 
+- ✅ **Checkout Multicarrito POS & Emparejamiento Seguro Odoo (Nov 2026)**: En carritos `is_pos === true` (`Gestión de Clientes`), el checkout no precarga datos del Admin, permite vincular opcionalmente usuarios de `profiles` o facturar sin usuario/correo web, y `odoo-sync` busca `res.partner` por email/cédula/teléfono/nombre sin sobrescribir contactos existentes ni colisionar en `guest@geekorium.com`.
+

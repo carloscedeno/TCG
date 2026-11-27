@@ -2593,3 +2593,13 @@ enderVersionsContent), garantizando experiencia *Above the Fold* en smartphones.
    - **Problema**: El script legacy `sync_sortswift_automated.py` usaba `sb.table("card_printings").select(...).execute()`, que PostgREST trunca a `1,000` filas, causando inserción de duplicados en ejecuciones por cron.
    - **Regla**: Toda sincronización programada de SortSwift debe invocar la Edge Function autoritativa `sortswift-sync` (`v4.0`), que pagina con `fetchAllRows` y deduplica automáticamente.
 
+
+
+### 74. Aislamiento de Sesión en Checkout Multicarrito (POS) y Matching de Partners en Odoo (Nov 2026)
+- **Problema**: Al hacer checkout desde el terminal Multicarrito (`carts.is_pos === true`) usando la sesión del Admin, el sistema precargaba los datos del Admin, enviaba su email como fallback en `createOrder`, y `odoo-sync` agrupaba invitados bajo `'guest@geekorium.com'` o sobrescribía el nombre del partner existente en Odoo.
+- **Causa Raíz**: `CheckoutPage` asumía que `supabase.auth.getUser()` siempre representaba al comprador final; `api.ts` hacía fallback al correo del usuario autenticado cuando faltaba `guestInfo.email`; y `odoo-sync` buscaba `res.partner` únicamente por email con fallback `'guest@geekorium.com'` y ejecutaba `write({ name })` sobre coincidencias.
+- **Solución**:
+  1. Ramificar `CheckoutPage` por `cartData.is_pos`: omitir `loadProfile()`/`loadAddresses()`, habilitar vinculación opcional de usuario en `profiles` y permitir correo opcional sin exigir usuario registrado (manteniendo intacto el flujo web normal).
+  2. En `createOrder` (`frontend/src/utils/api.ts`), usar el email de `auth.getUser()` solo si `userData.user?.id === orderData.userId`.
+  3. En `odoo-sync`, ignorar correos/cédulas placeholder, buscar `res.partner` por `email` -> `vat` -> `phone` -> `name`, y reutilizar contactos existentes sin sobrescribir su `name`.
+- **Regla Derivada**: En flujos asistidos o POS operados por staff autenticado, nunca inferir ni sobrescribir los datos del comprador desde `auth.getUser()`.
