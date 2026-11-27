@@ -57,11 +57,11 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
     return (
         <header className="sticky top-0 z-50 w-full bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-neutral-200 dark:border-white/5 shadow-2xl">
             {/* Top Bar: Logo & Search & User */}
-            <div className="max-w-[1600px] mx-auto px-4 h-14 lg:h-[60px] flex items-center justify-between gap-12">
+            <div className="max-w-[1600px] mx-auto px-3 sm:px-4 h-14 lg:h-[60px] flex items-center justify-between gap-2 sm:gap-6 lg:gap-12">
                 <Link to="/" className="flex-shrink-0 group relative">
                     <img src="/branding/Logo.png" alt="Geekorium" className="hidden dark:block w-28 sm:w-40 object-contain group-hover:scale-105 transition-transform" />
                     <img src="/branding/Logo-Light.png" alt="Geekorium" className="block dark:hidden w-28 sm:w-40 object-contain group-hover:scale-105 transition-transform" />
-                    <span className="absolute -top-1 -right-4 bg-red-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded-md rotate-12 shadow-lg">BETA</span>
+                    <span className="hidden sm:inline-block absolute -top-1 -right-4 bg-red-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded-md rotate-12 shadow-lg">BETA</span>
                 </Link>
 
                 {/* Main Utility Nav - Always show on PC */}
@@ -99,8 +99,8 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                     />
                 </div>
 
-                <div className="flex items-center gap-4 md:gap-6">
-                    <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-4 md:gap-6 shrink-0">
+                    <div className="flex items-center gap-2 sm:gap-3">
                         <button onClick={onCartOpen} data-testid="cart-button" className="hidden lg:flex relative p-2 text-neutral-600 dark:text-text-low hover:text-black dark:hover:text-text-high transition-all">
                             <ShoppingCart size={22} />
                             {cartCount > 0 && (
@@ -115,7 +115,7 @@ export const Header = ({ onCartOpen, cartCount }: HeaderProps) => {
                             ) : (
                                 <button 
                                     onClick={openAuthModal}
-                                    className="px-4 py-2 bg-black dark:bg-white text-white dark:text-black font-black text-[11px] uppercase tracking-widest rounded-xl hover:scale-105 transition-transform"
+                                    className="px-3 sm:px-4 py-1.5 sm:py-2 bg-black dark:bg-white text-white dark:text-black font-black text-[10px] sm:text-[11px] uppercase tracking-wider sm:tracking-widest rounded-xl hover:scale-105 transition-transform whitespace-nowrap"
                                 >
                                     Iniciar Sesión
                                 </button>

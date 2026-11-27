@@ -251,7 +251,7 @@ export const CardDetailBlocks: React.FC<CardDetailBlocksProps> = ({
     if (!details) return null;
 
     return (
-        <div className="w-full h-auto md:h-full grid grid-cols-1 md:grid-cols-3 md:divide-x md:divide-white/5 relative bg-[#090c11]">
+        <div className="w-full h-auto shrink-0 md:shrink md:h-full grid grid-cols-1 md:grid-cols-3 md:divide-x md:divide-white/5 relative bg-[#090c11]">
             {/* Top-Right Close Button (matching mockup red outline X on desktop) */}
             {showDesktopClose && (
                 <button
@@ -266,7 +266,7 @@ export const CardDetailBlocks: React.FC<CardDetailBlocksProps> = ({
             {/* ════════════════════════════════════════════════════════════════
                 BLOQUE 1 (IZQUIERDA DESKTOP / ARRIBA MOBILE): IMAGEN DE LA CARTA
                ════════════════════════════════════════════════════════════════ */}
-            <div className="flex flex-col items-center justify-center px-4 pt-3 pb-2 md:p-5 bg-[#0a0d13] relative">
+            <div className="flex flex-col items-center justify-center px-4 pt-3 pb-2 md:p-5 bg-[#0a0d13] relative min-w-0">
                 {loading && !displayImage ? (
                     <div className="w-full max-w-[290px] sm:max-w-[310px] md:max-w-[295px] aspect-[5/7] rounded-2xl bg-white/5 border border-white/10 animate-pulse flex flex-col items-center justify-center gap-2">
                         <Loader2 size={28} className="text-geeko-cyan animate-spin" />
@@ -333,7 +333,7 @@ export const CardDetailBlocks: React.FC<CardDetailBlocksProps> = ({
             {/* ════════════════════════════════════════════════════════════════
                 BLOQUE 2 (CENTRO DESKTOP / MEDIO MOBILE): INFO, LEGALIDAD Y COMPRA
                ════════════════════════════════════════════════════════════════ */}
-            <div className="flex flex-col justify-center px-4 py-3 md:p-5 bg-[#090c11] gap-3.5 md:overflow-y-auto custom-scrollbar">
+            <div className="flex flex-col justify-center px-4 py-3 md:p-5 bg-[#090c11] gap-3.5 md:overflow-y-auto custom-scrollbar min-w-0">
                 <div className="space-y-2">
                     {/* TCG Header (hidden on mobile when parent modal provides a sticky mobile TCG header) */}
                     <div className={`${hasMobileHeader ? 'hidden md:flex' : 'flex'} items-center gap-2`}>
@@ -549,7 +549,7 @@ export const CardDetailBlocks: React.FC<CardDetailBlocksProps> = ({
             {/* ════════════════════════════════════════════════════════════════
                 BLOQUE 3 (DERECHA DESKTOP / ABAJO MOBILE): EDICIONES DISPONIBLES
                ════════════════════════════════════════════════════════════════ */}
-            <div className="flex flex-col bg-[#080b10] px-4 pt-3 pb-5 md:p-5 md:pr-4 border-t border-white/10 md:border-t-0 md:min-h-0 md:max-h-[470px] md:overflow-hidden">
+            <div className="flex flex-col bg-[#080b10] px-4 pt-3 pb-5 md:p-5 md:pr-4 border-t border-white/10 md:border-t-0 md:min-h-0 md:max-h-[470px] md:overflow-hidden min-w-0">
                 <div className="pb-2.5 border-b border-white/10 md:pr-10 shrink-0">
                     <div className="flex items-center justify-between gap-2">
                         <h3 className="text-[10px] sm:text-[11px] font-black uppercase tracking-wide text-white leading-tight">

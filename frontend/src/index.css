@@ -118,9 +118,16 @@
   --token-text-low: #B7B7B7;
 }
 
+html {
+  overflow-x: clip;
+  max-width: 100%;
+}
+
 body {
   margin: 0;
   min-width: 320px;
+  max-width: 100%;
+  overflow-x: clip;
   min-height: 100vh;
   background-color: var(--color-neutral-white);
   color: var(--color-neutral-black);

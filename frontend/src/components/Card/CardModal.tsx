@@ -375,7 +375,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
 
     const modalNode = (
         <div
-            className="fixed inset-0 z-[300] flex items-center justify-center bg-black/80 backdrop-blur-md p-2.5 sm:p-4 md:p-6 animate-in fade-in duration-200 overflow-hidden"
+            className="fixed inset-0 w-full max-w-[100vw] z-[300] flex items-center justify-center bg-black/80 backdrop-blur-md p-2.5 sm:p-4 md:p-6 animate-in fade-in duration-200 overflow-hidden"
             onClick={handleBackdropClick}
         >
             {/* Modal Content — 3 Equal-Size Compact Blocks (stacked vertically on mobile) */}
@@ -383,7 +383,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                 data-testid="card-modal"
                 role="dialog"
                 aria-modal="true"
-                className="w-full max-w-[440px] md:max-w-6xl max-h-[94dvh] md:h-auto md:max-h-[90vh] rounded-[24px] md:rounded-[28px] border border-white/15 shadow-[0_0_100px_rgba(0,0,0,0.85)] flex flex-col overflow-y-auto md:overflow-hidden relative bg-[#090c11] custom-scrollbar"
+                className="w-full max-w-[calc(100vw-20px)] sm:max-w-[440px] md:max-w-6xl max-h-[94dvh] md:h-auto md:max-h-[90vh] rounded-[24px] md:rounded-[28px] border border-white/15 shadow-[0_0_100px_rgba(0,0,0,0.85)] flex flex-col overflow-y-auto overflow-x-clip md:overflow-hidden relative bg-[#090c11] custom-scrollbar mx-auto"
                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
             >
                 {/* Sticky Header for mobile: TCG badge + red-outlined X matching mobile wireframe */}
