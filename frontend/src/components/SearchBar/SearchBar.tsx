@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { searchCardNames } from '../../utils/api';
+import { searchIntentTracker } from '../../utils/searchAnalytics';
 
 interface SearchBarProps {
   onSelect?: (card: any) => void;
@@ -57,6 +58,10 @@ export function SearchBar({ onSelect, placeholder, mobile = false, value = "", o
   }, [value]);
 
   const handleSelect = (suggestion: string) => {
+    searchIntentTracker.recordResolution('suggestion_click', {
+      query: value || suggestion,
+      resolvedName: suggestion,
+    });
     if (onChange) onChange(suggestion);
     if (onSelect) onSelect({ name: suggestion });
     setShowSuggestions(false);
@@ -65,6 +70,9 @@ export function SearchBar({ onSelect, placeholder, mobile = false, value = "", o
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setShowSuggestions(false);
+    if (value && value.trim().length >= 2) {
+      searchIntentTracker.recordResolution('submit', { query: value });
+    }
     if (onChange && value) onChange(value);
   };
 

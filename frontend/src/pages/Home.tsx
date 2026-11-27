@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
+import { useSeoMeta, SITE_URL } from '../hooks/useSeoMeta';
 
 import { CardGrid } from '../components/Card/CardGrid';
 import type { CardProps } from '../components/Card/Card';
 import { fetchCards, fetchSets, fetchProducts, fetchCart, fetchAccessories, fetchDiscountedSingles, fetchDiscountedAccessories, checkGameInventoryPresence } from '../utils/api';
+import { searchIntentTracker } from '../utils/searchAnalytics';
 import { FiltersPanel } from '../components/Filters/FiltersPanel';
 import type { Filters } from '../components/Filters/FiltersPanel';
 import { useAuth } from '../context/AuthContext';
@@ -131,6 +133,74 @@ const Home: React.FC = () => {
   const isDashboardView = !query && Object.entries(filters).every(([key, val]) => isDefaultFilter(key, val)) && (activeTab as string) !== 'catalog';
   const isAccessoryTab = activeTab === 'catalog' && (!filters.games?.length || filters.games.includes('ACCESSORIES') || filters.games.includes('OTHERS'));
 
+  const homeSeoConfig = useMemo(() => {
+    if (isCardModalOpen) return null;
+    const gameCode = filters.games && filters.games.length > 0 ? filters.games[0] : undefined;
+    const gameNames: Record<string, string> = {
+      MTG: 'Magic: The Gathering',
+      PKM: 'Pokémon TCG',
+      YGO: 'Yu-Gi-Oh!',
+      RFB: 'Riftbound',
+      OPC: 'One Piece Card Game',
+      DGM: 'Digimon Card Game',
+      GND: 'Gundam Card Game',
+      FAB: 'Flesh and Blood',
+    };
+    const gameLabel = gameCode ? (gameNames[gameCode] || gameCode) : '';
+    const trimmedQuery = query.trim();
+
+    let title = 'Geekorium Emporio Mágico — Cartas Coleccionables y TCG en Venezuela';
+    let description = 'Tu tienda de cartas coleccionables en Venezuela. Singles y sellado de Magic: The Gathering, Pokémon, Riftbound, One Piece y más.';
+    let canonicalPath = '/';
+
+    if (trimmedQuery) {
+      title = `Buscar "${trimmedQuery}"${gameLabel ? ` en ${gameLabel}` : ''} | Geekorium`;
+      description = `Resultados para "${trimmedQuery}" en el catálogo de Geekorium Venezuela.`;
+      canonicalPath = gameCode ? `/?game=${encodeURIComponent(gameCode)}` : '/';
+    } else if (gameLabel) {
+      title = `${gameLabel} Singles y Catálogo | Geekorium Venezuela`;
+      description = `Compra cartas individuales y productos de ${gameLabel} en Geekorium Venezuela con inventario actualizado.`;
+      canonicalPath = `/?game=${encodeURIComponent(gameCode!)}&tab=${activeTab}`;
+    } else if (activeTab === 'catalog') {
+      title = 'Artilugios, Sellado y Accesorios TCG | Geekorium';
+      description = 'Booster boxes, bundles, protectores, carpetas y accesorios TCG disponibles en Geekorium Venezuela.';
+      canonicalPath = '/?tab=catalog';
+    }
+
+    return {
+      title,
+      description,
+      canonicalPath,
+      jsonLd: [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'Store',
+          name: 'Geekorium Emporio Mágico',
+          url: SITE_URL,
+          logo: `${SITE_URL}/branding/Logo.png`,
+          description: 'Tienda de cartas coleccionables y Trading Card Games en Venezuela.',
+          address: {
+            '@type': 'PostalAddress',
+            addressCountry: 'VE',
+          },
+        },
+        {
+          '@context': 'https://schema.org',
+          '@type': 'WebSite',
+          name: 'Geekorium',
+          url: SITE_URL,
+          potentialAction: {
+            '@type': 'SearchAction',
+            target: `${SITE_URL}/?q={search_term_string}`,
+            'query-input': 'required name=search_term_string',
+          },
+        },
+      ],
+    };
+  }, [isCardModalOpen, filters.games, query, activeTab]);
+
+  useSeoMeta(homeSeoConfig);
+
   useEffect(() => {
     const gameCode = filters.games && filters.games.length > 0 ? filters.games[0] : undefined;
     
@@ -175,6 +245,9 @@ const Home: React.FC = () => {
   }, [user]);
 
   useEffect(() => {
+    const activeGame = filters.games && filters.games.length > 0 ? filters.games[0] : undefined;
+    searchIntentTracker.onQueryInput(query, { gameFilter: activeGame, tab: activeTab });
+
     const timer = setTimeout(() => {
       setDebouncedQuery(query);
       setDebouncedFilters(filters);
@@ -385,6 +458,12 @@ const Home: React.FC = () => {
           });
         }
         setTotalCount(result.total_count);
+        if (offset === 0 && debouncedQuery && debouncedQuery.trim().length >= 2) {
+          searchIntentTracker.onResultsLoaded(debouncedQuery, result.total_count, {
+            gameFilter: debouncedFilters.games?.[0],
+            tab: activeTab,
+          });
+        }
       } catch (err: any) {
         if (err.name === 'AbortError' || err.message === 'Fetch aborted') return;
         setError('Failed to fetch cards. Please try again later.');
@@ -464,6 +543,16 @@ const Home: React.FC = () => {
   }, [searchParams]);
 
   const handleCardClick = (id: string, isArchive: boolean = false, imageUrl?: string, fullCard?: any) => {
+    if (query && query.trim().length >= 2) {
+      searchIntentTracker.recordResolution('card_click', {
+        query,
+        resolvedCardId: id,
+        resolvedName: fullCard?.name,
+        resultsCount: totalCount,
+        gameFilter: filters.games?.[0],
+        tab: activeTab,
+      });
+    }
     if (isArchive) {
       navigate(`/product/${id}?archive=true`, { state: { initialImage: imageUrl, initialCard: fullCard } });
     } else {
@@ -643,6 +732,11 @@ const Home: React.FC = () => {
 
         {/* Main Content */}
         <main className="max-w-[1600px] w-full mx-auto px-6 py-4 flex-1">
+          <h1 className="sr-only">
+            {filters.games && filters.games.length > 0
+              ? `Catálogo de cartas y productos ${filters.games.join(', ')} en Geekorium`
+              : 'Geekorium Emporio Mágico — Tienda de Cartas Coleccionables y TCG en Venezuela'}
+          </h1>
           <div className="flex flex-col lg:flex-row gap-4">
             {/* Sidebar Filters */}
             <aside className="hidden lg:block w-72 flex-shrink-0">
@@ -762,6 +856,16 @@ const Home: React.FC = () => {
           initialImage={selectedCardImage}
           initialData={selectedCardData}
           onAddToCartSuccess={() => {
+            if (query && query.trim().length >= 2) {
+              searchIntentTracker.recordResolution('cart_add', {
+                query,
+                resolvedCardId: selectedCardId || undefined,
+                resolvedName: selectedCardData?.name,
+                resultsCount: totalCount,
+                gameFilter: filters.games?.[0],
+                tab: activeTab,
+              });
+            }
             window.dispatchEvent(new Event('cart-updated'));
           }}
         />

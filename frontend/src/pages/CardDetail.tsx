@@ -13,6 +13,7 @@ import { ManaText } from '../components/Mana/ManaText';
 import { Footer } from '../components/Navigation/Footer';
 import { CartDrawer } from '../components/Navigation/CartDrawer';
 import { CardImage } from '../components/Card/CardImage';
+import { useSeoMeta, buildCardProductSeo } from '../hooks/useSeoMeta';
 
 export const CardDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -237,6 +238,25 @@ export const CardDetail: React.FC = () => {
 
     const isFoil = activeVersion ? (activeVersion.is_foil || activeVersion.finish === 'foil') : !!(details?.is_foil || details?.finish === 'foil');
     const currentStock = (activeVersion?.stock ?? details?.stock ?? details?.total_stock ?? 0);
+
+    const cardSeoConfig = useMemo(() => {
+        if (!details?.name) return null;
+        return buildCardProductSeo({
+            id: id || details.printing_id || details.card_id,
+            name: details.name,
+            setName: activeVersion?.set_name || details.set,
+            setCode: activeVersion?.set_code || details.set_code,
+            price: Number(activeVersion?.price ?? details.price ?? 0),
+            stock: Number(currentStock) || 0,
+            imageUrl: currentImage || details.image_url,
+            finish: isFoil ? 'foil' : activeFinish,
+            game: details.game,
+            rarity: details.rarity,
+            isAccessory: details.is_accessory,
+        });
+    }, [details, id, activeVersion, currentStock, currentImage, isFoil, activeFinish]);
+
+    useSeoMeta(cardSeoConfig);
 
     const externalMarket = useMemo(() => {
         if (!details || details.is_accessory) return null;

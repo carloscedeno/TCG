@@ -5,6 +5,7 @@ import { Settings, Users, Database, Shield, AlertCircle, Package, ExternalLink, 
 
 import { supabase } from '../../utils/supabaseClient';
 import { CloudflareAnalytics } from '../../components/Admin/CloudflareAnalytics';
+import { SearchIntelligencePanel } from '../../components/Admin/SearchIntelligencePanel';
 import { PriceUpdateHistory } from '../../components/Admin/PriceUpdateHistory';
 
 const API_BASE = import.meta.env.VITE_API_BASE;
@@ -421,8 +422,9 @@ export const AdminDashboard = () => {
                     </button>
                 </div>
 
-                <div className="mb-12">
+                <div className="mb-12 space-y-8">
                     <CloudflareAnalytics session={session} apiBase={API_BASE} />
+                    <SearchIntelligencePanel />
                 </div>
 
                 {/* Hidden Scrapers */}

@@ -4,6 +4,7 @@ import { X, ShoppingCart, RotateCw, Loader2 } from 'lucide-react';
 import { fetchCardDetails, addToCart } from '../../utils/api';
 import { getTcgConfig } from '../../config/tcgRegistry';
 import { CardImage } from './CardImage';
+import { useSeoMeta, buildCardProductSeo } from '../../hooks/useSeoMeta';
 
 
 
@@ -367,6 +368,30 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
     const currentImage = (currentFace as any)?.image_url || (currentFace as any)?.image_uris?.normal || (currentFace as any)?.image_uris?.large || (currentFace as any)?.image_uris?.png || details?.image_url || initialImage || (initialData as any)?.image_url;
 
     const inStockSetsCount = useMemo(() => versionGroups.filter((g: any) => g.totalStock > 0).length, [versionGroups]);
+
+    const modalSeoConfig = useMemo(() => {
+        if (!isOpen || !details?.name) return null;
+        const modalPrice = Number(activeVersion?.price ?? details.price ?? 0);
+        const modalStock = Number(activeVersion?.stock ?? details.total_stock ?? 0);
+        const modalId = activePrintingId
+            ? `${activePrintingId}-${selectedFinish}`
+            : (cardId || details.card_id);
+        return buildCardProductSeo({
+            id: modalId,
+            name: details.name,
+            setName: activeVersion?.set_name || details.set,
+            setCode: activeVersion?.set_code || details.set_code,
+            price: modalPrice,
+            stock: modalStock,
+            imageUrl: currentImage,
+            finish: selectedFinish,
+            game: details.game,
+            rarity: details.rarity,
+            isAccessory: details.is_accessory,
+        });
+    }, [isOpen, details, activeVersion, activePrintingId, selectedFinish, cardId, currentImage]);
+
+    useSeoMeta(modalSeoConfig);
 
     const renderVersionsContent = () => (
         <div className="flex flex-col h-full w-full">

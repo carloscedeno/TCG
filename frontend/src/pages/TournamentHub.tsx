@@ -6,6 +6,7 @@ import { Header } from '../components/Navigation/Header';
 import { Footer } from '../components/Navigation/Footer';
 import { CartDrawer } from '../components/Navigation/CartDrawer';
 import { PreRegistrationModal } from '../components/Modals/PreRegistrationModal';
+import { useSeoMeta, SITE_URL } from '../hooks/useSeoMeta';
 
 // Fallback color mapping based on game code
 const GAME_COLORS: Record<string, { border: string, text: string }> = {
@@ -24,6 +25,30 @@ const TournamentHub: React.FC = () => {
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [cartCount, setCartCount] = useState(0);
     const [selectedEvent, setSelectedEvent] = useState<any>(null);
+
+    useSeoMeta({
+        title: 'Torneos y Misiones TCG | Geekorium Venezuela',
+        description: 'Calendario oficial de torneos de Magic: The Gathering, Pokémon, One Piece y TCG en Geekorium. Preinscríbete online.',
+        canonicalPath: '/tournaments',
+        jsonLd: events.length > 0 ? events.slice(0, 10).map((ev) => ({
+            '@context': 'https://schema.org',
+            '@type': 'Event',
+            name: ev.title || ev.name || 'Torneo Geekorium',
+            startDate: ev.date || ev.event_date || undefined,
+            eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+            location: {
+                '@type': 'Place',
+                name: ev.location || 'Geekorium Emporio Mágico',
+                address: 'Venezuela',
+            },
+            organizer: {
+                '@type': 'Organization',
+                name: 'Geekorium Emporio Mágico',
+                url: SITE_URL,
+            },
+        })) : undefined,
+        schemaId: 'geeko-events-jsonld',
+    });
 
     useEffect(() => {
         const loadData = async () => {

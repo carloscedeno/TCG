@@ -2,8 +2,14 @@ import React, { useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Footer } from '../components/Navigation/Footer';
+import { useSeoMeta } from '../hooks/useSeoMeta';
 
 const LegalPage: React.FC = () => {
+    useSeoMeta({
+        title: 'Aviso Legal y Términos Comerciales | Geekorium',
+        description: 'Información legal, propiedad intelectual y términos de venta de Geekorium Emporio Mágico.',
+        canonicalPath: '/legal',
+    });
     // Scroll to top on mount
     useEffect(() => {
         window.scrollTo(0, 0);

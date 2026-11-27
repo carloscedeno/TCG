@@ -4,8 +4,14 @@ import {
 } from 'lucide-react';
 import { HelpSection } from '../components/Help/HelpSection';
 import { Footer } from '../components/Navigation/Footer';
+import { useSeoMeta } from '../hooks/useSeoMeta';
 
 const HelpPage: React.FC = () => {
+    useSeoMeta({
+        title: 'Centro de Ayuda y Preguntas Frecuentes | Geekorium',
+        description: 'Resuelve dudas sobre envíos, pagos, reservas y compra de cartas TCG en Geekorium Venezuela.',
+        canonicalPath: '/help',
+    });
     return (
         <div className="min-h-screen flex flex-col bg-[#0a0a0a]">
             {/* Header / Nav Placeholder (Reuse standard nav or simplified back button) */}

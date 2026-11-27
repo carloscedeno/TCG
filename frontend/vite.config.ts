@@ -5,7 +5,9 @@ import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(() => {
+  process.env.VITE_ROBOTS = process.env.VITE_ROBOTS || 'index, follow';
+  return {
   base: '/',
   plugins: [
     react(),
@@ -55,4 +57,4 @@ export default defineConfig({
       }
     }
   }
-})
+}});

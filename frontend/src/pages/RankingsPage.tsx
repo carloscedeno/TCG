@@ -5,6 +5,7 @@ import { Header } from '../components/Navigation/Header';
 import { Footer } from '../components/Navigation/Footer';
 import { CartDrawer } from '../components/Navigation/CartDrawer';
 import { fetchCart } from '../utils/api';
+import { useSeoMeta } from '../hooks/useSeoMeta';
 
 interface RankingCategory {
     id: string;
@@ -80,6 +81,17 @@ const RankingsPage: React.FC = () => {
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [cartCount, setCartCount] = useState(0);
     const [activeSeasons, setActiveSeasons] = useState<any[]>([]);
+
+    const activeGameLabel = TCG_GAMES.find((g) => g.code === gameContext)?.name;
+    useSeoMeta({
+        title: activeGameLabel
+            ? `Rankings ${activeGameLabel} | Geekorium Venezuela`
+            : 'Rankings y Ligas TCG | Geekorium Venezuela',
+        description: activeGameLabel
+            ? `Tabla de posiciones oficial de ${activeGameLabel} en Geekorium Venezuela.`
+            : 'Consulta los rankings oficiales de jugadores y temporadas TCG en Geekorium.',
+        canonicalPath: gameContext ? `/rankings?game=${encodeURIComponent(gameContext)}` : '/rankings',
+    });
 
     useEffect(() => {
         const loadInitial = async () => {

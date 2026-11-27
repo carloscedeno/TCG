@@ -1,8 +1,15 @@
 User-agent: *
 Allow: /
 Allow: /tournaments
+Allow: /rankings
+Allow: /buscamos
+Allow: /card/
 Allow: /help
 Allow: /legal
+Disallow: /admin
+Disallow: /checkout
+Disallow: /profile
+Disallow: /import
 
 # Sitemaps
 Sitemap: https://geekorium.shop/sitemap.xml

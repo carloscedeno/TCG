@@ -120,7 +120,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
   if (viewMode === 'list') {
     return (
       <a
-        href={`card/${card_id}`}
+        href={`/card/${card_id}`}
         onClick={(e) => {
           if (!e.ctrlKey && !e.metaKey) {
             e.preventDefault();
@@ -214,7 +214,7 @@ export const Card = React.memo<CardProps>(({ name, set, imageUrl, image_url, pri
   // Grid View
   return (
     <a
-      href={`card/${card_id}`}
+      href={`/card/${card_id}`}
       onClick={(e) => {
         if (!e.ctrlKey && !e.metaKey) {
           e.preventDefault();

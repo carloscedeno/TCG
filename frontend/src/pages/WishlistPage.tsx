@@ -5,8 +5,14 @@ import { CartDrawer } from '../components/Navigation/CartDrawer';
 import { CardImage } from '../components/Card/CardImage';
 import { Search, Sparkles, MessageCircle, AlertCircle } from 'lucide-react';
 import { WISHLIST_DATA, type WishlistItem } from './wishlist_data';
+import { useSeoMeta } from '../hooks/useSeoMeta';
 
 export const WishlistPage: React.FC = () => {
+    useSeoMeta({
+        title: 'Geeko Buscamos — Cartas que Compramos | Geekorium',
+        description: 'Consulta la lista oficial de singles TCG que Geekorium está comprando o recibiendo por crédito en tienda.',
+        canonicalPath: '/buscamos',
+    });
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedGame, setSelectedGame] = useState<string>('ALL');
     const [isCartOpen, setIsCartOpen] = useState(false);
