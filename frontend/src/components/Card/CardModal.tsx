@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { fetchCardDetails, addToCart } from '../../utils/api';
+import { getTcgConfig, normalizeGameCode } from '../../config/tcgRegistry';
 import { CardDetailBlocks } from './CardDetailBlocks';
 import { useSeoMeta, buildCardProductSeo } from '../../hooks/useSeoMeta';
 
@@ -360,40 +361,45 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
 
     useSeoMeta(modalSeoConfig);
 
+    const mobileGameCode = normalizeGameCode(details?.game || initialData?.game || 'MTG');
+    const mobileGameName = getTcgConfig(mobileGameCode)?.gameName || mobileGameCode;
+
     if (!isOpen) return null;
 
     const modalNode = (
         <div
-            className="fixed inset-0 z-[300] flex items-end md:items-center justify-center bg-black/80 backdrop-blur-md p-0 md:p-6 animate-in fade-in duration-200 overflow-hidden"
+            className="fixed inset-0 z-[300] flex items-center justify-center bg-black/80 backdrop-blur-md p-2.5 sm:p-4 md:p-6 animate-in fade-in duration-200 overflow-hidden"
             onClick={handleBackdropClick}
         >
-            {/* Modal Content — 3 Equal-Size Blocks */}
+            {/* Modal Content — 3 Equal-Size Blocks (stacked cleanly vertically on mobile) */}
             <div
                 data-testid="card-modal"
                 role="dialog"
                 aria-modal="true"
-                className="w-full max-w-6xl h-[94vh] md:h-[620px] max-h-[94vh] rounded-t-[28px] md:rounded-[28px] border border-white/15 shadow-[0_0_100px_rgba(0,0,0,0.85)] flex flex-col overflow-y-auto md:overflow-hidden relative bg-[#090c11]"
+                className="w-full max-w-[440px] md:max-w-6xl max-h-[94dvh] md:h-[620px] md:max-h-[94vh] rounded-[24px] md:rounded-[28px] border border-white/15 shadow-[0_0_100px_rgba(0,0,0,0.85)] flex flex-col overflow-y-auto md:overflow-hidden relative bg-[#090c11] custom-scrollbar"
                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
             >
-                {/* Sticky Header for mobile */}
-                <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/10 bg-[#090c11]/95 backdrop-blur-md sticky top-0 z-50 md:hidden shrink-0">
+                {/* Sticky Header for mobile: TCG badge + red-outlined X matching mobile wireframe */}
+                <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 bg-[#090c11]/95 backdrop-blur-md sticky top-0 z-50 md:hidden shrink-0">
                     <div className="flex items-center gap-2 min-w-0 flex-1 pr-3">
-                        <div className="w-5 h-5 rounded-full bg-white/10 p-0.5 flex items-center justify-center border border-white/10 shrink-0">
+                        <div className="w-5 h-5 rounded-full bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center overflow-hidden shrink-0">
                             <img
-                                src={`/logos/tcg/${details?.game || initialData?.game || 'MTG'}.png`}
-                                alt={details?.game || initialData?.game || 'TCG'}
+                                src={`/logos/tcg/${mobileGameCode || 'MTG'}.png`}
+                                alt={mobileGameCode || 'TCG'}
                                 className="w-3.5 h-3.5 object-contain"
                                 onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
                             />
                         </div>
-                        <h2 className="text-sm font-black italic text-white truncate">{details?.name || 'Cargando...'}</h2>
+                        <span className="text-[11px] font-black uppercase tracking-wider text-neutral-100 truncate">
+                            {mobileGameName}
+                        </span>
                     </div>
                     <button
                         onClick={onClose}
-                        className="flex-shrink-0 w-9 h-9 flex items-center justify-center bg-red-500/10 hover:bg-red-500/20 border border-red-500/50 rounded-lg transition-all text-red-400"
+                        className="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-red-500/10 hover:bg-red-500/20 border border-red-500/60 rounded-lg transition-all text-red-400"
                         aria-label="Cerrar"
                     >
-                        <X size={18} />
+                        <X size={16} strokeWidth={2.5} />
                     </button>
                 </div>
 
@@ -417,6 +423,7 @@ export const CardModal: React.FC<CardModalProps> = ({ isOpen, onClose, cardId, i
                     addedSuccess={addedSuccess}
                     isArchive={isArchive}
                     isDetailsLoaded={!loading}
+                    hasMobileHeader={true}
                 />
             </div>
         </div>

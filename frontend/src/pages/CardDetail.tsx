@@ -286,7 +286,7 @@ export const CardDetail: React.FC = () => {
                         </div>
                     </div>
                 ) : details ? (
-                    <div data-testid="card-modal" className="w-full rounded-[28px] border border-white/15 shadow-[0_0_100px_rgba(0,0,0,0.45)] overflow-hidden md:h-[620px] relative bg-[#090c11]">
+                    <div data-testid="card-modal" className="w-full max-w-[460px] md:max-w-none rounded-[24px] md:rounded-[28px] border border-white/15 shadow-[0_0_100px_rgba(0,0,0,0.45)] overflow-hidden h-auto md:h-[620px] relative bg-[#090c11]">
                         <CardDetailBlocks
                             details={details}
                             loading={loading}

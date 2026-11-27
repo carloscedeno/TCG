@@ -34,6 +34,7 @@ export interface CardDetailBlocksProps {
     isArchive?: boolean;
     isDetailsLoaded?: boolean;
     showDesktopClose?: boolean;
+    hasMobileHeader?: boolean;
 }
 
 const VersionMiniature: React.FC<{ imageUrl?: string; setCode?: string; alt: string }> = ({
@@ -84,6 +85,7 @@ export const CardDetailBlocks: React.FC<CardDetailBlocksProps> = ({
     isArchive = false,
     isDetailsLoaded = true,
     showDesktopClose = true,
+    hasMobileHeader = false,
 }) => {
     const [quantity, setQuantity] = useState<number>(1);
     const [carouselIdx, setCarouselIdx] = useState<number>(0);
@@ -249,7 +251,7 @@ export const CardDetailBlocks: React.FC<CardDetailBlocksProps> = ({
     if (!details) return null;
 
     return (
-        <div className="w-full h-full grid grid-cols-1 md:grid-cols-3 md:divide-x md:divide-white/5 relative bg-[#090c11]">
+        <div className="w-full h-auto md:h-full grid grid-cols-1 md:grid-cols-3 md:divide-x md:divide-white/5 relative bg-[#090c11]">
             {/* Top-Right Close Button (matching mockup red outline X on desktop) */}
             {showDesktopClose && (
                 <button
@@ -262,16 +264,16 @@ export const CardDetailBlocks: React.FC<CardDetailBlocksProps> = ({
             )}
 
             {/* ════════════════════════════════════════════════════════════════
-                BLOQUE 1 (IZQUIERDA - 1/3): IMAGEN DE LA CARTA
+                BLOQUE 1 (IZQUIERDA DESKTOP / ARRIBA MOBILE): IMAGEN DE LA CARTA
                ════════════════════════════════════════════════════════════════ */}
-            <div className="flex flex-col items-center justify-center p-5 md:p-6 bg-[#0a0d13] relative min-h-[260px] md:min-h-0">
+            <div className="flex flex-col items-center justify-center px-4 pt-3 pb-2 md:p-6 bg-[#0a0d13] relative">
                 {loading && !displayImage ? (
-                    <div className="w-[190px] sm:w-[220px] md:w-full md:max-w-[275px] aspect-[5/7] rounded-2xl bg-white/5 border border-white/10 animate-pulse flex flex-col items-center justify-center gap-2">
+                    <div className="w-full max-w-[290px] sm:max-w-[310px] md:max-w-[275px] aspect-[5/7] rounded-2xl bg-white/5 border border-white/10 animate-pulse flex flex-col items-center justify-center gap-2">
                         <Loader2 size={28} className="text-geeko-cyan animate-spin" />
                         <span className="text-[10px] font-black text-geeko-cyan uppercase tracking-widest">Cargando...</span>
                     </div>
                 ) : (
-                    <div className="relative w-[190px] sm:w-[225px] md:w-full md:max-w-[275px] aspect-[5/7] flex items-center justify-center group/card">
+                    <div className="relative w-full max-w-[290px] sm:max-w-[310px] md:max-w-[275px] aspect-[5/7] flex items-center justify-center group/card">
                         <div className={`relative w-full h-full rounded-xl overflow-hidden border transition-all ${isFoilVisual ? 'border-purple-500/60 shadow-[0_0_35px_rgba(168,85,247,0.35)] holo-effect' : 'border-white/15 shadow-[0_20px_55px_rgba(0,0,0,0.9)]'}`}>
                             {isFoilVisual && (
                                 <div className="absolute inset-0 z-20 foil-shimmer opacity-30 mix-blend-overlay pointer-events-none" />
@@ -329,12 +331,12 @@ export const CardDetailBlocks: React.FC<CardDetailBlocksProps> = ({
             </div>
 
             {/* ════════════════════════════════════════════════════════════════
-                BLOQUE 2 (CENTRO - 1/3): INFO, LEGALIDAD Y COMPRA
+                BLOQUE 2 (CENTRO DESKTOP / MEDIO MOBILE): INFO, LEGALIDAD Y COMPRA
                ════════════════════════════════════════════════════════════════ */}
-            <div className="flex flex-col justify-between p-5 md:p-6 bg-[#090c11] gap-4 md:overflow-y-auto custom-scrollbar">
-                <div className="space-y-3">
-                    {/* TCG Header */}
-                    <div className="flex items-center gap-2">
+            <div className="flex flex-col justify-between px-4 py-3 md:p-6 bg-[#090c11] gap-4 md:overflow-y-auto custom-scrollbar">
+                <div className="space-y-2.5 md:space-y-3">
+                    {/* TCG Header (hidden on mobile when parent modal provides a sticky mobile TCG header) */}
+                    <div className={`${hasMobileHeader ? 'hidden md:flex' : 'flex'} items-center gap-2`}>
                         <div className="w-4 h-4 rounded-full bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center overflow-hidden shrink-0">
                             <img
                                 src={`/logos/tcg/${normalizedGame || 'MTG'}.png`}
@@ -547,10 +549,10 @@ export const CardDetailBlocks: React.FC<CardDetailBlocksProps> = ({
             </div>
 
             {/* ════════════════════════════════════════════════════════════════
-                BLOQUE 3 (DERECHA - 1/3): EDICIONES DISPONIBLES EN GEEKORIUM
+                BLOQUE 3 (DERECHA DESKTOP / ABAJO MOBILE): EDICIONES DISPONIBLES
                ════════════════════════════════════════════════════════════════ */}
-            <div className="flex flex-col bg-[#080b10] p-5 md:p-6 md:pr-5 min-h-[260px] md:min-h-0 md:overflow-hidden">
-                <div className="pb-3 border-b border-white/10 pr-8 md:pr-10 shrink-0">
+            <div className="flex flex-col bg-[#080b10] px-4 pt-3 pb-5 md:p-6 md:pr-5 border-t border-white/10 md:border-t-0 md:min-h-0 md:overflow-hidden">
+                <div className="pb-3 border-b border-white/10 md:pr-10 shrink-0">
                     <h3 className="text-xs font-black uppercase tracking-wider text-white">
                         Ediciones disponibles en Geekorium
                     </h3>
@@ -566,7 +568,7 @@ export const CardDetailBlocks: React.FC<CardDetailBlocksProps> = ({
 
                 <div
                     data-testid="versions-list-container"
-                    className="flex-1 overflow-y-auto custom-scrollbar mt-3 space-y-2 pr-1 max-h-[320px] md:max-h-none"
+                    className="md:flex-1 md:overflow-y-auto custom-scrollbar mt-3 space-y-2 md:pr-1"
                 >
                     {loading || !isDetailsLoaded ? (
                         [...Array(3)].map((_, i) => (
