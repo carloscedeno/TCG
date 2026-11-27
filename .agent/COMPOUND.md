@@ -882,3 +882,25 @@ ole). Se blindó mediante el trigger BEFORE UPDATE 	rg_prevent_role_escalation.
 - **Frontend Unit (`Jest`)**: `7 passed, 7 total` suites / `33 passed, 33 total` tests (incluye `frontend/src/tests/CheckoutPos.test.tsx`).
 - **Python Integration (`pytest tests/integration`)**: `1 passed`.
 - **Playwright E2E (`smoke`)**: `6 passed`.
+
+---
+
+## 📅 Sesión 2026-11-27 — Grid por Variante Más Cara, Detalle Compacto de 3 Bloques & Normalización de Variantes
+
+### Qué se resolvió
+1. **Selección de Variante Más Cara en Grid (`get_products_filtered` & `get_products_stock_by_printing_ids` + `Card.tsx`)**:
+   - Se actualizaron ambos RPC en PROD (`sxuotvogwvmxuvwbsscv`) y DEV (`bqfkqnnostzaqueujdms`) para elegir siempre la variante disponible más costosa (`eff_price DESC`) acumulando el stock total entre todas las versiones, aplicando precios NM/Foil de CardKingdom/TCG para MTG.
+   - `Card.tsx` refleja código de edición, disponibilidad total (`DISP`), etiqueta `FOIL`/`NORMAL`, porcentaje y precio con descuento, y precio formateado.
+2. **Vista de Detalle en 3 Bloques (Desktop + Mobile Vertical) — `CardDetailBlocks.tsx`, `CardModal.tsx`, `CardDetail.tsx`, `tcgRegistry.ts`**:
+   - Diseño en 3 bloques del mismo peso visual en desktop (compacto sin vacío vertical central: `justify-center gap-3.5`, `md:max-w-5xl`, `md:h-auto md:max-h-[90vh]`) y apilado vertical en móvil.
+   - Bloque 1: Imagen (con soporte DFC); Bloque 2: TCG, nombre, edición, código `#`, legalidad filtrada a 6 formatos MTG (`standard`, `modern`, `pioneer`, `pauper`, `duel`, `commander`), precio/descuento, acabado Normal/Foil y stock específico; Bloque 3: ediciones disponibles con miniatura, logo/código de set, separación Foil vs Normal, precio y disponibilidad individual.
+   - Fix en `CardModal.tsx` (`loadCardDetails`) para comparar ID base limpio sin sufijos `-foil`/`-nonfoil`/`-etched` y acabado seleccionado contra `all_versions`, evitando caer a otra edición más barata al abrir desde el grid.
+3. **Normalización de Sufijos de Variante (`sortswift-sync`)**:
+   - Se normalizaron 205 sufijos parentéticos (`(Borderless)`, `(Showcase)`, `(Extended Art)`, `(Retro Frame)`, etc.) en PROD y DEV y se desplegó `sortswift-sync` (PROD `v2`, DEV `v7`, `verify_jwt: false`) con `normalizeCardBaseName` para agrupar todas las ediciones bajo una sola carta canónica.
+
+### Validación Técnica (`/pruebame` full)
+- **Build (`tsc -b && vite build && node postbuild.js`)**: PASS (`24.4s`).
+- **Python Unit (`pytest tests/unit`)**: `34 passed`.
+- **Frontend Unit (`Jest`)**: `10 passed, 10 total` suites / `41 passed, 41 total` tests (incluye `frontend/src/tests/CardDetailBlocks.test.tsx`).
+- **Python Integration (`pytest tests/integration`)**: `1 passed`.
+- **Playwright E2E (`smoke`)**: `6 passed`.

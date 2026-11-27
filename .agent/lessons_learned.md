@@ -2603,3 +2603,14 @@ enderVersionsContent), garantizando experiencia *Above the Fold* en smartphones.
   2. En `createOrder` (`frontend/src/utils/api.ts`), usar el email de `auth.getUser()` solo si `userData.user?.id === orderData.userId`.
   3. En `odoo-sync`, ignorar correos/cédulas placeholder, buscar `res.partner` por `email` -> `vat` -> `phone` -> `name`, y reutilizar contactos existentes sin sobrescribir su `name`.
 - **Regla Derivada**: En flujos asistidos o POS operados por staff autenticado, nunca inferir ni sobrescribir los datos del comprador desde `auth.getUser()`.
+
+### 75. IDs Sintéticos `-foil`/`-nonfoil` y Flex Stretching en Modal de Detalle (Nov 2026)
+- **Problema**:
+  1. Al hacer clic en una carta del grid que seleccionaba una versión foil (`<uuid>-foil`), `CardModal` comparaba el `printing_id` con sufijo directamente contra `all_versions` o caía a `data.printing_id`, abriendo la edición equivocada (`CC2` Normal en lugar de `SLDS` Foil).
+  2. En el modal desktop de 3 bloques, usar `md:h-[620px]` con `justify-between` y `mt-auto` en la caja de compra estiraba la columna central dejando un espacio vacío enorme en cartas sin selector dual de acabado.
+  3. Cartas importadas con sufijos parentéticos (`(Borderless)`, `(Showcase)`, etc.) en el nombre creaban registros duplicados en `cards` que rompían la agrupación de versiones.
+- **Solución**:
+  1. En `CardModal.tsx` (`loadCardDetails`), normalizar el target eliminando `/-(foil|nonfoil|etched)$/i` y resolver la coincidencia en `all_versions` junto con el acabado (`targetFinish`).
+  2. Usar altura adaptable compacta (`md:h-auto md:max-h-[90vh]`, `md:max-w-5xl`) y `justify-center gap-3.5` en la columna central (`CardDetailBlocks.tsx`), manteniendo apilado vertical limpio en móvil.
+  3. Aplicar `normalizeCardBaseName` en `sortswift-sync` al sincronizar cartas nuevas para agrupar variantes bajo la carta canónica.
+- **Regla Derivada**: Siempre normalizar IDs sintéticos con sufijo de acabado antes de emparejar versiones entre RPC de grid y detalle, y preferir agrupación vertical centrada con `gap` frente a `justify-between` en columnas con contenido de altura variable.

@@ -1,12 +1,12 @@
 # 📈 Progress Report - Geekorium Optimization
 
-**Last Updated**: 2026-11-26 23:40 (Multi-Cart POS Checkout Isolation & Odoo Partner Matching)
+**Last Updated**: 2026-11-27 02:40 (3-Block Card Detail, Grid Highest-Price Variant & Variant Name Normalization)
 
-**Status**: ✅ Cart Performance | ✅ Cart Context Unification | ✅ Optimistic UI | ✅ Accessories Module | ✅ Polymorphic Checkout | ✅ Public Tracking RLS | ✅ Admin Visibility | ✅ Dev Branch Recreation | ✅ Catalog & Inventory Sync | ✅ Quick Add UX Optimized | ✅ Performance Optimization (Batch Fetch) | ✅ Global 'Nuevo' Feature | ✅ Schema Fallback implemented | ✅ Strixhaven Visibility Fix | ✅ Production Checkout Restored | ✅ Pokémon PKM Standardization | ✅ Security Audit & Cleanup | ✅ Dynamic Discounts & Visual Integrity | ✅ Bulk Import Catalog Sync | ✅ User Dashboard & TCG Player IDs | ✅ Address Book CRUD | ✅ Independent Billing Address | ✅ Order History & Pre-order Estimated Dates | ✅ Event Timezone Correction
+**Status**: ✅ Cart Performance | ✅ Cart Context Unification | ✅ Optimistic UI | ✅ Accessories Module | ✅ Polymorphic Checkout | ✅ Public Tracking RLS | ✅ Admin Visibility | ✅ Dev Branch Recreation | ✅ Catalog & Inventory Sync | ✅ Quick Add UX Optimized | ✅ Performance Optimization (Batch Fetch) | ✅ Global 'Nuevo' Feature | ✅ Schema Fallback implemented | ✅ Strixhaven Visibility Fix | ✅ Production Checkout Restored | ✅ Pokémon PKM Standardization | ✅ Security Audit & Cleanup | ✅ Dynamic Discounts & Visual Integrity | ✅ Bulk Import Catalog Sync | ✅ User Dashboard & TCG Player IDs | ✅ Address Book CRUD | ✅ Independent Billing Address | ✅ Order History & Pre-order Estimated Dates | ✅ Event Timezone Correction | ✅ Multi-Cart POS Checkout Isolation | ✅ 3-Block Card Detail & Variant Normalization
 
 ---
 
-This session focused on implementing User Dashboard (Mi Cuenta) features: TCG player ID storage, multi-address book with automatic default triggers, checkout integration with auto-fill, custom billing addresses, and order history filter tabs with estimated release dates for pre-ordered items.
+This session redesigned the grid card and 3-block desktop/mobile card detail view, prioritized the most expensive variant per card in catalog RPCs while preserving finish/printing selection in `CardModal`, and normalized parenthetical card variant suffixes across PROD and DEV.
 
 
 
@@ -14,6 +14,13 @@ This session focused on implementing User Dashboard (Mi Cuenta) features: TCG pl
 ---
 
 ## Completed Work
+
+### ✅ Grid Highest-Price Variant, 3-Block Card Detail & Variant Normalization (Nov 2026)
+
+- **Catalog Grid (`Card.tsx` + `get_products_filtered` / `get_products_stock_by_printing_ids`)**: Updated PROD & DEV RPCs to always surface the highest-priced variant per card while aggregating total stock across all versions; updated grid cards with set code, total availability, `FOIL` badge, discount pill, and formatted cost.
+- **3-Block Detail View (`CardDetailBlocks.tsx`, `CardModal.tsx`, `CardDetail.tsx`, `tcgRegistry.ts`)**: Built compact 3-block desktop layout (and vertical mobile stack) showing image, TCG + card title + edition + collector `#`, 6 MTG format legalities, finish selector/price/quantity buy box, and separated Normal/Foil version list; fixed synthetic `-foil`/`-nonfoil` ID matching in `CardModal.tsx`.
+- **Canonical Variant Grouping (`sortswift-sync`)**: Normalized 205 parenthetical suffixes (`(Borderless)`, `(Showcase)`, etc.) in PROD & DEV and deployed `sortswift-sync` (PROD `v2`, DEV `v7`) with `normalizeCardBaseName`.
+- **Automated Verification**: Added `frontend/src/tests/CardDetailBlocks.test.tsx` and passed `/pruebame -Mode full` (`tsc/vite build`, `34` Python unit, `10/10` Jest suites / `41` tests, `1` Python integration, `6` Playwright smoke).
 
 ### ✅ Multi-Cart POS Customer Checkout & Odoo Partner Matching (Nov 2026)
 

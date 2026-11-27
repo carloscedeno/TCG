@@ -121,3 +121,5 @@ Artefactos del Compound step:
 
 - ✅ **Checkout Multicarrito POS & Emparejamiento Seguro Odoo (Nov 2026)**: En carritos `is_pos === true` (`Gestión de Clientes`), el checkout no precarga datos del Admin, permite vincular opcionalmente usuarios de `profiles` o facturar sin usuario/correo web, y `odoo-sync` busca `res.partner` por email/cédula/teléfono/nombre sin sobrescribir contactos existentes ni colisionar en `guest@geekorium.com`.
 
+- ✅ **Grid Variante Más Cara, Detalle 3 Bloques Compacto & Normalización de Variantes (Nov 2026)**: Catálogo prioriza la variante disponible más costosa manteniendo stock agregado total; detalle en 3 bloques (desktop compacto y stack vertical móvil) con 6 legalidades MTG, código `#` y lista separada Foil/Normal en `CardDetailBlocks.tsx`; resolución de IDs sintéticos `-foil`/`-nonfoil` en `CardModal.tsx`; y normalización de sufijos parentéticos en BD y `sortswift-sync`.
+
