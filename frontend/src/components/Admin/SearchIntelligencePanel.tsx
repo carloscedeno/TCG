@@ -108,7 +108,7 @@ export const SearchIntelligencePanel = () => {
       if (rpcError) throw rpcError;
       setData(rpcData as SearchIntelligenceData);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Error al cargar analítica de búsquedas';
+      const msg = (err as { message?: string })?.message || 'Error al cargar analítica de búsquedas';
       setError(msg);
     } finally {
       setLoading(false);

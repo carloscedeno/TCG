@@ -65,7 +65,7 @@ class SearchIntentTracker {
     const trimmed = query.trim();
     this.applyContext(context);
 
-    if (trimmed.length < 2) {
+    if (trimmed.length < 2 || trimmed === '{search_term_string}') {
       if (this.sessionId && this.lastQuery.trim().length >= 2 && !this.resolvedInSession) {
         this.flushNow({
           query: this.lastQuery,

@@ -120,7 +120,7 @@ export const AdminDashboard = () => {
                 supabase.from('card_printings')
                     .select('updated_at')
                     .not('updated_at', 'is', null)
-                    .neq('printing_id', Date.now().toString()) // Anti-cache mechanism
+                    .neq('printing_id', '00000000-0000-0000-0000-000000000000')
                     .order('updated_at', { ascending: false })
                     .limit(1)
             ]);
